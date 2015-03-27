@@ -177,6 +177,12 @@ public:
     QString lastName() const {
         return mLastName;
     }
+    void setUsername(const QString & username) {
+        mUsername = username;
+    }
+    QString username() const {
+        return mUsername;
+    }
     void setBlocked(bool blocked) {
         mBlocked = blocked;
     }
@@ -313,6 +319,7 @@ private:
     qint64 mRandomId;
     QString mFirstName;
     QString mLastName;
+    QString mUsername;
     UserStatus mStatus;
     Message mMessage;
     GeoChatMessage mGeoChatMessage;

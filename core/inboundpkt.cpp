@@ -187,6 +187,7 @@ User InboundPkt::fetchUser() {
     if (x != (qint32)User::typeUserEmpty) {
         user.setFirstName(fetchQString());
         user.setLastName(fetchQString());
+        user.setUsername(fetchQString());
         if (x != (qint32)User::typeUserDeleted) {
             if (x != (qint32)User::typeUserSelf) {
                 user.setAccessHash(fetchLong());
@@ -688,6 +689,7 @@ Update InboundPkt::fetchUpdate() {
         update.setUserId(fetchInt());
         update.setFirstName(fetchQString());
         update.setLastName(fetchQString());
+        update.setUsername(fetchQString());
         break;
     case Update::typeUpdateUserPhoto:
         update.setUserId(fetchInt());

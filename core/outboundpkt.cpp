@@ -375,7 +375,7 @@ void OutboundPkt::appendSendMessageAction(const SendMessageAction &action) {
 }
 
 void OutboundPkt::initConnection() {
-    appendInt(TL_InvokeWithLayer17);
+    appendInt(TL_InvokeWithLayer18);
     appendInt(TL_InitConnection);
     appendInt(LIBQTELEGRAM_APP_ID);
     appendQString(Utils::getDeviceModel());

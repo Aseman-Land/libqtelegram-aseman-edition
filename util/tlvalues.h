@@ -437,8 +437,9 @@ enum TLValues {
     TL_UploadSaveBigFilePart = 0xde7b673d,
     TL_InitConnection = 0x69796de9,
     TL_HelpGetSupport = 0x9cdf08cd,
-    //TL_InvokeWithLayer14 = 0x2b9b08fa
-    TL_InvokeWithLayer17 = 0x50858a19
+    //TL_InvokeWithLayer14 = 0x2b9b08fa,
+    TL_InvokeWithLayer17 = 0x50858a19,
+    TL_InvokeWithLayer18 = 0x1c900537
 };
 
 #endif // TLVALUES_H

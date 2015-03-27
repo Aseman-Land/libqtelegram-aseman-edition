@@ -30,12 +30,12 @@ class User
 public:
 
     enum UserType {
-       typeUserSelf = 0x720535ec,
-       typeUserContact = 0xf2fb8319,
-       typeUserDeleted = 0xb29ad7cc,
-       typeUserForeign = 0x5214c89d,
+       typeUserSelf = 0x7007b451,
+       typeUserContact = 0xcab35e18,
+       typeUserDeleted = 0xd6016d7a,
+       typeUserForeign = 0x75cf7a8,
        typeUserEmpty = 0x200250ba,
-       typeUserRequest = 0x22e8ceb0
+       typeUserRequest = 0xd9ccc4ef
     };
 
     User(UserType classType = typeUserEmpty) :
