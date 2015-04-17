@@ -389,7 +389,8 @@ void Session::workBadServerSalt(InboundPkt &inboundPkt, qint64 msgId) {
     m_dc->setServerSalt(inboundPkt.fetchLong()); // new server_salt
     // resend the last query
     Query *q = m_pendingQueries.value(badMsgId);
-    resendQuery(q);
+    if(q)
+        resendQuery(q);
 }
 
 void Session::workPong(InboundPkt &inboundPkt, qint64 msgId) {
