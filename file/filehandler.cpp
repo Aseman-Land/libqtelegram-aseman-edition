@@ -249,6 +249,9 @@ qint64 FileHandler::uploadGetFile(const InputFileLocation &location, qint32 file
     DC *dc;
     dcNum ? dc = mDcProvider.getDc(dcNum) : dc = mDcProvider.getWorkingDc();
     Session *session = mApi->fileSession(dc);
+    if(!session)
+        return 0;
+
     DownloadFile::Ptr f = DownloadFile::Ptr(new DownloadFile(session, location, fileSize, this));
     if (location.classType() == InputFileLocation::typeInputEncryptedFileLocation) {
         f->setEncrypted(true);

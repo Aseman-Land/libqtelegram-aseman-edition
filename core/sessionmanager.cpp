@@ -44,7 +44,10 @@ Session *SessionManager::fileSession(DC *dc) {
     qint32 &resourcesAtDc = mDcResourceCounts[dc->id()];
 
     if (!resourcesAtDc) {
-        session = createFileSession(dc);
+        if(dc->state() >= DC::authKeyCreated)
+            session = createFileSession(dc);
+        else
+            return 0;
     } else {
         qint64 sessionId = mDcSessionIds.value(dc->id());
         session = mFileSessions.value(sessionId);

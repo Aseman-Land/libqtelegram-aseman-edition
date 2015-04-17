@@ -492,12 +492,14 @@ qint64 Session::encryptSendMessage(qint32 *msg, qint32 msgInts, qint32 useful) {
     qint32 l = aesEncryptMessage(encMsg);
     Q_ASSERT(l > 0);
 
-    rpcSendMessage(encMsg, l + UNENCSZ);
+    if(!rpcSendMessage(encMsg, l + UNENCSZ))
+        return -1;
+
     delete encMsg;
     return m_clientLastMsgId;
 }
 
-void Session::rpcSendMessage(void *data, qint32 len) {
+bool Session::rpcSendMessage(void *data, qint32 len) {
     qint32 written;
     Q_UNUSED(written);
 
@@ -506,15 +508,20 @@ void Session::rpcSendMessage(void *data, qint32 len) {
 
     if (totalLen < 0x7f) {
         written = writeOut(&totalLen, 1);
-        Q_ASSERT(written == 1);
+        if(written != 1)
+            return false;
     } else {
         totalLen = (totalLen << 8) | 0x7f;
         written = writeOut(&totalLen, 4);
-        Q_ASSERT(written == 4);
+        if(written != 4)
+            return false;
     }
 
     written = writeOut(data, len);
-    Q_ASSERT(written == len);
+    if(written != len)
+        return false;
+
+    return true;
 }
 
 
