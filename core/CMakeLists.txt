@@ -1,10 +1,7 @@
 set (CORE_HEADERS
     abstractapi.h
     api.h
-    asserter.h
     connection.h
-    constants.h
-    cryptoutils.h
     dc.h
     dcauth.h
     dcprovider.h
@@ -16,9 +13,7 @@ set (CORE_HEADERS
     querymethods.h
     session.h
     sessionmanager.h
-    settings.h
-    tlvalues.h
-    utils.h)
+    settings.h)
 
 if(NOT CLICK_MODE)
 INSTALL(FILES ${CORE_HEADERS}

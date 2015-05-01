@@ -113,7 +113,9 @@ void Session::processRpcMessage(InboundPkt &inboundPkt) {
     const qint32 UNENCSZ = offsetof (EncryptedMsg, serverSalt);
     qCDebug(TG_CORE_SESSION) << "processRpcMessage(), len=" << len;
 
-    Q_ASSERT(len >= MINSZ && (len & 15) == (UNENCSZ & 15));
+    if(len < MINSZ || (len & 15) != (UNENCSZ & 15))
+        return;
+
     Q_ASSERT(m_dc->authKeyId());
     mAsserter.check(enc->authKeyId == m_dc->authKeyId());
     //msg_key is used to compute AES key and to decrypt the received message
@@ -121,7 +123,8 @@ void Session::processRpcMessage(InboundPkt &inboundPkt) {
     qint32 l = CryptoUtils::getInstance()->padAESDecrypt((char *)&enc->serverSalt, len - UNENCSZ, (char *)&enc->serverSalt, len - UNENCSZ);
     Q_UNUSED(l);
     Q_ASSERT(l == len - UNENCSZ);
-    Q_ASSERT(!(enc->msgLen & 3) && enc->msgLen > 0 && enc->msgLen <= len - MINSZ && len - MINSZ - enc->msgLen <= 12);
+    if( !(!(enc->msgLen & 3) && enc->msgLen > 0 && enc->msgLen <= len - MINSZ && len - MINSZ - enc->msgLen <= 12) )
+        return;
 
     //check msg_key is indeed equal to SHA1 of the plaintext obtained after decription (without final padding bytes).
     static uchar sha1Buffer[20];
@@ -253,6 +256,9 @@ void Session::workMsgsAck(InboundPkt &inboundPkt, qint64 msgId) {
     for (qint32 i = 0; i < n; i++) {
         qint64 id = inboundPkt.fetchLong ();
         Query *q = m_pendingQueries.value(id);
+        if(!q)
+            return;
+
         Q_ASSERT(q);
         q->setAcked(true);
     }
@@ -554,7 +560,9 @@ qint64 Session::sendQuery(OutboundPkt &outboundPkt, QueryMethods *methods, QVari
 }
 
 void Session::recomposeAndSendQuery(Query *q) {
-    Q_ASSERT(q);
+    if(!q)
+        return;
+
     qCDebug(TG_CORE_SESSION) << "Resending query with previous msgId" << QString::number(q->msgId(), 16);
     q->setMsgId(encryptSendMessage((qint32 *)q->data(), q->dataLength(), 1));
     q->setSeqNo(m_seqNo - 1);
