@@ -295,7 +295,8 @@ void FileHandler::onUploadGetFileSessionCreated() {
 
 void FileHandler::onUploadGetFileAnswer(qint64 msgId, StorageFileType type, qint32 mtime, QByteArray bytes) {
     DownloadFile::Ptr f = mDownloadsMap.take(msgId);
-    Q_ASSERT(!f.isNull());
+    if(f.isNull())
+        return;
 
     if (mCancelDownloadsMap.take(f->id())) {
         Q_EMIT uploadCancelFileAnswer(f->id(), true);

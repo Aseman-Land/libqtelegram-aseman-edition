@@ -63,6 +63,9 @@ bool Settings::loadSettings(const QString &phoneNumber, const QString &baseConfi
 
     if (!m_pubKey) {
         m_pubKey = Utils::rsaLoadPublicKey(publicKeyFile);
+        if(!m_pubKey)
+            return false;
+
         m_pkFingerprint = Utils::computeRSAFingerprint(m_pubKey);
         qCDebug(TG_CORE_SETTINGS) << "loaded Telegram public key from file:" << publicKeyFile;
     }
