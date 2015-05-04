@@ -1,10 +1,23 @@
 QT += gui
 QT += network
 
-TARGET = qtelegram
+TARGET = qtelegram-ae
 TEMPLATE = lib
 DEFINES += LIBQTELEGRAM_LIBRARY
-LIBS += -lssl -lcrypto -lz
+
+win32 {
+    LIBS += -L$$OUT_PWD/$$DESTDIR -lssleay32 -lcrypto -lz
+    INCLUDEPATH += $$OUT_PWD/$$DESTDIR/include
+} else {
+macx {
+    QT += macextras
+    LIBS += -lssl -lcrypto -lz
+    INCLUDEPATH += /usr/include/
+} else {
+    LIBS += -lssl -lcrypto -lz
+    INCLUDEPATH += /usr/include/
+}
+}
 
 SOURCES += \
     util/utils.cpp \
@@ -131,4 +144,21 @@ HEADERS += \
     libqtelegram_global.h
 
 
+contains(QMAKE_HOST.arch, x86_64) {
+    LIB_PATH = x86_64-linux-gnu
+} else {
+    LIB_PATH = i386-linux-gnu
+}
 
+isEmpty(PREFIX) {
+    PREFIX = /usr
+}
+
+INSTALL_PREFIX = $$PREFIX/include/libqtelegram-ae
+INSTALL_HEADERS = $$HEADERS
+include(qmake/headerinstall.pri)
+
+target = $$TARGET
+target.path = $$PREFIX/lib/$$LIB_PATH
+
+INSTALLS += target
