@@ -10,6 +10,7 @@ win32 {
     INCLUDEPATH += $$OUT_PWD/$$DESTDIR/include
 } else {
 macx {
+    CONFIG += staticlib
     QT += macextras
     LIBS += -lssl -lcrypto -lz
     INCLUDEPATH += /usr/include/
@@ -143,11 +144,12 @@ HEADERS += \
     telegram.h \
     libqtelegram_global.h
 
-
-contains(QMAKE_HOST.arch, x86_64) {
-    LIB_PATH = x86_64-linux-gnu
-} else {
-    LIB_PATH = i386-linux-gnu
+linux {
+    contains(QMAKE_HOST.arch, x86_64) {
+        LIB_PATH = x86_64-linux-gnu
+    } else {
+        LIB_PATH = i386-linux-gnu
+    }
 }
 
 isEmpty(PREFIX) {

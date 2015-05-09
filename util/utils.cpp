@@ -24,6 +24,9 @@
 #include <openssl/pem.h>
 #include <openssl/err.h>
 #include <zlib.h>
+#if (QT_VERSION < QT_VERSION_CHECK(5, 4, 0))
+#include <sys/utsname.h>
+#endif
 
 #include <QDebug>
 #include <QEventLoop>
@@ -297,11 +300,23 @@ qint64 Utils::getKeyFingerprint(uchar *sharedKey) {
 }
 
 QString Utils::getDeviceModel() {
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
     return QSysInfo::buildCpuArchitecture();
+#else
+    struct utsname st;
+    uname(&st);
+    return QString(st.machine);
+#endif
 }
 
 QString Utils::getSystemVersion() {
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
     return QSysInfo::kernelType() + " " + QSysInfo::kernelVersion() + " " + QSysInfo::buildAbi();
+#else
+    struct utsname st;
+    uname(&st);
+    return QString(QString(st.sysname) + " " + QString(st.release) + " " + QString(st.version));
+#endif
 }
 
 QString Utils::getAppVersion() {

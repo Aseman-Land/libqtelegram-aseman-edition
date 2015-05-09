@@ -816,7 +816,9 @@ void Telegram::processSecretChatUpdate(const Update &update) {
             qCDebug(TG_LIB_SECRET) << "Waiting for peer to accept chat" << chatId;
 
             if (encryptedChat.participantId() != ourId()) {
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
                 qCritical(TG_LIB_SECRET()) << "Received request to create a secret chat is not for you!";
+#endif
                 return;
             }
 
