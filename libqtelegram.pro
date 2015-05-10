@@ -1,10 +1,23 @@
 QT += gui
 QT += network
 
-TARGET = qtelegram
+TARGET = qtelegram-ae
 TEMPLATE = lib
 DEFINES += LIBQTELEGRAM_LIBRARY
-LIBS += -lssl -lcrypto -lz
+
+win32 {
+    LIBS += -L$$OUT_PWD/$$DESTDIR -lssleay32 -lcrypto -lz
+    INCLUDEPATH += $$OUT_PWD/$$DESTDIR/include
+} else {
+macx {
+    QT += macextras
+    LIBS += -lssl -lcrypto -lz
+    INCLUDEPATH += /usr/include/
+} else {
+    LIBS += -lssl -lcrypto -lz
+    INCLUDEPATH += /usr/include/
+}
+}
 
 SOURCES += \
     util/utils.cpp \

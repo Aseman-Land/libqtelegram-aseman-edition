@@ -186,7 +186,7 @@ void DcProvider::processDcReady(DC *dc) {
             transferAuth();
             break;
         default:
-            Q_ASSERT(0); // it's impossible getting here. This is done to avoid warning when compilation
+//            Q_ASSERT(0); // it's impossible getting here. This is done to avoid warning when compilation
             break;
         }
 
