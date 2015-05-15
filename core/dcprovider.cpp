@@ -19,6 +19,8 @@
 #include "util/constants.h"
 #include "session.h"
 
+#include <QDebug>
+
 Q_LOGGING_CATEGORY(TG_CORE_DCPROVIDER, "tg.core.dcprovider")
 
 DcProvider::DcProvider() : mApi(0), mPendingDcs(0), mPendingTransferSessions(0), mWorkingDcSession(0) {
@@ -107,6 +109,7 @@ void DcProvider::initialize() {
                 defaultDcHost = TEST_DEFAULT_DC_HOST;
                 defaultDcPort = TEST_DEFAULT_DC_PORT;
             }
+
             // create a dc authenticator based in dc info
             mDcs[defaultDcId]->setHost(defaultDcHost);
             mDcs[defaultDcId]->setPort(defaultDcPort);
@@ -251,12 +254,17 @@ void DcProvider::onConfigReceived(qint64 msgId, qint32 date, bool testMode, qint
 
     mPendingDcs = dcOptions.length() -1; //all the received options but the default one, yet used
 
+    Settings *settings = Settings::getInstance();
+    qint32 defaultDcId = settings->testMode() ? TEST_DEFAULT_DC_ID : PRODUCTION_DEFAULT_DC_ID;
+
     Q_FOREACH (DcOption dcOption, dcOptions) {
         qCDebug(TG_CORE_DCPROVIDER) << "dcOption | id =" << dcOption.id() << ", ipAddress =" << dcOption.ipAddress() <<
                     ", port =" << dcOption.port() << ", hostname =" << dcOption.hostname();
 
         // for every new DC or not authenticated DC, insert into m_dcs and authenticate
         DC *dc = mDcs.value(dcOption.id());
+        if(dc && dc->id() == defaultDcId)
+            continue;
 
         // check if dc is not null or if received host and port are not equals than settings ones
         if ((!dc) || ((dc->host() != dcOption.ipAddress()) || (dc->port() != dcOption.port()))) {
