@@ -6,8 +6,8 @@ TEMPLATE = lib
 DEFINES += LIBQTELEGRAM_LIBRARY
 
 win32 {
-    LIBS += -L$$OUT_PWD/$$DESTDIR -lssleay32 -lcrypto -lz
-    INCLUDEPATH += $$OUT_PWD/$$DESTDIR/include
+    LIBS += -LD:/Projects/cutegram-deps/lib -lssleay32 -lcrypto -lz
+    INCLUDEPATH += D:/Projects/cutegram-deps/include
 } else {
 macx {
     CONFIG += staticlib

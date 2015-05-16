@@ -45,11 +45,14 @@ public:
     void setMethods(QueryMethods *methods) { m_methods = methods; }
     bool acked() { return m_acked; }
     void setAcked(bool acked) { m_acked = acked; }
+    QString name() { return m_name; }
+    void setName(QString name) { m_name = name; }
     QVariant extra() { return mExtra; }
     void setExtra(QVariant extra) { mExtra = extra; }
     void *data();
     void setData(void *data, qint32 dataLength);
     qint32 decreaseResends();
+
 
 Q_SIGNALS:
     void timeout(Query *q);
@@ -66,6 +69,7 @@ private:
     bool m_acked;
     QVariant mExtra;
     qint32 m_resends;
+    QString m_name;
 };
 
 #endif // QUERY_H

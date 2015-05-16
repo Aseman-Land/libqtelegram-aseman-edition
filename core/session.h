@@ -40,7 +40,7 @@ public:
     ~Session();
 
     DC *dc();
-    qint64 sendQuery(OutboundPkt &outboundPkt, QueryMethods *methods, QVariant extra = QVariant());
+    qint64 sendQuery(OutboundPkt &outboundPkt, QueryMethods *methods, QVariant extra = QVariant(), QString name = QString());
 
     inline qint64 sessionId() { return m_sessionId; }
     inline bool initConnectionNeeded() { return m_initConnectionNeeded; }

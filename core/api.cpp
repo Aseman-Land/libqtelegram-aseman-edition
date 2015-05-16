@@ -181,7 +181,7 @@ Api::Api(Session *session, QObject *parent) :
 }
 
 void Api::onError(Query *q, qint32 errorCode, const QString &errorText) {
-    Q_EMIT error(q->msgId(), errorCode, errorText);
+    Q_EMIT error(q->msgId(), errorCode, QString("%1: %2").arg(q->name(), errorText) );
 }
 
 //
@@ -211,7 +211,7 @@ qint64 Api::helpGetConfig() {
         mMainSession->setInitConnectionNeeded(false);
     }
     p.appendInt(TL_HelpGetConfig);
-    return mMainSession->sendQuery(p, &helpGetConfigMethods);
+    return mMainSession->sendQuery(p, &helpGetConfigMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 void Api::onHelpGetInviteTextAnswer(Query *q, InboundPkt &inboundPkt) {
@@ -228,7 +228,7 @@ qint64 Api::helpGetInviteText(const QString &langCode) {
     }
     p.appendInt(TL_HelpGetInviteText);
     p.appendQString(langCode);
-    return mMainSession->sendQuery(p, &helpGetInviteTextMethods);
+    return mMainSession->sendQuery(p, &helpGetInviteTextMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 // ### auth.checkPhone()
@@ -251,7 +251,7 @@ qint64 Api::authCheckPhone(const QString &phoneNumber) {
     }
     p.appendInt(TL_AuthCheckPhone);
     p.appendQString(phoneNumber);
-    qint64 resultId = mMainSession->sendQuery(p, &authCheckPhoneMethods);
+    qint64 resultId = mMainSession->sendQuery(p, &authCheckPhoneMethods, QVariant(), __PRETTY_FUNCTION__ );
     Q_EMIT authCheckPhoneSent(resultId, phoneNumber);
     return resultId;
 }
@@ -279,7 +279,7 @@ qint64 Api::authSendCode(const QString &phoneNumber, qint32 smsType, qint32 apiI
     p.appendInt(apiId);
     p.appendQString(apiHash);
     p.appendQString(langCode);
-    return mMainSession->sendQuery(p, &authSendCodeMethods);
+    return mMainSession->sendQuery(p, &authSendCodeMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 // ### auth.sendSms()
@@ -292,7 +292,7 @@ qint64 Api::authSendSms(const QString &phoneNumber, const QString &phoneCodeHash
     p.appendInt(TL_AuthSendSms);
     p.appendQString(phoneNumber);
     p.appendQString(phoneCodeHash);
-    return mMainSession->sendQuery(p, &authSendSmsMethods);
+    return mMainSession->sendQuery(p, &authSendSmsMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 // ## auth.sendCall()
@@ -305,7 +305,7 @@ qint64 Api::authSendCall(const QString &phoneNumber, const QString &phoneCodeHas
     p.appendInt(TL_AuthSendCall);
     p.appendQString(phoneNumber);
     p.appendQString(phoneCodeHash);
-    return mMainSession->sendQuery(p, &authSendCallMethods);
+    return mMainSession->sendQuery(p, &authSendCallMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 // ### auth.signIn()
@@ -326,7 +326,7 @@ qint64 Api::authSignIn(const QString &phoneNumber, const QString &phoneCodeHash,
     p.appendQString(phoneNumber);
     p.appendQString(phoneCodeHash);
     p.appendQString(phoneCode);
-    return mMainSession->sendQuery(p, &authSignInMethods);
+    return mMainSession->sendQuery(p, &authSignInMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 // ### auth.signUp()
@@ -349,7 +349,7 @@ qint64 Api::authSignUp(const QString &phoneNumber, const QString &phoneCodeHash,
     p.appendQString(phoneCode);
     p.appendQString(firstName);
     p.appendQString(lastName);
-    return mMainSession->sendQuery(p, &authSignUpMethods);
+    return mMainSession->sendQuery(p, &authSignUpMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 // ### auth.logOut
@@ -360,7 +360,7 @@ void Api::onAuthLogOutAnswer(Query *q, InboundPkt &inboundPkt) {
 qint64 Api::authLogOut() {
     OutboundPkt p;
     p.appendInt(TL_AuthLogOut);
-    return mMainSession->sendQuery(p, &authLogOutMethods);
+    return mMainSession->sendQuery(p, &authLogOutMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 // ### auth.sendInvites
@@ -377,7 +377,7 @@ qint64 Api::authSendInvites(const QStringList &phoneNumbers, const QString &mess
         p.appendQString(phoneNumber);
     }
     p.appendQString(message);
-    return mMainSession->sendQuery(p, &authSendInvitesMethods);
+    return mMainSession->sendQuery(p, &authSendInvitesMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 // ### auth.resetAuthorization
@@ -388,7 +388,7 @@ void Api::onAuthResetAuthorizationsAnswer(Query *q, InboundPkt &inboundPkt) {
 qint64 Api::authResetAuthorizations() {
     OutboundPkt p;
     p.appendInt(TL_AuthResetAuthorizations);
-    return mMainSession->sendQuery(p, &authResetAuthorizationsMethods);
+    return mMainSession->sendQuery(p, &authResetAuthorizationsMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 // ### auth.importAuthorization
@@ -408,7 +408,7 @@ qint64 Api::authImportAuthorization(qint32 id, const QByteArray &bytes) {
     p.appendInt(TL_AuthImportAuthorization);
     p.appendInt(id);
     p.appendBytes(bytes);
-    return mMainSession->sendQuery(p, &authImportAuthorizationMethods);
+    return mMainSession->sendQuery(p, &authImportAuthorizationMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 // ### auth.exportAuthorization
@@ -423,7 +423,7 @@ qint64 Api::authExportAuthorization(qint32 dcId) {
     OutboundPkt p;
     p.appendInt(TL_AuthExportAuthorization);
     p.appendInt(dcId);
-    return mMainSession->sendQuery(p, &authExportAuthorizationMethods);
+    return mMainSession->sendQuery(p, &authExportAuthorizationMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 //
@@ -444,7 +444,7 @@ qint64 Api::accountRegisterDevice(qint32 tokenType, const QString &token, const 
     p.appendQString(appVersion);
     p.appendBool(appSandbox);
     p.appendQString(langCode);
-    return mMainSession->sendQuery(p, &accountRegisterDeviceMethods);
+    return mMainSession->sendQuery(p, &accountRegisterDeviceMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 // ### account.unregisterDevice
@@ -457,7 +457,7 @@ qint64 Api::accountUnregisterDevice(qint32 tokenType, const QString &token) {
     p.appendInt(TL_AccountUnregisterDevice);
     p.appendInt(tokenType);
     p.appendQString(token);
-    return mMainSession->sendQuery(p, &accountUnregisterDeviceMethods);
+    return mMainSession->sendQuery(p, &accountUnregisterDeviceMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 // ### account.updateNotifySettings
@@ -470,7 +470,7 @@ qint64 Api::accountUpdateNotifySettings(const InputNotifyPeer &peer, const Input
     p.appendInt(TL_AccountUpdateNotifySettings);
     p.appendInputNotifyPeer(peer);
     p.appendInputPeerNotifySettings(settings);
-    return mMainSession->sendQuery(p, &accountUpdateNotifySettingsMethods);
+    return mMainSession->sendQuery(p, &accountUpdateNotifySettingsMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 // ### account.getNotifySettings
@@ -482,7 +482,7 @@ qint64 Api::accountGetNotifySettings(const InputNotifyPeer &peer) {
     OutboundPkt p;
     p.appendInt(TL_AccountGetNotifySettings);
     p.appendInputNotifyPeer(peer);
-    return mMainSession->sendQuery(p, &accountGetNotifySettingsMethods);
+    return mMainSession->sendQuery(p, &accountGetNotifySettingsMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 // ### account.resetNotifySettings
@@ -493,7 +493,7 @@ void Api::onAccountResetNotifySettingsAnswer(Query *q, InboundPkt &inboundPkt) {
 qint64 Api::accountResetNotifySettings() {
     OutboundPkt p;
     p.appendInt(TL_AccountResetNotifySettings);
-    return mMainSession->sendQuery(p, &accountResetNotifySettingsMethods);
+    return mMainSession->sendQuery(p, &accountResetNotifySettingsMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 // ### account.updateProfile
@@ -506,7 +506,7 @@ qint64 Api::accountUpdateProfile(const QString &firstName, const QString &lastNa
     p.appendInt(TL_AccountUpdateProfile);
     p.appendQString(firstName);
     p.appendQString(lastName);
-    return mMainSession->sendQuery(p, &accountUpdateProfileMethods);
+    return mMainSession->sendQuery(p, &accountUpdateProfileMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 // ### account.updateStatus
@@ -518,7 +518,7 @@ qint64 Api::accountUpdateStatus(bool offline) {
     OutboundPkt p;
     p.appendInt(TL_AccountUpdateStatus);
     p.appendBool(offline);
-    return mMainSession->sendQuery(p, &accountUpdateStatusMethods);
+    return mMainSession->sendQuery(p, &accountUpdateStatusMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 // ### account.getWallPapers
@@ -535,7 +535,7 @@ void Api::onAccountGetWallPapersAnswer(Query *q, InboundPkt &inboundPkt) {
 qint64 Api::accountGetWallPapers() {
     OutboundPkt p;
     p.appendInt(TL_AccountGetWallPapers);
-    return mMainSession->sendQuery(p, &accountGetWallPapersMethods);
+    return mMainSession->sendQuery(p, &accountGetWallPapersMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 // ### photos.uploadProfilePhoto
@@ -558,7 +558,7 @@ qint64 Api::photosUploadProfilePhoto(const InputFile &file, const QString &capti
     p.appendQString(caption);
     p.appendInputGeoPoint(geoPoint);
     p.appendInputPhotoCrop(crop);
-    return mMainSession->sendQuery(p, &photosUploadProfilePhotoMethods);
+    return mMainSession->sendQuery(p, &photosUploadProfilePhotoMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 // ### photos.updateProfilePhoto
@@ -571,7 +571,7 @@ qint64 Api::photosUpdateProfilePhoto(const InputPhoto &id, const InputPhotoCrop 
     p.appendInt(TL_PhotosUpdateProfilePhoto);
     p.appendInputPhoto(id);
     p.appendInputPhotoCrop(crop);
-    return mMainSession->sendQuery(p, &photosUpdateProfilePhotoMethods);
+    return mMainSession->sendQuery(p, &photosUpdateProfilePhotoMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 //
@@ -596,7 +596,7 @@ qint64 Api::usersGetUsers(const QList<InputUser> &users) {
     Q_FOREACH (InputUser user, users) {
         p.appendInputUser(user);
     }
-    return mMainSession->sendQuery(p, &usersGetUsersMethods);
+    return mMainSession->sendQuery(p, &usersGetUsersMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 // ### users.getFullUser
@@ -616,7 +616,7 @@ qint64 Api::usersGetFullUser(const InputUser &user) {
     OutboundPkt p;
     p.appendInt(TL_UsersGetFullUser);
     p.appendInputUser(user);
-    return mMainSession->sendQuery(p, &usersGetFullUserMethods);
+    return mMainSession->sendQuery(p, &usersGetFullUserMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 // ### photos.getUserPhotos
@@ -655,7 +655,7 @@ qint64 Api::photosGetUserPhotos(const InputUser &user, qint32 offset, qint32 max
     p.appendInt(offset);
     p.appendInt(maxId);
     p.appendInt(limit);
-    return mMainSession->sendQuery(p, &photosGetUserPhotosMethods);
+    return mMainSession->sendQuery(p, &photosGetUserPhotosMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 //
@@ -675,7 +675,7 @@ void Api::onContactsGetStatusesAnswer(Query *q, InboundPkt &inboundPkt) {
 qint64 Api::contactsGetStatuses() {
     OutboundPkt p;
     p.appendInt(TL_ContactsGetStatuses);
-    return mMainSession->sendQuery(p, &contactsGetStatusesMethods);
+    return mMainSession->sendQuery(p, &contactsGetStatusesMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 // ### contacts.getContacts
@@ -707,7 +707,7 @@ qint64 Api::contactsGetContacts(const QString &hash) {
     OutboundPkt p;
     p.appendInt(TL_ContactsGetContacts);
     p.appendQString(hash);
-    return mMainSession->sendQuery(p, &contactsGetContactsMethods);
+    return mMainSession->sendQuery(p, &contactsGetContactsMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 // ### contacts.importContacts
@@ -746,7 +746,7 @@ qint64 Api::contactsImportContacts(const QList<InputContact> contacts, bool repl
         p.appendInputContact(contact);
     }
     p.appendBool(replace);
-    return mMainSession->sendQuery(p, &contactsImportContactsMethods);
+    return mMainSession->sendQuery(p, &contactsImportContactsMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 // ### contacts.deleteContact
@@ -762,7 +762,7 @@ qint64 Api::contactsDeleteContact(const InputUser &id) {
     OutboundPkt p;
     p.appendInt(TL_ContactsDeleteContact);
     p.appendInputUser(id);
-    return mMainSession->sendQuery(p, &contactsDeleteContactMethods);
+    return mMainSession->sendQuery(p, &contactsDeleteContactMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 // ### contacts.deleteContacts
@@ -778,7 +778,7 @@ qint64 Api::contactsDeleteContacts(const QList<InputUser> &ids) {
     Q_FOREACH (InputUser id, ids) {
         p.appendInputUser(id);
     }
-    return mMainSession->sendQuery(p, &contactsDeleteContactsMethods);
+    return mMainSession->sendQuery(p, &contactsDeleteContactsMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 //
@@ -793,7 +793,7 @@ qint64 Api::contactsBlock(const InputUser &id) {
     OutboundPkt p;
     p.appendInt(TL_ContactsBlock);
     p.appendInputUser(id);
-    return mMainSession->sendQuery(p, &contactsBlockMethods);
+    return mMainSession->sendQuery(p, &contactsBlockMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 // ### contacts.unblock
@@ -805,7 +805,7 @@ qint64 Api::contactsUnblock(const InputUser &id) {
     OutboundPkt p;
     p.appendInt(TL_ContactsUnblock);
     p.appendInputUser(id);
-    return mMainSession->sendQuery(p, &contactsUnblockMethods);
+    return mMainSession->sendQuery(p, &contactsUnblockMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 // ### contacts.getBlocked
@@ -842,7 +842,7 @@ qint64 Api::contactsGetBlocked(qint32 offset, qint32 limit) {
     p.appendInt(TL_ContactsGetBlocked);
     p.appendInt(offset);
     p.appendInt(limit);
-    return mMainSession->sendQuery(p, &contactsGetBlockedMethods);
+    return mMainSession->sendQuery(p, &contactsGetBlockedMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 //
@@ -875,7 +875,7 @@ qint64 Api::messagesSendMessage(const InputPeer &peer, const QString &message, q
     p.appendInputPeer(peer);
     p.appendQString(message);
     p.appendLong(randomId);
-    return mMainSession->sendQuery(p, &messagesSendMessageMethods);
+    return mMainSession->sendQuery(p, &messagesSendMessageMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 // ### messages.sendMedia
@@ -921,7 +921,7 @@ qint64 Api::messagesSendMedia(const InputPeer &peer, const InputMedia &media, qi
     p.appendInputPeer(peer);
     p.appendInputMedia(media);
     p.appendLong(randomId);
-    return mMainSession->sendQuery(p, &messagesSendMediaMethods);
+    return mMainSession->sendQuery(p, &messagesSendMediaMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 // ### messages.setTyping
@@ -934,7 +934,7 @@ qint64 Api::messagesSetTyping(const InputPeer &peer, const SendMessageAction &ac
     p.appendInt(TL_MessagesSetTyping);
     p.appendInputPeer(peer);
     p.appendSendMessageAction(action);
-    return mMainSession->sendQuery(p, &messagesSetTypingMethods);
+    return mMainSession->sendQuery(p, &messagesSetTypingMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 // ### messages.getMessages
@@ -982,7 +982,7 @@ qint64 Api::messagesGetMessages(const QList<qint32> &ids) {
     Q_FOREACH (qint32 id, ids) {
         p.appendInt(id);
     }
-    return mMainSession->sendQuery(p, &messagesGetMessagesMethods);
+    return mMainSession->sendQuery(p, &messagesGetMessagesMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 // ### messages.getDialogs
@@ -1035,7 +1035,7 @@ qint64 Api::messagesGetDialogs(qint32 offset, qint32 maxId, qint32 limit) {
     p.appendInt(offset);
     p.appendInt(maxId);
     p.appendInt(limit);
-    return mMainSession->sendQuery(p, &messagesGetDialogsMethods);
+    return mMainSession->sendQuery(p, &messagesGetDialogsMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 // ### messages.getHistory
@@ -1082,7 +1082,7 @@ qint64 Api::messagesGetHistory(const InputPeer &peer, qint32 offset, qint32 maxI
     p.appendInt(offset);
     p.appendInt(maxId);
     p.appendInt(limit);
-    return mMainSession->sendQuery(p, &messagesGetHistoryMethods);
+    return mMainSession->sendQuery(p, &messagesGetHistoryMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 // ### messages.search
@@ -1133,7 +1133,7 @@ qint64 Api::messagesSearch(const InputPeer &peer, const QString &q, const Messag
     p.appendInt(offset);
     p.appendInt(maxId);
     p.appendInt(limit);
-    return mMainSession->sendQuery(p, &messagesSearchMethods);
+    return mMainSession->sendQuery(p, &messagesSearchMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 // ### messages.readHistory
@@ -1156,7 +1156,7 @@ qint64 Api::messagesReadHistory(const InputPeer &peer, qint32 maxId, qint32 offs
     p.appendInt(maxId);
     p.appendInt(offset);
     p.appendBool(readContents);
-    return mMainSession->sendQuery(p, &messagesReadHistoryMethods);
+    return mMainSession->sendQuery(p, &messagesReadHistoryMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 // ### messages.readMessageContents
@@ -1178,7 +1178,7 @@ qint64 Api::messagesReadMessageContents(const QList<qint32> &ids) {
     Q_FOREACH (qint32 id, ids) {
         p.appendInt(id);
     }
-    return mMainSession->sendQuery(p, &messagesReadMessageContentsMethods);
+    return mMainSession->sendQuery(p, &messagesReadMessageContentsMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 
@@ -1196,7 +1196,7 @@ qint64 Api::messagesDeleteHistory(const InputPeer &peer, qint32 offset) {
     p.appendInt(TL_MessagesDeleteHistory);
     p.appendInputPeer(peer);
     p.appendInt(offset);
-    return mMainSession->sendQuery(p, &messagesDeleteHistoryMethods);
+    return mMainSession->sendQuery(p, &messagesDeleteHistoryMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 // ### messages.deleteMessages
@@ -1218,7 +1218,7 @@ qint64 Api::messagesDeleteMessages(const QList<qint32> &ids) {
     Q_FOREACH (qint32 id, ids) {
         p.appendInt(id);
     }
-    return mMainSession->sendQuery(p, &messagesDeleteMessagesMethods);
+    return mMainSession->sendQuery(p, &messagesDeleteMessagesMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 // ### messages.restoreMessages
@@ -1240,7 +1240,7 @@ qint64 Api::messagesRestoreMessages(const QList<qint32> &ids) {
     Q_FOREACH (qint32 id, ids) {
         p.appendInt(id);
     }
-    return mMainSession->sendQuery(p, &messagesRestoreMessagesMethods);
+    return mMainSession->sendQuery(p, &messagesRestoreMessagesMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 // ### messages.receivedMessages
@@ -1258,7 +1258,7 @@ qint64 Api::messagesReceivedMessages(qint32 maxId) {
     OutboundPkt p;
     p.appendInt(TL_MessagesReceivedMessages);
     p.appendInt(maxId);
-    return mMainSession->sendQuery(p, &messagesReceivedMessagesMethods);
+    return mMainSession->sendQuery(p, &messagesReceivedMessagesMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 // ### messages.forwardMessage
@@ -1304,7 +1304,7 @@ qint64 Api::messagesForwardMessage(const InputPeer &peer, qint32 id, qint64 rand
     p.appendInputPeer(peer);
     p.appendInt(id);
     p.appendLong(randomId);
-    return mMainSession->sendQuery(p, &messagesForwardMessageMethods);
+    return mMainSession->sendQuery(p, &messagesForwardMessageMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 // ### messages.forwardMessages
@@ -1359,7 +1359,7 @@ qint64 Api::messagesForwardMessages(const InputPeer &peer, const QList<qint32> &
     Q_FOREACH (qint32 id, ids) {
         p.appendInt(id);
     }
-    return mMainSession->sendQuery(p, &messagesForwardMessagesMethods);
+    return mMainSession->sendQuery(p, &messagesForwardMessagesMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 // ### messages.sendBroadcast
@@ -1415,7 +1415,7 @@ qint64 Api::messagesSendBroadcast(const QList<InputUser> &contacts, const QStrin
     }
     p.appendQString(message);
     p.appendInputMedia(media);
-    return mMainSession->sendQuery(p, &messagesSendBroadcastMethods);
+    return mMainSession->sendQuery(p, &messagesSendBroadcastMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 //
@@ -1449,7 +1449,7 @@ qint64 Api::messagesGetChats(const QList<qint32> chatIds) {
     Q_FOREACH (qint32 id, chatIds) {
         p.appendInt(id);
     }
-    return mMainSession->sendQuery(p, &messagesGetChatsMethods);
+    return mMainSession->sendQuery(p, &messagesGetChatsMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 // ### messages.getFullChat
@@ -1477,7 +1477,7 @@ qint64 Api::messagesGetFullChat(qint32 chatId) {
     OutboundPkt p;
     p.appendInt(TL_MessagesGetFullChat);
     p.appendInt(chatId);
-    return mMainSession->sendQuery(p, &messagesGetFullChatMethods);
+    return mMainSession->sendQuery(p, &messagesGetFullChatMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 // ### messages.editChatTitle
@@ -1522,7 +1522,7 @@ qint64 Api::messagesEditChatTitle(qint32 chatId, const QString &title) {
     p.appendInt(TL_MessagesEditChatTitle);
     p.appendInt(chatId);
     p.appendQString(title);
-    return mMainSession->sendQuery(p, &messagesEditChatTitleMethods);
+    return mMainSession->sendQuery(p, &messagesEditChatTitleMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 // ### messages.editChatPhoto
@@ -1567,7 +1567,7 @@ qint64 Api::messagesEditChatPhoto(qint32 chatId, const InputChatPhoto &photo) {
     p.appendInt(TL_MessagesEditChatPhoto);
     p.appendInt(chatId);
     p.appendInputChatPhoto(photo);
-    return mMainSession->sendQuery(p, &messagesEditChatPhotoMethods);
+    return mMainSession->sendQuery(p, &messagesEditChatPhotoMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 // ### messages.addChatUser
@@ -1613,7 +1613,7 @@ qint64 Api::messagesAddChatUser(qint32 chatId, const InputUser &user, qint32 fwd
     p.appendInt(chatId);
     p.appendInputUser(user);
     p.appendInt(fwdLimit);
-    return mMainSession->sendQuery(p, &messagesAddChatUserMethods);
+    return mMainSession->sendQuery(p, &messagesAddChatUserMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 // ### messages.deleteChatUser
@@ -1658,7 +1658,7 @@ qint64 Api::messagesDeleteChatUser(qint32 chatId, const InputUser &user) {
     p.appendInt(TL_MessagesDeleteChatUser);
     p.appendInt(chatId);
     p.appendInputUser(user);
-    return mMainSession->sendQuery(p, &messagesDeleteChatUserMethods);
+    return mMainSession->sendQuery(p, &messagesDeleteChatUserMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 // ### messages.createChat
@@ -1707,7 +1707,7 @@ qint64 Api::messagesCreateChat(const QList<InputUser> &users, const QString &tit
         p.appendInputUser(user);
     }
     p.appendQString(title);
-    return mMainSession->sendQuery(p, &messagesCreateChatMethods);
+    return mMainSession->sendQuery(p, &messagesCreateChatMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 //
@@ -1734,7 +1734,7 @@ qint64 Api::messagesGetDhConfig(qint32 version, qint32 randomLength) {
     p.appendInt(TL_MessagesGetDhConfig);
     p.appendInt(version);
     p.appendInt(randomLength);
-    return mMainSession->sendQuery(p, &messagesGetDhConfigMethods);
+    return mMainSession->sendQuery(p, &messagesGetDhConfigMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 // ### messages.requestEncryption
@@ -1748,7 +1748,7 @@ qint64 Api::messagesRequestEncryption(const InputUser &user, qint32 randomId, QB
     p.appendInputUser(user);
     p.appendInt(randomId);
     p.appendBytes(g_a);
-    return mMainSession->sendQuery(p, &messagesRequestEncryptionMethods);
+    return mMainSession->sendQuery(p, &messagesRequestEncryptionMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 // ### message.acceptEncryption
@@ -1762,7 +1762,7 @@ qint64 Api::messagesAcceptEncryption(const InputEncryptedChat &inputEncryptedCha
     p.appendInputEncryptedChat(inputEncryptedChat);
     p.appendBytes(g_b);
     p.appendLong(keyFingerprint);
-    return mMainSession->sendQuery(p, &messagesAcceptEncryptionMethods);
+    return mMainSession->sendQuery(p, &messagesAcceptEncryptionMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 // ### messages.discardEncryption
@@ -1774,7 +1774,7 @@ qint64 Api::messagesDiscardEncryption(qint32 chatId) {
     OutboundPkt p;
     p.appendInt(TL_MessagesDiscardEncryption);
     p.appendInt(chatId);
-    return mMainSession->sendQuery(p, &messagesDiscardEncryptionMethods);
+    return mMainSession->sendQuery(p, &messagesDiscardEncryptionMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 // ### messages.setEncryptedTyping
@@ -1787,7 +1787,7 @@ qint64 Api::messagesSetEncryptedTyping(const InputEncryptedChat &inputEncryptedC
     p.appendInt(TL_MessagesSetEncryptedTyping);
     p.appendInputEncryptedChat(inputEncryptedChat);
     p.appendBool(typing);
-    return mMainSession->sendQuery(p, &messagesSetEncryptedTypingMethods);
+    return mMainSession->sendQuery(p, &messagesSetEncryptedTypingMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 // ### messages.readEncryptedHistory
@@ -1800,7 +1800,7 @@ qint64 Api::messagesReadEncryptedHistory(const InputEncryptedChat &inputEncrypte
     p.appendInt(TL_MessagesReadEncryptedHistory);
     p.appendInputEncryptedChat(inputEncryptedChat);
     p.appendInt(maxDate);
-    return mMainSession->sendQuery(p, &messagesReadEncryptedHistoryMethods);
+    return mMainSession->sendQuery(p, &messagesReadEncryptedHistoryMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 // ### messages.sendEncrypted
@@ -1833,7 +1833,7 @@ qint64 Api::messagesSendEncrypted(const QList<qint64> &previousMsgs, const Input
     p.appendInputEncryptedChat(inputEncryptedChat);
     p.appendLong(randomId);
     p.appendBytes(data);
-    return mMainSession->sendQuery(p, &messagesSendEncryptedMethods);
+    return mMainSession->sendQuery(p, &messagesSendEncryptedMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 // ### messages.sendEncryptedFile
@@ -1868,7 +1868,7 @@ qint64 Api::messagesSendEncryptedFile(const QList<qint64> &previousMsgs, const I
     p.appendLong(randomId);
     p.appendBytes(data);
     p.appendInputEncryptedFile(inputEncryptedFile);
-    return mMainSession->sendQuery(p, &messagesSendEncryptedFileMethods);
+    return mMainSession->sendQuery(p, &messagesSendEncryptedFileMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 // ### messages.sendEncryptedService
@@ -1901,7 +1901,7 @@ qint64 Api::messagesSendEncryptedService(const QList<qint64> &previousMsgs, cons
     p.appendInputEncryptedChat(inputEncryptedChat);
     p.appendLong(randomId);
     p.appendBytes(data);
-    return mMainSession->sendQuery(p, &messagesSendEncryptedServiceMethods);
+    return mMainSession->sendQuery(p, &messagesSendEncryptedServiceMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 // ### messages.receivedQueue
@@ -1919,7 +1919,7 @@ qint64 Api::messagesReceivedQueue(qint32 maxQts) {
     OutboundPkt p;
     p.appendInt(TL_MessagesReceivedQueue);
     p.appendInt(maxQts);
-    return mMainSession->sendQuery(p, &messagesReceivedQueueMethods);
+    return mMainSession->sendQuery(p, &messagesReceivedQueueMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 //
@@ -1939,7 +1939,7 @@ void Api::onUpdatesGetStateAnswer(Query *q, InboundPkt &inboundPkt) {
 qint64 Api::updatesGetState() {
     OutboundPkt p;
     p.appendInt(TL_UpdatesGetState);
-    return mMainSession->sendQuery(p, &updatesGetStateMethods);
+    return mMainSession->sendQuery(p, &updatesGetStateMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 // ### updates.getDifference
@@ -2001,7 +2001,7 @@ qint64 Api::updatesGetDifference(qint32 pts, qint32 date, qint32 qts) {
     p.appendInt(pts);
     p.appendInt(date);
     p.appendInt(qts);
-    return mMainSession->sendQuery(p, &updatesGetDifferenceMethods);
+    return mMainSession->sendQuery(p, &updatesGetDifferenceMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 //
@@ -2073,5 +2073,5 @@ qint64 Api::uploadGetFile(Session *session, const InputFileLocation &location, q
     p.appendInputFileLocation(location);
     p.appendInt(offset);
     p.appendInt(limit);
-    return session->sendQuery(p, &uploadGetFileMethods);
+    return session->sendQuery(p, &uploadGetFileMethods, QVariant(), __PRETTY_FUNCTION__ );
 }

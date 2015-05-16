@@ -532,7 +532,7 @@ bool Session::rpcSendMessage(void *data, qint32 len) {
 
 
 //### query management
-qint64 Session::sendQuery(OutboundPkt &outboundPkt, QueryMethods *methods, QVariant extra) {
+qint64 Session::sendQuery(OutboundPkt &outboundPkt, QueryMethods *methods, QVariant extra, QString name) {
     Q_ASSERT (m_sessionId);
     Q_ASSERT (m_dc->authKeyId());
     qint32 *data = outboundPkt.buffer();
@@ -548,6 +548,7 @@ qint64 Session::sendQuery(OutboundPkt &outboundPkt, QueryMethods *methods, QVari
     q->setMethods(methods);
     q->setAcked(false);
     q->setExtra(extra);
+    q->setName(name);
 
     if (Settings::getInstance()->resendQueries()) {
         connect(q, SIGNAL(timeout(Query*)), this, SLOT(resendQuery(Query*)), Qt::UniqueConnection);
