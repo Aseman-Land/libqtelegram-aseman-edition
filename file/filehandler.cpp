@@ -364,6 +364,8 @@ void FileHandler::onUploadGetFileError(qint64 id, qint32 errorCode, const QStrin
         qCDebug(TG_FILE_FILEHANDLER) << "file migrated to dc" << newDc;
         DC *dc = mDcProvider.getDc(newDc);
         DownloadFile::Ptr f = mDownloadsMap.take(id);
+        if(!f)
+            return;
         // release previous session
         f->session()->release();
         // get session against new dc
