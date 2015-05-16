@@ -1,0 +1,23 @@
+libqtelegram-ae (0.2-1aseman1-vivid) vivid; urgency=medium
+
+  * First Release
+
+ -- Aseman Team <contact@aseman.co>  Sat, 11 Feb 2015 15:30:00 +0330
+ 
+libqtelegram-ae (0.2-1aseman1-utopic) utopic; urgency=medium
+
+  * First Release
+
+ -- Aseman Team <contact@aseman.co>  Sat, 11 Feb 2015 15:30:00 +0330
+ 
+libqtelegram-ae (0.2-1aseman1-trusty) trusty; urgency=medium
+
+  * First Release
+
+ -- Aseman Team <contact@aseman.co>  Sat, 11 Feb 2015 15:30:00 +0330
+ 
+libqtelegram-ae (0.1-1) UNRELEASED; urgency=low
+
+  * Initial release
+
+ -- Roberto Mier Escandón <rmescandon@gmail.com>  Tue, 17 Jun 2014 00:31:05 -0300

@@ -10,6 +10,10 @@ win32 {
     INCLUDEPATH += $$OUT_PWD/$$DESTDIR/include
 } else {
 macx {
+<<<<<<< HEAD:libqtelegram.pro
+=======
+    CONFIG += staticlib
+>>>>>>> 39cb8a3cf4586075e11b629725faf46cb34a4b55:libqtelegram-ae.pro
     QT += macextras
     LIBS += -lssl -lcrypto -lz
     INCLUDEPATH += /usr/include/
@@ -143,5 +147,23 @@ HEADERS += \
     telegram.h \
     libqtelegram_global.h
 
+linux {
+    contains(QMAKE_HOST.arch, x86_64) {
+        LIB_PATH = x86_64-linux-gnu
+    } else {
+        LIB_PATH = i386-linux-gnu
+    }
+}
 
+isEmpty(PREFIX) {
+    PREFIX = /usr
+}
 
+INSTALL_PREFIX = $$PREFIX/include/libqtelegram-ae
+INSTALL_HEADERS = $$HEADERS
+include(qmake/headerinstall.pri)
+
+target = $$TARGET
+target.path = $$PREFIX/lib/$$LIB_PATH
+
+INSTALLS += target
