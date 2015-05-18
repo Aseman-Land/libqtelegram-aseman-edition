@@ -810,7 +810,7 @@ qint64 Api::contactsDeleteContacts(const QList<InputUser> &ids) {
 }
 
 void Api::onContactsSearchAnswer(Query *q, InboundPkt &inboundPkt) {
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_ContactsSearch);
+    ASSERT(inboundPkt.fetchInt() == (qint32)TL_ContactsFound);
     // contact founds
     ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
     qint32 n = inboundPkt.fetchInt();
@@ -830,7 +830,7 @@ void Api::onContactsSearchAnswer(Query *q, InboundPkt &inboundPkt) {
 
 qint64 Api::contactsSearch(const QString &q, qint32 limit) {
     OutboundPkt p;
-    p.appendInt(TL_MessagesSearch);
+    p.appendInt(TL_ContactsSearch);
     p.appendQString(q);
     p.appendInt(limit);
     return mMainSession->sendQuery(p, &contactsSearchMethods, QVariant(), __PRETTY_FUNCTION__ );
