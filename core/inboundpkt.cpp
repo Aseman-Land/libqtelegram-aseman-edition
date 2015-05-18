@@ -763,6 +763,11 @@ Update InboundPkt::fetchUpdate() {
         update.setPeer(fetchNotifyPeer());
         update.setNotifySettings(fetchPeerNotifySetting());
         break;
+    case Update::typeUpdateServiceNotification:
+        update.setType(fetchQString());
+        update.setMessageText(fetchQString());
+        update.setMedia(fetchMessageMedia());
+        update.setPopup(fetchBool());
     default:
         qDebug() << "Update received in a not contemplated option";
         break;
@@ -814,6 +819,13 @@ ContactBlocked InboundPkt::fetchContactBlocked() {
     cb.setUserId(fetchInt());
     cb.setDate(fetchDate());
     return cb;
+}
+
+ContactFound InboundPkt::fetchContactFound() {
+    ASSERT(fetchInt() == (qint32)ContactFound::typeContactFound);
+    ContactFound cf;
+    cf.setUserId(fetchInt());
+    return cf;
 }
 
 StorageFileType InboundPkt::fetchStorageFileType() {

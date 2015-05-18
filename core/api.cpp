@@ -75,6 +75,10 @@ Api::Api(Session *session, QObject *parent) :
 
     accountGetWallPapersMethods.onAnswer = &Api::onAccountGetWallPapersAnswer;
 
+    accountCheckUsernameMethods.onAnswer = &Api::onAccountCheckUsernameAnswer;
+
+    accountUpdateUsernameMethods.onAnswer = &Api::onAccountUpdateUsernameAnswer;
+
     photosUploadProfilePhotoMethods.onAnswer = &Api::onPhotosUploadProfilePhotoAnswer;
 
     photosUpdateProfilePhotoMethods.onAnswer = &Api::onPhotosUpdateProfilePhotoAnswer;
@@ -95,6 +99,8 @@ Api::Api(Session *session, QObject *parent) :
     contactsDeleteContactMethods.onAnswer = &Api::onContactsDeleteContactAnswer;
 
     contactsDeleteContactsMethods.onAnswer = &Api::onContactsDeleteContactsAnswer;
+
+    contactsSearchMethods.onAnswer = &Api::onContactsSearchAnswer;
 
     contactsBlockMethods.onAnswer = &Api::onContactsBlockAnswer;
 
@@ -538,6 +544,28 @@ qint64 Api::accountGetWallPapers() {
     return mMainSession->sendQuery(p, &accountGetWallPapersMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
+void Api::onAccountCheckUsernameAnswer(Query *q, InboundPkt &inboundPkt) {
+    Q_EMIT accountCheckUsernameResult(q->msgId(), inboundPkt.fetchBool());
+}
+
+qint64 Api::accountCheckUsername(const QString &username) {
+    OutboundPkt p;
+    p.appendInt(TL_AccountCheckUsername);
+    p.appendQString(username);
+    return mMainSession->sendQuery(p, &accountCheckUsernameMethods, QVariant(), __PRETTY_FUNCTION__ );
+}
+
+void Api::onAccountUpdateUsernameAnswer(Query *q, InboundPkt &inboundPkt) {
+    Q_EMIT accountUpdateUsernameResult(q->msgId(), inboundPkt.fetchUser());
+}
+
+qint64 Api::accountUpdateUsername(const QString &username) {
+    OutboundPkt p;
+    p.appendInt(TL_AccountUpdateUsername);
+    p.appendQString(username);
+    return mMainSession->sendQuery(p, &accountUpdateUsernameMethods, QVariant(), __PRETTY_FUNCTION__ );
+}
+
 // ### photos.uploadProfilePhoto
 void Api::onPhotosUploadProfilePhotoAnswer(Query *q, InboundPkt &inboundPkt) {
     ASSERT(inboundPkt.fetchInt() == (qint32)TL_PhotosPhoto);
@@ -779,6 +807,33 @@ qint64 Api::contactsDeleteContacts(const QList<InputUser> &ids) {
         p.appendInputUser(id);
     }
     return mMainSession->sendQuery(p, &contactsDeleteContactsMethods, QVariant(), __PRETTY_FUNCTION__ );
+}
+
+void Api::onContactsSearchAnswer(Query *q, InboundPkt &inboundPkt) {
+    ASSERT(inboundPkt.fetchInt() == (qint32)TL_ContactsSearch);
+    // contact founds
+    ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
+    qint32 n = inboundPkt.fetchInt();
+    QList<ContactFound> founds;
+    for (qint32 i = 0; i < n; i++) {
+        founds.append(inboundPkt.fetchContactFound());
+    }
+    // users
+    ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
+    n = inboundPkt.fetchInt();
+    QList<User> users;
+    for (qint32 i = 0; i < n; i++) {
+        users.append(inboundPkt.fetchUser());
+    }
+    Q_EMIT contactsFound(q->msgId(), founds, users);
+}
+
+qint64 Api::contactsSearch(const QString &q, qint32 limit) {
+    OutboundPkt p;
+    p.appendInt(TL_MessagesSearch);
+    p.appendQString(q);
+    p.appendInt(limit);
+    return mMainSession->sendQuery(p, &contactsSearchMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 //

@@ -170,6 +170,8 @@ void Telegram::onDcProviderReady() {
     connect(mApi, SIGNAL(accountUser(qint64,User)), this, SIGNAL(accountUpdateProfileAnswer(qint64,User)));
     connect(mApi, SIGNAL(accountUpdateStatusResult(qint64,bool)), this, SIGNAL(accountUpdateStatusAnswer(qint64,bool)));
     connect(mApi, SIGNAL(accountGetWallPapersResult(qint64,QList<WallPaper>)), this, SIGNAL(accountGetWallPapersAnswer(qint64,QList<WallPaper>)));
+    connect(mApi, SIGNAL(accountCheckUsernameResult(qint64,bool)), this, SIGNAL(accountCheckUsernameAnswer(qint64,bool)));
+    connect(mApi, SIGNAL(accountUpdateUsernameResult(qint64,User)), this, SIGNAL(accountUpdateUsernameAnswer(qint64,User)));
     connect(mApi, SIGNAL(photosPhoto(qint64,Photo,QList<User>)), this, SIGNAL(photosUploadProfilePhotoAnswer(qint64,Photo,QList<User>)));
     connect(mApi, SIGNAL(photosUserProfilePhoto(qint64,UserProfilePhoto)), this, SIGNAL(photosUpdateProfilePhotoAnswer(qint64,UserProfilePhoto)));
     connect(mApi, SIGNAL(usersGetUsersResult(qint64,QList<User>)), this, SIGNAL(usersGetUsersAnswer(qint64,QList<User>)));
@@ -181,6 +183,7 @@ void Telegram::onDcProviderReady() {
     connect(mApi, SIGNAL(contactsContactsNotModified(qint64)), this, SLOT(onContactsContactsNotModified(qint64)));
     connect(mApi, SIGNAL(contactsImportedContacts(qint64,QList<ImportedContact>,QList<qint64>,QList<User>)), this, SIGNAL(contactsImportContactsAnswer(qint64,QList<ImportedContact>,QList<qint64>,QList<User>)));
     connect(mApi, SIGNAL(contactsImportedContacts(qint64,QList<ImportedContact>,QList<qint64>,QList<User>)), this, SLOT(onContactsImportContactsAnswer()));
+    connect(mApi, SIGNAL(contactsFound(qint64,QList<ContactFound>,QList<User>)), this, SIGNAL(contactsFound(qint64,QList<ContactFound>,QList<User>)));
     connect(mApi, SIGNAL(contactsDeleteContactLink(qint64,ContactsMyLink,ContactsForeignLink,User)), this, SIGNAL(contactsDeleteContactAnswer(qint64,ContactsMyLink,ContactsForeignLink,User)));
     connect(mApi, SIGNAL(contactsDeleteContactsResult(qint64,bool)), this, SIGNAL(contactsDeleteContactsAnswer(qint64,bool)));
     connect(mApi, SIGNAL(contactsBlockResult(qint64,bool)), this, SIGNAL(contactsBlockAnswer(qint64,bool)));
@@ -1141,6 +1144,14 @@ qint64 Telegram::accountGetWallPapers() {
     return mApi->accountGetWallPapers();
 }
 
+qint64 Telegram::accountCheckUsername(const QString &username) {
+    return mApi->accountCheckUsername(username);
+}
+
+qint64 Telegram::accountUpdateUsername(const QString &username) {
+    return mApi->accountUpdateUsername(username);
+}
+
 qint64 Telegram::photosUploadProfilePhoto(const QByteArray &bytes, const QString &fileName, const QString &caption, const InputGeoPoint &geoPoint, const InputPhotoCrop &crop) {
     FileOperation *op = new FileOperation(FileOperation::uploadProfilePhoto);
     op->setCaption(caption);
@@ -1219,6 +1230,10 @@ qint64 Telegram::contactsDeleteContact(const InputUser &user) {
 
 qint64 Telegram::contactsDeleteContacts(const QList<InputUser> &users) {
     return mApi->contactsDeleteContacts(users);
+}
+
+qint64 Telegram::contactsSearch(const QString &q, qint32 limit) {
+    return mApi->contactsSearch(q, limit);
 }
 
 qint64 Telegram::contactsBlock(const InputUser &user) {

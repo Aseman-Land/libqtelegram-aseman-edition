@@ -67,6 +67,8 @@ public:
     qint64 accountUpdateProfile(const QString &firstName, const QString &lastName);
     qint64 accountUpdateStatus(bool offline);
     qint64 accountGetWallPapers();
+    qint64 accountCheckUsername(const QString &username);
+    qint64 accountUpdateUsername(const QString &username);
     qint64 photosUploadProfilePhoto(const QByteArray &bytes, const QString &fileName, const QString &caption = "", const InputGeoPoint &geoPoint = InputGeoPoint(InputGeoPoint::typeInputGeoPointEmpty), const InputPhotoCrop &crop = InputPhotoCrop(InputPhotoCrop::typeInputPhotoCropAuto));
     qint64 photosUploadProfilePhoto(const QString &filePath, const QString &caption = "", const InputGeoPoint &geoPoint = InputGeoPoint(InputGeoPoint::typeInputGeoPointEmpty), const InputPhotoCrop &crop = InputPhotoCrop(InputPhotoCrop::typeInputPhotoCropAuto));
     qint64 photosUpdateProfilePhoto(qint64 photoId, qint64 accessHash, const InputPhotoCrop &crop = InputPhotoCrop(InputPhotoCrop::typeInputPhotoCropAuto));
@@ -82,6 +84,7 @@ public:
     qint64 contactsImportContacts (const QList<InputContact> &contacts, bool replace);
     qint64 contactsDeleteContact(const InputUser &user);
     qint64 contactsDeleteContacts(const QList<InputUser> &users);
+    qint64 contactsSearch(const QString &q, qint32 limit = 0);
 
     // Working with blacklist
     qint64 contactsBlock(const InputUser &user);
@@ -211,6 +214,8 @@ Q_SIGNALS:
     void accountUpdateProfileAnswer(qint64 id, User user);
     void accountUpdateStatusAnswer(qint64 id, bool ok);
     void accountGetWallPapersAnswer(qint64 id, QList<WallPaper> wallPapers);
+    void accountCheckUsernameAnswer(qint64 id, bool ok);
+    void accountUpdateUsernameAnswer(qint64 id, User user);
     void photosUploadProfilePhotoAnswer(qint64 id, Photo photo, QList<User> users);
     void photosUpdateProfilePhotoAnswer(qint64 id, UserProfilePhoto userProfilePhoto);
 
@@ -225,6 +230,7 @@ Q_SIGNALS:
     void contactsImportContactsAnswer(qint64 id, QList<ImportedContact> importedContacts, QList<qint64> retryContacts, QList<User> users);
     void contactsDeleteContactAnswer(qint64 id, ContactsMyLink myLink, ContactsForeignLink foreignLink, User user);
     void contactsDeleteContactsAnswer(qint64 id, bool ok);
+    void contactsFound(qint64 id, QList<ContactFound> founds, QList<User> users);
 
     // Working with blacklist
     void contactsBlockAnswer(qint64 id, bool ok);

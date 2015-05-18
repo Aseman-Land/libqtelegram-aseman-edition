@@ -31,6 +31,7 @@
 #include "types/chat.h"
 #include "types/inputuser.h"
 #include "types/contact.h"
+#include "types/contactfound.h"
 #include "types/contactslink.h"
 #include "types/photo.h"
 #include "types/contactstatus.h"
@@ -84,6 +85,8 @@ public:
     qint64 accountUpdateProfile(const QString &firstName, const QString &lastName);
     qint64 accountUpdateStatus(bool offline);
     qint64 accountGetWallPapers();
+    qint64 accountCheckUsername(const QString &username);
+    qint64 accountUpdateUsername(const QString &username);
     qint64 photosUploadProfilePhoto(const InputFile &file, const QString &caption, const InputGeoPoint &geoPoint, const InputPhotoCrop &crop);
     qint64 photosUpdateProfilePhoto(const InputPhoto &id, const InputPhotoCrop &crop);
     // Users
@@ -96,6 +99,7 @@ public:
     qint64 contactsImportContacts(const QList<InputContact> contacts, bool replace);
     qint64 contactsDeleteContact(const InputUser &id);
     qint64 contactsDeleteContacts(const QList<InputUser> &ids);
+    qint64 contactsSearch(const QString &q, qint32 limit = 0);
     // Blacklist
     qint64 contactsBlock(const InputUser &id);
     qint64 contactsUnblock(const InputUser &id);
@@ -171,6 +175,8 @@ Q_SIGNALS:
     void accountUser(qint64 msgId, User user);
     void accountUpdateStatusResult(qint64 msgId, bool ok);
     void accountGetWallPapersResult(qint64 msgId, QList<WallPaper> wallpapers);
+    void accountCheckUsernameResult(qint64 msgId, bool ok);
+    void accountUpdateUsernameResult(qint64 msgId, User user);
     void photosPhoto(qint64 msgId, Photo photo, QList<User> users);
     void photosUserProfilePhoto(qint64 msgId, UserProfilePhoto photo);
     // Users
@@ -185,6 +191,7 @@ Q_SIGNALS:
     void contactsImportedContacts(qint64 msgId, QList<ImportedContact> imported, QList<qint64> retryContacts, QList<User> users);
     void contactsDeleteContactLink(qint64 msgId, ContactsMyLink myLink, ContactsForeignLink foreignLink, User user);
     void contactsDeleteContactsResult(qint64 msgId, bool ok);
+    void contactsFound(qint64 msgId, QList<ContactFound> founds, QList<User> users);
     // Blacklist
     void contactsBlockResult(qint64 msgId, bool ok);
     void contactsUnblockResult(qint64 msgId, bool ok);
@@ -283,6 +290,8 @@ private:
     QueryMethods accountUpdateProfileMethods;
     QueryMethods accountUpdateStatusMethods;
     QueryMethods accountGetWallPapersMethods;
+    QueryMethods accountCheckUsernameMethods;
+    QueryMethods accountUpdateUsernameMethods;
     QueryMethods photosUploadProfilePhotoMethods;
     QueryMethods photosUpdateProfilePhotoMethods;
     QueryMethods usersGetUsersMethods;
@@ -296,6 +305,7 @@ private:
     QueryMethods contactsBlockMethods;
     QueryMethods contactsUnblockMethods;
     QueryMethods contactsGetBlockedMethods;
+    QueryMethods contactsSearchMethods;
     QueryMethods messagesSendMessageMethods;
     QueryMethods messagesSendMediaMethods;
     QueryMethods messagesSetTypingMethods;
@@ -357,6 +367,8 @@ private:
     void onAccountUpdateProfileAnswer(Query *q, InboundPkt &inboundPkt);
     void onAccountUpdateStatusAnswer(Query *q, InboundPkt &inboundPkt);
     void onAccountGetWallPapersAnswer(Query *q, InboundPkt &inboundPkt);
+    void onAccountCheckUsernameAnswer(Query *q, InboundPkt &inboundPkt);
+    void onAccountUpdateUsernameAnswer(Query *q, InboundPkt &inboundPkt);
     void onPhotosUploadProfilePhotoAnswer(Query *q, InboundPkt &inboundPkt);
     void onPhotosUpdateProfilePhotoAnswer(Query *q, InboundPkt &inboundPkt);
     void onUsersGetUsersAnswer(Query *q, InboundPkt &inboundPkt);
@@ -367,6 +379,7 @@ private:
     void onContactsImportContactsAnswer(Query *q, InboundPkt &inboundPkt);
     void onContactsDeleteContactAnswer(Query *q, InboundPkt &inboundPkt);
     void onContactsDeleteContactsAnswer(Query *q, InboundPkt &inboundPkt);
+    void onContactsSearchAnswer(Query *q, InboundPkt &inboundPkt);
     void onContactsBlockAnswer(Query *q, InboundPkt &inboundPkt);
     void onContactsUnblockAnswer(Query *q, InboundPkt &inboundPkt);
     void onContactsGetBlockedAnswer(Query *q, InboundPkt &inboundPkt);

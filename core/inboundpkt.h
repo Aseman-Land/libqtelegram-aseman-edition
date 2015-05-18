@@ -48,6 +48,7 @@
 #include "types/contactsmylink.h"
 #include "types/geochatmessage.h"
 #include "types/contact.h"
+#include "types/contactfound.h"
 #include "types/update.h"
 #include "types/contactslink.h"
 #include "types/contactstatus.h"
@@ -106,6 +107,7 @@ public:
     virtual ContactsMyLink fetchContactsMyLink();
     virtual ContactsForeignLink fetchContactsForeignLink();
     virtual ContactBlocked fetchContactBlocked();
+    virtual ContactFound fetchContactFound();
     virtual StorageFileType fetchStorageFileType();
     virtual ChatFull fetchChatFull();
     virtual EncryptedMessage fetchEncryptedMessage();

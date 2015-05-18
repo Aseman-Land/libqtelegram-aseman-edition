@@ -365,6 +365,8 @@ enum TLValues {
     TL_AccountUpdateProfile = 0xf0888d68,
     TL_AccountUpdateStatus = 0x6628562c,
     TL_AccountGetWallPapers = 0xc04cfac2,
+    TL_AccountCheckUsername = 0x2714d86c,
+    TL_AccountUpdateUsername = 0x3e0bdd7c,
     TL_UsersGetUsers = 0xd91a548,
     TL_UsersGetFullUser = 0xca30a5b1,
     TL_ContactsGetStatuses = 0xc4a353ee,
@@ -439,7 +441,8 @@ enum TLValues {
     TL_HelpGetSupport = 0x9cdf08cd,
     //TL_InvokeWithLayer14 = 0x2b9b08fa,
     TL_InvokeWithLayer17 = 0x50858a19,
-    TL_InvokeWithLayer18 = 0x1c900537
+    TL_InvokeWithLayer18 = 0x1c900537,
+    TL_InvokeWithLayer23 = 0xda9b0d0d
 };
 
 #endif // TLVALUES_H

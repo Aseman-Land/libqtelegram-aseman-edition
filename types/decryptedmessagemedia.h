@@ -94,6 +94,7 @@ public:
     void setClassType(DecryptedMessageMediaType classType) { mClassType = classType; }
 
 private:
+    DecryptedMessageMediaType mClassType;
     QByteArray mThumb;
     qint32 mThumbW;
     qint32 mThumbH;
@@ -111,7 +112,6 @@ private:
     qint32 mUserId;
     QString mFileName;
     QString mMimeType;
-    DecryptedMessageMediaType mClassType;
 };
 
 #endif // DECRYPTEDMESSAGEMEDIA_H

@@ -65,12 +65,14 @@ public:
        typeUpdateNewEncryptedMessage = 0x12bcbd9a,
        typeUpdateEncryptedMessagesRead = 0x38fe25b7,
        typeUpdateChatParticipants = 0x7761198,
-       typeUpdateNewGeoChatMessage = 0x5a68e3f7
+       typeUpdateNewGeoChatMessage = 0x5a68e3f7,
+       typeUpdateServiceNotification = 0x82dd3e4
     };
 
     Update(UpdateType classType = typeUpdateInvalid) :
         mId(0),
         mPrevious(false),
+        mPopup(false),
         mDevice(""),
         mMyLink(ContactsMyLink::typeContactsMyLinkEmpty),
         mChatId(0),
@@ -89,8 +91,9 @@ public:
         mLastName(""),
         mStatus(UserStatus::typeUserStatusEmpty),
         mMessage(Message::typeMessageEmpty),
-        mEncryptedMessage(EncryptedMessage::typeEncryptedMessage),
+        mMedia(MessageMedia::typeMessageMediaEmpty),
         mGeoChatMessage(GeoChatMessage::typeGeoChatMessageEmpty),
+        mEncryptedMessage(EncryptedMessage::typeEncryptedMessage),
         mForeignLink(ContactsForeignLink::typeContactsForeignLinkUnknown),
         mMaxDate(0),
         mAuthKeyId(0),
@@ -291,8 +294,32 @@ public:
     SendMessageAction action() const {
         return mAction;
     }
+    void setMedia(const MessageMedia &media) {
+        mMedia = media;
+    }
+    MessageMedia media() const {
+        return mMedia;
+    }
+    void setPopup(bool popup) {
+        mPopup = popup;
+    }
+    bool popup() const {
+        return mPopup;
+    }
     void setClassType(UpdateType classType) {
         mClassType = classType;
+    }
+    void setType(const QString &type) {
+        mType = type;
+    }
+    QString type() const {
+        return mType;
+    }
+    void setMessageText(const QString &message) {
+        mMessageText = message;
+    }
+    QString messageText() const {
+        return mMessageText;
     }
     UpdateType classType() const {
         return mClassType;
@@ -301,6 +328,9 @@ public:
 private:
     qint32 mId;
     bool mPrevious;
+    bool mPopup;
+    QString mType;
+    QString mMessageText;
     QList<DcOption> mDcOptions;
     QString mDevice;
     ContactsMyLink mMyLink;
@@ -322,6 +352,7 @@ private:
     QString mUsername;
     UserStatus mStatus;
     Message mMessage;
+    MessageMedia mMedia;
     GeoChatMessage mGeoChatMessage;
     EncryptedMessage mEncryptedMessage;
     ContactsForeignLink mForeignLink;

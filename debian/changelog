@@ -1,3 +1,24 @@
+libqtelegram-ae (0.2-2aseman1-vivid) vivid; urgency=medium
+
+  * Bugfix and Crashfix
+  * Add feature, attach query name to query object to better debuging
+
+ -- Aseman Team <contact@aseman.co>  Sat, 16 May 2015 00:30:00 +0330
+ 
+libqtelegram-ae (0.2-2aseman1-utopic) utopic; urgency=medium
+
+  * Bugfix and Crashfix
+  * Add feature, attach query name to query object to better debuging
+
+ -- Aseman Team <contact@aseman.co>  Sat, 16 May 2015 00:30:00 +0330
+ 
+libqtelegram-ae (0.2-2aseman1-trusty) trusty; urgency=medium
+
+  * Bugfix and Crashfix
+  * Add feature, attach query name to query object to better debuging
+
+ -- Aseman Team <contact@aseman.co>  Sat, 16 May 2015 00:30:00 +0330
+ 
 libqtelegram-ae (0.2-1aseman1-vivid) vivid; urgency=medium
 
   * First Release

@@ -142,7 +142,8 @@ HEADERS += \
     core/eventtimer.h \
     core/dc.h \
     telegram.h \
-    libqtelegram_global.h
+    libqtelegram_global.h \
+    types/contactfound.h
 
 linux {
     contains(QMAKE_HOST.arch, x86_64) {
