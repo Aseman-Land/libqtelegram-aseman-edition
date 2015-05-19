@@ -91,6 +91,7 @@ public:
     void appendInputEncryptedChat(const InputEncryptedChat &inputEncryptedChat);
     void appendInputEncryptedFile(const InputEncryptedFile &inputEncryptedFile);
     void appendSendMessageAction(const SendMessageAction &action);
+    void appendDocumentAttribute(const DocumentAttribute &attr);
 
     qint32 length() const;
     qint32 *buffer();

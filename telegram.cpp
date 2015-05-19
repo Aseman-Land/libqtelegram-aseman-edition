@@ -1339,8 +1339,14 @@ qint64 Telegram::messagesSendAudio(const InputPeer &peer, qint64 randomId, const
 }
 
 qint64 Telegram::messagesSendDocument(const InputPeer &peer, qint64 randomId, const QByteArray &bytes, const QString &fileName, const QString &mimeType, const QByteArray &thumbnailBytes, const QString &thumbnailName) {
+    DocumentAttribute fileAttr(DocumentAttribute::typeAttributeFilename);
+    fileAttr.setFilename(fileName);
+
+    QList<DocumentAttribute> attributes;
+    attributes << fileAttr;
+
     InputMedia inputMedia(InputMedia::typeInputMediaUploadedDocument);
-    inputMedia.setFileName(fileName);
+    inputMedia.setAttributes(attributes);
     inputMedia.setMimeType(mimeType);
     if (!thumbnailBytes.isEmpty()) {
         inputMedia.setClassType(InputMedia::typeInputMediaUploadedThumbDocument);
@@ -1353,9 +1359,15 @@ qint64 Telegram::messagesSendDocument(const InputPeer &peer, qint64 randomId, co
 }
 
 qint64 Telegram::messagesSendDocument(const InputPeer &peer, qint64 randomId, const QString &filePath, const QString &thumbnailFilePath) {
+    DocumentAttribute fileAttr(DocumentAttribute::typeAttributeFilename);
+    fileAttr.setFilename(QFileInfo(filePath).fileName());
+
+    QList<DocumentAttribute> attributes;
+    attributes << fileAttr;
+
     InputMedia inputMedia(InputMedia::typeInputMediaUploadedDocument);
     inputMedia.setMimeType(QMimeDatabase().mimeTypeForFile(QFileInfo(filePath)).name());
-    inputMedia.setFileName(QFileInfo(filePath).fileName());
+    inputMedia.setAttributes(attributes);
     if (thumbnailFilePath.length() > 0) {
         inputMedia.setClassType(InputMedia::typeInputMediaUploadedThumbDocument);
     }

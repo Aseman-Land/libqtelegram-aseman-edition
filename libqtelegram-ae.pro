@@ -143,7 +143,9 @@ HEADERS += \
     core/dc.h \
     telegram.h \
     libqtelegram_global.h \
-    types/contactfound.h
+    types/contactfound.h \
+    types/documentattribute.h \
+    types/disabledfeature.h
 
 linux {
     contains(QMAKE_HOST.arch, x86_64) {

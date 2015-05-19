@@ -30,7 +30,10 @@ public:
     enum UserStatusType {
        typeUserStatusOffline = 0x8c703f,
        typeUserStatusEmpty = 0x9d05049,
-       typeUserStatusOnline = 0xedb93949
+       typeUserStatusOnline = 0xedb93949,
+       typeUserStatusRecently = 0xe26f42f1,
+       typeUserStatusLastWeek = 0x7bf09fc,
+       typeUserStatusLastMonth = 0x77ebc742
     };
 
     UserStatus(UserStatusType classType) :

@@ -27,15 +27,16 @@
 #include "inputvideo.h"
 #include "inputfile.h"
 #include "inputgeopoint.h"
+#include "documentattribute.h"
 
 class InputMedia
 {
 public:
 
     enum InputMediaType {
-       typeInputMediaUploadedDocument = 0x34e794bd,
+       typeInputMediaUploadedDocument = 0xffe76b78,
        typeInputMediaVideo = 0x7f023ae6,
-       typeInputMediaUploadedThumbDocument = 0x3e46de5d,
+       typeInputMediaUploadedThumbDocument = 0x41481486,
        typeInputMediaUploadedPhoto = 0x2dc53a7d,
        typeInputMediaDocument = 0xd184e841,
        typeInputMediaUploadedThumbVideo = 0x9912dabf,
@@ -60,7 +61,6 @@ public:
         m_geoPoint(InputGeoPoint::typeInputGeoPointEmpty),
         m_duration(0),
         m_h(0),
-        m_fileName(""),
         m_phoneNumber(""),
         m_w(0),
         m_lastName(""),
@@ -68,8 +68,6 @@ public:
 
     void setFile(InputFile file) { m_file = file; }
     InputFile file() const { return m_file; }
-    void setFileName(const QString & fileName) { m_fileName = fileName; }
-    QString fileName() const { return m_fileName; }
     void setMimeType(const QString & mimeType) { m_mimeType = mimeType; }
     QString mimeType() const { return m_mimeType; }
     void setPhotoId(InputPhoto photoId) { m_photoId = photoId; }
@@ -96,6 +94,8 @@ public:
     QString firstName() const { return m_firstName; }
     void setLastName(const QString & lastName) { m_lastName = lastName; }
     QString lastName() const { return m_lastName; }
+    void setAttributes(QList<DocumentAttribute> attrs) { m_attributes = attrs; }
+    QList<DocumentAttribute> attributes() const { return m_attributes; }
     void setClassType(InputMediaType classType) { m_classType = classType; }
     InputMediaType classType() const { return m_classType; }
 
@@ -104,6 +104,7 @@ private:
     InputPhoto m_photoId;
     InputVideo m_videoId;
     InputDocument m_documentId;
+    QList<DocumentAttribute> m_attributes;
     QString m_firstName;
     QString m_mimeType;
     InputFile m_file;
@@ -111,7 +112,6 @@ private:
     InputGeoPoint m_geoPoint;
     qint32 m_duration;
     qint32 m_h;
-    QString m_fileName;
     QString m_phoneNumber;
     qint32 m_w;
     QString m_lastName;

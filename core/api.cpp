@@ -197,6 +197,7 @@ void Api::onError(Query *q, qint32 errorCode, const QString &errorText) {
 void Api::onHelpGetConfigAnswer(Query *q, InboundPkt &inboundPkt) {
     ASSERT(inboundPkt.fetchInt() == (qint32)TL_Config);
     qint32 date = inboundPkt.fetchInt();
+    qint32 expires = inboundPkt.fetchInt();
     bool testMode = inboundPkt.fetchBool();
     qint32 thisDc = inboundPkt.fetchInt();
     ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
@@ -205,9 +206,17 @@ void Api::onHelpGetConfigAnswer(Query *q, InboundPkt &inboundPkt) {
     for (qint32 i = 0; i < n; i++) {
         dcOptions.append(inboundPkt.fetchDcOption());
     }
+    qint32 chatBigSize = inboundPkt.fetchInt();
     qint32 chatMaxSize = inboundPkt.fetchInt();
     qint32 broadcastMaxSize = inboundPkt.fetchInt();
-    Q_EMIT config(q->msgId(), date, testMode, thisDc, dcOptions, chatMaxSize, broadcastMaxSize);
+    ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
+    qint32 nf = inboundPkt.fetchInt();
+    QList<DisabledFeature> disabledFeatures;
+    for (qint32 i = 0; i < nf; i++) {
+        disabledFeatures.append(inboundPkt.fetchDisabledFeature());
+    }
+
+    Q_EMIT config(q->msgId(), date, expires, testMode, thisDc, dcOptions, chatBigSize, chatMaxSize, broadcastMaxSize, disabledFeatures);
 }
 
 qint64 Api::helpGetConfig() {

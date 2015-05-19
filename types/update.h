@@ -48,7 +48,7 @@ public:
        typeUpdateActivation = 0x6f690963,
        typeUpdateRestoreMessages = 0xd15de04d,
        typeUpdateEncryption = 0xb4a2e88d,
-       typeUpdateUserName = 0xda22d9ad,
+       typeUpdateUserName = 0xa7332b73,
        typeUpdateUserBlocked = 0x80ece81a,
        typeUpdateNewMessage = 0x13abdb3,
        typeUpdateContactLink = 0x51a48a9a,
@@ -66,7 +66,7 @@ public:
        typeUpdateEncryptedMessagesRead = 0x38fe25b7,
        typeUpdateChatParticipants = 0x7761198,
        typeUpdateNewGeoChatMessage = 0x5a68e3f7,
-       typeUpdateServiceNotification = 0x82dd3e4
+       typeUpdateServiceNotification = 0x382dd3e4
     };
 
     Update(UpdateType classType = typeUpdateInvalid) :

@@ -232,7 +232,8 @@ FileLocation InboundPkt::fetchFileLocation() {
 
 UserStatus InboundPkt::fetchUserStatus() {
     qint32 x = fetchInt();
-    ASSERT(x == (qint32)UserStatus::typeUserStatusEmpty || x == (qint32)UserStatus::typeUserStatusOnline || x == (qint32)UserStatus::typeUserStatusOffline);
+    ASSERT(x == (qint32)UserStatus::typeUserStatusEmpty || x == (qint32)UserStatus::typeUserStatusOnline || x == (qint32)UserStatus::typeUserStatusOffline
+           || x == (qint32)UserStatus::typeUserStatusRecently || x == (qint32)UserStatus::typeUserStatusLastWeek || x == (qint32)UserStatus::typeUserStatusLastMonth);
     UserStatus us((UserStatus::UserStatusType)x);
     switch (x) {
     case TL_UserStatusOnline: us.setExpires(fetchInt());
@@ -510,13 +511,17 @@ Document InboundPkt::fetchDocument() {
     doc.setId(fetchLong());
     if (x == (qint32)Document::typeDocument) {
         doc.setAccessHash(fetchLong());
-        doc.setUserId(fetchInt());
         doc.setDate(fetchInt());
-        doc.setFileName(fetchQString());
         doc.setMimeType(fetchQString());
         doc.setSize(fetchInt());
         doc.setThumb(fetchPhotoSize());
         doc.setDcId(fetchInt());
+        ASSERT(fetchInt() == (qint32)TL_Vector);
+        qint32 n = fetchInt();
+        QList<DocumentAttribute> attrs;
+        for (qint32 i = 0; i < n; i++)
+            attrs.append(fetchDocumentAttribute());
+        doc.setAttributes(attrs);
     }
     return doc;
 }
@@ -801,7 +806,7 @@ ContactStatus InboundPkt::fetchContactStatus() {
     ASSERT(fetchInt() == (qint32)ContactStatus::typeContactStatus);
     ContactStatus status;
     status.setUserId(fetchInt());
-    status.setExpires(fetchInt());
+    status.setUserStatus(fetchUserStatus());
     return status;
 }
 
@@ -880,6 +885,45 @@ EncryptedFile InboundPkt::fetchEncryptedFile() {
         f.setKeyFingerprint(fetchInt());
     }
     return f;
+}
+
+DisabledFeature InboundPkt::fetchDisabledFeature()
+{
+    ASSERT(fetchInt() == (qint32)TL_DisabledFeature);
+    DisabledFeature feature;
+    feature.setFeature(fetchQString());
+    feature.setDescription(fetchQString());
+    return feature;
+}
+
+DocumentAttribute InboundPkt::fetchDocumentAttribute()
+{
+    qint32 x = fetchInt();
+    ASSERT(x == (qint32)DocumentAttribute::typeAttributeImageSize || x == (qint32)DocumentAttribute::typeAttributeAnimated
+           || x == (qint32)DocumentAttribute::typeAttributeSticker || x == (qint32)DocumentAttribute::typeAttributeVideo
+           || x == (qint32)DocumentAttribute::typeAttributeAudio || x == (qint32)DocumentAttribute::typeAttributeFilename);
+
+    DocumentAttribute attr(static_cast<DocumentAttribute::DocumentAttributeType>(x));
+    switch(x)
+    {
+    case DocumentAttribute::typeAttributeImageSize:
+        attr.setW(fetchInt());
+        attr.setH(fetchInt());
+        break;
+    case DocumentAttribute::typeAttributeVideo:
+        attr.setDuration(fetchInt());
+        attr.setW(fetchInt());
+        attr.setH(fetchInt());
+        break;
+    case DocumentAttribute::typeAttributeAudio:
+        attr.setDuration(fetchInt());
+        break;
+    case DocumentAttribute::typeAttributeFilename:
+        attr.setFilename(fetchQString());
+        break;
+    }
+
+    return attr;
 }
 
 WallPaper InboundPkt::fetchWallPaper() {

@@ -60,6 +60,8 @@
 #include "types/updatesstate.h"
 #include "types/wallpaper.h"
 #include "types/encryptedchat.h"
+#include "types/disabledfeature.h"
+#include "types/documentattribute.h"
 
 #include "secret/secretchat.h"
 
@@ -116,6 +118,8 @@ public:
     virtual UserProfilePhoto fetchUserProfilePhoto();
     virtual EncryptedChat fetchEncryptedChat();
     virtual EncryptedFile fetchEncryptedFile();
+    virtual DisabledFeature fetchDisabledFeature();
+    virtual DocumentAttribute fetchDocumentAttribute();
 
 protected:
     char *m_buffer;

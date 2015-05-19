@@ -223,14 +223,26 @@ void OutboundPkt::appendInputMedia(const InputMedia &media) {
         break;
     case InputMedia::typeInputMediaUploadedDocument:
         appendInputFile(media.file());
-        appendQString(media.fileName());
         appendQString(media.mimeType());
+    {
+        QList<DocumentAttribute> attrs = media.attributes();
+        appendInt(static_cast<qint32>(TL_Vector));
+        appendInt(attrs.size());
+        Q_FOREACH (DocumentAttribute attr, attrs)
+            appendDocumentAttribute(attr);
+    }
         break;
     case InputMedia::typeInputMediaUploadedThumbDocument:
         appendInputFile(media.file());
         appendInputFile(media.thumb());
-        appendQString(media.fileName());
         appendQString(media.mimeType());
+    {
+        QList<DocumentAttribute> attrs = media.attributes();
+        appendInt(static_cast<qint32>(TL_Vector));
+        appendInt(attrs.size());
+        Q_FOREACH (DocumentAttribute attr, attrs)
+            appendDocumentAttribute(attr);
+    }
         break;
     case InputMedia::typeInputMediaDocument:
         appendInputDocument(media.documentId());
@@ -374,8 +386,31 @@ void OutboundPkt::appendSendMessageAction(const SendMessageAction &action) {
     appendInt(action.classType());
 }
 
+void OutboundPkt::appendDocumentAttribute(const DocumentAttribute &attr)
+{
+    switch(static_cast<int>(attr.classType()))
+    {
+    case DocumentAttribute::typeAttributeAudio:
+        appendInt(attr.duration());
+        break;
+    case DocumentAttribute::typeAttributeFilename:
+        appendQString(attr.filename());
+        break;
+    case DocumentAttribute::typeAttributeImageSize:
+        appendInt(attr.w());
+        appendInt(attr.h());
+        break;
+    case DocumentAttribute::typeAttributeVideo:
+        appendInt(attr.duration());
+        appendInt(attr.w());
+        appendInt(attr.h());
+        break;
+    }
+}
+
 void OutboundPkt::initConnection() {
-    appendInt(TL_InvokeWithLayer18);
+    appendInt(TL_InvokeWithLayer23);
+    appendInt(LAYER);
     appendInt(TL_InitConnection);
     appendInt(LIBQTELEGRAM_APP_ID);
     appendQString(Utils::getDeviceModel());

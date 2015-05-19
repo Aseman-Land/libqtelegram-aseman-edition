@@ -49,6 +49,7 @@
 #include "types/encryptedchat.h"
 #include "types/inputencryptedchat.h"
 #include "types/inputencryptedfile.h"
+#include "types/disabledfeature.h"
 #include "core/session.h"
 #include <QByteArray>
 #include <QList>
@@ -151,7 +152,7 @@ public:
 Q_SIGNALS:
     //# Answers
     // Registration / authorization
-    void config(qint64 msgId, qint32 date, bool testMode, qint32 thisDc, const QList<DcOption> &dcOptions, qint32 chatMaxSize, qint32 broadcastMaxSize);
+    void config(qint64 msgId, qint32 date, qint32 expires, bool testMode, qint32 thisDc, const QList<DcOption> &dcOptions, qint32 chatBigSize, qint32 chatMaxSize, qint32 broadcastMaxSize, QList<DisabledFeature> disabledFeatures);
     void helpGetInviteTextAnswer(qint64 msgId,QString inviteText); //inviteText is localised
     void authCheckedPhone(qint64 msgId, bool phoneRegistered, bool phoneInvited);
     void authCheckPhoneSent(qint64 msgId, QString phoneNumber);

@@ -35,6 +35,7 @@
 #include "decryptedmessage.h"
 #include "decryptedmessageaction.h"
 #include "decryptedmessagemedia.h"
+#include "documentattribute.h"
 #include "dialog.h"
 #include "document.h"
 #include "inputencryptedchat.h"

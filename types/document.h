@@ -22,13 +22,14 @@
 #define DOCUMENT_H
 
 #include "photosize.h"
+#include "documentattribute.h"
 
 class Document
 {
 public:
 
     enum DocumentType {
-       typeDocument = 0x9efc6326,
+       typeDocument = 0xf9a39f4f,
        typeDocumentEmpty = 0x36f8c871
     };
 
@@ -38,9 +39,7 @@ public:
         m_mimeType(""),
         m_thumb(PhotoSize::typePhotoSizeEmpty),
         m_date(0),
-        m_fileName(""),
         m_accessHash(0),
-        m_userId(0),
         m_size(0),
         m_classType(classType) {}
 
@@ -56,23 +55,11 @@ public:
     qint64 accessHash() const {
         return m_accessHash;
     }
-    void setUserId(qint32 userId) {
-        m_userId = userId;
-    }
-    qint32 userId() const {
-        return m_userId;
-    }
     void setDate(qint32 date) {
         m_date = date;
     }
     qint32 date() const {
         return m_date;
-    }
-    void setFileName(const QString & fileName) {
-        m_fileName = fileName;
-    }
-    QString fileName() const {
-        return m_fileName;
     }
     void setMimeType(const QString & mimeType) {
         m_mimeType = mimeType;
@@ -98,6 +85,12 @@ public:
     qint32 dcId() const {
         return m_dcId;
     }
+    void setAttributes(QList<DocumentAttribute> attrs) {
+        m_attributes = attrs;
+    }
+    QList<DocumentAttribute> attributes() const {
+        return m_attributes;
+    }
     void setClassType(DocumentType classType) {
         m_classType = classType;
     }
@@ -111,10 +104,9 @@ private:
     QString m_mimeType;
     PhotoSize m_thumb;
     qint32 m_date;
-    QString m_fileName;
     qint64 m_accessHash;
-    qint32 m_userId;
     qint32 m_size;
+    QList<DocumentAttribute> m_attributes;
     DocumentType m_classType;
 };
 #endif // DOCUMENT_H

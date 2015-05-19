@@ -89,7 +89,7 @@ private Q_SLOTS:
     void onDcAuthDisconnected();
     void onApiReady(DC*);
     void onApiError();
-    void onConfigReceived(qint64 msgId, qint32 date, bool testMode, qint32 thisDc, const QList<DcOption> &dcOptions, qint32 chatMaxSize, qint32 broadcastMaxSize);
+    void onConfigReceived(qint64 msgId, qint32 date, qint32 expires, bool testMode, qint32 thisDc, const QList<DcOption> &dcOptions, qint32 chatBigSize, qint32 chatMaxSize, qint32 broadcastMaxSize, QList<DisabledFeature> disabledFeatures);
     void onTransferSessionReady(DC*);
     void onAuthExportedAuthorization(qint64, qint32 ourId, const QByteArray &bytes);
     void onAuthImportedAuthorization(qint64, qint32 expires, const User &);

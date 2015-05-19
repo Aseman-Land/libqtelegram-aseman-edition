@@ -74,6 +74,6 @@
 #define DH_CONFIG_SERVER_RANDOM_LENGTH 256 // length we want to be a server generated random number
 #define SHARED_KEY_LENGTH 256 // length for the secret chat generated shared keys
 
-#define LAYER 18 // this value must be consistent with the TL_InvokeWithLayerX header in OutboundPkt.initConnection().
+#define LAYER 23 // this value must be consistent with the TL_InvokeWithLayerX header in OutboundPkt.initConnection().
 
 #endif // CONSTANTS_H

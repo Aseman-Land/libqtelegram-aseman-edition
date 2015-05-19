@@ -22,18 +22,19 @@
 #define CONTACTSTATUS_H
 
 #include <QtGlobal>
+#include "userstatus.h"
 
 class ContactStatus
 {
 public:
 
     enum ContactStatusType {
-       typeContactStatus = 0xaa77b873
+       typeContactStatus = 0xd3680c61
     };
 
     ContactStatus() :
         m_userId(0),
-        m_expires(0),
+        m_status(UserStatus::typeUserStatusEmpty),
         m_classType(typeContactStatus) {}
 
     void setUserId(qint32 userId) {
@@ -42,11 +43,11 @@ public:
     qint32 userId() const {
         return m_userId;
     }
-    void setExpires(qint32 expires) {
-        m_expires = expires;
+    void setUserStatus(UserStatus status) {
+        m_status = status;
     }
-    qint32 expires() const {
-        return m_expires;
+    UserStatus userStatus() const {
+        return m_status;
     }
     void setClassType(ContactStatusType classType) {
         m_classType = classType;
@@ -57,7 +58,7 @@ public:
 
 private:
     qint32 m_userId;
-    qint32 m_expires;
+    UserStatus m_status;
     ContactStatusType m_classType;
 };
 #endif // CONTACTSTATUS_H

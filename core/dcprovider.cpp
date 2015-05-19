@@ -241,16 +241,20 @@ void DcProvider::onApiReady(DC*) {
     disconnect(session, SIGNAL(sessionReady(DC*)), this, SLOT(onApiReady(DC*)));
 
     // get the config
-    connect(mApi, SIGNAL(config(qint64,qint32,bool,qint32,QList<DcOption>,qint32,qint32)), this, SLOT(onConfigReceived(qint64,qint32,bool,qint32,QList<DcOption>,qint32,qint32)));
+    connect(mApi, SIGNAL(config(qint64,qint32,qint32,bool,qint32,QList<DcOption>,qint32,qint32,qint32,QList<DisabledFeature>)), this, SLOT(onConfigReceived(qint64,qint32,qint32,bool,qint32,QList<DcOption>,qint32,qint32,qint32,QList<DisabledFeature>)));
     mApi->helpGetConfig();
 }
 
-void DcProvider::onConfigReceived(qint64 msgId, qint32 date, bool testMode, qint32 thisDc, const QList<DcOption> &dcOptions, qint32 chatMaxSize, qint32 broadcastMaxSize) {
+void DcProvider::onConfigReceived(qint64 msgId, qint32 date, qint32 expires, bool testMode, qint32 thisDc, const QList<DcOption> &dcOptions, qint32 chatBigSize, qint32 chatMaxSize, qint32 broadcastMaxSize, QList<DisabledFeature> disabledFeatures) {
 
     qCDebug(TG_CORE_DCPROVIDER) << "onConfigReceived(), msgId =" << QString::number(msgId, 16);
     qCDebug(TG_CORE_DCPROVIDER) << "date =" << date;
     qCDebug(TG_CORE_DCPROVIDER) << "testMode =" << testMode;
     qCDebug(TG_CORE_DCPROVIDER) << "thisDc =" << thisDc;
+
+    Q_UNUSED(expires)
+    Q_UNUSED(chatBigSize)
+    Q_UNUSED(disabledFeatures)
 
     mPendingDcs = dcOptions.length() -1; //all the received options but the default one, yet used
 
