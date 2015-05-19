@@ -93,7 +93,7 @@ void DcProvider::initialize() {
         mDcs.insert(dc->id(), dc);
     }
 
-    qint32 defaultDcId = settings->testMode() ? TEST_DEFAULT_DC_ID : PRODUCTION_DEFAULT_DC_ID;
+    qint32 defaultDcId = settings->testMode() ? TEST_DEFAULT_DC_ID : Settings::defaultHostDcId();
 
     // 2.- connect to working DC
     if (settings->workingDcNum() == defaultDcId) {
@@ -103,8 +103,8 @@ void DcProvider::initialize() {
         }
         // if dc hasn't key created, create it
         if (mDcs[defaultDcId]->state() < DC::authKeyCreated) {
-            QString defaultDcHost = PRODUCTION_DEFAULT_DC_HOST;
-            qint32 defaultDcPort = PRODUCTION_DEFAULT_DC_PORT;
+            QString defaultDcHost = Settings::defaultHostAddress();
+            qint32 defaultDcPort = Settings::defaultHostPort();
             if (settings->testMode()) {
                 defaultDcHost = TEST_DEFAULT_DC_HOST;
                 defaultDcPort = TEST_DEFAULT_DC_PORT;
@@ -258,17 +258,12 @@ void DcProvider::onConfigReceived(qint64 msgId, qint32 date, qint32 expires, boo
 
     mPendingDcs = dcOptions.length() -1; //all the received options but the default one, yet used
 
-    Settings *settings = Settings::getInstance();
-    qint32 defaultDcId = settings->testMode() ? TEST_DEFAULT_DC_ID : PRODUCTION_DEFAULT_DC_ID;
-
     Q_FOREACH (DcOption dcOption, dcOptions) {
         qCDebug(TG_CORE_DCPROVIDER) << "dcOption | id =" << dcOption.id() << ", ipAddress =" << dcOption.ipAddress() <<
                     ", port =" << dcOption.port() << ", hostname =" << dcOption.hostname();
 
         // for every new DC or not authenticated DC, insert into m_dcs and authenticate
         DC *dc = mDcs.value(dcOption.id());
-        if(dc && dc->id() == defaultDcId)
-            continue;
 
         // check if dc is not null or if received host and port are not equals than settings ones
         if ((!dc) || ((dc->host() != dcOption.ipAddress()) || (dc->port() != dcOption.port()))) {

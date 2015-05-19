@@ -46,6 +46,18 @@ public:
     Telegram(const QString &phoneNumber, const QString &configPath = QString("~/.telegram"), const QString &publicKeyFile = QString("tg.pub"));
     ~Telegram();
 
+    static void setDefaultHostAddress(const QString &host);
+    static void setDefaultHostPort(qint16 port);
+    static void setDefaultHostDcId(qint16 dcId);
+    static void setAppId(qint32 appId);
+    static void setAppHash(const QString &appHash);
+
+    static QString defaultHostAddress();
+    static qint16 defaultHostPort();
+    static qint16 defaultHostDcId();
+    static qint32 appId();
+    static QString appHash();
+
     // Registration / authorization
     qint64 authCheckPhone();
     qint64 authCheckPhone(const QString &phoneNumber);

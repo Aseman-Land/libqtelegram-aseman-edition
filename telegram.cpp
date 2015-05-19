@@ -107,6 +107,56 @@ void Telegram::init() {
 Telegram::~Telegram() {
 }
 
+void Telegram::setDefaultHostAddress(const QString &host)
+{
+    Settings::setDefaultHostAddress(host);
+}
+
+void Telegram::setDefaultHostPort(qint16 port)
+{
+    Settings::setDefaultHostPort(port);
+}
+
+void Telegram::setDefaultHostDcId(qint16 dcId)
+{
+    Settings::setDefaultHostDcId(dcId);
+}
+
+void Telegram::setAppId(qint32 appId)
+{
+    Settings::setAppId(appId);
+}
+
+void Telegram::setAppHash(const QString &appHash)
+{
+    Settings::setAppHash(appHash);
+}
+
+QString Telegram::defaultHostAddress()
+{
+    return Settings::defaultHostAddress();
+}
+
+qint16 Telegram::defaultHostPort()
+{
+    return Settings::defaultHostPort();
+}
+
+qint16 Telegram::defaultHostDcId()
+{
+    return Settings::defaultHostDcId();
+}
+
+qint32 Telegram::appId()
+{
+    return Settings::appId();
+}
+
+QString Telegram::appHash()
+{
+    return Settings::appHash();
+}
+
 bool Telegram::isConnected() {
     if (mApi && mApi->mainSession()) {
         return mApi->mainSession()->state() == QAbstractSocket::ConnectedState;
@@ -1072,7 +1122,7 @@ qint64 Telegram::authCheckPhone(const QString &phoneNumber) {
     return mApi->authCheckPhone(phoneNumber);
 }
 qint64 Telegram::authSendCode() {
-    return mApi->authSendCode(Settings::getInstance()->phoneNumber(), 0, LIBQTELEGRAM_APP_ID, LIBQTELEGRAM_APP_HASH, LANG_CODE);
+    return mApi->authSendCode(Settings::getInstance()->phoneNumber(), 0, Settings::appId(), Settings::appHash(), LANG_CODE);
 }
 
 qint64 Telegram::authSendSms() {

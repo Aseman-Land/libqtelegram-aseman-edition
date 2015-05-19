@@ -412,7 +412,7 @@ void OutboundPkt::initConnection() {
     appendInt(TL_InvokeWithLayer23);
     appendInt(LAYER);
     appendInt(TL_InitConnection);
-    appendInt(LIBQTELEGRAM_APP_ID);
+    appendInt(Settings::appId());
     appendQString(Utils::getDeviceModel());
     appendQString(Utils::getSystemVersion());
     appendQString(Utils::getAppVersion());

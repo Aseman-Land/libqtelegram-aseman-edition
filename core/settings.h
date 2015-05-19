@@ -88,6 +88,19 @@ class LIBQTELEGRAMSHARED_EXPORT Settings : public QObject
     Q_OBJECT
 public:
     static Settings *getInstance();
+
+    static void setDefaultHostAddress(const QString &host);
+    static void setDefaultHostPort(qint16 port);
+    static void setDefaultHostDcId(qint16 dcId);
+    static void setAppId(qint32 appId);
+    static void setAppHash(const QString &appHash);
+
+    static QString defaultHostAddress();
+    static qint16 defaultHostPort();
+    static qint16 defaultHostDcId();
+    static qint32 appId();
+    static QString appHash();
+
     bool loadSettings(const QString &phoneNumber, const QString &configPath = DEFAULT_CONFIG_PATH, const QString &publicKeyFile = DEFAULT_PUBLIC_KEY_FILE);
     void writeAuthFile();
     void writeSecretFile();

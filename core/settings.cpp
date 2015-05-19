@@ -33,6 +33,12 @@
 
 Q_LOGGING_CATEGORY(TG_CORE_SETTINGS, "tg.core.settings")
 
+QString lqt_defaultHostAddress_static;
+qint16 lqt_defaultHostPort_static = 0;
+qint16 lqt_defaultHostDcId_static = 0;
+qint32 lqt_appId_static = 0;
+QString lqt_appHash_static;
+
 Settings::Settings() :
     m_phoneNumber(""),
     m_baseConfigDirectory(""),
@@ -48,6 +54,56 @@ Settings::~Settings() {
 Settings* Settings::getInstance() {
     static Settings *instance = new Settings;
     return instance;
+}
+
+void Settings::setDefaultHostAddress(const QString &host)
+{
+    lqt_defaultHostAddress_static = host;
+}
+
+void Settings::setDefaultHostPort(qint16 port)
+{
+    lqt_defaultHostPort_static = port;
+}
+
+void Settings::setDefaultHostDcId(qint16 dcId)
+{
+    lqt_defaultHostDcId_static = dcId;
+}
+
+void Settings::setAppId(qint32 appId)
+{
+    lqt_appId_static = appId;
+}
+
+void Settings::setAppHash(const QString &appHash)
+{
+    lqt_appHash_static = appHash;
+}
+
+QString Settings::defaultHostAddress()
+{
+    return lqt_defaultHostAddress_static;
+}
+
+qint16 Settings::defaultHostPort()
+{
+    return lqt_defaultHostPort_static;
+}
+
+qint16 Settings::defaultHostDcId()
+{
+    return lqt_defaultHostDcId_static;
+}
+
+qint32 Settings::appId()
+{
+    return lqt_appId_static;
+}
+
+QString Settings::appHash()
+{
+    return lqt_appHash_static;
 }
 
 bool Settings::loadSettings(const QString &phoneNumber, const QString &baseConfigDirectory, const QString &publicKeyFile) {
@@ -149,7 +205,7 @@ void Settings::writeAuthFile() {
 void Settings::readAuthFile() {
     QSettings settings(m_authFilename, QSettings::IniFormat);
     Settings::getInstance()->testMode() ? settings.beginGroup(ST_TEST) : settings.beginGroup(ST_PRODUCTION);
-    qint32 defaultDcId = m_testMode ? TEST_DEFAULT_DC_ID : PRODUCTION_DEFAULT_DC_ID;
+    qint32 defaultDcId = m_testMode ? TEST_DEFAULT_DC_ID : Settings::defaultHostDcId();
     m_workingDcNum = settings.value(ST_WORKING_DC_NUM, defaultDcId).toInt();
     m_ourId = settings.value(ST_OUR_ID).toInt();
 
