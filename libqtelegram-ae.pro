@@ -145,7 +145,13 @@ HEADERS += \
     libqtelegram_global.h \
     types/contactfound.h \
     types/documentattribute.h \
-    types/disabledfeature.h
+    types/disabledfeature.h \
+    types/privacyrule.h \
+    types/inputprivacyrule.h \
+    types/accountdaysttl.h \
+    types/stickerpack.h \
+    types/privacykey.h \
+    types/inputprivacykey.h
 
 linux {
     contains(QMAKE_HOST.arch, x86_64) {

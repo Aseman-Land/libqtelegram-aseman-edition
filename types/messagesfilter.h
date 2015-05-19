@@ -20,6 +20,7 @@
 
 #ifndef MESSAGESFILTER_H
 #define MESSAGESFILTER_H
+
 class MessagesFilter
 {
 public:

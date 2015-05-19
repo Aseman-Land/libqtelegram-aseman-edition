@@ -539,7 +539,7 @@ void Telegram::onMessagesDhConfigNotModified(qint64 msgId, const QByteArray &ran
     BN_bn2bin(r, rawGAOrB);
     QByteArray gAOrB = QByteArray::fromRawData(reinterpret_cast<char*>(rawGAOrB), 256);
 
-    switch (secretChat->state()) {
+    switch (static_cast<qint32>(secretChat->state())) {
     case SecretChat::Init: {
         // generate randomId, used not only to request encryption but as chatId
         qint32 randomId;
@@ -683,7 +683,7 @@ SecretChatMessage Telegram::toSecretChatMessage(const EncryptedMessage &encrypte
 }
 
 void Telegram::processSecretChatUpdate(const Update &update) {
-    switch (update.classType()) {
+    switch (static_cast<qint32>(update.classType())) {
     case Update::typeUpdateNewEncryptedMessage: {
         EncryptedMessage encrypted = update.encryptedMessage();
 
@@ -702,7 +702,7 @@ void Telegram::processSecretChatUpdate(const Update &update) {
 
         const EncryptedChat &encryptedChat = update.chat();
         qint32 chatId = encryptedChat.id();
-        switch (encryptedChat.classType()) {
+        switch (static_cast<qint32>(encryptedChat.classType())) {
         case EncryptedChat::typeEncryptedChatRequested: {
 
             // here, we have received a request of creating a new secret chat. Emit a signal

@@ -120,6 +120,8 @@ public:
     virtual EncryptedFile fetchEncryptedFile();
     virtual DisabledFeature fetchDisabledFeature();
     virtual DocumentAttribute fetchDocumentAttribute();
+    virtual PrivacyRule fetchPrivacyRule();
+    virtual PrivacyKey fetchPrivacyKey();
 
 protected:
     char *m_buffer;

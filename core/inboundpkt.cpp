@@ -650,7 +650,10 @@ Update InboundPkt::fetchUpdate() {
              x == (qint32)Update::typeUpdateChatParticipantDelete ||
              x == (qint32)Update::typeUpdateDcOptions ||
              x == (qint32)Update::typeUpdateUserBlocked ||
-             x == (qint32)Update::typeUpdateNotifySettings);
+             x == (qint32)Update::typeUpdateNotifySettings ||
+             x == (qint32)Update::typeUpdateServiceNotification ||
+             x == (qint32)Update::typeUpdatePrivacy ||
+             x == (qint32)Update::typeUpdateUserPhone);
     Update update((Update::UpdateType)x);
     switch (x) {
     case Update::typeUpdateNewMessage:
@@ -773,6 +776,23 @@ Update InboundPkt::fetchUpdate() {
         update.setMessageText(fetchQString());
         update.setMedia(fetchMessageMedia());
         update.setPopup(fetchBool());
+        break;
+    case Update::typeUpdatePrivacy:
+    {
+        update.setKey(fetchPrivacyKey());
+        ASSERT(fetchInt() == (qint32)TL_Vector);
+        qint32 n = fetchInt();
+        QList<PrivacyRule> rules;
+        for (qint32 i = 0; i < n; i++) {
+            rules.append(fetchPrivacyRule());
+        }
+        update.setRules(rules);
+    }
+        break;
+    case Update::typeUpdateUserPhone:
+        update.setUserId(fetchInt());
+        update.setPhone(fetchQString());
+        break;
     default:
         qDebug() << "Update received in a not contemplated option";
         break;
@@ -924,6 +944,40 @@ DocumentAttribute InboundPkt::fetchDocumentAttribute()
     }
 
     return attr;
+}
+
+PrivacyRule InboundPkt::fetchPrivacyRule()
+{
+    qint32 x = fetchInt();
+    ASSERT(x == (qint32)PrivacyRule::typePrivacyValueAllowContacts || x == (qint32)PrivacyRule::typePrivacyValueAllowAll
+           || x == (qint32)PrivacyRule::typePrivacyValueAllowUsers || x == (qint32)PrivacyRule::typePrivacyValueDisallowContacts
+           || x == (qint32)PrivacyRule::typePrivacyValueDisallowAll || x == (qint32)PrivacyRule::typePrivacyValueDisallowUsers);
+
+    PrivacyRule rule(static_cast<PrivacyRule::PrivacyRuleType>(x));
+    switch(x)
+    {
+    case PrivacyRule::typePrivacyValueAllowUsers:
+    case PrivacyRule::typePrivacyValueDisallowUsers:
+    {
+        ASSERT(fetchInt() == (qint32)TL_Vector);
+        qint32 n = fetchInt();
+        QList<qint32> users;
+        for (qint32 i = 0; i < n; i++) {
+            users.append(fetchInt());
+        }
+        rule.setUsers(users);
+    }
+        break;
+    }
+
+    return rule;
+}
+
+PrivacyKey InboundPkt::fetchPrivacyKey()
+{
+    qint32 x = fetchInt();
+    ASSERT(x == (qint32)PrivacyKey::typePrivacyKeyStatusTimestamp);
+    return PrivacyKey(static_cast<PrivacyKey::PrivacyKeyType>(x));
 }
 
 WallPaper InboundPkt::fetchWallPaper() {

@@ -34,6 +34,8 @@
 #include "encryptedmessage.h"
 #include "encryptedchat.h"
 #include "sendmessageaction.h"
+#include "privacykey.h"
+#include "privacyrule.h"
 
 class Update
 {
@@ -66,7 +68,9 @@ public:
        typeUpdateEncryptedMessagesRead = 0x38fe25b7,
        typeUpdateChatParticipants = 0x7761198,
        typeUpdateNewGeoChatMessage = 0x5a68e3f7,
-       typeUpdateServiceNotification = 0x382dd3e4
+       typeUpdateServiceNotification = 0x382dd3e4,
+       typeUpdatePrivacy = 0xee3b272a,
+       typeUpdateUserPhone = 0x12b9417b
     };
 
     Update(UpdateType classType = typeUpdateInvalid) :
@@ -100,6 +104,7 @@ public:
         mLocation(""),
         mPeer(NotifyPeer::typeNotifyAll),
         mBlocked(false),
+        mKey(PrivacyKey::typePrivacyKeyStatusTimestamp),
         mClassType(classType) {}
 
     void setUserId(qint32 userId) {
@@ -321,6 +326,24 @@ public:
     QString messageText() const {
         return mMessageText;
     }
+    void setKey(PrivacyKey key) {
+        mKey = key;
+    }
+    PrivacyKey key() const {
+        return mKey;
+    }
+    void setRules(QList<PrivacyRule> rules) {
+        mRules = rules;
+    }
+    QList<PrivacyRule> rules() const {
+        return mRules;
+    }
+    void setPhone(const QString &phone) {
+        mPhone = phone;
+    }
+    QString phone() const {
+        return mPhone;
+    }
     UpdateType classType() const {
         return mClassType;
     }
@@ -362,6 +385,9 @@ private:
     NotifyPeer mPeer;
     bool mBlocked;
     SendMessageAction mAction;
+    PrivacyKey mKey;
+    QList<PrivacyRule> mRules;
+    QString mPhone;
     UpdateType mClassType;
 };
 #endif // UPDATE_H
