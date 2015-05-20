@@ -1442,12 +1442,13 @@ qint64 Telegram::messagesSendAudio(const InputPeer &peer, qint64 randomId, const
     return mFileHandler->uploadSendFile(*op, filePath);
 }
 
-qint64 Telegram::messagesSendDocument(const InputPeer &peer, qint64 randomId, const QByteArray &bytes, const QString &fileName, const QString &mimeType, const QByteArray &thumbnailBytes, const QString &thumbnailName) {
+qint64 Telegram::messagesSendDocument(const InputPeer &peer, qint64 randomId, const QByteArray &bytes, const QString &fileName, const QString &mimeType, const QByteArray &thumbnailBytes, const QString &thumbnailName, bool sendAsSticker) {
     DocumentAttribute fileAttr(DocumentAttribute::typeAttributeFilename);
     fileAttr.setFilename(fileName);
 
     QList<DocumentAttribute> attributes;
     attributes << fileAttr;
+    if(sendAsSticker) attributes << DocumentAttribute(DocumentAttribute::typeAttributeSticker);
 
     InputMedia inputMedia(InputMedia::typeInputMediaUploadedDocument);
     inputMedia.setAttributes(attributes);
@@ -1462,15 +1463,18 @@ qint64 Telegram::messagesSendDocument(const InputPeer &peer, qint64 randomId, co
     return mFileHandler->uploadSendFile(*op, fileName, bytes, thumbnailBytes, thumbnailName);
 }
 
-qint64 Telegram::messagesSendDocument(const InputPeer &peer, qint64 randomId, const QString &filePath, const QString &thumbnailFilePath) {
+qint64 Telegram::messagesSendDocument(const InputPeer &peer, qint64 randomId, const QString &filePath, const QString &thumbnailFilePath, bool sendAsSticker) {
+    const QMimeType t = QMimeDatabase().mimeTypeForFile(QFileInfo(filePath));
+
     DocumentAttribute fileAttr(DocumentAttribute::typeAttributeFilename);
     fileAttr.setFilename(QFileInfo(filePath).fileName());
 
     QList<DocumentAttribute> attributes;
     attributes << fileAttr;
+    if(sendAsSticker) attributes << DocumentAttribute(DocumentAttribute::typeAttributeSticker);
 
     InputMedia inputMedia(InputMedia::typeInputMediaUploadedDocument);
-    inputMedia.setMimeType(QMimeDatabase().mimeTypeForFile(QFileInfo(filePath)).name());
+    inputMedia.setMimeType(t.name());
     inputMedia.setAttributes(attributes);
     if (thumbnailFilePath.length() > 0) {
         inputMedia.setClassType(InputMedia::typeInputMediaUploadedThumbDocument);
