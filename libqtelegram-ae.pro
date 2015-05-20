@@ -152,7 +152,9 @@ HEADERS += \
     types/accountdaysttl.h \
     types/stickerpack.h \
     types/privacykey.h \
-    types/inputprivacykey.h
+    types/inputprivacykey.h \
+    types/messagesallstickers.h \
+    types/messagesstickers.h
 
 linux {
     contains(QMAKE_HOST.arch, x86_64) {

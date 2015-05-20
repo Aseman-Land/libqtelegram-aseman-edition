@@ -49,7 +49,12 @@
 #include "types/encryptedchat.h"
 #include "types/inputencryptedchat.h"
 #include "types/inputencryptedfile.h"
+#include "types/accountdaysttl.h"
 #include "types/disabledfeature.h"
+#include "types/inputprivacykey.h"
+#include "types/inputprivacyrule.h"
+#include "types/messagesstickers.h"
+#include "types/messagesallstickers.h"
 #include "core/session.h"
 #include <QByteArray>
 #include <QList>
@@ -88,6 +93,14 @@ public:
     qint64 accountGetWallPapers();
     qint64 accountCheckUsername(const QString &username);
     qint64 accountUpdateUsername(const QString &username);
+    qint64 accountGetPrivacy(const InputPrivacyKey &key);
+    qint64 accountSetPrivacy(const InputPrivacyKey &key, const QList<InputPrivacyRule> &rules);
+    qint64 accountDeleteAccount(const QString &reason);
+    qint64 accountGetAccountTTL();
+    qint64 accountSetAccountTTL(const AccountDaysTTL &ttl);
+    qint64 accountSendChangePhoneCode(const QString &phone_number);
+    qint64 accountChangePhone(const QString &phone_number, const QString &phone_code_hash, const QString &phone_code);
+    qint64 accountUpdateDeviceLocked(int period);
     qint64 photosUploadProfilePhoto(const InputFile &file, const QString &caption, const InputGeoPoint &geoPoint, const InputPhotoCrop &crop);
     qint64 photosUpdateProfilePhoto(const InputPhoto &id, const InputPhotoCrop &crop);
     // Users
@@ -101,6 +114,7 @@ public:
     qint64 contactsDeleteContact(const InputUser &id);
     qint64 contactsDeleteContacts(const QList<InputUser> &ids);
     qint64 contactsSearch(const QString &q, qint32 limit = 0);
+    qint64 contactsResolveUsername(const QString &username);
     // Blacklist
     qint64 contactsBlock(const InputUser &id);
     qint64 contactsUnblock(const InputUser &id);
@@ -141,6 +155,9 @@ public:
     qint64 messagesSendEncryptedFile(const QList<qint64> &previousMsgs, const InputEncryptedChat &inputEncryptedChat, qint64 randomId, QByteArray data, const InputEncryptedFile &file);
     qint64 messagesSendEncryptedService(const QList<qint64> &previousMsgs, const InputEncryptedChat &inputEncryptedChat, qint64 randomId, QByteArray data);
     qint64 messagesReceivedQueue(qint32 maxQts);
+    // Stickers
+    qint64 messagesGetStickers(QString emoticon, QString hash);
+    qint64 messagesGetAllStickers(QString hash);
     // Updates
     qint64 updatesGetState();
     qint64 updatesGetDifference(qint32 pts, qint32 date, qint32 qts);
@@ -178,6 +195,13 @@ Q_SIGNALS:
     void accountGetWallPapersResult(qint64 msgId, QList<WallPaper> wallpapers);
     void accountCheckUsernameResult(qint64 msgId, bool ok);
     void accountUpdateUsernameResult(qint64 msgId, User user);
+    void accountPrivacyRules(qint64 msgId, QList<PrivacyRule> rules, QList<User> users);
+    void accountDeleteAccountResult(qint64 msgId, bool ok);
+    void accountGetAccountTTLResult(qint64 msgId, const AccountDaysTTL &ttl);
+    void accountSetAccountTTLResult(qint64 msgId, bool ok);
+    void accountUpdateDeviceLockedResult(qint64 msgId, bool ok);
+    void accountChangePhoneResult(qint64 msgId, User user);
+    void accountSentChangePhoneCode(qint64 msgId, QString phone_code_hash, qint32 send_call_timeout);
     void photosPhoto(qint64 msgId, Photo photo, QList<User> users);
     void photosUserProfilePhoto(qint64 msgId, UserProfilePhoto photo);
     // Users
@@ -193,6 +217,7 @@ Q_SIGNALS:
     void contactsDeleteContactLink(qint64 msgId, ContactsMyLink myLink, ContactsForeignLink foreignLink, User user);
     void contactsDeleteContactsResult(qint64 msgId, bool ok);
     void contactsFound(qint64 msgId, QList<ContactFound> founds, QList<User> users);
+    void contactsResolveUsernameResult(qint64 msgId, User user);
     // Blacklist
     void contactsBlockResult(qint64 msgId, bool ok);
     void contactsUnblockResult(qint64 msgId, bool ok);
@@ -253,6 +278,9 @@ Q_SIGNALS:
     void messagesSendEncryptedServiceSentEncryptedFile(qint64 msgId, qint32 date, const EncryptedFile &file);
     void messagesSentEncryptedService(qint64 msgId, qint32 date);
     void messagesReceivedQueueResult(qint64 msgId, const QList<qint64> &randomIds);
+    // Stickers
+    void messagesGetStickersResult(qint64 msgId, MessagesStickers stickers);
+    void messagesGetAllStickersResult(qint64 msgId, MessagesAllStickers stickers);
     // Updates
     void updatesState(qint64 msgId, qint32 pts, qint32 qts, qint32 date, qint32 seq, qint32 unreadCount);
     void updatesDifferenceEmpty(qint64 msgId, qint32 date, qint32 seq);
@@ -293,6 +321,14 @@ private:
     QueryMethods accountGetWallPapersMethods;
     QueryMethods accountCheckUsernameMethods;
     QueryMethods accountUpdateUsernameMethods;
+    QueryMethods accountAccountGetPrivacyMethods;
+    QueryMethods accountAccountSetPrivacyMethods;
+    QueryMethods accountDeleteAccountMethods;
+    QueryMethods accountGetAccountTTLMethods;
+    QueryMethods accountSetAccountTTLMethods;
+    QueryMethods accountSendChangePhoneCodeMethods;
+    QueryMethods accountChangePhoneMethods;
+    QueryMethods accountUpdateDeviceLockedMethods;
     QueryMethods photosUploadProfilePhotoMethods;
     QueryMethods photosUpdateProfilePhotoMethods;
     QueryMethods usersGetUsersMethods;
@@ -307,6 +343,7 @@ private:
     QueryMethods contactsUnblockMethods;
     QueryMethods contactsGetBlockedMethods;
     QueryMethods contactsSearchMethods;
+    QueryMethods contactsResolveUsernameMethods;
     QueryMethods messagesSendMessageMethods;
     QueryMethods messagesSendMediaMethods;
     QueryMethods messagesSetTypingMethods;
@@ -340,6 +377,8 @@ private:
     QueryMethods messagesSendEncryptedFileMethods;
     QueryMethods messagesSendEncryptedServiceMethods;
     QueryMethods messagesReceivedQueueMethods;
+    QueryMethods messagesGetStickersMethods;
+    QueryMethods messagesGetAllStickersMethods;
     QueryMethods updatesGetStateMethods;
     QueryMethods updatesGetDifferenceMethods;
     QueryMethods uploadSaveFilePartMethods;
@@ -370,6 +409,13 @@ private:
     void onAccountGetWallPapersAnswer(Query *q, InboundPkt &inboundPkt);
     void onAccountCheckUsernameAnswer(Query *q, InboundPkt &inboundPkt);
     void onAccountUpdateUsernameAnswer(Query *q, InboundPkt &inboundPkt);
+    void onAccountPrivacyRules(Query *q, InboundPkt &inboundPkt);
+    void onAccountDeleteAccountAnswer(Query *q, InboundPkt &inboundPkt);
+    void onAccountGetAccountTTLAnswer(Query *q, InboundPkt &inboundPkt);
+    void onAccountSetAccountTTLAnswer(Query *q, InboundPkt &inboundPkt);
+    void onAccountChangePhoneAnswer(Query *q, InboundPkt &inboundPkt);
+    void onAccountUpdateDeviceLockedAnswer(Query *q, InboundPkt &inboundPkt);
+    void onAccountSentChangePhoneCode(Query *q, InboundPkt &inboundPkt);
     void onPhotosUploadProfilePhotoAnswer(Query *q, InboundPkt &inboundPkt);
     void onPhotosUpdateProfilePhotoAnswer(Query *q, InboundPkt &inboundPkt);
     void onUsersGetUsersAnswer(Query *q, InboundPkt &inboundPkt);
@@ -384,6 +430,7 @@ private:
     void onContactsBlockAnswer(Query *q, InboundPkt &inboundPkt);
     void onContactsUnblockAnswer(Query *q, InboundPkt &inboundPkt);
     void onContactsGetBlockedAnswer(Query *q, InboundPkt &inboundPkt);
+    void onContactsResolveUsernameAnswer(Query *q, InboundPkt &inboundPkt);
     void onMessagesSendMessageAnswer(Query *q, InboundPkt &inboundPkt);
     void onMessagesSendMediaAnswer(Query *q, InboundPkt &inboundPkt);
     void onMessagesSetTypingAnswer(Query *q, InboundPkt &inboundPkt);
@@ -417,6 +464,8 @@ private:
     void onMessagesSendEncryptedFileAnswer(Query *q, InboundPkt &inboundPkt);
     void onMessagesSendEncryptedServiceAnswer(Query *q, InboundPkt &inboundPkt);
     void onMessagesReceivedQueueAnswer(Query *q, InboundPkt &inboundPkt);
+    void onMessagesGetStickersAnswer(Query *q, InboundPkt &inboundPkt);
+    void onMessagesGetAllStickersAnswer(Query *q, InboundPkt &inboundPkt);
     void onUpdatesGetStateAnswer(Query *q, InboundPkt &inboundPkt);
     void onUpdatesGetDifferenceAnswer(Query *q, InboundPkt &inboundPkt);
     void onUploadSaveFilePartAnswer(Query *q, InboundPkt &inboundPkt);

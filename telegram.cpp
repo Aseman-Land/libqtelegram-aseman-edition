@@ -222,6 +222,13 @@ void Telegram::onDcProviderReady() {
     connect(mApi, SIGNAL(accountGetWallPapersResult(qint64,QList<WallPaper>)), this, SIGNAL(accountGetWallPapersAnswer(qint64,QList<WallPaper>)));
     connect(mApi, SIGNAL(accountCheckUsernameResult(qint64,bool)), this, SIGNAL(accountCheckUsernameAnswer(qint64,bool)));
     connect(mApi, SIGNAL(accountUpdateUsernameResult(qint64,User)), this, SIGNAL(accountUpdateUsernameAnswer(qint64,User)));
+    connect(mApi, SIGNAL(accountPrivacyRules(qint64,QList<PrivacyRule>,QList<User>)), this, SIGNAL(accountPrivacyRules(qint64,QList<PrivacyRule>,QList<User>)));
+    connect(mApi, SIGNAL(accountDeleteAccountResult(qint64,bool)), this, SIGNAL(accountDeleteAccountAnswer(qint64,bool)));
+    connect(mApi, SIGNAL(accountGetAccountTTLResult(qint64,AccountDaysTTL)), this, SIGNAL(accountGetAccountTTLAnswer(qint64,AccountDaysTTL)));
+    connect(mApi, SIGNAL(accountSetAccountTTLResult(qint64,bool)), this, SIGNAL(accountSetAccountTTLAnswer(qint64,bool)));
+    connect(mApi, SIGNAL(accountUpdateDeviceLockedResult(qint64,bool)), this, SIGNAL(accountUpdateDeviceLockedAnswer(qint64,bool)));
+    connect(mApi, SIGNAL(accountSentChangePhoneCode(qint64,QString,qint32)), this, SIGNAL(accountSentChangePhoneCode(qint64,QString,qint32)));
+    connect(mApi, SIGNAL(accountChangePhoneResult(qint64,User)), this, SIGNAL(accountChangePhoneAnswer(qint64,User)));
     connect(mApi, SIGNAL(photosPhoto(qint64,Photo,QList<User>)), this, SIGNAL(photosUploadProfilePhotoAnswer(qint64,Photo,QList<User>)));
     connect(mApi, SIGNAL(photosUserProfilePhoto(qint64,UserProfilePhoto)), this, SIGNAL(photosUpdateProfilePhotoAnswer(qint64,UserProfilePhoto)));
     connect(mApi, SIGNAL(usersGetUsersResult(qint64,QList<User>)), this, SIGNAL(usersGetUsersAnswer(qint64,QList<User>)));
@@ -234,6 +241,7 @@ void Telegram::onDcProviderReady() {
     connect(mApi, SIGNAL(contactsImportedContacts(qint64,QList<ImportedContact>,QList<qint64>,QList<User>)), this, SIGNAL(contactsImportContactsAnswer(qint64,QList<ImportedContact>,QList<qint64>,QList<User>)));
     connect(mApi, SIGNAL(contactsImportedContacts(qint64,QList<ImportedContact>,QList<qint64>,QList<User>)), this, SLOT(onContactsImportContactsAnswer()));
     connect(mApi, SIGNAL(contactsFound(qint64,QList<ContactFound>,QList<User>)), this, SIGNAL(contactsFound(qint64,QList<ContactFound>,QList<User>)));
+    connect(mApi, SIGNAL(contactsResolveUsernameResult(qint64,User)), this, SIGNAL(contactsResolveUsernameAnswer(qint64,User)));
     connect(mApi, SIGNAL(contactsDeleteContactLink(qint64,ContactsMyLink,ContactsForeignLink,User)), this, SIGNAL(contactsDeleteContactAnswer(qint64,ContactsMyLink,ContactsForeignLink,User)));
     connect(mApi, SIGNAL(contactsDeleteContactsResult(qint64,bool)), this, SIGNAL(contactsDeleteContactsAnswer(qint64,bool)));
     connect(mApi, SIGNAL(contactsBlockResult(qint64,bool)), this, SIGNAL(contactsBlockAnswer(qint64,bool)));
@@ -287,6 +295,8 @@ void Telegram::onDcProviderReady() {
     connect(mApi, SIGNAL(messagesSendEncryptedSentEncryptedFile(qint64,qint32,EncryptedFile)), this, SIGNAL(messagesSendEncryptedAnswer(qint64,qint32,EncryptedFile)));
     connect(mApi, SIGNAL(messagesSendEncryptedServiceSentEncryptedMessage(qint64,qint32)), this, SIGNAL(messagesSendEncryptedServiceAnswer(qint64,qint32)));
     connect(mApi, SIGNAL(messagesSendEncryptedServiceSentEncryptedFile(qint64,qint32,EncryptedFile)), this, SIGNAL(messagesSendEncryptedServiceAnswer(qint64,qint32,EncryptedFile)));
+    connect(mApi, SIGNAL(messagesGetStickersResult(qint64,MessagesStickers)), this, SIGNAL(messagesGetStickersAnwer(qint64,MessagesStickers)));
+    connect(mApi, SIGNAL(messagesGetAllStickersResult(qint64,MessagesAllStickers)), this, SIGNAL(messagesGetAllStickersAnwer(qint64,MessagesAllStickers)));
     connect(mApi, SIGNAL(updateShort(Update,qint32)), SLOT(onUpdateShort(Update)));
     connect(mApi, SIGNAL(updatesCombined(QList<Update>,QList<User>,QList<Chat>,qint32,qint32,qint32)), SLOT(onUpdatesCombined(QList<Update>)));
     connect(mApi, SIGNAL(updates(QList<Update>,QList<User>,QList<Chat>,qint32,qint32)), SLOT(onUpdates(QList<Update>)));
@@ -541,6 +551,14 @@ qint64 Telegram::messagesSendEncryptedDocument(qint32 chatId, qint64 randomId, q
 
 qint64 Telegram::messagesReceivedQueue(qint32 maxQts) {
     return mApi->messagesReceivedQueue(maxQts);
+}
+
+qint64 Telegram::messagesGetStickers(QString emoticon, QString hash) {
+    return mApi->messagesGetStickers(emoticon, hash);
+}
+
+qint64 Telegram::messagesGetAllStickers(QString hash) {
+    return mApi->messagesGetAllStickers(hash);
 }
 
 qint64 Telegram::generateGAorB(SecretChat *secretChat) {
@@ -1202,6 +1220,38 @@ qint64 Telegram::accountUpdateUsername(const QString &username) {
     return mApi->accountUpdateUsername(username);
 }
 
+qint64 Telegram::accountGetPrivacy(const InputPrivacyKey &key) {
+    return mApi->accountGetPrivacy(key);
+}
+
+qint64 Telegram::accountSetPrivacy(const InputPrivacyKey &key, const QList<InputPrivacyRule> &rules) {
+    return mApi->accountSetPrivacy(key, rules);
+}
+
+qint64 Telegram::accountDeleteAccount(const QString &reason) {
+    return mApi->accountDeleteAccount(reason);
+}
+
+qint64 Telegram::accountGetAccountTTL() {
+    return mApi->accountGetAccountTTL();
+}
+
+qint64 Telegram::accountSetAccountTTL(const AccountDaysTTL &ttl) {
+    return mApi->accountSetAccountTTL(ttl);
+}
+
+qint64 Telegram::accountUpdateDeviceLocked(int period) {
+    return mApi->accountUpdateDeviceLocked(period);
+}
+
+qint64 Telegram::accountSendChangePhoneCode(const QString &phone_number) {
+    return mApi->accountSendChangePhoneCode(phone_number);
+}
+
+qint64 Telegram::accountChangePhone(const QString &phone_number, const QString &phone_code_hash, const QString &phone_code) {
+    return mApi->accountChangePhone(phone_number, phone_code_hash, phone_code);
+}
+
 qint64 Telegram::photosUploadProfilePhoto(const QByteArray &bytes, const QString &fileName, const QString &caption, const InputGeoPoint &geoPoint, const InputPhotoCrop &crop) {
     FileOperation *op = new FileOperation(FileOperation::uploadProfilePhoto);
     op->setCaption(caption);
@@ -1284,6 +1334,10 @@ qint64 Telegram::contactsDeleteContacts(const QList<InputUser> &users) {
 
 qint64 Telegram::contactsSearch(const QString &q, qint32 limit) {
     return mApi->contactsSearch(q, limit);
+}
+
+qint64 Telegram::contactsResolveUsername(const QString &username) {
+    return mApi->contactsResolveUsername(username);
 }
 
 qint64 Telegram::contactsBlock(const InputUser &user) {

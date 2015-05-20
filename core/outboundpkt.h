@@ -47,6 +47,9 @@
 #include "types/inputgeochat.h"
 #include "types/inputencryptedchat.h"
 #include "types/inputencryptedfile.h"
+#include "types/inputprivacykey.h"
+#include "types/inputprivacyrule.h"
+#include "types/accountdaysttl.h"
 
 #include <QSharedPointer>
 
@@ -92,6 +95,9 @@ public:
     void appendInputEncryptedFile(const InputEncryptedFile &inputEncryptedFile);
     void appendSendMessageAction(const SendMessageAction &action);
     void appendDocumentAttribute(const DocumentAttribute &attr);
+    void appendInputPrivacyKey(const InputPrivacyKey &key);
+    void appendInputPrivacyRule(const InputPrivacyRule &rule);
+    void appendAccountDaysTTL(const AccountDaysTTL &ttl);
 
     qint32 length() const;
     qint32 *buffer();

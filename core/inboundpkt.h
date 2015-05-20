@@ -62,6 +62,8 @@
 #include "types/encryptedchat.h"
 #include "types/disabledfeature.h"
 #include "types/documentattribute.h"
+#include "types/accountdaysttl.h"
+#include "types/stickerpack.h"
 
 #include "secret/secretchat.h"
 
@@ -122,6 +124,9 @@ public:
     virtual DocumentAttribute fetchDocumentAttribute();
     virtual PrivacyRule fetchPrivacyRule();
     virtual PrivacyKey fetchPrivacyKey();
+    virtual AccountDaysTTL fetchAccountDaysTTL();
+    virtual Document fetchDocument();
+    virtual StickerPack fetchStickerPack();
 
 protected:
     char *m_buffer;
@@ -138,7 +143,6 @@ protected:
     PhotoSize fetchPhotoSize();
     MessageMedia fetchMessageMedia();
     Video fetchVideo();
-    Document fetchDocument();
     Audio fetchAudio();
     ChatParticipant fetchChatParticipant();
     ChatParticipants fetchChatParticipants();

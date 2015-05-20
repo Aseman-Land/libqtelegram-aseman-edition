@@ -388,6 +388,7 @@ void OutboundPkt::appendSendMessageAction(const SendMessageAction &action) {
 
 void OutboundPkt::appendDocumentAttribute(const DocumentAttribute &attr)
 {
+    appendInt(attr.classType());
     switch(static_cast<int>(attr.classType()))
     {
     case DocumentAttribute::typeAttributeAudio:
@@ -406,6 +407,28 @@ void OutboundPkt::appendDocumentAttribute(const DocumentAttribute &attr)
         appendInt(attr.h());
         break;
     }
+}
+
+void OutboundPkt::appendInputPrivacyKey(const InputPrivacyKey &key)
+{
+    appendInt(key.classType());
+}
+
+void OutboundPkt::appendInputPrivacyRule(const InputPrivacyRule &rule)
+{
+    appendInt(rule.classType());
+
+    QList<qint32> users = rule.users();
+    appendInt(static_cast<qint32>(TL_Vector));
+    appendInt(users.size());
+    Q_FOREACH (qint32 user, users)
+        appendInt(user);
+}
+
+void OutboundPkt::appendAccountDaysTTL(const AccountDaysTTL &ttl)
+{
+    appendInt(ttl.classType());
+    appendInt(ttl.days());
 }
 
 void OutboundPkt::initConnection() {

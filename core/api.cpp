@@ -79,6 +79,22 @@ Api::Api(Session *session, QObject *parent) :
 
     accountUpdateUsernameMethods.onAnswer = &Api::onAccountUpdateUsernameAnswer;
 
+    accountAccountGetPrivacyMethods.onAnswer = &Api::onAccountPrivacyRules;
+
+    accountAccountSetPrivacyMethods.onAnswer = &Api::onAccountPrivacyRules;
+
+    accountDeleteAccountMethods.onAnswer = &Api::onAccountDeleteAccountAnswer;
+
+    accountGetAccountTTLMethods.onAnswer = &Api::onAccountGetAccountTTLAnswer;
+
+    accountSetAccountTTLMethods.onAnswer = &Api::onAccountSetAccountTTLAnswer;
+
+    accountChangePhoneMethods.onAnswer = &Api::onAccountChangePhoneAnswer;
+
+    accountSendChangePhoneCodeMethods.onAnswer = &Api::onAccountSentChangePhoneCode;
+
+    accountUpdateDeviceLockedMethods.onAnswer = &Api::onAccountUpdateDeviceLockedAnswer;
+
     photosUploadProfilePhotoMethods.onAnswer = &Api::onPhotosUploadProfilePhotoAnswer;
 
     photosUpdateProfilePhotoMethods.onAnswer = &Api::onPhotosUpdateProfilePhotoAnswer;
@@ -101,6 +117,8 @@ Api::Api(Session *session, QObject *parent) :
     contactsDeleteContactsMethods.onAnswer = &Api::onContactsDeleteContactsAnswer;
 
     contactsSearchMethods.onAnswer = &Api::onContactsSearchAnswer;
+
+    contactsResolveUsernameMethods.onAnswer = &Api::onContactsResolveUsernameAnswer;
 
     contactsBlockMethods.onAnswer = &Api::onContactsBlockAnswer;
 
@@ -173,6 +191,10 @@ Api::Api(Session *session, QObject *parent) :
     messagesSendEncryptedServiceMethods.onAnswer = &Api::onMessagesSendEncryptedServiceAnswer;
 
     messagesReceivedQueueMethods.onAnswer = &Api::onMessagesReceivedQueueAnswer;
+
+    messagesGetStickersMethods.onAnswer = &Api::onMessagesGetStickersAnswer;
+
+    messagesGetAllStickersMethods.onAnswer = &Api::onMessagesGetAllStickersAnswer;
 
     updatesGetStateMethods.onAnswer = &Api::onUpdatesGetStateAnswer;
 
@@ -575,6 +597,119 @@ qint64 Api::accountUpdateUsername(const QString &username) {
     return mMainSession->sendQuery(p, &accountUpdateUsernameMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
+void Api::onAccountPrivacyRules(Query *q, InboundPkt &inboundPkt) {
+    ASSERT(inboundPkt.fetchInt() == (qint32)TL_AccountPrivacyRules);
+    ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
+    qint32 nr = inboundPkt.fetchInt();
+    QList<PrivacyRule> rules;
+    for (qint32 i = 0; i < nr; i++) {
+        rules.append(inboundPkt.fetchPrivacyRule());
+    }
+
+    ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
+    qint32 nu = inboundPkt.fetchInt();
+    QList<User> users;
+    for (qint32 i = 0; i < nu; i++) {
+        users.append(inboundPkt.fetchUser());
+    }
+
+    Q_EMIT accountPrivacyRules(q->msgId(), rules, users);
+}
+
+qint64 Api::accountGetPrivacy(const InputPrivacyKey &key) {
+    OutboundPkt p;
+    p.appendInt(TL_AccountGetPrivacy);
+    p.appendInputPrivacyKey(key);
+
+    return mMainSession->sendQuery(p, &accountAccountGetPrivacyMethods, QVariant(), __PRETTY_FUNCTION__ );
+}
+
+qint64 Api::accountSetPrivacy(const InputPrivacyKey &key, const QList<InputPrivacyRule> &rules) {
+    OutboundPkt p;
+    p.appendInt(TL_AccountSetPrivacy);
+    p.appendInputPrivacyKey(key);
+
+    p.appendInt(static_cast<qint32>(TL_Vector));
+    p.appendInt(rules.size());
+    Q_FOREACH (InputPrivacyRule rule, rules)
+        p.appendInputPrivacyRule(rule);
+
+    return mMainSession->sendQuery(p, &accountAccountSetPrivacyMethods, QVariant(), __PRETTY_FUNCTION__ );
+}
+
+void Api::onAccountDeleteAccountAnswer(Query *q, InboundPkt &inboundPkt) {
+    Q_EMIT accountDeleteAccountResult(q->msgId(), inboundPkt.fetchBool());
+}
+
+qint64 Api::accountDeleteAccount(const QString &reason) {
+    OutboundPkt p;
+    p.appendInt(TL_AccountDeleteAccount);
+    p.appendQString(reason);
+
+    return mMainSession->sendQuery(p, &accountDeleteAccountMethods, QVariant(), __PRETTY_FUNCTION__ );
+}
+
+void Api::onAccountGetAccountTTLAnswer(Query *q, InboundPkt &inboundPkt) {
+    Q_EMIT accountGetAccountTTLResult(q->msgId(), inboundPkt.fetchAccountDaysTTL());
+}
+
+qint64 Api::accountGetAccountTTL()
+{
+    OutboundPkt p;
+    p.appendInt(TL_AccountGetAccountTTL);
+
+    return mMainSession->sendQuery(p, &accountGetAccountTTLMethods, QVariant(), __PRETTY_FUNCTION__ );
+}
+
+void Api::onAccountSetAccountTTLAnswer(Query *q, InboundPkt &inboundPkt) {
+    Q_EMIT accountSetAccountTTLResult(q->msgId(), inboundPkt.fetchBool());
+}
+
+void Api::onAccountChangePhoneAnswer(Query *q, InboundPkt &inboundPkt) {
+    Q_EMIT accountChangePhoneResult(q->msgId(), inboundPkt.fetchUser());
+}
+
+void Api::onAccountUpdateDeviceLockedAnswer(Query *q, InboundPkt &inboundPkt) {
+    Q_EMIT accountUpdateDeviceLockedResult(q->msgId(), inboundPkt.fetchBool());
+}
+
+void Api::onAccountSentChangePhoneCode(Query *q, InboundPkt &inboundPkt) {
+    ASSERT(inboundPkt.fetchInt() == (qint32)TL_AccountSentChangePhoneCode);
+    Q_EMIT accountSentChangePhoneCode(q->msgId(), inboundPkt.fetchQString(), inboundPkt.fetchInt());
+}
+
+qint64 Api::accountSetAccountTTL(const AccountDaysTTL &ttl) {
+    OutboundPkt p;
+    p.appendInt(TL_AccountSetAccountTTL);
+    p.appendAccountDaysTTL(ttl);
+    return mMainSession->sendQuery(p, &accountSetAccountTTLMethods, QVariant(), __PRETTY_FUNCTION__ );
+}
+
+qint64 Api::accountSendChangePhoneCode(const QString &phone_number) {
+    OutboundPkt p;
+    p.appendInt(TL_AccountSendChangePhoneCode);
+    p.appendQString(phone_number);
+    return mMainSession->sendQuery(p, &accountSendChangePhoneCodeMethods, QVariant(), __PRETTY_FUNCTION__ );
+
+}
+
+qint64 Api::accountChangePhone(const QString &phone_number, const QString &phone_code_hash, const QString &phone_code) {
+    OutboundPkt p;
+    p.appendInt(TL_AccountChangePhone);
+    p.appendQString(phone_number);
+    p.appendQString(phone_code_hash);
+    p.appendQString(phone_code);
+    return mMainSession->sendQuery(p, &accountChangePhoneMethods, QVariant(), __PRETTY_FUNCTION__ );
+}
+
+qint64 Api::accountUpdateDeviceLocked(int period) {
+    OutboundPkt p;
+    p.appendInt(TL_AccountUpdateDeviceLocked);
+    p.appendInt(period);
+    return mMainSession->sendQuery(p, &accountUpdateDeviceLockedMethods, QVariant(), __PRETTY_FUNCTION__ );
+
+}
+
 // ### photos.uploadProfilePhoto
 void Api::onPhotosUploadProfilePhotoAnswer(Query *q, InboundPkt &inboundPkt) {
     ASSERT(inboundPkt.fetchInt() == (qint32)TL_PhotosPhoto);
@@ -843,6 +978,17 @@ qint64 Api::contactsSearch(const QString &q, qint32 limit) {
     p.appendQString(q);
     p.appendInt(limit);
     return mMainSession->sendQuery(p, &contactsSearchMethods, QVariant(), __PRETTY_FUNCTION__ );
+}
+
+void Api::onContactsResolveUsernameAnswer(Query *q, InboundPkt &inboundPkt) {
+    Q_EMIT contactsResolveUsernameResult(q->msgId(), inboundPkt.fetchUser());
+}
+
+qint64 Api::contactsResolveUsername(const QString &username) {
+    OutboundPkt p;
+    p.appendInt(TL_ContactsResolveUsername);
+    p.appendQString(username);
+    return mMainSession->sendQuery(p, &contactsResolveUsernameMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 //
@@ -1984,6 +2130,79 @@ qint64 Api::messagesReceivedQueue(qint32 maxQts) {
     p.appendInt(TL_MessagesReceivedQueue);
     p.appendInt(maxQts);
     return mMainSession->sendQuery(p, &messagesReceivedQueueMethods, QVariant(), __PRETTY_FUNCTION__ );
+}
+
+void Api::onMessagesGetStickersAnswer(Query *q, InboundPkt &inboundPkt) {
+    qint64 x = inboundPkt.fetchInt();
+    ASSERT(x == (qint32)MessagesStickers::typeMessagesStickers ||
+           x == (qint32)MessagesStickers::typeMessagesStickersNotModified);
+
+    MessagesStickers stickers( static_cast<MessagesStickers::MessagesStickersType>(x) );
+    switch(x)
+    {
+    case MessagesStickers::typeMessagesStickers:
+    {
+        stickers.setHash(inboundPkt.fetchQString());
+        ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
+        qint32 n = inboundPkt.fetchInt();
+        QList<Document> documents;
+        for (qint32 i = 0; i < n; i++) {
+            documents.append(inboundPkt.fetchDocument());
+        }
+        stickers.setDocuments(documents);
+    }
+        break;
+    }
+
+    Q_EMIT messagesGetStickersResult(q->msgId(), stickers);
+}
+
+qint64 Api::messagesGetStickers(QString emoticon, QString hash) {
+    OutboundPkt p;
+    p.appendInt(TL_MessagesGetStickers);
+    p.appendQString(emoticon);
+    p.appendQString(hash);
+    return mMainSession->sendQuery(p, &messagesGetStickersMethods, QVariant(), __PRETTY_FUNCTION__ );
+}
+
+void Api::onMessagesGetAllStickersAnswer(Query *q, InboundPkt &inboundPkt) {
+    qint64 x = inboundPkt.fetchInt();
+    ASSERT(x == (qint32)MessagesAllStickers::typeMessagesAllStickers ||
+           x == (qint32)MessagesAllStickers::typeMessagesAllStickersNotModified);
+
+    MessagesAllStickers stickers( static_cast<MessagesAllStickers::MessagesAllStickersType>(x) );
+    switch(x)
+    {
+    case MessagesAllStickers::typeMessagesAllStickers:
+    {
+        stickers.setHash(inboundPkt.fetchQString());
+        ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
+        qint32 ns = inboundPkt.fetchInt();
+        QList<StickerPack> packs;
+        for (qint32 i = 0; i < ns; i++) {
+            packs.append(inboundPkt.fetchStickerPack());
+        }
+        stickers.setPacks(packs);
+
+        ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
+        qint32 nd = inboundPkt.fetchInt();
+        QList<Document> documents;
+        for (qint32 i = 0; i < nd; i++) {
+            documents.append(inboundPkt.fetchDocument());
+        }
+        stickers.setDocuments(documents);
+    }
+        break;
+    }
+
+    Q_EMIT messagesGetAllStickersResult(q->msgId(), stickers);
+}
+
+qint64 Api::messagesGetAllStickers(QString hash) {
+    OutboundPkt p;
+    p.appendInt(TL_MessagesGetAllStickers);
+    p.appendQString(hash);
+    return mMainSession->sendQuery(p, &messagesGetAllStickersMethods, QVariant(), __PRETTY_FUNCTION__ );
 }
 
 //

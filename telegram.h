@@ -81,6 +81,14 @@ public:
     qint64 accountGetWallPapers();
     qint64 accountCheckUsername(const QString &username);
     qint64 accountUpdateUsername(const QString &username);
+    qint64 accountGetPrivacy(const InputPrivacyKey &key);
+    qint64 accountSetPrivacy(const InputPrivacyKey &key, const QList<InputPrivacyRule> &rules);
+    qint64 accountDeleteAccount(const QString &reason);
+    qint64 accountGetAccountTTL();
+    qint64 accountSetAccountTTL(const AccountDaysTTL &ttl);
+    qint64 accountUpdateDeviceLocked(int period);
+    qint64 accountSendChangePhoneCode(const QString &phone_number);
+    qint64 accountChangePhone(const QString &phone_number, const QString &phone_code_hash, const QString &phone_code);
     qint64 photosUploadProfilePhoto(const QByteArray &bytes, const QString &fileName, const QString &caption = "", const InputGeoPoint &geoPoint = InputGeoPoint(InputGeoPoint::typeInputGeoPointEmpty), const InputPhotoCrop &crop = InputPhotoCrop(InputPhotoCrop::typeInputPhotoCropAuto));
     qint64 photosUploadProfilePhoto(const QString &filePath, const QString &caption = "", const InputGeoPoint &geoPoint = InputGeoPoint(InputGeoPoint::typeInputGeoPointEmpty), const InputPhotoCrop &crop = InputPhotoCrop(InputPhotoCrop::typeInputPhotoCropAuto));
     qint64 photosUpdateProfilePhoto(qint64 photoId, qint64 accessHash, const InputPhotoCrop &crop = InputPhotoCrop(InputPhotoCrop::typeInputPhotoCropAuto));
@@ -97,6 +105,7 @@ public:
     qint64 contactsDeleteContact(const InputUser &user);
     qint64 contactsDeleteContacts(const QList<InputUser> &users);
     qint64 contactsSearch(const QString &q, qint32 limit = 0);
+    qint64 contactsResolveUsername(const QString &username);
 
     // Working with blacklist
     qint64 contactsBlock(const InputUser &user);
@@ -175,6 +184,10 @@ public:
     qint64 geochatSendMedia(const InputGeoChat &peer, const InputMedia &media);
     qint64 geochatCreateGeoChat(const QString &title, const InputGeoPoint &geoPoint, const QString &address, const QString &venue);
 
+    // Stickers
+    qint64 messagesGetStickers(QString emoticon, QString hash);
+    qint64 messagesGetAllStickers(QString hash);
+
     // Working with updates
     qint64 updatesGetState();
     qint64 updatesGetDifference(qint32 pts, qint32 date, qint32 qts);
@@ -228,6 +241,13 @@ Q_SIGNALS:
     void accountGetWallPapersAnswer(qint64 id, QList<WallPaper> wallPapers);
     void accountCheckUsernameAnswer(qint64 id, bool ok);
     void accountUpdateUsernameAnswer(qint64 id, User user);
+    void accountPrivacyRules(qint64 msgId, QList<PrivacyRule> rules, QList<User> users);
+    void accountDeleteAccountAnswer(qint64 msgId, bool ok);
+    void accountGetAccountTTLAnswer(qint64 msgId, const AccountDaysTTL &ttl);
+    void accountSetAccountTTLAnswer(qint64 msgId, bool ok);
+    void accountUpdateDeviceLockedAnswer(qint64 msgId, bool ok);
+    void accountChangePhoneAnswer(qint64 msgId, User user);
+    void accountSentChangePhoneCode(qint64 msgId, QString phone_code_hash, qint32 send_call_timeout);
     void photosUploadProfilePhotoAnswer(qint64 id, Photo photo, QList<User> users);
     void photosUpdateProfilePhotoAnswer(qint64 id, UserProfilePhoto userProfilePhoto);
 
@@ -243,6 +263,7 @@ Q_SIGNALS:
     void contactsDeleteContactAnswer(qint64 id, ContactsMyLink myLink, ContactsForeignLink foreignLink, User user);
     void contactsDeleteContactsAnswer(qint64 id, bool ok);
     void contactsFound(qint64 id, QList<ContactFound> founds, QList<User> users);
+    void contactsResolveUsernameAnswer(qint64 msgId, User user);
 
     // Working with blacklist
     void contactsBlockAnswer(qint64 id, bool ok);
@@ -293,6 +314,10 @@ Q_SIGNALS:
     void messagesSendEncryptedFileAnswer(qint64 id, qint32 date, EncryptedFile encryptedFile = EncryptedFile()); // messagesSentEncryptedMessage/messagesSentEncryptedFile
     void messagesSendEncryptedServiceAnswer(qint64 id, qint32 date, EncryptedFile encryptedFile = EncryptedFile()); // messagesSentEncryptedMessage/messagesSentEncryptedFile
     void messagesReceivedQueueAnwer(qint64 id, QList<qint64> msgIds);
+
+    // Stickers
+    void messagesGetStickersAnwer(qint64 msgId, MessagesStickers stickers);
+    void messagesGetAllStickersAnwer(qint64 msgId, MessagesAllStickers stickers);
 
     // Working with geochats
     void geochatsGetLocatedAnswer(qint64 id, QList<ChatLocated> results, QList<GeoChatMessage> messages, QList<Chat> chats, QList<User> users);

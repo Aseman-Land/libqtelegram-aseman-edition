@@ -12,13 +12,12 @@ public:
     };
 
     StickerPack() :
-        m_documents(0),
         m_classType(typeStickerPack) {}
 
-    void setDocuments(qint64 documents) {
+    void setDocuments(QList<qint64> documents) {
         m_documents = documents;
     }
-    qint64 documents() const {
+    QList<qint64> documents() const {
         return m_documents;
     }
     void setEmoticon(QString emoticon) {
@@ -36,7 +35,7 @@ public:
 
 private:
     QString m_emoticon;
-    qint64 m_documents;
+    QList<qint64> m_documents;
     StickerPackType m_classType;
 };
 

@@ -20,10 +20,10 @@ public:
     InputPrivacyRule(InputPrivacyRuleType classType) :
         m_classType(classType) {}
 
-    void setUsers(const QList<int> &users) {
+    void setUsers(const QList<qint32> &users) {
         m_users = users;
     }
-    QList<int> users() {
+    QList<qint32> users() const {
         return m_users;
     }
     void setClassType(InputPrivacyRuleType classType) {
@@ -34,7 +34,7 @@ public:
     }
 
 private:
-    QList<int> m_users;
+    QList<qint32> m_users;
     InputPrivacyRuleType m_classType;
 };
 

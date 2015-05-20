@@ -526,6 +526,20 @@ Document InboundPkt::fetchDocument() {
     return doc;
 }
 
+StickerPack InboundPkt::fetchStickerPack()
+{
+    ASSERT(fetchInt() == (qint32)StickerPack::typeStickerPack);
+    StickerPack pack;
+    pack.setEmoticon(fetchQString());
+    ASSERT(fetchInt() == (qint32)TL_Vector);
+    qint32 n = fetchInt();
+    QList<qint64> docs;
+    for (qint32 i = 0; i < n; i++)
+        docs.append(fetchLong());
+    pack.setDocuments(docs);
+    return pack;
+}
+
 Audio InboundPkt::fetchAudio() {
     qint32 x = fetchInt();
     ASSERT(x == (qint32)Audio::typeAudioEmpty || x == (qint32)Audio::typeAudio);
@@ -978,6 +992,15 @@ PrivacyKey InboundPkt::fetchPrivacyKey()
     qint32 x = fetchInt();
     ASSERT(x == (qint32)PrivacyKey::typePrivacyKeyStatusTimestamp);
     return PrivacyKey(static_cast<PrivacyKey::PrivacyKeyType>(x));
+}
+
+AccountDaysTTL InboundPkt::fetchAccountDaysTTL()
+{
+    qint32 x = fetchInt();
+    ASSERT(x == (qint32)AccountDaysTTL::typeAccountDaysTTLType);
+    AccountDaysTTL ttl;
+    ttl.setDays(fetchInt());
+    return ttl;
 }
 
 WallPaper InboundPkt::fetchWallPaper() {
