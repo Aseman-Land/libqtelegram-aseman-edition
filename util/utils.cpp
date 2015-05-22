@@ -301,7 +301,11 @@ qint64 Utils::getKeyFingerprint(uchar *sharedKey) {
 
 QString Utils::getDeviceModel() {
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
-    return QSysInfo::buildCpuArchitecture();
+#if defined(Q_OS_ANDROID) || defined(Q_OS_IOS)
+    return "Mobile " + QSysInfo::buildCpuArchitecture();
+#else
+    return "Desktop " + QSysInfo::buildCpuArchitecture();
+#endif
 #else
     struct utsname st;
     uname(&st);
@@ -311,7 +315,7 @@ QString Utils::getDeviceModel() {
 
 QString Utils::getSystemVersion() {
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
-    return QSysInfo::kernelType() + " " + QSysInfo::kernelVersion() + " " + QSysInfo::buildAbi();
+    return QSysInfo::prettyProductName() + " " + QSysInfo::currentCpuArchitecture();
 #else
     struct utsname st;
     uname(&st);
@@ -320,7 +324,7 @@ QString Utils::getSystemVersion() {
 }
 
 QString Utils::getAppVersion() {
-    return LIBQTELEGRAM_VERSION " (build " LIBQTELEGRAM_BUILD ")";
+    return QCoreApplication::applicationVersion();
 }
 
 QString Utils::parsePhoneNumberDigits(const QString &phoneNumber) {
