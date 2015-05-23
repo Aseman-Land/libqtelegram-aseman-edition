@@ -302,9 +302,9 @@ qint64 Utils::getKeyFingerprint(uchar *sharedKey) {
 QString Utils::getDeviceModel() {
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
 #if defined(Q_OS_ANDROID) || defined(Q_OS_IOS)
-    return "Mobile " + QSysInfo::buildCpuArchitecture();
+    return "Mobile"
 #else
-    return "Desktop " + QSysInfo::buildCpuArchitecture();
+    return "PC";
 #endif
 #else
     struct utsname st;
