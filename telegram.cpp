@@ -34,6 +34,7 @@
 #include <QMimeDatabase>
 #include <QtEndian>
 #include <QImage>
+#include <QImageReader>
 
 #include "util/tlvalues.h"
 
@@ -1448,7 +1449,9 @@ qint64 Telegram::messagesSendDocument(const InputPeer &peer, qint64 randomId, co
 
     QList<DocumentAttribute> attributes;
     attributes << fileAttr;
-    if(sendAsSticker) attributes << DocumentAttribute(DocumentAttribute::typeAttributeSticker);
+    if(sendAsSticker) {
+        attributes << DocumentAttribute(DocumentAttribute::typeAttributeSticker);
+    }
 
     InputMedia inputMedia(InputMedia::typeInputMediaUploadedDocument);
     inputMedia.setAttributes(attributes);
@@ -1465,16 +1468,27 @@ qint64 Telegram::messagesSendDocument(const InputPeer &peer, qint64 randomId, co
 
 qint64 Telegram::messagesSendDocument(const InputPeer &peer, qint64 randomId, const QString &filePath, const QString &thumbnailFilePath, bool sendAsSticker) {
     const QMimeType t = QMimeDatabase().mimeTypeForFile(QFileInfo(filePath));
+    QString mimeType = t.name();
 
     DocumentAttribute fileAttr(DocumentAttribute::typeAttributeFilename);
     fileAttr.setFilename(QFileInfo(filePath).fileName());
 
     QList<DocumentAttribute> attributes;
     attributes << fileAttr;
-    if(sendAsSticker) attributes << DocumentAttribute(DocumentAttribute::typeAttributeSticker);
+    if(sendAsSticker) {
+        QImageReader reader(filePath);
+        DocumentAttribute imageSizeAttr(DocumentAttribute::typeAttributeImageSize);
+        imageSizeAttr.setH(reader.size().height());
+        imageSizeAttr.setW(reader.size().width());
+
+        attributes << DocumentAttribute(DocumentAttribute::typeAttributeSticker) << imageSizeAttr;
+
+        if(mimeType.contains("webp"))
+            mimeType = "image/webp";
+    }
 
     InputMedia inputMedia(InputMedia::typeInputMediaUploadedDocument);
-    inputMedia.setMimeType(t.name());
+    inputMedia.setMimeType(mimeType);
     inputMedia.setAttributes(attributes);
     if (thumbnailFilePath.length() > 0) {
         inputMedia.setClassType(InputMedia::typeInputMediaUploadedThumbDocument);
