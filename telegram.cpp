@@ -923,7 +923,7 @@ void Telegram::createSharedKey(SecretChat *secretChat, BIGNUM *p, QByteArray gAO
 
     // move r (BIGNUM) to shared key (char[]) array format
     uchar *sharedKey = secretChat->sharedKey();
-    memset(sharedKey, 0, sizeof(sharedKey));
+    memset(sharedKey, 0, SHARED_KEY_LENGTH);
     BN_bn2bin(result, sharedKey + (SHARED_KEY_LENGTH - BN_num_bytes (result)));
 
     qint64 keyFingerprint = Utils::getKeyFingerprint(sharedKey);

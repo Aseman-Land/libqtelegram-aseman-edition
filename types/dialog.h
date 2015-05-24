@@ -39,6 +39,8 @@ public:
         m_unreadCount(0),
         m_classType(typeDialog) {}
 
+    virtual ~Dialog() {}
+
     void setPeer(Peer peer) {
         m_peer = peer;
     }
