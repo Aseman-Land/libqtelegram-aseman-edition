@@ -1,5 +1,6 @@
 QT += gui
 QT += network
+QT += multimedia
 
 TARGET = qtelegram-ae
 TEMPLATE = lib

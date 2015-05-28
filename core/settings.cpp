@@ -40,9 +40,9 @@ qint32 lqt_appId_static = 0;
 QString lqt_appHash_static;
 
 Settings::Settings() :
+    m_pubKey(0),
     m_phoneNumber(""),
-    m_baseConfigDirectory(""),
-    m_pubKey(0) {
+    m_baseConfigDirectory("") {
 }
 
 Settings::~Settings() {
