@@ -1443,15 +1443,13 @@ qint64 Telegram::messagesSendAudio(const InputPeer &peer, qint64 randomId, const
     return mFileHandler->uploadSendFile(*op, filePath);
 }
 
-qint64 Telegram::messagesSendDocument(const InputPeer &peer, qint64 randomId, const QByteArray &bytes, const QString &fileName, const QString &mimeType, const QByteArray &thumbnailBytes, const QString &thumbnailName, bool sendAsSticker) {
+qint64 Telegram::messagesSendDocument(const InputPeer &peer, qint64 randomId, const QByteArray &bytes, const QString &fileName, const QString &mimeType, const QByteArray &thumbnailBytes, const QString &thumbnailName, const QList<DocumentAttribute> &extraAttributes) {
     DocumentAttribute fileAttr(DocumentAttribute::typeAttributeFilename);
     fileAttr.setFilename(fileName);
 
     QList<DocumentAttribute> attributes;
     attributes << fileAttr;
-    if(sendAsSticker) {
-        attributes << DocumentAttribute(DocumentAttribute::typeAttributeSticker);
-    }
+    attributes << extraAttributes;
 
     InputMedia inputMedia(InputMedia::typeInputMediaUploadedDocument);
     inputMedia.setAttributes(attributes);
