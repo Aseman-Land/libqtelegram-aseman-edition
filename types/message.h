@@ -43,6 +43,7 @@ public:
         m_fromId(0),
         m_out(false),
         m_date(0),
+        m_replyToMsgId(0),
         m_media(MessageMedia::typeMessageMediaEmpty),
         m_fwdDate(0),
         m_fwdFromId(0),
