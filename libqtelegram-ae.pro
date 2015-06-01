@@ -76,7 +76,6 @@ HEADERS += \
     types/updatesstate.h \
     types/chatfull.h \
     types/peernotifysettings.h \
-    types/contactsforeignlink.h \
     types/decryptedmessageaction.h \
     types/geopoint.h \
     types/inputnotifypeer.h \
@@ -88,7 +87,6 @@ HEADERS += \
     types/geochatmessage.h \
     types/decryptedmessage.h \
     types/user.h \
-    types/contactsmylink.h \
     types/filelocation.h \
     types/audio.h \
     types/inputphoto.h \
@@ -155,7 +153,11 @@ HEADERS += \
     types/privacykey.h \
     types/inputprivacykey.h \
     types/messagesallstickers.h \
-    types/messagesstickers.h
+    types/messagesstickers.h \
+    types/contactlink.h \
+    types/config.h \
+    types/accountpassword.h \
+    types/affectedmessages.h
 
 linux {
     contains(QMAKE_HOST.arch, x86_64) {

@@ -30,7 +30,7 @@ class User
 public:
 
     enum UserType {
-       typeUserSelf = 0x7007b451,
+       typeUserSelf = 0x1c60e608,
        typeUserContact = 0xcab35e18,
        typeUserDeleted = 0xd6016d7a,
        typeUserForeign = 0x75cf7a8,
@@ -41,7 +41,6 @@ public:
     User(UserType classType = typeUserEmpty) :
         m_id(0),
         m_accessHash(0),
-        m_inactive(false),
         m_phone(""),
         m_firstName(""),
         m_photo(UserProfilePhoto::typeUserProfilePhotoEmpty),
@@ -91,12 +90,6 @@ public:
     UserStatus status() const {
         return m_status;
     }
-    void setInactive(bool inactive) {
-        m_inactive = inactive;
-    }
-    bool inactive() const {
-        return m_inactive;
-    }
     void setAccessHash(qint64 accessHash) {
         m_accessHash = accessHash;
     }
@@ -113,7 +106,6 @@ public:
 private:
     qint32 m_id;
     qint64 m_accessHash;
-    bool m_inactive;
     QString m_phone;
     QString m_firstName;
     UserProfilePhoto m_photo;

@@ -15,7 +15,7 @@ FileHandler::FileHandler(Api *api, DcProvider &dcProvider, SecretState &secretSt
     connect(mApi, SIGNAL(uploadFile(qint64,StorageFileType,qint32,QByteArray)), this, SLOT(onUploadGetFileAnswer(qint64,StorageFileType,qint32,QByteArray)));
     connect(mApi, SIGNAL(uploadFileError(qint64,qint32,QString)), this, SLOT(onUploadGetFileError(qint64,qint32,QString)));
     connect(mApi, SIGNAL(messagesSentMediaStatedMessage(qint64,Message,QList<Chat>,QList<User>,qint32,qint32)), SLOT(onMessagesSendMediaStatedMessage(qint64,Message,QList<Chat>,QList<User>,qint32,qint32)));
-    connect(mApi, SIGNAL(messagesSentMediaStatedMessageLink(qint64,Message,QList<Chat>,QList<User>,QList<ContactsLink>,qint32,qint32)), SLOT(onMessagesSendMediaStatedMessageLink(qint64,Message,QList<Chat>,QList<User>,QList<ContactsLink>,qint32,qint32)));
+    connect(mApi, SIGNAL(messagesSentMediaStatedMessageLink(qint64,Message,QList<Chat>,QList<User>,QList<ContactsLink>,qint32,qint32,qint32)), SLOT(onMessagesSendMediaStatedMessageLink(qint64,Message,QList<Chat>,QList<User>,QList<ContactsLink>,qint32,qint32,qint32)));
     connect(mApi, SIGNAL(messagesSendEncryptedFileSentEncryptedMessage(qint64,qint32)), this, SLOT(onMessagesSentEncryptedFile(qint64,qint32)));
     connect(mApi, SIGNAL(messagesSendEncryptedFileSentEncryptedFile(qint64,qint32,EncryptedFile)), this, SLOT(onMessagesSentEncryptedFile(qint64,qint32,EncryptedFile)));
 }
@@ -165,7 +165,7 @@ void FileHandler::onUploadSaveFilePartResult(qint64, qint64 fileId, bool) {
             inputFile.setParts(uploadFile->nParts());
             inputFile.setName(uploadFile->name());
 
-            qint64 requestId;
+            qint64 requestId = 0;
             // Read operation and execute internal api operation depending on file operation type
             FileOperation::Ptr op = mFileOperationsMap.take(uploadFile->id());
             switch (op->opType()) {
@@ -190,7 +190,8 @@ void FileHandler::onUploadSaveFilePartResult(qint64, qint64 fileId, bool) {
                     // retrieve peer related to file, generate random id and send media metadata
                     InputPeer peer = op->peer();
                     qint64 randomId = op->randomId();
-                    requestId = mApi->messagesSendMedia(peer, metadata, randomId);
+                    qint32 replyToMsgId = op->replyToMsgId();
+                    requestId = mApi->messagesSendMedia(peer, metadata, randomId, replyToMsgId);
                     break;
                 }
                 case FileOperation::editChatPhoto: {
@@ -408,16 +409,17 @@ qint64 FileHandler::uploadCancelFile(qint64 fileId) {
     return fileId;
 }
 
-void FileHandler::onMessagesSendMediaStatedMessage(qint64 id, Message message, QList<Chat> chats, QList<User> users, qint32 pts, qint32 seq) {
+void FileHandler::onMessagesSendMediaStatedMessage(qint64 id, Message message, QList<Chat> chats, QList<User> users, qint32 pts, qint32 ptsCount) {
     QList<ContactsLink> links;
-    onMessagesSendMediaStatedMessageLink(id, message, chats, users, links, pts, seq);
+    onMessagesSendMediaStatedMessageLink(id, message, chats, users, links, pts, ptsCount);
 }
 
-void FileHandler::onMessagesSendMediaStatedMessageLink(qint64 id, Message message, QList<Chat> chats, QList<User> users, QList<ContactsLink> links, qint32 pts, qint32 seq) {
+void FileHandler::onMessagesSendMediaStatedMessageLink(qint64 id, Message message, QList<Chat> chats, QList<User> users, QList<ContactsLink> links, qint32 pts, qint32 pts_count, qint32 seq) {
     //recover correlated send media request id -> fileId
     qint64 fileId = mFileIdsMap.take(id);
     Q_ASSERT(fileId);
-    Q_EMIT messagesSendMediaAnswer(fileId, message, chats, users, links, pts, seq);
+    Q_UNUSED(seq)
+    Q_EMIT messagesSendMediaAnswer(fileId, message, chats, users, links, pts, pts_count);
 }
 
 void FileHandler::onMessagesSentEncryptedFile(qint64 id, qint32 date, const EncryptedFile &encryptedFile) {

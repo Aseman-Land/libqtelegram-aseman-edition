@@ -29,13 +29,14 @@ class Dialog
 public:
 
     enum DialogType {
-       typeDialog = 0xab3a99ac
+       typeDialog = 0xc1dd804a
     };
 
     Dialog() :
         m_peer(Peer::typePeerUser),
         m_notifySettings(PeerNotifySettings::typePeerNotifySettingsEmpty),
         m_topMessage(0),
+        m_readInboxMaxId(0),
         m_unreadCount(0),
         m_classType(typeDialog) {}
 
@@ -52,6 +53,12 @@ public:
     }
     qint32 topMessage() const {
         return m_topMessage;
+    }
+    void setReadInboxMaxId(qint32 readInboxMaxId) {
+        m_readInboxMaxId = readInboxMaxId;
+    }
+    qint32 readInboxMaxId() const {
+        return m_readInboxMaxId;
     }
     virtual void setUnreadCount(qint32 unreadCount) {
         m_unreadCount = unreadCount;
@@ -76,6 +83,7 @@ private:
     Peer m_peer;
     PeerNotifySettings m_notifySettings;
     qint32 m_topMessage;
+    qint32 m_readInboxMaxId;
     qint32 m_unreadCount;
     DialogType m_classType;
 };

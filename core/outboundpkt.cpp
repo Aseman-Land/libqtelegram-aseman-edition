@@ -401,6 +401,9 @@ void OutboundPkt::appendDocumentAttribute(const DocumentAttribute &attr)
         appendInt(attr.w());
         appendInt(attr.h());
         break;
+    case DocumentAttribute::typeAttributeSticker:
+        appendQString(attr.alt());
+        break;
     case DocumentAttribute::typeAttributeVideo:
         appendInt(attr.duration());
         appendInt(attr.w());
@@ -432,7 +435,7 @@ void OutboundPkt::appendAccountDaysTTL(const AccountDaysTTL &ttl)
 }
 
 void OutboundPkt::initConnection() {
-    appendInt(TL_InvokeWithLayer23);
+    appendInt(TL_InvokeWithLayer25);
     appendInt(LAYER);
     appendInt(TL_InitConnection);
     appendInt(Settings::appId());

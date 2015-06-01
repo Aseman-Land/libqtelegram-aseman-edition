@@ -241,20 +241,18 @@ void DcProvider::onApiReady(DC*) {
     disconnect(session, SIGNAL(sessionReady(DC*)), this, SLOT(onApiReady(DC*)));
 
     // get the config
-    connect(mApi, SIGNAL(config(qint64,qint32,qint32,bool,qint32,QList<DcOption>,qint32,qint32,qint32,QList<DisabledFeature>)), this, SLOT(onConfigReceived(qint64,qint32,qint32,bool,qint32,QList<DcOption>,qint32,qint32,qint32,QList<DisabledFeature>)));
+    connect(mApi, SIGNAL(config(qint64,Config)), this, SLOT(onConfigReceived(qint64,Config)));
     mApi->helpGetConfig();
 }
 
-void DcProvider::onConfigReceived(qint64 msgId, qint32 date, qint32 expires, bool testMode, qint32 thisDc, const QList<DcOption> &dcOptions, qint32 chatBigSize, qint32 chatMaxSize, qint32 broadcastMaxSize, QList<DisabledFeature> disabledFeatures) {
+void DcProvider::onConfigReceived(qint64 msgId, Config config) {
 
     qCDebug(TG_CORE_DCPROVIDER) << "onConfigReceived(), msgId =" << QString::number(msgId, 16);
-    qCDebug(TG_CORE_DCPROVIDER) << "date =" << date;
-    qCDebug(TG_CORE_DCPROVIDER) << "testMode =" << testMode;
-    qCDebug(TG_CORE_DCPROVIDER) << "thisDc =" << thisDc;
+    qCDebug(TG_CORE_DCPROVIDER) << "date =" << config.date();
+    qCDebug(TG_CORE_DCPROVIDER) << "testMode =" << config.testMode();
+    qCDebug(TG_CORE_DCPROVIDER) << "thisDc =" << config.thisDc();
 
-    Q_UNUSED(expires)
-    Q_UNUSED(chatBigSize)
-    Q_UNUSED(disabledFeatures)
+    const QList<DcOption> &dcOptions = config.dcOptions();
 
     mPendingDcs = dcOptions.length() -1; //all the received options but the default one, yet used
 
@@ -284,14 +282,14 @@ void DcProvider::onConfigReceived(qint64 msgId, qint32 date, qint32 expires, boo
             connect(dcAuth, SIGNAL(fatalError()), this, SIGNAL(fatalError()));
             connect(dcAuth, SIGNAL(dcReady(DC*)), this, SLOT(onDcReady(DC*)));
             dcAuth->createAuthKey();
-        } else if (dcOption.id() != thisDc) {
+        } else if (dcOption.id() != config.thisDc()) {
             // if authorized and not working dc emit dcReady signal directly
             onDcReady(dc);
         }
     }
 
-    qCDebug(TG_CORE_DCPROVIDER) << "chatMaxSize =" << chatMaxSize;
-    qCDebug(TG_CORE_DCPROVIDER) << "broadcastMaxSize =" << broadcastMaxSize;
+    qCDebug(TG_CORE_DCPROVIDER) << "chatMaxSize =" << config.chatSizeMax();
+    qCDebug(TG_CORE_DCPROVIDER) << "broadcastMaxSize =" << config.broadcastSizeMax();
 }
 
 Api *DcProvider::getApi() const {

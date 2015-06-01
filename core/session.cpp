@@ -346,26 +346,48 @@ void Session::workUpdates(InboundPkt &inboundPkt, qint64 msgId) {
 void Session::workUpdateShortMessage(InboundPkt &inboundPkt, qint64 msgId) {
     qCDebug(TG_CORE_SESSION) << "workUpdateShortMessage: msgId =" << QString::number(msgId, 16);
     mAsserter.check(inboundPkt.fetchInt() == (qint32)TL_UpdateShortMessage);
+    qint32 flags = inboundPkt.fetchInt();
     qint32 id = inboundPkt.fetchInt();
-    qint32 fromId = inboundPkt.fetchInt();
+    qint32 userId = inboundPkt.fetchInt();
     QString message = inboundPkt.fetchQString();
     qint32 pts = inboundPkt.fetchInt();
+    qint32 ptsCount = inboundPkt.fetchInt();
     qint32 date = inboundPkt.fetchInt();
-    qint32 seq = inboundPkt.fetchInt();
-    Q_EMIT updateShortMessage(id, fromId, message, pts, date, seq);
+    qint32 fwd_from_id = 0;
+    qint32 fwd_date = 0;
+    qint32 reply_to_msg_id = 0;
+    if(flags & (1<<2)) {
+        fwd_from_id = inboundPkt.fetchInt();
+        fwd_date = inboundPkt.fetchInt();
+    }
+    if(flags & (1<<3)) {
+        reply_to_msg_id = inboundPkt.fetchInt();
+    }
+    Q_EMIT updateShortMessage(id, userId, message, pts, ptsCount, date, fwd_from_id, fwd_date, reply_to_msg_id);
 }
 
 void Session::workUpdateShortChatMessage(InboundPkt &inboundPkt, qint64 msgId) {
     qCDebug(TG_CORE_SESSION) << "workUpdateShortChatMessage: msgId =" << QString::number(msgId, 16);
     mAsserter.check(inboundPkt.fetchInt() == (qint32)TL_UpdateShortChatMessage);
+    qint32 flags = inboundPkt.fetchInt();
     qint32 id = inboundPkt.fetchInt();
     qint32 fromId = inboundPkt.fetchInt();
     qint32 chatId = inboundPkt.fetchInt();
     QString message = inboundPkt.fetchQString();
     qint32 pts = inboundPkt.fetchInt();
+    qint32 pts_count = inboundPkt.fetchInt();
     qint32 date = inboundPkt.fetchInt();
-    qint32 seq = inboundPkt.fetchInt();
-    Q_EMIT updateShortChatMessage(id, fromId, chatId, message, pts, date, seq);
+    qint32 fwd_from_id = 0;
+    qint32 fwd_date = 0;
+    qint32 reply_to_msg_id = 0;
+    if(flags & (1<<2)) {
+        fwd_from_id = inboundPkt.fetchInt();
+        fwd_date = inboundPkt.fetchInt();
+    }
+    if(flags & (1<<3)) {
+        reply_to_msg_id = inboundPkt.fetchInt();
+    }
+    Q_EMIT updateShortChatMessage(id, fromId, chatId, message, pts, pts_count, date, fwd_from_id, fwd_date, reply_to_msg_id);
 }
 
 void Session::workPacked(InboundPkt &inboundPkt, qint64 msgId) {

@@ -197,9 +197,6 @@ User InboundPkt::fetchUser() {
             }
             user.setPhoto(fetchUserProfilePhoto());
             user.setStatus(fetchUserStatus());
-            if (x == (qint32)User::typeUserSelf) {
-                user.setInactive(fetchBool());
-            }
         }
     }
     return user;
@@ -303,6 +300,7 @@ Dialog InboundPkt::fetchDialog() {
     Dialog d;
     d.setPeer(fetchPeer());
     d.setTopMessage(fetchInt());
+    d.setReadInboxMaxId(fetchInt());
     d.setUnreadCount(fetchInt());
     d.setNotifySettings(fetchPeerNotifySetting());
     return d;
@@ -336,23 +334,27 @@ PeerNotifySettings InboundPkt::fetchPeerNotifySetting() {
 
 Message InboundPkt::fetchMessage() {
     qint32 x = fetchInt();
-    ASSERT(x == (qint32)Message::typeMessageEmpty || x == (qint32)Message::typeMessage || x == (qint32)Message::typeMessageForwarded || x == (qint32)Message::typeMessageService);
+    ASSERT(x == (qint32)Message::typeMessageEmpty || x == (qint32)Message::typeMessage || x == (qint32)Message::typeMessageService);
     Message message((Message::MessageType)x);
+    qint32 flags = 0;
     if (x != (qint32)Message::typeMessageEmpty) {
-        qint32 flags = fetchInt();
-        bool unread = flags & 0x1;
-        bool out = flags & 0x2;
-        message.setUnread(unread);
-        message.setOut(out);
+        flags = fetchInt();
+        message.setUnread(flags & 1<<0);
+        message.setOut(flags & 1<<1);
     }
     message.setId(fetchInt());
     if (x != (qint32)Message::typeMessageEmpty) {
-        if (x == (qint32)Message::typeMessageForwarded) {
-            message.setFwdFromId(fetchInt());
-            message.setFwdDate(fetchInt());
-        }
         message.setFromId(fetchInt());
         message.setToId(fetchPeer());
+        if (x == (qint32)Message::typeMessage) {
+            if (flags & (1<<2)) {
+                message.setFwdFromId(fetchInt());
+                message.setFwdDate(fetchInt());
+            }
+            if (flags & (1<<3)) {
+                message.setReplyToMsgId(fetchInt());
+            }
+        }
         message.setDate(fetchInt());
         if (x == (qint32)Message::typeMessageService) {
             message.setAction(fetchMessageAction());
@@ -471,7 +473,6 @@ MessageMedia InboundPkt::fetchMessageMedia() {
         media.setUserId(fetchInt());
         break;
     case MessageMedia::typeMessageMediaUnsupported:
-        media.setBytes(fetchBytes());
         break;
     case MessageMedia::typeMessageMediaDocument:
         media.setDocument(fetchDocument());
@@ -540,6 +541,26 @@ StickerPack InboundPkt::fetchStickerPack()
     return pack;
 }
 
+AffectedMessages InboundPkt::fetchAffectedMessages() {
+    ASSERT(fetchInt() == (qint32)AffectedMessages::typeAffectedMessages);
+    AffectedMessages amsg;
+    amsg.setPts(fetchInt());
+    amsg.setPtsCount(fetchInt());
+    return amsg;
+}
+
+AccountPassword InboundPkt::fetchAccountPassword() {
+    qint32 x = fetchInt();
+    ASSERT(x == (qint32)AccountPassword::typeAccountNoPassword ||
+           x == (qint32)AccountPassword::typeAccountPassword);
+
+    AccountPassword password(static_cast<AccountPassword::AccountPasswordType>(x));
+    password.setCurrentSalt(fetchBytes());
+    password.setNewSalt(fetchBytes());
+    password.setHint(fetchQString());
+    return password;
+}
+
 Audio InboundPkt::fetchAudio() {
     qint32 x = fetchInt();
     ASSERT(x == (qint32)Audio::typeAudioEmpty || x == (qint32)Audio::typeAudio);
@@ -585,28 +606,14 @@ ChatParticipants InboundPkt::fetchChatParticipants() {
     return cps;
 }
 
-ContactsMyLink InboundPkt::fetchContactsMyLink() {
+ContactLink InboundPkt::fetchContactLink() {
     qint32 x = fetchInt();
-    ASSERT(x == (qint32)ContactsMyLink::typeContactsMyLinkEmpty ||
-             x == (qint32)ContactsMyLink::typeContactsMyLinkRequested ||
-             x == (qint32)ContactsMyLink::typeContactsMyLinkContact);
-    ContactsMyLink myLink((ContactsMyLink::ContactsMyLinkType)x);
-    if (x == (qint32)ContactsMyLink::typeContactsMyLinkRequested) {
-        myLink.setContact(fetchBool());
-    }
-    return myLink;
-}
-
-ContactsForeignLink InboundPkt::fetchContactsForeignLink() {
-    qint32 x = fetchInt();
-    ASSERT(x == (qint32)ContactsForeignLink::typeContactsForeignLinkUnknown ||
-             x == (qint32)ContactsForeignLink::typeContactsForeignLinkRequested ||
-             x == (qint32)ContactsForeignLink::typeContactsForeignLinkMutual);
-    ContactsForeignLink foreignLink((ContactsForeignLink::ContactsForeignLinkType)x);
-    if (x == (qint32)ContactsForeignLink::typeContactsForeignLinkRequested) {
-        foreignLink.setHasPhone(fetchBool());
-    }
-    return foreignLink;
+    ASSERT(x == (qint32)ContactLink::typeContactLinkContact ||
+             x == (qint32)ContactLink::typeContactLinkHasPhone ||
+             x == (qint32)ContactLink::typeContactLinkNone ||
+             x == (qint32)ContactLink::typeContactLinkUnknown);
+    ContactLink link((ContactLink::ContactLinkType)x);
+    return link;
 }
 
 GeoChatMessage InboundPkt::fetchGeoChatMessage() {
@@ -667,12 +674,15 @@ Update InboundPkt::fetchUpdate() {
              x == (qint32)Update::typeUpdateNotifySettings ||
              x == (qint32)Update::typeUpdateServiceNotification ||
              x == (qint32)Update::typeUpdatePrivacy ||
-             x == (qint32)Update::typeUpdateUserPhone);
+             x == (qint32)Update::typeUpdateUserPhone ||
+             x == (qint32)Update::typeUpdateReadHistoryInbox ||
+             x == (qint32)Update::typeUpdateReadHistoryOutbox);
     Update update((Update::UpdateType)x);
     switch (x) {
     case Update::typeUpdateNewMessage:
         update.setMessage(fetchMessage());
         update.setPts(fetchInt());
+        update.setPtsCount(fetchInt());
         break;
     case Update::typeUpdateMessageID:
         update.setId(fetchInt());
@@ -689,6 +699,7 @@ Update InboundPkt::fetchUpdate() {
         }
         update.setMessages(messages);
         update.setPts(fetchInt());
+        update.setPtsCount(fetchInt());
         break;
     }
     case Update::typeUpdateUserTyping:
@@ -725,8 +736,8 @@ Update InboundPkt::fetchUpdate() {
         break;
     case Update::typeUpdateContactLink:
         update.setUserId(fetchInt());
-        update.setMyLink(fetchContactsMyLink());
-        update.setForeignLink(fetchContactsForeignLink());
+        update.setMyLink(fetchContactLink());
+        update.setForeignLink(fetchContactLink());
         break;
     case Update::typeUpdateActivation:
         update.setUserId(fetchInt());
@@ -782,7 +793,7 @@ Update InboundPkt::fetchUpdate() {
         update.setBlocked(fetchBool());
         break;
     case Update::typeUpdateNotifySettings:
-        update.setPeer(fetchNotifyPeer());
+        update.setNotifyPeer(fetchNotifyPeer());
         update.setNotifySettings(fetchPeerNotifySetting());
         break;
     case Update::typeUpdateServiceNotification:
@@ -807,6 +818,13 @@ Update InboundPkt::fetchUpdate() {
         update.setUserId(fetchInt());
         update.setPhone(fetchQString());
         break;
+    case Update::typeUpdateReadHistoryInbox:
+    case Update::typeUpdateReadHistoryOutbox:
+        update.setPeer(fetchPeer());
+        update.setMaxId(fetchInt());
+        update.setPts(fetchInt());
+        update.setPtsCount(fetchInt());
+        break;
     default:
         qDebug() << "Update received in a not contemplated option";
         break;
@@ -830,8 +848,8 @@ NotifyPeer InboundPkt::fetchNotifyPeer() {
 ContactsLink InboundPkt::fetchContactsLink() {
     ASSERT(fetchInt() == (qint32)ContactsLink::typeContactsLink);
     ContactsLink link;
-    link.setMyLink(fetchContactsMyLink());
-    link.setForeignLink(fetchContactsForeignLink());
+    link.setMyLink(fetchContactLink());
+    link.setForeignLink(fetchContactLink());
     link.setUser(fetchUser());
     return link;
 }
@@ -951,6 +969,9 @@ DocumentAttribute InboundPkt::fetchDocumentAttribute()
         break;
     case DocumentAttribute::typeAttributeAudio:
         attr.setDuration(fetchInt());
+        break;
+    case DocumentAttribute::typeAttributeSticker:
+        attr.setAlt(fetchQString());
         break;
     case DocumentAttribute::typeAttributeFilename:
         attr.setFilename(fetchQString());

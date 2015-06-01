@@ -44,9 +44,10 @@
 #include "types/video.h"
 #include "types/chatparticipant.h"
 #include "types/chatparticipants.h"
-#include "types/contactsforeignlink.h"
-#include "types/contactsmylink.h"
+#include "types/contactlink.h"
+#include "types/affectedmessages.h"
 #include "types/geochatmessage.h"
+#include "types/accountpassword.h"
 #include "types/contact.h"
 #include "types/contactfound.h"
 #include "types/update.h"
@@ -108,8 +109,7 @@ public:
     virtual PeerNotifySettings fetchPeerNotifySetting();
     virtual ContactStatus fetchContactStatus();
     virtual ImportedContact fetchImportedContact();
-    virtual ContactsMyLink fetchContactsMyLink();
-    virtual ContactsForeignLink fetchContactsForeignLink();
+    virtual ContactLink fetchContactLink();
     virtual ContactBlocked fetchContactBlocked();
     virtual ContactFound fetchContactFound();
     virtual StorageFileType fetchStorageFileType();
@@ -127,6 +127,8 @@ public:
     virtual AccountDaysTTL fetchAccountDaysTTL();
     virtual Document fetchDocument();
     virtual StickerPack fetchStickerPack();
+    virtual AffectedMessages fetchAffectedMessages();
+    virtual AccountPassword fetchAccountPassword();
 
 protected:
     char *m_buffer;

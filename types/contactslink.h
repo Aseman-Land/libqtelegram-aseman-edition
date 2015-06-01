@@ -21,8 +21,7 @@
 #ifndef CONTACTSLINK_H
 #define CONTACTSLINK_H
 
-#include "contactsforeignlink.h"
-#include "contactsmylink.h"
+#include "contactlink.h"
 #include "user.h"
 
 class ContactsLink
@@ -30,27 +29,27 @@ class ContactsLink
 public:
 
     enum ContactsLinkType {
-       typeContactsLink = 0xeccea3f5
+       typeContactsLink = 0x3ace484c
     };
 
     ContactsLink() :
-        m_foreignLink(ContactsForeignLink::typeContactsForeignLinkUnknown),
-        m_myLink(ContactsMyLink::typeContactsMyLinkEmpty),
+        m_foreignLink(ContactLink::typeContactLinkUnknown),
+        m_myLink(ContactLink::typeContactLinkUnknown),
         m_user(User::typeUserEmpty),
         m_classType(typeContactsLink) {}
 
     ~ContactsLink() {}
 
-    void setMyLink(ContactsMyLink myLink) {
+    void setMyLink(ContactLink myLink) {
         m_myLink = myLink;
     }
-    ContactsMyLink myLink() const {
+    ContactLink myLink() const {
         return m_myLink;
     }
-    void setForeignLink(ContactsForeignLink foreignLink) {
+    void setForeignLink(ContactLink foreignLink) {
         m_foreignLink = foreignLink;
     }
-    ContactsForeignLink foreignLink() const {
+    ContactLink foreignLink() const {
         return m_foreignLink;
     }
     void setUser(User user) {
@@ -67,8 +66,8 @@ public:
     }
 
 private:
-    ContactsForeignLink m_foreignLink;
-    ContactsMyLink m_myLink;
+    ContactLink m_foreignLink;
+    ContactLink m_myLink;
     User m_user;
     ContactsLinkType m_classType;
 };

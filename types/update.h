@@ -22,13 +22,12 @@
 #define UPDATE_H
 
 #include "dcoption.h"
-#include "contactsmylink.h"
+#include "contactlink.h"
 #include "peernotifysettings.h"
 #include "userprofilephoto.h"
 #include "chatparticipants.h"
 #include "userstatus.h"
 #include "message.h"
-#include "contactsforeignlink.h"
 #include "notifypeer.h"
 #include "geochatmessage.h"
 #include "encryptedmessage.h"
@@ -52,16 +51,16 @@ public:
        typeUpdateEncryption = 0xb4a2e88d,
        typeUpdateUserName = 0xa7332b73,
        typeUpdateUserBlocked = 0x80ece81a,
-       typeUpdateNewMessage = 0x13abdb3,
-       typeUpdateContactLink = 0x51a48a9a,
+       typeUpdateNewMessage = 0x1f2b0afd,
+       typeUpdateContactLink = 0x9d2e67c5,
        typeUpdateChatParticipantDelete = 0x6e5f8c22,
        typeUpdateNewAuthorization = 0x8f06529a,
        typeUpdateChatParticipantAdd = 0x3a0eeb22,
        typeUpdateDcOptions = 0x8e5e9873,
-       typeUpdateDeleteMessages = 0xa92bfe26,
+       typeUpdateDeleteMessages = 0xa20db0e5,
        typeUpdateUserTyping = 0x5c486927,
        typeUpdateEncryptedChatTyping = 0x1710f156,
-       typeUpdateReadMessages = 0xc6649e31,
+       typeUpdateReadMessages = 0x2e5ab668,
        typeUpdateUserPhoto = 0x95313b0c,
        typeUpdateContactRegistered = 0x2575bbb9,
        typeUpdateNewEncryptedMessage = 0x12bcbd9a,
@@ -70,7 +69,9 @@ public:
        typeUpdateNewGeoChatMessage = 0x5a68e3f7,
        typeUpdateServiceNotification = 0x382dd3e4,
        typeUpdatePrivacy = 0xee3b272a,
-       typeUpdateUserPhone = 0x12b9417b
+       typeUpdateUserPhone = 0x12b9417b,
+       typeUpdateReadHistoryInbox = 0x9961fd5c,
+       typeUpdateReadHistoryOutbox = 0x2f2f21bf
     };
 
     Update(UpdateType classType = typeUpdateInvalid) :
@@ -78,10 +79,12 @@ public:
         mPrevious(false),
         mPopup(false),
         mDevice(""),
-        mMyLink(ContactsMyLink::typeContactsMyLinkEmpty),
+        mMyLink(ContactLink::typeContactLinkUnknown),
         mChatId(0),
         mUserId(0),
         mPts(0),
+        mPtsCount(0),
+        mMaxId(0),
         mVersion(0),
         mQts(0),
         mDate(0),
@@ -98,11 +101,12 @@ public:
         mMedia(MessageMedia::typeMessageMediaEmpty),
         mGeoChatMessage(GeoChatMessage::typeGeoChatMessageEmpty),
         mEncryptedMessage(EncryptedMessage::typeEncryptedMessage),
-        mForeignLink(ContactsForeignLink::typeContactsForeignLinkUnknown),
+        mForeignLink(ContactLink::typeContactLinkUnknown),
         mMaxDate(0),
         mAuthKeyId(0),
         mLocation(""),
-        mPeer(NotifyPeer::typeNotifyAll),
+        mNotifyPeer(NotifyPeer::typeNotifyAll),
+        mPeer(Peer::typePeerUser),
         mBlocked(false),
         mKey(PrivacyKey::typePrivacyKeyStatusTimestamp),
         mClassType(classType) {}
@@ -119,11 +123,17 @@ public:
     UserStatus status() const {
         return mStatus;
     }
-    void setPeer(NotifyPeer peer) {
-        mPeer = peer;
+    void setNotifyPeer(NotifyPeer peer) {
+        mNotifyPeer = peer;
     }
-    NotifyPeer peer() const {
+    NotifyPeer notifyPeer() const {
+        return mNotifyPeer;
+    }
+    Peer peer() const {
         return mPeer;
+    }
+    void setPeer(const Peer &peer) {
+        mPeer = peer;
     }
     void setNotifySettings(PeerNotifySettings notifySettings) {
         mNotifySettings = notifySettings;
@@ -160,6 +170,18 @@ public:
     }
     qint32 pts() const {
         return mPts;
+    }
+    void setPtsCount(qint32 ptsCount) {
+        mPtsCount = ptsCount;
+    }
+    qint32 ptsCount() const {
+        return mPtsCount;
+    }
+    qint64 maxId() const {
+        return mMaxId;
+    }
+    void setMaxId(const qint64 &maxId) {
+        mMaxId = maxId;
     }
     void setChat(EncryptedChat chat) {
         mChat = chat;
@@ -215,16 +237,16 @@ public:
     GeoChatMessage geoChatMessage() const {
         return mGeoChatMessage;
     }
-    void setMyLink(ContactsMyLink myLink) {
+    void setMyLink(ContactLink myLink) {
         mMyLink = myLink;
     }
-    ContactsMyLink myLink() const {
+    ContactLink myLink() const {
         return mMyLink;
     }
-    void setForeignLink(ContactsForeignLink foreignLink) {
+    void setForeignLink(ContactLink foreignLink) {
         mForeignLink = foreignLink;
     }
-    ContactsForeignLink foreignLink() const {
+    ContactLink foreignLink() const {
         return mForeignLink;
     }
     void setVersion(qint32 version) {
@@ -356,10 +378,12 @@ private:
     QString mMessageText;
     QList<DcOption> mDcOptions;
     QString mDevice;
-    ContactsMyLink mMyLink;
+    ContactLink mMyLink;
     qint32 mChatId;
     qint32 mUserId;
     qint32 mPts;
+    qint32 mPtsCount;
+    qint64 mMaxId;
     qint32 mVersion;
     qint32 mQts;
     qint32 mDate;
@@ -378,11 +402,12 @@ private:
     MessageMedia mMedia;
     GeoChatMessage mGeoChatMessage;
     EncryptedMessage mEncryptedMessage;
-    ContactsForeignLink mForeignLink;
+    ContactLink mForeignLink;
     qint32 mMaxDate;
     qint64 mAuthKeyId;
     QString mLocation;
-    NotifyPeer mPeer;
+    NotifyPeer mNotifyPeer;
+    Peer mPeer;
     bool mBlocked;
     SendMessageAction mAction;
     PrivacyKey mKey;
