@@ -58,7 +58,7 @@ Q_DECLARE_LOGGING_CATEGORY(TG_CORE_OUTBOUNDPKT)
 class OutboundPkt
 {
 public:
-    explicit OutboundPkt();
+    explicit OutboundPkt(Settings *settings);
     virtual ~OutboundPkt();
 
     void clearPacket();
@@ -111,6 +111,9 @@ protected:
     void appendInputVideo(const InputVideo &video);
     void appendInputDocument(const InputDocument &document);
     void appendInputGeoChat(const InputGeoChat &geoChat);
+
+private:
+    Settings *mSettings;
 };
 
 #endif // OUTBOUNDPKT_H

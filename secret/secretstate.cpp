@@ -18,8 +18,9 @@
 #include "secretstate.h"
 #include "core/settings.h"
 
-SecretState::SecretState(QObject *parent) :
+SecretState::SecretState(Settings *settings, QObject *parent) :
     QObject(parent),
+    mSettings(settings),
     mVersion(0),
     mG(0),
     mP(0) {
@@ -52,23 +53,21 @@ void SecretState::setP(const QByteArray &bigEndianP) {
 
 
 void SecretState::save() {
-    Settings *settings = Settings::getInstance();
-    settings->setVersion(mVersion);
+    mSettings->setVersion(mVersion);
     qint32 g = BN_get_word(mG);
-    settings->setG(g);
+    mSettings->setG(g);
     QByteArray mPBytes = Utils::bignumToBytes(mP);
-    settings->setP(mPBytes);
-    settings->setSecretChats(mChats.values());
-    settings->writeSecretFile();
+    mSettings->setP(mPBytes);
+    mSettings->setSecretChats(mChats.values());
+    mSettings->writeSecretFile();
 }
 
 void SecretState::load() {
-    Settings *settings = Settings::getInstance();
-    mVersion = settings->version();
-    setG(settings->g());
-    setP(settings->p());
+    mVersion = mSettings->version();
+    setG(mSettings->g());
+    setP(mSettings->p());
     mChats.clear();
-    Q_FOREACH (SecretChat *secretChat, settings->secretChats()) {
+    Q_FOREACH (SecretChat *secretChat, mSettings->secretChats()) {
         mChats.insert(secretChat->chatId(), secretChat);
     }
 }

@@ -69,7 +69,7 @@ class Api : public AbstractApi
 {
     Q_OBJECT
 public:
-    explicit Api(Session *session, QObject *parent = 0);
+    explicit Api(Session *session, Settings *settings, CryptoUtils *crypto, QObject *parent = 0);
 
     // Registration / authorization
     qint64 helpGetConfig();
@@ -307,6 +307,9 @@ Q_SIGNALS:
     void uploadFileError(qint64 msgId, qint32 errorCode, QString errorText);
 
 private:
+    Settings *mSettings;
+    CryptoUtils *mCrypto;
+
     QueryMethods helpGetConfigMethods;
     QueryMethods helpGetInviteTextMethods;
     QueryMethods authCheckPhoneMethods;

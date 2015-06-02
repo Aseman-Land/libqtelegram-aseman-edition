@@ -22,8 +22,12 @@
 
 Q_LOGGING_CATEGORY(TG_CORE_SESSIONMANAGER, "tg.core.sessionmanager")
 
-SessionManager::SessionManager(Session *session, QObject *parent) :
-    QObject(parent), mMainSession(session) {
+SessionManager::SessionManager(Session *session, Settings *settings, CryptoUtils *crypto, QObject *parent) :
+    QObject(parent),
+    mSettings(settings),
+    mCrypto(crypto),
+    mMainSession(session)
+{
     connect(mMainSession, SIGNAL(sessionReady(DC*)), this, SIGNAL(mainSessionReady()), Qt::UniqueConnection);
     connect(mMainSession, SIGNAL(sessionClosed(qint64)), this, SIGNAL(mainSessionClosed()), Qt::UniqueConnection);
 }
@@ -68,7 +72,7 @@ Session *SessionManager::createFileSession(DC *dc) {
 }
 
 Session *SessionManager::createSession(DC *dc) {
-    Session *session = new Session(dc, this);
+    Session *session = new Session(dc, mSettings, mCrypto, this);
     connect(session, SIGNAL(sessionReleased(qint64)), SLOT(onSessionReleased(qint64)));
     connect(session, SIGNAL(sessionClosed(qint64)), SLOT(onSessionClosed(qint64)));
     connectResponsesSignals(session);

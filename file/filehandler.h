@@ -18,7 +18,7 @@ class FileHandler : public QObject
 public:
     typedef QSharedPointer<FileHandler> Ptr;
 
-    explicit FileHandler(Api* api, DcProvider &dcProvider, SecretState &secretState, QObject *parent = 0);
+    explicit FileHandler(Api* api, CryptoUtils *crypto, Settings *settings, DcProvider &dcProvider, SecretState &secretState, QObject *parent = 0);
     ~FileHandler();
 
     qint64 uploadSendFile(FileOperation &op, const QString &fileName, const QByteArray &bytes, const QByteArray &thumbnailBytes = 0, const QString &thumbnailName = "");
@@ -37,6 +37,8 @@ Q_SIGNALS:
 
 private:
     Api *mApi;
+    CryptoUtils *mCrypto;
+    Settings *mSettings;
     DcProvider &mDcProvider;
     SecretState &mSecretState;
 

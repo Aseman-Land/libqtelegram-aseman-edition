@@ -32,7 +32,10 @@ class CryptoUtils : public QObject
 {
     Q_OBJECT
 public:
-    static CryptoUtils *getInstance();
+    CryptoUtils(Settings *settings);
+    ~CryptoUtils();
+    CryptoUtils(const CryptoUtils &);
+    CryptoUtils &operator=(const CryptoUtils &);
 
     qint32 encryptPacketBuffer(OutboundPkt &p, void *encryptBuffer);
     qint32 encryptPacketBufferAESUnAuth(const char serverNonce[16], const char hiddenClientNonce[32], OutboundPkt &p, void *encryptBuffer);
@@ -54,12 +57,7 @@ public:
     qint32 computeKeyFingerprint(const QByteArray &key, const QByteArray &iv);
 
 private:
-    CryptoUtils();
-    ~CryptoUtils();
-    CryptoUtils(const CryptoUtils &);
-    CryptoUtils &operator=(const CryptoUtils &);
-
-    static CryptoUtils *m_instance;
+    Settings *mSettings;
 
     BN_CTX *BN_ctx;
     uchar aes_key_raw[32], aes_iv[32];

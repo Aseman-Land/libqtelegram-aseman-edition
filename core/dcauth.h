@@ -33,7 +33,7 @@ class DCAuth : public Connection
 {
     Q_OBJECT
 public:
-    explicit DCAuth(DC *dc, QObject *parent = 0);
+    explicit DCAuth(DC *dc, Settings *settings, CryptoUtils *crypto, QObject *parent = 0);
     ~DCAuth();
 
     void createAuthKey();
@@ -53,6 +53,8 @@ private:
     char m_newNonce[32];
     char m_serverNonce[16];
 
+    Settings *mSettings;
+    CryptoUtils *mCrypto;
     DC *m_dc;
 
     // dc auth methodsDCAuth

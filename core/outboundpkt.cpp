@@ -32,7 +32,9 @@ void do_delete(T_ buf[]) {
     delete[] buf;
 }
 
-OutboundPkt::OutboundPkt() {
+OutboundPkt::OutboundPkt(Settings *settings) :
+    mSettings(settings)
+{
     __buffer = QSharedPointer<qint32>(new qint32[PACKET_BUFFER_SIZE], do_delete<qint32>);
     m_packetBuffer = __buffer.data() + 16;
     clearPacket();
@@ -442,5 +444,5 @@ void OutboundPkt::initConnection() {
     appendQString(Utils::getDeviceModel());
     appendQString(Utils::getSystemVersion());
     appendQString(Utils::getAppVersion());
-    appendQString(Settings::getInstance()->langCode());
+    appendQString(mSettings->langCode());
 }

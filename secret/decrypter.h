@@ -32,7 +32,7 @@ class Decrypter : public QObject, public InboundPkt
 {
     Q_OBJECT
 public:
-    explicit Decrypter();
+    explicit Decrypter(Settings *settings);
     ~Decrypter();
 
     void setSecretChat(SecretChat *secretChat);
@@ -43,6 +43,7 @@ Q_SIGNALS:
     void sequenceNumberGap(qint32 chatId, qint32 startSeqNo, qint32 endSeqNo);
 
 protected:
+    Settings *mSettings;
     SecretChat *mSecretChat;
     QSharedPointer<char> mBufferPtr;
 

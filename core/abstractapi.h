@@ -32,7 +32,7 @@ class AbstractApi : public SessionManager
 {
     Q_OBJECT
 public:
-    explicit AbstractApi(Session *session, QObject *parent = 0);
+    explicit AbstractApi(Session *session, Settings *settings, CryptoUtils *crypto, QObject *parent = 0);
     ~AbstractApi();
 
 Q_SIGNALS:

@@ -33,7 +33,7 @@ class DcProvider : public QObject
 {
     Q_OBJECT
 public:
-    DcProvider();
+    DcProvider(Settings *settings, CryptoUtils *crypto);
     ~DcProvider();
 
     void initialize();
@@ -64,6 +64,9 @@ private:
 
     QMap<qint32, DC *> mDcs;
     QMap<qint32, DCAuth *> mDcAuths;
+    Settings *mSettings;
+    CryptoUtils *mCrypto;
+
     //api instance for "internal" operations (config, getNearestDc, etc...). This object could be received
     // from outside, as parameter, when completed external public layer
     Api *mApi;

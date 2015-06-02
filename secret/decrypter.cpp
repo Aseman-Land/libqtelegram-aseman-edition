@@ -29,8 +29,9 @@ void do_delete(T_ buf[]) {
     delete[] buf;
 }
 
-Decrypter::Decrypter() :
+Decrypter::Decrypter(Settings *settings) :
     InboundPkt(0, 0),
+    mSettings(settings),
     mSecretChat(0) {
     mBufferPtr = QSharedPointer<char>(new char[PACKET_BUFFER_SIZE], do_delete<char>);
 }
@@ -94,7 +95,7 @@ DecryptedMessage Decrypter::decryptEncryptedData(qint64 randomId, const QByteArr
             qCDebug(TG_SECRET_DECRYPTER) << "Received in_seq_no=" << receivedInSeqNoParam << "(expected" << (mSecretChat->getOutSeqNoParam() - 2) << ")";
             qCDebug(TG_SECRET_DECRYPTER) << "Received out_seq_no=" << receivedOutSeqNoParam << "(expected" << mSecretChat->getInSeqNoParam() << ")";
 
-            qint32 ourId = Settings::getInstance()->ourId();
+            qint32 ourId = mSettings->ourId();
 
             if ((receivedOutSeqNoParam & 1) != 1 - (mSecretChat->adminId() == ourId) ||
                     (receivedInSeqNoParam & 1) != (mSecretChat->adminId() == ourId)) {

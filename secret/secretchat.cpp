@@ -21,8 +21,9 @@
 
 Q_LOGGING_CATEGORY(TG_SECRET_SECRETCHAT, "tg.secret.secretchat")
 
-SecretChat::SecretChat(QObject *parent) :
+SecretChat::SecretChat(Settings *settings, QObject *parent) :
     QObject(parent),
+    mSettings(settings),
     mState(Init),
     mChatId(0),
     mRequestedUser(InputUser::typeInputUserEmpty),
@@ -169,12 +170,12 @@ void SecretChat::setLayer(qint32 layer) {
 }
 
 qint32 SecretChat::getInSeqNoParam() {
-    qint32 ourId = Settings::getInstance()->ourId();
+    qint32 ourId = mSettings->ourId();
     return 2 * mInSeqNo + ( mAdminId != ourId ? 1 : 0 );
 }
 
 qint32 SecretChat::getOutSeqNoParam() {
-    qint32 ourId = Settings::getInstance()->ourId();
+    qint32 ourId = mSettings->ourId();
     return 2 * mOutSeqNo + ( mAdminId == ourId ? 1 : 0 );
 }
 

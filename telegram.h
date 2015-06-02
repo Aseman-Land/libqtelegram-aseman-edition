@@ -58,6 +58,9 @@ public:
     static qint32 appId();
     static QString appHash();
 
+    Settings *settings() const;
+    CryptoUtils *crypto() const;
+
     // Registration / authorization
     qint64 authCheckPhone();
     qint64 authCheckPhone(const QString &phoneNumber);
@@ -391,8 +394,11 @@ protected:
     bool mSlept;
 
 private:
+    Settings *mSettings;
+    CryptoUtils *mCrypto;
+
     Api *mApi;
-    DcProvider mDcProvider;
+    DcProvider *mDcProvider;
     FileHandler::Ptr mFileHandler;
 
     QString m_phoneCodeHash;
@@ -402,9 +408,9 @@ private:
     QList<User> m_cachedUsers;
 
     // encrypted chats
-    SecretState mSecretState;
-    Encrypter mEncrypter;
-    Decrypter mDecrypter;
+    SecretState *mSecretState;
+    Encrypter *mEncrypter;
+    Decrypter *mDecrypter;
     void processSecretChatUpdate(const Update &update);
     qint64 generateGAorB(SecretChat *secretChat);
     void createSharedKey(SecretChat * secretChat, BIGNUM *p, QByteArray gAOrB);

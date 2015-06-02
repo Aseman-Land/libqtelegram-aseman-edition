@@ -21,8 +21,8 @@
 
 #include "abstractapi.h"
 
-AbstractApi::AbstractApi(Session *session, QObject *parent) :
-    SessionManager(session, parent) {
+AbstractApi::AbstractApi(Session *session, Settings *settings, CryptoUtils *crypto, QObject *parent) :
+    SessionManager(session, settings, crypto, parent) {
     // connect responses and updates signals in main session
     connectResponsesSignals(mMainSession);
     connectUpdatesSignals(mMainSession);

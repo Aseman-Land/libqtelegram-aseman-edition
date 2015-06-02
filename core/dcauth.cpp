@@ -33,7 +33,11 @@
 
 Q_LOGGING_CATEGORY(TG_CORE_DCAUTH, "tg.core.dcauth")
 
-DCAuth::DCAuth(DC *dc, QObject *parent) : Connection(dc->host(), dc->port(), parent) , m_dc(dc) {
+DCAuth::DCAuth(DC *dc, Settings *settings, CryptoUtils *crypto, QObject *parent) :
+    Connection(dc->host(), dc->port(), parent),
+    mSettings(settings),
+    mCrypto(crypto),
+    m_dc(dc) {
 }
 
 DCAuth::~DCAuth() {
@@ -76,7 +80,7 @@ void DCAuth::sendReqPQPacket() {
     qCDebug(TG_CORE_DCAUTH) << "sendReqPQPacket()";
     mAsserter.check(m_dc->state() == DC::init);
     Utils::randomBytes(m_nonce, 16);
-    OutboundPkt outboundPkt;
+    OutboundPkt outboundPkt(mSettings);
     outboundPkt.appendInt(TL_ReqPQ);
     outboundPkt.appendInts((qint32 *)m_nonce, 4);
     rpcSendPacket(outboundPkt);
@@ -128,18 +132,18 @@ void DCAuth::processResPQAnswer(const InboundPkt &inboundPkt) {
     mAsserter.check(fingerprints_num >= 1 && fingerprints_num <= 64 && len == fingerprints_num * 8 + 8 + (from - buffer));
     qint64 *fingerprints = (qint64 *) (from + 8);
     for (i = 0; i < fingerprints_num; i++) {
-        if (fingerprints[i] == Settings::getInstance()->pkFingerprint()) {
+        if (fingerprints[i] == mSettings->pkFingerprint()) {
             qCDebug(TG_CORE_DCAUTH) << "found our public key at position" << i;
             break;
         }
     }
     if (i == fingerprints_num) {
-        qCWarning(TG_CORE_DCAUTH) << "fatal: don't have any matching keys (" << QString::number(Settings::getInstance()->pkFingerprint(), 16) << "expected)";
+        qCWarning(TG_CORE_DCAUTH) << "fatal: don't have any matching keys (" << QString::number(mSettings->pkFingerprint(), 16) << "expected)";
         Q_EMIT fatalError();
     }
 
     // create inner part (P_Q_inner_data)
-    OutboundPkt p;
+    OutboundPkt p(mSettings);
     p.forwardPtr(5);
     p.appendInt(TL_PQInnerData);
     p.appendCString(buffer + 57, clen);
@@ -157,7 +161,7 @@ void DCAuth::processResPQAnswer(const InboundPkt &inboundPkt) {
     SHA1 ((uchar *) (p.buffer() + 5), (p.length() - 5) * 4, (uchar *) p.buffer());
 
     qint32 encryptBuffer[ENCRYPT_BUFFER_INTS];
-    qint32 l = CryptoUtils::getInstance()->encryptPacketBuffer(p, encryptBuffer);
+    qint32 l = mCrypto->encryptPacketBuffer(p, encryptBuffer);
 
     // Req DH params
     p.clearPacket();
@@ -166,7 +170,7 @@ void DCAuth::processResPQAnswer(const InboundPkt &inboundPkt) {
     p.appendInts((qint32 *) m_serverNonce, 4);
     p.appendBytes(p1BigEndianBytes);
     p.appendBytes(p2BigEndianBytes);
-    p.appendLong(Settings::getInstance()->pkFingerprint());
+    p.appendLong(mSettings->pkFingerprint());
     p.appendCString((char *) encryptBuffer, l);
 
     m_dc->setState(DC::reqDHSent);
@@ -187,7 +191,7 @@ void DCAuth::processDHAnswer(InboundPkt &inboundPkt) {
 
     mAsserter.check(!memcmp (buffer + 24, m_nonce, 16));
     mAsserter.check(!memcmp (buffer + 40, m_serverNonce, 16));
-    CryptoUtils::getInstance()->initAESUnAuth (m_serverNonce, m_newNonce, AES_DECRYPT);
+    mCrypto->initAESUnAuth (m_serverNonce, m_newNonce, AES_DECRYPT);
 
     inboundPkt.setInPtr((qint32 *)(buffer + 56));
     inboundPkt.setInEnd((qint32 *)(buffer + len));
@@ -196,7 +200,7 @@ void DCAuth::processDHAnswer(InboundPkt &inboundPkt) {
 
     mAsserter.check(l > 0);
     qint32 decryptBuffer[DECRYPT_BUFFER_INTS];
-    l = CryptoUtils::getInstance()->padAESDecrypt(inboundPkt.fetchStr(l), l, (char *)decryptBuffer, DECRYPT_BUFFER_INTS * 4 -16);
+    l = mCrypto->padAESDecrypt(inboundPkt.fetchStr(l), l, (char *)decryptBuffer, DECRYPT_BUFFER_INTS * 4 -16);
 
     mAsserter.check(inboundPkt.inPtr() == inboundPkt.inEnd());
     mAsserter.check(l >= 60);
@@ -217,7 +221,7 @@ void DCAuth::processDHAnswer(InboundPkt &inboundPkt) {
 
     qint32 serverTime = inboundPkt.fetchInt();
     mAsserter.check(inboundPkt.inPtr() <= inboundPkt.inEnd());
-    mAsserter.check(CryptoUtils::getInstance()->checkDHParams (&dh_prime, g) >= 0);
+    mAsserter.check(mCrypto->checkDHParams (&dh_prime, g) >= 0);
 
     static char sha1Buffer[20];
     SHA1 ((uchar *) decryptBuffer + 20, (inboundPkt.inPtr() - decryptBuffer - 5) * 4, (uchar *) sha1Buffer);
@@ -230,7 +234,7 @@ void DCAuth::processDHAnswer(InboundPkt &inboundPkt) {
     m_dc->setTimeDifference(clientTime - serverTime);
 
     // Build set_client_DH_params answer
-    OutboundPkt outboundPkt;
+    OutboundPkt outboundPkt(mSettings);
     outboundPkt.forwardPtr(5);
     outboundPkt.appendInt(TL_ClientDHInnerData);
     outboundPkt.appendInts((qint32 *)m_nonce, 4);
@@ -246,12 +250,12 @@ void DCAuth::processDHAnswer(InboundPkt &inboundPkt) {
 
     BIGNUM *y = BN_new ();
     Utils::ensurePtr(y);
-    Utils::ensure(CryptoUtils::getInstance()->BNModExp(y, &dh_g, dh_power, &dh_prime));
+    Utils::ensure(mCrypto->BNModExp(y, &dh_g, dh_power, &dh_prime));
     outboundPkt.appendBignum(y);
     BN_free (y);
 
     BN_init (&auth_key_num);
-    Utils::ensure(CryptoUtils::getInstance()->BNModExp(&auth_key_num, &g_a, dh_power, &dh_prime));
+    Utils::ensure(mCrypto->BNModExp(&auth_key_num, &g_a, dh_power, &dh_prime));
     l = BN_num_bytes (&auth_key_num);
 
     mAsserter.check(l >= 250 && l <= 256);
@@ -265,7 +269,7 @@ void DCAuth::processDHAnswer(InboundPkt &inboundPkt) {
 
     SHA1 ((uchar *) (outboundPkt.buffer() + 5), (outboundPkt.length() - 5) * 4, (uchar *) outboundPkt.buffer());
     qint32 encryptBuffer[DECRYPT_BUFFER_INTS];
-    l = CryptoUtils::getInstance()->encryptPacketBufferAESUnAuth (m_serverNonce, m_newNonce, outboundPkt, encryptBuffer);
+    l = mCrypto->encryptPacketBufferAESUnAuth (m_serverNonce, m_newNonce, outboundPkt, encryptBuffer);
 
     outboundPkt.clearPacket();
     outboundPkt.appendInt(TL_SetClientDHParams);

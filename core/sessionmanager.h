@@ -33,7 +33,7 @@ class SessionManager : public QObject
 {
     Q_OBJECT
 public:
-    explicit SessionManager(Session *session, QObject *parent = 0);
+    explicit SessionManager(Session *session, Settings *settings, CryptoUtils *crypto, QObject *parent = 0);
     ~SessionManager();
 
     void createMainSessionToDc(DC *dc);
@@ -49,6 +49,8 @@ Q_SIGNALS:
     void mainSessionClosed();
 
 protected:
+    Settings *mSettings;
+    CryptoUtils *mCrypto;
     Session *mMainSession;
     // sessionId -> Session object
     QMap<qint64, Session *> mFileSessions;

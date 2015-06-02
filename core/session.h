@@ -36,7 +36,7 @@ class Session : public Connection
 {
     Q_OBJECT
 public:
-    explicit Session(DC *dc, QObject *parent = 0);
+    explicit Session(DC *dc, Settings *settings, CryptoUtils *crypto, QObject *parent = 0);
     ~Session();
 
     DC *dc();
@@ -82,6 +82,8 @@ private:
         qint32 message[MAX_MESSAGE_INTS];
     };
 
+    Settings *mSettings;
+    CryptoUtils *mCrypto;
 
     // session members
     qint64 m_sessionId;

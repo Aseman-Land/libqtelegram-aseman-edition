@@ -51,11 +51,6 @@ Settings::~Settings() {
     }
 }
 
-Settings* Settings::getInstance() {
-    static Settings *instance = new Settings;
-    return instance;
-}
-
 void Settings::setDefaultHostAddress(const QString &host)
 {
     lqt_defaultHostAddress_static = host;
@@ -179,7 +174,7 @@ bool Settings::loadSettings(const QString &phoneNumber, const QString &baseConfi
 
 void Settings::writeAuthFile() {
     QSettings settings(m_authFilename, QSettings::IniFormat);
-    Settings::getInstance()->testMode() ? settings.beginGroup(ST_TEST) : settings.beginGroup(ST_PRODUCTION);
+    testMode() ? settings.beginGroup(ST_TEST) : settings.beginGroup(ST_PRODUCTION);
     settings.setValue(ST_WORKING_DC_NUM, m_workingDcNum);
     settings.setValue(ST_OUR_ID, m_ourId);
     settings.beginWriteArray(ST_DCS_ARRAY);
@@ -204,7 +199,7 @@ void Settings::writeAuthFile() {
 
 void Settings::readAuthFile() {
     QSettings settings(m_authFilename, QSettings::IniFormat);
-    Settings::getInstance()->testMode() ? settings.beginGroup(ST_TEST) : settings.beginGroup(ST_PRODUCTION);
+    testMode() ? settings.beginGroup(ST_TEST) : settings.beginGroup(ST_PRODUCTION);
     qint32 defaultDcId = m_testMode ? TEST_DEFAULT_DC_ID : Settings::defaultHostDcId();
     m_workingDcNum = settings.value(ST_WORKING_DC_NUM, defaultDcId).toInt();
     m_ourId = settings.value(ST_OUR_ID).toInt();
@@ -268,7 +263,7 @@ void Settings::readSecretFile() {
     qint32 n = settings.beginReadArray(ST_SECRET_CHATS_ARRAY);
     for (qint32 i = 0; i < n; i++) {
         settings.setArrayIndex(i);
-        SecretChat *secretChat = new SecretChat();
+        SecretChat *secretChat = new SecretChat(this);
         secretChat->setState(SecretChat::Accepted); // only accepted chats are saved.
         secretChat->setChatId(settings.value(ST_CHAT_ID, 0).toInt());
         secretChat->setAccessHash(settings.value(ST_ACCESS_HASH, 0).toLongLong());
