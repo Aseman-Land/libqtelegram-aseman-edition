@@ -29,8 +29,10 @@ Q_LOGGING_CATEGORY(TG_CORE_SESSION, "tg.core.session")
 
 qint64 Session::m_clientLastMsgId = 0;
 
-Session::Session(DC *dc, QObject *parent) :
+Session::Session(DC *dc, Settings *settings, CryptoUtils *crypto, QObject *parent) :
     Connection(dc->host(), dc->port(), parent),
+    mSettings(settings),
+    mCrypto(crypto),
     m_sessionId(0),
     m_serverSalt(0),
     mTimeDifference(0),
@@ -119,8 +121,8 @@ void Session::processRpcMessage(InboundPkt &inboundPkt) {
     Q_ASSERT(m_dc->authKeyId());
     mAsserter.check(enc->authKeyId == m_dc->authKeyId());
     //msg_key is used to compute AES key and to decrypt the received message
-    CryptoUtils::getInstance()->initAESAuth(m_dc->authKey() + 8, enc->msgKey, AES_DECRYPT);
-    qint32 l = CryptoUtils::getInstance()->padAESDecrypt((char *)&enc->serverSalt, len - UNENCSZ, (char *)&enc->serverSalt, len - UNENCSZ);
+    mCrypto->initAESAuth(m_dc->authKey() + 8, enc->msgKey, AES_DECRYPT);
+    qint32 l = mCrypto->padAESDecrypt((char *)&enc->serverSalt, len - UNENCSZ, (char *)&enc->serverSalt, len - UNENCSZ);
     Q_UNUSED(l);
     Q_ASSERT(l == len - UNENCSZ);
     if( !(!(enc->msgLen & 3) && enc->msgLen > 0 && enc->msgLen <= len - MINSZ && len - MINSZ - enc->msgLen <= 12) )
@@ -346,26 +348,48 @@ void Session::workUpdates(InboundPkt &inboundPkt, qint64 msgId) {
 void Session::workUpdateShortMessage(InboundPkt &inboundPkt, qint64 msgId) {
     qCDebug(TG_CORE_SESSION) << "workUpdateShortMessage: msgId =" << QString::number(msgId, 16);
     mAsserter.check(inboundPkt.fetchInt() == (qint32)TL_UpdateShortMessage);
+    qint32 flags = inboundPkt.fetchInt();
     qint32 id = inboundPkt.fetchInt();
-    qint32 fromId = inboundPkt.fetchInt();
+    qint32 userId = inboundPkt.fetchInt();
     QString message = inboundPkt.fetchQString();
     qint32 pts = inboundPkt.fetchInt();
+    qint32 ptsCount = inboundPkt.fetchInt();
     qint32 date = inboundPkt.fetchInt();
-    qint32 seq = inboundPkt.fetchInt();
-    Q_EMIT updateShortMessage(id, fromId, message, pts, date, seq);
+    qint32 fwd_from_id = 0;
+    qint32 fwd_date = 0;
+    qint32 reply_to_msg_id = 0;
+    if(flags & (1<<2)) {
+        fwd_from_id = inboundPkt.fetchInt();
+        fwd_date = inboundPkt.fetchInt();
+    }
+    if(flags & (1<<3)) {
+        reply_to_msg_id = inboundPkt.fetchInt();
+    }
+    Q_EMIT updateShortMessage(id, userId, message, pts, ptsCount, date, fwd_from_id, fwd_date, reply_to_msg_id);
 }
 
 void Session::workUpdateShortChatMessage(InboundPkt &inboundPkt, qint64 msgId) {
     qCDebug(TG_CORE_SESSION) << "workUpdateShortChatMessage: msgId =" << QString::number(msgId, 16);
     mAsserter.check(inboundPkt.fetchInt() == (qint32)TL_UpdateShortChatMessage);
+    qint32 flags = inboundPkt.fetchInt();
     qint32 id = inboundPkt.fetchInt();
     qint32 fromId = inboundPkt.fetchInt();
     qint32 chatId = inboundPkt.fetchInt();
     QString message = inboundPkt.fetchQString();
     qint32 pts = inboundPkt.fetchInt();
+    qint32 pts_count = inboundPkt.fetchInt();
     qint32 date = inboundPkt.fetchInt();
-    qint32 seq = inboundPkt.fetchInt();
-    Q_EMIT updateShortChatMessage(id, fromId, chatId, message, pts, date, seq);
+    qint32 fwd_from_id = 0;
+    qint32 fwd_date = 0;
+    qint32 reply_to_msg_id = 0;
+    if(flags & (1<<2)) {
+        fwd_from_id = inboundPkt.fetchInt();
+        fwd_date = inboundPkt.fetchInt();
+    }
+    if(flags & (1<<3)) {
+        reply_to_msg_id = inboundPkt.fetchInt();
+    }
+    Q_EMIT updateShortChatMessage(id, fromId, chatId, message, pts, pts_count, date, fwd_from_id, fwd_date, reply_to_msg_id);
 }
 
 void Session::workPacked(InboundPkt &inboundPkt, qint64 msgId) {
@@ -477,8 +501,8 @@ qint32 Session::aesEncryptMessage (EncryptedMsg *encMsg) {
     qCDebug(TG_CORE_SESSION) << "sending message with sha1" << QString::number(*(qint32 *)sha1Buffer, 8);
 
     memcpy (encMsg->msgKey, sha1Buffer + 4, 16);
-    CryptoUtils::getInstance()->initAESAuth(m_dc->authKey(), encMsg->msgKey, AES_ENCRYPT);
-    return CryptoUtils::getInstance()->padAESEncrypt((char *) &encMsg->serverSalt, encLen, (char *) &encMsg->serverSalt, MAX_MESSAGE_INTS * 4 + (MINSZ - UNENCSZ));
+    mCrypto->initAESAuth(m_dc->authKey(), encMsg->msgKey, AES_ENCRYPT);
+    return mCrypto->padAESEncrypt((char *) &encMsg->serverSalt, encLen, (char *) &encMsg->serverSalt, MAX_MESSAGE_INTS * 4 + (MINSZ - UNENCSZ));
 }
 
 qint64 Session::encryptSendMessage(qint32 *msg, qint32 msgInts, qint32 useful) {
@@ -550,7 +574,7 @@ qint64 Session::sendQuery(OutboundPkt &outboundPkt, QueryMethods *methods, QVari
     q->setExtra(extra);
     q->setName(name);
 
-    if (Settings::getInstance()->resendQueries()) {
+    if (mSettings->resendQueries()) {
         connect(q, SIGNAL(timeout(Query*)), this, SLOT(resendQuery(Query*)), Qt::UniqueConnection);
         q->startTimer(QUERY_TIMEOUT);
     }
@@ -581,7 +605,7 @@ void Session::resendQuery(Query *q) {
         delete q;
     } else {
         qCDebug(TG_CORE_SESSION) << "Resending query with msgId" << QString::number(q->msgId(), 16);
-        OutboundPkt p;
+        OutboundPkt p(mSettings);
         p.appendInt(TL_MsgContainer);
         p.appendInt(1);
         p.appendLong(q->msgId());
@@ -663,7 +687,7 @@ void Session::ackAll() {
 }
 
 void Session::sendAcks(const QList<qint64> &msgIds) {
-    OutboundPkt p;
+    OutboundPkt p(mSettings);
     p.appendInt(TL_MsgsAck);
     p.appendInt(TL_Vector);
     int n = msgIds.length();

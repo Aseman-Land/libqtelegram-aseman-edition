@@ -27,7 +27,9 @@
 #include <openssl/sha.h>
 #include <openssl/md5.h>
 
-CryptoUtils::CryptoUtils() {
+CryptoUtils::CryptoUtils(Settings *settings) :
+    mSettings(settings)
+{
     BN_ctx = BN_CTX_new ();
     Utils::ensurePtr(BN_ctx);
 }
@@ -36,13 +38,8 @@ CryptoUtils::~CryptoUtils() {
     if (BN_ctx) free(BN_ctx); //do this with a tfree method from Utils
 }
 
-CryptoUtils* CryptoUtils::getInstance() {
-    static CryptoUtils *instance = new CryptoUtils;
-    return instance;
-}
-
 qint32 CryptoUtils::encryptPacketBuffer(OutboundPkt &p, void *encryptBuffer) {
-    RSA *pubKey = Settings::getInstance()->pubKey();
+    RSA *pubKey = mSettings->pubKey();
     return padRsaEncrypt((char *) p.buffer(), p.length() * 4, (char *) encryptBuffer, ENCRYPT_BUFFER_INTS * 4, pubKey->n, pubKey->e);
 }
 

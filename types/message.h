@@ -28,21 +28,10 @@
 class Message
 {
 public:
-
-    /*
-    enum MessageType {
-       typeMessageEmpty = 0x83e5de54,
-       typeMessageService = 0x9f8d60bb,
-       typeMessage = 0x22eb6aba,
-       typeMessageForwarded = 0x5f46804
-    };
-    */
-
     enum MessageType {
        typeMessageEmpty = 0x83e5de54,
        typeMessageService = 0x1d86f70e,
-       typeMessage = 0x567699b3,
-       typeMessageForwarded = 0xa367e716
+       typeMessage = 0xa7ab1991
     };
 
     Message() :
@@ -54,6 +43,7 @@ public:
         m_fromId(0),
         m_out(false),
         m_date(0),
+        m_replyToMsgId(0),
         m_media(MessageMedia::typeMessageMediaEmpty),
         m_fwdDate(0),
         m_fwdFromId(0),
@@ -70,6 +60,7 @@ public:
         m_fromId(0),
         m_out(false),
         m_date(0),
+        m_replyToMsgId(0),
         m_media(MessageMedia::typeMessageMediaEmpty),
         m_fwdDate(0),
         m_fwdFromId(0),
@@ -93,6 +84,12 @@ public:
     }
     qint32 fromId() const {
         return m_fromId;
+    }
+    void setReplyToMsgId(qint32 msgId) {
+        m_replyToMsgId = msgId;
+    }
+    qint32 replyToMsgId() const {
+        return m_replyToMsgId;
     }
     void setToId(Peer toId) {
         m_toId = toId;
@@ -164,6 +161,7 @@ private:
     qint32 m_fromId;
     bool m_out;
     qint32 m_date;
+    qint32 m_replyToMsgId;
     MessageMedia m_media;
     qint32 m_fwdDate;
     qint32 m_fwdFromId;

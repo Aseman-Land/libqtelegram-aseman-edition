@@ -87,7 +87,10 @@ class LIBQTELEGRAMSHARED_EXPORT Settings : public QObject
 {
     Q_OBJECT
 public:
-    static Settings *getInstance();
+    Settings();
+    ~Settings();
+    Settings(const Settings &); // hide copy constructor
+    Settings& operator=(const Settings &); // hide asignment
 
     static void setDefaultHostAddress(const QString &host);
     static void setDefaultHostPort(qint16 port);
@@ -131,11 +134,6 @@ public:
     void writeCrashFile();
 
 private:
-    Settings();
-    ~Settings();
-    Settings(const Settings &); // hide copy constructor
-    Settings& operator=(const Settings &); // hide asignment
-
     void readAuthFile();
     void readSecretFile();
 

@@ -22,8 +22,9 @@
 
 #include <QFileInfo>
 
-UploadFile::UploadFile(Session *session, UploadFile::FileType fileType, const QByteArray &buffer, QObject *parent) :
+UploadFile::UploadFile(Session *session, CryptoUtils *crypto, UploadFile::FileType fileType, const QByteArray &buffer, QObject *parent) :
     File(session, buffer.size(), parent),
+    mCrypto(crypto),
     mFileType(fileType),
     mRelatedFileId(0),
     mName(""),
@@ -37,8 +38,9 @@ UploadFile::UploadFile(Session *session, UploadFile::FileType fileType, const QB
     calculatePartsCount();
 }
 
-UploadFile::UploadFile(Session *session, UploadFile::FileType fileType, const QString &filePath, QObject *parent) :
+UploadFile::UploadFile(Session *session, CryptoUtils *crypto, UploadFile::FileType fileType, const QString &filePath, QObject *parent) :
     File(session, QFileInfo(filePath).size(), parent),
+    mCrypto(crypto),
     mFileType(fileType),
     mRelatedFileId(0),
     mName(QFileInfo(filePath).fileName()),
@@ -106,7 +108,7 @@ QByteArray UploadFile::nextPart() {
 
     QByteArray processedBytes;
     if (mEncrypted) {
-        processedBytes = CryptoUtils::getInstance()->encryptFilePart(partBytes, mKey, mIv);
+        processedBytes = mCrypto->encryptFilePart(partBytes, mKey, mIv);
     } else {
         processedBytes = partBytes;
     }

@@ -18,7 +18,7 @@ class FileHandler : public QObject
 public:
     typedef QSharedPointer<FileHandler> Ptr;
 
-    explicit FileHandler(Api* api, DcProvider &dcProvider, SecretState &secretState, QObject *parent = 0);
+    explicit FileHandler(Api* api, CryptoUtils *crypto, Settings *settings, DcProvider &dcProvider, SecretState &secretState, QObject *parent = 0);
     ~FileHandler();
 
     qint64 uploadSendFile(FileOperation &op, const QString &fileName, const QByteArray &bytes, const QByteArray &thumbnailBytes = 0, const QString &thumbnailName = "");
@@ -32,11 +32,13 @@ Q_SIGNALS:
     void uploadCancelFileAnswer(qint64 fileId, bool cancelled);
     void error(qint64 id, qint32 errorCode, QString errorText);
 
-    void messagesSendMediaAnswer(qint64 fileId, Message message, QList<Chat> chats, QList<User> users, QList<ContactsLink> links, qint32 pts, qint32 seq);
+    void messagesSendMediaAnswer(qint64 fileId, Message message, QList<Chat> chats, QList<User> users, QList<ContactsLink> links, qint32 pts, qint32 ptsCount);
     void messagesSendEncryptedFileAnswer(qint64 id, qint32 date, EncryptedFile encryptedFile = EncryptedFile());
 
 private:
     Api *mApi;
+    CryptoUtils *mCrypto;
+    Settings *mSettings;
     DcProvider &mDcProvider;
     SecretState &mSecretState;
 
@@ -71,8 +73,8 @@ private Q_SLOTS:
     void onUploadGetFileAnswer(qint64 msgId, StorageFileType type, qint32 mtime, QByteArray bytes);
     void onUploadGetFileError(qint64 id, qint32 errorCode, const QString &errorText);
 
-    void onMessagesSendMediaStatedMessage(qint64 id, Message message, QList<Chat> chats, QList<User> users, qint32 pts, qint32 seq);
-    void onMessagesSendMediaStatedMessageLink(qint64 id, Message message, QList<Chat> chats, QList<User> users, QList<ContactsLink> links, qint32 pts, qint32 seq);
+    void onMessagesSendMediaStatedMessage(qint64 id, Message message, QList<Chat> chats, QList<User> users, qint32 pts, qint32 ptsCount);
+    void onMessagesSendMediaStatedMessageLink(qint64 id, Message message, QList<Chat> chats, QList<User> users, QList<ContactsLink> links, qint32 pts, qint32 pts_count, qint32 seq = 0);
     void onMessagesSentEncryptedFile(qint64, qint32 date, const EncryptedFile &encryptedFile = EncryptedFile());
 };
 

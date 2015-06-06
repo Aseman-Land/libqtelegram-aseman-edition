@@ -29,7 +29,7 @@ class SecretState : public QObject
 {
     Q_OBJECT
 public:
-    explicit SecretState(QObject *parent = 0);
+    explicit SecretState(Settings *settings, QObject *parent = 0);
     ~SecretState();
 
     qint32 version() { return mVersion; }
@@ -45,6 +45,7 @@ public:
     void save();
 
 private:
+    Settings *mSettings;
     qint32 mVersion;
     BIGNUM *mG;
     BIGNUM *mP;

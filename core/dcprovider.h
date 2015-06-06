@@ -33,7 +33,7 @@ class DcProvider : public QObject
 {
     Q_OBJECT
 public:
-    DcProvider();
+    DcProvider(Settings *settings, CryptoUtils *crypto);
     ~DcProvider();
 
     void initialize();
@@ -64,6 +64,9 @@ private:
 
     QMap<qint32, DC *> mDcs;
     QMap<qint32, DCAuth *> mDcAuths;
+    Settings *mSettings;
+    CryptoUtils *mCrypto;
+
     //api instance for "internal" operations (config, getNearestDc, etc...). This object could be received
     // from outside, as parameter, when completed external public layer
     Api *mApi;
@@ -89,7 +92,7 @@ private Q_SLOTS:
     void onDcAuthDisconnected();
     void onApiReady(DC*);
     void onApiError();
-    void onConfigReceived(qint64 msgId, qint32 date, qint32 expires, bool testMode, qint32 thisDc, const QList<DcOption> &dcOptions, qint32 chatBigSize, qint32 chatMaxSize, qint32 broadcastMaxSize, QList<DisabledFeature> disabledFeatures);
+    void onConfigReceived(qint64 msgId, Config config);
     void onTransferSessionReady(DC*);
     void onAuthExportedAuthorization(qint64, qint32 ourId, const QByteArray &bytes);
     void onAuthImportedAuthorization(qint64, qint32 expires, const User &);

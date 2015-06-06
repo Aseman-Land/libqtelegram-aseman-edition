@@ -28,7 +28,7 @@ Q_DECLARE_LOGGING_CATEGORY(TG_SECRET_ENCRYPTER)
 class Encrypter : public OutboundPkt
 {
 public:
-    explicit Encrypter();
+    explicit Encrypter(Settings *settings);
 
     void setSecretChat(SecretChat *secretChat);
 

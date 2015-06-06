@@ -40,8 +40,8 @@ public:
 
     typedef QSharedPointer<UploadFile> Ptr;
 
-    explicit UploadFile(Session *session, FileType type, const QByteArray &buffer, QObject *parent = 0);
-    explicit UploadFile(Session *session, FileType type, const QString &filePath, QObject *parent = 0);
+    explicit UploadFile(Session *session, CryptoUtils *crypto, FileType type, const QByteArray &buffer, QObject *parent = 0);
+    explicit UploadFile(Session *session, CryptoUtils *crypto, FileType type, const QString &filePath, QObject *parent = 0);
     ~UploadFile();
 
     qint64 relatedFileId() const { return mRelatedFileId; }
@@ -62,6 +62,7 @@ Q_SIGNALS:
     void fileNotOpen();
 
 private:
+    CryptoUtils *mCrypto;
     FileType mFileType;
     qint64 mRelatedFileId; // if this is the main file, related file is thumbnail and viceversa
     QString mName;

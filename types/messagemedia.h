@@ -38,7 +38,7 @@ public:
        typeMessageMediaContact = 0x5e7d2f39,
        typeMessageMediaEmpty = 0x3ded6320,
        typeMessageMediaVideo = 0xa2d24290,
-       typeMessageMediaUnsupported = 0x29632a36,
+       typeMessageMediaUnsupported = 0x9f84f49e,
        typeMessageMediaAudio = 0xc6b68300,
        typeMessageMediaPhoto = 0xc8c45a2a,
        typeMessageMediaGeo = 0x56e0d474

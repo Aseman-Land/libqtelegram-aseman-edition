@@ -4,9 +4,11 @@
 
 Q_LOGGING_CATEGORY(TG_FILE_FILEHANDLER, "tg.file.filehandler")
 
-FileHandler::FileHandler(Api *api, DcProvider &dcProvider, SecretState &secretState, QObject *parent) :
+FileHandler::FileHandler(Api *api, CryptoUtils *crypto, Settings *settings, DcProvider &dcProvider, SecretState &secretState, QObject *parent) :
     QObject(parent),
     mApi(api),
+    mCrypto(crypto),
+    mSettings(settings),
     mDcProvider(dcProvider),
     mSecretState(secretState) {
 
@@ -15,7 +17,7 @@ FileHandler::FileHandler(Api *api, DcProvider &dcProvider, SecretState &secretSt
     connect(mApi, SIGNAL(uploadFile(qint64,StorageFileType,qint32,QByteArray)), this, SLOT(onUploadGetFileAnswer(qint64,StorageFileType,qint32,QByteArray)));
     connect(mApi, SIGNAL(uploadFileError(qint64,qint32,QString)), this, SLOT(onUploadGetFileError(qint64,qint32,QString)));
     connect(mApi, SIGNAL(messagesSentMediaStatedMessage(qint64,Message,QList<Chat>,QList<User>,qint32,qint32)), SLOT(onMessagesSendMediaStatedMessage(qint64,Message,QList<Chat>,QList<User>,qint32,qint32)));
-    connect(mApi, SIGNAL(messagesSentMediaStatedMessageLink(qint64,Message,QList<Chat>,QList<User>,QList<ContactsLink>,qint32,qint32)), SLOT(onMessagesSendMediaStatedMessageLink(qint64,Message,QList<Chat>,QList<User>,QList<ContactsLink>,qint32,qint32)));
+    connect(mApi, SIGNAL(messagesSentMediaStatedMessageLink(qint64,Message,QList<Chat>,QList<User>,QList<ContactsLink>,qint32,qint32,qint32)), SLOT(onMessagesSendMediaStatedMessageLink(qint64,Message,QList<Chat>,QList<User>,QList<ContactsLink>,qint32,qint32,qint32)));
     connect(mApi, SIGNAL(messagesSendEncryptedFileSentEncryptedMessage(qint64,qint32)), this, SLOT(onMessagesSentEncryptedFile(qint64,qint32)));
     connect(mApi, SIGNAL(messagesSendEncryptedFileSentEncryptedFile(qint64,qint32,EncryptedFile)), this, SLOT(onMessagesSentEncryptedFile(qint64,qint32,EncryptedFile)));
 }
@@ -36,7 +38,7 @@ qint64 FileHandler::uploadSendFile(FileOperation &op, const QString &fileName, c
     // create dedicated session to working dc for the main file
     DC *dc = mDcProvider.getWorkingDc();
     Session *session = mApi->fileSession(dc);
-    UploadFile::Ptr f = UploadFile::Ptr(new UploadFile(session, UploadFile::Main, bytes, this));
+    UploadFile::Ptr f = UploadFile::Ptr(new UploadFile(session, mCrypto, UploadFile::Main, bytes, this));
     bool encrypted = op.opType() == FileOperation::sendEncryptedFile;
     if (encrypted) {
         f->setEncrypted(true);
@@ -51,7 +53,7 @@ qint64 FileHandler::uploadSendFile(FileOperation &op, const QString &fileName, c
     // first send all thumbnail before sending main file
     if (!thumbnailBytes.isEmpty()) {
         // use same session for thumbnail and main file. In case a thumbnail exists, send it first
-        UploadFile::Ptr thumb = UploadFile::Ptr(new UploadFile(session, UploadFile::Thumbnail, thumbnailBytes, this));
+        UploadFile::Ptr thumb = UploadFile::Ptr(new UploadFile(session, mCrypto, UploadFile::Thumbnail, thumbnailBytes, this));
         f->setRelatedFileId(thumb->id());
         thumb->setRelatedFileId(f->id());
         thumbnailName.length() > 0 ? thumb->setName(thumbnailName) : thumb->setName(fileName);
@@ -75,7 +77,7 @@ qint64 FileHandler::uploadSendFile(FileOperation &op, const QString &filePath, c
     // create dedicated session to working dc for the main file
     DC *dc = mDcProvider.getWorkingDc();
     Session *session = mApi->fileSession(dc);
-    UploadFile::Ptr f = UploadFile::Ptr(new UploadFile(session, UploadFile::Main, filePath, this));
+    UploadFile::Ptr f = UploadFile::Ptr(new UploadFile(session, mCrypto, UploadFile::Main, filePath, this));
     bool encrypted = op.opType() == FileOperation::sendEncryptedFile;
     if (encrypted) {
         f->setEncrypted(true);
@@ -89,7 +91,7 @@ qint64 FileHandler::uploadSendFile(FileOperation &op, const QString &filePath, c
     // first send all thumbnail before sending main file
     if (thumbnailPath.length() > 0) {
         // use same session for thumbnail and main file. In case a thumbnail exists, send it first
-        UploadFile::Ptr thumb = UploadFile::Ptr(new UploadFile(session, UploadFile::Thumbnail, thumbnailPath, this));
+        UploadFile::Ptr thumb = UploadFile::Ptr(new UploadFile(session, mCrypto, UploadFile::Thumbnail, thumbnailPath, this));
         f->setRelatedFileId(thumb->id());
         thumb->setRelatedFileId(f->id());
         // insert the relationship fileId <-> thumb file
@@ -190,7 +192,8 @@ void FileHandler::onUploadSaveFilePartResult(qint64, qint64 fileId, bool) {
                     // retrieve peer related to file, generate random id and send media metadata
                     InputPeer peer = op->peer();
                     qint64 randomId = op->randomId();
-                    requestId = mApi->messagesSendMedia(peer, metadata, randomId);
+                    qint32 replyToMsgId = op->replyToMsgId();
+                    requestId = mApi->messagesSendMedia(peer, metadata, randomId, replyToMsgId);
                     break;
                 }
                 case FileOperation::editChatPhoto: {
@@ -217,12 +220,12 @@ void FileHandler::onUploadSaveFilePartResult(qint64, qint64 fileId, bool) {
                     inputEncryptedFile.setParts(uploadFile->nParts());
                     inputEncryptedFile.setMd5Checksum(QString(uploadFile->md5().toHex()));
 
-                    qint32 keyFingerprint = CryptoUtils::getInstance()->computeKeyFingerprint(op->key(), op->iv());
+                    qint32 keyFingerprint = mCrypto->computeKeyFingerprint(op->key(), op->iv());
                     inputEncryptedFile.setKeyFingerprint(keyFingerprint);
 
                     SecretChat *secretChat = mSecretState.chats().value(inputEncryptedChat.chatId());
                     QList<qint64> previousMsgs = secretChat->sequence();
-                    Encrypter encrypter;
+                    Encrypter encrypter(mSettings);
                     encrypter.setSecretChat(secretChat);
                     QByteArray data = encrypter.generateEncryptedData(decryptedMessage);
                     requestId = mApi->messagesSendEncryptedFile(previousMsgs, inputEncryptedChat, randomId, data, inputEncryptedFile);
@@ -306,7 +309,7 @@ void FileHandler::onUploadGetFileAnswer(qint64 msgId, StorageFileType type, qint
     }
 
     if (f->encrypted()) {
-        CryptoUtils::getInstance()->decryptFilePart(bytes, f->key(), f->iv());
+        mCrypto->decryptFilePart(bytes, f->key(), f->iv());
         // if decrypted bytes are more than the last part expected ones, remove surplus
         qint32 expectedMaxPartSize = f->expectedSize() - f->offset();
         if (bytes.length() > expectedMaxPartSize) {
@@ -316,7 +319,7 @@ void FileHandler::onUploadGetFileAnswer(qint64 msgId, StorageFileType type, qint
 
     // if 'managedDownloads' flag is set, store all temporal received data and return a unique event
     // when file downloading is finished. Emit an event for every part otherwise.
-    if (Settings::getInstance()->managedDownloads()) {
+    if (mSettings->managedDownloads()) {
         // partial bytes appended to DownloadFile object
         f->appendBytes(bytes);
 
@@ -408,16 +411,17 @@ qint64 FileHandler::uploadCancelFile(qint64 fileId) {
     return fileId;
 }
 
-void FileHandler::onMessagesSendMediaStatedMessage(qint64 id, Message message, QList<Chat> chats, QList<User> users, qint32 pts, qint32 seq) {
+void FileHandler::onMessagesSendMediaStatedMessage(qint64 id, Message message, QList<Chat> chats, QList<User> users, qint32 pts, qint32 ptsCount) {
     QList<ContactsLink> links;
-    onMessagesSendMediaStatedMessageLink(id, message, chats, users, links, pts, seq);
+    onMessagesSendMediaStatedMessageLink(id, message, chats, users, links, pts, ptsCount);
 }
 
-void FileHandler::onMessagesSendMediaStatedMessageLink(qint64 id, Message message, QList<Chat> chats, QList<User> users, QList<ContactsLink> links, qint32 pts, qint32 seq) {
+void FileHandler::onMessagesSendMediaStatedMessageLink(qint64 id, Message message, QList<Chat> chats, QList<User> users, QList<ContactsLink> links, qint32 pts, qint32 pts_count, qint32 seq) {
     //recover correlated send media request id -> fileId
     qint64 fileId = mFileIdsMap.take(id);
     Q_ASSERT(fileId);
-    Q_EMIT messagesSendMediaAnswer(fileId, message, chats, users, links, pts, seq);
+    Q_UNUSED(seq)
+    Q_EMIT messagesSendMediaAnswer(fileId, message, chats, users, links, pts, pts_count);
 }
 
 void FileHandler::onMessagesSentEncryptedFile(qint64 id, qint32 date, const EncryptedFile &encryptedFile) {

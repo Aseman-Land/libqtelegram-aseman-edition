@@ -36,7 +36,7 @@ class Session : public Connection
 {
     Q_OBJECT
 public:
-    explicit Session(DC *dc, QObject *parent = 0);
+    explicit Session(DC *dc, Settings *settings, CryptoUtils *crypto, QObject *parent = 0);
     ~Session();
 
     DC *dc();
@@ -61,8 +61,8 @@ Q_SIGNALS:
     void errorReceived(Query *q, qint32 errorCode, QString errorText);
 
     void updatesTooLong();
-    void updateShortMessage(qint32 id, qint32 fromId, const QString &message, qint32 pts, qint32 date, qint32 seq);
-    void updateShortChatMessage(qint32 id, qint32 fromId, qint32 chatId, const QString &message, qint32 pts, qint32 date, qint32 seq);
+    void updateShortMessage(qint32 id, qint32 userId, const QString &message, qint32 pts, qint32 pts_count, qint32 date, qint32 fwd_from_id, qint32 fwd_date, qint32 reply_to_msg_id);
+    void updateShortChatMessage(qint32 id, qint32 fromId, qint32 chatId, const QString &message, qint32 pts, qint32 pts_count, qint32 date, qint32 fwd_from_id, qint32 fwd_date, qint32 reply_to_msg_id);
     void updateShort(Update update, qint32 date);
     void updatesCombined(QList<Update> updates, QList<User> users, QList<Chat> chats, qint32 date, qint32 seqStart, qint32 seq);
     void updates(QList<Update> udts, QList<User> users, QList<Chat> chats, qint32 date, qint32 seq);
@@ -82,6 +82,8 @@ private:
         qint32 message[MAX_MESSAGE_INTS];
     };
 
+    Settings *mSettings;
+    CryptoUtils *mCrypto;
 
     // session members
     qint64 m_sessionId;

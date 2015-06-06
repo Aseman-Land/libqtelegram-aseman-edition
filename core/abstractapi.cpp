@@ -21,8 +21,8 @@
 
 #include "abstractapi.h"
 
-AbstractApi::AbstractApi(Session *session, QObject *parent) :
-    SessionManager(session, parent) {
+AbstractApi::AbstractApi(Session *session, Settings *settings, CryptoUtils *crypto, QObject *parent) :
+    SessionManager(session, settings, crypto, parent) {
     // connect responses and updates signals in main session
     connectResponsesSignals(mMainSession);
     connectUpdatesSignals(mMainSession);
@@ -33,8 +33,8 @@ AbstractApi::~AbstractApi() {
 
 void AbstractApi::connectUpdatesSignals(Session *session) {
     connect(session, SIGNAL(updatesTooLong()), this, SIGNAL(updatesTooLong()));
-    connect(session, SIGNAL(updateShortMessage(qint32,qint32,QString,qint32,qint32,qint32)), this, SIGNAL(updateShortMessage(qint32,qint32,QString,qint32,qint32,qint32)));
-    connect(session, SIGNAL(updateShortChatMessage(qint32,qint32,qint32,QString,qint32,qint32,qint32)), this, SIGNAL(updateShortChatMessage(qint32,qint32,qint32,QString,qint32,qint32,qint32)));
+    connect(session, SIGNAL(updateShortMessage(qint32,qint32,QString,qint32,qint32,qint32,qint32,qint32,qint32)), this, SIGNAL(updateShortMessage(qint32,qint32,QString,qint32,qint32,qint32,qint32,qint32,qint32)));
+    connect(session, SIGNAL(updateShortChatMessage(qint32,qint32,qint32,QString,qint32,qint32,qint32,qint32,qint32,qint32)), this, SIGNAL(updateShortChatMessage(qint32,qint32,qint32,QString,qint32,qint32,qint32,qint32,qint32,qint32)));
     connect(session, SIGNAL(updateShort(Update,qint32)), this, SIGNAL(updateShort(Update,qint32)));
     connect(session, SIGNAL(updatesCombined(QList<Update>,QList<User>,QList<Chat>,qint32,qint32,qint32)), this, SIGNAL(updatesCombined(QList<Update>,QList<User>,QList<Chat>,qint32,qint32,qint32)));
     connect(session, SIGNAL(updates(QList<Update>,QList<User>,QList<Chat>,qint32,qint32)), this, SIGNAL(updates(QList<Update>,QList<User>,QList<Chat>,qint32,qint32)));

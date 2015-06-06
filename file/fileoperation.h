@@ -43,6 +43,7 @@ public:
         mPeer(InputPeer::typeInputPeerEmpty),
         mInputMedia(InputMedia::typeInputMediaEmpty),
         mRandomId(0),
+        mReplyToMsgId(0),
         mInputChatPhoto(InputChatPhoto::typeInputChatPhotoEmpty),
         mGeoPoint(InputGeoPoint::typeInputGeoPointEmpty),
         mCrop(InputPhotoCrop::typeInputPhotoCropAuto),
@@ -54,6 +55,8 @@ public:
     void setInputMedia(const InputMedia &inputMedia) { mInputMedia = inputMedia; }
     qint64 randomId() const { return mRandomId; }
     void setRandomId(qint64 randomId) { mRandomId = randomId; }
+    qint32 replyToMsgId() const { return mReplyToMsgId; }
+    void setReplyToMsgId(const qint32 &replyToMsgId) { mReplyToMsgId = replyToMsgId; }
     qint32 chatId() const { return mChatId; }
     void setChatId(qint32 chatId) { mChatId = chatId; }
     InputChatPhoto inputChatPhoto() const { return mInputChatPhoto; }
@@ -88,6 +91,7 @@ private:
     InputPeer mPeer;
     InputMedia mInputMedia;
     qint64 mRandomId;
+    qint32 mReplyToMsgId;
     // editChatPhoto operation attributes
     qint32 mChatId;
     InputChatPhoto mInputChatPhoto;
