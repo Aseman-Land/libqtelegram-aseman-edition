@@ -147,7 +147,7 @@ public:
     qint64 messagesGetChats(const QList<qint32> &chatIds);
     qint64 messagesGetFullChat(qint32 chatId);
     qint64 messagesEditChatTitle(qint32 chatId, const QString &title);
-    qint64 messagesEditChatPhoto(qint32 chatId, const QByteArray &bytes, const QString &fileName, const InputPhotoCrop &crop = InputPhotoCrop(InputPhotoCrop::typeInputPhotoCropAuto));
+    qint64 messagesEditChatPhoto(qint32 chatId, const QString &filePath, const InputPhotoCrop &crop = InputPhotoCrop(InputPhotoCrop::typeInputPhotoCropAuto));
     qint64 messagesEditChatPhoto(qint32 chatId, qint64 photoId, qint64 accessHash, const InputPhotoCrop &crop = InputPhotoCrop(InputPhotoCrop::typeInputPhotoCropAuto));
     qint64 messagesAddChatUser(qint32 chatId, const InputUser &user, qint32 fwdLimit = 0); // Adds a user to a chat and sends a service message on it.
     qint64 messagesDeleteChatUser(qint32 chatId, const InputUser &user);
@@ -214,7 +214,7 @@ public:
 
 Q_SIGNALS:
     // Errors
-    void error(qint64 id, qint32 errorCode, QString errorText);
+    void error(qint64 id, qint32 errorCode, QString functionName, QString errorText);
     void authSignInError(qint64 id, qint32 errorCode, QString errorText);
     void authSignUpError(qint64 id, qint32 errorCode, QString errorText);
 
@@ -268,6 +268,7 @@ Q_SIGNALS:
     // Working with blacklist
     void contactsBlockAnswer(qint64 id, bool ok);
     void contactsUnblockAnswer(qint64 id, bool ok);
+    void contactsBlockResult(qint64 id, bool ok);
     void contactsGetBlockedAnswer(qint64 id, qint32 sliceCount, QList<ContactBlocked> blocked, QList<User> users);
 
     // Working with messages
@@ -298,7 +299,7 @@ Q_SIGNALS:
     void messagesGetChatsAnswer(qint64 id, QList<Chat> chats, QList<User> users);
     void messagesGetFullChatAnswer(qint64 id, ChatFull chatFull, QList<Chat> chats, QList<User> users);
     void messagesEditChatTitleAnswer(qint64 id, Message message, QList<Chat> chats, QList<User> users, QList<ContactsLink> links, qint32 pts, qint32 seq);// statedMessage or statedMessageLink
-    void messagesEditChatPhotoAnswer(qint64 id, Message message, QList<Chat> chats, QList<User> users, QList<ContactsLink> links, qint32 pts, qint32 seq); // statedMessage or statedMessageLink
+    void messagesEditChatPhotoStatedMessageAnswer(qint64 msgId, Message message, QList<Chat> chats, QList<User> users, QList<ContactsLink> links, qint32 pts, qint32 seq);
     void messagesAddChatUserAnswer(qint64 id, Message message, QList<Chat> chats, QList<User> users, QList<ContactsLink> links, qint32 pts, qint32 seq); // statedMessage or statedMessageLink
     void messagesDeleteChatUserAnswer(qint64 id, Message message, QList<Chat> chats, QList<User> users, QList<ContactsLink> links, qint32 pts, qint32 seq); // statedMessage or statedMessageLink
     void messagesCreateChatAnswer(qint64 id, Message message, QList<Chat> chats, QList<User> users, QList<ContactsLink> links, qint32 pts, qint32 seq); // statedMessage or statedMessageLink
@@ -416,7 +417,7 @@ private:
 private Q_SLOTS:
     void onDcProviderReady();
     void onAuthLoggedIn();
-    void onError(qint64 id, qint32 errorCode, const QString &errorText);
+    void onError(qint64 id, qint32 errorCode, QString functionName, const QString &errorText);
     void onErrorRetry(qint64 id, qint32 errorCode, const QString &errorText);
     void onAuthCheckPhoneDcChanged();
     void onHelpGetInviteTextDcChanged();
@@ -439,7 +440,7 @@ private Q_SLOTS:
     void onMessagesForwardMsgsStatedMessages(qint64 msgId, QList<Message> messages, QList<Chat> chats, QList<User> users, qint32 pts, qint32 seq);
     void onMessagesSendBroadcastStatedMessages(qint64 msgId, QList<Message> messages, QList<Chat> chats, QList<User> users, qint32 pts, qint32 seq);
     void onMessagesEditChatTitleStatedMessage(qint64 msgId, Message message, QList<Chat> chats, QList<User> users, qint32 pts, qint32 seq);
-    void onMessagesEditChatPhotoStatedMessage(qint64 msgId, Message message, QList<Chat> chats, QList<User> users, qint32 pts, qint32 seq);
+    void onMessagesEditChatPhotoStatedMessageAnswer(qint64 msgId, Message message, QList<Chat> chats, QList<User> users, qint32 pts, qint32 seq);
     void onMessagesAddChatUserStatedMessage(qint64 msgId, Message message, QList<Chat> chats, QList<User> users, qint32 pts, qint32 seq);
     void onMessagesDeleteChatUserStatedMessage(qint64 msgId, Message message, QList<Chat> chats, QList<User> users, qint32 pts, qint32 seq);
     void onMessagesCreateChatStatedMessage(qint64 msgId, Message message, QList<Chat> chats, QList<User> users, qint32 pts, qint32 seq);

@@ -165,7 +165,7 @@ void FileHandler::onUploadSaveFilePartResult(qint64, qint64 fileId, bool) {
             inputFile.setParts(uploadFile->nParts());
             inputFile.setName(uploadFile->name());
 
-            qint64 requestId;
+            qint64 requestId = 0;
             // Read operation and execute internal api operation depending on file operation type
             FileOperation::Ptr op = mFileOperationsMap.take(uploadFile->id());
             switch (op->opType()) {

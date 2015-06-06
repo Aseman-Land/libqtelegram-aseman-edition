@@ -291,7 +291,7 @@ Q_SIGNALS:
     void uploadSaveBigFilePartResult(qint64 msgId, qint64 fileId, bool ok);
     void uploadFile(qint64 msgId, StorageFileType type, qint32 mtime, QByteArray bytes);
     //errors
-    void error(qint64 msgId, qint32 errorCode, QString errorText);
+    void error(qint64 msgId, qint32 errorCode, QString functionName, QString errorText);
     void errorRetry(qint64 msgId, qint32 errorCode, QString errorText);
     void authSignInError(qint64 msgId, qint32 errorCode, QString errorText);
     void authSignUpError(qint64 msgId, qint32 errorCode, QString errorText);

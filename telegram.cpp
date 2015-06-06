@@ -196,7 +196,7 @@ void Telegram::onDcProviderReady() {
     connect(mApi, SIGNAL(updatesCombined(QList<Update>,QList<User>,QList<Chat>,qint32,qint32,qint32)), this, SIGNAL(updatesCombined(QList<Update>,QList<User>,QList<Chat>,qint32,qint32,qint32)));
     connect(mApi, SIGNAL(updates(QList<Update>,QList<User>,QList<Chat>,qint32,qint32)), this, SIGNAL(updates(QList<Update>,QList<User>,QList<Chat>,qint32,qint32)));
     // errors
-    connect(mApi, SIGNAL(error(qint64,qint32,QString)), this, SLOT(onError(qint64,qint32,QString)));
+    connect(mApi, SIGNAL(error(qint64,qint32,QString,QString)), this, SLOT(onError(qint64,qint32,QString,QString)));
     connect(mApi, SIGNAL(errorRetry(qint64,qint32,QString)), this, SLOT(onErrorRetry(qint64,qint32,QString)));
     connect(mApi, SIGNAL(authSignInError(qint64,qint32,QString)), this, SIGNAL(authSignInError(qint64,qint32,QString)));
     connect(mApi, SIGNAL(authSignUpError(qint64,qint32,QString)), this, SIGNAL(authSignUpError(qint64,qint32,QString)));
@@ -277,8 +277,12 @@ void Telegram::onDcProviderReady() {
              this, SIGNAL(messagesGetFullChatAnswer(qint64,ChatFull,QList<Chat>,QList<User>)));
     connect(mApi, SIGNAL(messagesEditChatTitleStatedMessage(qint64,Message,QList<Chat>,QList<User>,qint32,qint32)), this, SLOT(onMessagesEditChatTitleStatedMessage(qint64,Message,QList<Chat>,QList<User>,qint32,qint32)));
     connect(mApi, SIGNAL(messagesEditChatTitleStatedMessageLink(qint64,Message,QList<Chat>,QList<User>,QList<ContactsLink>,qint32,qint32)), this, SIGNAL(messagesEditChatTitleAnswer(qint64,Message,QList<Chat>,QList<User>,QList<ContactsLink>,qint32,qint32)));
-    connect(mApi, SIGNAL(messagesEditChatPhotoStatedMessage(qint64,Message,QList<Chat>,QList<User>,qint32,qint32)), this, SLOT(onMessagesEditChatPhotoStatedMessage(qint64,Message,QList<Chat>,QList<User>,qint32,qint32)));
-    connect(mApi, SIGNAL(messagesEditChatPhotoStatedMessageLink(qint64,Message,QList<Chat>,QList<User>,QList<ContactsLink>,qint32,qint32)), this, SIGNAL(messagesEditChatPhotoAnswer(qint64,Message,QList<Chat>,QList<User>,QList<ContactsLink>,qint32,qint32)));
+
+    connect(mApi, SIGNAL(messagesEditChatPhotoStatedMessage(qint64,Message,QList<Chat>,QList<User>,qint32,qint32)),
+            this, SLOT(onMessagesEditChatPhotoStatedMessageAnswer(qint64,Message,QList<Chat>,QList<User>,qint32,qint32)));
+    connect(mApi, SIGNAL(messagesEditChatPhotoStatedMessageLink(qint64,Message,QList<Chat>,QList<User>,QList<ContactsLink>,qint32,qint32)),
+            this, SIGNAL(messagesEditChatPhotoStatedMessageAnswer(qint64,Message,QList<Chat>,QList<User>,QList<ContactsLink>,qint32,qint32)));
+
     connect(mApi, SIGNAL(messagesAddChatUserStatedMessage(qint64,Message,QList<Chat>,QList<User>,qint32,qint32)), this, SLOT(onMessagesAddChatUserStatedMessage(qint64,Message,QList<Chat>,QList<User>,qint32,qint32)));
     connect(mApi, SIGNAL(messagesAddChatUserStatedMessageLink(qint64,Message,QList<Chat>,QList<User>,QList<ContactsLink>,qint32,qint32)), this, SIGNAL(messagesAddChatUserAnswer(qint64,Message,QList<Chat>,QList<User>,QList<ContactsLink>,qint32,qint32)));
     connect(mApi, SIGNAL(messagesDeleteChatUserStatedMessage(qint64,Message,QList<Chat>,QList<User>,qint32,qint32)), this, SLOT(onMessagesDeleteChatUserStatedMessage(qint64,Message,QList<Chat>,QList<User>,qint32,qint32)));
@@ -589,7 +593,7 @@ void Telegram::onMessagesDhConfig(qint64 msgId, qint32 g, const QByteArray &p, q
 void Telegram::onMessagesDhConfigNotModified(qint64 msgId, const QByteArray &random) {
     qCDebug(TG_LIB_SECRET) << "processing DH parameters";
     SecretChat *secretChat = mSecretState.chats().take(msgId);
-    ASSERT(secretChat);  
+    ASSERT(secretChat);
     // create secret a number by taking server random (and generating a client random also to have more entrophy)
     secretChat->createMyKey(random);
     // create empty bignum where store the result of operation g^a mod p
@@ -632,6 +636,9 @@ void Telegram::onMessagesDhConfigNotModified(qint64 msgId, const QByteArray &ran
         mApi->messagesAcceptEncryption(inputEncryptedChat, gAOrB, keyFingerprint);
         break;
     }
+    default:
+        Q_ASSERT("Not handled");
+        break;
     }
 
     BN_free(r);
@@ -904,8 +911,14 @@ void Telegram::processSecretChatUpdate(const Update &update) {
             }
             break;
         }
+        default:
+            Q_ASSERT("Not handled");
+            break;
         }
     }
+    default:
+        Q_ASSERT("Not handled");
+        break;
     }
 }
 
@@ -933,11 +946,11 @@ void Telegram::createSharedKey(SecretChat *secretChat, BIGNUM *p, QByteArray gAO
 }
 
 // error and internal managements
-void Telegram::onError(qint64 id, qint32 errorCode, const QString &errorText) {
+void Telegram::onError(qint64 id, qint32 errorCode, QString functionName, const QString &errorText) {
     if (errorCode == 401) {
         onAuthLogOutAnswer(id, false);
     }
-    Q_EMIT error(id, errorCode, errorText);
+    Q_EMIT error(id, errorCode, functionName, errorText);
 }
 
 void Telegram::onErrorRetry(qint64 id, qint32 errorCode, const QString &errorText) {
@@ -949,7 +962,7 @@ void Telegram::onErrorRetry(qint64 id, qint32 errorCode, const QString &errorTex
         DC *dc = mDcProvider.getDc(newDc);
         mApi->changeMainSessionToDc(dc);
     } else {
-        Q_EMIT error(id, errorCode, errorText);
+        Q_EMIT error(id, errorCode, QString(), errorText);
     }
 }
 
@@ -1078,9 +1091,9 @@ void Telegram::onMessagesEditChatTitleStatedMessage(qint64 id, Message message, 
     Q_EMIT messagesEditChatTitleAnswer(id, message, chats, users, links, pts, seq);
 }
 
-void Telegram::onMessagesEditChatPhotoStatedMessage(qint64 id, Message message, QList<Chat> chats, QList<User> users, qint32 pts, qint32 seq) {
+void Telegram::onMessagesEditChatPhotoStatedMessageAnswer(qint64 msgId, Message message, QList<Chat> chats, QList<User> users, qint32 pts, qint32 seq) {
     QList<ContactsLink> links;
-    Q_EMIT messagesEditChatPhotoAnswer(id, message, chats, users, links, pts, seq);
+    Q_EMIT messagesEditChatPhotoStatedMessageAnswer(msgId, message, chats, users, links, pts, seq);
 }
 
 void Telegram::onMessagesAddChatUserStatedMessage(qint64 id, Message message, QList<Chat> chats, QList<User> users, qint32 pts, qint32 seq) {
@@ -1616,13 +1629,13 @@ qint64 Telegram::messagesEditChatTitle(qint32 chatId, const QString &title) {
     return mApi->messagesEditChatTitle(chatId, title);
 }
 
-qint64 Telegram::messagesEditChatPhoto(qint32 chatId, const QByteArray &bytes, const QString &fileName, const InputPhotoCrop &crop) {
+qint64 Telegram::messagesEditChatPhoto(qint32 chatId, const QString &filePath, const InputPhotoCrop &crop) {
     InputChatPhoto inputChatPhoto(InputChatPhoto::typeInputChatUploadedPhoto);
     inputChatPhoto.setCrop(crop);
     FileOperation *op = new FileOperation(FileOperation::editChatPhoto);
     op->setChatId(chatId);
     op->setInputChatPhoto(inputChatPhoto);
-    return mFileHandler->uploadSendFile(*op, fileName, bytes);
+    return mFileHandler->uploadSendFile(*op, filePath);
 }
 
 qint64 Telegram::messagesEditChatPhoto(qint32 chatId, qint64 photoId, qint64 accessHash, const InputPhotoCrop &crop) {

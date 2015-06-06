@@ -209,7 +209,7 @@ Api::Api(Session *session, QObject *parent) :
 }
 
 void Api::onError(Query *q, qint32 errorCode, const QString &errorText) {
-    Q_EMIT error(q->msgId(), errorCode, QString("%1: %2").arg(q->name(), errorText) );
+    Q_EMIT error(q->msgId(), errorCode, q->name(), errorText );
 }
 
 //

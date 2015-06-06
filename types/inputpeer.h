@@ -41,6 +41,9 @@ public:
         m_accessHash(0),
         m_classType(classType) {}
 
+    qint32 id() {
+        return (m_classType == typeInputPeerChat) ? m_chatId : m_userId;
+    }
     void setUserId(qint32 userId) {
         m_userId = userId;
     }
