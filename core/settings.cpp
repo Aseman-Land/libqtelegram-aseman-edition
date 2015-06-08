@@ -40,6 +40,7 @@ qint32 lqt_appId_static = 0;
 QString lqt_appHash_static;
 
 Settings::Settings() :
+    m_workingDcConfigAvailabe(false),
     m_pubKey(0),
     m_phoneNumber(""),
     m_baseConfigDirectory("") {
@@ -203,6 +204,7 @@ void Settings::readAuthFile() {
     qint32 defaultDcId = m_testMode ? TEST_DEFAULT_DC_ID : Settings::defaultHostDcId();
     m_workingDcNum = settings.value(ST_WORKING_DC_NUM, defaultDcId).toInt();
     m_ourId = settings.value(ST_OUR_ID).toInt();
+    m_workingDcConfigAvailabe = settings.contains(ST_WORKING_DC_NUM);
 
     qCDebug(TG_CORE_SETTINGS) << "workingDcNum:" << m_workingDcNum;
     qCDebug(TG_CORE_SETTINGS) << "ourId:" << m_ourId;

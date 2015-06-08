@@ -101,7 +101,7 @@ void DcProvider::initialize() {
     qint32 defaultDcId = mSettings->testMode() ? TEST_DEFAULT_DC_ID : Settings::defaultHostDcId();
 
     // 2.- connect to working DC
-    if (mSettings->workingDcNum() == defaultDcId) {
+    if (!mSettings->workingDcConfigAvailabe()) {
         // If dcId == defaultDcId, it's the default one, so call default host and port
         if (!mDcs.value(defaultDcId, 0)) {
             mDcs[defaultDcId] = new DC(defaultDcId);
