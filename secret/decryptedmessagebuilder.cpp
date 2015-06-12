@@ -6,9 +6,9 @@ DecryptedMessageBuilder::DecryptedMessageBuilder(qint32 layer) : mLayer(layer) {
 
 QByteArray DecryptedMessageBuilder::generateRandomBytes() {
     qint32 n = 15 + 4 * (lrand48() % 3);
-    char rnd[n];
-    Utils::randomBytes(rnd, n);
-    QByteArray randomBytes(rnd);
+    QScopedArrayPointer<char> rnd(new char[n]);
+    Utils::randomBytes(rnd.data(), n);
+    QByteArray randomBytes(rnd.data());
     return randomBytes;
 }
 
