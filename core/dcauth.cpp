@@ -27,7 +27,7 @@
 #include "util/asserter.h"
 #include <QDateTime>
 
-#ifdef Q_OS_MAC
+#if defined(Q_OS_MAC) || defined(Q_OS_WIN)
 #define CLOCK_REALTIME 0
 #endif
 

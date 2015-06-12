@@ -285,24 +285,24 @@ QByteArray CryptoUtils::encryptFilePart(const QByteArray &partBytes, uchar *key,
     uchar *buffer = (uchar *)partBytes.constData();
     // Use an output buffer for not to modify original one.
     // Max size of the output buffer, included padding, will be length + 15
-    uchar out[length + 15];
-    memcpy(out, buffer, length);
+    QScopedArrayPointer<uchar> out(new uchar[length + 15]);
+    memcpy(out.data(), buffer, length);
 
     // in case this part length % 0xF != 0, it means is the last part and we must pad the size to match AES block size (16)
     qint32 paddedSize = length;
     if (length & 15) {
         paddedSize = (length + 15) & -16;
         if (length < paddedSize) {
-            RAND_pseudo_bytes(out + length, paddedSize - length);
+            RAND_pseudo_bytes(out.data() + length, paddedSize - length);
         }
     }
 
     AES_KEY aesKey;
     AES_set_encrypt_key(key, 256, &aesKey);
-    AES_ige_encrypt(out, out, paddedSize, &aesKey, iv, AES_ENCRYPT);
+    AES_ige_encrypt(out.data(), out.data(), paddedSize, &aesKey, iv, AES_ENCRYPT);
     memset(&aesKey, 0, sizeof(aesKey));
 
-    return QByteArray((char *)out, paddedSize);
+    return QByteArray((char *)out.data(), paddedSize);
 }
 
 QByteArray CryptoUtils::decryptFilePart(const QByteArray &partBytes, uchar *key, uchar *iv) {
