@@ -40,7 +40,7 @@
 
 Q_LOGGING_CATEGORY(TG_UTIL_UTILS, "tg.util.utils")
 
-#ifdef Q_OS_MAC
+#if defined(Q_OS_MAC)
 #include <sys/time.h>
 //clock_gettime is not implemented on OSX
 int clock_gettime(int /*clk_id*/, struct timespec* t) {
@@ -51,7 +51,7 @@ int clock_gettime(int /*clk_id*/, struct timespec* t) {
     t->tv_nsec = now.tv_usec * 1000;
     return 0;
 }
-#elif Q_OS_WIN
+#elif defined(Q_OS_WIN)
 //clock_gettime is not implemented on Win
 // took from https://stackoverflow.com/questions/5404277/porting-clock-gettime-to-windows
 
