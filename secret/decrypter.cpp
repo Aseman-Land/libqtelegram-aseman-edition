@@ -18,6 +18,7 @@
 #include "decrypter.h"
 #include "util/constants.h"
 #include "util/tlvalues.h"
+#include "util/utils.h"
 #include "core/settings.h"
 #include <openssl/sha.h>
 #include <openssl/aes.h>
@@ -55,7 +56,7 @@ DecryptedMessage Decrypter::decryptEncryptedData(qint64 randomId, const QByteArr
     m_buffer = mBufferPtr.data();
     memcpy(m_buffer, bytes.data(), m_length);
 
-    if (!(m_length & 15) == 8) {
+    if (!((m_length & 15) == 8)) {
         qCWarning(TG_SECRET_DECRYPTER) << "Received packet doesn't satisfy length rule (!(length & 0xF) == 1000)";
         return DecryptedMessage();
     }
@@ -235,7 +236,7 @@ QByteArray Decrypter::decryptEncryptedMessage() {
     AES_KEY aesKey;
     AES_set_decrypt_key(key, 256, &aesKey);
     AES_ige_encrypt((uchar *)m_inPtr, (uchar *)m_inPtr, bufferLength, &aesKey, iv, 0);
-    memset(&aesKey, 0, sizeof (aesKey));
+    Utils::secureZeroMemory(&aesKey, 0, sizeof(aesKey));
 
     qint32 x = prefetchInt();
     if (x < 0 || (x & 3)) {
