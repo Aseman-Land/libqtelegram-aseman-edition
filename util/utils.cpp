@@ -80,7 +80,7 @@ LARGE_INTEGER getFILETIMEoffset()
     return (t);
 }
 
-int clock_gettime(int X, struct timespec *ts)
+int clock_gettime(int /*X*/, struct timespec *ts)
 {
     LARGE_INTEGER           t;
     FILETIME                f;
