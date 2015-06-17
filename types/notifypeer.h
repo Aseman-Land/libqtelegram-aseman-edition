@@ -38,7 +38,7 @@ public:
         m_peer(Peer::typePeerUser),
         m_classType(classType) {}
 
-    void setPeer(Peer peer) {
+    void setPeer(const Peer &peer) {
         m_peer = peer;
     }
     Peer peer() const {

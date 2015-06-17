@@ -48,7 +48,7 @@ public:
     QString type() const {
         return m_type;
     }
-    void setLocation(FileLocation location) {
+    void setLocation(const FileLocation &location) {
         m_location = location;
     }
     FileLocation location() const {
@@ -86,12 +86,12 @@ public:
     }
 
 private:
-    qint32 m_h;
     QString m_type;
     QByteArray m_bytes;
     FileLocation m_location;
+    PhotoSizeType m_classType;
+    qint32 m_h;
     qint32 m_size;
     qint32 m_w;
-    PhotoSizeType m_classType;
 };
 #endif // PHOTOSIZE_H

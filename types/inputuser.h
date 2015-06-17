@@ -59,8 +59,8 @@ public:
     }
 
 private:
-    qint32 m_userId;
     qint64 m_accessHash;
     InputUserType m_classType;
+    qint32 m_userId;
 };
 #endif // INPUTUSER_H

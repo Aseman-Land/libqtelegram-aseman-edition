@@ -95,7 +95,7 @@ public:
     qint32 size() const {
         return m_size;
     }
-    void setThumb(PhotoSize thumb) {
+    void setThumb(const PhotoSize &thumb) {
         m_thumb = thumb;
     }
     PhotoSize thumb() const {
@@ -127,18 +127,18 @@ public:
     }
 
 private:
-    qint64 m_id;
-    qint32 m_dcId;
     QString m_caption;
     QString m_mimeType;
-    qint32 m_date;
     PhotoSize m_thumb;
+    qint64 m_id;
+    qint64 m_accessHash;
+    VideoType m_classType;
+    qint32 m_dcId;
+    qint32 m_date;
     qint32 m_duration;
     qint32 m_h;
     qint32 m_size;
-    qint64 m_accessHash;
     qint32 m_userId;
     qint32 m_w;
-    VideoType m_classType;
 };
 #endif // VIDEO_H

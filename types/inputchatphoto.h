@@ -41,19 +41,19 @@ public:
         m_crop(InputPhotoCrop::typeInputPhotoCropAuto),
         m_classType(classType) {}
 
-    void setId(InputPhoto id) {
+    void setId(const InputPhoto &id) {
         m_id = id;
     }
     InputPhoto id() const {
         return m_id;
     }
-    void setCrop(InputPhotoCrop crop) {
+    void setCrop(const InputPhotoCrop &crop) {
         m_crop = crop;
     }
     InputPhotoCrop crop() const {
         return m_crop;
     }
-    void setFile(InputFile file) {
+    void setFile(const InputFile &file) {
         m_file = file;
     }
     InputFile file() const {

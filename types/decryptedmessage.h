@@ -49,10 +49,10 @@ public:
     DecryptedMessageType classType() const { return mClassType; }
     void setRandomId(qint64 randomId) { mRandomId = randomId; }
     void setTtl(qint32 ttl) { mTtl = ttl; }
-    void setRandomBytes(QByteArray randomBytes) { mRandomBytes = randomBytes; }
+    void setRandomBytes(const QByteArray &randomBytes) { mRandomBytes = randomBytes; }
     void setMessage(const QString &message) { mMessage = message; }
-    void setMedia(DecryptedMessageMedia media) { mMedia = media; }
-    void setAction(DecryptedMessageAction action) { mAction = action; }
+    void setMedia(const DecryptedMessageMedia &media) { mMedia = media; }
+    void setAction(const DecryptedMessageAction &action) { mAction = action; }
     void setClassType(DecryptedMessageType classType) { mClassType = classType; }
 
 private:

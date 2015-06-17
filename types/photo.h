@@ -72,7 +72,7 @@ public:
     QString caption() const {
         return m_caption;
     }
-    void setGeo(GeoPoint geo) {
+    void setGeo(const GeoPoint &geo) {
         m_geo = geo;
     }
     GeoPoint geo() const {

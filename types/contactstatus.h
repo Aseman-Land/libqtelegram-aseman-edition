@@ -43,7 +43,7 @@ public:
     qint32 userId() const {
         return m_userId;
     }
-    void setUserStatus(UserStatus status) {
+    void setUserStatus(const UserStatus &status) {
         m_status = status;
     }
     UserStatus userStatus() const {

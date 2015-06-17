@@ -78,13 +78,13 @@ public:
     QString phone() const {
         return m_phone;
     }
-    void setPhoto(UserProfilePhoto photo) {
+    void setPhoto(const UserProfilePhoto &photo) {
         m_photo = photo;
     }
     UserProfilePhoto photo() const {
         return m_photo;
     }
-    void setStatus(UserStatus status) {
+    void setStatus(const UserStatus &status) {
         m_status = status;
     }
     UserStatus status() const {

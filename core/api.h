@@ -116,7 +116,7 @@ public:
     // Contacts
     qint64 contactsGetStatuses();
     qint64 contactsGetContacts(const QString &hash);
-    qint64 contactsImportContacts(const QList<InputContact> contacts, bool replace);
+    qint64 contactsImportContacts(const QList<InputContact> &contacts, bool replace);
     qint64 contactsDeleteContact(const InputUser &id);
     qint64 contactsDeleteContacts(const QList<InputUser> &ids);
     qint64 contactsSearch(const QString &q, qint32 limit = 0);
@@ -143,7 +143,7 @@ public:
     qint64 messagesForwardMessages(const InputPeer &peer, const QList<qint32> &ids, const QList<qint32> &randomIds);
     qint64 messagesSendBroadcast(const QList<InputUser> &contacts, const QString &message, const InputMedia &media);
     // Chats
-    qint64 messagesGetChats(const QList<qint32> chatIds);
+    qint64 messagesGetChats(const QList<qint32> &chatIds);
     qint64 messagesGetFullChat(qint32 chatId);
     qint64 messagesEditChatTitle(qint32 chatId, const QString &title);
     qint64 messagesEditChatPhoto(qint32 chatId, const InputChatPhoto &photo);
@@ -175,7 +175,7 @@ public:
 Q_SIGNALS:
     //# Answers
     // Registration / authorization
-    void config(qint64 msgId, Config config);
+    void config(qint64 msgId, const Config &config);
     void helpGetInviteTextAnswer(qint64 msgId,QString inviteText); //inviteText is localised
     void authCheckedPhone(qint64 msgId, bool phoneRegistered);
     void authCheckPhoneSent(qint64 msgId, QString phoneNumber);

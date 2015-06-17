@@ -45,13 +45,13 @@ public:
     qint64 photoId() const {
         return m_photoId;
     }
-    void setPhotoSmall(FileLocation photoSmall) {
+    void setPhotoSmall(const FileLocation &photoSmall) {
         m_photoSmall = photoSmall;
     }
     FileLocation photoSmall() const {
         return m_photoSmall;
     }
-    void setPhotoBig(FileLocation photoBig) {
+    void setPhotoBig(const FileLocation &photoBig) {
         m_photoBig = photoBig;
     }
     FileLocation photoBig() const {

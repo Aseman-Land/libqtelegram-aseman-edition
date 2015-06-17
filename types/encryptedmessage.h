@@ -65,7 +65,7 @@ public:
     QByteArray bytes() const {
         return mBytes;
     }
-    void setFile(EncryptedFile file) {
+    void setFile(const EncryptedFile &file) {
         mFile = file;
     }
     EncryptedFile file() const {

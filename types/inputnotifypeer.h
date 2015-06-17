@@ -40,13 +40,13 @@ public:
         m_peer(InputPeer::typeInputPeerEmpty),
         m_classType(classType) {}
 
-    void setPeer(InputPeer peer) {
+    void setPeer(const InputPeer &peer) {
         m_peer = peer;
     }
     InputPeer peer() const {
         return m_peer;
     }
-    void setGeoChatPeer(InputGeoChat geoChatPeer) {
+    void setGeoChatPeer(const InputGeoChat &geoChatPeer) {
         m_geoChatPeer = geoChatPeer;
     }
     InputGeoChat geoChatPeer() const {

@@ -92,7 +92,7 @@ private Q_SLOTS:
     void onDcAuthDisconnected();
     void onApiReady(DC*);
     void onApiError();
-    void onConfigReceived(qint64 msgId, Config config);
+    void onConfigReceived(qint64 msgId, const Config &config);
     void onTransferSessionReady(DC*);
     void onAuthExportedAuthorization(qint64, qint32 ourId, const QByteArray &bytes);
     void onAuthImportedAuthorization(qint64, qint32 expires, const User &);

@@ -117,13 +117,13 @@ public:
     qint32 userId() const {
         return mUserId;
     }
-    void setStatus(UserStatus status) {
+    void setStatus(const UserStatus &status) {
         mStatus = status;
     }
     UserStatus status() const {
         return mStatus;
     }
-    void setNotifyPeer(NotifyPeer peer) {
+    void setNotifyPeer(const NotifyPeer &peer) {
         mNotifyPeer = peer;
     }
     NotifyPeer notifyPeer() const {
@@ -135,7 +135,7 @@ public:
     void setPeer(const Peer &peer) {
         mPeer = peer;
     }
-    void setNotifySettings(PeerNotifySettings notifySettings) {
+    void setNotifySettings(const PeerNotifySettings &notifySettings) {
         mNotifySettings = notifySettings;
     }
     PeerNotifySettings notifySettings() const {
@@ -183,7 +183,7 @@ public:
     void setMaxId(const qint64 &maxId) {
         mMaxId = maxId;
     }
-    void setChat(EncryptedChat chat) {
+    void setChat(const EncryptedChat &chat) {
         mChat = chat;
     }
     EncryptedChat chat() const {
@@ -219,13 +219,13 @@ public:
     bool blocked() const {
         return mBlocked;
     }
-    void setMessage(Message message) {
+    void setMessage(const Message &message) {
         mMessage = message;
     }
     Message message() const {
         return mMessage;
     }
-    void setMessage(GeoChatMessage message) {
+    void setMessage(const GeoChatMessage &message) {
         mGeoChatMessage = message;
     }
     EncryptedMessage encryptedMessage() const {
@@ -285,7 +285,7 @@ public:
     QList<DcOption> dcOptions() const {
         return mDcOptions;
     }
-    void setPhoto(UserProfilePhoto photo) {
+    void setPhoto(const UserProfilePhoto &photo) {
         mPhoto = photo;
     }
     UserProfilePhoto photo() const {
@@ -309,7 +309,7 @@ public:
     qint32 maxDate() const {
         return mMaxDate;
     }
-    void setParticipants(ChatParticipants participants) {
+    void setParticipants(const ChatParticipants &participants) {
         mParticipants = participants;
     }
     ChatParticipants participants() const {

@@ -966,7 +966,7 @@ void Api::onContactsImportContactsAnswer(Query *q, InboundPkt &inboundPkt) {
     Q_EMIT contactsImportedContacts(q->msgId(), imported, retryContacts, users);
 }
 
-qint64 Api::contactsImportContacts(const QList<InputContact> contacts, bool replace) {
+qint64 Api::contactsImportContacts(const QList<InputContact> &contacts, bool replace) {
     OutboundPkt p(mSettings);
     p.appendInt(TL_ContactsImportContacts);
     p.appendInt(TL_Vector);
@@ -1692,7 +1692,7 @@ void Api::onMessagesGetChatsAnswer(Query *q, InboundPkt &inboundPkt) {
     Q_EMIT messagesChats(q->msgId(), chats);
 }
 
-qint64 Api::messagesGetChats(const QList<qint32> chatIds) {
+qint64 Api::messagesGetChats(const QList<qint32> &chatIds) {
     OutboundPkt p(mSettings);
     p.appendInt(TL_MessagesGetChats);
     p.appendInt(TL_Vector);

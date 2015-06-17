@@ -66,19 +66,19 @@ public:
         m_lastName(""),
         m_classType(classType) {}
 
-    void setFile(InputFile file) { m_file = file; }
+    void setFile(const InputFile &file) { m_file = file; }
     InputFile file() const { return m_file; }
     void setMimeType(const QString & mimeType) { m_mimeType = mimeType; }
     QString mimeType() const { return m_mimeType; }
-    void setPhotoId(InputPhoto photoId) { m_photoId = photoId; }
+    void setPhotoId(const InputPhoto &photoId) { m_photoId = photoId; }
     InputPhoto photoId() const { return m_photoId; }
-    void setAudioId(InputAudio audioId) { m_audioId = audioId; }
+    void setAudioId(const InputAudio &audioId) { m_audioId = audioId; }
     InputAudio audioId() const { return m_audioId; }
-    void setVideoId(InputVideo videoId) { m_videoId = videoId; }
+    void setVideoId(const InputVideo &videoId) { m_videoId = videoId; }
     InputVideo videoId() const { return m_videoId; }
-    void setDocumentId(InputDocument documentId) { m_documentId = documentId; }
+    void setDocumentId(const InputDocument &documentId) { m_documentId = documentId; }
     InputDocument documentId() const { return m_documentId; }
-    void setThumb(InputFile thumb) { m_thumb = thumb; }
+    void setThumb(const InputFile &thumb) { m_thumb = thumb; }
     InputFile thumb() const { return m_thumb; }
     void setDuration(qint32 duration) { m_duration = duration; }
     qint32 duration() const { return m_duration; }
@@ -86,7 +86,7 @@ public:
     qint32 w() const { return m_w; }
     void setH(qint32 h) { m_h = h; }
     qint32 h() const { return m_h; }
-    void setGeoPoint(InputGeoPoint geoPoint) { m_geoPoint = geoPoint; }
+    void setGeoPoint(const InputGeoPoint &geoPoint) { m_geoPoint = geoPoint; }
     InputGeoPoint geoPoint() const { return m_geoPoint; }
     void setPhoneNumber(const QString & phoneNumber) { m_phoneNumber = phoneNumber; }
     QString phoneNumber() const { return m_phoneNumber; }
