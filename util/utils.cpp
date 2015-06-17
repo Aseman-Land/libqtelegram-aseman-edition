@@ -248,7 +248,7 @@ void Utils::secureZeroMemory(void *dst, int val, size_t count) {
 #else
     // TODO: maybe we should use memset_s ?
 
-    volatile unsigned char *p = dst; 
+    volatile unsigned char *p = (unsigned char *)dst; 
     while (count--) 
         *p++ = val; 
 
