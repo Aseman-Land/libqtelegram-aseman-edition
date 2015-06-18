@@ -2193,7 +2193,7 @@ void Api::onMessagesGetStickersAnswer(Query *q, InboundPkt &inboundPkt) {
     Q_EMIT messagesGetStickersResult(q->msgId(), stickers);
 }
 
-qint64 Api::messagesGetStickers(QString emoticon, QString hash) {
+qint64 Api::messagesGetStickers(const QString &emoticon, const QString &hash) {
     OutboundPkt p(mSettings);
     p.appendInt(TL_MessagesGetStickers);
     p.appendQString(emoticon);
@@ -2234,7 +2234,7 @@ void Api::onMessagesGetAllStickersAnswer(Query *q, InboundPkt &inboundPkt) {
     Q_EMIT messagesGetAllStickersResult(q->msgId(), stickers);
 }
 
-qint64 Api::messagesGetAllStickers(QString hash) {
+qint64 Api::messagesGetAllStickers(const QString &hash) {
     OutboundPkt p(mSettings);
     p.appendInt(TL_MessagesGetAllStickers);
     p.appendQString(hash);

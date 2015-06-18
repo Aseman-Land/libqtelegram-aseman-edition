@@ -52,7 +52,7 @@ Q_SIGNALS:
     // is ready for using any of its methods in any DC
     void authTransferCompleted();
 
-    void error(qint64 id, qint32 errorCode, QString errorText);
+    void error(qint64 id, qint32 errorCode, const QString &errorText);
     void fatalError();
 
 public Q_SLOTS:

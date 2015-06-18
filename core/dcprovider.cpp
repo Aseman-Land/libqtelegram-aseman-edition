@@ -334,8 +334,8 @@ void DcProvider::onTransferSessionReady(DC *) {
     Session *session = qobject_cast<Session *>(sender());
     mTransferSessions.append(session);
     if (--mPendingTransferSessions == 0) {
-        connect(mApi, SIGNAL(authExportedAuthorization(qint64,qint32,QByteArray)), this, SLOT(onAuthExportedAuthorization(qint64,qint32,QByteArray)));
-        connect(mApi, SIGNAL(authImportedAuthorization(qint64,qint32,User)), this, SLOT(onAuthImportedAuthorization(qint64,qint32,User)));
+        connect(mApi, SIGNAL(authExportedAuthorization(qint64,qint32,const QByteArray&)), this, SLOT(onAuthExportedAuthorization(qint64,qint32,const QByteArray&)));
+        connect(mApi, SIGNAL(authImportedAuthorization(qint64,qint32,const User&)), this, SLOT(onAuthImportedAuthorization(qint64,qint32,const User&)));
         mApi->authExportAuthorization(mTransferSessions.first()->dc()->id());
     }
 }
