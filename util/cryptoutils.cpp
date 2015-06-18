@@ -98,7 +98,7 @@ void CryptoUtils::initAESUnAuth (const char serverNonce[16], const char hiddenCl
     } else {
         AES_set_decrypt_key (aes_key_raw, 32*8, &aes_key);
     }
-    memset (aes_key_raw, 0, sizeof (aes_key_raw));
+    Utils::secureZeroMemory (aes_key_raw, 0, sizeof (aes_key_raw));
 }
 
 void CryptoUtils::initAESAuth (char authKey[192], char msgKey[16], qint32 encrypt) {
@@ -141,7 +141,7 @@ void CryptoUtils::initAESAuth (char authKey[192], char msgKey[16], qint32 encryp
     } else {
         AES_set_decrypt_key (aes_key_raw, 32*8, &aes_key);
     }
-    memset (aes_key_raw, 0, sizeof (aes_key_raw));
+    Utils::secureZeroMemory (aes_key_raw, 0, sizeof (aes_key_raw));
 }
 
 qint32 CryptoUtils::padAESEncrypt (const char *from, qint32 fromLen, char *to, qint32 size) {
@@ -300,7 +300,7 @@ QByteArray CryptoUtils::encryptFilePart(const QByteArray &partBytes, uchar *key,
     AES_KEY aesKey;
     AES_set_encrypt_key(key, 256, &aesKey);
     AES_ige_encrypt(out.data(), out.data(), paddedSize, &aesKey, iv, AES_ENCRYPT);
-    memset(&aesKey, 0, sizeof(aesKey));
+    Utils::secureZeroMemory(&aesKey, 0, sizeof(aesKey));
 
     return QByteArray((char *)out.data(), paddedSize);
 }
@@ -313,7 +313,7 @@ QByteArray CryptoUtils::decryptFilePart(const QByteArray &partBytes, uchar *key,
     AES_KEY aesKey;
     AES_set_decrypt_key(key, 256, &aesKey);
     AES_ige_encrypt(buffer, buffer, length, &aesKey, iv, AES_DECRYPT);
-    memset(&aesKey, 0, sizeof(aesKey));
+    Utils::secureZeroMemory(&aesKey, 0, sizeof(aesKey));
 
     return QByteArray::fromRawData((char *)buffer, length);
 }

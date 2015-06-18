@@ -260,7 +260,7 @@ void DCAuth::processDHAnswer(InboundPkt &inboundPkt) {
 
     mAsserter.check(l >= 250 && l <= 256);
     mAsserter.check(BN_bn2bin (&auth_key_num, (uchar *)m_dc->authKey()));
-    memset (m_dc->authKey() + l, 0, 256 - l);
+    Utils::secureZeroMemory (m_dc->authKey() + l, 0, 256 - l);
     BN_free (dh_power);
     BN_free (&auth_key_num);
     BN_free (&dh_g);

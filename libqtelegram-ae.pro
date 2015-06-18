@@ -6,9 +6,12 @@ TARGET = qtelegram-ae
 TEMPLATE = lib
 DEFINES += LIBQTELEGRAM_LIBRARY
 
+INCLUDEPATH += ./
+
 win32 {
     LIBS += -LD:/Projects/cutegram-deps/lib -lssleay32 -lcrypto -lz
     INCLUDEPATH += D:/Projects/cutegram-deps/include
+    DEFINES += ZLIB_WINAPI
     DESTDIR = D:/Projects/build/Cutegram-Desktop_Qt_5_4_0_MinGW_32bit-Release/build
 } else {
 macx {
