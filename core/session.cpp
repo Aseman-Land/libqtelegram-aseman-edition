@@ -556,7 +556,7 @@ bool Session::rpcSendMessage(void *data, qint32 len) {
 
 
 //### query management
-qint64 Session::sendQuery(OutboundPkt &outboundPkt, QueryMethods *methods, QVariant extra, QString name) {
+qint64 Session::sendQuery(OutboundPkt &outboundPkt, QueryMethods *methods, const QVariant &extra, const QString &name) {
     Q_ASSERT (m_sessionId);
     Q_ASSERT (m_dc->authKeyId());
     qint32 *data = outboundPkt.buffer();
