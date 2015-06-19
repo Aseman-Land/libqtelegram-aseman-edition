@@ -80,7 +80,7 @@ LARGE_INTEGER getFILETIMEoffset()
     return (t);
 }
 
-int clock_gettime(int /*X*/, struct timespec *ts)
+int clock_gettime(int X, struct timespec *ts)
 {
     LARGE_INTEGER           t;
     FILETIME                f;
@@ -239,20 +239,6 @@ void Utils::freeSecure(void *ptr, qint32 size) {
     if (!ptr) return;
     memset (ptr, 0, size);
     free (ptr);
-}
-
-void Utils::secureZeroMemory(void *dst, int val, size_t count) {
-#if defined(Q_OS_WIN)
-    Q_UNUSED(val);
-    RtlSecureZeroMemory(dst, count);
-#else
-    // TODO: maybe we should use memset_s ?
-
-    volatile unsigned char *p = (unsigned char *)dst; 
-    while (count--) 
-        *p++ = val; 
-
-#endif
 }
 
 RSA *Utils::rsaLoadPublicKey(const QString &publicKeyName) {

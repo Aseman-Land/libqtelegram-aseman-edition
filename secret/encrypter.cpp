@@ -291,7 +291,7 @@ qint32 *Encrypter::encryptDecryptedMessage () {
     AES_KEY aesKey;
     AES_set_encrypt_key(key, 256, &aesKey);
     AES_ige_encrypt((uchar *)mEncrPtr, (uchar *)mEncrPtr, 4 * (mEncrEnd - mEncrPtr), &aesKey, iv, 1);
-    Utils::secureZeroMemory(&aesKey, 0, sizeof(aesKey));
+    memset(&aesKey, 0, sizeof (aesKey));
 
     return msgKey;
 }

@@ -61,7 +61,6 @@ public:
     static void ensure(qint32 r);
     static void ensurePtr(void *p);
     static void freeSecure (void *ptr, qint32 size);
-    static void secureZeroMemory(void *dst, int val, size_t count);
 
     static void *talloc(size_t size);
     static qint32 tinflate (void *input, qint32 ilen, void *output, qint32 olen);
