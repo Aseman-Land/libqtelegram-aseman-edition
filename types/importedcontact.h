@@ -56,8 +56,8 @@ public:
     }
 
 private:
-    qint32 m_userId;
     qint64 m_clientId;
     ImportedContactType m_classType;
+    qint32 m_userId;
 };
 #endif // IMPORTEDCONTACT_H

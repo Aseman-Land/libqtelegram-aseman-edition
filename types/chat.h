@@ -86,13 +86,13 @@ public:
     QString venue() const {
         return m_venue;
     }
-    void setGeo(GeoPoint geo) {
+    void setGeo(const GeoPoint &geo) {
         m_geo = geo;
     }
     GeoPoint geo() const {
         return m_geo;
     }
-    void setPhoto(ChatPhoto photo) {
+    void setPhoto(const ChatPhoto &photo) {
         m_photo = photo;
     }
     ChatPhoto photo() const {

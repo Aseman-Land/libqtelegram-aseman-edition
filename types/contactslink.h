@@ -52,7 +52,7 @@ public:
     ContactLink foreignLink() const {
         return m_foreignLink;
     }
-    void setUser(User user) {
+    void setUser(const User &user) {
         m_user = user;
     }
     User user() const {

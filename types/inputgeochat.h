@@ -56,8 +56,8 @@ public:
     }
 
 private:
-    qint32 m_chatId;
     qint64 m_accessHash;
     InputGeoChatType m_classType;
+    qint32 m_chatId;
 };
 #endif // INPUTGEOCHAT_H

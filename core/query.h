@@ -46,9 +46,9 @@ public:
     bool acked() { return m_acked; }
     void setAcked(bool acked) { m_acked = acked; }
     QString name() { return m_name; }
-    void setName(QString name) { m_name = name; }
+    void setName(const QString &name) { m_name = name; }
     QVariant extra() { return mExtra; }
-    void setExtra(QVariant extra) { mExtra = extra; }
+    void setExtra(const QVariant &extra) { mExtra = extra; }
     void *data();
     void setData(void *data, qint32 dataLength);
     qint32 decreaseResends();

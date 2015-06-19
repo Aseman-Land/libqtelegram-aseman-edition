@@ -966,7 +966,7 @@ void Api::onContactsImportContactsAnswer(Query *q, InboundPkt &inboundPkt) {
     Q_EMIT contactsImportedContacts(q->msgId(), imported, retryContacts, users);
 }
 
-qint64 Api::contactsImportContacts(const QList<InputContact> contacts, bool replace) {
+qint64 Api::contactsImportContacts(const QList<InputContact> &contacts, bool replace) {
     OutboundPkt p(mSettings);
     p.appendInt(TL_ContactsImportContacts);
     p.appendInt(TL_Vector);
@@ -1692,7 +1692,7 @@ void Api::onMessagesGetChatsAnswer(Query *q, InboundPkt &inboundPkt) {
     Q_EMIT messagesChats(q->msgId(), chats);
 }
 
-qint64 Api::messagesGetChats(const QList<qint32> chatIds) {
+qint64 Api::messagesGetChats(const QList<qint32> &chatIds) {
     OutboundPkt p(mSettings);
     p.appendInt(TL_MessagesGetChats);
     p.appendInt(TL_Vector);
@@ -2193,7 +2193,7 @@ void Api::onMessagesGetStickersAnswer(Query *q, InboundPkt &inboundPkt) {
     Q_EMIT messagesGetStickersResult(q->msgId(), stickers);
 }
 
-qint64 Api::messagesGetStickers(QString emoticon, QString hash) {
+qint64 Api::messagesGetStickers(const QString &emoticon, const QString &hash) {
     OutboundPkt p(mSettings);
     p.appendInt(TL_MessagesGetStickers);
     p.appendQString(emoticon);
@@ -2234,7 +2234,7 @@ void Api::onMessagesGetAllStickersAnswer(Query *q, InboundPkt &inboundPkt) {
     Q_EMIT messagesGetAllStickersResult(q->msgId(), stickers);
 }
 
-qint64 Api::messagesGetAllStickers(QString hash) {
+qint64 Api::messagesGetAllStickers(const QString &hash) {
     OutboundPkt p(mSettings);
     p.appendInt(TL_MessagesGetAllStickers);
     p.appendQString(hash);

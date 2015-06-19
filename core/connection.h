@@ -37,7 +37,7 @@ class Connection : public QTcpSocket, public Endpoint
 {
     Q_OBJECT
 public:
-    explicit Connection(const QString &host = "", qint32 port = -1, QObject *parent = 0);
+    explicit Connection(const QString &host = QString::null, qint32 port = -1, QObject *parent = 0);
     ~Connection();
 
     void connectToServer();

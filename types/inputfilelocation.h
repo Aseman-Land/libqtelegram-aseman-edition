@@ -83,9 +83,9 @@ public:
 private:
     qint64 m_id;
     qint64 m_secret;
-    qint32 m_localId;
     qint64 m_accessHash;
     qint64 m_volumeId;
     InputFileLocationType m_classType;
+    qint32 m_localId;
 };
 #endif // INPUTFILELOCATION_H

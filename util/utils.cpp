@@ -385,7 +385,7 @@ qint64 Utils::getKeyFingerprint(uchar *sharedKey) {
 QString Utils::getDeviceModel() {
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
 #if defined(Q_OS_ANDROID) || defined(Q_OS_IOS)
-    return "Mobile"
+    return "Mobile";
 #else
     return "PC";
 #endif

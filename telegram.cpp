@@ -88,7 +88,7 @@ Telegram::Telegram(const QString &phoneNumber, const QString &configPath, const 
     // activate rest of dc provider signal connections
     connect(mDcProvider, SIGNAL(authNeeded()), this, SIGNAL(authNeeded()));
     connect(mDcProvider, SIGNAL(authTransferCompleted()), this, SLOT(onAuthLoggedIn()));
-    connect(mDcProvider, SIGNAL(error(qint64,qint32,QString)), this, SIGNAL(error(qint64,qint32,QString)));
+    connect(mDcProvider, SIGNAL(error(qint64,qint32,const QString&)), this, SIGNAL(error(qint64,qint32,const QString&)));
 }
 
 bool Telegram::sleep() {
@@ -223,127 +223,126 @@ void Telegram::onDcProviderReady() {
     // api signal-signal and signal-slot connections
     // updates
     connect(mApi, SIGNAL(updatesTooLong()), this, SIGNAL(updatesTooLong()));
-    connect(mApi, SIGNAL(updateShortMessage(qint32,qint32,QString,qint32,qint32,qint32,qint32,qint32,qint32,bool,bool)), this, SIGNAL(updateShortMessage(qint32,qint32,QString,qint32,qint32,qint32,qint32,qint32,qint32,bool,bool)));
-    connect(mApi, SIGNAL(updateShortChatMessage(qint32,qint32,qint32,QString,qint32,qint32,qint32,qint32,qint32,qint32,bool,bool)), this, SIGNAL(updateShortChatMessage(qint32,qint32,qint32,QString,qint32,qint32,qint32,qint32,qint32,qint32,bool,bool)));
-    connect(mApi, SIGNAL(updateShort(Update,qint32)), this, SIGNAL(updateShort(Update,qint32)));
-    connect(mApi, SIGNAL(updatesCombined(QList<Update>,QList<User>,QList<Chat>,qint32,qint32,qint32)), this, SIGNAL(updatesCombined(QList<Update>,QList<User>,QList<Chat>,qint32,qint32,qint32)));
-    connect(mApi, SIGNAL(updates(QList<Update>,QList<User>,QList<Chat>,qint32,qint32)), this, SIGNAL(updates(QList<Update>,QList<User>,QList<Chat>,qint32,qint32)));
+    connect(mApi, SIGNAL(updateShortMessage(qint32,qint32,const QString&,qint32,qint32,qint32,qint32,qint32,qint32,bool,bool)), this, SIGNAL(updateShortMessage(qint32,qint32,const QString&,qint32,qint32,qint32,qint32,qint32,qint32,bool,bool)));
+    connect(mApi, SIGNAL(updateShortChatMessage(qint32,qint32,qint32,const QString&,qint32,qint32,qint32,qint32,qint32,qint32,bool,bool)), this, SIGNAL(updateShortChatMessage(qint32,qint32,qint32,const QString&,qint32,qint32,qint32,qint32,qint32,qint32,bool,bool)));
+    connect(mApi, SIGNAL(updateShort(const Update&,qint32)), this, SIGNAL(updateShort(const Update&,qint32)));
+    connect(mApi, SIGNAL(updatesCombined(const QList<Update>&,const QList<User>&,const QList<Chat>&,qint32,qint32,qint32)), this, SIGNAL(updatesCombined(const QList<Update>&,const QList<User>&,const QList<Chat>&,qint32,qint32,qint32)));
+    connect(mApi, SIGNAL(updates(const QList<Update>&,const QList<User>&,const QList<Chat>&,qint32,qint32)), this, SIGNAL(updates(const QList<Update>&,const QList<User>&,const QList<Chat>&,qint32,qint32)));
     // errors
-    connect(mApi, SIGNAL(error(qint64,qint32,QString,QString)), this, SLOT(onError(qint64,qint32,QString,QString)));
-    connect(mApi, SIGNAL(errorRetry(qint64,qint32,QString)), this, SLOT(onErrorRetry(qint64,qint32,QString)));
-    connect(mApi, SIGNAL(authSignInError(qint64,qint32,QString)), this, SIGNAL(authSignInError(qint64,qint32,QString)));
-    connect(mApi, SIGNAL(authSignUpError(qint64,qint32,QString)), this, SIGNAL(authSignUpError(qint64,qint32,QString)));
+    connect(mApi, SIGNAL(error(qint64,qint32,const QString&,const QString&)), this, SLOT(onError(qint64,qint32,const QString&,const QString&)));
+    connect(mApi, SIGNAL(errorRetry(qint64,qint32,const QString&)), this, SLOT(onErrorRetry(qint64,qint32,const QString&)));
+    connect(mApi, SIGNAL(authSignInError(qint64,qint32,const QString&)), this, SIGNAL(authSignInError(qint64,qint32,const QString&)));
+    connect(mApi, SIGNAL(authSignUpError(qint64,qint32,const QString&)), this, SIGNAL(authSignUpError(qint64,qint32,const QString&)));
     // positive responses
-    connect(mApi, SIGNAL(helpGetInviteTextAnswer(qint64,QString)), this, SIGNAL(helpGetInviteTextAnswer(qint64,QString)));
+    connect(mApi, SIGNAL(helpGetInviteTextAnswer(qint64,const QString&)), this, SIGNAL(helpGetInviteTextAnswer(qint64,const QString&)));
     connect(mApi, SIGNAL(authCheckedPhone(qint64,bool)), this, SIGNAL(authCheckPhoneAnswer(qint64,bool)));
-    connect(mApi, SIGNAL(authCheckPhoneSent(qint64,QString)), this, SIGNAL(authCheckPhoneSent(qint64,QString)));
-    connect(mApi, SIGNAL(authSentCode(qint64,bool,QString,qint32,bool)), this, SLOT(onAuthSentCode(qint64,bool,QString,qint32,bool)));
-    connect(mApi, SIGNAL(authSentAppCode(qint64,bool,QString,qint32,bool)), this, SLOT(onAuthSentCode(qint64,bool,QString,qint32,bool)));
+    connect(mApi, SIGNAL(authCheckPhoneSent(qint64,const QString&)), this, SIGNAL(authCheckPhoneSent(qint64,const QString&)));
+    connect(mApi, SIGNAL(authSentCode(qint64,bool,const QString&,qint32,bool)), this, SLOT(onAuthSentCode(qint64,bool,const QString&,qint32,bool)));
+    connect(mApi, SIGNAL(authSentAppCode(qint64,bool,const QString&,qint32,bool)), this, SLOT(onAuthSentCode(qint64,bool,const QString&,qint32,bool)));
     connect(mApi, SIGNAL(authSendSmsResult(qint64,bool)), this, SIGNAL(authSendSmsAnswer(qint64,bool)));
     connect(mApi, SIGNAL(authSendCallResult(qint64,bool)), this, SIGNAL(authSendCallAnswer(qint64,bool)));
-    connect(mApi, SIGNAL(authSignInAuthorization(qint64,qint32,User)), this, SLOT(onUserAuthorized(qint64,qint32,User)));
-    connect(mApi, SIGNAL(authSignUpAuthorization(qint64,qint32,User)), this, SLOT(onUserAuthorized(qint64,qint32,User)));
+    connect(mApi, SIGNAL(authSignInAuthorization(qint64,qint32,const User&)), this, SLOT(onUserAuthorized(qint64,qint32,const User&)));
+    connect(mApi, SIGNAL(authSignUpAuthorization(qint64,qint32,const User&)), this, SLOT(onUserAuthorized(qint64,qint32,const User&)));
     connect(mApi, SIGNAL(authLogOutResult(qint64,bool)), this, SLOT(onAuthLogOutAnswer(qint64,bool)));
     connect(mApi, SIGNAL(authSendInvitesResult(qint64,bool)), this, SIGNAL(authSendInvitesAnswer(qint64,bool)));
     connect(mApi, SIGNAL(authResetAuthorizationsResult(qint64,bool)), this, SIGNAL(authResetAuthorizationsAnswer(qint64,bool)));
-    connect(mApi, SIGNAL(authCheckPasswordResult(qint64,qint32,User)), this, SIGNAL(authCheckPasswordAnswer(qint64,qint32,User)));
+    connect(mApi, SIGNAL(authCheckPasswordResult(qint64,qint32,const User&)), this, SIGNAL(authCheckPasswordAnswer(qint64,qint32,const User&)));
     connect(mApi, SIGNAL(accountRegisterDeviceResult(qint64,bool)), this, SIGNAL(accountRegisterDeviceAnswer(qint64,bool)));
     connect(mApi, SIGNAL(accountUnregisterDeviceResult(qint64,bool)), this, SIGNAL(accountUnregisterDeviceAnswer(qint64,bool)));
     connect(mApi, SIGNAL(accountUpdateNotifySettingsResult(qint64,bool)), this, SIGNAL(accountUpdateNotifySettingsAnswer(qint64,bool)));
-    connect(mApi, SIGNAL(accountPeerNotifySettings(qint64,PeerNotifySettings)), this, SIGNAL(accountGetNotifySettingsAnswer(qint64,PeerNotifySettings)));
+    connect(mApi, SIGNAL(accountPeerNotifySettings(qint64,const PeerNotifySettings&)), this, SIGNAL(accountGetNotifySettingsAnswer(qint64,const PeerNotifySettings&)));
     connect(mApi, SIGNAL(accountResetNotifySettingsResult(qint64,bool)), this, SIGNAL(accountResetNotifySettingsAnswer(qint64,bool)));
-    connect(mApi, SIGNAL(accountUser(qint64,User)), this, SIGNAL(accountUpdateProfileAnswer(qint64,User)));
+    connect(mApi, SIGNAL(accountUser(qint64,const User&)), this, SIGNAL(accountUpdateProfileAnswer(qint64,const User&)));
     connect(mApi, SIGNAL(accountUpdateStatusResult(qint64,bool)), this, SIGNAL(accountUpdateStatusAnswer(qint64,bool)));
-    connect(mApi, SIGNAL(accountGetWallPapersResult(qint64,QList<WallPaper>)), this, SIGNAL(accountGetWallPapersAnswer(qint64,QList<WallPaper>)));
+    connect(mApi, SIGNAL(accountGetWallPapersResult(qint64,const QList<WallPaper>&)), this, SIGNAL(accountGetWallPapersAnswer(qint64,const QList<WallPaper>&)));
     connect(mApi, SIGNAL(accountCheckUsernameResult(qint64,bool)), this, SIGNAL(accountCheckUsernameAnswer(qint64,bool)));
-    connect(mApi, SIGNAL(accountUpdateUsernameResult(qint64,User)), this, SIGNAL(accountUpdateUsernameAnswer(qint64,User)));
-    connect(mApi, SIGNAL(accountPrivacyRules(qint64,QList<PrivacyRule>,QList<User>)), this, SIGNAL(accountPrivacyRules(qint64,QList<PrivacyRule>,QList<User>)));
+    connect(mApi, SIGNAL(accountUpdateUsernameResult(qint64,const User&)), this, SIGNAL(accountUpdateUsernameAnswer(qint64,const User&)));
+    connect(mApi, SIGNAL(accountPrivacyRules(qint64,const QList<PrivacyRule>&,const QList<User>&)), this, SIGNAL(accountPrivacyRules(qint64,const QList<PrivacyRule>&,const QList<User>&)));
     connect(mApi, SIGNAL(accountDeleteAccountResult(qint64,bool)), this, SIGNAL(accountDeleteAccountAnswer(qint64,bool)));
-    connect(mApi, SIGNAL(accountGetAccountTTLResult(qint64,AccountDaysTTL)), this, SIGNAL(accountGetAccountTTLAnswer(qint64,AccountDaysTTL)));
+    connect(mApi, SIGNAL(accountGetAccountTTLResult(qint64,const AccountDaysTTL&)), this, SIGNAL(accountGetAccountTTLAnswer(qint64,const AccountDaysTTL&)));
     connect(mApi, SIGNAL(accountSetAccountTTLResult(qint64,bool)), this, SIGNAL(accountSetAccountTTLAnswer(qint64,bool)));
     connect(mApi, SIGNAL(accountUpdateDeviceLockedResult(qint64,bool)), this, SIGNAL(accountUpdateDeviceLockedAnswer(qint64,bool)));
-    connect(mApi, SIGNAL(accountSentChangePhoneCode(qint64,QString,qint32)), this, SIGNAL(accountSentChangePhoneCode(qint64,QString,qint32)));
+    connect(mApi, SIGNAL(accountSentChangePhoneCode(qint64,const QString&,qint32)), this, SIGNAL(accountSentChangePhoneCode(qint64,const QString&,qint32)));
     connect(mApi, SIGNAL(accountSetPasswordResult(qint64,bool)), this, SIGNAL(accountSetPasswordAnswer(qint64,bool)));
-    connect(mApi, SIGNAL(accountGetPasswordResult(qint64,AccountPassword)), this, SIGNAL(accountGetPasswordAnswer(qint64,AccountPassword)));
-    connect(mApi, SIGNAL(accountChangePhoneResult(qint64,User)), this, SIGNAL(accountChangePhoneAnswer(qint64,User)));
-    connect(mApi, SIGNAL(photosPhoto(qint64,Photo,QList<User>)), this, SIGNAL(photosUploadProfilePhotoAnswer(qint64,Photo,QList<User>)));
-    connect(mApi, SIGNAL(photosUserProfilePhoto(qint64,UserProfilePhoto)), this, SIGNAL(photosUpdateProfilePhotoAnswer(qint64,UserProfilePhoto)));
-    connect(mApi, SIGNAL(usersGetUsersResult(qint64,QList<User>)), this, SIGNAL(usersGetUsersAnswer(qint64,QList<User>)));
-    connect(mApi, SIGNAL(userFull(qint64,User,ContactsLink,Photo,PeerNotifySettings,bool,QString,QString)), this, SIGNAL(usersGetFullUserAnswer(qint64,User,ContactsLink,Photo,PeerNotifySettings,bool,QString,QString)));
-    connect(mApi, SIGNAL(photosPhotos(qint64,QList<Photo>,QList<User>)), this, SLOT(onPhotosPhotos(qint64, QList<Photo>, QList<User>)));
-    connect(mApi, SIGNAL(photosPhotosSlice(qint64,qint32,QList<Photo>,QList<User>)), this, SIGNAL(photosGetUserPhotosAnswer(qint64,qint32,QList<Photo>,QList<User>)));
-    connect(mApi, SIGNAL(contactsGetStatusesResult(qint64,QList<ContactStatus>)), this, SIGNAL(contactsGetStatusesAnswer(qint64,QList<ContactStatus>)));
-    connect(mApi, SIGNAL(contactsContacts(qint64,QList<Contact>,QList<User>)), this, SLOT(onContactsContacts(qint64,QList<Contact>,QList<User>)));
+    connect(mApi, SIGNAL(accountGetPasswordResult(qint64,const AccountPassword&)), this, SIGNAL(accountGetPasswordAnswer(qint64,const AccountPassword&)));
+    connect(mApi, SIGNAL(accountChangePhoneResult(qint64,const User&)), this, SIGNAL(accountChangePhoneAnswer(qint64,const User&)));
+    connect(mApi, SIGNAL(photosPhoto(qint64,const Photo&,const QList<User>&)), this, SIGNAL(photosUploadProfilePhotoAnswer(qint64,const Photo&,const QList<User>&)));
+    connect(mApi, SIGNAL(photosUserProfilePhoto(qint64,const UserProfilePhoto&)), this, SIGNAL(photosUpdateProfilePhotoAnswer(qint64,const UserProfilePhoto&)));
+    connect(mApi, SIGNAL(usersGetUsersResult(qint64,const QList<User>&)), this, SIGNAL(usersGetUsersAnswer(qint64,const QList<User>&)));
+    connect(mApi, SIGNAL(userFull(qint64,const User&,const ContactsLink&,const Photo&,const PeerNotifySettings&,bool,const QString&,const QString&)), this, SIGNAL(usersGetFullUserAnswer(qint64,const User&,const ContactsLink&,const Photo&,const PeerNotifySettings&,bool,const QString&,const QString&)));
+    connect(mApi, SIGNAL(photosPhotos(qint64,const QList<Photo>&,const QList<User>&)), this, SLOT(onPhotosPhotos(qint64, const QList<Photo>&, const QList<User>&)));
+    connect(mApi, SIGNAL(photosPhotosSlice(qint64,qint32,const QList<Photo>&,const QList<User>&)), this, SIGNAL(photosGetUserPhotosAnswer(qint64,qint32,const QList<Photo>&,const QList<User>&)));
+    connect(mApi, SIGNAL(contactsGetStatusesResult(qint64,const QList<ContactStatus>&)), this, SIGNAL(contactsGetStatusesAnswer(qint64,const QList<ContactStatus>&)));
+    connect(mApi, SIGNAL(contactsContacts(qint64,const QList<Contact>&,const QList<User>&)), this, SLOT(onContactsContacts(qint64,const QList<Contact>&,const QList<User>&)));
     connect(mApi, SIGNAL(contactsContactsNotModified(qint64)), this, SLOT(onContactsContactsNotModified(qint64)));
-    connect(mApi, SIGNAL(contactsImportedContacts(qint64,QList<ImportedContact>,QList<qint64>,QList<User>)), this, SIGNAL(contactsImportContactsAnswer(qint64,QList<ImportedContact>,QList<qint64>,QList<User>)));
-    connect(mApi, SIGNAL(contactsImportedContacts(qint64,QList<ImportedContact>,QList<qint64>,QList<User>)), this, SLOT(onContactsImportContactsAnswer()));
-    connect(mApi, SIGNAL(contactsFound(qint64,QList<ContactFound>,QList<User>)), this, SIGNAL(contactsFound(qint64,QList<ContactFound>,QList<User>)));
-    connect(mApi, SIGNAL(contactsResolveUsernameResult(qint64,User)), this, SIGNAL(contactsResolveUsernameAnswer(qint64,User)));
-    connect(mApi, SIGNAL(contactsDeleteContactLink(qint64,ContactLink,ContactLink,User)), this, SIGNAL(contactsDeleteContactAnswer(qint64,ContactLink,ContactLink,User)));
+    connect(mApi, SIGNAL(contactsImportedContacts(qint64,const QList<ImportedContact>&,const QList<qint64>&,const QList<User>&)), this, SIGNAL(contactsImportContactsAnswer(qint64,const QList<ImportedContact>&,const QList<qint64>&,const QList<User>&)));
+    connect(mApi, SIGNAL(contactsImportedContacts(qint64,const QList<ImportedContact>&,const QList<qint64>&,const QList<User>&)), this, SLOT(onContactsImportContactsAnswer()));
+    connect(mApi, SIGNAL(contactsFound(qint64,const QList<ContactFound>&,const QList<User>&)), this, SIGNAL(contactsFound(qint64,const QList<ContactFound>&,const QList<User>&)));
+    connect(mApi, SIGNAL(contactsResolveUsernameResult(qint64,const User&)), this, SIGNAL(contactsResolveUsernameAnswer(qint64,const User&)));
+    connect(mApi, SIGNAL(contactsDeleteContactLink(qint64,const ContactLink&,const ContactLink&,const User&)), this, SIGNAL(contactsDeleteContactAnswer(qint64,const ContactLink&,const ContactLink&,const User&)));
     connect(mApi, SIGNAL(contactsDeleteContactsResult(qint64,bool)), this, SIGNAL(contactsDeleteContactsAnswer(qint64,bool)));
     connect(mApi, SIGNAL(contactsBlockResult(qint64,bool)), this, SIGNAL(contactsBlockAnswer(qint64,bool)));
     connect(mApi, SIGNAL(contactsUnblockResult(qint64,bool)), this, SIGNAL(contactsUnblockAnswer(qint64,bool)));
-    connect(mApi, SIGNAL(contactsBlocked(qint64,QList<ContactBlocked>,QList<User>)), this, SLOT(onContactsBlocked(qint64,QList<ContactBlocked>,QList<User>)));
-    connect(mApi, SIGNAL(contactsBlockedSlice(qint64,qint32,QList<ContactBlocked>,QList<User>)), this, SIGNAL(contactsGetBlockedAnswer(qint64,qint32,QList<ContactBlocked>,QList<User>)));
+    connect(mApi, SIGNAL(contactsBlocked(qint64,const QList<ContactBlocked>&,const QList<User>&)), this, SLOT(onContactsBlocked(qint64,const QList<ContactBlocked>&,const QList<User>&)));
+    connect(mApi, SIGNAL(contactsBlockedSlice(qint64,qint32,const QList<ContactBlocked>&,const QList<User>&)), this, SIGNAL(contactsGetBlockedAnswer(qint64,qint32,QList<ContactBlocked>,QList<User>)));
     connect(mApi, SIGNAL(messagesSentMessage(qint64,qint32,qint32,qint32,qint32,qint32)), this, SLOT(onMessagesSentMessage(qint64,qint32,qint32,qint32,qint32,qint32)));
-    connect(mApi, SIGNAL(messagesSentMessageLink(qint64,qint32,qint32,qint32,qint32,qint32,QList<ContactsLink>)), this, SIGNAL(messagesSendMessageAnswer(qint64,qint32,qint32,qint32,qint32,qint32,QList<ContactsLink>)));
+    connect(mApi, SIGNAL(messagesSentMessageLink(qint64,qint32,qint32,qint32,qint32,qint32,const QList<ContactsLink>&)), this, SIGNAL(messagesSendMessageAnswer(qint64,qint32,qint32,qint32,qint32,qint32,const QList<ContactsLink>&)));
     connect(mApi, SIGNAL(messagesSetTypingResult(qint64,bool)), this, SIGNAL(messagesSetTypingAnswer(qint64,bool)));
-    connect(mApi, SIGNAL(messagesGetMessagesMessages(qint64,QList<Message>,QList<Chat>,QList<User>)), this, SLOT(onMessagesGetMessagesMessages(qint64,QList<Message>,QList<Chat>,QList<User>)));
-    connect(mApi, SIGNAL(messagesGetMessagesMessagesSlice(qint64,qint32,QList<Message>,QList<Chat>,QList<User>)), this, SIGNAL(messagesGetMessagesAnswer(qint64,qint32,QList<Message>,QList<Chat>,QList<User>)));
-    connect(mApi, SIGNAL(messagesDialogs(qint64, QList<Dialog>,QList<Message>,QList<Chat>,QList<User>)), this, SLOT(onMessagesDialogs(qint64,QList<Dialog>,QList<Message>,QList<Chat>,QList<User>)));
-    connect(mApi, SIGNAL(messagesDialogsSlice(qint64,qint32,QList<Dialog>,QList<Message>,QList<Chat>,QList<User>)), this, SIGNAL(messagesGetDialogsAnswer(qint64,qint32,QList<Dialog>,QList<Message>,QList<Chat>,QList<User>)));
-    connect(mApi, SIGNAL(messagesGetHistoryMessages(qint64,QList<Message>,QList<Chat>,QList<User>)), this, SLOT(onMessagesGetHistoryMessages(qint64,QList<Message>,QList<Chat>,QList<User>)));
-    connect(mApi, SIGNAL(messagesGetHistoryMessagesSlice(qint64,qint32,QList<Message>,QList<Chat>,QList<User>)), this, SIGNAL(messagesGetHistoryAnswer(qint64,qint32,QList<Message>,QList<Chat>,QList<User>)));
-    connect(mApi, SIGNAL(messagesSearchMessages(qint64,QList<Message>,QList<Chat>,QList<User>)), this, SLOT(onMessagesSearchMessages(qint64,QList<Message>,QList<Chat>,QList<User>)));
-    connect(mApi, SIGNAL(messagesSearchMessagesSlice(qint64,qint32,QList<Message>,QList<Chat>,QList<User>)), this, SIGNAL(messagesSearchAnswer(qint64,qint32,QList<Message>,QList<Chat>,QList<User>)));
+    connect(mApi, SIGNAL(messagesGetMessagesMessages(qint64,const QList<Message>&,const QList<Chat>&,const QList<User>&)), this, SLOT(onMessagesGetMessagesMessages(qint64,const QList<Message>&,const QList<Chat>&,const QList<User>&)));
+    connect(mApi, SIGNAL(messagesGetMessagesMessagesSlice(qint64,qint32,const QList<Message>&,const QList<Chat>&,const QList<User>&)), this, SIGNAL(messagesGetMessagesAnswer(qint64,qint32,const QList<Message>&,const QList<Chat>&,const QList<User>&)));
+    connect(mApi, SIGNAL(messagesDialogs(qint64, const QList<Dialog>&,const QList<Message>&,const QList<Chat>&,const QList<User>&)), this, SLOT(onMessagesDialogs(qint64,const QList<Dialog>&,const QList<Message>&,const QList<Chat>&,const QList<User>&)));
+    connect(mApi, SIGNAL(messagesDialogsSlice(qint64,qint32,const QList<Dialog>&,const QList<Message>&,const QList<Chat>&,const QList<User>&)), this, SIGNAL(messagesGetDialogsAnswer(qint64,qint32,const QList<Dialog>&,const QList<Message>&,const QList<Chat>&,const QList<User>&)));
+    connect(mApi, SIGNAL(messagesGetHistoryMessages(qint64,const QList<Message>&,const QList<Chat>&,const QList<User>&)), this, SLOT(onMessagesGetHistoryMessages(qint64,const QList<Message>&,const QList<Chat>&,const QList<User>&)));
+    connect(mApi, SIGNAL(messagesGetHistoryMessagesSlice(qint64,qint32,const QList<Message>&,const QList<Chat>&,const QList<User>&)), this, SIGNAL(messagesGetHistoryAnswer(qint64,qint32,const QList<Message>&,const QList<Chat>&,const QList<User>&)));
+    connect(mApi, SIGNAL(messagesSearchMessages(qint64,const QList<Message>&,const QList<Chat>&,const QList<User>&)), this, SLOT(onMessagesSearchMessages(qint64,const QList<Message>&,const QList<Chat>&,const QList<User>&)));
+    connect(mApi, SIGNAL(messagesSearchMessagesSlice(qint64,qint32,const QList<Message>&,const QList<Chat>&,const QList<User>&)), this, SIGNAL(messagesSearchAnswer(qint64,qint32,const QList<Message>&,const QList<Chat>&,const QList<User>&)));
     connect(mApi, SIGNAL(messagesReadAffectedHistory(qint64,qint32,qint32,qint32)), this, SIGNAL(messagesReadHistoryAnswer(qint64,qint32,qint32,qint32)));
-    connect(mApi, SIGNAL(messagesReadMessageContentsResult(qint64,AffectedMessages)), this, SIGNAL(messagesReadMessageContentsAnswer(qint64,AffectedMessages)));
+    connect(mApi, SIGNAL(messagesReadMessageContentsResult(qint64,const AffectedMessages&)), this, SIGNAL(messagesReadMessageContentsAnswer(qint64,const AffectedMessages&)));
     connect(mApi, SIGNAL(messagesDeleteAffectedHistory(qint64,qint32,qint32,qint32)), this, SIGNAL(messagesDeleteHistoryAnswer(qint64,qint32,qint32,qint32)));
-    connect(mApi, SIGNAL(messagesDeleteMessagesResult(qint64,AffectedMessages)), this, SIGNAL(messagesDeleteMessagesAnswer(qint64,AffectedMessages)));
-    connect(mApi, SIGNAL(messagesRestoreMessagesResult(qint64,QList<qint32>)), this, SIGNAL(messagesRestoreMessagesAnswer(qint64,QList<qint32>)));
-    connect(mApi, SIGNAL(messagesReceivedMessagesResult(qint64,QList<qint32>)), this, SIGNAL(messagesReceivedMessagesAnswer(qint64,QList<qint32>)));
-    connect(mApi, SIGNAL(messagesForwardMsgStatedMessage(qint64,Message,QList<Chat>,QList<User>,qint32,qint32,qint32)), this, SLOT(onMessagesForwardMsgStatedMessage(qint64,Message,QList<Chat>,QList<User>,qint32,qint32,qint32)));
-    connect(mApi, SIGNAL(messagesForwardMsgStatedMessageLink(qint64,Message,QList<Chat>,QList<User>,QList<ContactsLink>,qint32,qint32,qint32)), this, SIGNAL(messagesForwardMessageAnswer(qint64,Message,QList<Chat>,QList<User>,QList<ContactsLink>,qint32,qint32,qint32)));
-    connect(mApi, SIGNAL(messagesForwardMsgsStatedMessages(qint64,QList<Message>,QList<Chat>,QList<User>,qint32,qint32,qint32)), this, SLOT(onMessagesForwardMsgsStatedMessages(qint64,QList<Message>,QList<Chat>,QList<User>,qint32,qint32,qint32)));
-    connect(mApi, SIGNAL(messagesForwardMsgsStatedMessagesLinks(qint64,QList<Message>,QList<Chat>,QList<User>,QList<ContactsLink>,qint32,qint32,qint32)), this, SIGNAL(messagesForwardMessagesAnswer(qint64,QList<Message>,QList<Chat>,QList<User>,QList<ContactsLink>,qint32,qint32,qint32)));
-    connect(mApi, SIGNAL(messagesSendBroadcastStatedMessages(qint64,QList<Message>,QList<Chat>,QList<User>,qint32,qint32,qint32)), this, SLOT(onMessagesSendBroadcastStatedMessages(qint64,QList<Message>,QList<Chat>,QList<User>,qint32,qint32,qint32)));
-    connect(mApi, SIGNAL(messagesSendBroadcastStatedMessagesLinks(qint64,QList<Message>,QList<Chat>,QList<User>,QList<ContactsLink>,qint32,qint32,qint32)), this, SIGNAL(messagesSendBroadcastAnswer(qint64,QList<Message>,QList<Chat>,QList<User>,QList<ContactsLink>,qint32,qint32,qint32)));
-    connect(mApi, SIGNAL(messagesChats(qint64,QList<Chat>)), this, SIGNAL(messagesGetChatsAnswer(qint64,QList<Chat>)));
-    connect(mApi, SIGNAL(messagesChatFull(qint64,ChatFull,QList<Chat>,QList<User>)),
-             this, SIGNAL(messagesGetFullChatAnswer(qint64,ChatFull,QList<Chat>,QList<User>)));
+    connect(mApi, SIGNAL(messagesDeleteMessagesResult(qint64,const AffectedMessages&)), this, SIGNAL(messagesDeleteMessagesAnswer(qint64,const AffectedMessages&)));
+    connect(mApi, SIGNAL(messagesRestoreMessagesResult(qint64,const QList<qint32>&)), this, SIGNAL(messagesRestoreMessagesAnswer(qint64,const QList<qint32>&)));
+    connect(mApi, SIGNAL(messagesReceivedMessagesResult(qint64,const QList<qint32>&)), this, SIGNAL(messagesReceivedMessagesAnswer(qint64,const QList<qint32>&)));
+    connect(mApi, SIGNAL(messagesForwardMsgStatedMessage(qint64,const Message&,const QList<Chat>&,const QList<User>&,qint32,qint32,qint32)), this, SLOT(onMessagesForwardMsgStatedMessage(qint64,const Message&,const QList<Chat>&,const QList<User>&,qint32,qint32,qint32)));
+    connect(mApi, SIGNAL(messagesForwardMsgStatedMessageLink(qint64,const Message&,const QList<Chat>&,const QList<User>&,const QList<ContactsLink>&,qint32,qint32,qint32)), this, SIGNAL(messagesForwardMessageAnswer(qint64,const Message&,const QList<Chat>&,const QList<User>&,const QList<ContactsLink>&,qint32,qint32,qint32)));
+    connect(mApi, SIGNAL(messagesForwardMsgsStatedMessages(qint64,const QList<Message>&,const QList<Chat>&,const QList<User>&,qint32,qint32,qint32)), this, SLOT(onMessagesForwardMsgsStatedMessages(qint64,const QList<Message>&,const QList<Chat>&,const QList<User>&,qint32,qint32,qint32)));
+    connect(mApi, SIGNAL(messagesForwardMsgsStatedMessagesLinks(qint64,const QList<Message>&,const QList<Chat>&,const QList<User>&,const QList<ContactsLink>&,qint32,qint32,qint32)), this, SIGNAL(messagesForwardMessagesAnswer(qint64,const QList<Message>&,const QList<Chat>&,const QList<User>&,const QList<ContactsLink>&,qint32,qint32,qint32)));
+    connect(mApi, SIGNAL(messagesSendBroadcastStatedMessages(qint64,const QList<Message>&,const QList<Chat>&,const QList<User>&,qint32,qint32,qint32)), this, SLOT(onMessagesSendBroadcastStatedMessages(qint64,const QList<Message>&,const QList<Chat>&,const QList<User>&,qint32,qint32,qint32)));
+    connect(mApi, SIGNAL(messagesSendBroadcastStatedMessagesLinks(qint64,const QList<Message>&,const QList<Chat>&,const QList<User>&,const QList<ContactsLink>&,qint32,qint32,qint32)), this, SIGNAL(messagesSendBroadcastAnswer(qint64,const QList<Message>,const QList<Chat>,const QList<User>,const QList<ContactsLink>,qint32,qint32,qint32)));
+    connect(mApi, SIGNAL(messagesChats(qint64,const QList<Chat>&)), this, SIGNAL(messagesGetChatsAnswer(qint64,const QList<Chat>&)));
+    connect(mApi, SIGNAL(messagesChatFull(qint64,const ChatFull&,const QList<Chat>&,const QList<User>&)), this, SIGNAL(messagesGetFullChatAnswer(qint64,const ChatFull&,const QList<Chat>&,const QList<User>&)));
 
-    connect(mApi, SIGNAL(messagesEditChatTitleStatedMessage(qint64,Message,QList<Chat>,QList<User>,qint32,qint32,qint32)), this, SLOT(onMessagesEditChatTitleStatedMessage(qint64,Message,QList<Chat>,QList<User>,qint32,qint32,qint32)));
-    connect(mApi, SIGNAL(messagesEditChatTitleStatedMessageLink(qint64,Message,QList<Chat>,QList<User>,QList<ContactsLink>,qint32,qint32,qint32)), this, SIGNAL(messagesEditChatTitleAnswer(qint64,Message,QList<Chat>,QList<User>,QList<ContactsLink>,qint32,qint32,qint32)));
-    connect(mApi, SIGNAL(messagesEditChatPhotoStatedMessage(qint64,Message,QList<Chat>,QList<User>,qint32,qint32,qint32)), this, SLOT(onMessagesEditChatPhotoStatedMessageAnswer(qint64,Message,QList<Chat>,QList<User>,qint32,qint32,qint32)));
-    connect(mApi, SIGNAL(messagesEditChatPhotoStatedMessageLink(qint64,Message,QList<Chat>,QList<User>,QList<ContactsLink>,qint32,qint32,qint32)), this, SIGNAL(messagesEditChatPhotoStatedMessageAnswer(qint64,Message,QList<Chat>,QList<User>,QList<ContactsLink>,qint32,qint32,qint32)));
-    connect(mApi, SIGNAL(messagesAddChatUserStatedMessage(qint64,Message,QList<Chat>,QList<User>,qint32,qint32,qint32)), this, SLOT(onMessagesAddChatUserStatedMessage(qint64,Message,QList<Chat>,QList<User>,qint32,qint32,qint32)));
-    connect(mApi, SIGNAL(messagesAddChatUserStatedMessageLink(qint64,Message,QList<Chat>,QList<User>,QList<ContactsLink>,qint32,qint32,qint32)), this, SIGNAL(messagesAddChatUserAnswer(qint64,Message,QList<Chat>,QList<User>,QList<ContactsLink>,qint32,qint32,qint32)));
-    connect(mApi, SIGNAL(messagesDeleteChatUserStatedMessage(qint64,Message,QList<Chat>,QList<User>,qint32,qint32,qint32)), this, SLOT(onMessagesDeleteChatUserStatedMessage(qint64,Message,QList<Chat>,QList<User>,qint32,qint32,qint32)));
-    connect(mApi, SIGNAL(messagesDeleteChatUserStatedMessageLink(qint64,Message,QList<Chat>,QList<User>,QList<ContactsLink>,qint32,qint32,qint32)), this, SIGNAL(messagesDeleteChatUserAnswer(qint64,Message,QList<Chat>,QList<User>,QList<ContactsLink>,qint32,qint32,qint32)));
-    connect(mApi, SIGNAL(messagesCreateChatStatedMessage(qint64,Message,QList<Chat>,QList<User>,qint32,qint32,qint32)), this, SLOT(onMessagesCreateChatStatedMessage(qint64,Message,QList<Chat>,QList<User>,qint32,qint32,qint32)));
-    connect(mApi, SIGNAL(messagesCreateChatStatedMessageLink(qint64,Message,QList<Chat>,QList<User>,QList<ContactsLink>,qint32,qint32,qint32)), this, SIGNAL(messagesCreateChatAnswer(qint64,Message,QList<Chat>,QList<User>,QList<ContactsLink>,qint32,qint32,qint32)));
+    connect(mApi, SIGNAL(messagesEditChatTitleStatedMessage(qint64,const Message&,const QList<Chat>&,const QList<User>&,qint32,qint32,qint32)), this, SLOT(onMessagesEditChatTitleStatedMessage(qint64,const Message&,const QList<Chat>&,const QList<User>&,qint32,qint32,qint32)));
+    connect(mApi, SIGNAL(messagesEditChatTitleStatedMessageLink(qint64,const Message&,const QList<Chat>&,const QList<User>&,const QList<ContactsLink>&,qint32,qint32,qint32)), this, SIGNAL(messagesEditChatTitleAnswer(qint64,const Message&,const QList<Chat>&,const QList<User>&,const QList<ContactsLink>&,qint32,qint32,qint32)));
+    connect(mApi, SIGNAL(messagesEditChatPhotoStatedMessage(qint64,const Message&,const QList<Chat>&,const QList<User>&,qint32,qint32,qint32)), this, SLOT(onMessagesEditChatPhotoStatedMessageAnswer(qint64,const Message&,const QList<Chat>&,const QList<User>&,qint32,qint32,qint32)));
+    connect(mApi, SIGNAL(messagesEditChatPhotoStatedMessageLink(qint64,const Message&,const QList<Chat>&,const QList<User>&,const QList<ContactsLink>&,qint32,qint32,qint32)), this, SIGNAL(messagesEditChatPhotoStatedMessageAnswer(qint64,const Message&,const QList<Chat>&,const QList<User>&,const QList<ContactsLink>&,qint32,qint32,qint32)));
+    connect(mApi, SIGNAL(messagesAddChatUserStatedMessage(qint64,const Message&,const QList<Chat>&,const QList<User>&,qint32,qint32,qint32)), this, SLOT(onMessagesAddChatUserStatedMessage(qint64,const Message&,const QList<Chat>&,const QList<User>&,qint32,qint32,qint32)));
+    connect(mApi, SIGNAL(messagesAddChatUserStatedMessageLink(qint64,const Message&,const QList<Chat>&,const QList<User>&,const QList<ContactsLink>&,qint32,qint32,qint32)), this, SIGNAL(messagesAddChatUserAnswer(qint64,const Message&,const QList<Chat>&,const QList<User>&,const QList<ContactsLink>&,qint32,qint32,qint32)));
+    connect(mApi, SIGNAL(messagesDeleteChatUserStatedMessage(qint64,const Message&,const QList<Chat>&,const QList<User>&,qint32,qint32,qint32)), this, SLOT(onMessagesDeleteChatUserStatedMessage(qint64,const Message&,const QList<Chat>&,const QList<User>&,qint32,qint32,qint32)));
+    connect(mApi, SIGNAL(messagesDeleteChatUserStatedMessageLink(qint64,const Message&,const QList<Chat>&,const QList<User>&,const QList<ContactsLink>&,qint32,qint32,qint32)), this, SIGNAL(messagesDeleteChatUserAnswer(qint64,const Message&,const QList<Chat>&,const QList<User>&,const QList<ContactsLink>&,qint32,qint32,qint32)));
+    connect(mApi, SIGNAL(messagesCreateChatStatedMessage(qint64,const Message&,const QList<Chat>&,const QList<User>&,qint32,qint32,qint32)), this, SLOT(onMessagesCreateChatStatedMessage(qint64,const Message&,const QList<Chat>&,const QList<User>&,qint32,qint32,qint32)));
+    connect(mApi, SIGNAL(messagesCreateChatStatedMessageLink(qint64,const Message&,const QList<Chat>&,const QList<User>&,const QList<ContactsLink>&,qint32,qint32,qint32)), this, SIGNAL(messagesCreateChatAnswer(qint64,const Message&,const QList<Chat>&,const QList<User>&,const QList<ContactsLink>&,qint32,qint32,qint32)));
 
     // secret chats
-    connect(mApi, SIGNAL(messagesDhConfig(qint64,qint32,QByteArray,qint32,QByteArray)), this, SLOT(onMessagesDhConfig(qint64,qint32,QByteArray,qint32,QByteArray)));
-    connect(mApi, SIGNAL(messagesDhConfigNotModified(qint64,QByteArray)), this, SLOT(onMessagesDhConfigNotModified(qint64,QByteArray)));
-    connect(mApi, SIGNAL(messagesRequestEncryptionEncryptedChat(qint64,EncryptedChat)), this, SLOT(onMessagesRequestEncryptionEncryptedChat(qint64,EncryptedChat)));
-    connect(mApi, SIGNAL(messagesAcceptEncryptionEncryptedChat(qint64,EncryptedChat)), this, SLOT(onMessagesAcceptEncryptionEncryptedChat(qint64,EncryptedChat)));
+    connect(mApi, SIGNAL(messagesDhConfig(qint64,qint32,const QByteArray&,qint32,const QByteArray&)), this, SLOT(onMessagesDhConfig(qint64,qint32,const QByteArray&,qint32,const QByteArray&)));
+    connect(mApi, SIGNAL(messagesDhConfigNotModified(qint64,const QByteArray&)), this, SLOT(onMessagesDhConfigNotModified(qint64,const QByteArray&)));
+    connect(mApi, SIGNAL(messagesRequestEncryptionEncryptedChat(qint64,const EncryptedChat&)), this, SLOT(onMessagesRequestEncryptionEncryptedChat(qint64,const EncryptedChat&)));
+    connect(mApi, SIGNAL(messagesAcceptEncryptionEncryptedChat(qint64,const EncryptedChat&)), this, SLOT(onMessagesAcceptEncryptionEncryptedChat(qint64,const EncryptedChat&)));
     connect(mApi, SIGNAL(messagesDiscardEncryptionResult(qint64,bool)), this, SLOT(onMessagesDiscardEncryptionResult(qint64,bool)));
     connect(mApi, SIGNAL(messagesReadEncryptedHistoryResult(qint64,bool)), this, SIGNAL(messagesReadEncryptedHistoryAnswer(qint64,bool)));
     connect(mApi, SIGNAL(messagesSendEncryptedSentEncryptedMessage(qint64,qint32)), this, SIGNAL(messagesSendEncryptedAnswer(qint64,qint32)));
-    connect(mApi, SIGNAL(messagesSendEncryptedSentEncryptedFile(qint64,qint32,EncryptedFile)), this, SIGNAL(messagesSendEncryptedAnswer(qint64,qint32,EncryptedFile)));
+    connect(mApi, SIGNAL(messagesSendEncryptedSentEncryptedFile(qint64,qint32,const EncryptedFile&)), this, SIGNAL(messagesSendEncryptedAnswer(qint64,qint32,const EncryptedFile&)));
     connect(mApi, SIGNAL(messagesSendEncryptedServiceSentEncryptedMessage(qint64,qint32)), this, SIGNAL(messagesSendEncryptedServiceAnswer(qint64,qint32)));
-    connect(mApi, SIGNAL(messagesSendEncryptedServiceSentEncryptedFile(qint64,qint32,EncryptedFile)), this, SIGNAL(messagesSendEncryptedServiceAnswer(qint64,qint32,EncryptedFile)));
-    connect(mApi, SIGNAL(messagesGetStickersResult(qint64,MessagesStickers)), this, SIGNAL(messagesGetStickersAnwer(qint64,MessagesStickers)));
-    connect(mApi, SIGNAL(messagesGetAllStickersResult(qint64,MessagesAllStickers)), this, SIGNAL(messagesGetAllStickersAnwer(qint64,MessagesAllStickers)));
-    connect(mApi, SIGNAL(updateShort(Update,qint32)), SLOT(onUpdateShort(Update)));
-    connect(mApi, SIGNAL(updatesCombined(QList<Update>,QList<User>,QList<Chat>,qint32,qint32,qint32)), SLOT(onUpdatesCombined(QList<Update>)));
-    connect(mApi, SIGNAL(updates(QList<Update>,QList<User>,QList<Chat>,qint32,qint32)), SLOT(onUpdates(QList<Update>)));
+    connect(mApi, SIGNAL(messagesSendEncryptedServiceSentEncryptedFile(qint64,qint32,const EncryptedFile&)), this, SIGNAL(messagesSendEncryptedServiceAnswer(qint64,qint32,const EncryptedFile&)));
+    connect(mApi, SIGNAL(messagesGetStickersResult(qint64,const MessagesStickers&)), this, SIGNAL(messagesGetStickersAnwer(qint64,const MessagesStickers&)));
+    connect(mApi, SIGNAL(messagesGetAllStickersResult(qint64,const MessagesAllStickers&)), this, SIGNAL(messagesGetAllStickersAnwer(qint64,const MessagesAllStickers&)));
+    connect(mApi, SIGNAL(updateShort(const Update&,qint32)), SLOT(onUpdateShort(const Update&)));
+    connect(mApi, SIGNAL(updatesCombined(const QList<Update>&,const QList<User>&,const QList<Chat>&,qint32,qint32,qint32)), SLOT(onUpdatesCombined(const QList<Update>&)));
+    connect(mApi, SIGNAL(updates(const QList<Update>&,const QList<User>&,const QList<Chat>&,qint32,qint32)), SLOT(onUpdates(const QList<Update>&)));
     // updates
     connect(mApi, SIGNAL(updatesState(qint64,qint32,qint32,qint32,qint32,qint32)), this, SIGNAL(updatesGetStateAnswer(qint64,qint32,qint32,qint32,qint32,qint32)));
     connect(mApi, SIGNAL(updatesDifferenceEmpty(qint64,qint32,qint32)), this, SIGNAL(updatesGetDifferenceAnswer(qint64,qint32,qint32)));
-    connect(mApi, SIGNAL(updatesDifference(qint64,QList<Message>,QList<EncryptedMessage>,QList<Update>,QList<Chat>,QList<User>,UpdatesState)), this, SLOT(onUpdatesDifference(qint64,QList<Message>,QList<EncryptedMessage>,QList<Update>,QList<Chat>,QList<User>,UpdatesState)));
-    connect(mApi, SIGNAL(updatesDifferenceSlice(qint64,QList<Message>,QList<EncryptedMessage>,QList<Update>,QList<Chat>,QList<User>,UpdatesState)), this, SLOT(onUpdatesDifferenceSlice(qint64,QList<Message>,QList<EncryptedMessage>,QList<Update>,QList<Chat>,QList<User>,UpdatesState)));
+    connect(mApi, SIGNAL(updatesDifference(qint64,const QList<Message>&,const QList<EncryptedMessage>&,const QList<Update>&,const QList<Chat>&,const QList<User>&,const UpdatesState&)), this, SLOT(onUpdatesDifference(qint64,const QList<Message>&,const QList<EncryptedMessage>&,const QList<Update>&,const QList<Chat>&,const QList<User>&,const UpdatesState&)));
+    connect(mApi, SIGNAL(updatesDifferenceSlice(qint64,const QList<Message>,const QList<EncryptedMessage>,const QList<Update>&,const QList<Chat>&,const QList<User>&,const UpdatesState&)), this, SLOT(onUpdatesDifferenceSlice(qint64,const QList<Message>&,const QList<EncryptedMessage>&,const QList<Update>&,const QList<Chat>&,const QList<User>&,const UpdatesState&)));
     // logic additional signal slots
     connect(mApi, SIGNAL(mainSessionDcChanged(DC*)), this, SLOT(onAuthCheckPhoneDcChanged()));
     connect(mApi, SIGNAL(mainSessionDcChanged(DC*)), this, SLOT(onHelpGetInviteTextDcChanged()));
@@ -353,11 +352,11 @@ void Telegram::onDcProviderReady() {
 
     mFileHandler = FileHandler::Ptr(new FileHandler(mApi, mCrypto, mSettings, *mDcProvider, *mSecretState));
     connect(mFileHandler.data(), SIGNAL(uploadSendFileAnswer(qint64,qint32,qint32,qint32)), SIGNAL(uploadSendFileAnswer(qint64,qint32,qint32,qint32)));
-    connect(mFileHandler.data(), SIGNAL(uploadGetFileAnswer(qint64,StorageFileType,qint32,QByteArray,qint32,qint32,qint32)), SIGNAL(uploadGetFileAnswer(qint64,StorageFileType,qint32,QByteArray,qint32,qint32,qint32)));
+    connect(mFileHandler.data(), SIGNAL(uploadGetFileAnswer(qint64,const StorageFileType&,qint32,const QByteArray&,qint32,qint32,qint32)), SIGNAL(uploadGetFileAnswer(qint64,const StorageFileType&,qint32,const QByteArray&,qint32,qint32,qint32)));
     connect(mFileHandler.data(), SIGNAL(uploadCancelFileAnswer(qint64,bool)), SIGNAL(uploadCancelFileAnswer(qint64,bool)));
-    connect(mFileHandler.data(), SIGNAL(error(qint64,qint32,QString)), SIGNAL(error(qint64,qint32,QString)));
-    connect(mFileHandler.data(), SIGNAL(messagesSendMediaAnswer(qint64,Message,QList<Chat>,QList<User>,QList<ContactsLink>,qint32,qint32)), SLOT(onMessagesSendMediaAnswer(qint64,Message,QList<Chat>,QList<User>,QList<ContactsLink>,qint32,qint32)));
-    connect(mFileHandler.data(), SIGNAL(messagesSendEncryptedFileAnswer(qint64,qint32,EncryptedFile)), SIGNAL(messagesSendEncryptedFileAnswer(qint64,qint32,EncryptedFile)));
+    connect(mFileHandler.data(), SIGNAL(error(qint64,qint32,const QString&)), SIGNAL(error(qint64,qint32,const QString&)));
+    connect(mFileHandler.data(), SIGNAL(messagesSendMediaAnswer(qint64,const Message&,const QList<Chat>&,const QList<User>&,const QList<ContactsLink>&,qint32,qint32)), SLOT(onMessagesSendMediaAnswer(qint64,const Message&,const QList<Chat>&,const QList<User>&,const QList<ContactsLink>&,qint32,qint32)));
+    connect(mFileHandler.data(), SIGNAL(messagesSendEncryptedFileAnswer(qint64,qint32,const EncryptedFile&)), SIGNAL(messagesSendEncryptedFileAnswer(qint64,qint32,const EncryptedFile&)));
 
     // At this point we should test the main session state and emit by hand signals of connected/disconnected
     // depending on the connection state of the session. This is so because first main session connection, if done,
@@ -592,11 +591,11 @@ qint64 Telegram::messagesReceivedQueue(qint32 maxQts) {
     return mApi->messagesReceivedQueue(maxQts);
 }
 
-qint64 Telegram::messagesGetStickers(QString emoticon, QString hash) {
+qint64 Telegram::messagesGetStickers(const QString &emoticon, const QString &hash) {
     return mApi->messagesGetStickers(emoticon, hash);
 }
 
-qint64 Telegram::messagesGetAllStickers(QString hash) {
+qint64 Telegram::messagesGetAllStickers(const QString &hash) {
     return mApi->messagesGetAllStickers(hash);
 }
 
@@ -980,7 +979,7 @@ void Telegram::createSharedKey(SecretChat *secretChat, BIGNUM *p, QByteArray gAO
 }
 
 // error and internal managements
-void Telegram::onError(qint64 id, qint32 errorCode, const QString &errorText, QString functionName) {
+void Telegram::onError(qint64 id, qint32 errorCode, const QString &errorText, const QString &functionName) {
     if (errorCode == 401) {
         onAuthLogOutAnswer(id, false);
     }
@@ -1063,8 +1062,8 @@ void Telegram::onMessagesSentMessage(qint64 id, qint32 msgId, qint32 date, qint3
     Q_EMIT messagesSendMessageAnswer(id, msgId, date, pts, pts_count, seq, links);
 }
 
-void Telegram::onMessagesSendMediaAnswer(qint64 fileId, Message message, QList<Chat> chats, QList<User> users, QList<ContactsLink> links, qint32 pts, qint32 ptsCount) {
-    //depending on responsed media, emit one signal or another
+void Telegram::onMessagesSendMediaAnswer(qint64 fileId, const Message &message, const QList<Chat> &chats, const QList<User> &users, const QList<ContactsLink> &links, qint32 pts, qint32 ptsCount) {
+    //depending on responded media, emit one signal or another
     switch (message.media().classType()) {
     case MessageMedia::typeMessageMediaPhoto:
         Q_EMIT messagesSendPhotoAnswer(fileId, message, chats, users, links, pts, ptsCount);
@@ -1105,42 +1104,42 @@ void Telegram::onMessagesSearchMessages(qint64 id, const QList<Message> &message
     Q_EMIT messagesSearchAnswer(id, messages.size(), messages, chats, users);
 }
 
-void Telegram::onMessagesForwardMsgStatedMessage(qint64 id, Message message, QList<Chat> chats, QList<User> users, qint32 pts, qint32 pts_count, qint32 seq) {
+void Telegram::onMessagesForwardMsgStatedMessage(qint64 id, const Message &message, const QList<Chat> &chats, const QList<User> &users, qint32 pts, qint32 pts_count, qint32 seq) {
     QList<ContactsLink> links;
     Q_EMIT messagesForwardMessageAnswer(id, message, chats, users, links, pts, pts_count, seq);
 }
 
-void Telegram::onMessagesForwardMsgsStatedMessages(qint64 id, QList<Message> messages, QList<Chat> chats, QList<User> users, qint32 pts, qint32 pts_count, qint32 seq) {
+void Telegram::onMessagesForwardMsgsStatedMessages(qint64 id, const QList<Message> &messages, const QList<Chat> &chats, const QList<User> &users, qint32 pts, qint32 pts_count, qint32 seq) {
     QList<ContactsLink> links;
     Q_EMIT messagesForwardMessagesAnswer(id, messages, chats, users, links, pts, pts_count, seq);
 }
 
-void Telegram::onMessagesSendBroadcastStatedMessages(qint64 id, QList<Message> messages, QList<Chat> chats, QList<User> users, qint32 pts, qint32 pts_count, qint32 seq) {
+void Telegram::onMessagesSendBroadcastStatedMessages(qint64 id, const QList<Message> &messages, const QList<Chat> &chats, const QList<User> &users, qint32 pts, qint32 pts_count, qint32 seq) {
     QList<ContactsLink> links;
     Q_EMIT messagesSendBroadcastAnswer(id, messages, chats, users, links, pts, pts_count, seq);
 }
 
-void Telegram::onMessagesEditChatTitleStatedMessage(qint64 id, Message message, QList<Chat> chats, QList<User> users, qint32 pts, qint32 pts_count, qint32 seq) {
+void Telegram::onMessagesEditChatTitleStatedMessage(qint64 id, const Message &message, const QList<Chat> &chats, const QList<User> &users, qint32 pts, qint32 pts_count, qint32 seq) {
     QList<ContactsLink> links;
     Q_EMIT messagesEditChatTitleAnswer(id, message, chats, users, links, pts, pts_count, seq);
 }
 
-void Telegram::onMessagesEditChatPhotoStatedMessageAnswer(qint64 msgId, Message message, QList<Chat> chats, QList<User> users, qint32 pts, qint32 pts_count, qint32 seq) {
+void Telegram::onMessagesEditChatPhotoStatedMessageAnswer(qint64 msgId, const Message &message, const QList<Chat> &chats, const QList<User> &users, qint32 pts, qint32 pts_count, qint32 seq) {
     QList<ContactsLink> links;
     Q_EMIT messagesEditChatPhotoStatedMessageAnswer(msgId, message, chats, users, links, pts, pts_count, seq);
 }
 
-void Telegram::onMessagesAddChatUserStatedMessage(qint64 id, Message message, QList<Chat> chats, QList<User> users, qint32 pts, qint32 pts_count, qint32 seq) {
+void Telegram::onMessagesAddChatUserStatedMessage(qint64 id, const Message &message, const QList<Chat> &chats, const QList<User> &users, qint32 pts, qint32 pts_count, qint32 seq) {
     QList<ContactsLink> links;
     Q_EMIT messagesAddChatUserAnswer(id, message, chats, users, links, pts, pts_count, seq);
 }
 
-void Telegram::onMessagesDeleteChatUserStatedMessage(qint64 id, Message message, QList<Chat> chats, QList<User> users, qint32 pts, qint32 pts_count, qint32 seq) {
+void Telegram::onMessagesDeleteChatUserStatedMessage(qint64 id, const Message &message, const QList<Chat> &chats, const QList<User> &users, qint32 pts, qint32 pts_count, qint32 seq) {
     QList<ContactsLink> links;
     Q_EMIT messagesDeleteChatUserAnswer(id, message, chats, users, links, pts, pts_count, seq);
 }
 
-void Telegram::onMessagesCreateChatStatedMessage(qint64 id, Message message, QList<Chat> chats, QList<User> users, qint32 pts, qint32 pts_count, qint32 seq) {
+void Telegram::onMessagesCreateChatStatedMessage(qint64 id, const Message &message, const QList<Chat> &chats, const QList<User> &users, qint32 pts, qint32 pts_count, qint32 seq) {
     QList<ContactsLink> links;
     Q_EMIT messagesCreateChatAnswer(id, message, chats, users, links, pts, pts_count, seq);
 }
@@ -1629,7 +1628,7 @@ qint64 Telegram::messagesGetHistory(const InputPeer &peer, qint32 offset, qint32
     return mApi->messagesGetHistory(peer, offset, maxId, limit);
 }
 
-qint64 Telegram::messagesSearch(const InputPeer &peer, const QString &query, MessagesFilter filter, qint32 minDate, qint32 maxDate, qint32 offset, qint32 maxId, qint32 limit) {
+qint64 Telegram::messagesSearch(const InputPeer &peer, const QString &query, const MessagesFilter &filter, qint32 minDate, qint32 maxDate, qint32 offset, qint32 maxId, qint32 limit) {
     return mApi->messagesSearch(peer, query, filter, minDate, maxDate, offset, maxId, limit);
 }
 

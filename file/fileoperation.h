@@ -60,13 +60,13 @@ public:
     qint32 chatId() const { return mChatId; }
     void setChatId(qint32 chatId) { mChatId = chatId; }
     InputChatPhoto inputChatPhoto() const { return mInputChatPhoto; }
-    void setInputChatPhoto(InputChatPhoto inputChatPhoto) { mInputChatPhoto = inputChatPhoto; }
+    void setInputChatPhoto(const InputChatPhoto &inputChatPhoto) { mInputChatPhoto = inputChatPhoto; }
     QString caption() const { return mCaption; }
     void setCaption(QString caption) { mCaption = caption; }
     InputGeoPoint geoPoint() const { return mGeoPoint; }
-    void setGeoPoint(InputGeoPoint geoPoint) { mGeoPoint = geoPoint; }
+    void setGeoPoint(const InputGeoPoint &geoPoint) { mGeoPoint = geoPoint; }
     InputPhotoCrop crop() const { return mCrop; }
-    void setCrop(InputPhotoCrop crop) { mCrop = crop; }
+    void setCrop(const InputPhotoCrop &crop) { mCrop = crop; }
     OpType opType() const { return mType; }
 
 

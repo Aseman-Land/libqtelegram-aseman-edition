@@ -80,11 +80,11 @@ public:
     }
 
 private:
-    QString m_md5Checksum;
-    qint32 m_parts;
     qint64 m_id;
-    qint32 m_keyFingerprint;
     qint64 m_accessHash;
+    QString m_md5Checksum;
     InputEncryptedFileType m_classType;
+    qint32 m_keyFingerprint;
+    qint32 m_parts;
 };
 #endif // INPUTENCRYPTEDFILE_H

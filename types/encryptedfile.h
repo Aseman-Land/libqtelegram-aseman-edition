@@ -78,11 +78,11 @@ public:
     }
 
 private:
-    qint32 mDcId;
     qint64 mId;
-    qint32 mKeyFingerprint;
-    qint32 mSize;
     qint64 mAccessHash;
     EncryptedFileType mClassType;
+    qint32 mDcId;
+    qint32 mKeyFingerprint;
+    qint32 mSize;
 };
 #endif // ENCRYPTEDFILE_H

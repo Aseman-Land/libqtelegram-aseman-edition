@@ -74,13 +74,13 @@ public:
     QString message() const {
         return m_message;
     }
-    void setMedia(MessageMedia media) {
+    void setMedia(const MessageMedia &media) {
         m_media = media;
     }
     MessageMedia media() const {
         return m_media;
     }
-    void setAction(MessageAction action) {
+    void setAction(const MessageAction &action) {
         m_action = action;
     }
     MessageAction action() const {

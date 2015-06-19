@@ -142,7 +142,7 @@ void Connection::onConnected() {
     stopReconnecting();
 
     // abridged version of the protocol requires sending 0xef byte at beginning
-    char byte = 0xef;
+    unsigned char byte = 0xef;
     qint32 writtenBytes = writeOut(&byte, 1);
     Q_UNUSED(writtenBytes);
     Q_ASSERT(writtenBytes == 1);

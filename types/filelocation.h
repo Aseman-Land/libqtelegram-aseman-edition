@@ -85,10 +85,10 @@ public:
     }
 
 private:
-    qint32 m_localId;
     qint64 m_secret;
-    qint32 m_dcId;
     qint64 m_volumeId;
     FileLocationType m_classType;
+    qint32 m_dcId;
+    qint32 m_localId;
 };
 #endif // FILELOCATION_H

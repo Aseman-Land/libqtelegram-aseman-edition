@@ -14,10 +14,10 @@ FileHandler::FileHandler(Api *api, CryptoUtils *crypto, Settings *settings, DcPr
 
     connect(mApi, SIGNAL(uploadSaveFilePartResult(qint64,qint64,bool)), this, SLOT(onUploadSaveFilePartResult(qint64,qint64,bool)));
     connect(mApi, SIGNAL(uploadSaveBigFilePartResult(qint64,qint64,bool)), this, SLOT(onUploadSaveFilePartResult(qint64,qint64,bool)));
-    connect(mApi, SIGNAL(uploadFile(qint64,StorageFileType,qint32,QByteArray)), this, SLOT(onUploadGetFileAnswer(qint64,StorageFileType,qint32,QByteArray)));
-    connect(mApi, SIGNAL(uploadFileError(qint64,qint32,QString)), this, SLOT(onUploadGetFileError(qint64,qint32,QString)));
-    connect(mApi, SIGNAL(messagesSentMediaStatedMessage(qint64,Message,QList<Chat>,QList<User>,qint32,qint32)), SLOT(onMessagesSendMediaStatedMessage(qint64,Message,QList<Chat>,QList<User>,qint32,qint32)));
-    connect(mApi, SIGNAL(messagesSentMediaStatedMessageLink(qint64,Message,QList<Chat>,QList<User>,QList<ContactsLink>,qint32,qint32,qint32)), SLOT(onMessagesSendMediaStatedMessageLink(qint64,Message,QList<Chat>,QList<User>,QList<ContactsLink>,qint32,qint32,qint32)));
+    connect(mApi, SIGNAL(uploadFile(qint64,const StorageFileType&,qint32,QByteArray)), this, SLOT(onUploadGetFileAnswer(qint64,const StorageFileType&,qint32,QByteArray)));
+    connect(mApi, SIGNAL(uploadFileError(qint64,qint32,const QString&)), this, SLOT(onUploadGetFileError(qint64,qint32,const QString&)));
+    connect(mApi, SIGNAL(messagesSentMediaStatedMessage(qint64,const Message&,const QList<Chat>&,const QList<User>&,qint32,qint32)), SLOT(onMessagesSendMediaStatedMessage(qint64,const Message&,const QList<Chat>&,const QList<User>&,qint32,qint32)));
+    connect(mApi, SIGNAL(messagesSentMediaStatedMessageLink(qint64,const Message&,const QList<Chat>&,const QList<User>&,const QList<ContactsLink>&,qint32,qint32,qint32)), SLOT(onMessagesSendMediaStatedMessageLink(qint64,const Message&,const QList<Chat>&,const QList<User>&,const QList<ContactsLink>&,qint32,qint32,qint32)));
     connect(mApi, SIGNAL(messagesSendEncryptedFileSentEncryptedMessage(qint64,qint32)), this, SLOT(onMessagesSentEncryptedFile(qint64,qint32)));
     connect(mApi, SIGNAL(messagesSendEncryptedFileSentEncryptedFile(qint64,qint32,EncryptedFile)), this, SLOT(onMessagesSentEncryptedFile(qint64,qint32,EncryptedFile)));
 }
@@ -296,7 +296,7 @@ void FileHandler::onUploadGetFileSessionCreated() {
     }
 }
 
-void FileHandler::onUploadGetFileAnswer(qint64 msgId, StorageFileType type, qint32 mtime, QByteArray bytes) {
+void FileHandler::onUploadGetFileAnswer(qint64 msgId, const StorageFileType &type, qint32 mtime, QByteArray bytes) {
     DownloadFile::Ptr f = mDownloadsMap.take(msgId);
     if(f.isNull())
         return;
@@ -411,12 +411,12 @@ qint64 FileHandler::uploadCancelFile(qint64 fileId) {
     return fileId;
 }
 
-void FileHandler::onMessagesSendMediaStatedMessage(qint64 id, Message message, QList<Chat> chats, QList<User> users, qint32 pts, qint32 ptsCount) {
+void FileHandler::onMessagesSendMediaStatedMessage(qint64 id, const Message &message, const QList<Chat> &chats, const QList<User> &users, qint32 pts, qint32 ptsCount) {
     QList<ContactsLink> links;
     onMessagesSendMediaStatedMessageLink(id, message, chats, users, links, pts, ptsCount);
 }
 
-void FileHandler::onMessagesSendMediaStatedMessageLink(qint64 id, Message message, QList<Chat> chats, QList<User> users, QList<ContactsLink> links, qint32 pts, qint32 pts_count, qint32 seq) {
+void FileHandler::onMessagesSendMediaStatedMessageLink(qint64 id, const Message &message, const QList<Chat> &chats, const QList<User> &users, const QList<ContactsLink> &links, qint32 pts, qint32 pts_count, qint32 seq) {
     //recover correlated send media request id -> fileId
     qint64 fileId = mFileIdsMap.take(id);
     Q_ASSERT(fileId);

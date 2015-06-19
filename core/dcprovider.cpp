@@ -246,11 +246,11 @@ void DcProvider::onApiReady(DC*) {
     disconnect(session, SIGNAL(sessionReady(DC*)), this, SLOT(onApiReady(DC*)));
 
     // get the config
-    connect(mApi, SIGNAL(config(qint64,Config)), this, SLOT(onConfigReceived(qint64,Config)));
+    connect(mApi, SIGNAL(config(qint64,const Config&)), this, SLOT(onConfigReceived(qint64,const Config&)));
     mApi->helpGetConfig();
 }
 
-void DcProvider::onConfigReceived(qint64 msgId, Config config) {
+void DcProvider::onConfigReceived(qint64 msgId, const Config &config) {
 
     qCDebug(TG_CORE_DCPROVIDER) << "onConfigReceived(), msgId =" << QString::number(msgId, 16);
     qCDebug(TG_CORE_DCPROVIDER) << "date =" << config.date();
@@ -334,8 +334,8 @@ void DcProvider::onTransferSessionReady(DC *) {
     Session *session = qobject_cast<Session *>(sender());
     mTransferSessions.append(session);
     if (--mPendingTransferSessions == 0) {
-        connect(mApi, SIGNAL(authExportedAuthorization(qint64,qint32,QByteArray)), this, SLOT(onAuthExportedAuthorization(qint64,qint32,QByteArray)));
-        connect(mApi, SIGNAL(authImportedAuthorization(qint64,qint32,User)), this, SLOT(onAuthImportedAuthorization(qint64,qint32,User)));
+        connect(mApi, SIGNAL(authExportedAuthorization(qint64,qint32,const QByteArray&)), this, SLOT(onAuthExportedAuthorization(qint64,qint32,const QByteArray&)));
+        connect(mApi, SIGNAL(authImportedAuthorization(qint64,qint32,const User&)), this, SLOT(onAuthImportedAuthorization(qint64,qint32,const User&)));
         mApi->authExportAuthorization(mTransferSessions.first()->dc()->id());
     }
 }

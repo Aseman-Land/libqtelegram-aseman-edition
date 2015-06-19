@@ -21,19 +21,19 @@ public:
     explicit FileHandler(Api* api, CryptoUtils *crypto, Settings *settings, DcProvider &dcProvider, SecretState &secretState, QObject *parent = 0);
     ~FileHandler();
 
-    qint64 uploadSendFile(FileOperation &op, const QString &fileName, const QByteArray &bytes, const QByteArray &thumbnailBytes = 0, const QString &thumbnailName = "");
-    qint64 uploadSendFile(FileOperation &op, const QString &filePath, const QString &thumbnailPath = "");
+    qint64 uploadSendFile(FileOperation &op, const QString &fileName, const QByteArray &bytes, const QByteArray &thumbnailBytes = 0, const QString &thumbnailName = QString::null);
+    qint64 uploadSendFile(FileOperation &op, const QString &filePath, const QString &thumbnailPath = QString::null);
     qint64 uploadGetFile(const InputFileLocation &file, qint32 fileSize, qint32 dc = 0, const QByteArray &key = QByteArray(), const QByteArray &iv = QByteArray());
     qint64 uploadCancelFile(qint64 fileId);
 
 Q_SIGNALS:
     void uploadSendFileAnswer(qint64 fileId, qint32 partId, qint32 uploaded, qint32 totalSize);
-    void uploadGetFileAnswer(qint64 fileId, StorageFileType type, qint32 mtime, QByteArray bytes, qint32 partId, qint32 downloaded, qint32 total);
+    void uploadGetFileAnswer(qint64 fileId, const StorageFileType &type, qint32 mtime, const QByteArray &bytes, qint32 partId, qint32 downloaded, qint32 total);
     void uploadCancelFileAnswer(qint64 fileId, bool cancelled);
-    void error(qint64 id, qint32 errorCode, QString errorText);
+    void error(qint64 id, qint32 errorCode, const QString &errorText);
 
-    void messagesSendMediaAnswer(qint64 fileId, Message message, QList<Chat> chats, QList<User> users, QList<ContactsLink> links, qint32 pts, qint32 ptsCount);
-    void messagesSendEncryptedFileAnswer(qint64 id, qint32 date, EncryptedFile encryptedFile = EncryptedFile());
+    void messagesSendMediaAnswer(qint64 fileId, const Message &message, const QList<Chat> &chats, const QList<User> &users, const QList<ContactsLink> &links, qint32 pts, qint32 ptsCount);
+    void messagesSendEncryptedFileAnswer(qint64 id, qint32 date, const EncryptedFile &encryptedFile = EncryptedFile());
 
 private:
     Api *mApi;
@@ -70,11 +70,11 @@ private Q_SLOTS:
     void onUploadSendFileSessionCreated();
     void onUploadSaveFilePartResult(qint64 msgId, qint64 fileId, bool ok);
     void onUploadGetFileSessionCreated();
-    void onUploadGetFileAnswer(qint64 msgId, StorageFileType type, qint32 mtime, QByteArray bytes);
+    void onUploadGetFileAnswer(qint64 msgId, const StorageFileType &type, qint32 mtime, QByteArray bytes);
     void onUploadGetFileError(qint64 id, qint32 errorCode, const QString &errorText);
 
-    void onMessagesSendMediaStatedMessage(qint64 id, Message message, QList<Chat> chats, QList<User> users, qint32 pts, qint32 ptsCount);
-    void onMessagesSendMediaStatedMessageLink(qint64 id, Message message, QList<Chat> chats, QList<User> users, QList<ContactsLink> links, qint32 pts, qint32 pts_count, qint32 seq = 0);
+    void onMessagesSendMediaStatedMessage(qint64 id, const Message &message, const QList<Chat> &chats, const QList<User> &users, qint32 pts, qint32 ptsCount);
+    void onMessagesSendMediaStatedMessageLink(qint64 id, const Message &message, const QList<Chat> &chats, const QList<User> &users, const QList<ContactsLink> &links, qint32 pts, qint32 pts_count, qint32 seq = 0);
     void onMessagesSentEncryptedFile(qint64, qint32 date, const EncryptedFile &encryptedFile = EncryptedFile());
 };
 

@@ -129,11 +129,13 @@ public:
     }
 
 private:
+    QList<DcOption> m_dcOptions;
+    QList<DisabledFeature> m_disabledFeatures;
+    bool m_testMode;
+    ConfigType m_classType;
     qint32 m_date;
     qint32 m_expires;
-    bool m_testMode;
     qint32 m_thisDc;
-    QList<DcOption> m_dcOptions;
     qint32 m_chatSizeMax;
     qint32 m_broadcastSizeMax;
     qint32 m_onlineUpdatePeriodMs;
@@ -143,8 +145,6 @@ private:
     qint32 m_notifyCloudDelayMs;
     qint32 m_notifyDefaultDelayMs;
     qint32 m_chatBigSize;
-    QList<DisabledFeature> m_disabledFeatures;
-    ConfigType m_classType;
 };
 
 #endif // CONFIG

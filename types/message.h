@@ -91,7 +91,7 @@ public:
     qint32 replyToMsgId() const {
         return m_replyToMsgId;
     }
-    void setToId(Peer toId) {
+    void setToId(const Peer &toId) {
         m_toId = toId;
     }
     Peer toId() const {
@@ -115,7 +115,7 @@ public:
     qint32 date() const {
         return m_date;
     }
-    void setAction(MessageAction action) {
+    void setAction(const MessageAction &action) {
         m_action = action;
     }
     MessageAction action() const {
@@ -127,7 +127,7 @@ public:
     QString message() const {
         return m_message;
     }
-    void setMedia(MessageMedia media) {
+    void setMedia(const MessageMedia &media) {
         m_media = media;
     }
     MessageMedia media() const {

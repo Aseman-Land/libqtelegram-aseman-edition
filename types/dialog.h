@@ -42,7 +42,7 @@ public:
 
     virtual ~Dialog() {}
 
-    void setPeer(Peer peer) {
+    void setPeer(const Peer &peer) {
         m_peer = peer;
     }
     Peer peer() const {
@@ -66,7 +66,7 @@ public:
     qint32 unreadCount() const {
         return m_unreadCount;
     }
-    void setNotifySettings(PeerNotifySettings notifySettings) {
+    void setNotifySettings(const PeerNotifySettings &notifySettings) {
         m_notifySettings = notifySettings;
     }
     PeerNotifySettings notifySettings() const {

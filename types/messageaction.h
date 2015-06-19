@@ -58,7 +58,7 @@ public:
     QList<qint32> users() const {
         return m_users;
     }
-    void setPhoto(Photo photo) {
+    void setPhoto(const Photo &photo) {
         m_photo = photo;
     }
     Photo photo() const {

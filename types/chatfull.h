@@ -46,19 +46,19 @@ public:
     qint32 id() const {
         return m_id;
     }
-    void setParticipants(ChatParticipants participants) {
+    void setParticipants(const ChatParticipants &participants) {
         m_participants = participants;
     }
     ChatParticipants participants() const {
         return m_participants;
     }
-    void setChatPhoto(Photo chatPhoto) {
+    void setChatPhoto(const Photo &chatPhoto) {
         m_chatPhoto = chatPhoto;
     }
     Photo chatPhoto() const {
         return m_chatPhoto;
     }
-    void setNotifySettings(PeerNotifySettings notifySettings) {
+    void setNotifySettings(const PeerNotifySettings &notifySettings) {
         m_notifySettings = notifySettings;
     }
     PeerNotifySettings notifySettings() const {
@@ -73,9 +73,9 @@ public:
 
 private:
     ChatParticipants m_participants;
-    Photo m_chatPhoto;
-    qint32 m_id;
     PeerNotifySettings m_notifySettings;
+    Photo m_chatPhoto;
     ChatFullType m_classType;
+    qint32 m_id;
 };
 #endif // CHATFULL_H

@@ -57,7 +57,7 @@ public:
         m_video(Video::typeVideoEmpty),
         m_classType(classType) {}
 
-    void setDocument(Document document) {
+    void setDocument(const Document &document) {
         m_document = document;
     }
     Document document() const {
@@ -87,7 +87,7 @@ public:
     qint32 userId() const {
         return m_userId;
     }
-    void setVideo(Video video) {
+    void setVideo(const Video &video) {
         m_video = video;
     }
     Video video() const {
@@ -99,19 +99,19 @@ public:
     QByteArray bytes() const {
         return m_bytes;
     }
-    void setAudio(Audio audio) {
+    void setAudio(const Audio &audio) {
         m_audio = audio;
     }
     Audio audio() const {
         return m_audio;
     }
-    void setPhoto(Photo photo) {
+    void setPhoto(const Photo &photo) {
         m_photo = photo;
     }
     Photo photo() const {
         return m_photo;
     }
-    void setGeo(GeoPoint geo) {
+    void setGeo(const GeoPoint &geo) {
         m_geo = geo;
     }
     GeoPoint geo() const {

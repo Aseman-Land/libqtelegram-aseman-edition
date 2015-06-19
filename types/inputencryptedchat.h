@@ -56,8 +56,8 @@ public:
     }
 
 private:
-    qint32 m_chatId;
     qint64 m_accessHash;
     InputEncryptedChatType m_classType;
+    qint32 m_chatId;
 };
 #endif // INPUTENCRYPTEDCHAT_H

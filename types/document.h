@@ -73,7 +73,7 @@ public:
     qint32 size() const {
         return m_size;
     }
-    void setThumb(PhotoSize thumb) {
+    void setThumb(const PhotoSize &thumb) {
         m_thumb = thumb;
     }
     PhotoSize thumb() const {
@@ -85,7 +85,7 @@ public:
     qint32 dcId() const {
         return m_dcId;
     }
-    void setAttributes(QList<DocumentAttribute> attrs) {
+    void setAttributes(const QList<DocumentAttribute> &attrs) {
         m_attributes = attrs;
     }
     QList<DocumentAttribute> attributes() const {
@@ -99,14 +99,14 @@ public:
     }
 
 private:
-    qint64 m_id;
-    qint32 m_dcId;
+    QList<DocumentAttribute> m_attributes;
     QString m_mimeType;
     PhotoSize m_thumb;
-    qint32 m_date;
     qint64 m_accessHash;
-    qint32 m_size;
-    QList<DocumentAttribute> m_attributes;
+    qint64 m_id;
     DocumentType m_classType;
+    qint32 m_dcId;
+    qint32 m_date;
+    qint32 m_size;
 };
 #endif // DOCUMENT_H
