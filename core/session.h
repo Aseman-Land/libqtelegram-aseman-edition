@@ -40,7 +40,7 @@ public:
     ~Session();
 
     DC *dc();
-    qint64 sendQuery(OutboundPkt &outboundPkt, QueryMethods *methods, const QVariant &extra = QVariant(), const QString &name = QString());
+    qint64 sendQuery(OutboundPkt &outboundPkt, QueryMethods *methods, QVariant extra = QVariant(), QString name = QString());
 
     inline qint64 sessionId() { return m_sessionId; }
     inline bool initConnectionNeeded() { return m_initConnectionNeeded; }
@@ -63,10 +63,9 @@ Q_SIGNALS:
     void updatesTooLong();
     void updateShortMessage(qint32 id, qint32 userId, const QString &message, qint32 pts, qint32 pts_count, qint32 date, qint32 fwd_from_id, qint32 fwd_date, qint32 reply_to_msg_id, bool unread, bool out);
     void updateShortChatMessage(qint32 id, qint32 fromId, qint32 chatId, const QString &message, qint32 pts, qint32 pts_count, qint32 date, qint32 fwd_from_id, qint32 fwd_date, qint32 reply_to_msg_id, bool unread, bool out);
-    void updateShort(const Update &update, qint32 date);
-    void updatesCombined(const QList<Update> &updates, const QList<User> &users, const QList<Chat> &chats, qint32 date, qint32 seqStart, qint32 seq);
-    void updates(const QList<Update> &udts, const QList<User> &users, const QList<Chat> &chats, qint32 date, qint32 seq);
-
+    void updateShort(Update update, qint32 date);
+    void updatesCombined(QList<Update> updates, QList<User> users, QList<Chat> chats, qint32 date, qint32 seqStart, qint32 seq);
+    void updates(QList<Update> udts, QList<User> users, QList<Chat> chats, qint32 date, qint32 seq);
 
 private:
     struct EncryptedMsg {
