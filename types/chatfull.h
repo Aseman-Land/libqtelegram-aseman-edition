@@ -35,10 +35,10 @@ public:
 
     ChatFull() :
         m_participants(ChatParticipants::typeChatParticipants),
-        m_chatPhoto(Photo::typePhotoEmpty),
-        m_id(0),
         m_notifySettings(PeerNotifySettings::typePeerNotifySettingsEmpty),
-        m_classType(typeChatFull) {}
+        m_chatPhoto(Photo::typePhotoEmpty),        
+        m_classType(typeChatFull),
+        m_id(0) {}
 
     void setId(qint32 id) {
         m_id = id;

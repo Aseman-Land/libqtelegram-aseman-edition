@@ -34,13 +34,13 @@ public:
     };
 
     PhotoSize(PhotoSizeType classType = typePhotoSizeEmpty) :
-        m_h(0),
         m_type(""),
         m_bytes(""),
         m_location(FileLocation::typeFileLocationUnavailable),
+        m_classType(classType),
+        m_h(0),
         m_size(0),
-        m_w(0),
-        m_classType(classType) {}
+        m_w(0) {}
 
     void setType(const QString & type) {
         m_type = type;

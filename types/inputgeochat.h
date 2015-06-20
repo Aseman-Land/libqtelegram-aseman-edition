@@ -32,9 +32,9 @@ public:
     };
 
     InputGeoChat() :
-        m_chatId(0),
         m_accessHash(0),
-        m_classType(typeInputGeoChat) {}
+        m_classType(typeInputGeoChat),
+        m_chatId(0) {}
 
     void setChatId(qint32 chatId) {
         m_chatId = chatId;

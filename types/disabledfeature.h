@@ -26,6 +26,12 @@ public:
     QString description() const {
         return m_description;
     }
+    void setClassType(DisabledFeatureType classType) {
+        m_classType = classType;
+    }
+    DisabledFeatureType classType() const {
+        return m_classType;
+    }
 
 private:
     QString m_feature;

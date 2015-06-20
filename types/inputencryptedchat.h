@@ -32,9 +32,9 @@ public:
     };
 
     InputEncryptedChat() :
-        m_chatId(0),
         m_accessHash(0),
-        m_classType(typeInputEncryptedChat) {}
+        m_classType(typeInputEncryptedChat),
+        m_chatId(0) {}
 
     void setChatId(qint32 chatId) {
         m_chatId = chatId;

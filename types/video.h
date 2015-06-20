@@ -33,19 +33,19 @@ public:
     };
 
     Video(VideoType classType) :
-        m_id(0),
-        m_dcId(0),
         m_caption(""),
         m_mimeType(""),
-        m_date(0),
         m_thumb(PhotoSize::typePhotoSizeEmpty),
+        m_id(0),
+        m_accessHash(0),
+        m_classType(classType),
+        m_dcId(0),
+        m_date(0),
         m_duration(0),
         m_h(0),
         m_size(0),
-        m_accessHash(0),
         m_userId(0),
-        m_w(0),
-        m_classType(classType) {}
+        m_w(0) {}
 
     void setId(qint64 id) {
         m_id = id;

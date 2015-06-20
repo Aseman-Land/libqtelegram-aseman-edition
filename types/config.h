@@ -15,9 +15,10 @@ public:
     };
 
     Config() :
+        m_testMode(false),
+        m_classType(typeConfig),
         m_date(0),
         m_expires(0),
-        m_testMode(false),
         m_thisDc(0),
         m_chatSizeMax(0),
         m_broadcastSizeMax(0),
@@ -27,8 +28,7 @@ public:
         m_onlineCloudTimeoutMs(0),
         m_notifyCloudDelayMs(0),
         m_notifyDefaultDelayMs(0),
-        m_chatBigSize(0),
-        m_classType(typeConfig) {}
+        m_chatBigSize(0) {}
     ~Config() {}
 
     qint32 date() const {
