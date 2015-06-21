@@ -34,10 +34,10 @@ public:
        typeInputUserForeign = 0x655e74ff
     };
 
-    InputUser(InputUserType classType = typeInputUserEmpty) :
-        m_userId(0),
+    InputUser(InputUserType classType = typeInputUserEmpty) :        
         m_accessHash(0),
-        m_classType(classType) {}
+        m_classType(classType),
+        m_userId(0) {}
 
     void setUserId(qint32 userId) {
         m_userId = userId;

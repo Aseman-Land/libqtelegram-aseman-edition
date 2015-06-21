@@ -34,14 +34,14 @@ public:
     };
 
     Document(DocumentType classType) :
-        m_id(0),
-        m_dcId(0),
         m_mimeType(""),
         m_thumb(PhotoSize::typePhotoSizeEmpty),
-        m_date(0),
         m_accessHash(0),
-        m_size(0),
-        m_classType(classType) {}
+        m_id(0),
+        m_classType(classType),
+        m_dcId(0),
+        m_date(0),        
+        m_size(0) {}
 
     void setId(qint64 id) {
         m_id = id;

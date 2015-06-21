@@ -31,13 +31,12 @@ public:
        typeFileLocationUnavailable = 0x7c596b46
     };
 
-    FileLocation(FileLocationType classType = typeFileLocationUnavailable) :
-        m_localId(0),
+    FileLocation(FileLocationType classType = typeFileLocationUnavailable) :        
         m_secret(0),
+        m_volumeId(0),
+        m_classType(classType),
         m_dcId(0),
-        m_volumeId(0) {
-        m_classType = classType;
-    }
+        m_localId(0) {}
 
     bool operator==(const FileLocation &other) const {
         if (this->dcId() == other.dcId() &&

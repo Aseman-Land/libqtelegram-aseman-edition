@@ -32,9 +32,9 @@ public:
     };
 
     ImportedContact() :
-        m_userId(0),
         m_clientId(0),
-        m_classType(typeImportedContact) {}
+        m_classType(typeImportedContact),
+        m_userId(0) {}
 
     void setUserId(qint32 userId) {
         m_userId = userId;

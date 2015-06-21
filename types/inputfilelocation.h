@@ -38,10 +38,10 @@ public:
     InputFileLocation(InputFileLocationType classType = typeInputFileLocation) :
         m_id(0),
         m_secret(0),
-        m_localId(0),
         m_accessHash(0),
         m_volumeId(0),
-        m_classType(classType) {}
+        m_classType(classType),
+        m_localId(0) {}
 
     void setId(qint64 id) {
         m_id = id;

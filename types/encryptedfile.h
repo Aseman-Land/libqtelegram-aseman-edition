@@ -33,12 +33,12 @@ public:
     };
 
     EncryptedFile(EncryptedFileType classType = typeEncryptedFileEmpty) :
-        mDcId(0),
         mId(0),
-        mKeyFingerprint(0),
-        mSize(0),
         mAccessHash(0),
-        mClassType(classType) {}
+        mClassType(classType),
+        mDcId(0),
+        mKeyFingerprint(0),
+        mSize(0) {}
 
     void setId(qint64 id) {
         mId = id;

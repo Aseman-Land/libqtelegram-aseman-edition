@@ -35,12 +35,12 @@ public:
     };
 
     InputEncryptedFile(InputEncryptedFileType classType) :
-        m_md5Checksum(""),
-        m_parts(0),
         m_id(0),
-        m_keyFingerprint(0),
         m_accessHash(0),
-        m_classType(classType) {}
+        m_md5Checksum(""),
+        m_classType(classType),
+        m_keyFingerprint(0),
+        m_parts(0) {}
 
     void setId(qint64 id) {
         m_id = id;
