@@ -92,17 +92,17 @@ public:
     Settings(const Settings &); // hide copy constructor
     Settings& operator=(const Settings &); // hide asignment
 
-    static void setDefaultHostAddress(const QString &host);
-    static void setDefaultHostPort(qint16 port);
-    static void setDefaultHostDcId(qint16 dcId);
-    static void setAppId(qint32 appId);
-    static void setAppHash(const QString &appHash);
+    void setDefaultHostAddress(const QString &host);
+    void setDefaultHostPort(qint16 port);
+    void setDefaultHostDcId(qint16 dcId);
+    void setAppId(qint32 appId);
+    void setAppHash(const QString &appHash);
 
-    static QString defaultHostAddress();
-    static qint16 defaultHostPort();
-    static qint16 defaultHostDcId();
-    static qint32 appId();
-    static QString appHash();
+    QString defaultHostAddress();
+    qint16 defaultHostPort();
+    qint16 defaultHostDcId();
+    qint32 appId();
+    QString appHash();
 
     bool loadSettings(const QString &phoneNumber, const QString &configPath = DEFAULT_CONFIG_PATH, const QString &publicKeyFile = DEFAULT_PUBLIC_KEY_FILE);
     void writeAuthFile();
@@ -137,6 +137,12 @@ public:
 private:
     void readAuthFile();
     void readSecretFile();
+
+    QString m_defaultHostAddress;
+    qint16 m_defaultHostPort;
+    qint16 m_defaultHostDcId;
+    qint32 m_appId;
+    QString m_appHash;
 
     bool m_workingDcConfigAvailabe;
     qint64 m_pkFingerprint;

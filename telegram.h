@@ -43,20 +43,15 @@ class LIBQTELEGRAMSHARED_EXPORT Telegram : public QObject
 {
     Q_OBJECT
 public:
-    Telegram(const QString &phoneNumber, const QString &configPath = QString("~/.telegram"), const QString &publicKeyFile = QString("tg.pub"));
+    Telegram(const QString &defaultHostAddress, qint16 defaultHostPort, qint16 defaultHostDcId, qint32 appId, const QString &appHash,
+             const QString &phoneNumber, const QString &configPath = QString("~/.telegram"), const QString &publicKeyFile = QString("tg.pub"));
     ~Telegram();
 
-    static void setDefaultHostAddress(const QString &host);
-    static void setDefaultHostPort(qint16 port);
-    static void setDefaultHostDcId(qint16 dcId);
-    static void setAppId(qint32 appId);
-    static void setAppHash(const QString &appHash);
-
-    static QString defaultHostAddress();
-    static qint16 defaultHostPort();
-    static qint16 defaultHostDcId();
-    static qint32 appId();
-    static QString appHash();
+    QString defaultHostAddress();
+    qint16 defaultHostPort();
+    qint16 defaultHostDcId();
+    qint32 appId();
+    QString appHash();
 
     Settings *settings() const;
     CryptoUtils *crypto() const;
@@ -404,6 +399,7 @@ private:
     FileHandler::Ptr mFileHandler;
 
     QString m_phoneCodeHash;
+    QString mSettingsId;
 
     // cached contacts
     QList<Contact> m_cachedContacts;

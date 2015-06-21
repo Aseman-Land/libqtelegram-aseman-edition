@@ -172,7 +172,7 @@ void Encrypter::appendDecryptedMessageMedia(const DecryptedMessageMedia &media) 
 void Encrypter::appendDecryptedMessageAction(const DecryptedMessageAction &action) {
     DecryptedMessageAction::DecryptedMessageActionType x = action.classType();
     appendInt(x);
-    switch (x) {
+    switch (static_cast<int>(x)) {
     case DecryptedMessageAction::typeDecryptedMessageActionSetMessageTTL: {
         appendInt(action.ttlSeconds());
         break;

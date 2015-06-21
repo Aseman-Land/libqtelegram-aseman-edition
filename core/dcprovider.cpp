@@ -98,7 +98,7 @@ void DcProvider::initialize() {
         mDcs.insert(dc->id(), dc);
     }
 
-    qint32 defaultDcId = mSettings->testMode() ? TEST_DEFAULT_DC_ID : Settings::defaultHostDcId();
+    qint32 defaultDcId = mSettings->testMode() ? TEST_DEFAULT_DC_ID : mSettings->defaultHostDcId();
 
     // 2.- connect to working DC
     if (!mSettings->workingDcConfigAvailabe()) {
@@ -108,8 +108,8 @@ void DcProvider::initialize() {
         }
         // if dc hasn't key created, create it
         if (mDcs[defaultDcId]->state() < DC::authKeyCreated) {
-            QString defaultDcHost = Settings::defaultHostAddress();
-            qint32 defaultDcPort = Settings::defaultHostPort();
+            QString defaultDcHost = mSettings->defaultHostAddress();
+            qint32 defaultDcPort = mSettings->defaultHostPort();
             if (mSettings->testMode()) {
                 defaultDcHost = TEST_DEFAULT_DC_HOST;
                 defaultDcPort = TEST_DEFAULT_DC_PORT;

@@ -44,7 +44,7 @@ Q_LOGGING_CATEGORY(TG_LIB_SECRET, "tg.lib.secret")
 QHash<QString, Settings*> qtelegram_settings_per_number;
 QHash<QString, CryptoUtils*> qtelegram_cryptos_per_number;
 
-Telegram::Telegram(const QString &phoneNumber, const QString &configPath, const QString &publicKeyFile) :
+Telegram::Telegram(const QString &defaultHostAddress, qint16 defaultHostPort, qint16 defaultHostDcId, qint32 appId, const QString &appHash, const QString &phoneNumber, const QString &configPath, const QString &publicKeyFile) :
     mLibraryState(LoggedOut),
     mLastRetryType(NotRetry),
     mSlept(false),
@@ -54,10 +54,18 @@ Telegram::Telegram(const QString &phoneNumber, const QString &configPath, const 
     // http://blog.qt.digia.com/blog/2014/03/11/qt-weekly-1-categorized-logging/
     QLoggingCategory::setFilterRules(QString(qgetenv("QT_LOGGING_RULES")));
 
-    mSettings = qtelegram_settings_per_number.value(phoneNumber);
+    mSettingsId = defaultHostAddress + ":" + QString::number(defaultHostPort) + ":" + configPath +
+            ":" + QString::number(defaultHostPort) + ":" + QString::number(appId) + ":" + appHash +
+            phoneNumber;
+    mSettings = qtelegram_settings_per_number.value(mSettingsId);
     if(!mSettings) {
         mSettings = new Settings();
-        qtelegram_settings_per_number[phoneNumber] = mSettings;
+        mSettings->setAppHash(appHash);
+        mSettings->setAppId(appId);
+        mSettings->setDefaultHostAddress(defaultHostAddress);
+        mSettings->setDefaultHostDcId(defaultHostDcId);
+        mSettings->setDefaultHostPort(defaultHostPort);
+        qtelegram_settings_per_number[mSettingsId] = mSettings;
     }
 
     // load settings
@@ -131,54 +139,29 @@ void Telegram::init() {
 Telegram::~Telegram() {
 }
 
-void Telegram::setDefaultHostAddress(const QString &host)
-{
-    Settings::setDefaultHostAddress(host);
-}
-
-void Telegram::setDefaultHostPort(qint16 port)
-{
-    Settings::setDefaultHostPort(port);
-}
-
-void Telegram::setDefaultHostDcId(qint16 dcId)
-{
-    Settings::setDefaultHostDcId(dcId);
-}
-
-void Telegram::setAppId(qint32 appId)
-{
-    Settings::setAppId(appId);
-}
-
-void Telegram::setAppHash(const QString &appHash)
-{
-    Settings::setAppHash(appHash);
-}
-
 QString Telegram::defaultHostAddress()
 {
-    return Settings::defaultHostAddress();
+    return mSettings->defaultHostAddress();
 }
 
 qint16 Telegram::defaultHostPort()
 {
-    return Settings::defaultHostPort();
+    return mSettings->defaultHostPort();
 }
 
 qint16 Telegram::defaultHostDcId()
 {
-    return Settings::defaultHostDcId();
+    return mSettings->defaultHostDcId();
 }
 
 qint32 Telegram::appId()
 {
-    return Settings::appId();
+    return mSettings->appId();
 }
 
 QString Telegram::appHash()
 {
-    return Settings::appHash();
+    return mSettings->appHash();
 }
 
 Settings *Telegram::settings() const
@@ -1187,7 +1170,7 @@ qint64 Telegram::authCheckPhone(const QString &phoneNumber) {
     return mApi->authCheckPhone(phoneNumber);
 }
 qint64 Telegram::authSendCode() {
-    return mApi->authSendCode(mSettings->phoneNumber(), 0, Settings::appId(), Settings::appHash(), LANG_CODE);
+    return mApi->authSendCode(mSettings->phoneNumber(), 0, mSettings->appId(), mSettings->appHash(), LANG_CODE);
 }
 
 qint64 Telegram::authSendSms() {

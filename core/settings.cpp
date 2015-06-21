@@ -35,13 +35,10 @@
 
 Q_LOGGING_CATEGORY(TG_CORE_SETTINGS, "tg.core.settings")
 
-QString lqt_defaultHostAddress_static;
-qint16 lqt_defaultHostPort_static = 0;
-qint16 lqt_defaultHostDcId_static = 0;
-qint32 lqt_appId_static = 0;
-QString lqt_appHash_static;
-
 Settings::Settings() :
+    m_defaultHostPort(0),
+    m_defaultHostDcId(0),
+    m_appId(0),
     m_workingDcConfigAvailabe(false),
     m_pubKey(0),
     m_phoneNumber(""),
@@ -56,52 +53,52 @@ Settings::~Settings() {
 
 void Settings::setDefaultHostAddress(const QString &host)
 {
-    lqt_defaultHostAddress_static = host;
+    m_defaultHostAddress = host;
 }
 
 void Settings::setDefaultHostPort(qint16 port)
 {
-    lqt_defaultHostPort_static = port;
+    m_defaultHostPort = port;
 }
 
 void Settings::setDefaultHostDcId(qint16 dcId)
 {
-    lqt_defaultHostDcId_static = dcId;
+    m_defaultHostDcId = dcId;
 }
 
 void Settings::setAppId(qint32 appId)
 {
-    lqt_appId_static = appId;
+    m_appId = appId;
 }
 
 void Settings::setAppHash(const QString &appHash)
 {
-    lqt_appHash_static = appHash;
+    m_appHash = appHash;
 }
 
 QString Settings::defaultHostAddress()
 {
-    return lqt_defaultHostAddress_static;
+    return m_defaultHostAddress;
 }
 
 qint16 Settings::defaultHostPort()
 {
-    return lqt_defaultHostPort_static;
+    return m_defaultHostPort;
 }
 
 qint16 Settings::defaultHostDcId()
 {
-    return lqt_defaultHostDcId_static;
+    return m_defaultHostDcId;
 }
 
 qint32 Settings::appId()
 {
-    return lqt_appId_static;
+    return m_appId;
 }
 
 QString Settings::appHash()
 {
-    return lqt_appHash_static;
+    return m_appHash;
 }
 
 bool Settings::loadSettings(const QString &phoneNumber, const QString &baseConfigDirectory, const QString &publicKeyFile) {

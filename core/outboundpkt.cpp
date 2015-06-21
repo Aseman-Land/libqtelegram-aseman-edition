@@ -440,7 +440,7 @@ void OutboundPkt::initConnection() {
     appendInt(TL_InvokeWithLayer25);
     appendInt(LAYER);
     appendInt(TL_InitConnection);
-    appendInt(Settings::appId());
+    appendInt(mSettings->appId());
     appendQString(Utils::getDeviceModel());
     appendQString(Utils::getSystemVersion());
     appendQString(Utils::getAppVersion());
