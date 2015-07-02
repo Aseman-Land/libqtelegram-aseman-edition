@@ -92,7 +92,7 @@ void Session::processConnected() {
 void Session::processRpcAnswer(QByteArray response) {
     qint32 len = response.length();
 
-    qCDebug(TG_CORE_SESSION) << "connection #" << socketDescriptor() << "received rpc answer" << op << "with" << len << "content bytes by session" << QString::number(m_sessionId, 16);
+    qCDebug(TG_CORE_SESSION) << "connection #" << socketDescriptor() << "received rpc answer with" << len << "content bytes by session" << QString::number(m_sessionId, 16);
 
     InboundPkt p(response.data(), len);
     processRpcMessage(p);
