@@ -176,6 +176,10 @@ INSTALL_HEADERS = $$HEADERS
 include(qmake/headerinstall.pri)
 
 target = $$TARGET
-target.path = $$PREFIX/lib/$$LIB_PATH
+isEmpty(LIBDIR) {
+    target.path = $$PREFIX/lib/$$LIB_PATH
+} else {
+    target.path = $$LIBDIR
+}
 
 INSTALLS += target
