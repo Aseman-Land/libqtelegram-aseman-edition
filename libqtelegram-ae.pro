@@ -13,16 +13,7 @@ win32 {
     LIBS += -L$${OPENSSL_LIB_DIR} -lssleay32 -lcrypto -lz
     INCLUDEPATH += $${OPENSSL_INCLUDE_PATH}
 } else {
-macx {
-    isEmpty(OPENSSL_LIB_DIR): OPENSSL_LIB_DIR = $${DESTDIR}
-    isEmpty(OPENSSL_INCLUDE_PATH): OPENSSL_INCLUDE_PATH = $${DESTDIR}/include/openssl
-
-    CONFIG += staticlib
-    QT += macextras
-    LIBS += -lssl -lcrypto -lz
-    INCLUDEPATH += /usr/include/openssl
-} else {
-    isEmpty(OPENSSL_INCLUDE_PATH): OPENSSL_INCLUDE_PATH = /usr/include/openssl
+    isEmpty(OPENSSL_INCLUDE_PATH): OPENSSL_INCLUDE_PATH = /usr/include/openssl /usr/local/include/openssl
     isEmpty(OPENSSL_LIB_DIR) {
         LIBS += -lssl -lcrypto -lz
     } else {
@@ -30,7 +21,12 @@ macx {
     }
 
     INCLUDEPATH += $${OPENSSL_INCLUDE_PATH}
-}
+
+    macx {
+        CONFIG += staticlib
+        QT += macextras
+    } else {
+    }
 }
 
 SOURCES += \
