@@ -23,8 +23,8 @@
 
 #include <exception>
 #include <stdexcept>
-#include <openssl/sha.h>
-#include <openssl/md5.h>
+#include <sha.h>
+#include <md5.h>
 
 #include <QDebug>
 #include <QLoggingCategory>

@@ -20,8 +20,8 @@
 #include "util/tlvalues.h"
 #include "util/utils.h"
 #include "core/settings.h"
-#include <openssl/sha.h>
-#include <openssl/aes.h>
+#include <sha.h>
+#include <aes.h>
 
 Q_LOGGING_CATEGORY(TG_SECRET_DECRYPTER, "tg.secret.decrypter")
 

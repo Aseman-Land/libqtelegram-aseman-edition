@@ -20,9 +20,9 @@
  */
 
 #include "utils.h"
-#include <openssl/rand.h>
-#include <openssl/pem.h>
-#include <openssl/err.h>
+#include <rand.h>
+#include <pem.h>
+#include <err.h>
 #include <zlib.h>
 #if (QT_VERSION < QT_VERSION_CHECK(5, 4, 0))
 #include <sys/utsname.h>

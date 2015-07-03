@@ -7,18 +7,29 @@ TEMPLATE = lib
 DEFINES += LIBQTELEGRAM_LIBRARY
 
 win32 {
-    LIBS += -LD:/Projects/cutegram-deps/lib -lssleay32 -lcrypto -lz
-    INCLUDEPATH += D:/Projects/cutegram-deps/include
-    DESTDIR = D:/Projects/build/Cutegram-Desktop_Qt_5_4_0_MinGW_32bit-Release/build
+    isEmpty(OPENSSL_LIB_DIR): OPENSSL_LIB_DIR = $${DESTDIR}
+    isEmpty(OPENSSL_INCLUDE_PATH): OPENSSL_INCLUDE_PATH = $${DESTDIR}/include/openssl
+
+    LIBS += -L$${OPENSSL_LIB_DIR} -lssleay32 -lcrypto -lz
+    INCLUDEPATH += $${OPENSSL_INCLUDE_PATH}
 } else {
 macx {
+    isEmpty(OPENSSL_LIB_DIR): OPENSSL_LIB_DIR = $${DESTDIR}
+    isEmpty(OPENSSL_INCLUDE_PATH): OPENSSL_INCLUDE_PATH = $${DESTDIR}/include/openssl
+
     CONFIG += staticlib
     QT += macextras
     LIBS += -lssl -lcrypto -lz
-    INCLUDEPATH += /usr/include/
+    INCLUDEPATH += /usr/include/openssl
 } else {
-    LIBS += -lssl -lcrypto -lz
-    INCLUDEPATH += /usr/include/
+    isEmpty(OPENSSL_INCLUDE_PATH): OPENSSL_INCLUDE_PATH = /usr/include/openssl
+    isEmpty(OPENSSL_LIB_DIR) {
+        LIBS += -lssl -lcrypto -lz
+    } else {
+        LIBS += -L$${OPENSSL_LIB_DIR} -lssl -lcrypto -lz
+    }
+
+    INCLUDEPATH += $${OPENSSL_INCLUDE_PATH}
 }
 }
 

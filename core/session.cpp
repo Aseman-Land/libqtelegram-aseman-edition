@@ -20,8 +20,8 @@
  */
 
 #include "session.h"
-#include "openssl/rand.h"
-#include "openssl/sha.h"
+#include <rand.h>
+#include <sha.h>
 #include <QDateTime>
 #include "util/tlvalues.h"
 
