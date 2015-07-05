@@ -1645,7 +1645,7 @@ qint64 Telegram::messagesForwardMessage(const InputPeer &peer, qint32 msgId) {
     return mApi->messagesForwardMessage(peer, msgId, randomId);
 }
 
-qint64 Telegram::messagesForwardMessages(const InputPeer &peer, const QList<qint32> &msgIds, const QList<qint32> &randomIds) {
+qint64 Telegram::messagesForwardMessages(const InputPeer &peer, const QList<qint32> &msgIds, const QList<qint64> &randomIds) {
     return mApi->messagesForwardMessages(peer, msgIds, randomIds);
 }
 
