@@ -52,7 +52,7 @@
 
 // divide file bytes into parts >= 128 kbytes. This is the minimum block size to ensurance receiving complete the users
 // profile and chat "photoBig" files.
-#define BLOCK (16 * 1024)
+#define BLOCK (32 * 1024)
 
 #define RECONNECT_TIMEOUT 5000 // in case session hasn't connection, try to reconnect every 5 seconds
 

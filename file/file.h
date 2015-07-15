@@ -65,6 +65,7 @@ public:
     qint64 length() const { return mLength; }
     qint64 partLength() const { return mPartLength; }
 
+    void setPartLength(qint64 l) { mPartLength = l; }
     void setEncrypted(bool encrypted) { mEncrypted = encrypted; }
     void setKey(const QByteArray &key) { memcpy(mKey, key.data(), 32); }
     void setIv(const QByteArray &iv) { memcpy(mIv, iv.data(), 32); }
