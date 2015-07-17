@@ -29,13 +29,12 @@ class Photo
 public:
 
     enum PhotoType {
-       typePhoto = 0x22b56751,
+       typePhoto = 0xc3838076,
        typePhotoEmpty = 0x2331b22d
     };
 
     Photo(PhotoType classType = typePhotoEmpty) :
         m_id(0),
-        m_caption(""),
         m_date(0),
         m_geo(GeoPoint::typeGeoPointEmpty),
         m_accessHash(0),
@@ -66,12 +65,6 @@ public:
     qint32 date() const {
         return m_date;
     }
-    void setCaption(const QString & caption) {
-        m_caption = caption;
-    }
-    QString caption() const {
-        return m_caption;
-    }
     void setGeo(const GeoPoint &geo) {
         m_geo = geo;
     }
@@ -93,7 +86,6 @@ public:
 
 private:
     qint64 m_id;
-    QString m_caption;
     qint32 m_date;
     QList<PhotoSize> m_sizes;
     GeoPoint m_geo;

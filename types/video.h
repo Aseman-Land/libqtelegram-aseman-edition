@@ -29,12 +29,10 @@ public:
 
     enum VideoType {
        typeVideoEmpty = 0xc10658a8,
-       typeVideo = 0x388fa391
+       typeVideo = 0xee9f4a4d
     };
 
     Video(VideoType classType) :
-        m_caption(""),
-        m_mimeType(""),
         m_thumb(PhotoSize::typePhotoSizeEmpty),
         m_id(0),
         m_accessHash(0),
@@ -71,23 +69,11 @@ public:
     qint32 date() const {
         return m_date;
     }
-    void setCaption(const QString & caption) {
-        m_caption = caption;
-    }
-    QString caption() const {
-        return m_caption;
-    }
     void setDuration(qint32 duration) {
         m_duration = duration;
     }
     qint32 duration() const {
         return m_duration;
-    }
-    void setMimeType(const QString & mimeType) {
-        m_mimeType = mimeType;
-    }
-    QString mimeType() const {
-        return m_mimeType;
     }
     void setSize(qint32 size) {
         m_size = size;
@@ -127,8 +113,6 @@ public:
     }
 
 private:
-    QString m_caption;
-    QString m_mimeType;
     PhotoSize m_thumb;
     qint64 m_id;
     qint64 m_accessHash;

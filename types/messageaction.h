@@ -36,12 +36,14 @@ public:
        typeMessageActionGeoChatCreate = 0x6f038ebc,
        typeMessageActionChatDeleteUser = 0xb2ae9b0c,
        typeMessageActionChatAddUser = 0x5e3cfc4b,
-       typeMessageActionGeoChatCheckin = 0xc7d53de
+       typeMessageActionGeoChatCheckin = 0xc7d53de,
+       typeMessageActionChatJoinedByLink = 0xf89cf5e8
     };
 
     MessageAction(MessageActionType classType = typeMessageActionEmpty) :
         m_address(""),
         m_userId(0),
+        m_inviterId(0),
         m_photo(Photo::typePhotoEmpty),
         m_title(""),
         m_classType(classType) {}
@@ -76,6 +78,12 @@ public:
     qint32 userId() const {
         return m_userId;
     }
+    qint32 inviterId() const {
+        return m_inviterId;
+    }
+    void setInviterId(const qint32 &inviterId) {
+        m_inviterId = inviterId;
+    }
     void setClassType(MessageActionType classType) {
         m_classType = classType;
     }
@@ -86,9 +94,11 @@ public:
 private:
     QString m_address;
     qint32 m_userId;
+    qint32 m_inviterId;
     Photo m_photo;
     QString m_title;
     QList<qint32> m_users;
     MessageActionType m_classType;
 };
 #endif // MESSAGEACTION_H
+

@@ -7,8 +7,8 @@ class AccountPassword
 {
 public:
     enum AccountPasswordType {
-        typeAccountNoPassword = 0x5770e7a9,
-        typeAccountPassword = 0x739e5f72
+        typeAccountNoPassword = 0x96dabc18,
+        typeAccountPassword = 0x7c18141c
     };
 
     AccountPassword(AccountPasswordType type) :
@@ -33,6 +33,18 @@ public:
     void setHint(const QString &hint) {
         m_hint = hint;
     }
+    QString emailUnconfirmedPattern() const {
+        return m_emailUnconfirmedPattern;
+    }
+    void setEmailUnconfirmedPattern(const QString &emailUnconfirmedPattern) {
+        m_emailUnconfirmedPattern = emailUnconfirmedPattern;
+    }
+    bool hasRecovery() const {
+        return m_hasRecovery;
+    }
+    void setHasRecovery(bool hasRecovery) {
+        m_hasRecovery = hasRecovery;
+    }
     void setClassType(AccountPasswordType classType) {
         m_classType = classType;
     }
@@ -44,6 +56,8 @@ private:
     QByteArray m_newSalt;
     QByteArray m_currentSalt;
     QString m_hint;
+    QString m_emailUnconfirmedPattern;
+    bool m_hasRecovery;
     AccountPasswordType m_classType;
 };
 

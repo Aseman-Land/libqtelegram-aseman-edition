@@ -185,9 +185,11 @@ void OutboundPkt::appendInputMedia(const InputMedia &media) {
         break;
     case InputMedia::typeInputMediaUploadedPhoto:
         appendInputFile(media.file());
+        appendQString(media.caption());
         break;
     case InputMedia::typeInputMediaPhoto:
         appendInputPhoto(media.photoId());
+        appendQString(media.caption());
         break;
     case InputMedia::typeInputMediaGeoPoint:
         appendInputGeoPoint(media.geoPoint());
@@ -202,7 +204,7 @@ void OutboundPkt::appendInputMedia(const InputMedia &media) {
         appendInt(media.duration());
         appendInt(media.w());
         appendInt(media.h());
-        appendQString(media.mimeType());
+        appendQString(media.caption());
         break;
     case InputMedia::typeInputMediaUploadedThumbVideo:
         appendInputFile(media.file());
@@ -210,10 +212,11 @@ void OutboundPkt::appendInputMedia(const InputMedia &media) {
         appendInt(media.duration());
         appendInt(media.w());
         appendInt(media.h());
-        appendQString(media.mimeType());
+        appendQString(media.caption());
         break;
     case InputMedia::typeInputMediaVideo:
         appendInputVideo(media.videoId());
+        appendQString(media.caption());
         break;
     case InputMedia::typeInputMediaUploadedAudio:
         appendInputFile(media.file());
@@ -248,6 +251,13 @@ void OutboundPkt::appendInputMedia(const InputMedia &media) {
         break;
     case InputMedia::typeInputMediaDocument:
         appendInputDocument(media.documentId());
+        break;
+    case InputMedia::typeInputMediaVenue:
+        appendInputGeoPoint(media.geoPoint());
+        appendQString(media.title());
+        appendQString(media.address());
+        appendQString(media.provider());
+        appendQString(media.venueId());
         break;
     }
 }

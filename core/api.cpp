@@ -1121,6 +1121,7 @@ void Api::onMessagesSendMessageAnswer(Query *q, InboundPkt &inboundPkt) {
     ASSERT(x == (qint32)TL_MessagesSentMessage || x == (qint32)TL_MessagesSentMessageLink);
     qint32 id = inboundPkt.fetchInt();
     qint32 date = inboundPkt.fetchInt();
+    MessageMedia media = inboundPkt.fetchMessageMedia();
     qint32 pts = inboundPkt.fetchInt();
     qint32 pts_count = inboundPkt.fetchInt();
     if (x == (qint32)TL_MessagesSentMessageLink) {
@@ -1131,9 +1132,9 @@ void Api::onMessagesSendMessageAnswer(Query *q, InboundPkt &inboundPkt) {
             links.append(inboundPkt.fetchContactsLink());
         }
         qint32 seq = inboundPkt.fetchInt();
-        Q_EMIT messagesSentMessageLink(q->msgId(), id, date, pts, pts_count, seq, links);
+        Q_EMIT messagesSentMessageLink(q->msgId(), id, date, media, pts, pts_count, seq, links);
     } else {
-        Q_EMIT messagesSentMessage(q->msgId(), id, date, pts, pts_count);
+        Q_EMIT messagesSentMessage(q->msgId(), id, date, media, pts, pts_count);
     }
 }
 

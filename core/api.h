@@ -233,8 +233,8 @@ Q_SIGNALS:
     void contactsBlocked(qint64 msgId, const QList<ContactBlocked> &blocked, const QList<User> &users);
     void contactsBlockedSlice(qint64 msgId, qint32 count, const QList<ContactBlocked> &blocked, const QList<User> &users);
     // Messages
-    void messagesSentMessage(qint64 msgId, qint32 id, qint32 date, qint32 pts, qint32 pts_count, qint32 seq = 0);
-    void messagesSentMessageLink(qint64 msgId, qint32 id, qint32 date, qint32 pts, qint32 pts_count, qint32 seq, const QList<ContactsLink> &links);
+    void messagesSentMessage(qint64 msgId, qint32 id, qint32 date, const MessageMedia &media, qint32 pts, qint32 pts_count, qint32 seq = 0);
+    void messagesSentMessageLink(qint64 msgId, qint32 id, qint32 date, const MessageMedia &media, qint32 pts, qint32 pts_count, qint32 seq, const QList<ContactsLink> &links);
     void messagesSentMediaStatedMessage(qint64 msgId, const Message &message, const QList<Chat> &chats, const QList<User> &users, qint32 pts, qint32 pts_count);
     void messagesSentMediaStatedMessageLink(qint64 msgId, const Message &message, const QList<Chat> &chats, const QList<User> &users, const QList<ContactsLink> &links, qint32 pts, qint32 pts_count, qint32 seq);
     void messagesSetTypingResult(qint64 msgId, bool ok);

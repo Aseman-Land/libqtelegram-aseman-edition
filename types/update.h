@@ -71,7 +71,9 @@ public:
        typeUpdatePrivacy = 0xee3b272a,
        typeUpdateUserPhone = 0x12b9417b,
        typeUpdateReadHistoryInbox = 0x9961fd5c,
-       typeUpdateReadHistoryOutbox = 0x2f2f21bf
+       typeUpdateReadHistoryOutbox = 0x2f2f21bf,
+       typeUpdateWebPage = 0x2cc36971,
+       typeUpdateReadMessagesContents = 0x68c13933
     };
 
     Update(UpdateType classType = typeUpdateInvalid) :
@@ -366,6 +368,13 @@ public:
     QString phone() const {
         return mPhone;
     }
+
+    WebPage webPage() const {
+        return mWebPage;
+    }
+    void setWebPage(const WebPage &webPage) {
+        mWebPage = webPage;
+    }
     UpdateType classType() const {
         return mClassType;
     }
@@ -413,6 +422,7 @@ private:
     PrivacyKey mKey;
     QList<PrivacyRule> mRules;
     QString mPhone;
+    WebPage mWebPage;
     UpdateType mClassType;
 };
 #endif // UPDATE_H

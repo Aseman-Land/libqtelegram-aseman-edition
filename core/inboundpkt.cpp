@@ -414,7 +414,6 @@ Photo InboundPkt::fetchPhoto() {
         photo.setAccessHash(fetchLong());
         photo.setUserId(fetchInt());
         photo.setDate(fetchInt());
-        photo.setCaption(fetchQString());
         photo.setGeo(fetchGeoPoint());
         ASSERT(fetchInt() == (qint32)TL_Vector);
         qint32 n = fetchInt();
@@ -454,14 +453,18 @@ MessageMedia InboundPkt::fetchMessageMedia() {
              x == (qint32)MessageMedia::typeMessageMediaContact ||
              x == (qint32)MessageMedia::typeMessageMediaUnsupported ||
              x == (qint32)MessageMedia::typeMessageMediaDocument ||
-             x == (qint32)MessageMedia::typeMessageMediaAudio);
+             x == (qint32)MessageMedia::typeMessageMediaAudio ||
+             x == (qint32)MessageMedia::typeMessageMediaWebPage ||
+             x == (qint32)MessageMedia::typeMessageMediaVenue);
     MessageMedia media((MessageMedia::MessageMediaType)x);
     switch (x) {
     case MessageMedia::typeMessageMediaPhoto:
         media.setPhoto(fetchPhoto());
+        media.setCaption(fetchQString());
         break;
     case MessageMedia::typeMessageMediaVideo:
         media.setVideo(fetchVideo());
+        media.setCaption(fetchQString());
         break;
     case MessageMedia::typeMessageMediaGeo:
         media.setGeo(fetchGeoPoint());
@@ -480,6 +483,16 @@ MessageMedia InboundPkt::fetchMessageMedia() {
     case MessageMedia::typeMessageMediaAudio:
         media.setAudio(fetchAudio());
         break;
+    case MessageMedia::typeMessageMediaWebPage:
+        media.setWebpage(fetchWebPage());
+        break;
+    case MessageMedia::typeMessageMediaVenue:
+        media.setGeo(fetchGeoPoint());
+        media.setTitle(fetchQString());
+        media.setAddress(fetchQString());
+        media.setProvider(fetchQString());
+        media.setVenueId(fetchQString());
+        break;
     }
     return media;
 }
@@ -493,9 +506,7 @@ Video InboundPkt::fetchVideo() {
         video.setAccessHash(fetchLong());
         video.setUserId(fetchInt());
         video.setDate(fetchInt());
-        video.setCaption(fetchQString());
         video.setDuration(fetchInt());
-        video.setMimeType(fetchQString());
         video.setSize(fetchInt());
         video.setThumb(fetchPhotoSize());
         video.setDcId(fetchInt());
@@ -576,6 +587,70 @@ Audio InboundPkt::fetchAudio() {
         audio.setDcId(fetchInt());
     }
     return audio;
+}
+
+WebPage InboundPkt::fetchWebPage()
+{
+    qint32 x = fetchInt();
+    ASSERT(x == (qint32)WebPage::typeWebPage ||
+           x == (qint32)WebPage::typeWebPageEmpty ||
+           x == (qint32)WebPage::typeWebPagePending );
+
+    WebPage web((WebPage::WebPageType)x);
+    web.setId(fetchLong());
+    if (x == (qint32)WebPage::typeWebPagePending) {
+        web.setDate(fetchInt());
+    }
+    if (x == (qint32)WebPage::typeWebPage) {
+        int flags = fetchInt();
+        web.setUrl(fetchQString());
+        web.setDisplayUrl(fetchQString());
+        if (flags & (1<<0))
+            web.setType(fetchQString());
+        if (flags & (1<<1))
+            web.setSiteName(fetchQString());
+        if (flags & (1<<2))
+            web.setTitle(fetchQString());
+        if (flags & (1<<3))
+            web.setDescription(fetchQString());
+        if (flags & (1<<4))
+            web.setPhoto(fetchPhoto());
+        if (flags & (1<<5)) {
+            web.setEmbedUrl(fetchQString());
+            web.setEmbedType(fetchQString());
+        }
+        if (flags & (1<<6)) {
+            web.setEmbedWidth(fetchInt());
+            web.setEmbedHeight(fetchInt());
+        }
+        if (flags & (1<<7))
+            web.setDuration(fetchInt());
+        if (flags & (1<<8))
+            web.setAuthor(fetchQString());
+    }
+
+    return web;
+}
+
+Authorization InboundPkt::fetchAuthorization()
+{
+    ASSERT(fetchInt() == (qint32)Authorization::typeAuthorization);
+    Authorization auth;
+    auth.setHash(fetchLong());
+    auth.setFlags(fetchInt());
+    auth.setDeviceModel(fetchQString());
+    auth.setPlatform(fetchQString());
+    auth.setSystemVersion(fetchQString());
+    auth.setApiId(fetchInt());
+    auth.setAppName(fetchQString());
+    auth.setAppVersion(fetchQString());
+    auth.setDateCreated(fetchInt());
+    auth.setDateActive(fetchInt());
+    auth.setIp(fetchQString());
+    auth.setCountry(fetchQString());
+    auth.setRegion(fetchQString());
+
+    return auth;
 }
 
 ChatParticipant InboundPkt::fetchChatParticipant() {
@@ -676,7 +751,9 @@ Update InboundPkt::fetchUpdate() {
              x == (qint32)Update::typeUpdatePrivacy ||
              x == (qint32)Update::typeUpdateUserPhone ||
              x == (qint32)Update::typeUpdateReadHistoryInbox ||
-             x == (qint32)Update::typeUpdateReadHistoryOutbox);
+             x == (qint32)Update::typeUpdateReadHistoryOutbox ||
+             x == (qint32)Update::typeUpdateWebPage ||
+             x == (qint32)Update::typeUpdateReadMessagesContents);
     Update update((Update::UpdateType)x);
     switch (x) {
     case Update::typeUpdateNewMessage:
@@ -688,6 +765,7 @@ Update InboundPkt::fetchUpdate() {
         update.setId(fetchInt());
         update.setRandomId(fetchLong());
         break;
+    case Update::typeUpdateReadMessagesContents:
     case Update::typeUpdateReadMessages:
     case Update::typeUpdateDeleteMessages:
     case Update::typeUpdateRestoreMessages: {
@@ -824,6 +902,9 @@ Update InboundPkt::fetchUpdate() {
         update.setMaxId(fetchInt());
         update.setPts(fetchInt());
         update.setPtsCount(fetchInt());
+        break;
+    case Update::typeUpdateWebPage:
+        update.setWebPage(fetchWebPage());
         break;
     default:
         qDebug() << "Update received in a not contemplated option";
@@ -1096,5 +1177,16 @@ SendMessageAction InboundPkt::fetchSendMessageAction() {
            x == (qint32)SendMessageAction::typeSendMessageGeoLocationAction ||
            x == (qint32)SendMessageAction::typeSendMessageChooseContactAction);
     SendMessageAction sendMessageAction((SendMessageAction::SendMessageActionType)x);
+
+    switch(x)
+    {
+    case SendMessageAction::typeSendMessageUploadVideoAction:
+    case SendMessageAction::typeSendMessageUploadAudioAction:
+    case SendMessageAction::typeSendMessageUploadPhotoAction:
+    case SendMessageAction::typeSendMessageUploadDocumentAction:
+        sendMessageAction.setProgress(fetchInt());
+        break;
+    }
+
     return sendMessageAction;
 }

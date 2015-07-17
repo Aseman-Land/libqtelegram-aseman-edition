@@ -2,6 +2,7 @@
 #define DOCUMENTATTRIBUTE
 
 #include <QtGlobal>
+#include "inputstickerset.h"
 
 class DocumentAttribute
 {
@@ -10,7 +11,7 @@ public:
     enum DocumentAttributeType {
         typeAttributeImageSize = 0x6c37c15c,
         typeAttributeAnimated = 0x11b58939,
-        typeAttributeSticker = 0x994c9882,
+        typeAttributeSticker = 0x3a556302,
         typeAttributeVideo = 0x5910cccb,
         typeAttributeAudio = 0x51448e5,
         typeAttributeFilename = 0x15590068,
@@ -21,8 +22,15 @@ public:
         m_h(0),
         m_w(0),
         m_duration(0),
+        m_stickerset(InputStickerSet::typeInputStickerSetEmpty),
         m_classType(type) {}
 
+    InputStickerSet stickerset() const {
+        return m_stickerset;
+    }
+    void setStickerset(const InputStickerSet &stickerset) {
+        m_stickerset = stickerset;
+    }
     void setH(int h) {
         m_h = h;
     }
@@ -66,6 +74,7 @@ private:
     int m_duration;
     QString m_alt;
     QString m_filename;
+    InputStickerSet m_stickerset;
     DocumentAttributeType m_classType;
 };
 

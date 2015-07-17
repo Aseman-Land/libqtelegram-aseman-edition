@@ -35,18 +35,19 @@ public:
 
     enum InputMediaType {
        typeInputMediaUploadedDocument = 0xffe76b78,
-       typeInputMediaVideo = 0x7f023ae6,
+       typeInputMediaVideo = 0x936a4ebd,
        typeInputMediaUploadedThumbDocument = 0x41481486,
-       typeInputMediaUploadedPhoto = 0x2dc53a7d,
+       typeInputMediaUploadedPhoto = 0xf7aff1c0,
        typeInputMediaDocument = 0xd184e841,
-       typeInputMediaUploadedThumbVideo = 0x9912dabf,
-       typeInputMediaUploadedVideo = 0x133ad6f6,
+       typeInputMediaUploadedThumbVideo = 0x96fb97dc,
+       typeInputMediaUploadedVideo = 0xe13fd4bc,
        typeInputMediaUploadedAudio = 0x4e498cab,
        typeInputMediaGeoPoint = 0xf9c44144,
-       typeInputMediaPhoto = 0x8f2ab2ec,
+       typeInputMediaPhoto = 0xe9bfb4f3,
        typeInputMediaEmpty = 0x9664f57f,
        typeInputMediaContact = 0xa6e45987,
-       typeInputMediaAudio = 0x89938781
+       typeInputMediaAudio = 0x89938781,
+       typeInputMediaVenue = 0x2827a81a
     };
 
     InputMedia(InputMediaType classType) :
@@ -95,7 +96,17 @@ public:
     void setLastName(const QString & lastName) { m_lastName = lastName; }
     QString lastName() const { return m_lastName; }
     void setAttributes(QList<DocumentAttribute> attrs) { m_attributes = attrs; }
+    QString caption() const { return m_caption; }
+    void setCaption(const QString &caption) { m_caption = caption; }
     QList<DocumentAttribute> attributes() const { return m_attributes; }
+    QString address() const { return m_address; }
+    void setAddress(const QString &address) { m_address = address; }
+    QString title() const { return m_title; }
+    void setTitle(const QString &title) { m_title = title; }
+    QString provider() const { return m_provider; }
+    void setProvider(const QString &provider) { m_provider = provider; }
+    QString venueId() const { return m_venueId; }
+    void setVenueId(const QString &venueId) { m_venueId = venueId; }
     void setClassType(InputMediaType classType) { m_classType = classType; }
     InputMediaType classType() const { return m_classType; }
 
@@ -107,6 +118,7 @@ private:
     QList<DocumentAttribute> m_attributes;
     QString m_firstName;
     QString m_mimeType;
+    QString m_caption;
     InputFile m_file;
     InputFile m_thumb;
     InputGeoPoint m_geoPoint;
@@ -115,6 +127,10 @@ private:
     QString m_phoneNumber;
     qint32 m_w;
     QString m_lastName;
+    QString m_address;
+    QString m_title;
+    QString m_provider;
+    QString m_venueId;
     InputMediaType m_classType;
 };
 #endif // INPUTMEDIA_H

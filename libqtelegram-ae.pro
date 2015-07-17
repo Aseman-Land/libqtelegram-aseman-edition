@@ -164,7 +164,20 @@ HEADERS += \
     types/contactlink.h \
     types/config.h \
     types/accountpassword.h \
-    types/affectedmessages.h
+    types/affectedmessages.h \
+    types/webpage.h \
+    types/authorization.h \
+    types/receivednotifymessage.h \
+    types/exportedchatinvite.h \
+    types/chatinvite.h \
+    types/inputstickerset.h \
+    types/stickerset.h \
+    types/accountauthorizations.h \
+    types/accountpasswordsettings.h \
+    types/accountpasswordinputsettings.h \
+    types/authpasswordrecovery.h \
+    types/messagesstickerset.h \
+    types/updates.h
 
 linux {
     contains(QMAKE_HOST.arch, x86_64) {

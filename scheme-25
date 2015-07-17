@@ -191,11 +191,11 @@ messages.messagesSlice#b446ae3 count:int messages:Vector<Message> chats:Vector<C
 
 messages.messageEmpty#3f4e0648 = messages.Message;
 
+messages.sentMessage#900eac40 id:int date:int pts:int pts_count:int = messages.SentMessage;
+
 messages.statedMessages#7d84b48 messages:Vector<Message> chats:Vector<Chat> users:Vector<User> pts:int pts_count:int = messages.StatedMessages;
 
 messages.statedMessage#96240c6a message:Message chats:Vector<Chat> users:Vector<User> pts:int pts_count:int = messages.StatedMessage;
-
-messages.sentMessage#900eac40 id:int date:int pts:int pts_count:int = messages.SentMessage;
 
 messages.chats#64ff9fd5 chats:Vector<Chat> = messages.Chats;
 
@@ -256,11 +256,11 @@ help.noAppUpdate#c45a6536 = help.AppUpdate;
 
 help.inviteText#18cb9f78 message:string = help.InviteText;
 
+messages.sentMessageLink#e923400d id:int date:int pts:int pts_count:int links:Vector<contacts.Link> seq:int = messages.SentMessage;
+
 messages.statedMessagesLinks#51be5d19 messages:Vector<Message> chats:Vector<Chat> users:Vector<User> pts:int pts_count:int links:Vector<contacts.Link> seq:int = messages.StatedMessages;
 
 messages.statedMessageLink#948a288 message:Message chats:Vector<Chat> users:Vector<User> pts:int pts_count:int links:Vector<contacts.Link> seq:int = messages.StatedMessage;
-
-messages.sentMessageLink#e923400d id:int date:int pts:int pts_count:int links:Vector<contacts.Link> seq:int = messages.SentMessage;
 
 inputGeoChat#74d456fa chat_id:int access_hash:long = InputGeoChat;
 

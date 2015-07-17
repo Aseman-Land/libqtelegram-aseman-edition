@@ -65,6 +65,7 @@
 #include "types/documentattribute.h"
 #include "types/accountdaysttl.h"
 #include "types/stickerpack.h"
+#include "types/authorization.h"
 
 #include "secret/secretchat.h"
 
@@ -129,6 +130,22 @@ public:
     virtual StickerPack fetchStickerPack();
     virtual AffectedMessages fetchAffectedMessages();
     virtual AccountPassword fetchAccountPassword();
+    virtual FileLocation fetchFileLocation();
+    virtual UserStatus fetchUserStatus();
+    virtual GeoPoint fetchGeoPoint();
+    virtual ChatPhoto fetchChatPhoto();
+    virtual MessageAction fetchMessageAction();
+    virtual PhotoSize fetchPhotoSize();
+    virtual MessageMedia fetchMessageMedia();
+    virtual Video fetchVideo();
+    virtual Audio fetchAudio();
+    virtual WebPage fetchWebPage();
+    virtual Authorization fetchAuthorization();
+    virtual ChatParticipant fetchChatParticipant();
+    virtual ChatParticipants fetchChatParticipants();
+    virtual GeoChatMessage fetchGeoChatMessage();
+    virtual NotifyPeer fetchNotifyPeer();
+    virtual SendMessageAction fetchSendMessageAction();
 
 protected:
     char *m_buffer;
@@ -136,21 +153,6 @@ protected:
 
     qint32 *m_inPtr;
     qint32 *m_inEnd;
-
-    FileLocation fetchFileLocation();
-    UserStatus fetchUserStatus();
-    GeoPoint fetchGeoPoint();
-    ChatPhoto fetchChatPhoto();
-    MessageAction fetchMessageAction();
-    PhotoSize fetchPhotoSize();
-    MessageMedia fetchMessageMedia();
-    Video fetchVideo();
-    Audio fetchAudio();
-    ChatParticipant fetchChatParticipant();
-    ChatParticipants fetchChatParticipants();
-    GeoChatMessage fetchGeoChatMessage();
-    NotifyPeer fetchNotifyPeer();
-    SendMessageAction fetchSendMessageAction();
 };
 
 #endif // INBOUNDPKT_H
