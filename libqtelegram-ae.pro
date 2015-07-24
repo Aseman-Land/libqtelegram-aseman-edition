@@ -165,7 +165,6 @@ HEADERS += \
     types/config.h \
     types/accountpassword.h \
     types/affectedmessages.h
-}
 
 isEmpty(PREFIX) {
     PREFIX = /usr
