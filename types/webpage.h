@@ -1,164 +1,98 @@
-#ifndef WEBPAGE
-#define WEBPAGE
+#ifndef LQTG_WEBPAGE
+#define LQTG_WEBPAGE
 
+#include "telegramtypeobject.h"
+#include <QString>
 #include <QtGlobal>
 #include "photo.h"
 
-class WebPage 
+class WebPage : public TelegramTypeObject
 {
 public:
-
     enum WebPageType {
-       typeWebPageEmpty = 0xeb1477e8,
-       typeWebPagePending = 0xc586da1c,
-       typeWebPage = 0xa31ea0b5
+        typeWebPageEmpty = 0xeb1477e8,
+        typeWebPagePending = 0xc586da1c,
+        typeWebPage = 0xa31ea0b5
     };
 
-    WebPage(WebPageType classType = typeWebPageEmpty) :
-        mId(0),
-        mDate(0),
-        mFlags(0),
-        mEmbedWidth(0),
-        mEmbedHeight(0),
-        mDuration(0),
-        mClassType(classType) {}
+    WebPage(WebPageType classType = typeWebPageEmpty, InboundPkt *in = 0);
+    WebPage(InboundPkt *in);
+    virtual ~WebPage();
 
-    qint64 id() const {
-        return mId;
-    }
-    void setId(const qint64 &id) {
-        mId = id;
-    }
+    void setAuthor(const QString &author);
+    QString author() const;
 
-    qint32 date() const {
-        return mDate;
-    }
-    void setDate(const qint32 &date) {
-        mDate = date;
-    }
+    void setDate(qint32 date);
+    qint32 date() const;
 
-    QString url() const {
-        return mUrl;
-    }
-    void setUrl(const QString &url) {
-        mUrl = url;
-    }
+    void setDescription(const QString &description);
+    QString description() const;
 
-    QString displayUrl() const {
-        return mDisplayUrl;
-    }
-    void setDisplayUrl(const QString &displayUrl) {
-        mDisplayUrl = displayUrl;
-    }
+    void setDisplayUrl(const QString &displayUrl);
+    QString displayUrl() const;
 
-    qint32 flags() const {
-        return mFlags;
-    }
-    void setFlags(const qint32 &flags) {
-        mFlags = flags;
-    }
+    void setDuration(qint32 duration);
+    qint32 duration() const;
 
-    QString type() const {
-        return mType;
-    }
-    void setType(const QString &type) {
-        mType = type;
-    }
+    void setEmbedHeight(qint32 embedHeight);
+    qint32 embedHeight() const;
 
-    QString siteName() const {
-        return mSiteName;
-    }
-    void setSiteName(const QString &siteName) {
-        mSiteName = siteName;
-    }
-    QString title() const {
-        return mTitle;
-    }
-    void setTitle(const QString &title) {
-        mTitle = title;
-    }
+    void setEmbedType(const QString &embedType);
+    QString embedType() const;
 
-    QString description() const {
-        return mDescription;
-    }
-    void setDescription(const QString &description) {
-        mDescription = description;
-    }
+    void setEmbedUrl(const QString &embedUrl);
+    QString embedUrl() const;
 
-    Photo photo() const {
-        return mPhoto;
-    }
-    void setPhoto(const Photo &photo) {
-        mPhoto = photo;
-    }
+    void setEmbedWidth(qint32 embedWidth);
+    qint32 embedWidth() const;
 
-    QString embedUrl() const {
-        return mEmbedUrl;
-    }
-    void setEmbedUrl(const QString &embedUrl) {
-        mEmbedUrl = embedUrl;
-    }
+    void setFlags(qint32 flags);
+    qint32 flags() const;
 
-    QString embedType() const {
-        return mEmbedType;
-    }
-    void setEmbedType(const QString &embedType) {
-        mEmbedType = embedType;
-    }
+    void setId(qint64 id);
+    qint64 id() const;
 
-    qint32 embedWidth() const {
-        return mEmbedWidth;
-    }
-    void setEmbedWidth(const qint32 &embedWidth) {
-        mEmbedWidth = embedWidth;
-    }
+    void setPhoto(const Photo &photo);
+    Photo photo() const;
 
-    qint32 embedHeight() const {
-        return mEmbedHeight;
-    }
-    void setEmbedHeight(const qint32 &embedHeight) {
-        mEmbedHeight = embedHeight;
-    }
+    void setSiteName(const QString &siteName);
+    QString siteName() const;
 
-    qint32 duration() const {
-        return mDuration;
-    }
-    void setDuration(const qint32 &duration) {
-        mDuration = duration;
-    }
+    void setTitle(const QString &title);
+    QString title() const;
 
-    QString author() const {
-        return mAuthor;
-    }
-    void setAuthor(const QString &author) {
-        mAuthor = author;
-    }
+    void setType(const QString &type);
+    QString type() const;
 
-    void setClassType(WebPageType classType) {
-        mClassType = classType;
-    }
-    WebPageType classType() const {
-        return mClassType;
-    }
+    void setUrl(const QString &url);
+    QString url() const;
+
+    void setClassType(WebPageType classType);
+    WebPageType classType() const;
+
+    bool fetch(InboundPkt *in);
+    bool push(OutboundPkt *out) const;
+
+    bool operator ==(const WebPage &b);
 
 private:
-    qint64 mId;
-    qint32 mDate;
-    QString mUrl;
-    QString mDisplayUrl;
-    qint32 mFlags;
-    QString mType;
-    QString mSiteName;
-    QString mTitle;
-    QString mDescription;
-    Photo mPhoto;
-    QString mEmbedUrl;
-    QString mEmbedType;
-    qint32 mEmbedWidth;
-    qint32 mEmbedHeight;
-    qint32 mDuration;
-    QString mAuthor;
-    WebPageType mClassType;
+    QString m_author;
+    qint32 m_date;
+    QString m_description;
+    QString m_displayUrl;
+    qint32 m_duration;
+    qint32 m_embedHeight;
+    QString m_embedType;
+    QString m_embedUrl;
+    qint32 m_embedWidth;
+    qint32 m_flags;
+    qint64 m_id;
+    Photo m_photo;
+    QString m_siteName;
+    QString m_title;
+    QString m_type;
+    QString m_url;
+    WebPageType m_classType;
 };
 
-#endif // WEBPAGE
+#endif // LQTG_WEBPAGE

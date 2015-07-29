@@ -1,28 +1,29 @@
-#ifndef INPUTPRIVACYKEY
-#define INPUTPRIVACYKEY
+#ifndef LQTG_INPUTPRIVACYKEY
+#define LQTG_INPUTPRIVACYKEY
 
-#include <QtGlobal>
+#include "telegramtypeobject.h"
 
-class InputPrivacyKey
+class InputPrivacyKey : public TelegramTypeObject
 {
 public:
     enum InputPrivacyKeyType {
-       typeInputPrivacyKeyStatusTimestamp = 0xee3b272a
+        typeInputPrivacyKeyStatusTimestamp = 0x4f96cb18
     };
 
-    InputPrivacyKey(InputPrivacyKeyType classType) :
-        m_classType(classType) {}
+    InputPrivacyKey(InputPrivacyKeyType classType = typeInputPrivacyKeyStatusTimestamp, InboundPkt *in = 0);
+    InputPrivacyKey(InboundPkt *in);
+    virtual ~InputPrivacyKey();
 
-    void setClassType(InputPrivacyKeyType classType) {
-        m_classType = classType;
-    }
-    InputPrivacyKeyType classType() const {
-        return m_classType;
-    }
+    void setClassType(InputPrivacyKeyType classType);
+    InputPrivacyKeyType classType() const;
+
+    bool fetch(InboundPkt *in);
+    bool push(OutboundPkt *out) const;
+
+    bool operator ==(const InputPrivacyKey &b);
 
 private:
     InputPrivacyKeyType m_classType;
 };
 
-#endif // INPUTPRIVACYKEY
-
+#endif // LQTG_INPUTPRIVACYKEY

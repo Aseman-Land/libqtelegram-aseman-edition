@@ -1,60 +1,51 @@
-#ifndef MESSAGESALLSTICKERS
-#define MESSAGESALLSTICKERS
+#ifndef LQTG_MESSAGESALLSTICKERS
+#define LQTG_MESSAGESALLSTICKERS
 
-#include <QtGlobal>
-#include "stickerpack.h"
+#include "telegramtypeobject.h"
+#include <QList>
 #include "document.h"
+#include <QString>
+#include "stickerpack.h"
 #include "stickerset.h"
 
-class MessagesAllStickers
+class MessagesAllStickers : public TelegramTypeObject
 {
 public:
-
     enum MessagesAllStickersType {
-       typeMessagesAllStickersNotModified = 0xe86602c3,
-       typeMessagesAllStickers = 0x5ce352ec
+        typeMessagesAllStickersNotModified = 0xe86602c3,
+        typeMessagesAllStickers = 0x5ce352ec
     };
 
-    QList<StickerSet> sets() const {
-        return m_sets;
-    }
-    void setSets(const QList<StickerSet> &sets) {
-        m_sets = sets;
-    }
-    MessagesAllStickers(MessagesAllStickersType classType) :
-        m_classType(classType) {}
+    MessagesAllStickers(MessagesAllStickersType classType = typeMessagesAllStickersNotModified, InboundPkt *in = 0);
+    MessagesAllStickers(InboundPkt *in);
+    virtual ~MessagesAllStickers();
 
-    void setDocuments(QList<Document> documents) {
-        m_documents = documents;
-    }
-    QList<Document> documents() const {
-        return m_documents;
-    }
-    void setPacks(QList<StickerPack> packs) {
-        m_packs = packs;
-    }
-    QList<StickerPack> packs() const {
-        return m_packs;
-    }
-    void setHash(QString hash) {
-        m_hash = hash;
-    }
-    QString hash() const {
-        return m_hash;
-    }
-    void setClassType(MessagesAllStickersType classType) {
-        m_classType = classType;
-    }
-    MessagesAllStickersType classType() const {
-        return m_classType;
-    }
+    void setDocuments(const QList<Document> &documents);
+    QList<Document> documents() const;
+
+    void setHash(const QString &hash);
+    QString hash() const;
+
+    void setPacks(const QList<StickerPack> &packs);
+    QList<StickerPack> packs() const;
+
+    void setSets(const QList<StickerSet> &sets);
+    QList<StickerSet> sets() const;
+
+    void setClassType(MessagesAllStickersType classType);
+    MessagesAllStickersType classType() const;
+
+    bool fetch(InboundPkt *in);
+    bool push(OutboundPkt *out) const;
+
+    bool operator ==(const MessagesAllStickers &b);
 
 private:
+    QList<Document> m_documents;
     QString m_hash;
     QList<StickerPack> m_packs;
-    QList<Document> m_documents;
     QList<StickerSet> m_sets;
     MessagesAllStickersType m_classType;
 };
 
-#endif // MESSAGESALLSTICKERS
+#endif // LQTG_MESSAGESALLSTICKERS

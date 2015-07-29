@@ -21,7 +21,10 @@
 #define DECRYPTEDMESSAGEMEDIA_H
 
 #include <QByteArray>
-#include "types/types.h"
+#include <QList>
+
+#include "documentattribute.h"
+#include "photosize.h"
 
 class DecryptedMessageMedia {
 

@@ -1,54 +1,45 @@
-#ifndef MESSAGESSTICKERSET
-#define MESSAGESSTICKERSET
+#ifndef LQTG_MESSAGESSTICKERSET
+#define LQTG_MESSAGESSTICKERSET
 
-#include <QtGlobal>
-#include "stickerset.h"
-#include "stickerpack.h"
+#include "telegramtypeobject.h"
+#include <QList>
 #include "document.h"
+#include "stickerpack.h"
+#include "stickerset.h"
 
-class MessagesStickerSet
+class MessagesStickerSet : public TelegramTypeObject
 {
 public:
-
     enum MessagesStickerSetType {
-       typeMessagesStickerSet = 0xb60a24a6
+        typeMessagesStickerSet = 0xb60a24a6
     };
 
-    MessagesStickerSet() :
-        m_documents(Document::typeDocumentEmpty),
-        m_classType(MessagesStickerSetType) {}
+    MessagesStickerSet(MessagesStickerSetType classType = typeMessagesStickerSet, InboundPkt *in = 0);
+    MessagesStickerSet(InboundPkt *in);
+    virtual ~MessagesStickerSet();
 
-    StickerSet set() const {
-        return m_set;
-    }
-    void setSet(const StickerSet &set) {
-        m_set = set;
-    }
-    QList<StickerPack> packs() const {
-        return m_packs;
-    }
-    void setPacks(const QList<StickerPack> &packs) {
-        m_packs = packs;
-    }
-    QList<Document> documents() const {
-        return m_documents;
-    }
-    void setDocuments(const QList<Document> &documents) {
-        m_documents = documents;
-    }
-    void setClassType(MessagesStickerSetType classType) {
-        m_classType = classType;
-    }
-    MessagesStickerSetType classType() const {
-        return m_classType;
-    }
+    void setDocuments(const QList<Document> &documents);
+    QList<Document> documents() const;
+
+    void setPacks(const QList<StickerPack> &packs);
+    QList<StickerPack> packs() const;
+
+    void setSet(const StickerSet &set);
+    StickerSet set() const;
+
+    void setClassType(MessagesStickerSetType classType);
+    MessagesStickerSetType classType() const;
+
+    bool fetch(InboundPkt *in);
+    bool push(OutboundPkt *out) const;
+
+    bool operator ==(const MessagesStickerSet &b);
 
 private:
-    StickerSet m_set;
-    QList<StickerPack> m_packs;
     QList<Document> m_documents;
+    QList<StickerPack> m_packs;
+    StickerSet m_set;
     MessagesStickerSetType m_classType;
 };
 
-#endif // MESSAGESSTICKERSET
-
+#endif // LQTG_MESSAGESSTICKERSET

@@ -1,46 +1,38 @@
-#ifndef RECEIVEDNOTIFYMESSAGE
-#define RECEIVEDNOTIFYMESSAGE
+#ifndef LQTG_RECEIVEDNOTIFYMESSAGE
+#define LQTG_RECEIVEDNOTIFYMESSAGE
 
+#include "telegramtypeobject.h"
 #include <QtGlobal>
 
-class ReceivedNotifyMessage
+class ReceivedNotifyMessage : public TelegramTypeObject
 {
 public:
-
     enum ReceivedNotifyMessageType {
-       typeReceivedNotifyMessage = 0xa384b779
+        typeReceivedNotifyMessage = 0xa384b779
     };
 
-    ReceivedNotifyMessage(ReceivedNotifyMessageType classType) :
-        m_id(0),
-        m_flags(0),
-        m_classType(typeReceivedNotifyMessage) {}
+    ReceivedNotifyMessage(ReceivedNotifyMessageType classType = typeReceivedNotifyMessage, InboundPkt *in = 0);
+    ReceivedNotifyMessage(InboundPkt *in);
+    virtual ~ReceivedNotifyMessage();
 
-    qint32 id() const {
-        return m_id;
-    }
-    void setId(const qint32 &id) {
-        m_id = id;
-    }
-    qint32 flags() const {
-        return m_flags;
-    }
-    void setFlags(const qint32 &flags) {
-        m_flags = flags;
-    }
-    void setClassType(ReceivedNotifyMessageType classType) {
-        m_classType = classType;
-    }
-    ReceivedNotifyMessageType classType() const {
-        return m_classType;
-    }
+    void setFlags(qint32 flags);
+    qint32 flags() const;
+
+    void setId(qint32 id);
+    qint32 id() const;
+
+    void setClassType(ReceivedNotifyMessageType classType);
+    ReceivedNotifyMessageType classType() const;
+
+    bool fetch(InboundPkt *in);
+    bool push(OutboundPkt *out) const;
+
+    bool operator ==(const ReceivedNotifyMessage &b);
 
 private:
-    qint32 m_id;
     qint32 m_flags;
+    qint32 m_id;
     ReceivedNotifyMessageType m_classType;
 };
 
-#endif // RECEIVEDNOTIFYMESSAGE
-
-
+#endif // LQTG_RECEIVEDNOTIFYMESSAGE

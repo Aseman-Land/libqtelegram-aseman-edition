@@ -319,14 +319,14 @@ DecryptedMessageMedia Decrypter::fetchDecryptedMessageMedia() {
         media.setDate(fetchLong());
         media.setMimeType(fetchQString());
         media.setSize(fetchInt());
-        media.setThumb23(fetchPhotoSize());
+        media.setThumb23(this);
         media.setDcId(fetchInt());
 
         ASSERT(fetchInt() == (qint32)TL_Vector);
         qint32 n = fetchInt();
         QList<DocumentAttribute> attrs;
         for (qint32 i = 0; i < n; i++)
-            attrs.append(fetchDocumentAttribute());
+            attrs.append(this);
         media.setAttributes(attrs);
         break;
     }

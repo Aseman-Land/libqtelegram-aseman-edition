@@ -1,428 +1,249 @@
-/*
- * Copyright 2014 Canonical Ltd.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; version 3.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * Authors:
- *      Roberto Mier
- *      Tiago Herrmann
- */
+#ifndef LQTG_UPDATE
+#define LQTG_UPDATE
 
-#ifndef UPDATE_H
-#define UPDATE_H
-
-#include "dcoption.h"
-#include "contactlink.h"
-#include "peernotifysettings.h"
-#include "userprofilephoto.h"
-#include "chatparticipants.h"
-#include "userstatus.h"
-#include "message.h"
-#include "notifypeer.h"
-#include "geochatmessage.h"
-#include "encryptedmessage.h"
-#include "encryptedchat.h"
+#include "telegramtypeobject.h"
 #include "sendmessageaction.h"
+#include <QtGlobal>
+#include "encryptedchat.h"
+#include <QList>
+#include "dcoption.h"
+#include <QString>
+#include "contactlink.h"
 #include "privacykey.h"
+#include "messagemedia.h"
+#include "encryptedmessage.h"
+#include "geochatmessage.h"
+#include "message.h"
+#include "peernotifysettings.h"
+#include "chatparticipants.h"
+#include "notifypeer.h"
+#include "peer.h"
+#include "userprofilephoto.h"
 #include "privacyrule.h"
+#include "userstatus.h"
+#include "webpage.h"
 
-class Update
+class Update : public TelegramTypeObject
 {
 public:
-
     enum UpdateType {
-       typeUpdateInvalid = 0,
-       typeUpdateUserStatus = 0x1bfbd823,
-       typeUpdateNotifySettings = 0xbec268ef,
-       typeUpdateMessageID = 0x4e90bfd6,
-       typeUpdateChatUserTyping = 0x9a65ea1f,
-       typeUpdateActivation = 0x6f690963,
-       typeUpdateRestoreMessages = 0xd15de04d,
-       typeUpdateEncryption = 0xb4a2e88d,
-       typeUpdateUserName = 0xa7332b73,
-       typeUpdateUserBlocked = 0x80ece81a,
-       typeUpdateNewMessage = 0x1f2b0afd,
-       typeUpdateContactLink = 0x9d2e67c5,
-       typeUpdateChatParticipantDelete = 0x6e5f8c22,
-       typeUpdateNewAuthorization = 0x8f06529a,
-       typeUpdateChatParticipantAdd = 0x3a0eeb22,
-       typeUpdateDcOptions = 0x8e5e9873,
-       typeUpdateDeleteMessages = 0xa20db0e5,
-       typeUpdateUserTyping = 0x5c486927,
-       typeUpdateEncryptedChatTyping = 0x1710f156,
-       typeUpdateReadMessages = 0x2e5ab668,
-       typeUpdateUserPhoto = 0x95313b0c,
-       typeUpdateContactRegistered = 0x2575bbb9,
-       typeUpdateNewEncryptedMessage = 0x12bcbd9a,
-       typeUpdateEncryptedMessagesRead = 0x38fe25b7,
-       typeUpdateChatParticipants = 0x7761198,
-       typeUpdateNewGeoChatMessage = 0x5a68e3f7,
-       typeUpdateServiceNotification = 0x382dd3e4,
-       typeUpdatePrivacy = 0xee3b272a,
-       typeUpdateUserPhone = 0x12b9417b,
-       typeUpdateReadHistoryInbox = 0x9961fd5c,
-       typeUpdateReadHistoryOutbox = 0x2f2f21bf,
-       typeUpdateWebPage = 0x2cc36971,
-       typeUpdateReadMessagesContents = 0x68c13933
+        typeUpdateNewMessage = 0x1f2b0afd,
+        typeUpdateMessageID = 0x4e90bfd6,
+        typeUpdateDeleteMessages = 0xa20db0e5,
+        typeUpdateUserTyping = 0x5c486927,
+        typeUpdateChatUserTyping = 0x9a65ea1f,
+        typeUpdateChatParticipants = 0x7761198,
+        typeUpdateUserStatus = 0x1bfbd823,
+        typeUpdateUserName = 0xa7332b73,
+        typeUpdateUserPhoto = 0x95313b0c,
+        typeUpdateContactRegistered = 0x2575bbb9,
+        typeUpdateContactLink = 0x9d2e67c5,
+        typeUpdateNewAuthorization = 0x8f06529a,
+        typeUpdateNewGeoChatMessage = 0x5a68e3f7,
+        typeUpdateNewEncryptedMessage = 0x12bcbd9a,
+        typeUpdateEncryptedChatTyping = 0x1710f156,
+        typeUpdateEncryption = 0xb4a2e88d,
+        typeUpdateEncryptedMessagesRead = 0x38fe25b7,
+        typeUpdateChatParticipantAdd = 0x3a0eeb22,
+        typeUpdateChatParticipantDelete = 0x6e5f8c22,
+        typeUpdateDcOptions = 0x8e5e9873,
+        typeUpdateUserBlocked = 0x80ece81a,
+        typeUpdateNotifySettings = 0xbec268ef,
+        typeUpdateServiceNotification = 0x382dd3e4,
+        typeUpdatePrivacy = 0xee3b272a,
+        typeUpdateUserPhone = 0x12b9417b,
+        typeUpdateReadHistoryInbox = 0x9961fd5c,
+        typeUpdateReadHistoryOutbox = 0x2f2f21bf,
+        typeUpdateWebPage = 0x2cc36971,
+        typeUpdateReadMessagesContents = 0x68c13933
     };
 
-    Update(UpdateType classType = typeUpdateInvalid) :
-        mId(0),
-        mPrevious(false),
-        mPopup(false),
-        mDevice(""),
-        mMyLink(ContactLink::typeContactLinkUnknown),
-        mChatId(0),
-        mUserId(0),
-        mPts(0),
-        mPtsCount(0),
-        mMaxId(0),
-        mVersion(0),
-        mQts(0),
-        mDate(0),
-        mNotifySettings(PeerNotifySettings::typePeerNotifySettingsEmpty),
-        mChat(EncryptedChat::typeEncryptedChatEmpty),
-        mInviterId(0),
-        mPhoto(UserProfilePhoto::typeUserProfilePhotoEmpty),
-        mParticipants(ChatParticipants::typeChatParticipants),
-        mRandomId(0),
-        mFirstName(""),
-        mLastName(""),
-        mStatus(UserStatus::typeUserStatusEmpty),
-        mMessage(Message::typeMessageEmpty),
-        mMedia(MessageMedia::typeMessageMediaEmpty),
-        mGeoChatMessage(GeoChatMessage::typeGeoChatMessageEmpty),
-        mEncryptedMessage(EncryptedMessage::typeEncryptedMessage),
-        mForeignLink(ContactLink::typeContactLinkUnknown),
-        mMaxDate(0),
-        mAuthKeyId(0),
-        mLocation(""),
-        mNotifyPeer(NotifyPeer::typeNotifyAll),
-        mPeer(Peer::typePeerUser),
-        mBlocked(false),
-        mKey(PrivacyKey::typePrivacyKeyStatusTimestamp),
-        mClassType(classType) {}
+    Update(UpdateType classType = typeUpdateNewMessage, InboundPkt *in = 0);
+    Update(InboundPkt *in);
+    virtual ~Update();
 
-    void setUserId(qint32 userId) {
-        mUserId = userId;
-    }
-    qint32 userId() const {
-        return mUserId;
-    }
-    void setStatus(const UserStatus &status) {
-        mStatus = status;
-    }
-    UserStatus status() const {
-        return mStatus;
-    }
-    void setNotifyPeer(const NotifyPeer &peer) {
-        mNotifyPeer = peer;
-    }
-    NotifyPeer notifyPeer() const {
-        return mNotifyPeer;
-    }
-    Peer peer() const {
-        return mPeer;
-    }
-    void setPeer(const Peer &peer) {
-        mPeer = peer;
-    }
-    void setNotifySettings(const PeerNotifySettings &notifySettings) {
-        mNotifySettings = notifySettings;
-    }
-    PeerNotifySettings notifySettings() const {
-        return mNotifySettings;
-    }
-    void setId(qint32 id) {
-        mId = id;
-    }
-    qint32 id() const {
-        return mId;
-    }
-    void setRandomId(qint64 randomId) {
-        mRandomId = randomId;
-    }
-    qint64 randomId() const {
-        return mRandomId;
-    }
-    void setChatId(qint32 chatId) {
-        mChatId = chatId;
-    }
-    qint32 chatId() const {
-        return mChatId;
-    }
-    void setMessages(const QList<qint32> & messages) {
-        mMessages = messages;
-    }
-    QList<qint32> messages() const {
-        return mMessages;
-    }
-    void setPts(qint32 pts) {
-        mPts = pts;
-    }
-    qint32 pts() const {
-        return mPts;
-    }
-    void setPtsCount(qint32 ptsCount) {
-        mPtsCount = ptsCount;
-    }
-    qint32 ptsCount() const {
-        return mPtsCount;
-    }
-    qint64 maxId() const {
-        return mMaxId;
-    }
-    void setMaxId(const qint64 &maxId) {
-        mMaxId = maxId;
-    }
-    void setChat(const EncryptedChat &chat) {
-        mChat = chat;
-    }
-    EncryptedChat chat() const {
-        return mChat;
-    }
-    void setDate(qint32 date) {
-        mDate = date;
-    }
-    qint32 date() const {
-        return mDate;
-    }
-    void setFirstName(const QString & firstName) {
-        mFirstName = firstName;
-    }
-    QString firstName() const {
-        return mFirstName;
-    }
-    void setLastName(const QString & lastName) {
-        mLastName = lastName;
-    }
-    QString lastName() const {
-        return mLastName;
-    }
-    void setUsername(const QString & username) {
-        mUsername = username;
-    }
-    QString username() const {
-        return mUsername;
-    }
-    void setBlocked(bool blocked) {
-        mBlocked = blocked;
-    }
-    bool blocked() const {
-        return mBlocked;
-    }
-    void setMessage(const Message &message) {
-        mMessage = message;
-    }
-    Message message() const {
-        return mMessage;
-    }
-    void setMessage(const GeoChatMessage &message) {
-        mGeoChatMessage = message;
-    }
-    EncryptedMessage encryptedMessage() const {
-        return mEncryptedMessage;
-    }
-    void setEncryptedMessage(const EncryptedMessage &encryptedMessage) {
-        mEncryptedMessage = encryptedMessage;
-    }
-    GeoChatMessage geoChatMessage() const {
-        return mGeoChatMessage;
-    }
-    void setMyLink(ContactLink myLink) {
-        mMyLink = myLink;
-    }
-    ContactLink myLink() const {
-        return mMyLink;
-    }
-    void setForeignLink(ContactLink foreignLink) {
-        mForeignLink = foreignLink;
-    }
-    ContactLink foreignLink() const {
-        return mForeignLink;
-    }
-    void setVersion(qint32 version) {
-        mVersion = version;
-    }
-    qint32 version() const {
-        return mVersion;
-    }
-    void setAuthKeyId(qint64 authKeyId) {
-        mAuthKeyId = authKeyId;
-    }
-    qint64 authKeyId() const {
-        return mAuthKeyId;
-    }
-    void setDevice(const QString & device) {
-        mDevice = device;
-    }
-    QString device() const {
-        return mDevice;
-    }
-    void setLocation(const QString & location) {
-        mLocation = location;
-    }
-    QString location() const {
-        return mLocation;
-    }
-    void setInviterId(qint32 inviterId) {
-        mInviterId = inviterId;
-    }
-    qint32 inviterId() const {
-        return mInviterId;
-    }
-    void setDcOptions(const QList<DcOption> & dcOptions) {
-        mDcOptions = dcOptions;
-    }
-    QList<DcOption> dcOptions() const {
-        return mDcOptions;
-    }
-    void setPhoto(const UserProfilePhoto &photo) {
-        mPhoto = photo;
-    }
-    UserProfilePhoto photo() const {
-        return mPhoto;
-    }
-    void setPrevious(bool previous) {
-        mPrevious = previous;
-    }
-    bool previous() const {
-        return mPrevious;
-    }
-    void setQts(qint32 qts) {
-        mQts = qts;
-    }
-    qint32 qts() const {
-        return mQts;
-    }
-    void setMaxDate(qint32 maxDate) {
-        mMaxDate = maxDate;
-    }
-    qint32 maxDate() const {
-        return mMaxDate;
-    }
-    void setParticipants(const ChatParticipants &participants) {
-        mParticipants = participants;
-    }
-    ChatParticipants participants() const {
-        return mParticipants;
-    }
-    void setAction(const SendMessageAction &action) {
-        mAction = action;
-    }
-    SendMessageAction action() const {
-        return mAction;
-    }
-    void setMedia(const MessageMedia &media) {
-        mMedia = media;
-    }
-    MessageMedia media() const {
-        return mMedia;
-    }
-    void setPopup(bool popup) {
-        mPopup = popup;
-    }
-    bool popup() const {
-        return mPopup;
-    }
-    void setClassType(UpdateType classType) {
-        mClassType = classType;
-    }
-    void setType(const QString &type) {
-        mType = type;
-    }
-    QString type() const {
-        return mType;
-    }
-    void setMessageText(const QString &message) {
-        mMessageText = message;
-    }
-    QString messageText() const {
-        return mMessageText;
-    }
-    void setKey(PrivacyKey key) {
-        mKey = key;
-    }
-    PrivacyKey key() const {
-        return mKey;
-    }
-    void setRules(QList<PrivacyRule> rules) {
-        mRules = rules;
-    }
-    QList<PrivacyRule> rules() const {
-        return mRules;
-    }
-    void setPhone(const QString &phone) {
-        mPhone = phone;
-    }
-    QString phone() const {
-        return mPhone;
-    }
+    void setAction(const SendMessageAction &action);
+    SendMessageAction action() const;
 
-    WebPage webPage() const {
-        return mWebPage;
-    }
-    void setWebPage(const WebPage &webPage) {
-        mWebPage = webPage;
-    }
-    UpdateType classType() const {
-        return mClassType;
-    }
+    void setAuthKeyId(qint64 authKeyId);
+    qint64 authKeyId() const;
+
+    void setBlocked(bool blocked);
+    bool blocked() const;
+
+    void setChat(const EncryptedChat &chat);
+    EncryptedChat chat() const;
+
+    void setChatId(qint32 chatId);
+    qint32 chatId() const;
+
+    void setDate(qint32 date);
+    qint32 date() const;
+
+    void setDcOptions(const QList<DcOption> &dcOptions);
+    QList<DcOption> dcOptions() const;
+
+    void setDevice(const QString &device);
+    QString device() const;
+
+    void setFirstName(const QString &firstName);
+    QString firstName() const;
+
+    void setForeignLink(const ContactLink &foreignLink);
+    ContactLink foreignLink() const;
+
+    void setId(qint32 id);
+    qint32 id() const;
+
+    void setInviterId(qint32 inviterId);
+    qint32 inviterId() const;
+
+    void setKey(const PrivacyKey &key);
+    PrivacyKey key() const;
+
+    void setLastName(const QString &lastName);
+    QString lastName() const;
+
+    void setLocation(const QString &location);
+    QString location() const;
+
+    void setMaxDate(qint32 maxDate);
+    qint32 maxDate() const;
+
+    void setMaxId(qint32 maxId);
+    qint32 maxId() const;
+
+    void setMedia(const MessageMedia &media);
+    MessageMedia media() const;
+
+    void setMessageEncrypted(const EncryptedMessage &messageEncrypted);
+    EncryptedMessage messageEncrypted() const;
+
+    void setMessageGeoChat(const GeoChatMessage &messageGeoChat);
+    GeoChatMessage messageGeoChat() const;
+
+    void setMessage(const Message &message);
+    Message message() const;
+
+    void setMessageString(const QString &messageString);
+    QString messageString() const;
+
+    void setMessages(const QList<qint32> &messages);
+    QList<qint32> messages() const;
+
+    void setMyLink(const ContactLink &myLink);
+    ContactLink myLink() const;
+
+    void setNotifySettings(const PeerNotifySettings &notifySettings);
+    PeerNotifySettings notifySettings() const;
+
+    void setParticipants(const ChatParticipants &participants);
+    ChatParticipants participants() const;
+
+    void setPeerNotify(const NotifyPeer &peerNotify);
+    NotifyPeer peerNotify() const;
+
+    void setPeer(const Peer &peer);
+    Peer peer() const;
+
+    void setPhone(const QString &phone);
+    QString phone() const;
+
+    void setPhoto(const UserProfilePhoto &photo);
+    UserProfilePhoto photo() const;
+
+    void setPopup(bool popup);
+    bool popup() const;
+
+    void setPrevious(bool previous);
+    bool previous() const;
+
+    void setPts(qint32 pts);
+    qint32 pts() const;
+
+    void setPtsCount(qint32 ptsCount);
+    qint32 ptsCount() const;
+
+    void setQts(qint32 qts);
+    qint32 qts() const;
+
+    void setRandomId(qint64 randomId);
+    qint64 randomId() const;
+
+    void setRules(const QList<PrivacyRule> &rules);
+    QList<PrivacyRule> rules() const;
+
+    void setStatus(const UserStatus &status);
+    UserStatus status() const;
+
+    void setType(const QString &type);
+    QString type() const;
+
+    void setUserId(qint32 userId);
+    qint32 userId() const;
+
+    void setUsername(const QString &username);
+    QString username() const;
+
+    void setVersion(qint32 version);
+    qint32 version() const;
+
+    void setWebpage(const WebPage &webpage);
+    WebPage webpage() const;
+
+    void setClassType(UpdateType classType);
+    UpdateType classType() const;
+
+    bool fetch(InboundPkt *in);
+    bool push(OutboundPkt *out) const;
+
+    bool operator ==(const Update &b);
 
 private:
-    qint32 mId;
-    bool mPrevious;
-    bool mPopup;
-    QString mType;
-    QString mMessageText;
-    QList<DcOption> mDcOptions;
-    QString mDevice;
-    ContactLink mMyLink;
-    qint32 mChatId;
-    qint32 mUserId;
-    qint32 mPts;
-    qint32 mPtsCount;
-    qint64 mMaxId;
-    qint32 mVersion;
-    qint32 mQts;
-    qint32 mDate;
-    PeerNotifySettings mNotifySettings;
-    EncryptedChat mChat;
-    qint32 mInviterId;
-    UserProfilePhoto mPhoto;
-    QList<qint32> mMessages;
-    ChatParticipants mParticipants;
-    qint64 mRandomId;
-    QString mFirstName;
-    QString mLastName;
-    QString mUsername;
-    UserStatus mStatus;
-    Message mMessage;
-    MessageMedia mMedia;
-    GeoChatMessage mGeoChatMessage;
-    EncryptedMessage mEncryptedMessage;
-    ContactLink mForeignLink;
-    qint32 mMaxDate;
-    qint64 mAuthKeyId;
-    QString mLocation;
-    NotifyPeer mNotifyPeer;
-    Peer mPeer;
-    bool mBlocked;
-    SendMessageAction mAction;
-    PrivacyKey mKey;
-    QList<PrivacyRule> mRules;
-    QString mPhone;
-    WebPage mWebPage;
-    UpdateType mClassType;
+    SendMessageAction m_action;
+    qint64 m_authKeyId;
+    bool m_blocked;
+    EncryptedChat m_chat;
+    qint32 m_chatId;
+    qint32 m_date;
+    QList<DcOption> m_dcOptions;
+    QString m_device;
+    QString m_firstName;
+    ContactLink m_foreignLink;
+    qint32 m_id;
+    qint32 m_inviterId;
+    PrivacyKey m_key;
+    QString m_lastName;
+    QString m_location;
+    qint32 m_maxDate;
+    qint32 m_maxId;
+    MessageMedia m_media;
+    EncryptedMessage m_messageEncrypted;
+    GeoChatMessage m_messageGeoChat;
+    Message m_message;
+    QString m_messageString;
+    QList<qint32> m_messages;
+    ContactLink m_myLink;
+    PeerNotifySettings m_notifySettings;
+    ChatParticipants m_participants;
+    NotifyPeer m_peerNotify;
+    Peer m_peer;
+    QString m_phone;
+    UserProfilePhoto m_photo;
+    bool m_popup;
+    bool m_previous;
+    qint32 m_pts;
+    qint32 m_ptsCount;
+    qint32 m_qts;
+    qint64 m_randomId;
+    QList<PrivacyRule> m_rules;
+    UserStatus m_status;
+    QString m_type;
+    qint32 m_userId;
+    QString m_username;
+    qint32 m_version;
+    WebPage m_webpage;
+    UpdateType m_classType;
 };
-#endif // UPDATE_H
+
+#endif // LQTG_UPDATE

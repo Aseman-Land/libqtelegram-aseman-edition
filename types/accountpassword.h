@@ -1,9 +1,11 @@
-#ifndef ACCOUNTPASSWORD
-#define ACCOUNTPASSWORD
+#ifndef LQTG_ACCOUNTPASSWORD
+#define LQTG_ACCOUNTPASSWORD
 
+#include "telegramtypeobject.h"
 #include <QByteArray>
+#include <QString>
 
-class AccountPassword
+class AccountPassword : public TelegramTypeObject
 {
 public:
     enum AccountPasswordType {
@@ -11,54 +13,40 @@ public:
         typeAccountPassword = 0x7c18141c
     };
 
-    AccountPassword(AccountPasswordType type) :
-        m_classType(type) {}
-    virtual ~AccountPassword() {}
+    AccountPassword(AccountPasswordType classType = typeAccountNoPassword, InboundPkt *in = 0);
+    AccountPassword(InboundPkt *in);
+    virtual ~AccountPassword();
 
-    QByteArray newSalt() const {
-        return m_newSalt;
-    }
-    void setNewSalt(const QByteArray &newSalt) {
-        m_newSalt = newSalt;
-    }
-    QByteArray currentSalt() const {
-        return m_currentSalt;
-    }
-    void setCurrentSalt(const QByteArray &currentSalt) {
-        m_currentSalt = currentSalt;
-    }
-    QString hint() const {
-        return m_hint;
-    }
-    void setHint(const QString &hint) {
-        m_hint = hint;
-    }
-    QString emailUnconfirmedPattern() const {
-        return m_emailUnconfirmedPattern;
-    }
-    void setEmailUnconfirmedPattern(const QString &emailUnconfirmedPattern) {
-        m_emailUnconfirmedPattern = emailUnconfirmedPattern;
-    }
-    bool hasRecovery() const {
-        return m_hasRecovery;
-    }
-    void setHasRecovery(bool hasRecovery) {
-        m_hasRecovery = hasRecovery;
-    }
-    void setClassType(AccountPasswordType classType) {
-        m_classType = classType;
-    }
-    AccountPasswordType classType() const {
-        return m_classType;
-    }
+    void setCurrentSalt(const QByteArray &currentSalt);
+    QByteArray currentSalt() const;
+
+    void setEmailUnconfirmedPattern(const QString &emailUnconfirmedPattern);
+    QString emailUnconfirmedPattern() const;
+
+    void setHasRecovery(bool hasRecovery);
+    bool hasRecovery() const;
+
+    void setHint(const QString &hint);
+    QString hint() const;
+
+    void setNewSalt(const QByteArray &newSalt);
+    QByteArray newSalt() const;
+
+    void setClassType(AccountPasswordType classType);
+    AccountPasswordType classType() const;
+
+    bool fetch(InboundPkt *in);
+    bool push(OutboundPkt *out) const;
+
+    bool operator ==(const AccountPassword &b);
 
 private:
-    QByteArray m_newSalt;
     QByteArray m_currentSalt;
-    QString m_hint;
     QString m_emailUnconfirmedPattern;
     bool m_hasRecovery;
+    QString m_hint;
+    QByteArray m_newSalt;
     AccountPasswordType m_classType;
 };
 
-#endif // ACCOUNTPASSWORD
+#endif // LQTG_ACCOUNTPASSWORD

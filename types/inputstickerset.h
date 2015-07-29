@@ -1,53 +1,45 @@
-#ifndef INPUTSTICKERSET
-#define INPUTSTICKERSET
+#ifndef LQTG_INPUTSTICKERSET
+#define LQTG_INPUTSTICKERSET
 
+#include "telegramtypeobject.h"
 #include <QtGlobal>
+#include <QString>
 
-class InputStickerSet
+class InputStickerSet : public TelegramTypeObject
 {
 public:
-
     enum InputStickerSetType {
-       typeInputStickerSetEmpty = 0xffb62b95,
-       typeInputStickerSetID = 0x9de7a269,
-       typeInputStickerSetShortName = 0x861cc8a0
+        typeInputStickerSetEmpty = 0xffb62b95,
+        typeInputStickerSetID = 0x9de7a269,
+        typeInputStickerSetShortName = 0x861cc8a0
     };
 
-    InputStickerSet(InputStickerSetType classType) :
-        mId(0),
-        mAccessHash(0),
-        m_classType(classType) {}
+    InputStickerSet(InputStickerSetType classType = typeInputStickerSetEmpty, InboundPkt *in = 0);
+    InputStickerSet(InboundPkt *in);
+    virtual ~InputStickerSet();
 
-    QString shortName() const {
-        return mShortName;
-    }
-    void setShortName(const QString &shortName) {
-        mShortName = shortName;
-    }
-    qint64 id() const {
-        return mId;
-    }
-    void setId(const qint64 &id) {
-        mId = id;
-    }
-    qint64 accessHash() const {
-        return mAccessHash;
-    }
-    void setAccessHash(const qint64 &accessHash) {
-        mAccessHash = accessHash;
-    }
-    void setClassType(InputStickerSetType classType) {
-        m_classType = classType;
-    }
-    InputStickerSetType classType() const {
-        return m_classType;
-    }
+    void setAccessHash(qint64 accessHash);
+    qint64 accessHash() const;
+
+    void setId(qint64 id);
+    qint64 id() const;
+
+    void setShortName(const QString &shortName);
+    QString shortName() const;
+
+    void setClassType(InputStickerSetType classType);
+    InputStickerSetType classType() const;
+
+    bool fetch(InboundPkt *in);
+    bool push(OutboundPkt *out) const;
+
+    bool operator ==(const InputStickerSet &b);
 
 private:
-    QString mShortName;
-    qint64 mId;
-    qint64 mAccessHash;
+    qint64 m_accessHash;
+    qint64 m_id;
+    QString m_shortName;
     InputStickerSetType m_classType;
 };
 
-#endif // INPUTSTICKERSET
+#endif // LQTG_INPUTSTICKERSET

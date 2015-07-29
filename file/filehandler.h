@@ -3,7 +3,7 @@
 
 #include <QObject>
 #include <QSharedPointer>
-#include "uploadfile.h"
+#include "uploadfileengine.h"
 #include "fileoperation.h"
 #include "downloadfile.h"
 #include "core/dcprovider.h"
@@ -44,17 +44,17 @@ private:
 
     /* File Sending */
     // fileId -> physical file details (length, bytes, parts, every part details, etc..)
-    QMap<qint64, UploadFile::Ptr> mUploadsMap;
+    QMap<qint64, UploadFileEngine::Ptr> mUploadsMap;
     // mainFileId -> operation additional data to be done with the file (peer, operation type)
     QMap<qint64, FileOperation::Ptr> mFileOperationsMap;
     // sessionId -> list of files waiting for session connection to be ready for being uploaded
-    QMap<qint64, QList<UploadFile::Ptr> > mInitialUploadsMap;
+    QMap<qint64, QList<UploadFileEngine::Ptr> > mInitialUploadsMap;
     // finally, when sending media by using telegram api messagesSendMedia, we need to correlate
     // requestId -> fileId, cos fileId is what we returned in request and the identifier we need
     // to answer in final response
     QMap<qint64, qint64> mFileIdsMap;
 
-    qint64 uploadSendFileParts(UploadFile &file);
+    qint64 uploadSendFileParts(UploadFileEngine &file);
 
     /* File receiving */
     // requestId -> physical downloading file details (DownloadFile structure includes fileId)

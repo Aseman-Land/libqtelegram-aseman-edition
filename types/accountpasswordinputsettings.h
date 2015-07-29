@@ -1,56 +1,52 @@
-#ifndef ACCOUNTPASSWORDINPUTSETTINGS
-#define ACCOUNTPASSWORDINPUTSETTINGS
+#ifndef LQTG_ACCOUNTPASSWORDINPUTSETTINGS
+#define LQTG_ACCOUNTPASSWORDINPUTSETTINGS
 
+#include "telegramtypeobject.h"
+#include <QString>
 #include <QtGlobal>
+#include <QByteArray>
 
-class AccountPasswordInputSettings
+class AccountPasswordInputSettings : public TelegramTypeObject
 {
 public:
-
     enum AccountPasswordInputSettingsType {
-       typeAccountPasswordInputSettings = 0xbcfc532c
+        typeAccountPasswordInputSettings = 0xbcfc532c
     };
 
-    AccountPasswordInputSettings() :
-        m_classType(typeAccountPasswordInputSettings) {}
+    AccountPasswordInputSettings(AccountPasswordInputSettingsType classType = typeAccountPasswordInputSettings, InboundPkt *in = 0);
+    AccountPasswordInputSettings(InboundPkt *in);
+    virtual ~AccountPasswordInputSettings();
 
-    QByteArray newSalt() const {
-        return m_newSalt;
-    }
-    void setNewSalt(const QByteArray &newSalt) {
-        m_newSalt = newSalt;
-    }
-    QByteArray newPasswordHash() const {
-        return m_newPasswordHash;
-    }
-    void setNewPasswordHash(const QByteArray &newPasswordHash) {
-        m_newPasswordHash = newPasswordHash;
-    }
-    QByteArray hint() const {
-        return m_hint;
-    }
-    void setHint(const QByteArray &hint) {
-        m_hint = hint;
-    }
-    QString email() const {
-        return m_email;
-    }
-    void setEmail(const QString &email) {
-        m_email = email;
-    }
-    void setClassType(AccountPasswordInputSettingsType classType) {
-        m_classType = classType;
-    }
-    AccountPasswordInputSettingsType classType() const {
-        return m_classType;
-    }
+    void setEmail(const QString &email);
+    QString email() const;
+
+    void setFlags(qint32 flags);
+    qint32 flags() const;
+
+    void setHint(const QString &hint);
+    QString hint() const;
+
+    void setNewPasswordHash(const QByteArray &newPasswordHash);
+    QByteArray newPasswordHash() const;
+
+    void setNewSalt(const QByteArray &newSalt);
+    QByteArray newSalt() const;
+
+    void setClassType(AccountPasswordInputSettingsType classType);
+    AccountPasswordInputSettingsType classType() const;
+
+    bool fetch(InboundPkt *in);
+    bool push(OutboundPkt *out) const;
+
+    bool operator ==(const AccountPasswordInputSettings &b);
 
 private:
-    QByteArray m_newSalt;
-    QByteArray m_newPasswordHash;
-    QByteArray m_hint;
     QString m_email;
+    qint32 m_flags;
+    QString m_hint;
+    QByteArray m_newPasswordHash;
+    QByteArray m_newSalt;
     AccountPasswordInputSettingsType m_classType;
 };
 
-#endif // ACCOUNTPASSWORDINPUTSETTINGS
+#endif // LQTG_ACCOUNTPASSWORDINPUTSETTINGS

@@ -25,6 +25,7 @@
 #include "dc.h"
 #include "connection.h"
 #include "query.h"
+#include "types/updates.h"
 #include <QMap>
 #include <QLoggingCategory>
 

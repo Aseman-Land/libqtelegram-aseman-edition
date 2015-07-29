@@ -1,128 +1,72 @@
-/*
- * Copyright 2014 Canonical Ltd.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; version 3.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * Authors:
- *      Roberto Mier
- *      Tiago Herrmann
- */
+#ifndef LQTG_VIDEO
+#define LQTG_VIDEO
 
-#ifndef VIDEO_H
-#define VIDEO_H
-
+#include "telegramtypeobject.h"
+#include <QtGlobal>
 #include "photosize.h"
 
-class Video
+class Video : public TelegramTypeObject
 {
 public:
-
     enum VideoType {
-       typeVideoEmpty = 0xc10658a8,
-       typeVideo = 0xee9f4a4d
+        typeVideoEmpty = 0xc10658a8,
+        typeVideo = 0xee9f4a4d
     };
 
-    Video(VideoType classType) :
-        m_thumb(PhotoSize::typePhotoSizeEmpty),
-        m_id(0),
-        m_accessHash(0),
-        m_classType(classType),
-        m_dcId(0),
-        m_date(0),
-        m_duration(0),
-        m_h(0),
-        m_size(0),
-        m_userId(0),
-        m_w(0) {}
+    Video(VideoType classType = typeVideoEmpty, InboundPkt *in = 0);
+    Video(InboundPkt *in);
+    virtual ~Video();
 
-    void setId(qint64 id) {
-        m_id = id;
-    }
-    qint64 id() const {
-        return m_id;
-    }
-    void setAccessHash(qint64 accessHash) {
-        m_accessHash = accessHash;
-    }
-    qint64 accessHash() const {
-        return m_accessHash;
-    }
-    void setUserId(qint32 userId) {
-        m_userId = userId;
-    }
-    qint32 userId() const {
-        return m_userId;
-    }
-    void setDate(qint32 date) {
-        m_date = date;
-    }
-    qint32 date() const {
-        return m_date;
-    }
-    void setDuration(qint32 duration) {
-        m_duration = duration;
-    }
-    qint32 duration() const {
-        return m_duration;
-    }
-    void setSize(qint32 size) {
-        m_size = size;
-    }
-    qint32 size() const {
-        return m_size;
-    }
-    void setThumb(const PhotoSize &thumb) {
-        m_thumb = thumb;
-    }
-    PhotoSize thumb() const {
-        return m_thumb;
-    }
-    void setDcId(qint32 dcId) {
-        m_dcId = dcId;
-    }
-    qint32 dcId() const {
-        return m_dcId;
-    }
-    void setW(qint32 w) {
-        m_w = w;
-    }
-    qint32 w() const {
-        return m_w;
-    }
-    void setH(qint32 h) {
-        m_h = h;
-    }
-    qint32 h() const {
-        return m_h;
-    }
-    void setClassType(VideoType classType) {
-        m_classType = classType;
-    }
-    VideoType classType() const {
-        return m_classType;
-    }
+    void setAccessHash(qint64 accessHash);
+    qint64 accessHash() const;
+
+    void setDate(qint32 date);
+    qint32 date() const;
+
+    void setDcId(qint32 dcId);
+    qint32 dcId() const;
+
+    void setDuration(qint32 duration);
+    qint32 duration() const;
+
+    void setH(qint32 h);
+    qint32 h() const;
+
+    void setId(qint64 id);
+    qint64 id() const;
+
+    void setSize(qint32 size);
+    qint32 size() const;
+
+    void setThumb(const PhotoSize &thumb);
+    PhotoSize thumb() const;
+
+    void setUserId(qint32 userId);
+    qint32 userId() const;
+
+    void setW(qint32 w);
+    qint32 w() const;
+
+    void setClassType(VideoType classType);
+    VideoType classType() const;
+
+    bool fetch(InboundPkt *in);
+    bool push(OutboundPkt *out) const;
+
+    bool operator ==(const Video &b);
 
 private:
-    PhotoSize m_thumb;
-    qint64 m_id;
     qint64 m_accessHash;
-    VideoType m_classType;
-    qint32 m_dcId;
     qint32 m_date;
+    qint32 m_dcId;
     qint32 m_duration;
     qint32 m_h;
+    qint64 m_id;
     qint32 m_size;
+    PhotoSize m_thumb;
     qint32 m_userId;
     qint32 m_w;
+    VideoType m_classType;
 };
-#endif // VIDEO_H
+
+#endif // LQTG_VIDEO

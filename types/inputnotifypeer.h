@@ -1,67 +1,43 @@
-/*
- * Copyright 2014 Canonical Ltd.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; version 3.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * Authors:
- *      Roberto Mier
- *      Tiago Herrmann
- */
+#ifndef LQTG_INPUTNOTIFYPEER
+#define LQTG_INPUTNOTIFYPEER
 
-#ifndef INPUTNOTIFYPEER_H
-#define INPUTNOTIFYPEER_H
-
-#include "inputpeer.h"
+#include "telegramtypeobject.h"
 #include "inputgeochat.h"
+#include "inputpeer.h"
 
-class InputNotifyPeer
+class InputNotifyPeer : public TelegramTypeObject
 {
 public:
-
     enum InputNotifyPeerType {
-       typeInputNotifyChats = 0x4a95e84e,
-       typeInputNotifyUsers = 0x193b4417,
-       typeInputNotifyAll = 0xa429b886,
-       typeInputNotifyPeer = 0xb8bc5b0c,
-       typeInputNotifyGeoChatPeer = 0x4d8ddec8
+        typeInputNotifyPeer = 0xb8bc5b0c,
+        typeInputNotifyUsers = 0x193b4417,
+        typeInputNotifyChats = 0x4a95e84e,
+        typeInputNotifyAll = 0xa429b886,
+        typeInputNotifyGeoChatPeer = 0x4d8ddec8
     };
 
-    InputNotifyPeer(InputNotifyPeerType classType) :
-        m_peer(InputPeer::typeInputPeerEmpty),
-        m_classType(classType) {}
+    InputNotifyPeer(InputNotifyPeerType classType = typeInputNotifyPeer, InboundPkt *in = 0);
+    InputNotifyPeer(InboundPkt *in);
+    virtual ~InputNotifyPeer();
 
-    void setPeer(const InputPeer &peer) {
-        m_peer = peer;
-    }
-    InputPeer peer() const {
-        return m_peer;
-    }
-    void setGeoChatPeer(const InputGeoChat &geoChatPeer) {
-        m_geoChatPeer = geoChatPeer;
-    }
-    InputGeoChat geoChatPeer() const {
-        return m_geoChatPeer;
-    }
-    void setClassType(InputNotifyPeerType classType) {
-        m_classType = classType;
-    }
-    InputNotifyPeerType classType() const {
-        return m_classType;
-    }
+    void setPeerInputGeoChat(const InputGeoChat &peerInputGeoChat);
+    InputGeoChat peerInputGeoChat() const;
+
+    void setPeerInput(const InputPeer &peerInput);
+    InputPeer peerInput() const;
+
+    void setClassType(InputNotifyPeerType classType);
+    InputNotifyPeerType classType() const;
+
+    bool fetch(InboundPkt *in);
+    bool push(OutboundPkt *out) const;
+
+    bool operator ==(const InputNotifyPeer &b);
 
 private:
-    InputPeer m_peer;
-    InputGeoChat m_geoChatPeer;
+    InputGeoChat m_peerInputGeoChat;
+    InputPeer m_peerInput;
     InputNotifyPeerType m_classType;
 };
-#endif // INPUTNOTIFYPEER_H
+
+#endif // LQTG_INPUTNOTIFYPEER

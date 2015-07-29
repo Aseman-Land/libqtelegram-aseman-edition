@@ -118,7 +118,7 @@ void DCAuth::processResPQAnswer(const InboundPkt &inboundPkt) {
     qCDebug(TG_CORE_DCAUTH) << "received pq =" << what;
 
     qint64 g = Utils::findDivider(what);
-    mAsserter.check(g > 1 && g < what);
+    mAsserter.check(g > 1 && g < (qint64)what);
     p1 = g;
     p2 = what / g;
     if (p1 > p2) {

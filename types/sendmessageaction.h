@@ -1,12 +1,12 @@
-#ifndef SENDMESSAGEACTION_H
-#define SENDMESSAGEACTION_H
+#ifndef LQTG_SENDMESSAGEACTION
+#define LQTG_SENDMESSAGEACTION
 
+#include "telegramtypeobject.h"
 #include <QtGlobal>
 
-class SendMessageAction {
-
+class SendMessageAction : public TelegramTypeObject
+{
 public:
-
     enum SendMessageActionType {
         typeSendMessageTypingAction = 0x16bf744e,
         typeSendMessageCancelAction = 0xfd5ec8f5,
@@ -20,27 +20,24 @@ public:
         typeSendMessageChooseContactAction = 0x628cbc6f
     };
 
-    SendMessageAction(SendMessageActionType classType = typeSendMessageCancelAction) :
-        m_progress(0),
-        mClassType(classType) {
-    }
+    SendMessageAction(SendMessageActionType classType = typeSendMessageTypingAction, InboundPkt *in = 0);
+    SendMessageAction(InboundPkt *in);
+    virtual ~SendMessageAction();
 
-    qint32 progress() const {
-        return m_progress;
-    }
-    void setProgress(const qint32 &progress) {
-        m_progress = progress;
-    }
-    void setClassType(SendMessageActionType classType) {
-        mClassType = classType;
-    }
-    SendMessageActionType classType() const {
-        return mClassType;
-    }
+    void setProgress(qint32 progress);
+    qint32 progress() const;
+
+    void setClassType(SendMessageActionType classType);
+    SendMessageActionType classType() const;
+
+    bool fetch(InboundPkt *in);
+    bool push(OutboundPkt *out) const;
+
+    bool operator ==(const SendMessageAction &b);
 
 private:
     qint32 m_progress;
-    SendMessageActionType mClassType;
+    SendMessageActionType m_classType;
 };
 
-#endif // SENDMESSAGEACTION_H
+#endif // LQTG_SENDMESSAGEACTION

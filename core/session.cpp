@@ -272,120 +272,38 @@ void Session::workRpcResult(InboundPkt &inboundPkt, qint64 msgId) {
 
 void Session::workUpdateShort(InboundPkt &inboundPkt, qint64 msgId) {
     qCDebug(TG_CORE_SESSION) << "workUpdateShort: msgId =" << QString::number(msgId, 16);
-    mAsserter.check(inboundPkt.fetchInt() == (qint32)TL_UpdateShort);
-    Update update = inboundPkt.fetchUpdate();
-    qint32 date = inboundPkt.fetchInt();
-    Q_EMIT updateShort(update, date);
+    Updates upd(&inboundPkt);
+    Q_EMIT updateShort(upd.update(), upd.date());
 }
 
 void Session::workUpdatesCombined(InboundPkt &inboundPkt, qint64 msgId) {
     qCDebug(TG_CORE_SESSION) << "workUpdatesCombined: msgId =" << QString::number(msgId, 16);
-    mAsserter.check(inboundPkt.fetchInt() == (qint32)TL_UpdatesCombined);
-    //updates
-    mAsserter.check(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    qint32 n = inboundPkt.fetchInt();
-    QList<Update> updates;
-    for (qint32 i = 0; i < n; i++) {
-        updates.append(inboundPkt.fetchUpdate());
-    }
-    //users
-    mAsserter.check(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    n = inboundPkt.fetchInt();
-    QList<User> users;
-    for (qint32 i = 0; i < n; i++) {
-        users.append(inboundPkt.fetchUser());
-    }
-    //chats
-    mAsserter.check(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    n = inboundPkt.fetchInt();
-    QList<Chat> chats;
-    for (qint32 i = 0; i < n; i++) {
-        chats.append(inboundPkt.fetchChat());
-    }
-    qint32 date = inboundPkt.fetchInt();
-    qint32 seqStart = inboundPkt.fetchInt();
-    qint32 seq = inboundPkt.fetchInt();
-    Q_EMIT updatesCombined(updates, users, chats, date, seqStart, seq);
+    Updates upd(&inboundPkt);
+    Q_EMIT updatesCombined(upd.updates(), upd.users(), upd.chats(), upd.date(), upd.seqStart(), upd.seq());
 }
 
 void Session::workUpdates(InboundPkt &inboundPkt, qint64 msgId) {
     qCDebug(TG_CORE_SESSION) << "workUpdates: msgId =" << QString::number(msgId, 16);
-    mAsserter.check(inboundPkt.fetchInt() == (qint32)TL_Updates);
-    //updates
-    mAsserter.check(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    qint32 n = inboundPkt.fetchInt();
-    QList<Update> updatesList;
-    for (qint32 i = 0; i < n; i++) {
-        updatesList.append(inboundPkt.fetchUpdate());
-    }
-    //users
-    mAsserter.check(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    n = inboundPkt.fetchInt();
-    QList<User> users;
-    for (qint32 i = 0; i < n; i++) {
-        users.append(inboundPkt.fetchUser());
-    }
-    //chats
-    mAsserter.check(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    n = inboundPkt.fetchInt();
-    QList<Chat> chats;
-    for (qint32 i = 0; i < n; i++) {
-        chats.append(inboundPkt.fetchChat());
-    }
-    qint32 date = inboundPkt.fetchInt();
-    qint32 seq = inboundPkt.fetchInt();
-    Q_EMIT updates(updatesList, users, chats, date, seq);
+    Updates upd(&inboundPkt);
+    Q_EMIT updates(upd.updates(), upd.users(), upd.chats(), upd.date(), upd.seq());
 }
 
 void Session::workUpdateShortMessage(InboundPkt &inboundPkt, qint64 msgId) {
     qCDebug(TG_CORE_SESSION) << "workUpdateShortMessage: msgId =" << QString::number(msgId, 16);
-    mAsserter.check(inboundPkt.fetchInt() == (qint32)TL_UpdateShortMessage);
-    qint32 flags = inboundPkt.fetchInt();
-    qint32 id = inboundPkt.fetchInt();
-    qint32 userId = inboundPkt.fetchInt();
-    QString message = inboundPkt.fetchQString();
-    qint32 pts = inboundPkt.fetchInt();
-    qint32 ptsCount = inboundPkt.fetchInt();
-    qint32 date = inboundPkt.fetchInt();
-    qint32 fwd_from_id = 0;
-    qint32 fwd_date = 0;
-    qint32 reply_to_msg_id = 0;
-    bool unread = (flags & 1<<0);
-    bool out = (flags & 1<<1);
-    if(flags & (1<<2)) {
-        fwd_from_id = inboundPkt.fetchInt();
-        fwd_date = inboundPkt.fetchInt();
-    }
-    if(flags & (1<<3)) {
-        reply_to_msg_id = inboundPkt.fetchInt();
-    }
-    Q_EMIT updateShortMessage(id, userId, message, pts, ptsCount, date, fwd_from_id, fwd_date, reply_to_msg_id, unread, out);
+    Q_UNUSED(msgId)
+    Updates upd(&inboundPkt);
+    bool unread = (upd.flags() & 1<<0);
+    bool out = (upd.flags() & 1<<1);
+    Q_EMIT updateShortMessage(upd.id(), upd.userId(), upd.message(), upd.pts(), upd.ptsCount(), upd.date(), upd.fwdFromId(), upd.fwdDate(), upd.replyToMsgId(), unread, out);
 }
 
 void Session::workUpdateShortChatMessage(InboundPkt &inboundPkt, qint64 msgId) {
     qCDebug(TG_CORE_SESSION) << "workUpdateShortChatMessage: msgId =" << QString::number(msgId, 16);
-    mAsserter.check(inboundPkt.fetchInt() == (qint32)TL_UpdateShortChatMessage);
-    qint32 flags = inboundPkt.fetchInt();
-    qint32 id = inboundPkt.fetchInt();
-    qint32 fromId = inboundPkt.fetchInt();
-    qint32 chatId = inboundPkt.fetchInt();
-    QString message = inboundPkt.fetchQString();
-    qint32 pts = inboundPkt.fetchInt();
-    qint32 pts_count = inboundPkt.fetchInt();
-    qint32 date = inboundPkt.fetchInt();
-    qint32 fwd_from_id = 0;
-    qint32 fwd_date = 0;
-    qint32 reply_to_msg_id = 0;
-    bool unread = (flags & 1<<0);
-    bool out = (flags & 1<<1);
-    if(flags & (1<<2)) {
-        fwd_from_id = inboundPkt.fetchInt();
-        fwd_date = inboundPkt.fetchInt();
-    }
-    if(flags & (1<<3)) {
-        reply_to_msg_id = inboundPkt.fetchInt();
-    }
-    Q_EMIT updateShortChatMessage(id, fromId, chatId, message, pts, pts_count, date, fwd_from_id, fwd_date, reply_to_msg_id, unread, out);
+    Q_UNUSED(msgId)
+    Updates upd(&inboundPkt);
+    bool unread = (upd.flags() & 1<<0);
+    bool out = (upd.flags() & 1<<1);
+    Q_EMIT updateShortChatMessage(upd.id(), upd.fromId(), upd.chatId(), upd.message(), upd.pts(), upd.ptsCount(), upd.date(), upd.fwdFromId(), upd.date(), upd.replyToMsgId(), unread, out);
 }
 
 void Session::workPacked(InboundPkt &inboundPkt, qint64 msgId) {

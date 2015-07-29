@@ -1,58 +1,47 @@
-#ifndef STICKERSET
-#define STICKERSET
+#ifndef LQTG_STICKERSET
+#define LQTG_STICKERSET
 
+#include "telegramtypeobject.h"
 #include <QtGlobal>
+#include <QString>
 
-class StickerSet
+class StickerSet : public TelegramTypeObject
 {
 public:
-
     enum StickerSetType {
-       typeStickerSet = 0xa7a43b17
+        typeStickerSet = 0xa7a43b17
     };
 
-    StickerSet() :
-        mId(0),
-        mAccessHash(0),
-        m_classType(typeStickerSet) {}
+    StickerSet(StickerSetType classType = typeStickerSet, InboundPkt *in = 0);
+    StickerSet(InboundPkt *in);
+    virtual ~StickerSet();
 
-    QString shortName() const {
-        return mShortName;
-    }
-    void setShortName(const QString &shortName) {
-        mShortName = shortName;
-    }
-    qint64 id() const {
-        return mId;
-    }
-    void setId(const qint64 &id) {
-        mId = id;
-    }
-    qint64 accessHash() const {
-        return mAccessHash;
-    }
-    void setAccessHash(const qint64 &accessHash) {
-        mAccessHash = accessHash;
-    }
-    QString title() const {
-        return mTitle;
-    }
-    void setTitle(const QString &title) {
-        mTitle = title;
-    }
-    void setClassType(StickerSetType classType) {
-        m_classType = classType;
-    }
-    StickerSetType classType() const {
-        return m_classType;
-    }
+    void setAccessHash(qint64 accessHash);
+    qint64 accessHash() const;
+
+    void setId(qint64 id);
+    qint64 id() const;
+
+    void setShortName(const QString &shortName);
+    QString shortName() const;
+
+    void setTitle(const QString &title);
+    QString title() const;
+
+    void setClassType(StickerSetType classType);
+    StickerSetType classType() const;
+
+    bool fetch(InboundPkt *in);
+    bool push(OutboundPkt *out) const;
+
+    bool operator ==(const StickerSet &b);
 
 private:
-    QString mShortName;
-    QString mTitle;
-    qint64 mId;
-    qint64 mAccessHash;
+    qint64 m_accessHash;
+    qint64 m_id;
+    QString m_shortName;
+    QString m_title;
     StickerSetType m_classType;
 };
 
-#endif // STICKERSET
+#endif // LQTG_STICKERSET

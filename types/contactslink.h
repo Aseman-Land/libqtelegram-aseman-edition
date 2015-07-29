@@ -1,69 +1,37 @@
-/*
- * Copyright 2014 Canonical Ltd.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; version 3.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * Authors:
- *      Roberto Mier
- *      Tiago Herrmann
- */
+#ifndef LQTG_CONTACTSLINK
+#define LQTG_CONTACTSLINK
 
-#ifndef CONTACTSLINK_H
-#define CONTACTSLINK_H
-
+#include "telegramtypeobject.h"
 #include "contactlink.h"
 #include "user.h"
 
-class ContactsLink
+class ContactsLink : public TelegramTypeObject
 {
 public:
-
     enum ContactsLinkType {
-       typeContactsLink = 0x3ace484c
+        typeContactsLink = 0x3ace484c
     };
 
-    ContactsLink() :
-        m_foreignLink(ContactLink::typeContactLinkUnknown),
-        m_myLink(ContactLink::typeContactLinkUnknown),
-        m_user(User::typeUserEmpty),
-        m_classType(typeContactsLink) {}
+    ContactsLink(ContactsLinkType classType = typeContactsLink, InboundPkt *in = 0);
+    ContactsLink(InboundPkt *in);
+    virtual ~ContactsLink();
 
-    ~ContactsLink() {}
+    void setForeignLink(const ContactLink &foreignLink);
+    ContactLink foreignLink() const;
 
-    void setMyLink(ContactLink myLink) {
-        m_myLink = myLink;
-    }
-    ContactLink myLink() const {
-        return m_myLink;
-    }
-    void setForeignLink(ContactLink foreignLink) {
-        m_foreignLink = foreignLink;
-    }
-    ContactLink foreignLink() const {
-        return m_foreignLink;
-    }
-    void setUser(const User &user) {
-        m_user = user;
-    }
-    User user() const {
-        return m_user;
-    }
-    void setClassType(ContactsLinkType classType) {
-        m_classType = classType;
-    }
-    ContactsLinkType classType() const {
-        return m_classType;
-    }
+    void setMyLink(const ContactLink &myLink);
+    ContactLink myLink() const;
+
+    void setUser(const User &user);
+    User user() const;
+
+    void setClassType(ContactsLinkType classType);
+    ContactsLinkType classType() const;
+
+    bool fetch(InboundPkt *in);
+    bool push(OutboundPkt *out) const;
+
+    bool operator ==(const ContactsLink &b);
 
 private:
     ContactLink m_foreignLink;
@@ -71,4 +39,5 @@ private:
     User m_user;
     ContactsLinkType m_classType;
 };
-#endif // CONTACTSLINK_H
+
+#endif // LQTG_CONTACTSLINK

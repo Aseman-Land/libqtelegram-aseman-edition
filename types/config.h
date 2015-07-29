@@ -1,150 +1,105 @@
-#ifndef CONFIG
-#define CONFIG
+#ifndef LQTG_CONFIG
+#define LQTG_CONFIG
 
+#include "telegramtypeobject.h"
+#include <QtGlobal>
 #include <QList>
-
 #include "dcoption.h"
 #include "disabledfeature.h"
 
-class Config
+class Config : public TelegramTypeObject
 {
 public:
-
     enum ConfigType {
-        typeConfig = 0x3e6f732a
+        typeConfig = 0x4e32b894
     };
 
-    Config() :
-        m_testMode(false),
-        m_classType(typeConfig),
-        m_date(0),
-        m_expires(0),
-        m_thisDc(0),
-        m_chatSizeMax(0),
-        m_broadcastSizeMax(0),
-        m_onlineUpdatePeriodMs(0),
-        m_offlineBlurTimeoutMs(0),
-        m_offlineIdleTimeoutMs(0),
-        m_onlineCloudTimeoutMs(0),
-        m_notifyCloudDelayMs(0),
-        m_notifyDefaultDelayMs(0),
-        m_chatBigSize(0) {}
-    ~Config() {}
+    Config(ConfigType classType = typeConfig, InboundPkt *in = 0);
+    Config(InboundPkt *in);
+    virtual ~Config();
 
-    qint32 date() const {
-        return m_date;
-    }
-    void setDate(const qint32 &date) {
-        m_date = date;
-    }
-    qint32 expires() const {
-        return m_expires;
-    }
-    void setExpires(const qint32 &expires) {
-        m_expires = expires;
-    }
-    bool testMode() const {
-        return m_testMode;
-    }
-    void setTestMode(bool testMode) {
-        m_testMode = testMode;
-    }
-    qint32 thisDc() const {
-        return m_thisDc;
-    }
-    void setThisDc(const qint32 &thisDc) {
-        m_thisDc = thisDc;
-    }
-    QList<DcOption> dcOptions() const {
-        return m_dcOptions;
-    }
-    void setDcOptions(const QList<DcOption> &dcOptions) {
-        m_dcOptions = dcOptions;
-    }
-    qint32 chatSizeMax() const {
-        return m_chatSizeMax;
-    }
-    void setChatSizeMax(const qint32 &chatSizeMax) {
-        m_chatSizeMax = chatSizeMax;
-    }
-    qint32 broadcastSizeMax() const {
-        return m_broadcastSizeMax;
-    }
-    void setBroadcastSizeMax(const qint32 &broadcastSizeMax) {
-        m_broadcastSizeMax = broadcastSizeMax;
-    }
-    qint32 onlineUpdatePeriodMs() const {
-        return m_onlineUpdatePeriodMs;
-    }
-    void setOnlineUpdatePeriodMs(const qint32 &onlineUpdatePeriodMs) {
-        m_onlineUpdatePeriodMs = onlineUpdatePeriodMs;
-    }
-    qint32 offlineBlurTimeoutMs() const {
-        return m_offlineBlurTimeoutMs;
-    }
-    void setOfflineBlurTimeoutMs(const qint32 &offlineBlurTimeoutMs) {
-        m_offlineBlurTimeoutMs = offlineBlurTimeoutMs;
-    }
-    qint32 offlineIdleTimeoutMs() const {
-        return m_offlineIdleTimeoutMs;
-    }
-    void setOfflineIdleTimeoutMs(const qint32 &offlineIdleTimeoutMs) {
-        m_offlineIdleTimeoutMs = offlineIdleTimeoutMs;
-    }
-    qint32 onlineCloudTimeoutMs() const {
-        return m_onlineCloudTimeoutMs;
-    }
-    void setOnlineCloudTimeoutMs(const qint32 &onlineCloudTimeoutMs) {
-        m_onlineCloudTimeoutMs = onlineCloudTimeoutMs;
-    }
-    qint32 notifyCloudDelayMs() const {
-        return m_notifyCloudDelayMs;
-    }
-    void setNotifyCloudDelayMs(const qint32 &notifyCloudDelayMs) {
-        m_notifyCloudDelayMs = notifyCloudDelayMs;
-    }
-    qint32 notifyDefaultDelayMs() const {
-        return m_notifyDefaultDelayMs;
-    }
-    void setNotifyDefaultDelayMs(const qint32 &notifyDefaultDelayMs) {
-        m_notifyDefaultDelayMs = notifyDefaultDelayMs;
-    }
-    qint32 chatBigSize() const {
-        return m_chatBigSize;
-    }
-    void setChatBigSize(const qint32 &chatBigSize) {
-        m_chatBigSize = chatBigSize;
-    }
-    QList<DisabledFeature> disabledFeatures() const {
-        return m_disabledFeatures;
-    }
-    void setDisabledFeatures(const QList<DisabledFeature> &disabledFeatures) {
-        m_disabledFeatures = disabledFeatures;
-    }
-    void setClassType(ConfigType classType) {
-        m_classType = classType;
-    }
-    ConfigType classType() const {
-        return m_classType;
-    }
+    void setBroadcastSizeMax(qint32 broadcastSizeMax);
+    qint32 broadcastSizeMax() const;
+
+    void setChatBigSize(qint32 chatBigSize);
+    qint32 chatBigSize() const;
+
+    void setChatSizeMax(qint32 chatSizeMax);
+    qint32 chatSizeMax() const;
+
+    void setDate(qint32 date);
+    qint32 date() const;
+
+    void setDcOptions(const QList<DcOption> &dcOptions);
+    QList<DcOption> dcOptions() const;
+
+    void setDisabledFeatures(const QList<DisabledFeature> &disabledFeatures);
+    QList<DisabledFeature> disabledFeatures() const;
+
+    void setExpires(qint32 expires);
+    qint32 expires() const;
+
+    void setForwardedCountMax(qint32 forwardedCountMax);
+    qint32 forwardedCountMax() const;
+
+    void setNotifyCloudDelayMs(qint32 notifyCloudDelayMs);
+    qint32 notifyCloudDelayMs() const;
+
+    void setNotifyDefaultDelayMs(qint32 notifyDefaultDelayMs);
+    qint32 notifyDefaultDelayMs() const;
+
+    void setOfflineBlurTimeoutMs(qint32 offlineBlurTimeoutMs);
+    qint32 offlineBlurTimeoutMs() const;
+
+    void setOfflineIdleTimeoutMs(qint32 offlineIdleTimeoutMs);
+    qint32 offlineIdleTimeoutMs() const;
+
+    void setOnlineCloudTimeoutMs(qint32 onlineCloudTimeoutMs);
+    qint32 onlineCloudTimeoutMs() const;
+
+    void setOnlineUpdatePeriodMs(qint32 onlineUpdatePeriodMs);
+    qint32 onlineUpdatePeriodMs() const;
+
+    void setPushChatLimit(qint32 pushChatLimit);
+    qint32 pushChatLimit() const;
+
+    void setPushChatPeriodMs(qint32 pushChatPeriodMs);
+    qint32 pushChatPeriodMs() const;
+
+    void setTestMode(bool testMode);
+    bool testMode() const;
+
+    void setThisDc(qint32 thisDc);
+    qint32 thisDc() const;
+
+    void setClassType(ConfigType classType);
+    ConfigType classType() const;
+
+    bool fetch(InboundPkt *in);
+    bool push(OutboundPkt *out) const;
+
+    bool operator ==(const Config &b);
 
 private:
+    qint32 m_broadcastSizeMax;
+    qint32 m_chatBigSize;
+    qint32 m_chatSizeMax;
+    qint32 m_date;
     QList<DcOption> m_dcOptions;
     QList<DisabledFeature> m_disabledFeatures;
-    bool m_testMode;
-    ConfigType m_classType;
-    qint32 m_date;
     qint32 m_expires;
-    qint32 m_thisDc;
-    qint32 m_chatSizeMax;
-    qint32 m_broadcastSizeMax;
-    qint32 m_onlineUpdatePeriodMs;
+    qint32 m_forwardedCountMax;
+    qint32 m_notifyCloudDelayMs;
+    qint32 m_notifyDefaultDelayMs;
     qint32 m_offlineBlurTimeoutMs;
     qint32 m_offlineIdleTimeoutMs;
     qint32 m_onlineCloudTimeoutMs;
-    qint32 m_notifyCloudDelayMs;
-    qint32 m_notifyDefaultDelayMs;
-    qint32 m_chatBigSize;
+    qint32 m_onlineUpdatePeriodMs;
+    qint32 m_pushChatLimit;
+    qint32 m_pushChatPeriodMs;
+    bool m_testMode;
+    qint32 m_thisDc;
+    ConfigType m_classType;
 };
 
-#endif // CONFIG
+#endif // LQTG_CONFIG

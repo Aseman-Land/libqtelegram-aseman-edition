@@ -1,64 +1,39 @@
-/*
- * Copyright 2014 Canonical Ltd.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; version 3.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * Authors:
- *      Roberto Mier
- *      Tiago Herrmann
- */
+#ifndef LQTG_CHATPHOTO
+#define LQTG_CHATPHOTO
 
-#ifndef CHATPHOTO_H
-#define CHATPHOTO_H
-
+#include "telegramtypeobject.h"
 #include "filelocation.h"
 
-class ChatPhoto
+class ChatPhoto : public TelegramTypeObject
 {
 public:
-
     enum ChatPhotoType {
-       typeChatPhoto = 0x6153276a,
-       typeChatPhotoEmpty = 0x37c1011c
+        typeChatPhotoEmpty = 0x37c1011c,
+        typeChatPhoto = 0x6153276a
     };
 
-    ChatPhoto(ChatPhotoType classType) :
-        m_photoBig(FileLocation::typeFileLocationUnavailable),
-        m_photoSmall(FileLocation::typeFileLocationUnavailable),
-        m_classType(classType) {}
+    ChatPhoto(ChatPhotoType classType = typeChatPhotoEmpty, InboundPkt *in = 0);
+    ChatPhoto(InboundPkt *in);
+    virtual ~ChatPhoto();
 
-    void setPhotoSmall(const FileLocation &photoSmall) {
-        m_photoSmall = photoSmall;
-    }
-    FileLocation photoSmall() const {
-        return m_photoSmall;
-    }
-    void setPhotoBig(const FileLocation &photoBig) {
-        m_photoBig = photoBig;
-    }
-    FileLocation photoBig() const {
-        return m_photoBig;
-    }
-    void setClassType(ChatPhotoType classType) {
-        m_classType = classType;
-    }
-    ChatPhotoType classType() const {
-        return m_classType;
-    }
+    void setPhotoBig(const FileLocation &photoBig);
+    FileLocation photoBig() const;
+
+    void setPhotoSmall(const FileLocation &photoSmall);
+    FileLocation photoSmall() const;
+
+    void setClassType(ChatPhotoType classType);
+    ChatPhotoType classType() const;
+
+    bool fetch(InboundPkt *in);
+    bool push(OutboundPkt *out) const;
+
+    bool operator ==(const ChatPhoto &b);
 
 private:
     FileLocation m_photoBig;
     FileLocation m_photoSmall;
     ChatPhotoType m_classType;
 };
-#endif // CHATPHOTO_H
+
+#endif // LQTG_CHATPHOTO

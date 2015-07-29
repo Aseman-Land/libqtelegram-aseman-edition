@@ -1,71 +1,42 @@
-/*
- * Copyright 2014 Canonical Ltd.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; version 3.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * Authors:
- *      Roberto Mier
- *      Tiago Herrmann
- */
+#ifndef LQTG_CHATPARTICIPANT
+#define LQTG_CHATPARTICIPANT
 
-#ifndef CHATPARTICIPANT_H
-#define CHATPARTICIPANT_H
-
+#include "telegramtypeobject.h"
 #include <QtGlobal>
 
-class ChatParticipant
+class ChatParticipant : public TelegramTypeObject
 {
 public:
-
     enum ChatParticipantType {
-       typeChatParticipant = 0xc8d7493e
+        typeChatParticipant = 0xc8d7493e
     };
 
-    ChatParticipant() :
-        m_userId(0),
-        m_date(0),
-        m_inviterId(0),
-        m_classType(typeChatParticipant) {}
+    ChatParticipant(ChatParticipantType classType = typeChatParticipant, InboundPkt *in = 0);
+    ChatParticipant(InboundPkt *in);
+    virtual ~ChatParticipant();
 
-    void setUserId(qint32 userId) {
-        m_userId = userId;
-    }
-    qint32 userId() const {
-        return m_userId;
-    }
-    void setInviterId(qint32 inviterId) {
-        m_inviterId = inviterId;
-    }
-    qint32 inviterId() const {
-        return m_inviterId;
-    }
-    void setDate(qint32 date) {
-        m_date = date;
-    }
-    qint32 date() const {
-        return m_date;
-    }
-    void setClassType(ChatParticipantType classType) {
-        m_classType = classType;
-    }
-    ChatParticipantType classType() const {
-        return m_classType;
-    }
+    void setDate(qint32 date);
+    qint32 date() const;
+
+    void setInviterId(qint32 inviterId);
+    qint32 inviterId() const;
+
+    void setUserId(qint32 userId);
+    qint32 userId() const;
+
+    void setClassType(ChatParticipantType classType);
+    ChatParticipantType classType() const;
+
+    bool fetch(InboundPkt *in);
+    bool push(OutboundPkt *out) const;
+
+    bool operator ==(const ChatParticipant &b);
 
 private:
-    qint32 m_userId;
     qint32 m_date;
     qint32 m_inviterId;
+    qint32 m_userId;
     ChatParticipantType m_classType;
 };
-#endif // CHATPARTICIPANT_H
+
+#endif // LQTG_CHATPARTICIPANT

@@ -21,10 +21,11 @@
 #ifndef FILEOPERATION_H
 #define FILEOPERATION_H
 
-#include "uploadfile.h"
+#include "uploadfileengine.h"
 #include "types/inputpeer.h"
 #include "types/inputmedia.h"
 #include "types/inputchatphoto.h"
+#include "types/inputencryptedchat.h"
 #include <QSharedPointer>
 
 class FileOperation

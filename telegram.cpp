@@ -777,7 +777,7 @@ SecretChatMessage Telegram::toSecretChatMessage(const EncryptedMessage &encrypte
 void Telegram::processSecretChatUpdate(const Update &update) {
     switch (static_cast<qint32>(update.classType())) {
     case Update::typeUpdateNewEncryptedMessage: {
-        EncryptedMessage encrypted = update.encryptedMessage();
+        EncryptedMessage encrypted = update.messageEncrypted();
 
         SecretChatMessage secretChatMessage = toSecretChatMessage(encrypted);
 
@@ -1491,8 +1491,8 @@ qint64 Telegram::messagesSendAudio(const InputPeer &peer, qint64 randomId, const
 }
 
 qint64 Telegram::messagesSendDocument(const InputPeer &peer, qint64 randomId, const QByteArray &bytes, const QString &fileName, const QString &mimeType, const QByteArray &thumbnailBytes, const QString &thumbnailName, const QList<DocumentAttribute> &extraAttributes, qint32 replyToMsgId) {
-    DocumentAttribute fileAttr(DocumentAttribute::typeAttributeFilename);
-    fileAttr.setFilename(fileName);
+    DocumentAttribute fileAttr(DocumentAttribute::typeDocumentAttributeFilename);
+    fileAttr.setFileName(fileName);
 
     QList<DocumentAttribute> attributes;
     attributes << fileAttr;
@@ -1516,18 +1516,18 @@ qint64 Telegram::messagesSendDocument(const InputPeer &peer, qint64 randomId, co
     const QMimeType t = QMimeDatabase().mimeTypeForFile(QFileInfo(filePath));
     QString mimeType = t.name();
 
-    DocumentAttribute fileAttr(DocumentAttribute::typeAttributeFilename);
-    fileAttr.setFilename(QFileInfo(filePath).fileName());
+    DocumentAttribute fileAttr(DocumentAttribute::typeDocumentAttributeFilename);
+    fileAttr.setFileName(QFileInfo(filePath).fileName());
 
     QList<DocumentAttribute> attributes;
     attributes << fileAttr;
     if(sendAsSticker) {
         QImageReader reader(filePath);
-        DocumentAttribute imageSizeAttr(DocumentAttribute::typeAttributeImageSize);
+        DocumentAttribute imageSizeAttr(DocumentAttribute::typeDocumentAttributeImageSize);
         imageSizeAttr.setH(reader.size().height());
         imageSizeAttr.setW(reader.size().width());
 
-        attributes << DocumentAttribute(DocumentAttribute::typeAttributeSticker) << imageSizeAttr;
+        attributes << DocumentAttribute(DocumentAttribute::typeDocumentAttributeSticker) << imageSizeAttr;
 
         if(mimeType.contains("webp"))
             mimeType = "image/webp";
@@ -1552,7 +1552,7 @@ qint64 Telegram::messagesForwardPhoto(const InputPeer &peer, qint64 randomId, qi
     inputPhoto.setId(photoId);
     inputPhoto.setAccessHash(accessHash);
     InputMedia inputMedia(InputMedia::typeInputMediaPhoto);
-    inputMedia.setPhotoId(inputPhoto);
+    inputMedia.setIdInputPhoto(inputPhoto);
     return mApi->messagesSendMedia(peer, inputMedia, randomId, replyToMsgId);
 }
 
@@ -1561,7 +1561,7 @@ qint64 Telegram::messagesForwardVideo(const InputPeer &peer, qint64 randomId, qi
     inputVideo.setId(videoId);
     inputVideo.setAccessHash(accessHash);
     InputMedia inputMedia(InputMedia::typeInputMediaVideo);
-    inputMedia.setVideoId(inputVideo);
+    inputMedia.setIdInputVideo(inputVideo);
     return mApi->messagesSendMedia(peer, inputMedia, randomId, replyToMsgId);
 }
 
@@ -1570,7 +1570,7 @@ qint64 Telegram::messagesForwardAudio(const InputPeer &peer, qint64 randomId, qi
     inputAudio.setId(audioId);
     inputAudio.setAccessHash(accessHash);
     InputMedia inputMedia(InputMedia::typeInputMediaAudio);
-    inputMedia.setAudioId(inputAudio);
+    inputMedia.setIdInputAudio(inputAudio);
     return mApi->messagesSendMedia(peer, inputMedia, randomId, replyToMsgId);
 }
 
@@ -1579,7 +1579,7 @@ qint64 Telegram::messagesForwardDocument(const InputPeer &peer, qint64 randomId,
     inputDocument.setId(documentId);
     inputDocument.setAccessHash(accessHash);
     InputMedia inputMedia(InputMedia::typeInputMediaDocument);
-    inputMedia.setDocumentId(inputDocument);
+    inputMedia.setIdInputDocument(inputDocument);
     return mApi->messagesSendMedia(peer, inputMedia, randomId, replyToMsgId);
 }
 

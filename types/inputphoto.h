@@ -1,64 +1,39 @@
-/*
- * Copyright 2014 Canonical Ltd.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; version 3.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * Authors:
- *      Roberto Mier
- *      Tiago Herrmann
- */
+#ifndef LQTG_INPUTPHOTO
+#define LQTG_INPUTPHOTO
 
-#ifndef INPUTPHOTO_H
-#define INPUTPHOTO_H
-
+#include "telegramtypeobject.h"
 #include <QtGlobal>
 
-class InputPhoto
+class InputPhoto : public TelegramTypeObject
 {
 public:
-
     enum InputPhotoType {
-       typeInputPhoto = 0xfb95c6c4,
-       typeInputPhotoEmpty = 0x1cd7bf0d
+        typeInputPhotoEmpty = 0x1cd7bf0d,
+        typeInputPhoto = 0xfb95c6c4
     };
 
-    InputPhoto(InputPhotoType classType) :
-        m_id(0),
-        m_accessHash(0),
-        m_classType(classType) {}
+    InputPhoto(InputPhotoType classType = typeInputPhotoEmpty, InboundPkt *in = 0);
+    InputPhoto(InboundPkt *in);
+    virtual ~InputPhoto();
 
-    void setId(qint64 id) {
-        m_id = id;
-    }
-    qint64 id() const {
-        return m_id;
-    }
-    void setAccessHash(qint64 accessHash) {
-        m_accessHash = accessHash;
-    }
-    qint64 accessHash() const {
-        return m_accessHash;
-    }
-    void setClassType(InputPhotoType classType) {
-        m_classType = classType;
-    }
-    InputPhotoType classType() const {
-        return m_classType;
-    }
+    void setAccessHash(qint64 accessHash);
+    qint64 accessHash() const;
+
+    void setId(qint64 id);
+    qint64 id() const;
+
+    void setClassType(InputPhotoType classType);
+    InputPhotoType classType() const;
+
+    bool fetch(InboundPkt *in);
+    bool push(OutboundPkt *out) const;
+
+    bool operator ==(const InputPhoto &b);
 
 private:
-    qint64 m_id;
     qint64 m_accessHash;
+    qint64 m_id;
     InputPhotoType m_classType;
 };
-#endif // INPUTPHOTO_H
+
+#endif // LQTG_INPUTPHOTO

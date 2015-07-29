@@ -1,93 +1,47 @@
-/*
- * Copyright 2014 Canonical Ltd.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; version 3.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * Authors:
- *      Roberto Mier
- *      Tiago Herrmann
- */
+#ifndef LQTG_FILELOCATION
+#define LQTG_FILELOCATION
 
-#ifndef FILELOCATION_H
-#define FILELOCATION_H
+#include "telegramtypeobject.h"
+#include <QtGlobal>
 
-#include <QObject>
-
-class FileLocation
+class FileLocation : public TelegramTypeObject
 {
 public:
     enum FileLocationType {
-       typeFileLocation = 0x53d69076,
-       typeFileLocationUnavailable = 0x7c596b46
+        typeFileLocationUnavailable = 0x7c596b46,
+        typeFileLocation = 0x53d69076
     };
 
-    FileLocation(FileLocationType classType = typeFileLocationUnavailable) :        
-        m_secret(0),
-        m_volumeId(0),
-        m_classType(classType),
-        m_dcId(0),
-        m_localId(0) {}
+    FileLocation(FileLocationType classType = typeFileLocationUnavailable, InboundPkt *in = 0);
+    FileLocation(InboundPkt *in);
+    virtual ~FileLocation();
 
-    bool operator==(const FileLocation &other) const {
-        if (this->dcId() == other.dcId() &&
-                this->localId() == other.localId() &&
-                this->secret() == other.secret() &&
-                this->volumeId() == other.volumeId()) {
-            return true;
-        }
-        return false;
-    }
+    void setDcId(qint32 dcId);
+    qint32 dcId() const;
 
-    bool operator!=(const FileLocation &other) const {
-        return !((*this) == other);
-    }
+    void setLocalId(qint32 localId);
+    qint32 localId() const;
 
-    void setDcId(qint32 dcId) {
-        m_dcId = dcId;
-    }
-    qint32 dcId() const {
-        return m_dcId;
-    }
-    void setVolumeId(qint64 volumeId) {
-        m_volumeId = volumeId;
-    }
-    qint64 volumeId() const {
-        return m_volumeId;
-    }
-    void setLocalId(qint32 localId) {
-        m_localId = localId;
-    }
-    qint32 localId() const {
-        return m_localId;
-    }
-    void setSecret(qint64 secret) {
-        m_secret = secret;
-    }
-    qint64 secret() const {
-        return m_secret;
-    }
-    void setClassType(FileLocationType classType) {
-        m_classType = classType;
-    }
-    FileLocationType classType() const {
-        return m_classType;
-    }
+    void setSecret(qint64 secret);
+    qint64 secret() const;
+
+    void setVolumeId(qint64 volumeId);
+    qint64 volumeId() const;
+
+    void setClassType(FileLocationType classType);
+    FileLocationType classType() const;
+
+    bool fetch(InboundPkt *in);
+    bool push(OutboundPkt *out) const;
+
+    bool operator ==(const FileLocation &b);
 
 private:
+    qint32 m_dcId;
+    qint32 m_localId;
     qint64 m_secret;
     qint64 m_volumeId;
     FileLocationType m_classType;
-    qint32 m_dcId;
-    qint32 m_localId;
 };
-#endif // FILELOCATION_H
+
+#endif // LQTG_FILELOCATION

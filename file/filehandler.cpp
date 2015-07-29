@@ -23,7 +23,7 @@ FileHandler::FileHandler(Api *api, CryptoUtils *crypto, Settings *settings, DcPr
 }
 
 FileHandler::~FileHandler() {
-    Q_FOREACH (UploadFile::Ptr f, mUploadsMap.values()) {
+    Q_FOREACH (UploadFileEngine::Ptr f, mUploadsMap.values()) {
         f.clear();
     }
     Q_FOREACH (FileOperation::Ptr op, mFileOperationsMap.values()) {
@@ -38,7 +38,7 @@ qint64 FileHandler::uploadSendFile(FileOperation &op, const QString &fileName, c
     // create dedicated session to working dc for the main file
     DC *dc = mDcProvider.getWorkingDc();
     Session *session = mApi->fileSession(dc);
-    UploadFile::Ptr f = UploadFile::Ptr(new UploadFile(session, mCrypto, UploadFile::Main, bytes, this));
+    UploadFileEngine::Ptr f = UploadFileEngine::Ptr(new UploadFileEngine(session, mCrypto, UploadFileEngine::Main, bytes, this));
     bool encrypted = op.opType() == FileOperation::sendEncryptedFile;
     if (encrypted) {
         f->setEncrypted(true);
@@ -48,12 +48,12 @@ qint64 FileHandler::uploadSendFile(FileOperation &op, const QString &fileName, c
     f->setName(fileName);
     mUploadsMap.insert(f->id(), f);
     mFileOperationsMap.insert(f->id(), FileOperation::Ptr(&op));
-    UploadFile::Ptr firstFileToUpload = f;
+    UploadFileEngine::Ptr firstFileToUpload = f;
     // if exists thumbnail, create its file object and assign id to main file thumbnail_id (and viceversa)
     // first send all thumbnail before sending main file
     if (!thumbnailBytes.isEmpty()) {
         // use same session for thumbnail and main file. In case a thumbnail exists, send it first
-        UploadFile::Ptr thumb = UploadFile::Ptr(new UploadFile(session, mCrypto, UploadFile::Thumbnail, thumbnailBytes, this));
+        UploadFileEngine::Ptr thumb = UploadFileEngine::Ptr(new UploadFileEngine(session, mCrypto, UploadFileEngine::Thumbnail, thumbnailBytes, this));
         f->setRelatedFileId(thumb->id());
         thumb->setRelatedFileId(f->id());
         thumbnailName.length() > 0 ? thumb->setName(thumbnailName) : thumb->setName(fileName);
@@ -77,7 +77,7 @@ qint64 FileHandler::uploadSendFile(FileOperation &op, const QString &filePath, c
     // create dedicated session to working dc for the main file
     DC *dc = mDcProvider.getWorkingDc();
     Session *session = mApi->fileSession(dc);
-    UploadFile::Ptr f = UploadFile::Ptr(new UploadFile(session, mCrypto, UploadFile::Main, filePath, this));
+    UploadFileEngine::Ptr f = UploadFileEngine::Ptr(new UploadFileEngine(session, mCrypto, UploadFileEngine::Main, filePath, this));
     bool encrypted = op.opType() == FileOperation::sendEncryptedFile;
     if (encrypted) {
         f->setEncrypted(true);
@@ -86,12 +86,12 @@ qint64 FileHandler::uploadSendFile(FileOperation &op, const QString &filePath, c
     }
     mUploadsMap.insert(f->id(), f);
     mFileOperationsMap.insert(f->id(), FileOperation::Ptr(&op));
-    UploadFile::Ptr firstFileToUpload = f;
+    UploadFileEngine::Ptr firstFileToUpload = f;
     // if exists thumbnail, create its file object and assign id to main file thumbnail_id (and viceversa)
     // first send all thumbnail before sending main file
     if (thumbnailPath.length() > 0) {
         // use same session for thumbnail and main file. In case a thumbnail exists, send it first
-        UploadFile::Ptr thumb = UploadFile::Ptr(new UploadFile(session, mCrypto, UploadFile::Thumbnail, thumbnailPath, this));
+        UploadFileEngine::Ptr thumb = UploadFileEngine::Ptr(new UploadFileEngine(session, mCrypto, UploadFileEngine::Thumbnail, thumbnailPath, this));
         f->setRelatedFileId(thumb->id());
         thumb->setRelatedFileId(f->id());
         // insert the relationship fileId <-> thumb file
@@ -112,13 +112,13 @@ qint64 FileHandler::uploadSendFile(FileOperation &op, const QString &filePath, c
 
 void FileHandler::onUploadSendFileSessionCreated() {
     Session *session = qobject_cast<Session*>(sender());
-    QList<UploadFile::Ptr> sessionInitialFiles = mInitialUploadsMap.take(session->sessionId());
-    Q_FOREACH (UploadFile::Ptr f, sessionInitialFiles) {
+    QList<UploadFileEngine::Ptr> sessionInitialFiles = mInitialUploadsMap.take(session->sessionId());
+    Q_FOREACH (UploadFileEngine::Ptr f, sessionInitialFiles) {
         uploadSendFileParts(*f);
     }
 }
 
-qint64 FileHandler::uploadSendFileParts(UploadFile &file) {
+qint64 FileHandler::uploadSendFileParts(UploadFileEngine &file) {
     // depending on size use one or other api method to upload every part
     qint32 partId = 0;
 
@@ -135,7 +135,7 @@ qint64 FileHandler::uploadSendFileParts(UploadFile &file) {
 }
 
 void FileHandler::onUploadSaveFilePartResult(qint64, qint64 fileId, bool) {
-    UploadFile::Ptr uploadFile = mUploadsMap.value(fileId);
+    UploadFileEngine::Ptr uploadFile = mUploadsMap.value(fileId);
     Q_ASSERT(!uploadFile.isNull());
     uploadFile->increaseUploadedParts();
     qCDebug(TG_FILE_FILEHANDLER) << "uploaded" << uploadFile->uploadedParts() << "parts out of" << uploadFile->nParts();
@@ -150,9 +150,9 @@ void FileHandler::onUploadSaveFilePartResult(qint64, qint64 fileId, bool) {
     if (uploadFile->uploadedParts() == uploadFile->nParts()) {
         // if finished a thumbnail, send the main file. Send media metadata if finished is the main file
         qCDebug(TG_FILE_FILEHANDLER) << "file upload finished for fileId" << fileId;
-        if (uploadFile->fileType() == UploadFile::Thumbnail) {
+        if (uploadFile->fileType() == UploadFileEngine::Thumbnail) {
             qint64 mainFileId = uploadFile->relatedFileId();
-            UploadFile::Ptr main = mUploadsMap.value(mainFileId);
+            UploadFileEngine::Ptr main = mUploadsMap.value(mainFileId);
             Q_ASSERT(!main.isNull());
             uploadSendFileParts(*main);
         } else {
@@ -176,7 +176,7 @@ void FileHandler::onUploadSaveFilePartResult(qint64, qint64 fileId, bool) {
                     metadata.setFile(inputFile);
                     // once filled input main file, check if there is a thumbnail and fill its data
                     if (uploadFile->relatedFileId()) {
-                        UploadFile::Ptr thumb = mUploadsMap.take(uploadFile->relatedFileId());
+                        UploadFileEngine::Ptr thumb = mUploadsMap.take(uploadFile->relatedFileId());
                         InputFile inputThumb(InputFile::typeInputFile);
                         if (thumb->length() > 10 * 1024 * 1024) {
                             inputThumb.setClassType(InputFile::typeInputFileBig);

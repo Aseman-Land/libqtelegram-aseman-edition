@@ -1,64 +1,39 @@
-/*
- * Copyright 2014 Canonical Ltd.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; version 3.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * Authors:
- *      Roberto Mier
- *      Tiago Herrmann
- */
+#ifndef LQTG_CONTACTSTATUS
+#define LQTG_CONTACTSTATUS
 
-#ifndef CONTACTSTATUS_H
-#define CONTACTSTATUS_H
-
-#include <QtGlobal>
+#include "telegramtypeobject.h"
 #include "userstatus.h"
+#include <QtGlobal>
 
-class ContactStatus
+class ContactStatus : public TelegramTypeObject
 {
 public:
-
     enum ContactStatusType {
-       typeContactStatus = 0xd3680c61
+        typeContactStatus = 0xd3680c61
     };
 
-    ContactStatus() :
-        m_userId(0),
-        m_status(UserStatus::typeUserStatusEmpty),
-        m_classType(typeContactStatus) {}
+    ContactStatus(ContactStatusType classType = typeContactStatus, InboundPkt *in = 0);
+    ContactStatus(InboundPkt *in);
+    virtual ~ContactStatus();
 
-    void setUserId(qint32 userId) {
-        m_userId = userId;
-    }
-    qint32 userId() const {
-        return m_userId;
-    }
-    void setUserStatus(const UserStatus &status) {
-        m_status = status;
-    }
-    UserStatus userStatus() const {
-        return m_status;
-    }
-    void setClassType(ContactStatusType classType) {
-        m_classType = classType;
-    }
-    ContactStatusType classType() const {
-        return m_classType;
-    }
+    void setStatus(const UserStatus &status);
+    UserStatus status() const;
+
+    void setUserId(qint32 userId);
+    qint32 userId() const;
+
+    void setClassType(ContactStatusType classType);
+    ContactStatusType classType() const;
+
+    bool fetch(InboundPkt *in);
+    bool push(OutboundPkt *out) const;
+
+    bool operator ==(const ContactStatus &b);
 
 private:
-    qint32 m_userId;
     UserStatus m_status;
+    qint32 m_userId;
     ContactStatusType m_classType;
 };
-#endif // CONTACTSTATUS_H
+
+#endif // LQTG_CONTACTSTATUS

@@ -1,79 +1,47 @@
-/*
- * Copyright 2014 Canonical Ltd.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; version 3.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * Authors:
- *      Roberto Mier
- *      Tiago Herrmann
- */
+#ifndef LQTG_INPUTCONTACT
+#define LQTG_INPUTCONTACT
 
-#ifndef INPUTCONTACT_H
-#define INPUTCONTACT_H
-
+#include "telegramtypeobject.h"
+#include <QtGlobal>
 #include <QString>
 
-class InputContact
+class InputContact : public TelegramTypeObject
 {
 public:
-
     enum InputContactType {
-       typeInputPhoneContact = 0xf392b7f4
+        typeInputPhoneContact = 0xf392b7f4
     };
 
-    InputContact() :
-        m_firstName(""),
-        m_phone(""),
-        m_clientId(0),
-        m_lastName(""),
-        m_classType(typeInputPhoneContact) {}
+    InputContact(InputContactType classType = typeInputPhoneContact, InboundPkt *in = 0);
+    InputContact(InboundPkt *in);
+    virtual ~InputContact();
 
-    void setClientId(qint64 clientId) {
-        m_clientId = clientId;
-    }
-    qint64 clientId() const {
-        return m_clientId;
-    }
-    void setPhone(const QString & phone) {
-        m_phone = phone;
-    }
-    QString phone() const {
-        return m_phone;
-    }
-    void setFirstName(const QString & firstName) {
-        m_firstName = firstName;
-    }
-    QString firstName() const {
-        return m_firstName;
-    }
-    void setLastName(const QString & lastName) {
-        m_lastName = lastName;
-    }
-    QString lastName() const {
-        return m_lastName;
-    }
-    void setClassType(InputContactType classType) {
-        m_classType = classType;
-    }
-    InputContactType classType() const {
-        return m_classType;
-    }
+    void setClientId(qint64 clientId);
+    qint64 clientId() const;
+
+    void setFirstName(const QString &firstName);
+    QString firstName() const;
+
+    void setLastName(const QString &lastName);
+    QString lastName() const;
+
+    void setPhone(const QString &phone);
+    QString phone() const;
+
+    void setClassType(InputContactType classType);
+    InputContactType classType() const;
+
+    bool fetch(InboundPkt *in);
+    bool push(OutboundPkt *out) const;
+
+    bool operator ==(const InputContact &b);
 
 private:
-    QString m_firstName;
-    QString m_phone;
     qint64 m_clientId;
+    QString m_firstName;
     QString m_lastName;
+    QString m_phone;
     InputContactType m_classType;
 };
-#endif // INPUTCONTACT_H
+
+#endif // LQTG_INPUTCONTACT

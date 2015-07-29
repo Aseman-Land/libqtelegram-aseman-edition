@@ -1,69 +1,43 @@
-/*
- * Copyright 2014 Canonical Ltd.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; version 3.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * Authors:
- *      Roberto Mier
- *      Tiago Herrmann
- */
+#ifndef LQTG_INPUTPHOTOCROP
+#define LQTG_INPUTPHOTOCROP
 
-#ifndef INPUTPHOTOCROP_H
-#define INPUTPHOTOCROP_H
-class InputPhotoCrop
+#include "telegramtypeobject.h"
+#include <QtGlobal>
+
+class InputPhotoCrop : public TelegramTypeObject
 {
 public:
-
     enum InputPhotoCropType {
-       typeInputPhotoCropAuto = 0xade6b004,
-       typeInputPhotoCrop = 0xd9915325
+        typeInputPhotoCropAuto = 0xade6b004,
+        typeInputPhotoCrop = 0xd9915325
     };
 
-    InputPhotoCrop(InputPhotoCropType classType = typeInputPhotoCropAuto) :
-        m_cropTop(0.0),
-        m_cropLeft(0.0),
-        m_cropWidth(0.0),
-        m_classType(classType) {}
+    InputPhotoCrop(InputPhotoCropType classType = typeInputPhotoCropAuto, InboundPkt *in = 0);
+    InputPhotoCrop(InboundPkt *in);
+    virtual ~InputPhotoCrop();
 
-    void setCropLeft(double cropLeft) {
-        m_cropLeft = cropLeft;
-    }
-    double cropLeft() const {
-        return m_cropLeft;
-    }
-    void setCropTop(double cropTop) {
-        m_cropTop = cropTop;
-    }
-    double cropTop() const {
-        return m_cropTop;
-    }
-    void setCropWidth(double cropWidth) {
-        m_cropWidth = cropWidth;
-    }
-    double cropWidth() const {
-        return m_cropWidth;
-    }
-    void setClassType(InputPhotoCropType classType) {
-        m_classType = classType;
-    }
-    InputPhotoCropType classType() const {
-        return m_classType;
-    }
+    void setCropLeft(qreal cropLeft);
+    qreal cropLeft() const;
+
+    void setCropTop(qreal cropTop);
+    qreal cropTop() const;
+
+    void setCropWidth(qreal cropWidth);
+    qreal cropWidth() const;
+
+    void setClassType(InputPhotoCropType classType);
+    InputPhotoCropType classType() const;
+
+    bool fetch(InboundPkt *in);
+    bool push(OutboundPkt *out) const;
+
+    bool operator ==(const InputPhotoCrop &b);
 
 private:
-    double m_cropTop;
-    double m_cropLeft;
-    double m_cropWidth;
+    qreal m_cropLeft;
+    qreal m_cropTop;
+    qreal m_cropWidth;
     InputPhotoCropType m_classType;
 };
-#endif // INPUTPHOTOCROP_H
+
+#endif // LQTG_INPUTPHOTOCROP

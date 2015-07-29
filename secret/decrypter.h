@@ -22,6 +22,7 @@
 #include <QByteArray>
 #include "types/decryptedmessage.h"
 #include "types/encryptedmessage.h"
+#include "core/settings.h"
 
 #include <QSharedPointer>
 #include <QPair>

@@ -1,39 +1,35 @@
-#ifndef CHATINVITE
-#define CHATINVITE
+#ifndef LQTG_CHATINVITE
+#define LQTG_CHATINVITE
 
-#include <QtGlobal>
+#include "telegramtypeobject.h"
 #include "chat.h"
+#include <QString>
 
-class ChatInvite
+class ChatInvite : public TelegramTypeObject
 {
 public:
-
     enum ChatInviteType {
-       typeChatInviteAlready = 0x5a686d7c,
-       typeChatInvite = 0xce917dcd
+        typeChatInviteAlready = 0x5a686d7c,
+        typeChatInvite = 0xce917dcd
     };
 
-    ChatInvite(ChatInviteType classType) :
-        m_classType(classType) {}
+    ChatInvite(ChatInviteType classType = typeChatInviteAlready, InboundPkt *in = 0);
+    ChatInvite(InboundPkt *in);
+    virtual ~ChatInvite();
 
-    Chat chat() const {
-        return m_chat;
-    }
-    void setChat(const Chat &chat) {
-        m_chat = chat;
-    }
-    QString title() const {
-        return m_title;
-    }
-    void setTitle(const QString &title) {
-        m_title = title;
-    }
-    void setClassType(ChatInviteType classType) {
-        m_classType = classType;
-    }
-    ChatInviteType classType() const {
-        return m_classType;
-    }
+    void setChat(const Chat &chat);
+    Chat chat() const;
+
+    void setTitle(const QString &title);
+    QString title() const;
+
+    void setClassType(ChatInviteType classType);
+    ChatInviteType classType() const;
+
+    bool fetch(InboundPkt *in);
+    bool push(OutboundPkt *out) const;
+
+    bool operator ==(const ChatInvite &b);
 
 private:
     Chat m_chat;
@@ -41,5 +37,4 @@ private:
     ChatInviteType m_classType;
 };
 
-#endif // CHATINVITE
-
+#endif // LQTG_CHATINVITE

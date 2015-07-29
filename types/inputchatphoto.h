@@ -1,75 +1,46 @@
-/*
- * Copyright 2014 Canonical Ltd.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; version 3.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * Authors:
- *      Roberto Mier
- *      Tiago Herrmann
- */
+#ifndef LQTG_INPUTCHATPHOTO
+#define LQTG_INPUTCHATPHOTO
 
-#ifndef INPUTCHATPHOTO_H
-#define INPUTCHATPHOTO_H
-
-#include "inputphoto.h"
-#include "inputfile.h"
+#include "telegramtypeobject.h"
 #include "inputphotocrop.h"
+#include "inputfile.h"
+#include "inputphoto.h"
 
-class InputChatPhoto
+class InputChatPhoto : public TelegramTypeObject
 {
 public:
-
     enum InputChatPhotoType {
-       typeInputChatPhoto = 0xb2e1bf08,
-       typeInputChatUploadedPhoto = 0x94254732,
-       typeInputChatPhotoEmpty = 0x1ca48f57
+        typeInputChatPhotoEmpty = 0x1ca48f57,
+        typeInputChatUploadedPhoto = 0x94254732,
+        typeInputChatPhoto = 0xb2e1bf08
     };
 
-    InputChatPhoto(InputChatPhotoType classType) :
-        m_file(InputFile::typeInputFile),
-        m_id(InputPhoto::typeInputPhotoEmpty),
-        m_crop(InputPhotoCrop::typeInputPhotoCropAuto),
-        m_classType(classType) {}
+    InputChatPhoto(InputChatPhotoType classType = typeInputChatPhotoEmpty, InboundPkt *in = 0);
+    InputChatPhoto(InboundPkt *in);
+    virtual ~InputChatPhoto();
 
-    void setId(const InputPhoto &id) {
-        m_id = id;
-    }
-    InputPhoto id() const {
-        return m_id;
-    }
-    void setCrop(const InputPhotoCrop &crop) {
-        m_crop = crop;
-    }
-    InputPhotoCrop crop() const {
-        return m_crop;
-    }
-    void setFile(const InputFile &file) {
-        m_file = file;
-    }
-    InputFile file() const {
-        return m_file;
-    }
-    void setClassType(InputChatPhotoType classType) {
-        m_classType = classType;
-    }
-    InputChatPhotoType classType() const {
-        return m_classType;
-    }
+    void setCrop(const InputPhotoCrop &crop);
+    InputPhotoCrop crop() const;
+
+    void setFile(const InputFile &file);
+    InputFile file() const;
+
+    void setId(const InputPhoto &id);
+    InputPhoto id() const;
+
+    void setClassType(InputChatPhotoType classType);
+    InputChatPhotoType classType() const;
+
+    bool fetch(InboundPkt *in);
+    bool push(OutboundPkt *out) const;
+
+    bool operator ==(const InputChatPhoto &b);
 
 private:
+    InputPhotoCrop m_crop;
     InputFile m_file;
     InputPhoto m_id;
-    InputPhotoCrop m_crop;
     InputChatPhotoType m_classType;
 };
-#endif // INPUTCHATPHOTO_H
+
+#endif // LQTG_INPUTCHATPHOTO

@@ -1,49 +1,39 @@
-/*
- * Copyright 2014 Canonical Ltd.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; version 3.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * Authors:
- *      Roberto Mier
- *      Tiago Herrmann
- */
+#ifndef LQTG_INPUTGEOPOINT
+#define LQTG_INPUTGEOPOINT
 
-#ifndef INPUTGEOPOINT_H
-#define INPUTGEOPOINT_H
-class InputGeoPoint
+#include "telegramtypeobject.h"
+#include <QtGlobal>
+
+class InputGeoPoint : public TelegramTypeObject
 {
 public:
-
     enum InputGeoPointType {
-       typeInputGeoPointEmpty = 0xe4c123d6,
-       typeInputGeoPoint = 0xf3b7acc9
+        typeInputGeoPointEmpty = 0xe4c123d6,
+        typeInputGeoPoint = 0xf3b7acc9
     };
 
-    InputGeoPoint(InputGeoPointType classType =  typeInputGeoPointEmpty) :
-        m_longitude(0.0),
-        m_lat(0.0),
-        m_classType(classType) {}
+    InputGeoPoint(InputGeoPointType classType = typeInputGeoPointEmpty, InboundPkt *in = 0);
+    InputGeoPoint(InboundPkt *in);
+    virtual ~InputGeoPoint();
 
-    void setLat(double lat) { m_lat = lat; }
-    double lat() const { return m_lat; }
-    void setLongitude(double longitude) { m_longitude = longitude; }
-    double longitude() const { return m_longitude; }
-    void setClassType(InputGeoPointType classType) { m_classType = classType; }
-    InputGeoPointType classType() const { return m_classType;}
+    void setLat(qreal lat);
+    qreal lat() const;
+
+    void setLongValue(qreal longValue);
+    qreal longValue() const;
+
+    void setClassType(InputGeoPointType classType);
+    InputGeoPointType classType() const;
+
+    bool fetch(InboundPkt *in);
+    bool push(OutboundPkt *out) const;
+
+    bool operator ==(const InputGeoPoint &b);
 
 private:
-    double m_longitude;
-    double m_lat;
+    qreal m_lat;
+    qreal m_longValue;
     InputGeoPointType m_classType;
 };
-#endif // INPUTGEOPOINT_H
+
+#endif // LQTG_INPUTGEOPOINT

@@ -1,96 +1,58 @@
-/*
- * Copyright 2014 Canonical Ltd.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; version 3.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * Authors:
- *      Roberto Mier
- *      Tiago Herrmann
- */
+#ifndef LQTG_PHOTO
+#define LQTG_PHOTO
 
-#ifndef PHOTO_H
-#define PHOTO_H
-
-#include "photosize.h"
+#include "telegramtypeobject.h"
+#include <QtGlobal>
 #include "geopoint.h"
+#include <QList>
+#include "photosize.h"
 
-class Photo
+class Photo : public TelegramTypeObject
 {
 public:
-
     enum PhotoType {
-       typePhoto = 0xc3838076,
-       typePhotoEmpty = 0x2331b22d
+        typePhotoEmpty = 0x2331b22d,
+        typePhoto = 0xc3838076
     };
 
-    Photo(PhotoType classType = typePhotoEmpty) :
-        m_id(0),
-        m_date(0),
-        m_geo(GeoPoint::typeGeoPointEmpty),
-        m_accessHash(0),
-        m_userId(0),
-        m_classType(classType) {}
+    Photo(PhotoType classType = typePhotoEmpty, InboundPkt *in = 0);
+    Photo(InboundPkt *in);
+    virtual ~Photo();
 
-    void setId(qint64 id) {
-        m_id = id;
-    }
-    qint64 id() const {
-        return m_id;
-    }
-    void setAccessHash(qint64 accessHash) {
-        m_accessHash = accessHash;
-    }
-    qint64 accessHash() const {
-        return m_accessHash;
-    }
-    void setUserId(qint32 userId) {
-        m_userId = userId;
-    }
-    qint32 userId() const {
-        return m_userId;
-    }
-    void setDate(qint32 date) {
-        m_date = date;
-    }
-    qint32 date() const {
-        return m_date;
-    }
-    void setGeo(const GeoPoint &geo) {
-        m_geo = geo;
-    }
-    GeoPoint geo() const {
-        return m_geo;
-    }
-    void setSizes(const QList<PhotoSize> & sizes) {
-        m_sizes = sizes;
-    }
-    QList<PhotoSize> sizes() const {
-        return m_sizes;
-    }
-    void setClassType(PhotoType classType) {
-        m_classType = classType;
-    }
-    PhotoType classType() const {
-        return m_classType;
-    }
+    void setAccessHash(qint64 accessHash);
+    qint64 accessHash() const;
+
+    void setDate(qint32 date);
+    qint32 date() const;
+
+    void setGeo(const GeoPoint &geo);
+    GeoPoint geo() const;
+
+    void setId(qint64 id);
+    qint64 id() const;
+
+    void setSizes(const QList<PhotoSize> &sizes);
+    QList<PhotoSize> sizes() const;
+
+    void setUserId(qint32 userId);
+    qint32 userId() const;
+
+    void setClassType(PhotoType classType);
+    PhotoType classType() const;
+
+    bool fetch(InboundPkt *in);
+    bool push(OutboundPkt *out) const;
+
+    bool operator ==(const Photo &b);
 
 private:
-    qint64 m_id;
-    qint32 m_date;
-    QList<PhotoSize> m_sizes;
-    GeoPoint m_geo;
     qint64 m_accessHash;
+    qint32 m_date;
+    GeoPoint m_geo;
+    qint64 m_id;
+    QList<PhotoSize> m_sizes;
     qint32 m_userId;
     PhotoType m_classType;
 };
-#endif // PHOTO_H
+
+#endif // LQTG_PHOTO

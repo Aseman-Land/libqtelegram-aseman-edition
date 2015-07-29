@@ -1,79 +1,47 @@
-/*
- * Copyright 2014 Canonical Ltd.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; version 3.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * Authors:
- *      Roberto Mier
- *      Tiago Herrmann
- */
+#ifndef LQTG_INPUTPEERNOTIFYSETTINGS
+#define LQTG_INPUTPEERNOTIFYSETTINGS
 
-#ifndef INPUTPEERNOTIFYSETTINGS_H
-#define INPUTPEERNOTIFYSETTINGS_H
-
+#include "telegramtypeobject.h"
+#include <QtGlobal>
 #include <QString>
 
-class InputPeerNotifySettings
+class InputPeerNotifySettings : public TelegramTypeObject
 {
 public:
-
     enum InputPeerNotifySettingsType {
-       typeInputPeerNotifySettings = 0x46a2ce98
+        typeInputPeerNotifySettings = 0x46a2ce98
     };
 
-    InputPeerNotifySettings() :
-        m_muteUntil(0),
-        m_eventsMask(0),
-        m_sound(""),
-        m_showPreviews(false),
-        m_classType(typeInputPeerNotifySettings) {}
+    InputPeerNotifySettings(InputPeerNotifySettingsType classType = typeInputPeerNotifySettings, InboundPkt *in = 0);
+    InputPeerNotifySettings(InboundPkt *in);
+    virtual ~InputPeerNotifySettings();
 
-    void setMuteUntil(qint32 muteUntil) {
-        m_muteUntil = muteUntil;
-    }
-    qint32 muteUntil() const {
-        return m_muteUntil;
-    }
-    void setSound(const QString & sound) {
-        m_sound = sound;
-    }
-    QString sound() const {
-        return m_sound;
-    }
-    void setShowPreviews(bool showPreviews) {
-        m_showPreviews = showPreviews;
-    }
-    bool showPreviews() const {
-        return m_showPreviews;
-    }
-    void setEventsMask(qint32 eventsMask) {
-        m_eventsMask = eventsMask;
-    }
-    qint32 eventsMask() const {
-        return m_eventsMask;
-    }
-    void setClassType(InputPeerNotifySettingsType classType) {
-        m_classType = classType;
-    }
-    InputPeerNotifySettingsType classType() const {
-        return m_classType;
-    }
+    void setEventsMask(qint32 eventsMask);
+    qint32 eventsMask() const;
+
+    void setMuteUntil(qint32 muteUntil);
+    qint32 muteUntil() const;
+
+    void setShowPreviews(bool showPreviews);
+    bool showPreviews() const;
+
+    void setSound(const QString &sound);
+    QString sound() const;
+
+    void setClassType(InputPeerNotifySettingsType classType);
+    InputPeerNotifySettingsType classType() const;
+
+    bool fetch(InboundPkt *in);
+    bool push(OutboundPkt *out) const;
+
+    bool operator ==(const InputPeerNotifySettings &b);
 
 private:
-    qint32 m_muteUntil;
     qint32 m_eventsMask;
-    QString m_sound;
+    qint32 m_muteUntil;
     bool m_showPreviews;
+    QString m_sound;
     InputPeerNotifySettingsType m_classType;
 };
-#endif // INPUTPEERNOTIFYSETTINGS_H
+
+#endif // LQTG_INPUTPEERNOTIFYSETTINGS

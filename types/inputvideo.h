@@ -1,64 +1,39 @@
-/*
- * Copyright 2014 Canonical Ltd.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; version 3.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * Authors:
- *      Roberto Mier
- *      Tiago Herrmann
- */
+#ifndef LQTG_INPUTVIDEO
+#define LQTG_INPUTVIDEO
 
-#ifndef INPUTVIDEO_H
-#define INPUTVIDEO_H
-
+#include "telegramtypeobject.h"
 #include <QtGlobal>
 
-class InputVideo
+class InputVideo : public TelegramTypeObject
 {
 public:
-
     enum InputVideoType {
-       typeInputVideoEmpty = 0x5508ec75,
-       typeInputVideo = 0xee579652
+        typeInputVideoEmpty = 0x5508ec75,
+        typeInputVideo = 0xee579652
     };
 
-    InputVideo(InputVideoType classType) :
-        m_id(0),
-        m_accessHash(0),
-        m_classType(classType) {}
+    InputVideo(InputVideoType classType = typeInputVideoEmpty, InboundPkt *in = 0);
+    InputVideo(InboundPkt *in);
+    virtual ~InputVideo();
 
-    void setId(qint64 id) {
-        m_id = id;
-    }
-    qint64 id() const {
-        return m_id;
-    }
-    void setAccessHash(qint64 accessHash) {
-        m_accessHash = accessHash;
-    }
-    qint64 accessHash() const {
-        return m_accessHash;
-    }
-    void setClassType(InputVideoType classType) {
-        m_classType = classType;
-    }
-    InputVideoType classType() const {
-        return m_classType;
-    }
+    void setAccessHash(qint64 accessHash);
+    qint64 accessHash() const;
+
+    void setId(qint64 id);
+    qint64 id() const;
+
+    void setClassType(InputVideoType classType);
+    InputVideoType classType() const;
+
+    bool fetch(InboundPkt *in);
+    bool push(OutboundPkt *out) const;
+
+    bool operator ==(const InputVideo &b);
 
 private:
-    qint64 m_id;
     qint64 m_accessHash;
+    qint64 m_id;
     InputVideoType m_classType;
 };
-#endif // INPUTVIDEO_H
+
+#endif // LQTG_INPUTVIDEO

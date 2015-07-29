@@ -1,43 +1,38 @@
-#ifndef DISABLEDFEATURE
-#define DISABLEDFEATURE
+#ifndef LQTG_DISABLEDFEATURE
+#define LQTG_DISABLEDFEATURE
 
-#include <QtGlobal>
+#include "telegramtypeobject.h"
+#include <QString>
 
-class DisabledFeature
+class DisabledFeature : public TelegramTypeObject
 {
 public:
-
     enum DisabledFeatureType {
-       typeDisabledFeature = 0xae636f24
+        typeDisabledFeature = 0xae636f24
     };
 
-    DisabledFeature() :
-        m_classType(typeDisabledFeature) {}
+    DisabledFeature(DisabledFeatureType classType = typeDisabledFeature, InboundPkt *in = 0);
+    DisabledFeature(InboundPkt *in);
+    virtual ~DisabledFeature();
 
-    void setFeature(const QString &feature) {
-        m_feature = feature;
-    }
-    QString feature() const {
-        return m_feature;
-    }
-    void setDescription(const QString &description) {
-        m_description = description;
-    }
-    QString description() const {
-        return m_description;
-    }
-    void setClassType(DisabledFeatureType classType) {
-        m_classType = classType;
-    }
-    DisabledFeatureType classType() const {
-        return m_classType;
-    }
+    void setDescription(const QString &description);
+    QString description() const;
+
+    void setFeature(const QString &feature);
+    QString feature() const;
+
+    void setClassType(DisabledFeatureType classType);
+    DisabledFeatureType classType() const;
+
+    bool fetch(InboundPkt *in);
+    bool push(OutboundPkt *out) const;
+
+    bool operator ==(const DisabledFeature &b);
 
 private:
-    QString m_feature;
     QString m_description;
+    QString m_feature;
     DisabledFeatureType m_classType;
 };
 
-#endif // DISABLEDFEATURE
-
+#endif // LQTG_DISABLEDFEATURE

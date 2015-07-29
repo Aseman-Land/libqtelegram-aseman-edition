@@ -1,50 +1,35 @@
-/*
- * Copyright 2014 Canonical Ltd.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; version 3.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * Authors:
- *      Roberto Mier
- *      Tiago Herrmann
- */
+#ifndef LQTG_MESSAGESFILTER
+#define LQTG_MESSAGESFILTER
 
-#ifndef MESSAGESFILTER_H
-#define MESSAGESFILTER_H
+#include "telegramtypeobject.h"
 
-class MessagesFilter
+class MessagesFilter : public TelegramTypeObject
 {
 public:
-
     enum MessagesFilterType {
-       typeInputMessagesFilterPhotos = 0x9609a51c,
-       typeInputMessagesFilterVideo = 0x9fc00e65,
-       typeInputMessagesFilterDocument = 0x9eddf188,
-       typeInputMessagesFilterEmpty = 0x57e2f66c,
-       typeInputMessagesFilterPhotoVideo = 0x56e9f0e4,
-       typeInputMessagesFilterAudio = 0xcfc87522
+        typeInputMessagesFilterEmpty = 0x57e2f66c,
+        typeInputMessagesFilterPhotos = 0x9609a51c,
+        typeInputMessagesFilterVideo = 0x9fc00e65,
+        typeInputMessagesFilterPhotoVideo = 0x56e9f0e4,
+        typeInputMessagesFilterPhotoVideoDocuments = 0xd95e73bb,
+        typeInputMessagesFilterDocument = 0x9eddf188,
+        typeInputMessagesFilterAudio = 0xcfc87522
     };
 
-    MessagesFilter(MessagesFilterType classType) :
-        m_classType(classType) {}
+    MessagesFilter(MessagesFilterType classType = typeInputMessagesFilterEmpty, InboundPkt *in = 0);
+    MessagesFilter(InboundPkt *in);
+    virtual ~MessagesFilter();
 
-    void setClassType(MessagesFilterType classType) {
-        m_classType = classType;
-    }
-    MessagesFilterType classType() const {
-        return m_classType;
-    }
+    void setClassType(MessagesFilterType classType);
+    MessagesFilterType classType() const;
+
+    bool fetch(InboundPkt *in);
+    bool push(OutboundPkt *out) const;
+
+    bool operator ==(const MessagesFilter &b);
 
 private:
     MessagesFilterType m_classType;
 };
-#endif // MESSAGESFILTER_H
+
+#endif // LQTG_MESSAGESFILTER

@@ -1,125 +1,83 @@
-#ifndef AUTHORIZATION
-#define AUTHORIZATION
+#ifndef LQTG_AUTHORIZATION
+#define LQTG_AUTHORIZATION
 
+#include "telegramtypeobject.h"
 #include <QtGlobal>
+#include <QString>
 
-class Authorization 
+class Authorization : public TelegramTypeObject
 {
 public:
-
     enum AuthorizationType {
-       typeAuthorization = 0x7bf2e6f6
+        typeAuthorization = 0x7bf2e6f6
     };
 
-    Authorization() :
-        mHash(0),
-        mFlags(0),
-        mApiId(0),
-        mDateCreated(0),
-        mDateActive(0),
-        mClassType(typeAuthorization) {}
+    Authorization(AuthorizationType classType = typeAuthorization, InboundPkt *in = 0);
+    Authorization(InboundPkt *in);
+    virtual ~Authorization();
 
-    qint64 hash() const {
-        return mHash;
-    }
-    void setHash(const qint64 &hash) {
-        mHash = hash;
-    }
-    qint32 flags() const {
-        return mFlags;
-    }
-    void setFlags(const qint32 &flags) {
-        mFlags = flags;
-    }
-    QString deviceModel() const {
-        return mDeviceModel;
-    }
-    void setDeviceModel(const QString &deviceModel) {
-        mDeviceModel = deviceModel;
-    }
-    QString platform() const {
-        return mPlatform;
-    }
-    void setPlatform(const QString &platform) {
-        mPlatform = platform;
-    }
-    QString systemVersion() const {
-        return mSystemVersion;
-    }
-    void setSystemVersion(const QString &systemVersion) {
-        mSystemVersion = systemVersion;
-    }
-    qint32 apiId() const {
-        return mApiId;
-    }
-    void setApiId(const qint32 &apiId) {
-        mApiId = apiId;
-    }
-    QString appName() const {
-        return mAppName;
-    }
-    void setAppName(const QString &appName) {
-        mAppName = appName;
-    }
-    QString appVersion() const {
-        return mAppVersion;
-    }
-    void setAppVersion(const QString &appVersion) {
-        mAppVersion = appVersion;
-    }
-    qint32 dateCreated() const {
-        return mDateCreated;
-    }
-    void setDateCreated(const qint32 &dateCreated) {
-        mDateCreated = dateCreated;
-    }
-    qint32 dateActive() const {
-        return mDateActive;
-    }
-    void setDateActive(const qint32 &dateActive) {
-        mDateActive = dateActive;
-    }
-    QString ip() const {
-        return mIp;
-    }
-    void setIp(const QString &ip) {
-        mIp = ip;
-    }
-    QString country() const {
-        return mCountry;
-    }
-    void setCountry(const QString &country) {
-        mCountry = country;
-    }
-    QString region() const {
-        return mRegion;
-    }
-    void setRegion(const QString &region) {
-        mRegion = region;
-    }
-    void setClassType(AuthorizationType classType) {
-        mClassType = classType;
-    }
-    AuthorizationType classType() const {
-        return mClassType;
-    }
+    void setApiId(qint32 apiId);
+    qint32 apiId() const;
+
+    void setAppName(const QString &appName);
+    QString appName() const;
+
+    void setAppVersion(const QString &appVersion);
+    QString appVersion() const;
+
+    void setCountry(const QString &country);
+    QString country() const;
+
+    void setDateActive(qint32 dateActive);
+    qint32 dateActive() const;
+
+    void setDateCreated(qint32 dateCreated);
+    qint32 dateCreated() const;
+
+    void setDeviceModel(const QString &deviceModel);
+    QString deviceModel() const;
+
+    void setFlags(qint32 flags);
+    qint32 flags() const;
+
+    void setHash(qint64 hash);
+    qint64 hash() const;
+
+    void setIp(const QString &ip);
+    QString ip() const;
+
+    void setPlatform(const QString &platform);
+    QString platform() const;
+
+    void setRegion(const QString &region);
+    QString region() const;
+
+    void setSystemVersion(const QString &systemVersion);
+    QString systemVersion() const;
+
+    void setClassType(AuthorizationType classType);
+    AuthorizationType classType() const;
+
+    bool fetch(InboundPkt *in);
+    bool push(OutboundPkt *out) const;
+
+    bool operator ==(const Authorization &b);
 
 private:
-    qint64 mHash;
-    qint32 mFlags;
-    QString mDeviceModel;
-    QString mPlatform;
-    QString mSystemVersion;
-    qint32 mApiId;
-    QString mAppName;
-    QString mAppVersion;
-    qint32 mDateCreated;
-    qint32 mDateActive;
-    QString mIp;
-    QString mCountry;
-    QString mRegion;
-    AuthorizationType mClassType;
+    qint32 m_apiId;
+    QString m_appName;
+    QString m_appVersion;
+    QString m_country;
+    qint32 m_dateActive;
+    qint32 m_dateCreated;
+    QString m_deviceModel;
+    qint32 m_flags;
+    qint64 m_hash;
+    QString m_ip;
+    QString m_platform;
+    QString m_region;
+    QString m_systemVersion;
+    AuthorizationType m_classType;
 };
 
-#endif // AUTHORIZATION
-
+#endif // LQTG_AUTHORIZATION

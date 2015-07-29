@@ -23,42 +23,8 @@
 #define API_H
 
 #include "abstractapi.h"
-#include "types/user.h"
-#include "types/inputpeer.h"
-#include "types/message.h"
-#include "types/user.h"
-#include "types/dialog.h"
-#include "types/config.h"
-#include "types/affectedmessages.h"
-#include "types/accountpassword.h"
-#include "types/chat.h"
-#include "types/inputuser.h"
-#include "types/contact.h"
-#include "types/contactfound.h"
-#include "types/contactslink.h"
-#include "types/photo.h"
-#include "types/contactstatus.h"
-#include "types/importedcontact.h"
-#include "types/inputcontact.h"
-#include "types/contactblocked.h"
-#include "types/messagesfilter.h"
-#include "types/inputmedia.h"
-#include "types/inputchatphoto.h"
-#include "types/encryptedmessage.h"
-#include "types/updatesstate.h"
-#include "types/inputpeernotifysettings.h"
-#include "types/inputnotifypeer.h"
-#include "types/wallpaper.h"
-#include "types/encryptedchat.h"
-#include "types/inputencryptedchat.h"
-#include "types/inputencryptedfile.h"
-#include "types/accountdaysttl.h"
-#include "types/disabledfeature.h"
-#include "types/inputprivacykey.h"
-#include "types/inputprivacyrule.h"
-#include "types/messagesstickers.h"
-#include "types/messagesallstickers.h"
 #include "core/session.h"
+#include "types/types.h"
 #include <QByteArray>
 #include <QList>
 #include <QStringList>
@@ -235,8 +201,7 @@ Q_SIGNALS:
     // Messages
     void messagesSentMessage(qint64 msgId, qint32 id, qint32 date, const MessageMedia &media, qint32 pts, qint32 pts_count, qint32 seq = 0);
     void messagesSentMessageLink(qint64 msgId, qint32 id, qint32 date, const MessageMedia &media, qint32 pts, qint32 pts_count, qint32 seq, const QList<ContactsLink> &links);
-    void messagesSentMediaStatedMessage(qint64 msgId, const Message &message, const QList<Chat> &chats, const QList<User> &users, qint32 pts, qint32 pts_count);
-    void messagesSentMediaStatedMessageLink(qint64 msgId, const Message &message, const QList<Chat> &chats, const QList<User> &users, const QList<ContactsLink> &links, qint32 pts, qint32 pts_count, qint32 seq);
+    void messagesSentMedia(qint64 msgId, const Updates &updates);
     void messagesSetTypingResult(qint64 msgId, bool ok);
     void messagesGetMessagesMessages(qint64 msgId, const QList<Message> &messages, const QList<Chat> &chats, const QList<User> &users);
     void messagesGetMessagesMessagesSlice(qint64 msgId, qint32 count, const QList<Message> &messages, const QList<Chat> &chats, const QList<User> &users);
@@ -247,30 +212,22 @@ Q_SIGNALS:
     void messagesSearchMessages(qint64 msgId, const QList<Message> &messages, const QList<Chat> &chats, const QList<User> &users);
     void messagesSearchMessagesSlice(qint64 msgId, qint32 count, const QList<Message> &messages, const QList<Chat> &chats, const QList<User> &users);
     void messagesReadAffectedHistory(qint64 msgId, qint32 pts, qint32 pts_count, qint32 offset);
-    void messagesReadMessageContentsResult(qint64 msgId, const AffectedMessages &watchedIds);
+    void messagesReadMessageContentsResult(qint64 msgId, const MessagesAffectedMessages &watchedIds);
     void messagesDeleteAffectedHistory(qint64 msgId, qint32 pts, qint32 pts_count, qint32 offset);
-    void messagesDeleteMessagesResult(qint64 msgId, const AffectedMessages &deletedIds);
+    void messagesDeleteMessagesResult(qint64 msgId, const MessagesAffectedMessages &deletedIds);
     void messagesRestoreMessagesResult(qint64 msgId, const QList<qint32> &restoredIds);
     void messagesReceivedMessagesResult(qint64 msgId, const QList<qint32> &confirmedIds);
-    void messagesForwardMsgStatedMessage(qint64 msgId, const Message &message, const QList<Chat> &chats, const QList<User> &users, qint32 pts, qint32 pts_count, qint32 seq = 0);
-    void messagesForwardMsgStatedMessageLink(qint64 msgId, const Message &message, const QList<Chat> &chats, const QList<User> &users, const QList<ContactsLink> &links, qint32 pts, qint32 pts_count, qint32 seq);
-    void messagesForwardMsgsStatedMessages(qint64 msgId, const QList<Message> &messages, const QList<Chat> &chats, const QList<User> &users, qint32 pts, qint32 pts_count, qint32 seq = 0);
-    void messagesForwardMsgsStatedMessagesLinks(qint64 msgId, const QList<Message> &messages, const QList<Chat> &chats, const QList<User> &users, const QList<ContactsLink> &links, qint32 pts, qint32 pts_count, qint32 seq);
-    void messagesSendBroadcastStatedMessages(qint64 msgId, const QList<Message> &messages, const QList<Chat> &chats, const QList<User> &users, qint32 pts, qint32 pts_count, qint32 seq = 0);
-    void messagesSendBroadcastStatedMessagesLinks(qint64 msgId, const QList<Message> &messages, const QList<Chat> &chats, const QList<User> &users, const QList<ContactsLink> &links, qint32 pts, qint32 pts_count, qint32 seq);
+    void messagesForwardedMessage(qint64 msgId, const Updates &update);
+    void messagesForwardedMessages(qint64 msgId, const Updates &update);
+    void messagesSentBroadcast(qint64 msgId, const Updates &updates);
     // Chats
     void messagesChats(qint64 msgId, const QList<Chat> &chats);
     void messagesChatFull(qint64 msgId, const ChatFull &fullChat, const QList<Chat> &chats, const QList<User> &users);
-    void messagesEditChatTitleStatedMessage(qint64 msgId, const Message &message, const QList<Chat> &chats, const QList<User> &users, qint32 pts, qint32 pts_count, qint32 seq = 0);
-    void messagesEditChatTitleStatedMessageLink(qint64 msgId, const Message &message, const QList<Chat> &chats, const QList<User> &users, const QList<ContactsLink> &links, qint32 pts, qint32 pts_count, qint32 seq);
-    void messagesEditChatPhotoStatedMessage(qint64 msgId, const Message &message, const QList<Chat> &chats, const QList<User> &users, qint32 pts, qint32 pts_count, qint32 seq = 0);
-    void messagesEditChatPhotoStatedMessageLink(qint64 msgId, const Message &message, const QList<Chat> &chats, const QList<User> &users, const QList<ContactsLink> &links, qint32 pts, qint32 pts_count, qint32 seq);
-    void messagesAddChatUserStatedMessage(qint64 msgId, const Message &message, const QList<Chat> &chats, const QList<User> &users, qint32 pts, qint32 pts_count, qint32 seq = 0);
-    void messagesAddChatUserStatedMessageLink(qint64 msgId, const Message &message, const QList<Chat> &chats, const QList<User> &users, const QList<ContactsLink> &links, qint32 pts, qint32 pts_count, qint32 seq);
-    void messagesDeleteChatUserStatedMessage(qint64 msgId, const Message &message, const QList<Chat> &chats, const QList<User> &users, qint32 pts, qint32 pts_count, qint32 seq = 0);
-    void messagesDeleteChatUserStatedMessageLink(qint64 msgId, const Message &message, const QList<Chat> &chats, const QList<User> &users, const QList<ContactsLink> &links, qint32 pts, qint32 pts_count, qint32 seq);
-    void messagesCreateChatStatedMessage(qint64 msgId, const Message &message, const QList<Chat> &chats, const QList<User> &users, qint32 pts, qint32 pts_count, qint32 seq = 0);
-    void messagesCreateChatStatedMessageLink(qint64 msgId, const Message &message, const QList<Chat> &chats, const QList<User> &users, const QList<ContactsLink> &links, qint32 pts, qint32 pts_count, qint32 seq);
+    void messagesEditedChatTitle(qint64 msgId, const Updates &updates);
+    void messagesEditedChatPhoto(qint64 msgId, const Updates &updates);
+    void messagesAddedChatUser(qint64 msgId, const Updates &updates);
+    void messagesDeletedChat(qint64 msgId, const Updates &updates);
+    void messagesCreatedChat(qint64 msgId, const Updates &updates);
     // Secret chats
     void messagesDhConfig(qint64 msgId, qint32 g, const QByteArray &p, qint32 version, const QByteArray &random);
     void messagesDhConfigNotModified(qint64 msgId, const QByteArray &random);

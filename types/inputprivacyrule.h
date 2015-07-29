@@ -1,42 +1,40 @@
-#ifndef INPUTPRIVACYRULE
-#define INPUTPRIVACYRULE
+#ifndef LQTG_INPUTPRIVACYRULE
+#define LQTG_INPUTPRIVACYRULE
 
-#include <QtGlobal>
+#include "telegramtypeobject.h"
 #include <QList>
+#include "inputuser.h"
 
-class InputPrivacyRule
+class InputPrivacyRule : public TelegramTypeObject
 {
 public:
-
     enum InputPrivacyRuleType {
-       typeInputPrivacyValueAllowContacts = 0xfffe1bac,
-       typeInputPrivacyValueAllowAll = 0x65427b82,
-       typeInputPrivacyValueAllowUsers = 0x4d5bbe0c,
-       typeInputPrivacyValueDisallowContacts = 0xf888fa1a,
-       typeInputPrivacyValueDisallowAll = 0x8b73e763,
-       typeInputPrivacyValueDisallowUsers = 0xc7f49b7
+        typeInputPrivacyValueAllowContacts = 0xd09e07b,
+        typeInputPrivacyValueAllowAll = 0x184b35ce,
+        typeInputPrivacyValueAllowUsers = 0x131cc67f,
+        typeInputPrivacyValueDisallowContacts = 0xba52007,
+        typeInputPrivacyValueDisallowAll = 0xd66b66c9,
+        typeInputPrivacyValueDisallowUsers = 0x90110467
     };
 
-    InputPrivacyRule(InputPrivacyRuleType classType) :
-        m_classType(classType) {}
+    InputPrivacyRule(InputPrivacyRuleType classType = typeInputPrivacyValueAllowContacts, InboundPkt *in = 0);
+    InputPrivacyRule(InboundPkt *in);
+    virtual ~InputPrivacyRule();
 
-    void setUsers(const QList<qint32> &users) {
-        m_users = users;
-    }
-    QList<qint32> users() const {
-        return m_users;
-    }
-    void setClassType(InputPrivacyRuleType classType) {
-        m_classType = classType;
-    }
-    InputPrivacyRuleType classType() const {
-        return m_classType;
-    }
+    void setUsers(const QList<InputUser> &users);
+    QList<InputUser> users() const;
+
+    void setClassType(InputPrivacyRuleType classType);
+    InputPrivacyRuleType classType() const;
+
+    bool fetch(InboundPkt *in);
+    bool push(OutboundPkt *out) const;
+
+    bool operator ==(const InputPrivacyRule &b);
 
 private:
-    QList<qint32> m_users;
+    QList<InputUser> m_users;
     InputPrivacyRuleType m_classType;
 };
 
-#endif // INPUTPRIVACYRULE
-
+#endif // LQTG_INPUTPRIVACYRULE

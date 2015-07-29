@@ -1,39 +1,35 @@
-#ifndef EXPORTEDCHATINVITE
-#define EXPORTEDCHATINVITE
+#ifndef LQTG_EXPORTEDCHATINVITE
+#define LQTG_EXPORTEDCHATINVITE
 
-#include <QtGlobal>
+#include "telegramtypeobject.h"
+#include <QString>
 
-class ExportedChatInvite
+class ExportedChatInvite : public TelegramTypeObject
 {
 public:
-
     enum ExportedChatInviteType {
-       typeChatInviteEmpty = 0x69df3769,
-       typeChatInviteExported = 0xfc2e05bc
+        typeChatInviteEmpty = 0x69df3769,
+        typeChatInviteExported = 0xfc2e05bc
     };
 
-    ExportedChatInvite(ExportedChatInviteType classType) :
-        m_classType(classType) {}
+    ExportedChatInvite(ExportedChatInviteType classType = typeChatInviteEmpty, InboundPkt *in = 0);
+    ExportedChatInvite(InboundPkt *in);
+    virtual ~ExportedChatInvite();
 
-    QString link() const {
-        return m_link;
-    }
-    void setLink(const QString &link) {
-        m_link = link;
-    }
-    qint32 chatId() const {
-        return m_chatId;
-    }
-    void setClassType(ExportedChatInviteType classType) {
-        m_classType = classType;
-    }
-    ExportedChatInviteType classType() const {
-        return m_classType;
-    }
+    void setLink(const QString &link);
+    QString link() const;
+
+    void setClassType(ExportedChatInviteType classType);
+    ExportedChatInviteType classType() const;
+
+    bool fetch(InboundPkt *in);
+    bool push(OutboundPkt *out) const;
+
+    bool operator ==(const ExportedChatInvite &b);
 
 private:
     QString m_link;
     ExportedChatInviteType m_classType;
 };
 
-#endif // EXPORTEDCHATINVITE
+#endif // LQTG_EXPORTEDCHATINVITE

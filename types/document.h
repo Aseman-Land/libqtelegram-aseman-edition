@@ -1,112 +1,67 @@
-/*
- * Copyright 2014 Canonical Ltd.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; version 3.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * Authors:
- *      Roberto Mier
- *      Tiago Herrmann
- */
+#ifndef LQTG_DOCUMENT
+#define LQTG_DOCUMENT
 
-#ifndef DOCUMENT_H
-#define DOCUMENT_H
-
-#include "photosize.h"
+#include "telegramtypeobject.h"
+#include <QtGlobal>
+#include <QList>
 #include "documentattribute.h"
+#include <QString>
+#include "photosize.h"
 
-class Document
+class Document : public TelegramTypeObject
 {
 public:
-
     enum DocumentType {
-       typeDocument = 0xf9a39f4f,
-       typeDocumentEmpty = 0x36f8c871
+        typeDocumentEmpty = 0x36f8c871,
+        typeDocument = 0xf9a39f4f
     };
 
-    Document(DocumentType classType) :
-        m_mimeType(""),
-        m_thumb(PhotoSize::typePhotoSizeEmpty),
-        m_accessHash(0),
-        m_id(0),
-        m_classType(classType),
-        m_dcId(0),
-        m_date(0),        
-        m_size(0) {}
+    Document(DocumentType classType = typeDocumentEmpty, InboundPkt *in = 0);
+    Document(InboundPkt *in);
+    virtual ~Document();
 
-    void setId(qint64 id) {
-        m_id = id;
-    }
-    qint64 id() const {
-        return m_id;
-    }
-    void setAccessHash(qint64 accessHash) {
-        m_accessHash = accessHash;
-    }
-    qint64 accessHash() const {
-        return m_accessHash;
-    }
-    void setDate(qint32 date) {
-        m_date = date;
-    }
-    qint32 date() const {
-        return m_date;
-    }
-    void setMimeType(const QString & mimeType) {
-        m_mimeType = mimeType;
-    }
-    QString mimeType() const {
-        return m_mimeType;
-    }
-    void setSize(qint32 size) {
-        m_size = size;
-    }
-    qint32 size() const {
-        return m_size;
-    }
-    void setThumb(const PhotoSize &thumb) {
-        m_thumb = thumb;
-    }
-    PhotoSize thumb() const {
-        return m_thumb;
-    }
-    void setDcId(qint32 dcId) {
-        m_dcId = dcId;
-    }
-    qint32 dcId() const {
-        return m_dcId;
-    }
-    void setAttributes(const QList<DocumentAttribute> &attrs) {
-        m_attributes = attrs;
-    }
-    QList<DocumentAttribute> attributes() const {
-        return m_attributes;
-    }
-    void setClassType(DocumentType classType) {
-        m_classType = classType;
-    }
-    DocumentType classType() const {
-        return m_classType;
-    }
+    void setAccessHash(qint64 accessHash);
+    qint64 accessHash() const;
+
+    void setAttributes(const QList<DocumentAttribute> &attributes);
+    QList<DocumentAttribute> attributes() const;
+
+    void setDate(qint32 date);
+    qint32 date() const;
+
+    void setDcId(qint32 dcId);
+    qint32 dcId() const;
+
+    void setId(qint64 id);
+    qint64 id() const;
+
+    void setMimeType(const QString &mimeType);
+    QString mimeType() const;
+
+    void setSize(qint32 size);
+    qint32 size() const;
+
+    void setThumb(const PhotoSize &thumb);
+    PhotoSize thumb() const;
+
+    void setClassType(DocumentType classType);
+    DocumentType classType() const;
+
+    bool fetch(InboundPkt *in);
+    bool push(OutboundPkt *out) const;
+
+    bool operator ==(const Document &b);
 
 private:
-    QList<DocumentAttribute> m_attributes;
-    QString m_mimeType;
-    PhotoSize m_thumb;
     qint64 m_accessHash;
-    qint64 m_id;
-    DocumentType m_classType;
-    qint32 m_dcId;
+    QList<DocumentAttribute> m_attributes;
     qint32 m_date;
+    qint32 m_dcId;
+    qint64 m_id;
+    QString m_mimeType;
     qint32 m_size;
+    PhotoSize m_thumb;
+    DocumentType m_classType;
 };
-#endif // DOCUMENT_H
+
+#endif // LQTG_DOCUMENT

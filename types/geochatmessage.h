@@ -1,106 +1,63 @@
-/*
- * Copyright 2014 Canonical Ltd.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; version 3.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * Authors:
- *      Roberto Mier
- *      Tiago Herrmann
- */
+#ifndef LQTG_GEOCHATMESSAGE
+#define LQTG_GEOCHATMESSAGE
 
-#ifndef GEOCHATMESSAGE_H
-#define GEOCHATMESSAGE_H
-
+#include "telegramtypeobject.h"
 #include "messageaction.h"
+#include <QtGlobal>
 #include "messagemedia.h"
+#include <QString>
 
-class GeoChatMessage
+class GeoChatMessage : public TelegramTypeObject
 {
 public:
-
     enum GeoChatMessageType {
-       typeGeoChatMessage = 0x4505f8e1,
-       typeGeoChatMessageService = 0xd34fa24e,
-       typeGeoChatMessageEmpty = 0x60311a9b
+        typeGeoChatMessageEmpty = 0x60311a9b,
+        typeGeoChatMessage = 0x4505f8e1,
+        typeGeoChatMessageService = 0xd34fa24e
     };
 
-    GeoChatMessage(GeoChatMessageType classType) :
-        m_id(0),
-        m_action(MessageAction::typeMessageActionEmpty),
-        m_fromId(0),
-        m_date(0),
-        m_media(MessageMedia::typeMessageMediaEmpty),
-        m_chatId(0),
-        m_message(""),
-        m_classType(classType) {}
+    GeoChatMessage(GeoChatMessageType classType = typeGeoChatMessageEmpty, InboundPkt *in = 0);
+    GeoChatMessage(InboundPkt *in);
+    virtual ~GeoChatMessage();
 
-    void setChatId(qint32 chatId) {
-        m_chatId = chatId;
-    }
-    qint32 chatId() const {
-        return m_chatId;
-    }
-    void setId(qint32 id) {
-        m_id = id;
-    }
-    qint32 id() const {
-        return m_id;
-    }
-    void setFromId(qint32 fromId) {
-        m_fromId = fromId;
-    }
-    qint32 fromId() const {
-        return m_fromId;
-    }
-    void setDate(qint32 date) {
-        m_date = date;
-    }
-    qint32 date() const {
-        return m_date;
-    }
-    void setMessage(const QString & message) {
-        m_message = message;
-    }
-    QString message() const {
-        return m_message;
-    }
-    void setMedia(const MessageMedia &media) {
-        m_media = media;
-    }
-    MessageMedia media() const {
-        return m_media;
-    }
-    void setAction(const MessageAction &action) {
-        m_action = action;
-    }
-    MessageAction action() const {
-        return m_action;
-    }
-    void setClassType(GeoChatMessageType classType) {
-        m_classType = classType;
-    }
-    GeoChatMessageType classType() const {
-        return m_classType;
-    }
+    void setAction(const MessageAction &action);
+    MessageAction action() const;
+
+    void setChatId(qint32 chatId);
+    qint32 chatId() const;
+
+    void setDate(qint32 date);
+    qint32 date() const;
+
+    void setFromId(qint32 fromId);
+    qint32 fromId() const;
+
+    void setId(qint32 id);
+    qint32 id() const;
+
+    void setMedia(const MessageMedia &media);
+    MessageMedia media() const;
+
+    void setMessage(const QString &message);
+    QString message() const;
+
+    void setClassType(GeoChatMessageType classType);
+    GeoChatMessageType classType() const;
+
+    bool fetch(InboundPkt *in);
+    bool push(OutboundPkt *out) const;
+
+    bool operator ==(const GeoChatMessage &b);
 
 private:
-    qint32 m_id;
     MessageAction m_action;
-    qint32 m_fromId;
-    qint32 m_date;
-    MessageMedia m_media;
     qint32 m_chatId;
+    qint32 m_date;
+    qint32 m_fromId;
+    qint32 m_id;
+    MessageMedia m_media;
     QString m_message;
     GeoChatMessageType m_classType;
 };
-#endif // GEOCHATMESSAGE_H
+
+#endif // LQTG_GEOCHATMESSAGE

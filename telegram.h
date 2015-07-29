@@ -291,8 +291,8 @@ Q_SIGNALS:
     void messagesSearchAnswer(qint64 id, qint32 sliceCount, const QList<Message> &messages, const QList<Chat> &chats, const QList<User> &users);
     void messagesReadHistoryAnswer(qint64 id, qint32 pts, qint32 pts_count, qint32 offset);
     void messagesDeleteHistoryAnswer(qint64 id, qint32 pts, qint32 pts_count, qint32 offset);
-    void messagesReadMessageContentsAnswer(qint64 msgId, const AffectedMessages &watchedMessages);
-    void messagesDeleteMessagesAnswer(qint64 id, const AffectedMessages &deletedMessages);
+    void messagesReadMessageContentsAnswer(qint64 msgId, const MessagesAffectedMessages &watchedMessages);
+    void messagesDeleteMessagesAnswer(qint64 id, const MessagesAffectedMessages &deletedMessages);
     void messagesRestoreMessagesAnswer(qint64 id, const QList<qint32> &restoredMsgIds);
     void messagesReceivedMessagesAnswer(qint64 id, const QList<qint32> &confirmedMsgIds);
     void messagesForwardMessageAnswer(qint64 id, const Message &message, const QList<Chat> &chats, const QList<User> &users, const QList<ContactsLink> &links, qint32 pts, qint32 pts_count, qint32 seq);
