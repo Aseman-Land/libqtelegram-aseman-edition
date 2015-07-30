@@ -75,7 +75,7 @@
 #include "stickerpack.h"
 #include "stickerset.h"
 #include "update.h"
-#include "updates.h"
+#include "updatestype.h"
 #include "user.h"
 #include "userfull.h"
 #include "userprofilephoto.h"

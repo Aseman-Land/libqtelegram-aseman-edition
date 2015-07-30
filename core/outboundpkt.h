@@ -25,14 +25,14 @@
 #include <QObject>
 #include <QByteArray>
 #include <QLoggingCategory>
+#include <QSharedPointer>
+
 #include <bn.h>
 #include "util/constants.h"
-#include "settings.h"
-
-#include <QSharedPointer>
 
 Q_DECLARE_LOGGING_CATEGORY(TG_CORE_OUTBOUNDPKT)
 
+class Settings;
 class OutboundPkt
 {
 public:

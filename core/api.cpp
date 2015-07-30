@@ -812,7 +812,7 @@ qint64 Api::messagesSendMessage(const InputPeer &peer, const QString &message, q
 }
 
 void Api::onMessagesSendMediaAnswer(Query *q, InboundPkt &inboundPkt) {
-    const Updates &result = Functions::Messages::sendMediaResult(&inboundPkt);
+    const UpdatesType &result = Functions::Messages::sendMediaResult(&inboundPkt);
     Q_EMIT messagesSentMedia(q->msgId(), result);
 }
 
@@ -953,7 +953,7 @@ qint64 Api::messagesReceivedMessages(qint32 maxId) {
 }
 
 void Api::onMessagesForwardMessageAnswer(Query *q, InboundPkt &inboundPkt) {
-    const Updates &result = Functions::Messages::forwardMessageResult(&inboundPkt);
+    const UpdatesType &result = Functions::Messages::forwardMessageResult(&inboundPkt);
     Q_EMIT messagesForwardedMessage(q->msgId(), result);
 }
 
@@ -964,7 +964,7 @@ qint64 Api::messagesForwardMessage(const InputPeer &peer, qint32 id, qint64 rand
 }
 
 void Api::onMessagesForwardMessagesAnswer(Query *q, InboundPkt &inboundPkt) {
-    const Updates &result = Functions::Messages::forwardMessagesResult(&inboundPkt);
+    const UpdatesType &result = Functions::Messages::forwardMessagesResult(&inboundPkt);
     Q_EMIT messagesForwardedMessages(q->msgId(), result);
 }
 
@@ -975,7 +975,7 @@ qint64 Api::messagesForwardMessages(const InputPeer &peer, const QList<qint32> &
 }
 
 void Api::onMessagesSendBroadcastAnswer(Query *q, InboundPkt &inboundPkt) {
-    const Updates &result = Functions::Messages::sendBroadcastResult(&inboundPkt);
+    const UpdatesType &result = Functions::Messages::sendBroadcastResult(&inboundPkt);
     Q_EMIT messagesSentBroadcast(q->msgId(), result);
 }
 
@@ -1008,7 +1008,7 @@ qint64 Api::messagesGetFullChat(qint32 chatId) {
 }
 
 void Api::onMessagesEditChatTitleAnswer(Query *q, InboundPkt &inboundPkt) {
-    const Updates &result = Functions::Messages::editChatTitleResult(&inboundPkt);
+    const UpdatesType &result = Functions::Messages::editChatTitleResult(&inboundPkt);
     Q_EMIT messagesEditedChatTitle(q->msgId(), result);
 }
 
@@ -1019,7 +1019,7 @@ qint64 Api::messagesEditChatTitle(qint32 chatId, const QString &title) {
 }
 
 void Api::onMessagesEditChatPhotoAnswer(Query *q, InboundPkt &inboundPkt) {
-    const Updates &result = Functions::Messages::editChatPhotoResult(&inboundPkt);
+    const UpdatesType &result = Functions::Messages::editChatPhotoResult(&inboundPkt);
     Q_EMIT messagesEditedChatPhoto(q->msgId(), result);
 }
 
@@ -1030,7 +1030,7 @@ qint64 Api::messagesEditChatPhoto(qint32 chatId, const InputChatPhoto &photo) {
 }
 
 void Api::onMessagesAddChatUserAnswer(Query *q, InboundPkt &inboundPkt) {
-    const Updates &result = Functions::Messages::addChatUserResult(&inboundPkt);
+    const UpdatesType &result = Functions::Messages::addChatUserResult(&inboundPkt);
     Q_EMIT messagesAddedChatUser(q->msgId(), result);
 }
 
@@ -1041,7 +1041,7 @@ qint64 Api::messagesAddChatUser(qint32 chatId, const InputUser &user, qint32 fwd
 }
 
 void Api::onMessagesDeleteChatUserAnswer(Query *q, InboundPkt &inboundPkt) {
-    const Updates &result = Functions::Messages::deleteChatUserResult(&inboundPkt);
+    const UpdatesType &result = Functions::Messages::deleteChatUserResult(&inboundPkt);
     Q_EMIT messagesDeletedChat(q->msgId(), result);
 }
 
@@ -1052,7 +1052,7 @@ qint64 Api::messagesDeleteChatUser(qint32 chatId, const InputUser &user) {
 }
 
 void Api::onMessagesCreateChatAnswer(Query *q, InboundPkt &inboundPkt) {
-    const Updates &result = Functions::Messages::createChatResult(&inboundPkt);
+    const UpdatesType &result = Functions::Messages::createChatResult(&inboundPkt);
     Q_EMIT messagesCreatedChat(q->msgId(), result);
 }
 

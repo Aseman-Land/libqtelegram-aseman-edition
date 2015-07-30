@@ -176,18 +176,18 @@ void Session::rpcExecuteAnswer(InboundPkt &inboundPkt, qint64 msgId) {
     case TL_RpcResult:
         workRpcResult(inboundPkt, msgId);
         return;
-    case Updates::typeUpdateShort:
+    case UpdatesType::typeUpdateShort:
         workUpdateShort(inboundPkt, msgId);
         return;
-    case Updates::typeUpdatesCombined:
+    case UpdatesType::typeUpdatesCombined:
         workUpdatesCombined(inboundPkt, msgId);
-    case Updates::typeUpdates:
+    case UpdatesType::typeUpdates:
         workUpdates(inboundPkt, msgId);
         return;
-    case Updates::typeUpdateShortMessage:
+    case UpdatesType::typeUpdateShortMessage:
         workUpdateShortMessage(inboundPkt, msgId);
         return;
-    case Updates::typeUpdateShortChatMessage:
+    case UpdatesType::typeUpdateShortChatMessage:
         workUpdateShortChatMessage(inboundPkt, msgId);
         return;
     case TL_GZipPacked:
@@ -205,7 +205,7 @@ void Session::rpcExecuteAnswer(InboundPkt &inboundPkt, qint64 msgId) {
     case TL_MsgNewDetailedInfo:
         workNewDetailedInfo(inboundPkt, msgId);
         return;
-    case Updates::typeUpdatesTooLong:
+    case UpdatesType::typeUpdatesTooLong:
         workUpdatesTooLong(inboundPkt, msgId);
         return;
     case TL_BadMsgNotification:
@@ -273,26 +273,26 @@ void Session::workRpcResult(InboundPkt &inboundPkt, qint64 msgId) {
 
 void Session::workUpdateShort(InboundPkt &inboundPkt, qint64 msgId) {
     qCDebug(TG_CORE_SESSION) << "workUpdateShort: msgId =" << QString::number(msgId, 16);
-    Updates upd(&inboundPkt);
+    UpdatesType upd(&inboundPkt);
     Q_EMIT updateShort(upd.update(), upd.date());
 }
 
 void Session::workUpdatesCombined(InboundPkt &inboundPkt, qint64 msgId) {
     qCDebug(TG_CORE_SESSION) << "workUpdatesCombined: msgId =" << QString::number(msgId, 16);
-    Updates upd(&inboundPkt);
+    UpdatesType upd(&inboundPkt);
     Q_EMIT updatesCombined(upd.updates(), upd.users(), upd.chats(), upd.date(), upd.seqStart(), upd.seq());
 }
 
 void Session::workUpdates(InboundPkt &inboundPkt, qint64 msgId) {
     qCDebug(TG_CORE_SESSION) << "workUpdates: msgId =" << QString::number(msgId, 16);
-    Updates upd(&inboundPkt);
+    UpdatesType upd(&inboundPkt);
     Q_EMIT updates(upd.updates(), upd.users(), upd.chats(), upd.date(), upd.seq());
 }
 
 void Session::workUpdateShortMessage(InboundPkt &inboundPkt, qint64 msgId) {
     qCDebug(TG_CORE_SESSION) << "workUpdateShortMessage: msgId =" << QString::number(msgId, 16);
     Q_UNUSED(msgId)
-    Updates upd(&inboundPkt);
+    UpdatesType upd(&inboundPkt);
     bool unread = (upd.flags() & 1<<0);
     bool out = (upd.flags() & 1<<1);
     Q_EMIT updateShortMessage(upd.id(), upd.userId(), upd.message(), upd.pts(), upd.ptsCount(), upd.date(), upd.fwdFromId(), upd.fwdDate(), upd.replyToMsgId(), unread, out);
@@ -301,7 +301,7 @@ void Session::workUpdateShortMessage(InboundPkt &inboundPkt, qint64 msgId) {
 void Session::workUpdateShortChatMessage(InboundPkt &inboundPkt, qint64 msgId) {
     qCDebug(TG_CORE_SESSION) << "workUpdateShortChatMessage: msgId =" << QString::number(msgId, 16);
     Q_UNUSED(msgId)
-    Updates upd(&inboundPkt);
+    UpdatesType upd(&inboundPkt);
     bool unread = (upd.flags() & 1<<0);
     bool out = (upd.flags() & 1<<1);
     Q_EMIT updateShortChatMessage(upd.id(), upd.fromId(), upd.chatId(), upd.message(), upd.pts(), upd.ptsCount(), upd.date(), upd.fwdFromId(), upd.date(), upd.replyToMsgId(), unread, out);
@@ -364,7 +364,7 @@ void Session::workNewDetailedInfo(InboundPkt &inboundPkt, qint64 msgId) {
 
 void Session::workUpdatesTooLong(InboundPkt &inboundPkt, qint64 msgId) {
     qCDebug(TG_CORE_SESSION) << "workUpdatesTooLong: msgId =" << QString::number(msgId, 16);
-    Updates upd(&inboundPkt);
+    UpdatesType upd(&inboundPkt);
     Q_UNUSED(upd)
     Q_EMIT updatesTooLong();
 }

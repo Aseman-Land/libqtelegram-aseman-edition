@@ -88,7 +88,7 @@ void Encrypter::appendDecryptedMessage(const DecryptedMessage &decryptedMessage)
 void Encrypter::appendDecryptedMessageMedia(const DecryptedMessageMedia &media) {
     DecryptedMessageMedia::DecryptedMessageMediaType x = media.classType();
     appendInt(x);
-    switch(x) {
+    switch(static_cast<int>(x)) {
     case DecryptedMessageMedia::typeDecryptedMessageMediaEmpty: {
         break;
     }

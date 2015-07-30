@@ -128,7 +128,7 @@ public:
     // Stickers
     qint64 messagesGetStickers(const QString &emoticon, const QString &hash);
     qint64 messagesGetAllStickers(const QString &hash);
-    // Updates
+    // UpdatesType
     qint64 updatesGetState();
     qint64 updatesGetDifference(qint32 pts, qint32 date, qint32 qts);
     // Files
@@ -200,7 +200,7 @@ Q_SIGNALS:
     // Messages
     void messagesSentMessage(qint64 msgId, qint32 id, qint32 date, const MessageMedia &media, qint32 pts, qint32 pts_count, qint32 seq = 0);
     void messagesSentMessageLink(qint64 msgId, qint32 id, qint32 date, const MessageMedia &media, qint32 pts, qint32 pts_count, qint32 seq, const QList<ContactsLink> &links);
-    void messagesSentMedia(qint64 msgId, const Updates &updates);
+    void messagesSentMedia(qint64 msgId, const UpdatesType &updates);
     void messagesSetTypingResult(qint64 msgId, bool ok);
     void messagesGetMessagesMessages(qint64 msgId, const QList<Message> &messages, const QList<Chat> &chats, const QList<User> &users);
     void messagesGetMessagesMessagesSlice(qint64 msgId, qint32 count, const QList<Message> &messages, const QList<Chat> &chats, const QList<User> &users);
@@ -215,17 +215,17 @@ Q_SIGNALS:
     void messagesDeleteAffectedHistory(qint64 msgId, qint32 pts, qint32 pts_count, qint32 offset);
     void messagesDeleteMessagesResult(qint64 msgId, const MessagesAffectedMessages &deletedIds);
     void messagesReceivedMessagesResult(qint64 msgId, const QList<ReceivedNotifyMessage> &confirmedIds);
-    void messagesForwardedMessage(qint64 msgId, const Updates &update);
-    void messagesForwardedMessages(qint64 msgId, const Updates &update);
-    void messagesSentBroadcast(qint64 msgId, const Updates &updates);
+    void messagesForwardedMessage(qint64 msgId, const UpdatesType &update);
+    void messagesForwardedMessages(qint64 msgId, const UpdatesType &update);
+    void messagesSentBroadcast(qint64 msgId, const UpdatesType &updates);
     // Chats
     void messagesChats(qint64 msgId, const QList<Chat> &chats);
     void messagesChatFull(qint64 msgId, const ChatFull &fullChat, const QList<Chat> &chats, const QList<User> &users);
-    void messagesEditedChatTitle(qint64 msgId, const Updates &updates);
-    void messagesEditedChatPhoto(qint64 msgId, const Updates &updates);
-    void messagesAddedChatUser(qint64 msgId, const Updates &updates);
-    void messagesDeletedChat(qint64 msgId, const Updates &updates);
-    void messagesCreatedChat(qint64 msgId, const Updates &updates);
+    void messagesEditedChatTitle(qint64 msgId, const UpdatesType &updates);
+    void messagesEditedChatPhoto(qint64 msgId, const UpdatesType &updates);
+    void messagesAddedChatUser(qint64 msgId, const UpdatesType &updates);
+    void messagesDeletedChat(qint64 msgId, const UpdatesType &updates);
+    void messagesCreatedChat(qint64 msgId, const UpdatesType &updates);
     // Secret chats
     void messagesDhConfig(qint64 msgId, qint32 g, const QByteArray &p, qint32 version, const QByteArray &random);
     void messagesDhConfigNotModified(qint64 msgId, const QByteArray &random);
@@ -245,7 +245,7 @@ Q_SIGNALS:
     // Stickers
     void messagesGetStickersResult(qint64 msgId, const MessagesStickers &stickers);
     void messagesGetAllStickersResult(qint64 msgId, const MessagesAllStickers &stickers);
-    // Updates
+    // UpdatesType
     void updatesState(qint64 msgId, qint32 pts, qint32 qts, qint32 date, qint32 seq, qint32 unreadCount);
     void updatesDifferenceEmpty(qint64 msgId, qint32 date, qint32 seq);
     void updatesDifference(qint64 msgId, const QList<Message> &messsages, const QList<EncryptedMessage> &newEncryptedMessages, const QList<Update> &otherUpdates, const QList<Chat> &chats, const QList<User> &users, const UpdatesState &state);

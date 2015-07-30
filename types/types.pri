@@ -77,7 +77,7 @@ HEADERS += \
     $$PWD/stickerpack.h \
     $$PWD/stickerset.h \
     $$PWD/update.h \
-    $$PWD/updates.h \
+    $$PWD/updatestype.h \
     $$PWD/user.h \
     $$PWD/userfull.h \
     $$PWD/userprofilephoto.h \
@@ -201,7 +201,7 @@ SOURCES += \
     $$PWD/stickerpack.cpp \
     $$PWD/stickerset.cpp \
     $$PWD/update.cpp \
-    $$PWD/updates.cpp \
+    $$PWD/updatestype.cpp \
     $$PWD/user.cpp \
     $$PWD/userfull.cpp \
     $$PWD/userprofilephoto.cpp \

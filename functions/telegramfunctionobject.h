@@ -3,8 +3,9 @@
 
 #include <QtGlobal>
 
-class InboundPkt;
-class OutboundPkt;
+#include "core/inboundpkt.h"
+#include "core/outboundpkt.h"
+
 class TelegramFunctionObject
 {
 public:

@@ -18,7 +18,7 @@
 #include "types/receivednotifymessage.h"
 #include "types/sendmessageaction.h"
 #include "types/messagessentmessage.h"
-#include "types/updates.h"
+#include "types/updatestype.h"
 #include "types/inputmedia.h"
 #include "types/messageschats.h"
 #include "types/messageschatfull.h"
@@ -122,10 +122,10 @@ public:
     static Types::MessagesSentMessage sendMessageResult(InboundPkt *in);
 
     static bool sendMedia(OutboundPkt *out, qint32 flags, const Types::InputPeer &peer, qint32 replyToMsgId, const Types::InputMedia &media, qint64 randomId);
-    static Types::Updates sendMediaResult(InboundPkt *in);
+    static Types::UpdatesType sendMediaResult(InboundPkt *in);
 
     static bool forwardMessages(OutboundPkt *out, const Types::InputPeer &peer, const QList<qint32> &id, const QList<qint64> &randomId);
-    static Types::Updates forwardMessagesResult(InboundPkt *in);
+    static Types::UpdatesType forwardMessagesResult(InboundPkt *in);
 
     static bool getChats(OutboundPkt *out, const QList<qint32> &id);
     static Types::MessagesChats getChatsResult(InboundPkt *in);
@@ -134,25 +134,25 @@ public:
     static Types::MessagesChatFull getFullChatResult(InboundPkt *in);
 
     static bool editChatTitle(OutboundPkt *out, qint32 chatId, const QString &title);
-    static Types::Updates editChatTitleResult(InboundPkt *in);
+    static Types::UpdatesType editChatTitleResult(InboundPkt *in);
 
     static bool editChatPhoto(OutboundPkt *out, qint32 chatId, const Types::InputChatPhoto &photo);
-    static Types::Updates editChatPhotoResult(InboundPkt *in);
+    static Types::UpdatesType editChatPhotoResult(InboundPkt *in);
 
     static bool addChatUser(OutboundPkt *out, qint32 chatId, const Types::InputUser &userId, qint32 fwdLimit);
-    static Types::Updates addChatUserResult(InboundPkt *in);
+    static Types::UpdatesType addChatUserResult(InboundPkt *in);
 
     static bool deleteChatUser(OutboundPkt *out, qint32 chatId, const Types::InputUser &userId);
-    static Types::Updates deleteChatUserResult(InboundPkt *in);
+    static Types::UpdatesType deleteChatUserResult(InboundPkt *in);
 
     static bool createChat(OutboundPkt *out, const QList<Types::InputUser> &users, const QString &title);
-    static Types::Updates createChatResult(InboundPkt *in);
+    static Types::UpdatesType createChatResult(InboundPkt *in);
 
     static bool forwardMessage(OutboundPkt *out, const Types::InputPeer &peer, qint32 id, qint64 randomId);
-    static Types::Updates forwardMessageResult(InboundPkt *in);
+    static Types::UpdatesType forwardMessageResult(InboundPkt *in);
 
     static bool sendBroadcast(OutboundPkt *out, const QList<Types::InputUser> &contacts, const QList<qint64> &randomId, const QString &message, const Types::InputMedia &media);
-    static Types::Updates sendBroadcastResult(InboundPkt *in);
+    static Types::UpdatesType sendBroadcastResult(InboundPkt *in);
 
     static bool getDhConfig(OutboundPkt *out, qint32 version, qint32 randomLength);
     static Types::MessagesDhConfig getDhConfigResult(InboundPkt *in);
@@ -203,7 +203,7 @@ public:
     static Types::ChatInvite checkChatInviteResult(InboundPkt *in);
 
     static bool importChatInvite(OutboundPkt *out, const QString &hash);
-    static Types::Updates importChatInviteResult(InboundPkt *in);
+    static Types::UpdatesType importChatInviteResult(InboundPkt *in);
 
     static bool getStickerSet(OutboundPkt *out, const Types::InputStickerSet &stickerset);
     static Types::MessagesStickerSet getStickerSetResult(InboundPkt *in);

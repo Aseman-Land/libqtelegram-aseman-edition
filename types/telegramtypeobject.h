@@ -1,12 +1,12 @@
 #ifndef TELEGRAMTYPEOBJECT_H
 #define TELEGRAMTYPEOBJECT_H
 
-#include <QtGlobal>
-
 #ifdef LQTG_DISABLE_ASSERTS
 #define LQTG_FETCH_ASSERT
 #define LQTG_PUSH_ASSERT
 #else
+#include <QtGlobal>
+
 #define LQTG_FETCH_ASSERT qt_assert("x",__FILE__,__LINE__)
 #define LQTG_PUSH_ASSERT qt_assert("x",__FILE__,__LINE__)
 #endif
@@ -20,8 +20,9 @@
 #define LQTG_PUSH_LOG qDebug() << this << __PRETTY_FUNCTION__;
 #endif
 
-class InboundPkt;
-class OutboundPkt;
+#include "core/inboundpkt.h"
+#include "core/outboundpkt.h"
+
 class TelegramTypeObject
 {
 public:
