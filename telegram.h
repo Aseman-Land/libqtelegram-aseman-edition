@@ -89,7 +89,6 @@ public:
     qint64 accountSendChangePhoneCode(const QString &phone_number);
     qint64 accountChangePhone(const QString &phone_number, const QString &phone_code_hash, const QString &phone_code);
     qint64 accountGetPassword();
-    qint64 accountSetPassword(const QByteArray &currentPasswordHash, const QByteArray &newSalt, const QByteArray &newPasswordHash, const QString &hint);
     qint64 photosUploadProfilePhoto(const QByteArray &bytes, const QString &fileName, const QString &caption = QString::null, const InputGeoPoint &geoPoint = InputGeoPoint(InputGeoPoint::typeInputGeoPointEmpty), const InputPhotoCrop &crop = InputPhotoCrop(InputPhotoCrop::typeInputPhotoCropAuto));
     qint64 photosUploadProfilePhoto(const QString &filePath, const QString &caption = QString::null, const InputGeoPoint &geoPoint = InputGeoPoint(InputGeoPoint::typeInputGeoPointEmpty), const InputPhotoCrop &crop = InputPhotoCrop(InputPhotoCrop::typeInputPhotoCropAuto));
     qint64 photosUpdateProfilePhoto(qint64 photoId, qint64 accessHash, const InputPhotoCrop &crop = InputPhotoCrop(InputPhotoCrop::typeInputPhotoCropAuto));
@@ -138,11 +137,10 @@ public:
     qint64 messagesReadMessageContents(const QList<qint32> &ids);
     qint64 messagesDeleteHistory(const InputPeer &peer, qint32 offset = 0);
     qint64 messagesDeleteMessages(const QList<qint32> &msgIds);
-    qint64 messagesRestoreMessages(const QList<qint32> &msgIds);
     qint64 messagesReceivedMessages(qint32 maxId);
     qint64 messagesForwardMessage(const InputPeer &peer, qint32 msgId);
     qint64 messagesForwardMessages(const InputPeer &peer, const QList<qint32> &msgIds, const QList<qint64> &randomIds);
-    qint64 messagesSendBroadcast(const QList<InputUser> &users, const QString &message, const InputMedia &media);
+    qint64 messagesSendBroadcast(const QList<InputUser> &users, const QList<qint64> &randomIds, const QString &message, const InputMedia &media);
 
     // Working with chats
     qint64 messagesGetChats(const QList<qint32> &chatIds);

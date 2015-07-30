@@ -23,8 +23,10 @@
 #include <QByteArray>
 #include <QList>
 
-#include "documentattribute.h"
-#include "photosize.h"
+#include "types/documentattribute.h"
+#include "types/photosize.h"
+
+using namespace Tg::Types;
 
 class DecryptedMessageMedia {
 

@@ -28,6 +28,7 @@
 Q_LOGGING_CATEGORY(TG_CORE_SESSION, "tg.core.session")
 
 qint64 Session::m_clientLastMsgId = 0;
+using namespace Tg::Types;
 
 Session::Session(DC *dc, Settings *settings, CryptoUtils *crypto, QObject *parent) :
     Connection(dc->host(), dc->port(), parent),
@@ -175,18 +176,18 @@ void Session::rpcExecuteAnswer(InboundPkt &inboundPkt, qint64 msgId) {
     case TL_RpcResult:
         workRpcResult(inboundPkt, msgId);
         return;
-    case TL_UpdateShort:
+    case Updates::typeUpdateShort:
         workUpdateShort(inboundPkt, msgId);
         return;
-    case TL_UpdatesCombined:
+    case Updates::typeUpdatesCombined:
         workUpdatesCombined(inboundPkt, msgId);
-    case TL_Updates:
+    case Updates::typeUpdates:
         workUpdates(inboundPkt, msgId);
         return;
-    case TL_UpdateShortMessage:
+    case Updates::typeUpdateShortMessage:
         workUpdateShortMessage(inboundPkt, msgId);
         return;
-    case TL_UpdateShortChatMessage:
+    case Updates::typeUpdateShortChatMessage:
         workUpdateShortChatMessage(inboundPkt, msgId);
         return;
     case TL_GZipPacked:
@@ -204,7 +205,7 @@ void Session::rpcExecuteAnswer(InboundPkt &inboundPkt, qint64 msgId) {
     case TL_MsgNewDetailedInfo:
         workNewDetailedInfo(inboundPkt, msgId);
         return;
-    case TL_UpdatesTooLong:
+    case Updates::typeUpdatesTooLong:
         workUpdatesTooLong(inboundPkt, msgId);
         return;
     case TL_BadMsgNotification:
@@ -363,7 +364,8 @@ void Session::workNewDetailedInfo(InboundPkt &inboundPkt, qint64 msgId) {
 
 void Session::workUpdatesTooLong(InboundPkt &inboundPkt, qint64 msgId) {
     qCDebug(TG_CORE_SESSION) << "workUpdatesTooLong: msgId =" << QString::number(msgId, 16);
-    mAsserter.check(inboundPkt.fetchInt() == (qint32)TL_UpdatesTooLong);
+    Updates upd(&inboundPkt);
+    Q_UNUSED(upd)
     Q_EMIT updatesTooLong();
 }
 

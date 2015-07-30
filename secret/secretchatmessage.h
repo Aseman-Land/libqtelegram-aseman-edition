@@ -1,7 +1,7 @@
 #ifndef SECRETCHATMESSAGE_H
 #define SECRETCHATMESSAGE_H
 
-#include "types/decryptedmessage.h"
+#include "secret/decryptedmessage.h"
 #include "types/encryptedfile.h"
 
 class SecretChatMessage {

@@ -24,6 +24,8 @@
 #include <QList>
 #include "types/sendmessageaction.h"
 
+using namespace Tg::Types;
+
 class DecryptedMessageAction
 {
 public:

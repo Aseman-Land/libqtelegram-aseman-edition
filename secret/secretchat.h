@@ -30,7 +30,7 @@
 #include "types/inputuser.h"
 #include <bn.h>
 #include "types/encryptedchat.h"
-#include "types/decryptedmessage.h"
+#include "secret/decryptedmessage.h"
 #include "libqtelegram_global.h"
 #include "util/constants.h"
 

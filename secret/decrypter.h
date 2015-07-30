@@ -20,7 +20,7 @@
 
 #include "core/inboundpkt.h"
 #include <QByteArray>
-#include "types/decryptedmessage.h"
+#include "secret/decryptedmessage.h"
 #include "types/encryptedmessage.h"
 #include "core/settings.h"
 

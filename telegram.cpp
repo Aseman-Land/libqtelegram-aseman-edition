@@ -1290,10 +1290,6 @@ qint64 Telegram::accountGetPassword() {
     return mApi->accountGetPassword();
 }
 
-qint64 Telegram::accountSetPassword(const QByteArray &currentPasswordHash, const QByteArray &newSalt, const QByteArray &newPasswordHash, const QString &hint) {
-    return mApi->accountSetPassword(currentPasswordHash, newSalt, newPasswordHash, hint);
-}
-
 qint64 Telegram::photosUploadProfilePhoto(const QByteArray &bytes, const QString &fileName, const QString &caption, const InputGeoPoint &geoPoint, const InputPhotoCrop &crop) {
     FileOperation *op = new FileOperation(FileOperation::uploadProfilePhoto);
     op->setCaption(caption);
@@ -1631,10 +1627,6 @@ qint64 Telegram::messagesDeleteMessages(const QList<qint32> &msgIds) {
     return mApi->messagesDeleteMessages(msgIds);
 }
 
-qint64 Telegram::messagesRestoreMessages(const QList<qint32> &msgIds) {
-    return mApi->messagesRestoreMessages(msgIds);
-}
-
 qint64 Telegram::messagesReceivedMessages(qint32 maxId) {
     return mApi->messagesReceivedMessages(maxId);
 }
@@ -1649,8 +1641,8 @@ qint64 Telegram::messagesForwardMessages(const InputPeer &peer, const QList<qint
     return mApi->messagesForwardMessages(peer, msgIds, randomIds);
 }
 
-qint64 Telegram::messagesSendBroadcast(const QList<InputUser> &users, const QString &message, const InputMedia &media) {
-    return mApi->messagesSendBroadcast(users, message, media);
+qint64 Telegram::messagesSendBroadcast(const QList<InputUser> &users, const QList<qint64> &randomIds, const QString &message, const InputMedia &media) {
+    return mApi->messagesSendBroadcast(users, randomIds, message, media);
 }
 
 qint64 Telegram::messagesGetChats(const QList<qint32> &chatIds) {

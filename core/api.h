@@ -72,7 +72,6 @@ public:
     qint64 accountChangePhone(const QString &phone_number, const QString &phone_code_hash, const QString &phone_code);
     qint64 accountUpdateDeviceLocked(int period);
     qint64 accountGetPassword();
-    qint64 accountSetPassword(const QByteArray &currentPasswordHash, const QByteArray &newSalt, const QByteArray &newPasswordHash, const QString &hint);
     qint64 photosUploadProfilePhoto(const InputFile &file, const QString &caption, const InputGeoPoint &geoPoint, const InputPhotoCrop &crop);
     qint64 photosUpdateProfilePhoto(const InputPhoto &id, const InputPhotoCrop &crop);
     // Users
@@ -103,11 +102,10 @@ public:
     qint64 messagesReadMessageContents(const QList<qint32> &ids);
     qint64 messagesDeleteHistory(const InputPeer &peer, qint32 offset = 0);
     qint64 messagesDeleteMessages(const QList<qint32> &ids);
-    qint64 messagesRestoreMessages(const QList<qint32> &ids);
     qint64 messagesReceivedMessages(qint32 maxId);
     qint64 messagesForwardMessage(const InputPeer &peer, qint32 id, qint64 randomId);
     qint64 messagesForwardMessages(const InputPeer &peer, const QList<qint32> &ids, const QList<qint64> &randomIds);
-    qint64 messagesSendBroadcast(const QList<InputUser> &contacts, const QString &message, const InputMedia &media);
+    qint64 messagesSendBroadcast(const QList<InputUser> &contacts, const QList<qint64> &randomIds, const QString &message, const InputMedia &media);
     // Chats
     qint64 messagesGetChats(const QList<qint32> &chatIds);
     qint64 messagesGetFullChat(qint32 chatId);
@@ -168,7 +166,8 @@ Q_SIGNALS:
     void accountGetWallPapersResult(qint64 msgId, const QList<WallPaper> &wallpapers);
     void accountCheckUsernameResult(qint64 msgId, bool ok);
     void accountUpdateUsernameResult(qint64 msgId, const User &user);
-    void accountPrivacyRules(qint64 msgId, const QList<PrivacyRule> &rules, const QList<User> &users);
+    void accountSetPrivacyRules(qint64 msgId, const QList<PrivacyRule> &rules, const QList<User> &users);
+    void accountGetPrivacyRules(qint64 msgId, const QList<PrivacyRule> &rules, const QList<User> &users);
     void accountDeleteAccountResult(qint64 msgId, bool ok);
     void accountGetAccountTTLResult(qint64 msgId, const AccountDaysTTL &ttl);
     void accountSetAccountTTLResult(qint64 msgId, bool ok);
@@ -215,8 +214,7 @@ Q_SIGNALS:
     void messagesReadMessageContentsResult(qint64 msgId, const MessagesAffectedMessages &watchedIds);
     void messagesDeleteAffectedHistory(qint64 msgId, qint32 pts, qint32 pts_count, qint32 offset);
     void messagesDeleteMessagesResult(qint64 msgId, const MessagesAffectedMessages &deletedIds);
-    void messagesRestoreMessagesResult(qint64 msgId, const QList<qint32> &restoredIds);
-    void messagesReceivedMessagesResult(qint64 msgId, const QList<qint32> &confirmedIds);
+    void messagesReceivedMessagesResult(qint64 msgId, const QList<ReceivedNotifyMessage> &confirmedIds);
     void messagesForwardedMessage(qint64 msgId, const Updates &update);
     void messagesForwardedMessages(qint64 msgId, const Updates &update);
     void messagesSentBroadcast(qint64 msgId, const Updates &updates);
@@ -300,7 +298,6 @@ private:
     QueryMethods accountChangePhoneMethods;
     QueryMethods accountUpdateDeviceLockedMethods;
     QueryMethods accountGetPasswordMethods;
-    QueryMethods accountSetPasswordMethods;
     QueryMethods photosUploadProfilePhotoMethods;
     QueryMethods photosUpdateProfilePhotoMethods;
     QueryMethods usersGetUsersMethods;
@@ -327,7 +324,6 @@ private:
     QueryMethods messagesReadMessageContentsMethods;
     QueryMethods messagesDeleteHistoryMethods;
     QueryMethods messagesDeleteMessagesMethods;
-    QueryMethods messagesRestoreMessagesMethods;
     QueryMethods messagesReceivedMessagesMethods;
     QueryMethods messagesForwardMessageMethods;
     QueryMethods messagesForwardMessagesMethods;
@@ -382,14 +378,14 @@ private:
     void onAccountGetWallPapersAnswer(Query *q, InboundPkt &inboundPkt);
     void onAccountCheckUsernameAnswer(Query *q, InboundPkt &inboundPkt);
     void onAccountUpdateUsernameAnswer(Query *q, InboundPkt &inboundPkt);
-    void onAccountPrivacyRules(Query *q, InboundPkt &inboundPkt);
+    void onAccountGetPrivacyRules(Query *q, InboundPkt &inboundPkt);
+    void onAccountSetPrivacyRules(Query *q, InboundPkt &inboundPkt);
     void onAccountDeleteAccountAnswer(Query *q, InboundPkt &inboundPkt);
     void onAccountGetAccountTTLAnswer(Query *q, InboundPkt &inboundPkt);
     void onAccountSetAccountTTLAnswer(Query *q, InboundPkt &inboundPkt);
     void onAccountChangePhoneAnswer(Query *q, InboundPkt &inboundPkt);
     void onAccountUpdateDeviceLockedAnswer(Query *q, InboundPkt &inboundPkt);
     void onAccountGetPasswordAnswer(Query *q, InboundPkt &inboundPkt);
-    void onAccountSetPasswordAnswer(Query *q, InboundPkt &inboundPkt);
     void onAccountSentChangePhoneCode(Query *q, InboundPkt &inboundPkt);
     void onPhotosUploadProfilePhotoAnswer(Query *q, InboundPkt &inboundPkt);
     void onPhotosUpdateProfilePhotoAnswer(Query *q, InboundPkt &inboundPkt);
@@ -417,7 +413,6 @@ private:
     void onMessagesReadMessageContentsAnswer(Query *q, InboundPkt &inboundPkt);
     void onMessagesDeleteHistoryAnswer(Query *q, InboundPkt &inboundPkt);
     void onMessagesDeleteMessagesAnswer(Query *q, InboundPkt &inboundPkt);
-    void onMessagesRestoreMessagesAnswer(Query *q, InboundPkt &inboundPkt);
     void onMessagesReceivedMessagesAnswer(Query *q, InboundPkt &inboundPkt);
     void onMessagesForwardMessageAnswer(Query *q, InboundPkt &inboundPkt);
     void onMessagesForwardMessagesAnswer(Query *q, InboundPkt &inboundPkt);
