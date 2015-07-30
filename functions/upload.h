@@ -14,7 +14,7 @@
 namespace Tg {
 namespace Functions {
 
-class Upload : public TelegramFunctionObject
+class LIBQTELEGRAMSHARED_EXPORT Upload : public TelegramFunctionObject
 {
 public:
     enum UploadFunction {
@@ -29,8 +29,8 @@ public:
     static bool saveFilePart(OutboundPkt *out, qint64 fileId, qint32 filePart, const QByteArray &bytes);
     static bool saveFilePartResult(InboundPkt *in);
 
-    static bool getFile(OutboundPkt *out, const Types::InputFileLocation &location, qint32 offset, qint32 limit);
-    static Types::UploadFile getFileResult(InboundPkt *in);
+    static bool getFile(OutboundPkt *out, const InputFileLocation &location, qint32 offset, qint32 limit);
+    static UploadFile getFileResult(InboundPkt *in);
 
     static bool saveBigFilePart(OutboundPkt *out, qint64 fileId, qint32 filePart, qint32 fileTotalParts, const QByteArray &bytes);
     static bool saveBigFilePartResult(InboundPkt *in);

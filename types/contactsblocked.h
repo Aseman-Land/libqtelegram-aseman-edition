@@ -11,10 +11,7 @@
 #include <QtGlobal>
 #include "user.h"
 
-namespace Tg {
-namespace Types {
-
-class ContactsBlocked : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT ContactsBlocked : public TelegramTypeObject
 {
 public:
     enum ContactsBlockedType {
@@ -49,8 +46,5 @@ private:
     QList<User> m_users;
     ContactsBlockedType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_CONTACTSBLOCKED

@@ -9,10 +9,7 @@
 #include <QList>
 #include "inputuser.h"
 
-namespace Tg {
-namespace Types {
-
-class InputPrivacyRule : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT InputPrivacyRule : public TelegramTypeObject
 {
 public:
     enum InputPrivacyRuleType {
@@ -43,8 +40,5 @@ private:
     QList<InputUser> m_users;
     InputPrivacyRuleType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_INPUTPRIVACYRULE

@@ -8,10 +8,7 @@
 #include "telegramtypeobject.h"
 #include <QtGlobal>
 
-namespace Tg {
-namespace Types {
-
-class MessagesAffectedMessages : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT MessagesAffectedMessages : public TelegramTypeObject
 {
 public:
     enum MessagesAffectedMessagesType {
@@ -41,8 +38,5 @@ private:
     qint32 m_ptsCount;
     MessagesAffectedMessagesType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_MESSAGESAFFECTEDMESSAGES

@@ -11,10 +11,7 @@
 #include "photosize.h"
 #include <QString>
 
-namespace Tg {
-namespace Types {
-
-class WallPaper : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT WallPaper : public TelegramTypeObject
 {
 public:
     enum WallPaperType {
@@ -57,8 +54,5 @@ private:
     QString m_title;
     WallPaperType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_WALLPAPER

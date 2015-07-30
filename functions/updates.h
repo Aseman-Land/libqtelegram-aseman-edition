@@ -13,7 +13,7 @@
 namespace Tg {
 namespace Functions {
 
-class Updates : public TelegramFunctionObject
+class LIBQTELEGRAMSHARED_EXPORT Updates : public TelegramFunctionObject
 {
 public:
     enum UpdatesFunction {
@@ -25,10 +25,10 @@ public:
     virtual ~Updates();
 
     static bool getState(OutboundPkt *out);
-    static Types::UpdatesState getStateResult(InboundPkt *in);
+    static UpdatesState getStateResult(InboundPkt *in);
 
     static bool getDifference(OutboundPkt *out, qint32 pts, qint32 date, qint32 qts);
-    static Types::UpdatesDifference getDifferenceResult(InboundPkt *in);
+    static UpdatesDifference getDifferenceResult(InboundPkt *in);
 
 };
 

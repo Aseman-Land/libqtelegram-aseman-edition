@@ -8,10 +8,7 @@
 #include "telegramtypeobject.h"
 #include <QtGlobal>
 
-namespace Tg {
-namespace Types {
-
-class ChatParticipant : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT ChatParticipant : public TelegramTypeObject
 {
 public:
     enum ChatParticipantType {
@@ -45,8 +42,5 @@ private:
     qint32 m_userId;
     ChatParticipantType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_CHATPARTICIPANT

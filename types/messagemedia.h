@@ -15,10 +15,7 @@
 #include "video.h"
 #include "webpage.h"
 
-namespace Tg {
-namespace Types {
-
-class MessageMedia : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT MessageMedia : public TelegramTypeObject
 {
 public:
     enum MessageMediaType {
@@ -109,8 +106,5 @@ private:
     WebPage m_webpage;
     MessageMediaType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_MESSAGEMEDIA

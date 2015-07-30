@@ -11,10 +11,7 @@
 #include <QList>
 #include "photosize.h"
 
-namespace Tg {
-namespace Types {
-
-class Photo : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT Photo : public TelegramTypeObject
 {
 public:
     enum PhotoType {
@@ -61,8 +58,5 @@ private:
     qint32 m_userId;
     PhotoType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_PHOTO

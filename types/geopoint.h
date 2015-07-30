@@ -8,10 +8,7 @@
 #include "telegramtypeobject.h"
 #include <QtGlobal>
 
-namespace Tg {
-namespace Types {
-
-class GeoPoint : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT GeoPoint : public TelegramTypeObject
 {
 public:
     enum GeoPointType {
@@ -42,8 +39,5 @@ private:
     qreal m_longValue;
     GeoPointType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_GEOPOINT

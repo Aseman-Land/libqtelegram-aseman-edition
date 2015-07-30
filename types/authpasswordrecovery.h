@@ -8,10 +8,7 @@
 #include "telegramtypeobject.h"
 #include <QString>
 
-namespace Tg {
-namespace Types {
-
-class AuthPasswordRecovery : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT AuthPasswordRecovery : public TelegramTypeObject
 {
 public:
     enum AuthPasswordRecoveryType {
@@ -37,8 +34,5 @@ private:
     QString m_emailPattern;
     AuthPasswordRecoveryType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_AUTHPASSWORDRECOVERY

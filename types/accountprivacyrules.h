@@ -10,10 +10,7 @@
 #include "privacyrule.h"
 #include "user.h"
 
-namespace Tg {
-namespace Types {
-
-class AccountPrivacyRules : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT AccountPrivacyRules : public TelegramTypeObject
 {
 public:
     enum AccountPrivacyRulesType {
@@ -43,8 +40,5 @@ private:
     QList<User> m_users;
     AccountPrivacyRulesType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_ACCOUNTPRIVACYRULES

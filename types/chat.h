@@ -11,10 +11,7 @@
 #include "geopoint.h"
 #include "chatphoto.h"
 
-namespace Tg {
-namespace Types {
-
-class Chat : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT Chat : public TelegramTypeObject
 {
 public:
     enum ChatType {
@@ -87,8 +84,5 @@ private:
     qint32 m_version;
     ChatType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_CHAT

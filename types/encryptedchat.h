@@ -9,10 +9,7 @@
 #include <QtGlobal>
 #include <QByteArray>
 
-namespace Tg {
-namespace Types {
-
-class EncryptedChat : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT EncryptedChat : public TelegramTypeObject
 {
 public:
     enum EncryptedChatType {
@@ -70,8 +67,5 @@ private:
     qint32 m_participantId;
     EncryptedChatType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_ENCRYPTEDCHAT

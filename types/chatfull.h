@@ -12,10 +12,7 @@
 #include "peernotifysettings.h"
 #include "chatparticipants.h"
 
-namespace Tg {
-namespace Types {
-
-class ChatFull : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT ChatFull : public TelegramTypeObject
 {
 public:
     enum ChatFullType {
@@ -57,8 +54,5 @@ private:
     ChatParticipants m_participants;
     ChatFullType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_CHATFULL

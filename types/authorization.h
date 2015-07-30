@@ -9,10 +9,7 @@
 #include <QtGlobal>
 #include <QString>
 
-namespace Tg {
-namespace Types {
-
-class Authorization : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT Authorization : public TelegramTypeObject
 {
 public:
     enum AuthorizationType {
@@ -86,8 +83,5 @@ private:
     QString m_systemVersion;
     AuthorizationType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_AUTHORIZATION

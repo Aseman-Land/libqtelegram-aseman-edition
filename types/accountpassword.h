@@ -9,10 +9,7 @@
 #include <QByteArray>
 #include <QString>
 
-namespace Tg {
-namespace Types {
-
-class AccountPassword : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT AccountPassword : public TelegramTypeObject
 {
 public:
     enum AccountPasswordType {
@@ -55,8 +52,5 @@ private:
     QByteArray m_newSalt;
     AccountPasswordType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_ACCOUNTPASSWORD

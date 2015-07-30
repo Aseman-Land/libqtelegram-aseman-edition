@@ -8,10 +8,7 @@
 #include "telegramtypeobject.h"
 #include <QtGlobal>
 
-namespace Tg {
-namespace Types {
-
-class InputPhoto : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT InputPhoto : public TelegramTypeObject
 {
 public:
     enum InputPhotoType {
@@ -42,8 +39,5 @@ private:
     qint64 m_id;
     InputPhotoType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_INPUTPHOTO

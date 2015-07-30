@@ -12,10 +12,7 @@
 #include <QString>
 #include "user.h"
 
-namespace Tg {
-namespace Types {
-
-class UserFull : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT UserFull : public TelegramTypeObject
 {
 public:
     enum UserFullType {
@@ -65,8 +62,5 @@ private:
     User m_user;
     UserFullType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_USERFULL

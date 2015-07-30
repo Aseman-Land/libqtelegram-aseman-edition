@@ -7,10 +7,7 @@
 
 #include "telegramtypeobject.h"
 
-namespace Tg {
-namespace Types {
-
-class AuthCheckedPhone : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT AuthCheckedPhone : public TelegramTypeObject
 {
 public:
     enum AuthCheckedPhoneType {
@@ -36,8 +33,5 @@ private:
     bool m_phoneRegistered;
     AuthCheckedPhoneType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_AUTHCHECKEDPHONE

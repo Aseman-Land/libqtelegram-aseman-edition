@@ -9,10 +9,7 @@
 #include <QtGlobal>
 #include <QString>
 
-namespace Tg {
-namespace Types {
-
-class InputEncryptedFile : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT InputEncryptedFile : public TelegramTypeObject
 {
 public:
     enum InputEncryptedFileType {
@@ -57,8 +54,5 @@ private:
     qint32 m_parts;
     InputEncryptedFileType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_INPUTENCRYPTEDFILE

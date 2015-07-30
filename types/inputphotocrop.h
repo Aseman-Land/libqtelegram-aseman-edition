@@ -8,10 +8,7 @@
 #include "telegramtypeobject.h"
 #include <QtGlobal>
 
-namespace Tg {
-namespace Types {
-
-class InputPhotoCrop : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT InputPhotoCrop : public TelegramTypeObject
 {
 public:
     enum InputPhotoCropType {
@@ -46,8 +43,5 @@ private:
     qreal m_cropWidth;
     InputPhotoCropType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_INPUTPHOTOCROP

@@ -8,10 +8,7 @@
 #include "telegramtypeobject.h"
 #include <QtGlobal>
 
-namespace Tg {
-namespace Types {
-
-class InputGeoChat : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT InputGeoChat : public TelegramTypeObject
 {
 public:
     enum InputGeoChatType {
@@ -41,8 +38,5 @@ private:
     qint32 m_chatId;
     InputGeoChatType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_INPUTGEOCHAT

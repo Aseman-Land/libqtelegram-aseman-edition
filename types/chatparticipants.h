@@ -10,10 +10,7 @@
 #include <QList>
 #include "chatparticipant.h"
 
-namespace Tg {
-namespace Types {
-
-class ChatParticipants : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT ChatParticipants : public TelegramTypeObject
 {
 public:
     enum ChatParticipantsType {
@@ -52,8 +49,5 @@ private:
     qint32 m_version;
     ChatParticipantsType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_CHATPARTICIPANTS

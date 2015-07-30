@@ -10,10 +10,7 @@
 #include <QtGlobal>
 #include "storagefiletype.h"
 
-namespace Tg {
-namespace Types {
-
-class UploadFile : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT UploadFile : public TelegramTypeObject
 {
 public:
     enum UploadFileType {
@@ -47,8 +44,5 @@ private:
     StorageFileType m_type;
     UploadFileType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_UPLOADFILE

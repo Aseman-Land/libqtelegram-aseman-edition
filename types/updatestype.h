@@ -13,10 +13,7 @@
 #include "update.h"
 #include "user.h"
 
-namespace Tg {
-namespace Types {
-
-class UpdatesType : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT UpdatesType : public TelegramTypeObject
 {
 public:
     enum UpdatesTypeType {
@@ -115,8 +112,5 @@ private:
     QList<User> m_users;
     UpdatesTypeType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_UPDATESTYPE

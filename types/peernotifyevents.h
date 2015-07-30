@@ -7,10 +7,7 @@
 
 #include "telegramtypeobject.h"
 
-namespace Tg {
-namespace Types {
-
-class PeerNotifyEvents : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT PeerNotifyEvents : public TelegramTypeObject
 {
 public:
     enum PeerNotifyEventsType {
@@ -33,8 +30,5 @@ public:
 private:
     PeerNotifyEventsType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_PEERNOTIFYEVENTS

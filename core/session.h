@@ -33,6 +33,8 @@
 
 Q_DECLARE_LOGGING_CATEGORY(TG_CORE_SESSION)
 
+
+
 class Session : public Connection
 {
     Q_OBJECT

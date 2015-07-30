@@ -12,10 +12,7 @@
 #include <QString>
 #include "photosize.h"
 
-namespace Tg {
-namespace Types {
-
-class Document : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT Document : public TelegramTypeObject
 {
 public:
     enum DocumentType {
@@ -70,8 +67,5 @@ private:
     PhotoSize m_thumb;
     DocumentType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_DOCUMENT

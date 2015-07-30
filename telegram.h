@@ -25,23 +25,25 @@
 #include <QMap>
 #include <QLoggingCategory>
 #include <QSharedPointer>
+
 #include "libqtelegram_global.h"
 #include "types/types.h"
-#include "core/dcprovider.h"
-#include "core/api.h"
-#include "secret/secretstate.h"
-#include "secret/encrypter.h"
-#include "secret/decrypter.h"
+#include "secret/secretchat.h"
 #include "secret/secretchatmessage.h"
-#include "secret/decryptedmessagebuilder.h"
-#include "file/filehandler.h"
 
 Q_DECLARE_LOGGING_CATEGORY(TG_LIB_API)
 Q_DECLARE_LOGGING_CATEGORY(TG_LIB_SECRET)
 
+
+
+class Settings;
+class CryptoUtils;
+class TelegramPrivate;
 class LIBQTELEGRAMSHARED_EXPORT Telegram : public QObject
 {
     Q_OBJECT
+    friend class TelegramPrivate;
+
 public:
     Telegram(const QString &defaultHostAddress, qint16 defaultHostPort, qint16 defaultHostDcId, qint32 appId, const QString &appHash,
              const QString &phoneNumber, const QString &configPath = QString("~/.telegram"), const QString &publicKeyFile = QString("tg.pub"));
@@ -369,7 +371,6 @@ Q_SIGNALS:
     void fatalError();
 
 protected:
-
     enum LibraryState {
         LoggedOut,
         CreatedSharedKeys,
@@ -383,43 +384,12 @@ protected:
         NotRetry
     };
 
-    LibraryState mLibraryState;
-    LastRetryType mLastRetryType;
-
-    bool mSlept;
-
 private:
-    Settings *mSettings;
-    CryptoUtils *mCrypto;
-
-    Api *mApi;
-    DcProvider *mDcProvider;
-    FileHandler::Ptr mFileHandler;
-
-    QString m_phoneCodeHash;
-    QString mSettingsId;
-
-    // cached contacts
-    QList<Contact> m_cachedContacts;
-    QList<User> m_cachedUsers;
-
-    // encrypted chats
-    SecretState *mSecretState;
-    Encrypter *mEncrypter;
-    Decrypter *mDecrypter;
     void processSecretChatUpdate(const Update &update);
     qint64 generateGAorB(SecretChat *secretChat);
     void createSharedKey(SecretChat * secretChat, BIGNUM *p, QByteArray gAOrB);
     SecretChatMessage toSecretChatMessage(const EncryptedMessage &encryptedMessage);
     void processDifferences(qint64 id, const QList<Message> &messages, const QList<EncryptedMessage> &newEncryptedMessages, const QList<Update> &otherUpdates, const QList<Chat> &chats, const QList<User> &users, const UpdatesState &state, bool isIntermediateState);
-
-    bool mLoggedIn;
-    bool mCreatedSharedKeys;
-
-    //info for retries
-    QString mLastPhoneChecked;
-    QString mLastLangCode;
-    QList<InputContact> mLastContacts;
 
 private Q_SLOTS:
     void onDcProviderReady();
@@ -464,6 +434,9 @@ private Q_SLOTS:
     void onMessagesAcceptEncryptionEncryptedChat(qint64, const EncryptedChat &chat);
     void onMessagesDiscardEncryptionResult(qint64, bool ok);
     void onSequenceNumberGap(qint32 chatId, qint32 startSeqNo, qint32 endSeqNo);
+
+private:
+    TelegramPrivate *prv;
 };
 
 #endif // TELEGRAM_H

@@ -10,10 +10,7 @@
 #include "inputfile.h"
 #include "inputphoto.h"
 
-namespace Tg {
-namespace Types {
-
-class InputChatPhoto : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT InputChatPhoto : public TelegramTypeObject
 {
 public:
     enum InputChatPhotoType {
@@ -49,8 +46,5 @@ private:
     InputPhoto m_id;
     InputChatPhotoType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_INPUTCHATPHOTO

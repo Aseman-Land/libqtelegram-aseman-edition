@@ -461,12 +461,12 @@ qint64 Utils::findDivider(qint64 pq) {
             while (b) {
                 if (b & 1) {
                     c += a;
-                    if (c >= pq) {
+                    if ((qint64)c >= pq) {
                         c -= pq;
                     }
                 }
                 a += a;
-                if (a >= pq) {
+                if ((qint64)a >= pq) {
                     a -= pq;
                 }
                 b >>= 1;
@@ -481,7 +481,7 @@ qint64 Utils::findDivider(qint64 pq) {
                 y = x;
             }
         }
-        if (g > 1 && g < pq) break;
+        if (g > 1 && (qint64)g < pq) break;
     }
     qCDebug(TG_UTIL_UTILS) << "got" << g << "divider after" << it << "iterations";
     return g;

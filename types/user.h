@@ -11,10 +11,7 @@
 #include "userprofilephoto.h"
 #include "userstatus.h"
 
-namespace Tg {
-namespace Types {
-
-class User : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT User : public TelegramTypeObject
 {
 public:
     enum UserType {
@@ -73,8 +70,5 @@ private:
     QString m_username;
     UserType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_USER

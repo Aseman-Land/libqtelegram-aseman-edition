@@ -8,10 +8,7 @@
 #include "telegramtypeobject.h"
 #include <QtGlobal>
 
-namespace Tg {
-namespace Types {
-
-class InputDocument : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT InputDocument : public TelegramTypeObject
 {
 public:
     enum InputDocumentType {
@@ -42,8 +39,5 @@ private:
     qint64 m_id;
     InputDocumentType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_INPUTDOCUMENT

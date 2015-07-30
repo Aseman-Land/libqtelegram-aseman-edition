@@ -9,10 +9,7 @@
 #include <QtGlobal>
 #include "user.h"
 
-namespace Tg {
-namespace Types {
-
-class AuthAuthorization : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT AuthAuthorization : public TelegramTypeObject
 {
 public:
     enum AuthAuthorizationType {
@@ -42,8 +39,5 @@ private:
     User m_user;
     AuthAuthorizationType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_AUTHAUTHORIZATION

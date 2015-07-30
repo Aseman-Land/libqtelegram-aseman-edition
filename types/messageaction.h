@@ -11,10 +11,7 @@
 #include "photo.h"
 #include <QList>
 
-namespace Tg {
-namespace Types {
-
-class MessageAction : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT MessageAction : public TelegramTypeObject
 {
 public:
     enum MessageActionType {
@@ -69,8 +66,5 @@ private:
     QList<qint32> m_users;
     MessageActionType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_MESSAGEACTION

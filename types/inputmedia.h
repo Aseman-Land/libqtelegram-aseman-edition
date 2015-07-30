@@ -17,10 +17,7 @@
 #include "inputphoto.h"
 #include "inputvideo.h"
 
-namespace Tg {
-namespace Types {
-
-class InputMedia : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT InputMedia : public TelegramTypeObject
 {
 public:
     enum InputMediaType {
@@ -135,8 +132,5 @@ private:
     qint32 m_w;
     InputMediaType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_INPUTMEDIA

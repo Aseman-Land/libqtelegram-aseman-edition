@@ -8,10 +8,7 @@
 #include "telegramtypeobject.h"
 #include "peer.h"
 
-namespace Tg {
-namespace Types {
-
-class NotifyPeer : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT NotifyPeer : public TelegramTypeObject
 {
 public:
     enum NotifyPeerType {
@@ -40,8 +37,5 @@ private:
     Peer m_peer;
     NotifyPeerType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_NOTIFYPEER

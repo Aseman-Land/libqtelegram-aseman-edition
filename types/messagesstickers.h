@@ -10,10 +10,7 @@
 #include <QList>
 #include "document.h"
 
-namespace Tg {
-namespace Types {
-
-class MessagesStickers : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT MessagesStickers : public TelegramTypeObject
 {
 public:
     enum MessagesStickersType {
@@ -44,8 +41,5 @@ private:
     QList<Document> m_stickers;
     MessagesStickersType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_MESSAGESSTICKERS

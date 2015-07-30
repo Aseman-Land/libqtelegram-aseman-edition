@@ -9,10 +9,7 @@
 #include <QList>
 #include <QtGlobal>
 
-namespace Tg {
-namespace Types {
-
-class PrivacyRule : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT PrivacyRule : public TelegramTypeObject
 {
 public:
     enum PrivacyRuleType {
@@ -43,8 +40,5 @@ private:
     QList<qint32> m_users;
     PrivacyRuleType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_PRIVACYRULE

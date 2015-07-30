@@ -19,7 +19,7 @@
 namespace Tg {
 namespace Functions {
 
-class Auth : public TelegramFunctionObject
+class LIBQTELEGRAMSHARED_EXPORT Auth : public TelegramFunctionObject
 {
 public:
     enum AuthFunction {
@@ -44,19 +44,19 @@ public:
     virtual ~Auth();
 
     static bool checkPhone(OutboundPkt *out, const QString &phoneNumber);
-    static Types::AuthCheckedPhone checkPhoneResult(InboundPkt *in);
+    static AuthCheckedPhone checkPhoneResult(InboundPkt *in);
 
     static bool sendCode(OutboundPkt *out, const QString &phoneNumber, qint32 smsType, qint32 apiId, const QString &apiHash, const QString &langCode);
-    static Types::AuthSentCode sendCodeResult(InboundPkt *in);
+    static AuthSentCode sendCodeResult(InboundPkt *in);
 
     static bool sendCall(OutboundPkt *out, const QString &phoneNumber, const QString &phoneCodeHash);
     static bool sendCallResult(InboundPkt *in);
 
     static bool signUp(OutboundPkt *out, const QString &phoneNumber, const QString &phoneCodeHash, const QString &phoneCode, const QString &firstName, const QString &lastName);
-    static Types::AuthAuthorization signUpResult(InboundPkt *in);
+    static AuthAuthorization signUpResult(InboundPkt *in);
 
     static bool signIn(OutboundPkt *out, const QString &phoneNumber, const QString &phoneCodeHash, const QString &phoneCode);
-    static Types::AuthAuthorization signInResult(InboundPkt *in);
+    static AuthAuthorization signInResult(InboundPkt *in);
 
     static bool logOut(OutboundPkt *out);
     static bool logOutResult(InboundPkt *in);
@@ -68,10 +68,10 @@ public:
     static bool sendInvitesResult(InboundPkt *in);
 
     static bool exportAuthorization(OutboundPkt *out, qint32 dcId);
-    static Types::AuthExportedAuthorization exportAuthorizationResult(InboundPkt *in);
+    static AuthExportedAuthorization exportAuthorizationResult(InboundPkt *in);
 
     static bool importAuthorization(OutboundPkt *out, qint32 id, const QByteArray &bytes);
-    static Types::AuthAuthorization importAuthorizationResult(InboundPkt *in);
+    static AuthAuthorization importAuthorizationResult(InboundPkt *in);
 
     static bool bindTempAuthKey(OutboundPkt *out, qint64 permAuthKeyId, qint64 nonce, qint32 expiresAt, const QByteArray &encryptedMessage);
     static bool bindTempAuthKeyResult(InboundPkt *in);
@@ -80,13 +80,13 @@ public:
     static bool sendSmsResult(InboundPkt *in);
 
     static bool checkPassword(OutboundPkt *out, const QByteArray &passwordHash);
-    static Types::AuthAuthorization checkPasswordResult(InboundPkt *in);
+    static AuthAuthorization checkPasswordResult(InboundPkt *in);
 
     static bool requestPasswordRecovery(OutboundPkt *out);
-    static Types::AuthPasswordRecovery requestPasswordRecoveryResult(InboundPkt *in);
+    static AuthPasswordRecovery requestPasswordRecoveryResult(InboundPkt *in);
 
     static bool recoverPassword(OutboundPkt *out, const QString &code);
-    static Types::AuthAuthorization recoverPasswordResult(InboundPkt *in);
+    static AuthAuthorization recoverPasswordResult(InboundPkt *in);
 
 };
 

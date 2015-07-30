@@ -9,10 +9,7 @@
 #include <QList>
 #include "chat.h"
 
-namespace Tg {
-namespace Types {
-
-class MessagesChats : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT MessagesChats : public TelegramTypeObject
 {
 public:
     enum MessagesChatsType {
@@ -38,8 +35,5 @@ private:
     QList<Chat> m_chats;
     MessagesChatsType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_MESSAGESCHATS

@@ -9,10 +9,7 @@
 #include <QtGlobal>
 #include "encryptedfile.h"
 
-namespace Tg {
-namespace Types {
-
-class MessagesSentEncryptedMessage : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT MessagesSentEncryptedMessage : public TelegramTypeObject
 {
 public:
     enum MessagesSentEncryptedMessageType {
@@ -43,8 +40,5 @@ private:
     EncryptedFile m_file;
     MessagesSentEncryptedMessageType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_MESSAGESSENTENCRYPTEDMESSAGE

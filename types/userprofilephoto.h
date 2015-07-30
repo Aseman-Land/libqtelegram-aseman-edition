@@ -9,10 +9,7 @@
 #include "filelocation.h"
 #include <QtGlobal>
 
-namespace Tg {
-namespace Types {
-
-class UserProfilePhoto : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT UserProfilePhoto : public TelegramTypeObject
 {
 public:
     enum UserProfilePhotoType {
@@ -47,8 +44,5 @@ private:
     FileLocation m_photoSmall;
     UserProfilePhotoType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_USERPROFILEPHOTO

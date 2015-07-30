@@ -11,10 +11,7 @@
 #include "contactslink.h"
 #include "messagemedia.h"
 
-namespace Tg {
-namespace Types {
-
-class MessagesSentMessage : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT MessagesSentMessage : public TelegramTypeObject
 {
 public:
     enum MessagesSentMessageType {
@@ -65,8 +62,5 @@ private:
     qint32 m_seq;
     MessagesSentMessageType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_MESSAGESSENTMESSAGE

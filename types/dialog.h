@@ -10,10 +10,7 @@
 #include "peer.h"
 #include <QtGlobal>
 
-namespace Tg {
-namespace Types {
-
-class Dialog : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT Dialog : public TelegramTypeObject
 {
 public:
     enum DialogType {
@@ -55,8 +52,5 @@ private:
     qint32 m_unreadCount;
     DialogType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_DIALOG

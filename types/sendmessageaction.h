@@ -8,10 +8,7 @@
 #include "telegramtypeobject.h"
 #include <QtGlobal>
 
-namespace Tg {
-namespace Types {
-
-class SendMessageAction : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT SendMessageAction : public TelegramTypeObject
 {
 public:
     enum SendMessageActionType {
@@ -46,8 +43,5 @@ private:
     qint32 m_progress;
     SendMessageActionType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_SENDMESSAGEACTION

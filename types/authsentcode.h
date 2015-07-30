@@ -9,10 +9,7 @@
 #include <QString>
 #include <QtGlobal>
 
-namespace Tg {
-namespace Types {
-
-class AuthSentCode : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT AuthSentCode : public TelegramTypeObject
 {
 public:
     enum AuthSentCodeType {
@@ -51,8 +48,5 @@ private:
     qint32 m_sendCallTimeout;
     AuthSentCodeType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_AUTHSENTCODE

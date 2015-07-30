@@ -14,7 +14,7 @@
 namespace Tg {
 namespace Functions {
 
-class Users : public TelegramFunctionObject
+class LIBQTELEGRAMSHARED_EXPORT Users : public TelegramFunctionObject
 {
 public:
     enum UsersFunction {
@@ -25,11 +25,11 @@ public:
     Users();
     virtual ~Users();
 
-    static bool getUsers(OutboundPkt *out, const QList<Types::InputUser> &id);
-    static QList<Types::User> getUsersResult(InboundPkt *in);
+    static bool getUsers(OutboundPkt *out, const QList<InputUser> &id);
+    static QList<User> getUsersResult(InboundPkt *in);
 
-    static bool getFullUser(OutboundPkt *out, const Types::InputUser &id);
-    static Types::UserFull getFullUserResult(InboundPkt *in);
+    static bool getFullUser(OutboundPkt *out, const InputUser &id);
+    static UserFull getFullUserResult(InboundPkt *in);
 
 };
 

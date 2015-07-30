@@ -9,10 +9,7 @@
 #include <QtGlobal>
 #include <QByteArray>
 
-namespace Tg {
-namespace Types {
-
-class MessagesDhConfig : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT MessagesDhConfig : public TelegramTypeObject
 {
 public:
     enum MessagesDhConfigType {
@@ -51,8 +48,5 @@ private:
     qint32 m_version;
     MessagesDhConfigType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_MESSAGESDHCONFIG

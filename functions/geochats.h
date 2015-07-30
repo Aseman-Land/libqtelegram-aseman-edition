@@ -21,7 +21,7 @@
 namespace Tg {
 namespace Functions {
 
-class Geochats : public TelegramFunctionObject
+class LIBQTELEGRAMSHARED_EXPORT Geochats : public TelegramFunctionObject
 {
 public:
     enum GeochatsFunction {
@@ -42,41 +42,41 @@ public:
     Geochats();
     virtual ~Geochats();
 
-    static bool getLocated(OutboundPkt *out, const Types::InputGeoPoint &geoPoint, qint32 radius, qint32 limit);
-    static Types::GeochatsLocated getLocatedResult(InboundPkt *in);
+    static bool getLocated(OutboundPkt *out, const InputGeoPoint &geoPoint, qint32 radius, qint32 limit);
+    static GeochatsLocated getLocatedResult(InboundPkt *in);
 
     static bool getRecents(OutboundPkt *out, qint32 offset, qint32 limit);
-    static Types::GeochatsMessages getRecentsResult(InboundPkt *in);
+    static GeochatsMessages getRecentsResult(InboundPkt *in);
 
-    static bool checkin(OutboundPkt *out, const Types::InputGeoChat &peer);
-    static Types::GeochatsStatedMessage checkinResult(InboundPkt *in);
+    static bool checkin(OutboundPkt *out, const InputGeoChat &peer);
+    static GeochatsStatedMessage checkinResult(InboundPkt *in);
 
-    static bool getFullChat(OutboundPkt *out, const Types::InputGeoChat &peer);
-    static Types::MessagesChatFull getFullChatResult(InboundPkt *in);
+    static bool getFullChat(OutboundPkt *out, const InputGeoChat &peer);
+    static MessagesChatFull getFullChatResult(InboundPkt *in);
 
-    static bool editChatTitle(OutboundPkt *out, const Types::InputGeoChat &peer, const QString &title, const QString &address);
-    static Types::GeochatsStatedMessage editChatTitleResult(InboundPkt *in);
+    static bool editChatTitle(OutboundPkt *out, const InputGeoChat &peer, const QString &title, const QString &address);
+    static GeochatsStatedMessage editChatTitleResult(InboundPkt *in);
 
-    static bool editChatPhoto(OutboundPkt *out, const Types::InputGeoChat &peer, const Types::InputChatPhoto &photo);
-    static Types::GeochatsStatedMessage editChatPhotoResult(InboundPkt *in);
+    static bool editChatPhoto(OutboundPkt *out, const InputGeoChat &peer, const InputChatPhoto &photo);
+    static GeochatsStatedMessage editChatPhotoResult(InboundPkt *in);
 
-    static bool search(OutboundPkt *out, const Types::InputGeoChat &peer, const QString &q, const Types::MessagesFilter &filter, qint32 minDate, qint32 maxDate, qint32 offset, qint32 maxId, qint32 limit);
-    static Types::GeochatsMessages searchResult(InboundPkt *in);
+    static bool search(OutboundPkt *out, const InputGeoChat &peer, const QString &q, const MessagesFilter &filter, qint32 minDate, qint32 maxDate, qint32 offset, qint32 maxId, qint32 limit);
+    static GeochatsMessages searchResult(InboundPkt *in);
 
-    static bool getHistory(OutboundPkt *out, const Types::InputGeoChat &peer, qint32 offset, qint32 maxId, qint32 limit);
-    static Types::GeochatsMessages getHistoryResult(InboundPkt *in);
+    static bool getHistory(OutboundPkt *out, const InputGeoChat &peer, qint32 offset, qint32 maxId, qint32 limit);
+    static GeochatsMessages getHistoryResult(InboundPkt *in);
 
-    static bool setTyping(OutboundPkt *out, const Types::InputGeoChat &peer, bool typing);
+    static bool setTyping(OutboundPkt *out, const InputGeoChat &peer, bool typing);
     static bool setTypingResult(InboundPkt *in);
 
-    static bool sendMessage(OutboundPkt *out, const Types::InputGeoChat &peer, const QString &message, qint64 randomId);
-    static Types::GeochatsStatedMessage sendMessageResult(InboundPkt *in);
+    static bool sendMessage(OutboundPkt *out, const InputGeoChat &peer, const QString &message, qint64 randomId);
+    static GeochatsStatedMessage sendMessageResult(InboundPkt *in);
 
-    static bool sendMedia(OutboundPkt *out, const Types::InputGeoChat &peer, const Types::InputMedia &media, qint64 randomId);
-    static Types::GeochatsStatedMessage sendMediaResult(InboundPkt *in);
+    static bool sendMedia(OutboundPkt *out, const InputGeoChat &peer, const InputMedia &media, qint64 randomId);
+    static GeochatsStatedMessage sendMediaResult(InboundPkt *in);
 
-    static bool createGeoChat(OutboundPkt *out, const QString &title, const Types::InputGeoPoint &geoPoint, const QString &address, const QString &venue);
-    static Types::GeochatsStatedMessage createGeoChatResult(InboundPkt *in);
+    static bool createGeoChat(OutboundPkt *out, const QString &title, const InputGeoPoint &geoPoint, const QString &address, const QString &venue);
+    static GeochatsStatedMessage createGeoChatResult(InboundPkt *in);
 
 };
 

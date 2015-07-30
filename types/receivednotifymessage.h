@@ -8,10 +8,7 @@
 #include "telegramtypeobject.h"
 #include <QtGlobal>
 
-namespace Tg {
-namespace Types {
-
-class ReceivedNotifyMessage : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT ReceivedNotifyMessage : public TelegramTypeObject
 {
 public:
     enum ReceivedNotifyMessageType {
@@ -41,8 +38,5 @@ private:
     qint32 m_id;
     ReceivedNotifyMessageType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_RECEIVEDNOTIFYMESSAGE

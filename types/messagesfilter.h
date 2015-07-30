@@ -7,10 +7,7 @@
 
 #include "telegramtypeobject.h"
 
-namespace Tg {
-namespace Types {
-
-class MessagesFilter : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT MessagesFilter : public TelegramTypeObject
 {
 public:
     enum MessagesFilterType {
@@ -38,8 +35,5 @@ public:
 private:
     MessagesFilterType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_MESSAGESFILTER

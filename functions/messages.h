@@ -41,7 +41,7 @@
 namespace Tg {
 namespace Functions {
 
-class Messages : public TelegramFunctionObject
+class LIBQTELEGRAMSHARED_EXPORT Messages : public TelegramFunctionObject
 {
 public:
     enum MessagesFunction {
@@ -92,126 +92,126 @@ public:
     virtual ~Messages();
 
     static bool getMessages(OutboundPkt *out, const QList<qint32> &id);
-    static Types::MessagesMessages getMessagesResult(InboundPkt *in);
+    static MessagesMessages getMessagesResult(InboundPkt *in);
 
     static bool getDialogs(OutboundPkt *out, qint32 offset, qint32 maxId, qint32 limit);
-    static Types::MessagesDialogs getDialogsResult(InboundPkt *in);
+    static MessagesDialogs getDialogsResult(InboundPkt *in);
 
-    static bool getHistory(OutboundPkt *out, const Types::InputPeer &peer, qint32 offset, qint32 maxId, qint32 limit);
-    static Types::MessagesMessages getHistoryResult(InboundPkt *in);
+    static bool getHistory(OutboundPkt *out, const InputPeer &peer, qint32 offset, qint32 maxId, qint32 limit);
+    static MessagesMessages getHistoryResult(InboundPkt *in);
 
-    static bool search(OutboundPkt *out, const Types::InputPeer &peer, const QString &q, const Types::MessagesFilter &filter, qint32 minDate, qint32 maxDate, qint32 offset, qint32 maxId, qint32 limit);
-    static Types::MessagesMessages searchResult(InboundPkt *in);
+    static bool search(OutboundPkt *out, const InputPeer &peer, const QString &q, const MessagesFilter &filter, qint32 minDate, qint32 maxDate, qint32 offset, qint32 maxId, qint32 limit);
+    static MessagesMessages searchResult(InboundPkt *in);
 
-    static bool readHistory(OutboundPkt *out, const Types::InputPeer &peer, qint32 maxId, qint32 offset);
-    static Types::MessagesAffectedHistory readHistoryResult(InboundPkt *in);
+    static bool readHistory(OutboundPkt *out, const InputPeer &peer, qint32 maxId, qint32 offset);
+    static MessagesAffectedHistory readHistoryResult(InboundPkt *in);
 
-    static bool deleteHistory(OutboundPkt *out, const Types::InputPeer &peer, qint32 offset);
-    static Types::MessagesAffectedHistory deleteHistoryResult(InboundPkt *in);
+    static bool deleteHistory(OutboundPkt *out, const InputPeer &peer, qint32 offset);
+    static MessagesAffectedHistory deleteHistoryResult(InboundPkt *in);
 
     static bool deleteMessages(OutboundPkt *out, const QList<qint32> &id);
-    static Types::MessagesAffectedMessages deleteMessagesResult(InboundPkt *in);
+    static MessagesAffectedMessages deleteMessagesResult(InboundPkt *in);
 
     static bool receivedMessages(OutboundPkt *out, qint32 maxId);
-    static QList<Types::ReceivedNotifyMessage> receivedMessagesResult(InboundPkt *in);
+    static QList<ReceivedNotifyMessage> receivedMessagesResult(InboundPkt *in);
 
-    static bool setTyping(OutboundPkt *out, const Types::InputPeer &peer, const Types::SendMessageAction &action);
+    static bool setTyping(OutboundPkt *out, const InputPeer &peer, const SendMessageAction &action);
     static bool setTypingResult(InboundPkt *in);
 
-    static bool sendMessage(OutboundPkt *out, qint32 flags, const Types::InputPeer &peer, qint32 replyToMsgId, const QString &message, qint64 randomId);
-    static Types::MessagesSentMessage sendMessageResult(InboundPkt *in);
+    static bool sendMessage(OutboundPkt *out, qint32 flags, const InputPeer &peer, qint32 replyToMsgId, const QString &message, qint64 randomId);
+    static MessagesSentMessage sendMessageResult(InboundPkt *in);
 
-    static bool sendMedia(OutboundPkt *out, qint32 flags, const Types::InputPeer &peer, qint32 replyToMsgId, const Types::InputMedia &media, qint64 randomId);
-    static Types::UpdatesType sendMediaResult(InboundPkt *in);
+    static bool sendMedia(OutboundPkt *out, qint32 flags, const InputPeer &peer, qint32 replyToMsgId, const InputMedia &media, qint64 randomId);
+    static UpdatesType sendMediaResult(InboundPkt *in);
 
-    static bool forwardMessages(OutboundPkt *out, const Types::InputPeer &peer, const QList<qint32> &id, const QList<qint64> &randomId);
-    static Types::UpdatesType forwardMessagesResult(InboundPkt *in);
+    static bool forwardMessages(OutboundPkt *out, const InputPeer &peer, const QList<qint32> &id, const QList<qint64> &randomId);
+    static UpdatesType forwardMessagesResult(InboundPkt *in);
 
     static bool getChats(OutboundPkt *out, const QList<qint32> &id);
-    static Types::MessagesChats getChatsResult(InboundPkt *in);
+    static MessagesChats getChatsResult(InboundPkt *in);
 
     static bool getFullChat(OutboundPkt *out, qint32 chatId);
-    static Types::MessagesChatFull getFullChatResult(InboundPkt *in);
+    static MessagesChatFull getFullChatResult(InboundPkt *in);
 
     static bool editChatTitle(OutboundPkt *out, qint32 chatId, const QString &title);
-    static Types::UpdatesType editChatTitleResult(InboundPkt *in);
+    static UpdatesType editChatTitleResult(InboundPkt *in);
 
-    static bool editChatPhoto(OutboundPkt *out, qint32 chatId, const Types::InputChatPhoto &photo);
-    static Types::UpdatesType editChatPhotoResult(InboundPkt *in);
+    static bool editChatPhoto(OutboundPkt *out, qint32 chatId, const InputChatPhoto &photo);
+    static UpdatesType editChatPhotoResult(InboundPkt *in);
 
-    static bool addChatUser(OutboundPkt *out, qint32 chatId, const Types::InputUser &userId, qint32 fwdLimit);
-    static Types::UpdatesType addChatUserResult(InboundPkt *in);
+    static bool addChatUser(OutboundPkt *out, qint32 chatId, const InputUser &userId, qint32 fwdLimit);
+    static UpdatesType addChatUserResult(InboundPkt *in);
 
-    static bool deleteChatUser(OutboundPkt *out, qint32 chatId, const Types::InputUser &userId);
-    static Types::UpdatesType deleteChatUserResult(InboundPkt *in);
+    static bool deleteChatUser(OutboundPkt *out, qint32 chatId, const InputUser &userId);
+    static UpdatesType deleteChatUserResult(InboundPkt *in);
 
-    static bool createChat(OutboundPkt *out, const QList<Types::InputUser> &users, const QString &title);
-    static Types::UpdatesType createChatResult(InboundPkt *in);
+    static bool createChat(OutboundPkt *out, const QList<InputUser> &users, const QString &title);
+    static UpdatesType createChatResult(InboundPkt *in);
 
-    static bool forwardMessage(OutboundPkt *out, const Types::InputPeer &peer, qint32 id, qint64 randomId);
-    static Types::UpdatesType forwardMessageResult(InboundPkt *in);
+    static bool forwardMessage(OutboundPkt *out, const InputPeer &peer, qint32 id, qint64 randomId);
+    static UpdatesType forwardMessageResult(InboundPkt *in);
 
-    static bool sendBroadcast(OutboundPkt *out, const QList<Types::InputUser> &contacts, const QList<qint64> &randomId, const QString &message, const Types::InputMedia &media);
-    static Types::UpdatesType sendBroadcastResult(InboundPkt *in);
+    static bool sendBroadcast(OutboundPkt *out, const QList<InputUser> &contacts, const QList<qint64> &randomId, const QString &message, const InputMedia &media);
+    static UpdatesType sendBroadcastResult(InboundPkt *in);
 
     static bool getDhConfig(OutboundPkt *out, qint32 version, qint32 randomLength);
-    static Types::MessagesDhConfig getDhConfigResult(InboundPkt *in);
+    static MessagesDhConfig getDhConfigResult(InboundPkt *in);
 
-    static bool requestEncryption(OutboundPkt *out, const Types::InputUser &userId, qint32 randomId, const QByteArray &gA);
-    static Types::EncryptedChat requestEncryptionResult(InboundPkt *in);
+    static bool requestEncryption(OutboundPkt *out, const InputUser &userId, qint32 randomId, const QByteArray &gA);
+    static EncryptedChat requestEncryptionResult(InboundPkt *in);
 
-    static bool acceptEncryption(OutboundPkt *out, const Types::InputEncryptedChat &peer, const QByteArray &gB, qint64 keyFingerprint);
-    static Types::EncryptedChat acceptEncryptionResult(InboundPkt *in);
+    static bool acceptEncryption(OutboundPkt *out, const InputEncryptedChat &peer, const QByteArray &gB, qint64 keyFingerprint);
+    static EncryptedChat acceptEncryptionResult(InboundPkt *in);
 
     static bool discardEncryption(OutboundPkt *out, qint32 chatId);
     static bool discardEncryptionResult(InboundPkt *in);
 
-    static bool setEncryptedTyping(OutboundPkt *out, const Types::InputEncryptedChat &peer, bool typing);
+    static bool setEncryptedTyping(OutboundPkt *out, const InputEncryptedChat &peer, bool typing);
     static bool setEncryptedTypingResult(InboundPkt *in);
 
-    static bool readEncryptedHistory(OutboundPkt *out, const Types::InputEncryptedChat &peer, qint32 maxDate);
+    static bool readEncryptedHistory(OutboundPkt *out, const InputEncryptedChat &peer, qint32 maxDate);
     static bool readEncryptedHistoryResult(InboundPkt *in);
 
-    static bool sendEncrypted(OutboundPkt *out, const Types::InputEncryptedChat &peer, qint64 randomId, const QByteArray &data);
-    static Types::MessagesSentEncryptedMessage sendEncryptedResult(InboundPkt *in);
+    static bool sendEncrypted(OutboundPkt *out, const InputEncryptedChat &peer, qint64 randomId, const QByteArray &data);
+    static MessagesSentEncryptedMessage sendEncryptedResult(InboundPkt *in);
 
-    static bool sendEncryptedFile(OutboundPkt *out, const Types::InputEncryptedChat &peer, qint64 randomId, const QByteArray &data, const Types::InputEncryptedFile &file);
-    static Types::MessagesSentEncryptedMessage sendEncryptedFileResult(InboundPkt *in);
+    static bool sendEncryptedFile(OutboundPkt *out, const InputEncryptedChat &peer, qint64 randomId, const QByteArray &data, const InputEncryptedFile &file);
+    static MessagesSentEncryptedMessage sendEncryptedFileResult(InboundPkt *in);
 
-    static bool sendEncryptedService(OutboundPkt *out, const Types::InputEncryptedChat &peer, qint64 randomId, const QByteArray &data);
-    static Types::MessagesSentEncryptedMessage sendEncryptedServiceResult(InboundPkt *in);
+    static bool sendEncryptedService(OutboundPkt *out, const InputEncryptedChat &peer, qint64 randomId, const QByteArray &data);
+    static MessagesSentEncryptedMessage sendEncryptedServiceResult(InboundPkt *in);
 
     static bool receivedQueue(OutboundPkt *out, qint32 maxQts);
     static QList<qint64> receivedQueueResult(InboundPkt *in);
 
     static bool readMessageContents(OutboundPkt *out, const QList<qint32> &id);
-    static Types::MessagesAffectedMessages readMessageContentsResult(InboundPkt *in);
+    static MessagesAffectedMessages readMessageContentsResult(InboundPkt *in);
 
     static bool getStickers(OutboundPkt *out, const QString &emoticon, const QString &hash);
-    static Types::MessagesStickers getStickersResult(InboundPkt *in);
+    static MessagesStickers getStickersResult(InboundPkt *in);
 
     static bool getAllStickers(OutboundPkt *out, const QString &hash);
-    static Types::MessagesAllStickers getAllStickersResult(InboundPkt *in);
+    static MessagesAllStickers getAllStickersResult(InboundPkt *in);
 
     static bool getWebPagePreview(OutboundPkt *out, const QString &message);
-    static Types::MessageMedia getWebPagePreviewResult(InboundPkt *in);
+    static MessageMedia getWebPagePreviewResult(InboundPkt *in);
 
     static bool exportChatInvite(OutboundPkt *out, qint32 chatId);
-    static Types::ExportedChatInvite exportChatInviteResult(InboundPkt *in);
+    static ExportedChatInvite exportChatInviteResult(InboundPkt *in);
 
     static bool checkChatInvite(OutboundPkt *out, const QString &hash);
-    static Types::ChatInvite checkChatInviteResult(InboundPkt *in);
+    static ChatInvite checkChatInviteResult(InboundPkt *in);
 
     static bool importChatInvite(OutboundPkt *out, const QString &hash);
-    static Types::UpdatesType importChatInviteResult(InboundPkt *in);
+    static UpdatesType importChatInviteResult(InboundPkt *in);
 
-    static bool getStickerSet(OutboundPkt *out, const Types::InputStickerSet &stickerset);
-    static Types::MessagesStickerSet getStickerSetResult(InboundPkt *in);
+    static bool getStickerSet(OutboundPkt *out, const InputStickerSet &stickerset);
+    static MessagesStickerSet getStickerSetResult(InboundPkt *in);
 
-    static bool installStickerSet(OutboundPkt *out, const Types::InputStickerSet &stickerset);
+    static bool installStickerSet(OutboundPkt *out, const InputStickerSet &stickerset);
     static bool installStickerSetResult(InboundPkt *in);
 
-    static bool uninstallStickerSet(OutboundPkt *out, const Types::InputStickerSet &stickerset);
+    static bool uninstallStickerSet(OutboundPkt *out, const InputStickerSet &stickerset);
     static bool uninstallStickerSetResult(InboundPkt *in);
 
 };

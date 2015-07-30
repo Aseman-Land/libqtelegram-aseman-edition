@@ -9,10 +9,7 @@
 #include <QList>
 #include "authorization.h"
 
-namespace Tg {
-namespace Types {
-
-class AccountAuthorizations : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT AccountAuthorizations : public TelegramTypeObject
 {
 public:
     enum AccountAuthorizationsType {
@@ -38,8 +35,5 @@ private:
     QList<Authorization> m_authorizations;
     AccountAuthorizationsType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_ACCOUNTAUTHORIZATIONS

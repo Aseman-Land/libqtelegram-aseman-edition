@@ -25,6 +25,8 @@
 
 Q_LOGGING_CATEGORY(TG_SECRET_DECRYPTER, "tg.secret.decrypter")
 
+
+
 template <typename T_>
 void do_delete(T_ buf[]) {
     delete[] buf;

@@ -26,6 +26,8 @@ Q_LOGGING_CATEGORY(TG_SECRET_ENCRYPTER, "tg.secret.encrypter")
 
 #include <stdlib.h>
 
+
+
 Encrypter::Encrypter(Settings *settings) :
     OutboundPkt(settings),
     mEncrExtra(0),

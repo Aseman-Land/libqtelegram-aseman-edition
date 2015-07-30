@@ -9,10 +9,7 @@
 #include "userstatus.h"
 #include <QtGlobal>
 
-namespace Tg {
-namespace Types {
-
-class ContactStatus : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT ContactStatus : public TelegramTypeObject
 {
 public:
     enum ContactStatusType {
@@ -42,8 +39,5 @@ private:
     qint32 m_userId;
     ContactStatusType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_CONTACTSTATUS

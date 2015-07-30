@@ -8,10 +8,7 @@
 #include "telegramtypeobject.h"
 #include <QtGlobal>
 
-namespace Tg {
-namespace Types {
-
-class ImportedContact : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT ImportedContact : public TelegramTypeObject
 {
 public:
     enum ImportedContactType {
@@ -41,8 +38,5 @@ private:
     qint32 m_userId;
     ImportedContactType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_IMPORTEDCONTACT

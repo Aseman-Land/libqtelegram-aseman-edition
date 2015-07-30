@@ -8,10 +8,7 @@
 #include "telegramtypeobject.h"
 #include <QtGlobal>
 
-namespace Tg {
-namespace Types {
-
-class ContactFound : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT ContactFound : public TelegramTypeObject
 {
 public:
     enum ContactFoundType {
@@ -37,8 +34,5 @@ private:
     qint32 m_userId;
     ContactFoundType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_CONTACTFOUND

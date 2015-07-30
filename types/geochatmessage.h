@@ -11,10 +11,7 @@
 #include "messagemedia.h"
 #include <QString>
 
-namespace Tg {
-namespace Types {
-
-class GeoChatMessage : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT GeoChatMessage : public TelegramTypeObject
 {
 public:
     enum GeoChatMessageType {
@@ -66,8 +63,5 @@ private:
     QString m_message;
     GeoChatMessageType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_GEOCHATMESSAGE

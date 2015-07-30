@@ -9,10 +9,7 @@
 #include <QtGlobal>
 #include <QString>
 
-namespace Tg {
-namespace Types {
-
-class InputStickerSet : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT InputStickerSet : public TelegramTypeObject
 {
 public:
     enum InputStickerSetType {
@@ -48,8 +45,5 @@ private:
     QString m_shortName;
     InputStickerSetType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_INPUTSTICKERSET

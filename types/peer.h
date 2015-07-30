@@ -8,10 +8,7 @@
 #include "telegramtypeobject.h"
 #include <QtGlobal>
 
-namespace Tg {
-namespace Types {
-
-class Peer : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT Peer : public TelegramTypeObject
 {
 public:
     enum PeerType {
@@ -42,8 +39,5 @@ private:
     qint32 m_userId;
     PeerType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_PEER

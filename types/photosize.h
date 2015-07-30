@@ -11,10 +11,7 @@
 #include "filelocation.h"
 #include <QString>
 
-namespace Tg {
-namespace Types {
-
-class PhotoSize : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT PhotoSize : public TelegramTypeObject
 {
 public:
     enum PhotoSizeType {
@@ -62,8 +59,5 @@ private:
     qint32 m_w;
     PhotoSizeType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_PHOTOSIZE

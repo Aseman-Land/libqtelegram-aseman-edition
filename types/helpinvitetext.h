@@ -8,10 +8,7 @@
 #include "telegramtypeobject.h"
 #include <QString>
 
-namespace Tg {
-namespace Types {
-
-class HelpInviteText : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT HelpInviteText : public TelegramTypeObject
 {
 public:
     enum HelpInviteTextType {
@@ -37,8 +34,5 @@ private:
     QString m_message;
     HelpInviteTextType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_HELPINVITETEXT

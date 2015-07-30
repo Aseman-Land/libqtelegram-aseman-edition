@@ -7,10 +7,7 @@
 
 #include "telegramtypeobject.h"
 
-namespace Tg {
-namespace Types {
-
-class PrivacyKey : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT PrivacyKey : public TelegramTypeObject
 {
 public:
     enum PrivacyKeyType {
@@ -32,8 +29,5 @@ public:
 private:
     PrivacyKeyType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_PRIVACYKEY

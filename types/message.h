@@ -12,10 +12,7 @@
 #include <QString>
 #include "peer.h"
 
-namespace Tg {
-namespace Types {
-
-class Message : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT Message : public TelegramTypeObject
 {
 public:
     enum MessageType {
@@ -83,8 +80,5 @@ private:
     Peer m_toId;
     MessageType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_MESSAGE

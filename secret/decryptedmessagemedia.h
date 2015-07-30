@@ -26,8 +26,6 @@
 #include "types/documentattribute.h"
 #include "types/photosize.h"
 
-using namespace Tg::Types;
-
 class DecryptedMessageMedia {
 
 public:

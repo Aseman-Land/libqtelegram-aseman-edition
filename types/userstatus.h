@@ -8,10 +8,7 @@
 #include "telegramtypeobject.h"
 #include <QtGlobal>
 
-namespace Tg {
-namespace Types {
-
-class UserStatus : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT UserStatus : public TelegramTypeObject
 {
 public:
     enum UserStatusType {
@@ -46,8 +43,5 @@ private:
     qint32 m_wasOnline;
     UserStatusType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_USERSTATUS

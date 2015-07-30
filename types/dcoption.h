@@ -9,10 +9,7 @@
 #include <QString>
 #include <QtGlobal>
 
-namespace Tg {
-namespace Types {
-
-class DcOption : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT DcOption : public TelegramTypeObject
 {
 public:
     enum DcOptionType {
@@ -50,8 +47,5 @@ private:
     qint32 m_port;
     DcOptionType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_DCOPTION

@@ -8,10 +8,7 @@
 #include "telegramtypeobject.h"
 #include <QtGlobal>
 
-namespace Tg {
-namespace Types {
-
-class InputVideo : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT InputVideo : public TelegramTypeObject
 {
 public:
     enum InputVideoType {
@@ -42,8 +39,5 @@ private:
     qint64 m_id;
     InputVideoType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_INPUTVIDEO

@@ -8,10 +8,7 @@
 #include "telegramtypeobject.h"
 #include <QString>
 
-namespace Tg {
-namespace Types {
-
-class AccountPasswordSettings : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT AccountPasswordSettings : public TelegramTypeObject
 {
 public:
     enum AccountPasswordSettingsType {
@@ -37,8 +34,5 @@ private:
     QString m_email;
     AccountPasswordSettingsType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_ACCOUNTPASSWORDSETTINGS

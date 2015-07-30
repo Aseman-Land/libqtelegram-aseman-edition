@@ -10,10 +10,7 @@
 #include "contactsuggested.h"
 #include "user.h"
 
-namespace Tg {
-namespace Types {
-
-class ContactsSuggested : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT ContactsSuggested : public TelegramTypeObject
 {
 public:
     enum ContactsSuggestedType {
@@ -43,8 +40,5 @@ private:
     QList<User> m_users;
     ContactsSuggestedType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_CONTACTSSUGGESTED

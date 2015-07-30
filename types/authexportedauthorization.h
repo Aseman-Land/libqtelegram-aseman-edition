@@ -9,10 +9,7 @@
 #include <QByteArray>
 #include <QtGlobal>
 
-namespace Tg {
-namespace Types {
-
-class AuthExportedAuthorization : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT AuthExportedAuthorization : public TelegramTypeObject
 {
 public:
     enum AuthExportedAuthorizationType {
@@ -42,8 +39,5 @@ private:
     qint32 m_id;
     AuthExportedAuthorizationType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_AUTHEXPORTEDAUTHORIZATION

@@ -8,10 +8,7 @@
 #include "telegramtypeobject.h"
 #include <QtGlobal>
 
-namespace Tg {
-namespace Types {
-
-class UpdatesState : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT UpdatesState : public TelegramTypeObject
 {
 public:
     enum UpdatesStateType {
@@ -53,8 +50,5 @@ private:
     qint32 m_unreadCount;
     UpdatesStateType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_UPDATESSTATE

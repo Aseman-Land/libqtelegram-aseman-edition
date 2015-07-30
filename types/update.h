@@ -27,10 +27,7 @@
 #include "userstatus.h"
 #include "webpage.h"
 
-namespace Tg {
-namespace Types {
-
-class Update : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT Update : public TelegramTypeObject
 {
 public:
     enum UpdateType {
@@ -252,8 +249,5 @@ private:
     WebPage m_webpage;
     UpdateType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_UPDATE

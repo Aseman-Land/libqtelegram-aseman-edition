@@ -7,10 +7,7 @@
 
 #include "telegramtypeobject.h"
 
-namespace Tg {
-namespace Types {
-
-class StorageFileType : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT StorageFileType : public TelegramTypeObject
 {
 public:
     enum StorageFileTypeType {
@@ -41,8 +38,5 @@ public:
 private:
     StorageFileTypeType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_STORAGEFILETYPE

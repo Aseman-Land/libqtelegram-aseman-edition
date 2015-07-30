@@ -9,10 +9,7 @@
 #include <QtGlobal>
 #include <QString>
 
-namespace Tg {
-namespace Types {
-
-class InputContact : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT InputContact : public TelegramTypeObject
 {
 public:
     enum InputContactType {
@@ -50,8 +47,5 @@ private:
     QString m_phone;
     InputContactType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_INPUTCONTACT

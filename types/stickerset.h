@@ -9,10 +9,7 @@
 #include <QtGlobal>
 #include <QString>
 
-namespace Tg {
-namespace Types {
-
-class StickerSet : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT StickerSet : public TelegramTypeObject
 {
 public:
     enum StickerSetType {
@@ -50,8 +47,5 @@ private:
     QString m_title;
     StickerSetType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_STICKERSET

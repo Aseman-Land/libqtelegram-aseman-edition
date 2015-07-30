@@ -28,7 +28,7 @@
 namespace Tg {
 namespace Functions {
 
-class Account : public TelegramFunctionObject
+class LIBQTELEGRAMSHARED_EXPORT Account : public TelegramFunctionObject
 {
 public:
     enum AccountFunction {
@@ -66,67 +66,67 @@ public:
     static bool unregisterDevice(OutboundPkt *out, qint32 tokenType, const QString &token);
     static bool unregisterDeviceResult(InboundPkt *in);
 
-    static bool updateNotifySettings(OutboundPkt *out, const Types::InputNotifyPeer &peer, const Types::InputPeerNotifySettings &settings);
+    static bool updateNotifySettings(OutboundPkt *out, const InputNotifyPeer &peer, const InputPeerNotifySettings &settings);
     static bool updateNotifySettingsResult(InboundPkt *in);
 
-    static bool getNotifySettings(OutboundPkt *out, const Types::InputNotifyPeer &peer);
-    static Types::PeerNotifySettings getNotifySettingsResult(InboundPkt *in);
+    static bool getNotifySettings(OutboundPkt *out, const InputNotifyPeer &peer);
+    static PeerNotifySettings getNotifySettingsResult(InboundPkt *in);
 
     static bool resetNotifySettings(OutboundPkt *out);
     static bool resetNotifySettingsResult(InboundPkt *in);
 
     static bool updateProfile(OutboundPkt *out, const QString &firstName, const QString &lastName);
-    static Types::User updateProfileResult(InboundPkt *in);
+    static User updateProfileResult(InboundPkt *in);
 
     static bool updateStatus(OutboundPkt *out, bool offline);
     static bool updateStatusResult(InboundPkt *in);
 
     static bool getWallPapers(OutboundPkt *out);
-    static QList<Types::WallPaper> getWallPapersResult(InboundPkt *in);
+    static QList<WallPaper> getWallPapersResult(InboundPkt *in);
 
     static bool checkUsername(OutboundPkt *out, const QString &username);
     static bool checkUsernameResult(InboundPkt *in);
 
     static bool updateUsername(OutboundPkt *out, const QString &username);
-    static Types::User updateUsernameResult(InboundPkt *in);
+    static User updateUsernameResult(InboundPkt *in);
 
-    static bool getPrivacy(OutboundPkt *out, const Types::InputPrivacyKey &key);
-    static Types::AccountPrivacyRules getPrivacyResult(InboundPkt *in);
+    static bool getPrivacy(OutboundPkt *out, const InputPrivacyKey &key);
+    static AccountPrivacyRules getPrivacyResult(InboundPkt *in);
 
-    static bool setPrivacy(OutboundPkt *out, const Types::InputPrivacyKey &key, const QList<Types::InputPrivacyRule> &rules);
-    static Types::AccountPrivacyRules setPrivacyResult(InboundPkt *in);
+    static bool setPrivacy(OutboundPkt *out, const InputPrivacyKey &key, const QList<InputPrivacyRule> &rules);
+    static AccountPrivacyRules setPrivacyResult(InboundPkt *in);
 
     static bool deleteAccount(OutboundPkt *out, const QString &reason);
     static bool deleteAccountResult(InboundPkt *in);
 
     static bool getAccountTTL(OutboundPkt *out);
-    static Types::AccountDaysTTL getAccountTTLResult(InboundPkt *in);
+    static AccountDaysTTL getAccountTTLResult(InboundPkt *in);
 
-    static bool setAccountTTL(OutboundPkt *out, const Types::AccountDaysTTL &ttl);
+    static bool setAccountTTL(OutboundPkt *out, const AccountDaysTTL &ttl);
     static bool setAccountTTLResult(InboundPkt *in);
 
     static bool sendChangePhoneCode(OutboundPkt *out, const QString &phoneNumber);
-    static Types::AccountSentChangePhoneCode sendChangePhoneCodeResult(InboundPkt *in);
+    static AccountSentChangePhoneCode sendChangePhoneCodeResult(InboundPkt *in);
 
     static bool changePhone(OutboundPkt *out, const QString &phoneNumber, const QString &phoneCodeHash, const QString &phoneCode);
-    static Types::User changePhoneResult(InboundPkt *in);
+    static User changePhoneResult(InboundPkt *in);
 
     static bool updateDeviceLocked(OutboundPkt *out, qint32 period);
     static bool updateDeviceLockedResult(InboundPkt *in);
 
     static bool getAuthorizations(OutboundPkt *out);
-    static Types::AccountAuthorizations getAuthorizationsResult(InboundPkt *in);
+    static AccountAuthorizations getAuthorizationsResult(InboundPkt *in);
 
     static bool resetAuthorization(OutboundPkt *out, qint64 hash);
     static bool resetAuthorizationResult(InboundPkt *in);
 
     static bool getPassword(OutboundPkt *out);
-    static Types::AccountPassword getPasswordResult(InboundPkt *in);
+    static AccountPassword getPasswordResult(InboundPkt *in);
 
     static bool getPasswordSettings(OutboundPkt *out, const QByteArray &currentPasswordHash);
-    static Types::AccountPasswordSettings getPasswordSettingsResult(InboundPkt *in);
+    static AccountPasswordSettings getPasswordSettingsResult(InboundPkt *in);
 
-    static bool updatePasswordSettings(OutboundPkt *out, const QByteArray &currentPasswordHash, const Types::AccountPasswordInputSettings &newSettings);
+    static bool updatePasswordSettings(OutboundPkt *out, const QByteArray &currentPasswordHash, const AccountPasswordInputSettings &newSettings);
     static bool updatePasswordSettingsResult(InboundPkt *in);
 
 };

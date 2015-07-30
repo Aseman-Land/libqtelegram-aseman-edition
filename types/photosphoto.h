@@ -10,10 +10,7 @@
 #include <QList>
 #include "user.h"
 
-namespace Tg {
-namespace Types {
-
-class PhotosPhoto : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT PhotosPhoto : public TelegramTypeObject
 {
 public:
     enum PhotosPhotoType {
@@ -43,8 +40,5 @@ private:
     QList<User> m_users;
     PhotosPhotoType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_PHOTOSPHOTO

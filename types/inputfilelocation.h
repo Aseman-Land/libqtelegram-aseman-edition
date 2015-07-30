@@ -8,10 +8,7 @@
 #include "telegramtypeobject.h"
 #include <QtGlobal>
 
-namespace Tg {
-namespace Types {
-
-class InputFileLocation : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT InputFileLocation : public TelegramTypeObject
 {
 public:
     enum InputFileLocationType {
@@ -57,8 +54,5 @@ private:
     qint64 m_volumeId;
     InputFileLocationType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_INPUTFILELOCATION

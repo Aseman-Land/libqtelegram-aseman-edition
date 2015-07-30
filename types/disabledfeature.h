@@ -8,10 +8,7 @@
 #include "telegramtypeobject.h"
 #include <QString>
 
-namespace Tg {
-namespace Types {
-
-class DisabledFeature : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT DisabledFeature : public TelegramTypeObject
 {
 public:
     enum DisabledFeatureType {
@@ -41,8 +38,5 @@ private:
     QString m_feature;
     DisabledFeatureType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_DISABLEDFEATURE

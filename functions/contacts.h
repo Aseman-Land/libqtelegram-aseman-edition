@@ -23,7 +23,7 @@
 namespace Tg {
 namespace Functions {
 
-class Contacts : public TelegramFunctionObject
+class LIBQTELEGRAMSHARED_EXPORT Contacts : public TelegramFunctionObject
 {
 public:
     enum ContactsFunction {
@@ -46,43 +46,43 @@ public:
     virtual ~Contacts();
 
     static bool getStatuses(OutboundPkt *out);
-    static QList<Types::ContactStatus> getStatusesResult(InboundPkt *in);
+    static QList<ContactStatus> getStatusesResult(InboundPkt *in);
 
     static bool getContacts(OutboundPkt *out, const QString &hash);
-    static Types::ContactsContacts getContactsResult(InboundPkt *in);
+    static ContactsContacts getContactsResult(InboundPkt *in);
 
-    static bool importContacts(OutboundPkt *out, const QList<Types::InputContact> &contacts, bool replace);
-    static Types::ContactsImportedContacts importContactsResult(InboundPkt *in);
+    static bool importContacts(OutboundPkt *out, const QList<InputContact> &contacts, bool replace);
+    static ContactsImportedContacts importContactsResult(InboundPkt *in);
 
     static bool getSuggested(OutboundPkt *out, qint32 limit);
-    static Types::ContactsSuggested getSuggestedResult(InboundPkt *in);
+    static ContactsSuggested getSuggestedResult(InboundPkt *in);
 
-    static bool deleteContact(OutboundPkt *out, const Types::InputUser &id);
-    static Types::ContactsLink deleteContactResult(InboundPkt *in);
+    static bool deleteContact(OutboundPkt *out, const InputUser &id);
+    static ContactsLink deleteContactResult(InboundPkt *in);
 
-    static bool deleteContacts(OutboundPkt *out, const QList<Types::InputUser> &id);
+    static bool deleteContacts(OutboundPkt *out, const QList<InputUser> &id);
     static bool deleteContactsResult(InboundPkt *in);
 
-    static bool block(OutboundPkt *out, const Types::InputUser &id);
+    static bool block(OutboundPkt *out, const InputUser &id);
     static bool blockResult(InboundPkt *in);
 
-    static bool unblock(OutboundPkt *out, const Types::InputUser &id);
+    static bool unblock(OutboundPkt *out, const InputUser &id);
     static bool unblockResult(InboundPkt *in);
 
     static bool getBlocked(OutboundPkt *out, qint32 offset, qint32 limit);
-    static Types::ContactsBlocked getBlockedResult(InboundPkt *in);
+    static ContactsBlocked getBlockedResult(InboundPkt *in);
 
     static bool exportCard(OutboundPkt *out);
     static QList<qint32> exportCardResult(InboundPkt *in);
 
     static bool importCard(OutboundPkt *out, const QList<qint32> &exportCard);
-    static Types::User importCardResult(InboundPkt *in);
+    static User importCardResult(InboundPkt *in);
 
     static bool search(OutboundPkt *out, const QString &q, qint32 limit);
-    static Types::ContactsFound searchResult(InboundPkt *in);
+    static ContactsFound searchResult(InboundPkt *in);
 
     static bool resolveUsername(OutboundPkt *out, const QString &username);
-    static Types::User resolveUsernameResult(InboundPkt *in);
+    static User resolveUsernameResult(InboundPkt *in);
 
 };
 

@@ -8,10 +8,7 @@
 #include "telegramtypeobject.h"
 #include <QtGlobal>
 
-namespace Tg {
-namespace Types {
-
-class InputAudio : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT InputAudio : public TelegramTypeObject
 {
 public:
     enum InputAudioType {
@@ -42,8 +39,5 @@ private:
     qint64 m_id;
     InputAudioType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_INPUTAUDIO

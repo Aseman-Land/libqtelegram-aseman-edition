@@ -9,10 +9,7 @@
 #include <QString>
 #include <QtGlobal>
 
-namespace Tg {
-namespace Types {
-
-class InputAppEvent : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT InputAppEvent : public TelegramTypeObject
 {
 public:
     enum InputAppEventType {
@@ -50,8 +47,5 @@ private:
     QString m_type;
     InputAppEventType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_INPUTAPPEVENT

@@ -7,10 +7,7 @@
 
 #include "telegramtypeobject.h"
 
-namespace Tg {
-namespace Types {
-
-class ContactLink : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT ContactLink : public TelegramTypeObject
 {
 public:
     enum ContactLinkType {
@@ -35,8 +32,5 @@ public:
 private:
     ContactLinkType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_CONTACTLINK

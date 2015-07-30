@@ -8,10 +8,7 @@
 #include "telegramtypeobject.h"
 #include <QtGlobal>
 
-namespace Tg {
-namespace Types {
-
-class InputPeer : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT InputPeer : public TelegramTypeObject
 {
 public:
     enum InputPeerType {
@@ -49,8 +46,5 @@ private:
     qint32 m_userId;
     InputPeerType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_INPUTPEER

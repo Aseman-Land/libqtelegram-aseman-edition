@@ -21,6 +21,8 @@
 
 Q_LOGGING_CATEGORY(TG_SECRET_SECRETCHAT, "tg.secret.secretchat")
 
+
+
 SecretChat::SecretChat(Settings *settings, QObject *parent) :
     QObject(parent),
     mSettings(settings),

@@ -9,10 +9,7 @@
 #include "chat.h"
 #include <QString>
 
-namespace Tg {
-namespace Types {
-
-class ChatInvite : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT ChatInvite : public TelegramTypeObject
 {
 public:
     enum ChatInviteType {
@@ -43,8 +40,5 @@ private:
     QString m_title;
     ChatInviteType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_CHATINVITE

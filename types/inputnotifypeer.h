@@ -9,10 +9,7 @@
 #include "inputgeochat.h"
 #include "inputpeer.h"
 
-namespace Tg {
-namespace Types {
-
-class InputNotifyPeer : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT InputNotifyPeer : public TelegramTypeObject
 {
 public:
     enum InputNotifyPeerType {
@@ -46,8 +43,5 @@ private:
     InputPeer m_peerInput;
     InputNotifyPeerType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_INPUTNOTIFYPEER

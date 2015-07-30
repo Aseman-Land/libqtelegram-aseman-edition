@@ -9,10 +9,7 @@
 #include <QString>
 #include "user.h"
 
-namespace Tg {
-namespace Types {
-
-class HelpSupport : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT HelpSupport : public TelegramTypeObject
 {
 public:
     enum HelpSupportType {
@@ -42,8 +39,5 @@ private:
     User m_user;
     HelpSupportType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_HELPSUPPORT

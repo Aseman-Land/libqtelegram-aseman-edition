@@ -28,7 +28,6 @@
 #include "secret/encrypter.h"
 
 using namespace Tg;
-using namespace Types;
 
 Api::Api(Session *session, Settings *settings, CryptoUtils *crypto, QObject *parent) :
     AbstractApi(session, settings, crypto, parent),

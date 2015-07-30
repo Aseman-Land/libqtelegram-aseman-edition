@@ -11,10 +11,7 @@
 #include "chatfull.h"
 #include "user.h"
 
-namespace Tg {
-namespace Types {
-
-class MessagesChatFull : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT MessagesChatFull : public TelegramTypeObject
 {
 public:
     enum MessagesChatFullType {
@@ -48,8 +45,5 @@ private:
     QList<User> m_users;
     MessagesChatFullType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_MESSAGESCHATFULL

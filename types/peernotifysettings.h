@@ -9,10 +9,7 @@
 #include <QtGlobal>
 #include <QString>
 
-namespace Tg {
-namespace Types {
-
-class PeerNotifySettings : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT PeerNotifySettings : public TelegramTypeObject
 {
 public:
     enum PeerNotifySettingsType {
@@ -51,8 +48,5 @@ private:
     QString m_sound;
     PeerNotifySettingsType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_PEERNOTIFYSETTINGS

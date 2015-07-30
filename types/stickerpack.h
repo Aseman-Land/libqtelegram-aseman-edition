@@ -10,10 +10,7 @@
 #include <QtGlobal>
 #include <QString>
 
-namespace Tg {
-namespace Types {
-
-class StickerPack : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT StickerPack : public TelegramTypeObject
 {
 public:
     enum StickerPackType {
@@ -43,8 +40,5 @@ private:
     QString m_emoticon;
     StickerPackType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_STICKERPACK

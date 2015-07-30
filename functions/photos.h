@@ -21,7 +21,7 @@
 namespace Tg {
 namespace Functions {
 
-class Photos : public TelegramFunctionObject
+class LIBQTELEGRAMSHARED_EXPORT Photos : public TelegramFunctionObject
 {
 public:
     enum PhotosFunction {
@@ -34,17 +34,17 @@ public:
     Photos();
     virtual ~Photos();
 
-    static bool updateProfilePhoto(OutboundPkt *out, const Types::InputPhoto &id, const Types::InputPhotoCrop &crop);
-    static Types::UserProfilePhoto updateProfilePhotoResult(InboundPkt *in);
+    static bool updateProfilePhoto(OutboundPkt *out, const InputPhoto &id, const InputPhotoCrop &crop);
+    static UserProfilePhoto updateProfilePhotoResult(InboundPkt *in);
 
-    static bool uploadProfilePhoto(OutboundPkt *out, const Types::InputFile &file, const QString &caption, const Types::InputGeoPoint &geoPoint, const Types::InputPhotoCrop &crop);
-    static Types::PhotosPhoto uploadProfilePhotoResult(InboundPkt *in);
+    static bool uploadProfilePhoto(OutboundPkt *out, const InputFile &file, const QString &caption, const InputGeoPoint &geoPoint, const InputPhotoCrop &crop);
+    static PhotosPhoto uploadProfilePhotoResult(InboundPkt *in);
 
-    static bool deletePhotos(OutboundPkt *out, const QList<Types::InputPhoto> &id);
+    static bool deletePhotos(OutboundPkt *out, const QList<InputPhoto> &id);
     static QList<qint64> deletePhotosResult(InboundPkt *in);
 
-    static bool getUserPhotos(OutboundPkt *out, const Types::InputUser &userId, qint32 offset, qint32 maxId, qint32 limit);
-    static Types::PhotosPhotos getUserPhotosResult(InboundPkt *in);
+    static bool getUserPhotos(OutboundPkt *out, const InputUser &userId, qint32 offset, qint32 maxId, qint32 limit);
+    static PhotosPhotos getUserPhotosResult(InboundPkt *in);
 
 };
 

@@ -25,6 +25,7 @@
 #include "util/utils.h"
 #include "util/tlvalues.h"
 #include "core/settings.h"
+#include "util/constants.h"
 
 Q_LOGGING_CATEGORY(TG_CORE_OUTBOUNDPKT, "tg.core.outboundpkt")
 

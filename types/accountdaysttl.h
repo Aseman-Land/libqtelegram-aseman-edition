@@ -8,10 +8,7 @@
 #include "telegramtypeobject.h"
 #include <QtGlobal>
 
-namespace Tg {
-namespace Types {
-
-class AccountDaysTTL : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT AccountDaysTTL : public TelegramTypeObject
 {
 public:
     enum AccountDaysTTLType {
@@ -37,8 +34,5 @@ private:
     qint32 m_days;
     AccountDaysTTLType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_ACCOUNTDAYSTTL

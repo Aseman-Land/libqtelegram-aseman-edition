@@ -10,10 +10,7 @@
 #include <QtGlobal>
 #include "photo.h"
 
-namespace Tg {
-namespace Types {
-
-class WebPage : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT WebPage : public TelegramTypeObject
 {
 public:
     enum WebPageType {
@@ -101,8 +98,5 @@ private:
     QString m_url;
     WebPageType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_WEBPAGE

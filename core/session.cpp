@@ -28,7 +28,7 @@
 Q_LOGGING_CATEGORY(TG_CORE_SESSION, "tg.core.session")
 
 qint64 Session::m_clientLastMsgId = 0;
-using namespace Tg::Types;
+
 
 Session::Session(DC *dc, Settings *settings, CryptoUtils *crypto, QObject *parent) :
     Connection(dc->host(), dc->port(), parent),

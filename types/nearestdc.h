@@ -9,10 +9,7 @@
 #include <QString>
 #include <QtGlobal>
 
-namespace Tg {
-namespace Types {
-
-class NearestDc : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT NearestDc : public TelegramTypeObject
 {
 public:
     enum NearestDcType {
@@ -46,8 +43,5 @@ private:
     qint32 m_thisDc;
     NearestDcType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_NEARESTDC

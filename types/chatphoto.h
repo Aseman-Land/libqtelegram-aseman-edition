@@ -8,10 +8,7 @@
 #include "telegramtypeobject.h"
 #include "filelocation.h"
 
-namespace Tg {
-namespace Types {
-
-class ChatPhoto : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT ChatPhoto : public TelegramTypeObject
 {
 public:
     enum ChatPhotoType {
@@ -42,8 +39,5 @@ private:
     FileLocation m_photoSmall;
     ChatPhotoType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_CHATPHOTO

@@ -10,10 +10,7 @@
 #include "contact.h"
 #include "user.h"
 
-namespace Tg {
-namespace Types {
-
-class ContactsContacts : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT ContactsContacts : public TelegramTypeObject
 {
 public:
     enum ContactsContactsType {
@@ -44,8 +41,5 @@ private:
     QList<User> m_users;
     ContactsContactsType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_CONTACTSCONTACTS

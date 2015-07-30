@@ -10,10 +10,7 @@
 #include <QtGlobal>
 #include "inputstickerset.h"
 
-namespace Tg {
-namespace Types {
-
-class DocumentAttribute : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT DocumentAttribute : public TelegramTypeObject
 {
 public:
     enum DocumentAttributeType {
@@ -64,8 +61,5 @@ private:
     qint32 m_w;
     DocumentAttributeType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_DOCUMENTATTRIBUTE

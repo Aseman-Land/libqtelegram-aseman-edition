@@ -11,10 +11,7 @@
 #include "dcoption.h"
 #include "disabledfeature.h"
 
-namespace Tg {
-namespace Types {
-
-class Config : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT Config : public TelegramTypeObject
 {
 public:
     enum ConfigType {
@@ -108,8 +105,5 @@ private:
     qint32 m_thisDc;
     ConfigType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_CONFIG

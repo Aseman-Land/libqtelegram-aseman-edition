@@ -12,10 +12,7 @@
 #include "stickerpack.h"
 #include "stickerset.h"
 
-namespace Tg {
-namespace Types {
-
-class MessagesAllStickers : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT MessagesAllStickers : public TelegramTypeObject
 {
 public:
     enum MessagesAllStickersType {
@@ -54,8 +51,5 @@ private:
     QList<StickerSet> m_sets;
     MessagesAllStickersType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_MESSAGESALLSTICKERS

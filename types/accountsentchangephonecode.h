@@ -9,10 +9,7 @@
 #include <QString>
 #include <QtGlobal>
 
-namespace Tg {
-namespace Types {
-
-class AccountSentChangePhoneCode : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT AccountSentChangePhoneCode : public TelegramTypeObject
 {
 public:
     enum AccountSentChangePhoneCodeType {
@@ -42,8 +39,5 @@ private:
     qint32 m_sendCallTimeout;
     AccountSentChangePhoneCodeType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_ACCOUNTSENTCHANGEPHONECODE

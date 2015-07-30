@@ -8,10 +8,7 @@
 #include "telegramtypeobject.h"
 #include <QString>
 
-namespace Tg {
-namespace Types {
-
-class ExportedChatInvite : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT ExportedChatInvite : public TelegramTypeObject
 {
 public:
     enum ExportedChatInviteType {
@@ -38,8 +35,5 @@ private:
     QString m_link;
     ExportedChatInviteType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_EXPORTEDCHATINVITE

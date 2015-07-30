@@ -9,10 +9,7 @@
 #include <QtGlobal>
 #include <QString>
 
-namespace Tg {
-namespace Types {
-
-class Audio : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT Audio : public TelegramTypeObject
 {
 public:
     enum AudioType {
@@ -67,8 +64,5 @@ private:
     qint32 m_userId;
     AudioType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_AUDIO

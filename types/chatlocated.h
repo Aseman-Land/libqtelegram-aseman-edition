@@ -8,10 +8,7 @@
 #include "telegramtypeobject.h"
 #include <QtGlobal>
 
-namespace Tg {
-namespace Types {
-
-class ChatLocated : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT ChatLocated : public TelegramTypeObject
 {
 public:
     enum ChatLocatedType {
@@ -41,8 +38,5 @@ private:
     qint32 m_distance;
     ChatLocatedType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_CHATLOCATED

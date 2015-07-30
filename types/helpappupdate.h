@@ -9,10 +9,7 @@
 #include <QtGlobal>
 #include <QString>
 
-namespace Tg {
-namespace Types {
-
-class HelpAppUpdate : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT HelpAppUpdate : public TelegramTypeObject
 {
 public:
     enum HelpAppUpdateType {
@@ -51,8 +48,5 @@ private:
     QString m_url;
     HelpAppUpdateType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_HELPAPPUPDATE

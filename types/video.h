@@ -9,10 +9,7 @@
 #include <QtGlobal>
 #include "photosize.h"
 
-namespace Tg {
-namespace Types {
-
-class Video : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT Video : public TelegramTypeObject
 {
 public:
     enum VideoType {
@@ -75,8 +72,5 @@ private:
     qint32 m_w;
     VideoType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_VIDEO

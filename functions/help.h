@@ -18,7 +18,7 @@
 namespace Tg {
 namespace Functions {
 
-class Help : public TelegramFunctionObject
+class LIBQTELEGRAMSHARED_EXPORT Help : public TelegramFunctionObject
 {
 public:
     enum HelpFunction {
@@ -34,22 +34,22 @@ public:
     virtual ~Help();
 
     static bool getConfig(OutboundPkt *out);
-    static Types::Config getConfigResult(InboundPkt *in);
+    static Config getConfigResult(InboundPkt *in);
 
     static bool getNearestDc(OutboundPkt *out);
-    static Types::NearestDc getNearestDcResult(InboundPkt *in);
+    static NearestDc getNearestDcResult(InboundPkt *in);
 
     static bool getAppUpdate(OutboundPkt *out, const QString &deviceModel, const QString &systemVersion, const QString &appVersion, const QString &langCode);
-    static Types::HelpAppUpdate getAppUpdateResult(InboundPkt *in);
+    static HelpAppUpdate getAppUpdateResult(InboundPkt *in);
 
-    static bool saveAppLog(OutboundPkt *out, const QList<Types::InputAppEvent> &events);
+    static bool saveAppLog(OutboundPkt *out, const QList<InputAppEvent> &events);
     static bool saveAppLogResult(InboundPkt *in);
 
     static bool getInviteText(OutboundPkt *out, const QString &langCode);
-    static Types::HelpInviteText getInviteTextResult(InboundPkt *in);
+    static HelpInviteText getInviteTextResult(InboundPkt *in);
 
     static bool getSupport(OutboundPkt *out);
-    static Types::HelpSupport getSupportResult(InboundPkt *in);
+    static HelpSupport getSupportResult(InboundPkt *in);
 
 };
 

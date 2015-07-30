@@ -12,10 +12,7 @@
 #include "message.h"
 #include "user.h"
 
-namespace Tg {
-namespace Types {
-
-class MessagesMessages : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT MessagesMessages : public TelegramTypeObject
 {
 public:
     enum MessagesMessagesType {
@@ -54,8 +51,5 @@ private:
     QList<User> m_users;
     MessagesMessagesType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_MESSAGESMESSAGES

@@ -12,10 +12,7 @@
 #include "geochatmessage.h"
 #include "user.h"
 
-namespace Tg {
-namespace Types {
-
-class GeochatsMessages : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT GeochatsMessages : public TelegramTypeObject
 {
 public:
     enum GeochatsMessagesType {
@@ -54,8 +51,5 @@ private:
     QList<User> m_users;
     GeochatsMessagesType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_GEOCHATSMESSAGES

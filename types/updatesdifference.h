@@ -15,10 +15,7 @@
 #include "update.h"
 #include "user.h"
 
-namespace Tg {
-namespace Types {
-
-class UpdatesDifference : public TelegramTypeObject
+class LIBQTELEGRAMSHARED_EXPORT UpdatesDifference : public TelegramTypeObject
 {
 public:
     enum UpdatesDifferenceType {
@@ -78,8 +75,5 @@ private:
     QList<User> m_users;
     UpdatesDifferenceType m_classType;
 };
-
-}
-}
 
 #endif // LQTG_TYPE_UPDATESDIFFERENCE
