@@ -158,7 +158,7 @@ bool Functions::Messages::sendMessage(OutboundPkt *out, qint32 flags, const Inpu
     out->appendInt(fncMessagesSendMessage);
     out->appendInt(flags);
     if(!peer.push(out)) return false;
-    out->appendInt(replyToMsgId);
+    if(flags & 1<<0) out->appendInt(replyToMsgId);
     out->appendQString(message);
     out->appendLong(randomId);
     return true;
@@ -174,7 +174,7 @@ bool Functions::Messages::sendMedia(OutboundPkt *out, qint32 flags, const InputP
     out->appendInt(fncMessagesSendMedia);
     out->appendInt(flags);
     if(!peer.push(out)) return false;
-    out->appendInt(replyToMsgId);
+    if(flags & 1<<0) out->appendInt(replyToMsgId);
     if(!media.push(out)) return false;
     out->appendLong(randomId);
     return true;

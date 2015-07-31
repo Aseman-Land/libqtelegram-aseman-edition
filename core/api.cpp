@@ -806,7 +806,11 @@ void Api::onMessagesSendMessageAnswer(Query *q, InboundPkt &inboundPkt) {
 
 qint64 Api::messagesSendMessage(const InputPeer &peer, const QString &message, qint64 randomId, qint32 replyToMsgId) {
     OutboundPkt p(mSettings);
-    Functions::Messages::sendMessage(&p, 0, peer, replyToMsgId, message, randomId);
+    int flag = 0;
+    if(replyToMsgId)
+        flag = flag | (1<<0);
+
+    Functions::Messages::sendMessage(&p, flag, peer, replyToMsgId, message, randomId);
     return mMainSession->sendQuery(p, &messagesSendMessageMethods, QVariant(), __FUNCTION__ );
 }
 
@@ -817,7 +821,11 @@ void Api::onMessagesSendMediaAnswer(Query *q, InboundPkt &inboundPkt) {
 
 qint64 Api::messagesSendMedia(const InputPeer &peer, const InputMedia &media, qint64 randomId, qint32 replyToMsgId) {
     OutboundPkt p(mSettings);
-    Functions::Messages::sendMedia(&p, 0, peer, replyToMsgId, media, randomId);
+    int flag = 0;
+    if(replyToMsgId)
+        flag = flag | (1<<0);
+
+    Functions::Messages::sendMedia(&p, flag, peer, replyToMsgId, media, randomId);
     return mMainSession->sendQuery(p, &messagesSendMediaMethods, QVariant(), __FUNCTION__ );
 }
 

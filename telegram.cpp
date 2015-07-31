@@ -290,7 +290,6 @@ void Telegram::onDcProviderReady() {
     connect(prv->mApi, SIGNAL(accountGetWallPapersResult(qint64,const QList<WallPaper>&)), this, SIGNAL(accountGetWallPapersAnswer(qint64,const QList<WallPaper>&)));
     connect(prv->mApi, SIGNAL(accountCheckUsernameResult(qint64,bool)), this, SIGNAL(accountCheckUsernameAnswer(qint64,bool)));
     connect(prv->mApi, SIGNAL(accountUpdateUsernameResult(qint64,const User&)), this, SIGNAL(accountUpdateUsernameAnswer(qint64,const User&)));
-    connect(prv->mApi, SIGNAL(accountPrivacyRules(qint64,const QList<PrivacyRule>&,const QList<User>&)), this, SIGNAL(accountPrivacyRules(qint64,const QList<PrivacyRule>&,const QList<User>&)));
     connect(prv->mApi, SIGNAL(accountDeleteAccountResult(qint64,bool)), this, SIGNAL(accountDeleteAccountAnswer(qint64,bool)));
     connect(prv->mApi, SIGNAL(accountGetAccountTTLResult(qint64,const AccountDaysTTL&)), this, SIGNAL(accountGetAccountTTLAnswer(qint64,const AccountDaysTTL&)));
     connect(prv->mApi, SIGNAL(accountSetAccountTTLResult(qint64,bool)), this, SIGNAL(accountSetAccountTTLAnswer(qint64,bool)));
@@ -318,8 +317,8 @@ void Telegram::onDcProviderReady() {
     connect(prv->mApi, SIGNAL(contactsUnblockResult(qint64,bool)), this, SIGNAL(contactsUnblockAnswer(qint64,bool)));
     connect(prv->mApi, SIGNAL(contactsBlocked(qint64,const QList<ContactBlocked>&,const QList<User>&)), this, SLOT(onContactsBlocked(qint64,const QList<ContactBlocked>&,const QList<User>&)));
     connect(prv->mApi, SIGNAL(contactsBlockedSlice(qint64,qint32,const QList<ContactBlocked>&,const QList<User>&)), this, SIGNAL(contactsGetBlockedAnswer(qint64,qint32,QList<ContactBlocked>,QList<User>)));
-    connect(prv->mApi, SIGNAL(messagesSentMessage(qint64,qint32,qint32,qint32,qint32,qint32)), this, SLOT(onMessagesSentMessage(qint64,qint32,qint32,qint32,qint32,qint32)));
-    connect(prv->mApi, SIGNAL(messagesSentMessageLink(qint64,qint32,qint32,qint32,qint32,qint32,const QList<ContactsLink>&)), this, SIGNAL(messagesSendMessageAnswer(qint64,qint32,qint32,qint32,qint32,qint32,const QList<ContactsLink>&)));
+    connect(prv->mApi, SIGNAL(messagesSentMessage(qint64,qint32,qint32,const MessageMedia&,qint32,qint32,qint32)), this, SLOT(onMessagesSentMessage(qint64,qint32,qint32,const MessageMedia&,qint32,qint32,qint32)));
+    connect(prv->mApi, SIGNAL(messagesSentMessageLink(qint64,qint32,qint32,const MessageMedia&,qint32,qint32,qint32,const QList<ContactsLink>&)), this, SIGNAL(messagesSendMessageAnswer(qint64,qint32,qint32,const MessageMedia&,qint32,qint32,qint32,const QList<ContactsLink>&)));
     connect(prv->mApi, SIGNAL(messagesSetTypingResult(qint64,bool)), this, SIGNAL(messagesSetTypingAnswer(qint64,bool)));
     connect(prv->mApi, SIGNAL(messagesGetMessagesMessages(qint64,const QList<Message>&,const QList<Chat>&,const QList<User>&)), this, SLOT(onMessagesGetMessagesMessages(qint64,const QList<Message>&,const QList<Chat>&,const QList<User>&)));
     connect(prv->mApi, SIGNAL(messagesGetMessagesMessagesSlice(qint64,qint32,const QList<Message>&,const QList<Chat>&,const QList<User>&)), this, SIGNAL(messagesGetMessagesAnswer(qint64,qint32,const QList<Message>&,const QList<Chat>&,const QList<User>&)));
@@ -330,30 +329,21 @@ void Telegram::onDcProviderReady() {
     connect(prv->mApi, SIGNAL(messagesSearchMessages(qint64,const QList<Message>&,const QList<Chat>&,const QList<User>&)), this, SLOT(onMessagesSearchMessages(qint64,const QList<Message>&,const QList<Chat>&,const QList<User>&)));
     connect(prv->mApi, SIGNAL(messagesSearchMessagesSlice(qint64,qint32,const QList<Message>&,const QList<Chat>&,const QList<User>&)), this, SIGNAL(messagesSearchAnswer(qint64,qint32,const QList<Message>&,const QList<Chat>&,const QList<User>&)));
     connect(prv->mApi, SIGNAL(messagesReadAffectedHistory(qint64,qint32,qint32,qint32)), this, SIGNAL(messagesReadHistoryAnswer(qint64,qint32,qint32,qint32)));
-    connect(prv->mApi, SIGNAL(messagesReadMessageContentsResult(qint64,const AffectedMessages&)), this, SIGNAL(messagesReadMessageContentsAnswer(qint64,const AffectedMessages&)));
+    connect(prv->mApi, SIGNAL(messagesReadMessageContentsResult(qint64,const MessagesAffectedMessages&)), this, SIGNAL(messagesReadMessageContentsAnswer(qint64,const MessagesAffectedMessages&)));
     connect(prv->mApi, SIGNAL(messagesDeleteAffectedHistory(qint64,qint32,qint32,qint32)), this, SIGNAL(messagesDeleteHistoryAnswer(qint64,qint32,qint32,qint32)));
-    connect(prv->mApi, SIGNAL(messagesDeleteMessagesResult(qint64,const AffectedMessages&)), this, SIGNAL(messagesDeleteMessagesAnswer(qint64,const AffectedMessages&)));
-    connect(prv->mApi, SIGNAL(messagesRestoreMessagesResult(qint64,const QList<qint32>&)), this, SIGNAL(messagesRestoreMessagesAnswer(qint64,const QList<qint32>&)));
-    connect(prv->mApi, SIGNAL(messagesReceivedMessagesResult(qint64,const QList<qint32>&)), this, SIGNAL(messagesReceivedMessagesAnswer(qint64,const QList<qint32>&)));
-    connect(prv->mApi, SIGNAL(messagesForwardMsgStatedMessage(qint64,const Message&,const QList<Chat>&,const QList<User>&,qint32,qint32,qint32)), this, SLOT(onMessagesForwardMsgStatedMessage(qint64,const Message&,const QList<Chat>&,const QList<User>&,qint32,qint32,qint32)));
-    connect(prv->mApi, SIGNAL(messagesForwardMsgStatedMessageLink(qint64,const Message&,const QList<Chat>&,const QList<User>&,const QList<ContactsLink>&,qint32,qint32,qint32)), this, SIGNAL(messagesForwardMessageAnswer(qint64,const Message&,const QList<Chat>&,const QList<User>&,const QList<ContactsLink>&,qint32,qint32,qint32)));
-    connect(prv->mApi, SIGNAL(messagesForwardMsgsStatedMessages(qint64,const QList<Message>&,const QList<Chat>&,const QList<User>&,qint32,qint32,qint32)), this, SLOT(onMessagesForwardMsgsStatedMessages(qint64,const QList<Message>&,const QList<Chat>&,const QList<User>&,qint32,qint32,qint32)));
-    connect(prv->mApi, SIGNAL(messagesForwardMsgsStatedMessagesLinks(qint64,const QList<Message>&,const QList<Chat>&,const QList<User>&,const QList<ContactsLink>&,qint32,qint32,qint32)), this, SIGNAL(messagesForwardMessagesAnswer(qint64,const QList<Message>&,const QList<Chat>&,const QList<User>&,const QList<ContactsLink>&,qint32,qint32,qint32)));
-    connect(prv->mApi, SIGNAL(messagesSendBroadcastStatedMessages(qint64,const QList<Message>&,const QList<Chat>&,const QList<User>&,qint32,qint32,qint32)), this, SLOT(onMessagesSendBroadcastStatedMessages(qint64,const QList<Message>&,const QList<Chat>&,const QList<User>&,qint32,qint32,qint32)));
-    connect(prv->mApi, SIGNAL(messagesSendBroadcastStatedMessagesLinks(qint64,const QList<Message>&,const QList<Chat>&,const QList<User>&,const QList<ContactsLink>&,qint32,qint32,qint32)), this, SIGNAL(messagesSendBroadcastAnswer(qint64,const QList<Message>,const QList<Chat>,const QList<User>,const QList<ContactsLink>,qint32,qint32,qint32)));
+    connect(prv->mApi, SIGNAL(messagesDeleteMessagesResult(qint64,const MessagesAffectedMessages&)), this, SIGNAL(messagesDeleteMessagesAnswer(qint64,const MessagesAffectedMessages&)));
+    connect(prv->mApi, SIGNAL(messagesReceivedMessagesResult(qint64,const QList<ReceivedNotifyMessage>&)), this, SIGNAL(messagesReceivedMessagesAnswer(qint64,const QList<ReceivedNotifyMessage>&)));
+    connect(prv->mApi, SIGNAL(messagesForwardedMessage(qint64,const UpdatesType&)), this, SIGNAL(messagesForwardMessageAnswer(qint64,const UpdatesType&)));
+    connect(prv->mApi, SIGNAL(messagesForwardedMessages(qint64,const UpdatesType&)), this, SIGNAL(messagesForwardMessagesAnswer(qint64,const UpdatesType&)));
+    connect(prv->mApi, SIGNAL(messagesSentBroadcast(qint64,const UpdatesType&)), this, SIGNAL(messagesSendBroadcastAnswer(qint64,const UpdatesType&)));
     connect(prv->mApi, SIGNAL(messagesChats(qint64,const QList<Chat>&)), this, SIGNAL(messagesGetChatsAnswer(qint64,const QList<Chat>&)));
     connect(prv->mApi, SIGNAL(messagesChatFull(qint64,const ChatFull&,const QList<Chat>&,const QList<User>&)), this, SIGNAL(messagesGetFullChatAnswer(qint64,const ChatFull&,const QList<Chat>&,const QList<User>&)));
 
-    connect(prv->mApi, SIGNAL(messagesEditChatTitleStatedMessage(qint64,const Message&,const QList<Chat>&,const QList<User>&,qint32,qint32,qint32)), this, SLOT(onMessagesEditChatTitleStatedMessage(qint64,const Message&,const QList<Chat>&,const QList<User>&,qint32,qint32,qint32)));
-    connect(prv->mApi, SIGNAL(messagesEditChatTitleStatedMessageLink(qint64,const Message&,const QList<Chat>&,const QList<User>&,const QList<ContactsLink>&,qint32,qint32,qint32)), this, SIGNAL(messagesEditChatTitleAnswer(qint64,const Message&,const QList<Chat>&,const QList<User>&,const QList<ContactsLink>&,qint32,qint32,qint32)));
-    connect(prv->mApi, SIGNAL(messagesEditChatPhotoStatedMessage(qint64,const Message&,const QList<Chat>&,const QList<User>&,qint32,qint32,qint32)), this, SLOT(onMessagesEditChatPhotoStatedMessageAnswer(qint64,const Message&,const QList<Chat>&,const QList<User>&,qint32,qint32,qint32)));
-    connect(prv->mApi, SIGNAL(messagesEditChatPhotoStatedMessageLink(qint64,const Message&,const QList<Chat>&,const QList<User>&,const QList<ContactsLink>&,qint32,qint32,qint32)), this, SIGNAL(messagesEditChatPhotoStatedMessageAnswer(qint64,const Message&,const QList<Chat>&,const QList<User>&,const QList<ContactsLink>&,qint32,qint32,qint32)));
-    connect(prv->mApi, SIGNAL(messagesAddChatUserStatedMessage(qint64,const Message&,const QList<Chat>&,const QList<User>&,qint32,qint32,qint32)), this, SLOT(onMessagesAddChatUserStatedMessage(qint64,const Message&,const QList<Chat>&,const QList<User>&,qint32,qint32,qint32)));
-    connect(prv->mApi, SIGNAL(messagesAddChatUserStatedMessageLink(qint64,const Message&,const QList<Chat>&,const QList<User>&,const QList<ContactsLink>&,qint32,qint32,qint32)), this, SIGNAL(messagesAddChatUserAnswer(qint64,const Message&,const QList<Chat>&,const QList<User>&,const QList<ContactsLink>&,qint32,qint32,qint32)));
-    connect(prv->mApi, SIGNAL(messagesDeleteChatUserStatedMessage(qint64,const Message&,const QList<Chat>&,const QList<User>&,qint32,qint32,qint32)), this, SLOT(onMessagesDeleteChatUserStatedMessage(qint64,const Message&,const QList<Chat>&,const QList<User>&,qint32,qint32,qint32)));
-    connect(prv->mApi, SIGNAL(messagesDeleteChatUserStatedMessageLink(qint64,const Message&,const QList<Chat>&,const QList<User>&,const QList<ContactsLink>&,qint32,qint32,qint32)), this, SIGNAL(messagesDeleteChatUserAnswer(qint64,const Message&,const QList<Chat>&,const QList<User>&,const QList<ContactsLink>&,qint32,qint32,qint32)));
-    connect(prv->mApi, SIGNAL(messagesCreateChatStatedMessage(qint64,const Message&,const QList<Chat>&,const QList<User>&,qint32,qint32,qint32)), this, SLOT(onMessagesCreateChatStatedMessage(qint64,const Message&,const QList<Chat>&,const QList<User>&,qint32,qint32,qint32)));
-    connect(prv->mApi, SIGNAL(messagesCreateChatStatedMessageLink(qint64,const Message&,const QList<Chat>&,const QList<User>&,const QList<ContactsLink>&,qint32,qint32,qint32)), this, SIGNAL(messagesCreateChatAnswer(qint64,const Message&,const QList<Chat>&,const QList<User>&,const QList<ContactsLink>&,qint32,qint32,qint32)));
+    connect(prv->mApi, SIGNAL(messagesEditedChatTitle(qint64,const UpdatesType&)), this, SIGNAL(messagesEditChatTitleAnswer(qint64,const UpdatesType&)));
+    connect(prv->mApi, SIGNAL(messagesEditedChatPhoto(qint64,const UpdatesType&)), this, SIGNAL(messagesEditChatPhotoStatedMessageAnswer(qint64,const UpdatesType&)));
+    connect(prv->mApi, SIGNAL(messagesAddedChatUser(qint64,const UpdatesType&)), this, SIGNAL(messagesAddChatUserAnswer(qint64,const UpdatesType&)));
+    connect(prv->mApi, SIGNAL(messagesDeletedChat(qint64,const UpdatesType&)), this, SIGNAL(messagesDeleteChatUserAnswer(qint64,const UpdatesType&)));
+    connect(prv->mApi, SIGNAL(messagesCreatedChat(qint64,const UpdatesType&)), this, SIGNAL(messagesCreateChatAnswer(qint64,const UpdatesType&)));
 
     // secret chats
     connect(prv->mApi, SIGNAL(messagesDhConfig(qint64,qint32,const QByteArray&,qint32,const QByteArray&)), this, SLOT(onMessagesDhConfig(qint64,qint32,const QByteArray&,qint32,const QByteArray&)));
@@ -388,7 +378,7 @@ void Telegram::onDcProviderReady() {
     connect(prv->mFileHandler.data(), SIGNAL(uploadGetFileAnswer(qint64,const StorageFileType&,qint32,const QByteArray&,qint32,qint32,qint32)), SIGNAL(uploadGetFileAnswer(qint64,const StorageFileType&,qint32,const QByteArray&,qint32,qint32,qint32)));
     connect(prv->mFileHandler.data(), SIGNAL(uploadCancelFileAnswer(qint64,bool)), SIGNAL(uploadCancelFileAnswer(qint64,bool)));
     connect(prv->mFileHandler.data(), SIGNAL(error(qint64,qint32,const QString&)), SIGNAL(error(qint64,qint32,const QString&)));
-    connect(prv->mFileHandler.data(), SIGNAL(messagesSendMediaAnswer(qint64,const Message&,const QList<Chat>&,const QList<User>&,const QList<ContactsLink>&,qint32,qint32)), SLOT(onMessagesSendMediaAnswer(qint64,const Message&,const QList<Chat>&,const QList<User>&,const QList<ContactsLink>&,qint32,qint32)));
+    connect(prv->mFileHandler.data(), SIGNAL(messagesSentMedia(qint64,const UpdatesType&)), SLOT(onMessagesSendMediaAnswer(qint64,const UpdatesType&)));
     connect(prv->mFileHandler.data(), SIGNAL(messagesSendEncryptedFileAnswer(qint64,qint32,const EncryptedFile&)), SIGNAL(messagesSendEncryptedFileAnswer(qint64,qint32,const EncryptedFile&)));
 
     // At this point we should test the main session state and emit by hand signals of connected/disconnected
@@ -1090,34 +1080,36 @@ void Telegram::onContactsBlocked(qint64 id, const QList<ContactBlocked> &blocked
     Q_EMIT contactsGetBlockedAnswer(id, blocked.size(), blocked, users);
 }
 
-void Telegram::onMessagesSentMessage(qint64 id, qint32 msgId, qint32 date, qint32 pts, qint32 pts_count, qint32 seq) {
+void Telegram::onMessagesSentMessage(qint64 id, qint32 msgId, qint32 date, const MessageMedia &media, qint32 pts, qint32 pts_count, qint32 seq) {
     QList<ContactsLink> links;
-    Q_EMIT messagesSendMessageAnswer(id, msgId, date, pts, pts_count, seq, links);
+    Q_EMIT messagesSendMessageAnswer(id, msgId, date, media, pts, pts_count, seq, links);
 }
 
-void Telegram::onMessagesSendMediaAnswer(qint64 fileId, const Message &message, const QList<Chat> &chats, const QList<User> &users, const QList<ContactsLink> &links, qint32 pts, qint32 ptsCount) {
+void Telegram::onMessagesSendMediaAnswer(qint64 fileId, const UpdatesType &updates) {
     //depending on responded media, emit one signal or another
+    const Message &message = updates.update().message();
+    QList<ContactsLink> links;
     switch (message.media().classType()) {
     case MessageMedia::typeMessageMediaPhoto:
-        Q_EMIT messagesSendPhotoAnswer(fileId, message, chats, users, links, pts, ptsCount);
+        Q_EMIT messagesSendPhotoAnswer(fileId, message, updates.chats(), updates.users(), links, updates.pts(), updates.ptsCount());
         break;
     case MessageMedia::typeMessageMediaVideo:
-        Q_EMIT messagesSendVideoAnswer(fileId, message, chats, users, links, pts, ptsCount);
+        Q_EMIT messagesSendVideoAnswer(fileId, message, updates.chats(), updates.users(), links, updates.pts(), updates.ptsCount());
         break;
     case MessageMedia::typeMessageMediaGeo:
-        Q_EMIT messagesSendGeoPointAnswer(fileId, message, chats, users, links, pts, ptsCount);
+        Q_EMIT messagesSendGeoPointAnswer(fileId, message, updates.chats(), updates.users(), links, updates.pts(), updates.ptsCount());
         break;
     case MessageMedia::typeMessageMediaContact:
-        Q_EMIT messagesSendContactAnswer(fileId, message, chats, users, links, pts, ptsCount);
+        Q_EMIT messagesSendContactAnswer(fileId, message, updates.chats(), updates.users(), links, updates.pts(), updates.ptsCount());
         break;
     case MessageMedia::typeMessageMediaDocument:
-        Q_EMIT messagesSendDocumentAnswer(fileId, message, chats, users, links, pts, ptsCount);
+        Q_EMIT messagesSendDocumentAnswer(fileId, message, updates.chats(), updates.users(), links, updates.pts(), updates.ptsCount());
         break;
     case MessageMedia::typeMessageMediaAudio:
-        Q_EMIT messagesSendAudioAnswer(fileId, message, chats, users, links, pts, ptsCount);
+        Q_EMIT messagesSendAudioAnswer(fileId, message, updates.chats(), updates.users(), links, updates.pts(), updates.ptsCount());
         break;
     default:
-        Q_EMIT messagesSendMediaAnswer(fileId, message, chats, users, links, pts, ptsCount);
+        Q_EMIT messagesSendMediaAnswer(fileId, message, updates.chats(), updates.users(), links, updates.pts(), updates.ptsCount());
     }
 }
 
@@ -1135,46 +1127,6 @@ void Telegram::onMessagesGetHistoryMessages(qint64 id, const QList<Message> &mes
 
 void Telegram::onMessagesSearchMessages(qint64 id, const QList<Message> &messages, const QList<Chat> &chats, const QList<User> &users) {
     Q_EMIT messagesSearchAnswer(id, messages.size(), messages, chats, users);
-}
-
-void Telegram::onMessagesForwardMsgStatedMessage(qint64 id, const Message &message, const QList<Chat> &chats, const QList<User> &users, qint32 pts, qint32 pts_count, qint32 seq) {
-    QList<ContactsLink> links;
-    Q_EMIT messagesForwardMessageAnswer(id, message, chats, users, links, pts, pts_count, seq);
-}
-
-void Telegram::onMessagesForwardMsgsStatedMessages(qint64 id, const QList<Message> &messages, const QList<Chat> &chats, const QList<User> &users, qint32 pts, qint32 pts_count, qint32 seq) {
-    QList<ContactsLink> links;
-    Q_EMIT messagesForwardMessagesAnswer(id, messages, chats, users, links, pts, pts_count, seq);
-}
-
-void Telegram::onMessagesSendBroadcastStatedMessages(qint64 id, const QList<Message> &messages, const QList<Chat> &chats, const QList<User> &users, qint32 pts, qint32 pts_count, qint32 seq) {
-    QList<ContactsLink> links;
-    Q_EMIT messagesSendBroadcastAnswer(id, messages, chats, users, links, pts, pts_count, seq);
-}
-
-void Telegram::onMessagesEditChatTitleStatedMessage(qint64 id, const Message &message, const QList<Chat> &chats, const QList<User> &users, qint32 pts, qint32 pts_count, qint32 seq) {
-    QList<ContactsLink> links;
-    Q_EMIT messagesEditChatTitleAnswer(id, message, chats, users, links, pts, pts_count, seq);
-}
-
-void Telegram::onMessagesEditChatPhotoStatedMessageAnswer(qint64 msgId, const Message &message, const QList<Chat> &chats, const QList<User> &users, qint32 pts, qint32 pts_count, qint32 seq) {
-    QList<ContactsLink> links;
-    Q_EMIT messagesEditChatPhotoStatedMessageAnswer(msgId, message, chats, users, links, pts, pts_count, seq);
-}
-
-void Telegram::onMessagesAddChatUserStatedMessage(qint64 id, const Message &message, const QList<Chat> &chats, const QList<User> &users, qint32 pts, qint32 pts_count, qint32 seq) {
-    QList<ContactsLink> links;
-    Q_EMIT messagesAddChatUserAnswer(id, message, chats, users, links, pts, pts_count, seq);
-}
-
-void Telegram::onMessagesDeleteChatUserStatedMessage(qint64 id, const Message &message, const QList<Chat> &chats, const QList<User> &users, qint32 pts, qint32 pts_count, qint32 seq) {
-    QList<ContactsLink> links;
-    Q_EMIT messagesDeleteChatUserAnswer(id, message, chats, users, links, pts, pts_count, seq);
-}
-
-void Telegram::onMessagesCreateChatStatedMessage(qint64 id, const Message &message, const QList<Chat> &chats, const QList<User> &users, qint32 pts, qint32 pts_count, qint32 seq) {
-    QList<ContactsLink> links;
-    Q_EMIT messagesCreateChatAnswer(id, message, chats, users, links, pts, pts_count, seq);
 }
 
 void Telegram::onUpdatesDifference(qint64 id, const QList<Message> &messages, const QList<EncryptedMessage> &newEncryptedMessages, const QList<Update> &otherUpdates, const QList<Chat> &chats, const QList<User> &users, const UpdatesState &state) {

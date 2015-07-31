@@ -16,8 +16,7 @@ FileHandler::FileHandler(Api *api, CryptoUtils *crypto, Settings *settings, DcPr
     connect(mApi, SIGNAL(uploadSaveBigFilePartResult(qint64,qint64,bool)), this, SLOT(onUploadSaveFilePartResult(qint64,qint64,bool)));
     connect(mApi, SIGNAL(uploadFile(qint64,const StorageFileType&,qint32,QByteArray)), this, SLOT(onUploadGetFileAnswer(qint64,const StorageFileType&,qint32,QByteArray)));
     connect(mApi, SIGNAL(uploadFileError(qint64,qint32,const QString&)), this, SLOT(onUploadGetFileError(qint64,qint32,const QString&)));
-    connect(mApi, SIGNAL(messagesSentMediaStatedMessage(qint64,const Message&,const QList<Chat>&,const QList<User>&,qint32,qint32)), SLOT(onMessagesSendMediaStatedMessage(qint64,const Message&,const QList<Chat>&,const QList<User>&,qint32,qint32)));
-    connect(mApi, SIGNAL(messagesSentMediaStatedMessageLink(qint64,const Message&,const QList<Chat>&,const QList<User>&,const QList<ContactsLink>&,qint32,qint32,qint32)), SLOT(onMessagesSendMediaStatedMessageLink(qint64,const Message&,const QList<Chat>&,const QList<User>&,const QList<ContactsLink>&,qint32,qint32,qint32)));
+    connect(mApi, SIGNAL(messagesSentMedia(qint64,const UpdatesType&)), SIGNAL(messagesSentMedia(qint64,const UpdatesType&)));
     connect(mApi, SIGNAL(messagesSendEncryptedFileSentEncryptedMessage(qint64,qint32)), this, SLOT(onMessagesSentEncryptedFile(qint64,qint32)));
     connect(mApi, SIGNAL(messagesSendEncryptedFileSentEncryptedFile(qint64,qint32,EncryptedFile)), this, SLOT(onMessagesSentEncryptedFile(qint64,qint32,EncryptedFile)));
 }
@@ -411,17 +410,11 @@ qint64 FileHandler::uploadCancelFile(qint64 fileId) {
     return fileId;
 }
 
-void FileHandler::onMessagesSendMediaStatedMessage(qint64 id, const Message &message, const QList<Chat> &chats, const QList<User> &users, qint32 pts, qint32 ptsCount) {
-    QList<ContactsLink> links;
-    onMessagesSendMediaStatedMessageLink(id, message, chats, users, links, pts, ptsCount);
-}
-
-void FileHandler::onMessagesSendMediaStatedMessageLink(qint64 id, const Message &message, const QList<Chat> &chats, const QList<User> &users, const QList<ContactsLink> &links, qint32 pts, qint32 pts_count, qint32 seq) {
+void FileHandler::onMessagesSentMedia(qint64 id, const UpdatesType &updates) {
     //recover correlated send media request id -> fileId
     qint64 fileId = mFileIdsMap.take(id);
     Q_ASSERT(fileId);
-    Q_UNUSED(seq)
-    Q_EMIT messagesSendMediaAnswer(fileId, message, chats, users, links, pts, pts_count);
+    Q_EMIT messagesSentMedia(fileId, updates);
 }
 
 void FileHandler::onMessagesSentEncryptedFile(qint64 id, qint32 date, const EncryptedFile &encryptedFile) {
