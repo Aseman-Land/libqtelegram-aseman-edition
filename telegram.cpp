@@ -281,6 +281,8 @@ void Telegram::onDcProviderReady() {
     connect(prv->mApi, SIGNAL(authSendInvitesResult(qint64,bool)), this, SIGNAL(authSendInvitesAnswer(qint64,bool)));
     connect(prv->mApi, SIGNAL(authResetAuthorizationsResult(qint64,bool)), this, SIGNAL(authResetAuthorizationsAnswer(qint64,bool)));
     connect(prv->mApi, SIGNAL(authCheckPasswordResult(qint64,qint32,const User&)), this, SIGNAL(authCheckPasswordAnswer(qint64,qint32,const User&)));
+    connect(prv->mApi, SIGNAL(authRequestPasswordRecoveryResult(qint64,AuthPasswordRecovery)), this, SIGNAL(authRequestPasswordRecoveryAnswer(qint64,AuthPasswordRecovery)));
+    connect(prv->mApi, SIGNAL(authRecoverPasswordResult(qint64,AuthAuthorization)), this, SIGNAL(authRecoverPasswordAnswer(qint64,AuthAuthorization)));
     connect(prv->mApi, SIGNAL(accountRegisterDeviceResult(qint64,bool)), this, SIGNAL(accountRegisterDeviceAnswer(qint64,bool)));
     connect(prv->mApi, SIGNAL(accountUnregisterDeviceResult(qint64,bool)), this, SIGNAL(accountUnregisterDeviceAnswer(qint64,bool)));
     connect(prv->mApi, SIGNAL(accountUpdateNotifySettingsResult(qint64,bool)), this, SIGNAL(accountUpdateNotifySettingsAnswer(qint64,bool)));
@@ -296,8 +298,11 @@ void Telegram::onDcProviderReady() {
     connect(prv->mApi, SIGNAL(accountSetAccountTTLResult(qint64,bool)), this, SIGNAL(accountSetAccountTTLAnswer(qint64,bool)));
     connect(prv->mApi, SIGNAL(accountUpdateDeviceLockedResult(qint64,bool)), this, SIGNAL(accountUpdateDeviceLockedAnswer(qint64,bool)));
     connect(prv->mApi, SIGNAL(accountSentChangePhoneCode(qint64,const QString&,qint32)), this, SIGNAL(accountSentChangePhoneCode(qint64,const QString&,qint32)));
-    connect(prv->mApi, SIGNAL(accountSetPasswordResult(qint64,bool)), this, SIGNAL(accountSetPasswordAnswer(qint64,bool)));
     connect(prv->mApi, SIGNAL(accountGetPasswordResult(qint64,const AccountPassword&)), this, SIGNAL(accountGetPasswordAnswer(qint64,const AccountPassword&)));
+    connect(prv->mApi, SIGNAL(accountGetAuthorizationsResult(qint64,AccountAuthorizations)), this, SIGNAL(accountGetAuthorizationsAnswer(qint64,AccountAuthorizations)));
+    connect(prv->mApi, SIGNAL(accountResetAuthorizationResult(qint64,bool)), this, SIGNAL(accountResetAuthorizationAnswer(qint64,bool)));
+    connect(prv->mApi, SIGNAL(accountGetPasswordSettingsResult(qint64,AccountPasswordSettings)), this, SIGNAL(accountGetPasswordSettingsAnswer(qint64,AccountPasswordSettings)));
+    connect(prv->mApi, SIGNAL(accountUpdatePasswordSettingsResult(qint64,bool)), this, SIGNAL(accountUpdatePasswordSettingsAnswer(qint64,bool)));
     connect(prv->mApi, SIGNAL(accountChangePhoneResult(qint64,const User&)), this, SIGNAL(accountChangePhoneAnswer(qint64,const User&)));
     connect(prv->mApi, SIGNAL(photosPhoto(qint64,const Photo&,const QList<User>&)), this, SIGNAL(photosUploadProfilePhotoAnswer(qint64,const Photo&,const QList<User>&)));
     connect(prv->mApi, SIGNAL(photosUserProfilePhoto(qint64,const UserProfilePhoto&)), this, SIGNAL(photosUpdateProfilePhotoAnswer(qint64,const UserProfilePhoto&)));
@@ -337,6 +342,7 @@ void Telegram::onDcProviderReady() {
     connect(prv->mApi, SIGNAL(messagesForwardedMessage(qint64,const UpdatesType&)), this, SIGNAL(messagesForwardMessageAnswer(qint64,const UpdatesType&)));
     connect(prv->mApi, SIGNAL(messagesForwardedMessages(qint64,const UpdatesType&)), this, SIGNAL(messagesForwardMessagesAnswer(qint64,const UpdatesType&)));
     connect(prv->mApi, SIGNAL(messagesSentBroadcast(qint64,const UpdatesType&)), this, SIGNAL(messagesSendBroadcastAnswer(qint64,const UpdatesType&)));
+    connect(prv->mApi, SIGNAL(messagesGetWebPagePreviewResult(qint64,MessageMedia)), this, SIGNAL(messagesGetWebPagePreviewAnswer(qint64,MessageMedia)));
     connect(prv->mApi, SIGNAL(messagesChats(qint64,const QList<Chat>&)), this, SIGNAL(messagesGetChatsAnswer(qint64,const QList<Chat>&)));
     connect(prv->mApi, SIGNAL(messagesChatFull(qint64,const ChatFull&,const QList<Chat>&,const QList<User>&)), this, SIGNAL(messagesGetFullChatAnswer(qint64,const ChatFull&,const QList<Chat>&,const QList<User>&)));
 
@@ -359,6 +365,12 @@ void Telegram::onDcProviderReady() {
     connect(prv->mApi, SIGNAL(messagesSendEncryptedServiceSentEncryptedFile(qint64,qint32,const EncryptedFile&)), this, SIGNAL(messagesSendEncryptedServiceAnswer(qint64,qint32,const EncryptedFile&)));
     connect(prv->mApi, SIGNAL(messagesGetStickersResult(qint64,const MessagesStickers&)), this, SIGNAL(messagesGetStickersAnwer(qint64,const MessagesStickers&)));
     connect(prv->mApi, SIGNAL(messagesGetAllStickersResult(qint64,const MessagesAllStickers&)), this, SIGNAL(messagesGetAllStickersAnwer(qint64,const MessagesAllStickers&)));
+    connect(prv->mApi, SIGNAL(messagesGetStickerSetResult(qint64,MessagesStickerSet)), this, SIGNAL(messagesGetStickerSetAnwer(qint64,MessagesStickerSet)));
+    connect(prv->mApi, SIGNAL(messagesInstallStickerSetResult(qint64,bool)), this, SIGNAL(messagesInstallStickerSetAnwer(qint64,bool)));
+    connect(prv->mApi, SIGNAL(messagesUninstallStickerSetResult(qint64,bool)), this, SIGNAL(messagesUninstallStickerSetAnwer(qint64,bool)));
+    connect(prv->mApi, SIGNAL(messagesExportChatInviteResult(qint64,ExportedChatInvite)), this, SIGNAL(messagesExportChatInviteAnwer(qint64,ExportedChatInvite)));
+    connect(prv->mApi, SIGNAL(messagesCheckChatInviteResult(qint64,ChatInvite)), this, SIGNAL(messagesCheckChatInviteAnwer(qint64,ChatInvite)));
+    connect(prv->mApi, SIGNAL(messagesImportChatInviteResult(qint64,UpdatesType)), this, SIGNAL(messagesImportChatInviteAnwer(qint64,UpdatesType)));
     connect(prv->mApi, SIGNAL(updateShort(const Update&,qint32)), SLOT(onUpdateShort(const Update&)));
     connect(prv->mApi, SIGNAL(updatesCombined(const QList<Update>&,const QList<User>&,const QList<Chat>&,qint32,qint32,qint32)), SLOT(onUpdatesCombined(const QList<Update>&)));
     connect(prv->mApi, SIGNAL(updates(const QList<Update>&,const QList<User>&,const QList<Chat>&,qint32,qint32)), SLOT(onUpdates(const QList<Update>&)));
@@ -621,6 +633,30 @@ qint64 Telegram::messagesGetStickers(const QString &emoticon, const QString &has
 
 qint64 Telegram::messagesGetAllStickers(const QString &hash) {
     return prv->mApi->messagesGetAllStickers(hash);
+}
+
+qint64 Telegram::messagesGetStickerSet(const InputStickerSet &stickerset) {
+    return prv->mApi->messagesGetStickerSet(stickerset);
+}
+
+qint64 Telegram::messagesInstallStickerSet(const InputStickerSet &stickerset) {
+    return prv->mApi->messagesInstallStickerSet(stickerset);
+}
+
+qint64 Telegram::messagesUninstallStickerSet(const InputStickerSet &stickerset) {
+    return prv->mApi->messagesUninstallStickerSet(stickerset);
+}
+
+qint64 Telegram::messagesExportChatInvite(qint32 chatId) {
+    return prv->mApi->messagesExportChatInvite(chatId);
+}
+
+qint64 Telegram::messagesCheckChatInvite(const QString &hash) {
+    return prv->mApi->messagesCheckChatInvite(hash);
+}
+
+qint64 Telegram::messagesImportChatInvite(const QString &hash) {
+    return prv->mApi->messagesImportChatInvite(hash);
 }
 
 qint64 Telegram::generateGAorB(SecretChat *secretChat) {
@@ -1289,6 +1325,22 @@ qint64 Telegram::accountChangePhone(const QString &phone_number, const QString &
 
 qint64 Telegram::accountGetPassword() {
     return prv->mApi->accountGetPassword();
+}
+
+qint64 Telegram::accountGetAuthorizations() {
+    return prv->mApi->accountGetAuthorizations();
+}
+
+qint64 Telegram::accountResetAuthorization(qint64 hash) {
+    return prv->mApi->accountResetAuthorization(hash);
+}
+
+qint64 Telegram::accountGetPasswordSettings(const QByteArray &currentPasswordHash) {
+    return prv->mApi->accountGetPasswordSettings(currentPasswordHash);
+}
+
+qint64 Telegram::accountUpdatePasswordSettings(const QByteArray &currentPasswordHash, const AccountPasswordInputSettings &newSettings) {
+    return prv->mApi->accountUpdatePasswordSettings(currentPasswordHash, newSettings);
 }
 
 qint64 Telegram::photosUploadProfilePhoto(const QByteArray &bytes, const QString &fileName, const QString &caption, const InputGeoPoint &geoPoint, const InputPhotoCrop &crop) {

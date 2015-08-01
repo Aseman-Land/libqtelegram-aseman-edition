@@ -52,6 +52,8 @@ public:
     qint64 authExportAuthorization(qint32 dcId);
     qint64 authImportAuthorization(qint32 id, const QByteArray &bytes);
     qint64 authCheckPassword(const QByteArray &passwordHash);
+    qint64 authRequestPasswordRecovery();
+    qint64 authRecoverPassword(const QString &code);
     // Notifications / settings
     qint64 accountRegisterDevice(qint32 tokenType, const QString &token, const QString &deviceModel, const QString &systemVersion, const QString &appVersion, bool appSandbox, const QString &langCode);
     qint64 accountUnregisterDevice(qint32 tokenType, const QString &token);
@@ -71,9 +73,14 @@ public:
     qint64 accountSendChangePhoneCode(const QString &phone_number);
     qint64 accountChangePhone(const QString &phone_number, const QString &phone_code_hash, const QString &phone_code);
     qint64 accountUpdateDeviceLocked(int period);
-    qint64 accountGetPassword();
     qint64 photosUploadProfilePhoto(const InputFile &file, const QString &caption, const InputGeoPoint &geoPoint, const InputPhotoCrop &crop);
     qint64 photosUpdateProfilePhoto(const InputPhoto &id, const InputPhotoCrop &crop);
+    //Passwords
+    qint64 accountGetPassword();
+    qint64 accountGetAuthorizations();
+    qint64 accountResetAuthorization(qint64 hash);
+    qint64 accountGetPasswordSettings(const QByteArray &currentPasswordHash);
+    qint64 accountUpdatePasswordSettings(const QByteArray &currentPasswordHash, const AccountPasswordInputSettings &newSettings);
     // Users
     qint64 usersGetUsers(const QList<InputUser> &users);
     qint64 usersGetFullUser(const InputUser &user);
@@ -106,6 +113,7 @@ public:
     qint64 messagesForwardMessage(const InputPeer &peer, qint32 id, qint64 randomId);
     qint64 messagesForwardMessages(const InputPeer &peer, const QList<qint32> &ids, const QList<qint64> &randomIds);
     qint64 messagesSendBroadcast(const QList<InputUser> &contacts, const QList<qint64> &randomIds, const QString &message, const InputMedia &media);
+    qint64 messagesGetWebPagePreview(const QString &message);
     // Chats
     qint64 messagesGetChats(const QList<qint32> &chatIds);
     qint64 messagesGetFullChat(qint32 chatId);
@@ -128,6 +136,13 @@ public:
     // Stickers
     qint64 messagesGetStickers(const QString &emoticon, const QString &hash);
     qint64 messagesGetAllStickers(const QString &hash);
+    qint64 messagesGetStickerSet(const InputStickerSet &stickerset);
+    qint64 messagesInstallStickerSet(const InputStickerSet &stickerset);
+    qint64 messagesUninstallStickerSet(const InputStickerSet &stickerset);
+    // Invites
+    qint64 messagesExportChatInvite(qint32 chatId);
+    qint64 messagesCheckChatInvite(const QString &hash);
+    qint64 messagesImportChatInvite(const QString &hash);
     // UpdatesType
     qint64 updatesGetState();
     qint64 updatesGetDifference(qint32 pts, qint32 date, qint32 qts);
@@ -155,6 +170,8 @@ Q_SIGNALS:
     void authExportedAuthorization(qint64 msgId, qint32 id, const QByteArray &bytes);
     void authImportedAuthorization(qint64 msgId, qint32 expires, const User &user);
     void authCheckPasswordResult(qint64 msgId, qint32 expires, const User &user);
+    void authRequestPasswordRecoveryResult(qint64 msgId, const AuthPasswordRecovery &recovery);
+    void authRecoverPasswordResult(qint64 msgId, const AuthAuthorization &auth);
     // Notifications / settings
     void accountRegisterDeviceResult(qint64 msgId, bool ok);
     void accountUnregisterDeviceResult(qint64 msgId, bool ok);
@@ -174,8 +191,11 @@ Q_SIGNALS:
     void accountUpdateDeviceLockedResult(qint64 msgId, bool ok);
     void accountChangePhoneResult(qint64 msgId, const User &user);
     void accountSentChangePhoneCode(qint64 msgId, const QString &phone_code_hash, qint32 send_call_timeout);
-    void accountSetPasswordResult(qint64 msgId, bool ok);
     void accountGetPasswordResult(qint64 msgId, const AccountPassword &password);
+    void accountGetAuthorizationsResult(qint64 msgId, const AccountAuthorizations &auths);
+    void accountResetAuthorizationResult(qint64 msgId, bool ok);
+    void accountGetPasswordSettingsResult(qint64 msgId, const AccountPasswordSettings &settings);
+    void accountUpdatePasswordSettingsResult(qint64 msgId, bool ok);
     void photosPhoto(qint64 msgId, const Photo &photo, const QList<User> &users);
     void photosUserProfilePhoto(qint64 msgId, const UserProfilePhoto &photo);
     // Users
@@ -218,6 +238,7 @@ Q_SIGNALS:
     void messagesForwardedMessage(qint64 msgId, const UpdatesType &update);
     void messagesForwardedMessages(qint64 msgId, const UpdatesType &update);
     void messagesSentBroadcast(qint64 msgId, const UpdatesType &updates);
+    void messagesGetWebPagePreviewResult(qint64 msgId, const MessageMedia &updates);
     // Chats
     void messagesChats(qint64 msgId, const QList<Chat> &chats);
     void messagesChatFull(qint64 msgId, const ChatFull &fullChat, const QList<Chat> &chats, const QList<User> &users);
@@ -245,6 +266,13 @@ Q_SIGNALS:
     // Stickers
     void messagesGetStickersResult(qint64 msgId, const MessagesStickers &stickers);
     void messagesGetAllStickersResult(qint64 msgId, const MessagesAllStickers &stickers);
+    void messagesGetStickerSetResult(qint64 msgId, const MessagesStickerSet &stickerset);
+    void messagesInstallStickerSetResult(qint64 msgId, bool ok);
+    void messagesUninstallStickerSetResult(qint64 msgId, bool ok);
+    // Invites
+    void messagesExportChatInviteResult(qint64 msgId, const ExportedChatInvite &invite);
+    void messagesCheckChatInviteResult(qint64 msgId, const ChatInvite &invite);
+    void messagesImportChatInviteResult(qint64 msgId, const UpdatesType &updates);
     // UpdatesType
     void updatesState(qint64 msgId, qint32 pts, qint32 qts, qint32 date, qint32 seq, qint32 unreadCount);
     void updatesDifferenceEmpty(qint64 msgId, qint32 date, qint32 seq);
@@ -279,6 +307,8 @@ private:
     QueryMethods authExportAuthorizationMethods;
     QueryMethods authImportAuthorizationMethods;
     QueryMethods authCheckPasswordMethods;
+    QueryMethods authRequestPasswordRecoveryMethods;
+    QueryMethods authRecoverPasswordMethods;
     QueryMethods accountRegisterDeviceMethods;
     QueryMethods accountUnregisterDeviceMethods;
     QueryMethods accountUpdateNotifySettingsMethods;
@@ -298,6 +328,10 @@ private:
     QueryMethods accountChangePhoneMethods;
     QueryMethods accountUpdateDeviceLockedMethods;
     QueryMethods accountGetPasswordMethods;
+    QueryMethods accountGetAuthorizationsMethods;
+    QueryMethods accountResetAuthorizationMethods;
+    QueryMethods accountGetPasswordSettingsMethods;
+    QueryMethods accountUpdatePasswordSettingsMethods;
     QueryMethods photosUploadProfilePhotoMethods;
     QueryMethods photosUpdateProfilePhotoMethods;
     QueryMethods usersGetUsersMethods;
@@ -328,6 +362,7 @@ private:
     QueryMethods messagesForwardMessageMethods;
     QueryMethods messagesForwardMessagesMethods;
     QueryMethods messagesSendBroadcastMethods;
+    QueryMethods messagesGetWebPagePreviewMethods;
     QueryMethods messagesGetChatsMethods;
     QueryMethods messagesGetFullChatMethods;
     QueryMethods messagesEditChatTitleMethods;
@@ -347,6 +382,12 @@ private:
     QueryMethods messagesReceivedQueueMethods;
     QueryMethods messagesGetStickersMethods;
     QueryMethods messagesGetAllStickersMethods;
+    QueryMethods messagesExportChatInviteMethods;
+    QueryMethods messagesCheckChatInviteMethods;
+    QueryMethods messagesImportChatInviteMethods;
+    QueryMethods messagesGetStickerSetMethods;
+    QueryMethods messagesInstallStickerSetMethods;
+    QueryMethods messagesUninstallStickerSetMethods;
     QueryMethods updatesGetStateMethods;
     QueryMethods updatesGetDifferenceMethods;
     QueryMethods uploadSaveFilePartMethods;
@@ -368,6 +409,8 @@ private:
     void onAuthExportAuthorizationAnswer(Query *q, InboundPkt &inboundPkt);
     void onAuthImportAuthorizationAnswer(Query *q, InboundPkt &inboundPkt);
     void onAuthCheckPasswordAnswer(Query *q, InboundPkt &inboundPkt);
+    void onAuthRequestPasswordRecoveryAnswer(Query *q, InboundPkt &inboundPkt);
+    void onAuthRecoverPasswordAnswer(Query *q, InboundPkt &inboundPkt);
     void onAccountRegisterDeviceAnswer(Query *q, InboundPkt & inboundPkt);
     void onAccountUnregisterDeviceAnswer(Query *q, InboundPkt &inboundPkt);
     void onAccountUpdateNotifySettingsAnswer(Query *q, InboundPkt &inboundPkt);
@@ -386,6 +429,10 @@ private:
     void onAccountChangePhoneAnswer(Query *q, InboundPkt &inboundPkt);
     void onAccountUpdateDeviceLockedAnswer(Query *q, InboundPkt &inboundPkt);
     void onAccountGetPasswordAnswer(Query *q, InboundPkt &inboundPkt);
+    void onAccountGetAuthorizationsAnswer(Query *q, InboundPkt &inboundPkt);
+    void onAccountResetAuthorizationAnswer(Query *q, InboundPkt &inboundPkt);
+    void onAccountGetPasswordSettingsAnswer(Query *q, InboundPkt &inboundPkt);
+    void onAccountUpdatePasswordSettingsAnswer(Query *q, InboundPkt &inboundPkt);
     void onAccountSentChangePhoneCode(Query *q, InboundPkt &inboundPkt);
     void onPhotosUploadProfilePhotoAnswer(Query *q, InboundPkt &inboundPkt);
     void onPhotosUpdateProfilePhotoAnswer(Query *q, InboundPkt &inboundPkt);
@@ -417,6 +464,7 @@ private:
     void onMessagesForwardMessageAnswer(Query *q, InboundPkt &inboundPkt);
     void onMessagesForwardMessagesAnswer(Query *q, InboundPkt &inboundPkt);
     void onMessagesSendBroadcastAnswer(Query *q, InboundPkt &inboundPkt);
+    void onMessagesGetWebPagePreviewAnswer(Query *q, InboundPkt &inboundPkt);
     void onMessagesGetChatsAnswer(Query *q, InboundPkt &inboundPkt);
     void onMessagesGetFullChatAnswer(Query *q, InboundPkt &inboundPkt);
     void onMessagesEditChatTitleAnswer(Query *q, InboundPkt &inboundPkt);
@@ -436,6 +484,12 @@ private:
     void onMessagesReceivedQueueAnswer(Query *q, InboundPkt &inboundPkt);
     void onMessagesGetStickersAnswer(Query *q, InboundPkt &inboundPkt);
     void onMessagesGetAllStickersAnswer(Query *q, InboundPkt &inboundPkt);
+    void onMessagesGetStickerSetAnswer(Query *q, InboundPkt &inboundPkt);
+    void onMessagesInstallStickerSetAnswer(Query *q, InboundPkt &inboundPkt);
+    void onMessagesUninstallStickerSetAnswer(Query *q, InboundPkt &inboundPkt);
+    void onMessagesExportChatInviteAnswer(Query *q, InboundPkt &inboundPkt);
+    void onMessagesCheckChatInviteAnswer(Query *q, InboundPkt &inboundPkt);
+    void onMessagesImportChatInviteAnswer(Query *q, InboundPkt &inboundPkt);
     void onUpdatesGetStateAnswer(Query *q, InboundPkt &inboundPkt);
     void onUpdatesGetDifferenceAnswer(Query *q, InboundPkt &inboundPkt);
     void onUploadSaveFilePartAnswer(Query *q, InboundPkt &inboundPkt);

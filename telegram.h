@@ -90,7 +90,15 @@ public:
     qint64 accountUpdateDeviceLocked(int period);
     qint64 accountSendChangePhoneCode(const QString &phone_number);
     qint64 accountChangePhone(const QString &phone_number, const QString &phone_code_hash, const QString &phone_code);
+
+    //Passwords
     qint64 accountGetPassword();
+    qint64 accountGetAuthorizations();
+    qint64 accountResetAuthorization(qint64 hash);
+    qint64 accountGetPasswordSettings(const QByteArray &currentPasswordHash);
+    qint64 accountUpdatePasswordSettings(const QByteArray &currentPasswordHash, const AccountPasswordInputSettings &newSettings);
+
+    //Photos
     qint64 photosUploadProfilePhoto(const QByteArray &bytes, const QString &fileName, const QString &caption = QString::null, const InputGeoPoint &geoPoint = InputGeoPoint(InputGeoPoint::typeInputGeoPointEmpty), const InputPhotoCrop &crop = InputPhotoCrop(InputPhotoCrop::typeInputPhotoCropAuto));
     qint64 photosUploadProfilePhoto(const QString &filePath, const QString &caption = QString::null, const InputGeoPoint &geoPoint = InputGeoPoint(InputGeoPoint::typeInputGeoPointEmpty), const InputPhotoCrop &crop = InputPhotoCrop(InputPhotoCrop::typeInputPhotoCropAuto));
     qint64 photosUpdateProfilePhoto(qint64 photoId, qint64 accessHash, const InputPhotoCrop &crop = InputPhotoCrop(InputPhotoCrop::typeInputPhotoCropAuto));
@@ -188,6 +196,14 @@ public:
     // Stickers
     qint64 messagesGetStickers(const QString &emoticon, const QString &hash);
     qint64 messagesGetAllStickers(const QString &hash);
+    qint64 messagesGetStickerSet(const InputStickerSet &stickerset);
+    qint64 messagesInstallStickerSet(const InputStickerSet &stickerset);
+    qint64 messagesUninstallStickerSet(const InputStickerSet &stickerset);
+
+    // Invites
+    qint64 messagesExportChatInvite(qint32 chatId);
+    qint64 messagesCheckChatInvite(const QString &hash);
+    qint64 messagesImportChatInvite(const QString &hash);
 
     // Working with updates
     qint64 updatesGetState();
@@ -231,6 +247,8 @@ Q_SIGNALS:
     void authSendInvitesAnswer(qint64 id, bool ok);
     void authResetAuthorizationsAnswer(qint64 id, bool ok);
     void authCheckPasswordAnswer(qint64 msgId, qint32 expires, const User &user);
+    void authRequestPasswordRecoveryAnswer(qint64 msgId, const AuthPasswordRecovery &recovery);
+    void authRecoverPasswordAnswer(qint64 msgId, const AuthAuthorization &auth);
 
     // Working with Notifications. Settings
     void accountRegisterDeviceAnswer(qint64 id, bool ok);
@@ -249,8 +267,11 @@ Q_SIGNALS:
     void accountUpdateDeviceLockedAnswer(qint64 msgId, bool ok);
     void accountChangePhoneAnswer(qint64 msgId, const User &user);
     void accountSentChangePhoneCode(qint64 msgId, const QString &phone_code_hash, qint32 send_call_timeout);
-    void accountSetPasswordAnswer(qint64 msgId, bool ok);
     void accountGetPasswordAnswer(qint64 msgId, const AccountPassword &password);
+    void accountGetAuthorizationsAnswer(qint64 msgId, const AccountAuthorizations &auths);
+    void accountResetAuthorizationAnswer(qint64 msgId, bool ok);
+    void accountGetPasswordSettingsAnswer(qint64 msgId, const AccountPasswordSettings &settings);
+    void accountUpdatePasswordSettingsAnswer(qint64 msgId, bool ok);
     void photosUploadProfilePhotoAnswer(qint64 id, const Photo &photo, const QList<User> &users);
     void photosUpdateProfilePhotoAnswer(qint64 id, const UserProfilePhoto &userProfilePhoto);
 
@@ -296,6 +317,7 @@ Q_SIGNALS:
     void messagesForwardMessageAnswer(qint64 id, const UpdatesType &updates);
     void messagesForwardMessagesAnswer(qint64 id, const UpdatesType &updates);
     void messagesSendBroadcastAnswer(qint64 id, const UpdatesType &updates);
+    void messagesGetWebPagePreviewAnswer(qint64 msgId, const MessageMedia &updates);
 
     // Working with chats
     void messagesGetChatsAnswer(qint64 id, const QList<Chat> &chats);
@@ -321,6 +343,14 @@ Q_SIGNALS:
     // Stickers
     void messagesGetStickersAnwer(qint64 msgId, const MessagesStickers &stickers);
     void messagesGetAllStickersAnwer(qint64 msgId, const MessagesAllStickers &stickers);
+    void messagesGetStickerSetAnwer(qint64 msgId, const MessagesStickerSet &stickerset);
+    void messagesInstallStickerSetAnwer(qint64 msgId, bool ok);
+    void messagesUninstallStickerSetAnwer(qint64 msgId, bool ok);
+
+    // Invites
+    void messagesExportChatInviteAnwer(qint64 msgId, const ExportedChatInvite &invite);
+    void messagesCheckChatInviteAnwer(qint64 msgId, const ChatInvite &invite);
+    void messagesImportChatInviteAnwer(qint64 msgId, const UpdatesType &updates);
 
     // Working with geochats
     void geochatsGetLocatedAnswer(qint64 id, const QList<ChatLocated> &results, const QList<GeoChatMessage> &messages, const QList<Chat> &chats, const QList<User> &users);

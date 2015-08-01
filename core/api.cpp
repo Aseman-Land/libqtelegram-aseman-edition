@@ -66,6 +66,10 @@ Api::Api(Session *session, Settings *settings, CryptoUtils *crypto, QObject *par
 
     authCheckPasswordMethods.onAnswer = &Api::onAuthCheckPasswordAnswer;
 
+    authRequestPasswordRecoveryMethods.onAnswer = &Api::onAuthRequestPasswordRecoveryAnswer;
+
+    authRecoverPasswordMethods.onAnswer = &Api::onAuthRecoverPasswordAnswer;
+
     authExportAuthorizationMethods.onAnswer = &Api::onAuthExportAuthorizationAnswer;
 
     accountRegisterDeviceMethods.onAnswer = &Api::onAccountRegisterDeviceAnswer;
@@ -105,6 +109,14 @@ Api::Api(Session *session, Settings *settings, CryptoUtils *crypto, QObject *par
     accountUpdateDeviceLockedMethods.onAnswer = &Api::onAccountUpdateDeviceLockedAnswer;
 
     accountGetPasswordMethods.onAnswer = &Api::onAccountGetPasswordAnswer;
+
+    accountGetAuthorizationsMethods.onAnswer = &Api::onAccountGetAuthorizationsAnswer;
+
+    accountResetAuthorizationMethods.onAnswer = &Api::onAccountResetAuthorizationAnswer;
+
+    accountGetPasswordSettingsMethods.onAnswer = &Api::onAccountGetPasswordSettingsAnswer;
+
+    accountUpdatePasswordSettingsMethods.onAnswer = &Api::onAccountUpdatePasswordSettingsAnswer;
 
     photosUploadProfilePhotoMethods.onAnswer = &Api::onPhotosUploadProfilePhotoAnswer;
 
@@ -167,6 +179,8 @@ Api::Api(Session *session, Settings *settings, CryptoUtils *crypto, QObject *par
 
     messagesSendBroadcastMethods.onAnswer = &Api::onMessagesSendBroadcastAnswer;
 
+    messagesGetWebPagePreviewMethods.onAnswer = &Api::onMessagesGetWebPagePreviewAnswer;
+
     messagesGetChatsMethods.onAnswer = &Api::onMessagesGetChatsAnswer;
 
     messagesGetFullChatMethods.onAnswer = &Api::onMessagesGetFullChatAnswer;
@@ -204,6 +218,18 @@ Api::Api(Session *session, Settings *settings, CryptoUtils *crypto, QObject *par
     messagesGetStickersMethods.onAnswer = &Api::onMessagesGetStickersAnswer;
 
     messagesGetAllStickersMethods.onAnswer = &Api::onMessagesGetAllStickersAnswer;
+
+    messagesExportChatInviteMethods.onAnswer = &Api::onMessagesExportChatInviteAnswer;
+
+    messagesCheckChatInviteMethods.onAnswer = &Api::onMessagesCheckChatInviteAnswer;
+
+    messagesImportChatInviteMethods.onAnswer = &Api::onMessagesImportChatInviteAnswer;
+
+    messagesGetStickerSetMethods.onAnswer = &Api::onMessagesGetStickerSetAnswer;
+
+    messagesInstallStickerSetMethods.onAnswer = &Api::onMessagesInstallStickerSetAnswer;
+
+    messagesUninstallStickerSetMethods.onAnswer = &Api::onMessagesUninstallStickerSetAnswer;
 
     updatesGetStateMethods.onAnswer = &Api::onUpdatesGetStateAnswer;
 
@@ -396,6 +422,28 @@ qint64 Api::authCheckPassword(const QByteArray &passwordHash) {
     OutboundPkt p(mSettings);
     Functions::Auth::checkPassword(&p, passwordHash);
     return mMainSession->sendQuery(p, &authCheckPasswordMethods, QVariant(), __FUNCTION__ );
+}
+
+void Api::onAuthRequestPasswordRecoveryAnswer(Query *q, InboundPkt &inboundPkt) {
+    const AuthPasswordRecovery &result = Functions::Auth::requestPasswordRecoveryResult(&inboundPkt);
+    Q_EMIT authRequestPasswordRecoveryResult(q->msgId(), result);
+}
+
+qint64 Api::authRequestPasswordRecovery() {
+    OutboundPkt p(mSettings);
+    Functions::Auth::requestPasswordRecovery(&p);
+    return mMainSession->sendQuery(p, &authRequestPasswordRecoveryMethods, QVariant(), __FUNCTION__ );
+}
+
+void Api::onAuthRecoverPasswordAnswer(Query *q, InboundPkt &inboundPkt) {
+    const AuthAuthorization &result = Functions::Auth::recoverPasswordResult(&inboundPkt);
+    Q_EMIT authRecoverPasswordResult(q->msgId(), result);
+}
+
+qint64 Api::authRecoverPassword(const QString &code) {
+    OutboundPkt p(mSettings);
+    Functions::Auth::recoverPassword(&p, code);
+    return mMainSession->sendQuery(p, &authRecoverPasswordMethods, QVariant(), __FUNCTION__ );
 }
 
 void Api::onAuthExportAuthorizationAnswer(Query *q, InboundPkt &inboundPkt) {
@@ -617,6 +665,50 @@ qint64 Api::accountGetPassword() {
     OutboundPkt p(mSettings);
     Functions::Account::getPassword(&p);
     return mMainSession->sendQuery(p, &accountGetPasswordMethods, QVariant(), __FUNCTION__ );
+}
+
+void Api::onAccountGetAuthorizationsAnswer(Query *q, InboundPkt &inboundPkt) {
+    const AccountAuthorizations &result = Functions::Account::getAuthorizationsResult(&inboundPkt);
+    Q_EMIT accountGetAuthorizationsResult(q->msgId(), result);
+}
+
+qint64 Api::accountGetAuthorizations() {
+    OutboundPkt p(mSettings);
+    Functions::Account::getAuthorizations(&p);
+    return mMainSession->sendQuery(p, &accountGetAuthorizationsMethods, QVariant(), __FUNCTION__ );
+}
+
+void Api::onAccountResetAuthorizationAnswer(Query *q, InboundPkt &inboundPkt) {
+    const bool result = Functions::Account::resetAuthorizationResult(&inboundPkt);
+    Q_EMIT accountResetAuthorizationResult(q->msgId(), result);
+}
+
+qint64 Api::accountResetAuthorization(qint64 hash) {
+    OutboundPkt p(mSettings);
+    Functions::Account::resetAuthorization(&p, hash);
+    return mMainSession->sendQuery(p, &accountResetAuthorizationMethods, QVariant(), __FUNCTION__ );
+}
+
+void Api::onAccountGetPasswordSettingsAnswer(Query *q, InboundPkt &inboundPkt) {
+    const AccountPasswordSettings &result = Functions::Account::getPasswordSettingsResult(&inboundPkt);
+    Q_EMIT accountGetPasswordSettingsResult(q->msgId(), result);
+}
+
+qint64 Api::accountGetPasswordSettings(const QByteArray &currentPasswordHash) {
+    OutboundPkt p(mSettings);
+    Functions::Account::getPasswordSettings(&p, currentPasswordHash);
+    return mMainSession->sendQuery(p, &accountGetPasswordSettingsMethods, QVariant(), __FUNCTION__ );
+}
+
+void Api::onAccountUpdatePasswordSettingsAnswer(Query *q, InboundPkt &inboundPkt) {
+    const bool result = Functions::Account::updatePasswordSettingsResult(&inboundPkt);
+    Q_EMIT accountUpdatePasswordSettingsResult(q->msgId(), result);
+}
+
+qint64 Api::accountUpdatePasswordSettings(const QByteArray &currentPasswordHash, const AccountPasswordInputSettings &newSettings) {
+    OutboundPkt p(mSettings);
+    Functions::Account::updatePasswordSettings(&p, currentPasswordHash, newSettings);
+    return mMainSession->sendQuery(p, &accountUpdatePasswordSettingsMethods, QVariant(), __FUNCTION__ );
 }
 
 void Api::onPhotosUploadProfilePhotoAnswer(Query *q, InboundPkt &inboundPkt) {
@@ -993,6 +1085,17 @@ qint64 Api::messagesSendBroadcast(const QList<InputUser> &contacts, const QList<
     return mMainSession->sendQuery(p, &messagesSendBroadcastMethods, QVariant(), __FUNCTION__ );
 }
 
+void Api::onMessagesGetWebPagePreviewAnswer(Query *q, InboundPkt &inboundPkt) {
+    const MessageMedia &result = Functions::Messages::getWebPagePreviewResult((&inboundPkt));
+    Q_EMIT messagesGetWebPagePreviewResult(q->msgId(), result);
+}
+
+qint64 Api::messagesGetWebPagePreview(const QString &message) {
+    OutboundPkt p(mSettings);
+    Functions::Messages::getWebPagePreview(&p, message);
+    return mMainSession->sendQuery(p, &messagesGetWebPagePreviewMethods, QVariant(), __FUNCTION__ );
+}
+
 void Api::onMessagesGetChatsAnswer(Query *q, InboundPkt &inboundPkt) {
     const MessagesChats &result = Functions::Messages::getChatsResult(&inboundPkt);
     Q_EMIT messagesChats(q->msgId(), result.chats());
@@ -1250,6 +1353,72 @@ qint64 Api::messagesGetAllStickers(const QString &hash) {
     OutboundPkt p(mSettings);
     Functions::Messages::getAllStickers(&p, hash);
     return mMainSession->sendQuery(p, &messagesGetAllStickersMethods, QVariant(), __FUNCTION__ );
+}
+
+void Api::onMessagesGetStickerSetAnswer(Query *q, InboundPkt &inboundPkt) {
+    const MessagesStickerSet &result = Functions::Messages::getStickerSetResult(&inboundPkt);
+    Q_EMIT messagesGetStickerSetResult(q->msgId(), result);
+}
+
+qint64 Api::messagesGetStickerSet(const InputStickerSet &stickerset) {
+    OutboundPkt p(mSettings);
+    Functions::Messages::getStickerSet(&p, stickerset);
+    return mMainSession->sendQuery(p, &messagesGetStickerSetMethods, QVariant(), __FUNCTION__ );
+}
+
+void Api::onMessagesInstallStickerSetAnswer(Query *q, InboundPkt &inboundPkt) {
+    const bool result = Functions::Messages::installStickerSetResult(&inboundPkt);
+    Q_EMIT messagesInstallStickerSetResult(q->msgId(), result);
+}
+
+qint64 Api::messagesInstallStickerSet(const InputStickerSet &stickerset) {
+    OutboundPkt p(mSettings);
+    Functions::Messages::installStickerSet(&p, stickerset);
+    return mMainSession->sendQuery(p, &messagesInstallStickerSetMethods, QVariant(), __FUNCTION__ );
+}
+
+void Api::onMessagesUninstallStickerSetAnswer(Query *q, InboundPkt &inboundPkt) {
+    const bool result = Functions::Messages::uninstallStickerSetResult(&inboundPkt);
+    Q_EMIT messagesUninstallStickerSetResult(q->msgId(), result);
+}
+
+qint64 Api::messagesUninstallStickerSet(const InputStickerSet &stickerset) {
+    OutboundPkt p(mSettings);
+    Functions::Messages::uninstallStickerSet(&p, stickerset);
+    return mMainSession->sendQuery(p, &messagesUninstallStickerSetMethods, QVariant(), __FUNCTION__ );
+}
+
+void Api::onMessagesExportChatInviteAnswer(Query *q, InboundPkt &inboundPkt) {
+    const ExportedChatInvite &result = Functions::Messages::exportChatInviteResult(&inboundPkt);
+    Q_EMIT messagesExportChatInviteResult(q->msgId(), result);
+}
+
+qint64 Api::messagesExportChatInvite(qint32 chatId) {
+    OutboundPkt p(mSettings);
+    Functions::Messages::exportChatInvite(&p, chatId);
+    return mMainSession->sendQuery(p, &messagesExportChatInviteMethods, QVariant(), __FUNCTION__ );
+}
+
+void Api::onMessagesCheckChatInviteAnswer(Query *q, InboundPkt &inboundPkt) {
+    const ChatInvite &result = Functions::Messages::checkChatInviteResult(&inboundPkt);
+    Q_EMIT messagesCheckChatInviteResult(q->msgId(), result);
+}
+
+qint64 Api::messagesCheckChatInvite(const QString &hash) {
+    OutboundPkt p(mSettings);
+    Functions::Messages::checkChatInvite(&p, hash);
+    return mMainSession->sendQuery(p, &messagesCheckChatInviteMethods, QVariant(), __FUNCTION__ );
+}
+
+void Api::onMessagesImportChatInviteAnswer(Query *q, InboundPkt &inboundPkt) {
+    const UpdatesType &result = Functions::Messages::importChatInviteResult(&inboundPkt);
+    Q_EMIT messagesImportChatInviteResult(q->msgId(), result);
+}
+
+qint64 Api::messagesImportChatInvite(const QString &hash) {
+    OutboundPkt p(mSettings);
+    Functions::Messages::importChatInvite(&p, hash);
+    return mMainSession->sendQuery(p, &messagesImportChatInviteMethods, QVariant(), __FUNCTION__ );
 }
 
 void Api::onUpdatesGetStateAnswer(Query *q, InboundPkt &inboundPkt) {
