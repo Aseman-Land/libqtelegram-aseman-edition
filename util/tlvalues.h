@@ -69,11 +69,6 @@ enum TLValues {
     TL_MsgResendReq = 0x7d861a08,
 
     // https://core.telegram.org/schema by generator
-    TL_BoolFalse = 0xbc799737,
-    TL_BoolTrue = 0x997275b5,
-    TL_Vector = 0x1cb5c415,
-    TL_Error = 0xc4b9f9bb,
-    TL_Null = 0x56730bcc,
     TL_DecryptedMessageLayer = 0x1be31789,
     TL_DecryptedMessage_layer8 = 0x1f814f1f,
     TL_DecryptedMessage = 0x204d3878,
@@ -95,16 +90,7 @@ enum TLValues {
     TL_DecryptedMessageActionFlushHistory = 0x6719e45c,
     TL_DecryptedMessageActionResend = 0x511110b0,
     TL_DecryptedMessageActionNotifyLayer = 0xf3048883,
-    TL_DecryptedMessageActionTyping = 0xccb27641,
-    TL_InvokeAfterMsg = 0xcb9f372d,
-    TL_InvokeAfterMsgs = 0x3dc4b4f0,
-    TL_InitConnection = 0x69796de9,
-    TL_InvokeWithLayer14 = 0x2b9b08fa,
-    TL_InvokeWithLayer17 = 0x50858a19,
-    TL_InvokeWithLayer18 = 0x1c900537,
-    TL_InvokeWithLayer23 = 0xda9b0d0d,
-    TL_InvokeWithLayer25 = 0xda9b0d0d,
-    TL_InvokeWithLayer29 = 0xda9b0d0d
+    TL_DecryptedMessageActionTyping = 0xccb27641
 };
 
 #endif // TLVALUES_H

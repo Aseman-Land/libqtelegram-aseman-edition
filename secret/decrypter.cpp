@@ -20,6 +20,7 @@
 #include "util/tlvalues.h"
 #include "util/utils.h"
 #include "core/settings.h"
+#include "telegram/coretypes.h"
 #include <sha.h>
 #include <aes.h>
 
@@ -324,7 +325,7 @@ DecryptedMessageMedia Decrypter::fetchDecryptedMessageMedia() {
         media.setThumb23(this);
         media.setDcId(fetchInt());
 
-        ASSERT(fetchInt() == (qint32)TL_Vector);
+        ASSERT(fetchInt() == (qint32)CoreTypes::typeVector);
         qint32 n = fetchInt();
         QList<DocumentAttribute> attrs;
         for (qint32 i = 0; i < n; i++)
@@ -431,7 +432,7 @@ DecryptedMessageAction Decrypter::fetchDecryptedMessageAction() {
     case DecryptedMessageAction::typeDecryptedMessageActionReadMessages:
     case DecryptedMessageAction::typeDecryptedMessageActionDeleteMessages:
     case DecryptedMessageAction::typeDecryptedMessageActionScreenshotMessages: {
-        ASSERT(fetchInt() == (qint32)TL_Vector);
+        ASSERT(fetchInt() == (qint32)CoreTypes::typeVector);
         qint32 n = fetchInt();
         QList<qint64> randomIds;
         for (qint32 i = 0; i < n; i++) {

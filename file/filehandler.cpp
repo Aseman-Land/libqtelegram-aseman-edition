@@ -16,7 +16,7 @@ FileHandler::FileHandler(Api *api, CryptoUtils *crypto, Settings *settings, DcPr
     connect(mApi, SIGNAL(uploadSaveBigFilePartResult(qint64,qint64,bool)), this, SLOT(onUploadSaveFilePartResult(qint64,qint64,bool)));
     connect(mApi, SIGNAL(uploadFile(qint64,const StorageFileType&,qint32,QByteArray)), this, SLOT(onUploadGetFileAnswer(qint64,const StorageFileType&,qint32,QByteArray)));
     connect(mApi, SIGNAL(uploadFileError(qint64,qint32,const QString&)), this, SLOT(onUploadGetFileError(qint64,qint32,const QString&)));
-    connect(mApi, SIGNAL(messagesSentMedia(qint64,const UpdatesType&)), SIGNAL(messagesSentMedia(qint64,const UpdatesType&)));
+    connect(mApi, SIGNAL(messagesSentMedia(qint64,const UpdatesType&)), SLOT(onMessagesSentMedia(qint64,const UpdatesType&)));
     connect(mApi, SIGNAL(messagesSendEncryptedFileSentEncryptedMessage(qint64,qint32)), this, SLOT(onMessagesSentEncryptedFile(qint64,qint32)));
     connect(mApi, SIGNAL(messagesSendEncryptedFileSentEncryptedFile(qint64,qint32,EncryptedFile)), this, SLOT(onMessagesSentEncryptedFile(qint64,qint32,EncryptedFile)));
 }

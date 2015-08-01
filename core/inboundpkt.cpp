@@ -24,7 +24,7 @@
 #include <QDebug>
 #include "util/utils.h"
 #include "util/tlvalues.h"
-#include "telegram.h"
+#include "telegram/coretypes.h"
 
 Q_LOGGING_CATEGORY(TG_CORE_INBOUNDPKT, "tg.core.inboundpkt")
 
@@ -92,9 +92,9 @@ qint32 InboundPkt::fetchInt() {
 
 bool InboundPkt::fetchBool() {
     Q_ASSERT(m_inPtr + 1 <= m_inEnd);
-    ASSERT(*(m_inPtr) == (qint32)TL_BoolTrue || *(m_inPtr) == (qint32)TL_BoolFalse);
-    qCDebug(TG_CORE_INBOUNDPKT) << "fetchBool()" << (*(m_inPtr) == (qint32)TL_BoolTrue) << " (" << Utils::toHex(*m_inPtr) << ")";
-    return *(m_inPtr++) == (qint32)TL_BoolTrue;
+    ASSERT(*(m_inPtr) == (qint32)CoreTypes::typeBoolTrue || *(m_inPtr) == (qint32)CoreTypes::typeBoolFalse);
+    qCDebug(TG_CORE_INBOUNDPKT) << "fetchBool()" << (*(m_inPtr) == (qint32)CoreTypes::typeBoolTrue) << " (" << Utils::toHex(*m_inPtr) << ")";
+    return *(m_inPtr++) == (qint32)CoreTypes::typeBoolTrue;
 }
 
 qint64 InboundPkt::fetchLong() {

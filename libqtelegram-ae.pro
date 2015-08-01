@@ -29,8 +29,7 @@ win32 {
     }
 }
 
-include(functions/functions.pri)
-include(types/types.pri)
+include(telegram/telegram.pri)
 
 SOURCES += \
     util/utils.cpp \

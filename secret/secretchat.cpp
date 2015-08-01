@@ -18,6 +18,7 @@
 #include "secretchat.h"
 #include "util/utils.h"
 #include "core/settings.h"
+#include "telegram/coretypes.h"
 
 Q_LOGGING_CATEGORY(TG_SECRET_SECRETCHAT, "tg.secret.secretchat")
 
@@ -35,7 +36,7 @@ SecretChat::SecretChat(Settings *settings, QObject *parent) :
     mDate(0),
     mMyKey(0),
     mKeyFingerprint(0),
-    mLayer(LAYER),
+    mLayer(CoreTypes::typeLayerVersion),
     mInSeqNo(0),
     mOutSeqNo(0) {
 }

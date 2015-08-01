@@ -25,7 +25,7 @@
 #include "dc.h"
 #include "connection.h"
 #include "query.h"
-#include "types/updatestype.h"
+#include "telegram/types/updatestype.h"
 #include <QMap>
 #include <QLoggingCategory>
 

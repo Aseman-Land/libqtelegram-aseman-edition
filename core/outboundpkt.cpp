@@ -26,6 +26,7 @@
 #include "util/tlvalues.h"
 #include "core/settings.h"
 #include "util/constants.h"
+#include "telegram/coretypes.h"
 
 Q_LOGGING_CATEGORY(TG_CORE_OUTBOUNDPKT, "tg.core.outboundpkt")
 
@@ -142,13 +143,13 @@ void OutboundPkt::appendRandom(qint32 n) {
 
 void OutboundPkt::appendBool(bool b) {
     qCDebug(TG_CORE_OUTBOUNDPKT) << "appendBool()" << b;
-    b ? appendInt(TL_BoolTrue) : appendInt(TL_BoolFalse);
+    b ? appendInt(CoreTypes::typeBoolTrue) : appendInt(CoreTypes::typeBoolFalse);
 }
 
 void OutboundPkt::initConnection() {
-    appendInt(TL_InvokeWithLayer25);
-    appendInt(LAYER);
-    appendInt(TL_InitConnection);
+    appendInt(CoreTypes::typeInvokeWithLayer);
+    appendInt(CoreTypes::typeLayerVersion);
+    appendInt(CoreTypes::typeInitConnection);
     appendInt(mSettings->appId());
     appendQString(Utils::getDeviceModel());
     appendQString(Utils::getSystemVersion());

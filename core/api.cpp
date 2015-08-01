@@ -20,8 +20,9 @@
  */
 
 #include "api.h"
-#include "types/types.h"
-#include "functions/functions.h"
+#include "telegram/types/types.h"
+#include "telegram/functions/functions.h"
+#include "telegram/coretypes.h"
 
 #include "util/tlvalues.h"
 #include "dcprovider.h"
@@ -1152,8 +1153,8 @@ qint64 Api::messagesSendEncrypted(const QList<qint64> &previousMsgs, const Input
     // include invokeAfterMsgs with the sequence of previous messages to manage before this one
     qint32 n = previousMsgs.size();
     if (n > 0) {
-        p.appendInt(TL_InvokeAfterMsgs);
-        p.appendInt(TL_Vector);
+        p.appendInt(CoreTypes::typeInvokeAfterMsgs);
+        p.appendInt(CoreTypes::typeVector);
         p.appendInt(n);
         Q_FOREACH (qint64 msgId, previousMsgs) {
             p.appendLong(msgId);
@@ -1179,8 +1180,8 @@ qint64 Api::messagesSendEncryptedFile(const QList<qint64> &previousMsgs, const I
     // include invokeAfterMsgs with the sequence of previous messages to manage before this one
     qint32 n = previousMsgs.size();
     if (n > 0) {
-        p.appendInt(TL_InvokeAfterMsgs);
-        p.appendInt(TL_Vector);
+        p.appendInt(CoreTypes::typeInvokeAfterMsgs);
+        p.appendInt(CoreTypes::typeVector);
         p.appendInt(n);
         Q_FOREACH (qint64 msgId, previousMsgs) {
             p.appendLong(msgId);
@@ -1205,8 +1206,8 @@ qint64 Api::messagesSendEncryptedService(const QList<qint64> &previousMsgs, cons
     // include invokeAfterMsgs with the sequence of previous messages to manage before this one
     qint32 n = previousMsgs.size();
     if (n > 0) {
-        p.appendInt(TL_InvokeAfterMsgs);
-        p.appendInt(TL_Vector);
+        p.appendInt(CoreTypes::typeInvokeAfterMsgs);
+        p.appendInt(CoreTypes::typeVector);
         p.appendInt(n);
         Q_FOREACH (qint64 msgId, previousMsgs) {
             p.appendLong(msgId);

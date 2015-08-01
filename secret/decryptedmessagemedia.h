@@ -23,8 +23,8 @@
 #include <QByteArray>
 #include <QList>
 
-#include "types/documentattribute.h"
-#include "types/photosize.h"
+#include "telegram/types/documentattribute.h"
+#include "telegram/types/photosize.h"
 
 class DecryptedMessageMedia {
 

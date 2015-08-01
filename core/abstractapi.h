@@ -24,7 +24,7 @@
 
 #include <QObject>
 #include <QMap>
-#include "types/update.h"
+#include "telegram/types/update.h"
 #include "session.h"
 #include "sessionmanager.h"
 

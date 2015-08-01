@@ -26,7 +26,7 @@
 #include <QFile>
 #include <QCryptographicHash>
 #include "file.h"
-#include "types/inputmedia.h"
+#include "telegram/types/inputmedia.h"
 
 class UploadFileEngine : public File
 {

@@ -24,7 +24,7 @@
 
 #include "abstractapi.h"
 #include "core/session.h"
-#include "types/types.h"
+#include "telegram/types/types.h"
 #include <QByteArray>
 #include <QList>
 #include <QStringList>

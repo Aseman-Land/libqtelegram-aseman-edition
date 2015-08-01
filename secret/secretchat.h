@@ -29,8 +29,8 @@
 #include <QLoggingCategory>
 #include <bn.h>
 
-#include "types/inputuser.h"
-#include "types/encryptedchat.h"
+#include "telegram/types/inputuser.h"
+#include "telegram/types/encryptedchat.h"
 #include "secret/decryptedmessage.h"
 #include "util/constants.h"
 #include "libqtelegram_global.h"

@@ -24,6 +24,7 @@
 #include <sha.h>
 #include <QDateTime>
 #include "util/tlvalues.h"
+#include "telegram/coretypes.h"
 
 Q_LOGGING_CATEGORY(TG_CORE_SESSION, "tg.core.session")
 
@@ -246,7 +247,7 @@ void Session::workNewSessionCreated(InboundPkt &inboundPkt, qint64 msgId) {
 void Session::workMsgsAck(InboundPkt &inboundPkt, qint64 msgId) {
     qCDebug(TG_CORE_SESSION) << "workMsgsAck: msgId =" << QString::number(msgId, 16);
     mAsserter.check(inboundPkt.fetchInt() == (qint32)TL_MsgsAck);
-    mAsserter.check(inboundPkt.fetchInt () == (qint32)TL_Vector);
+    mAsserter.check(inboundPkt.fetchInt () == (qint32)CoreTypes::typeVector);
     qint32 n = inboundPkt.fetchInt();
     for (qint32 i = 0; i < n; i++) {
         qint64 id = inboundPkt.fetchLong ();
@@ -605,7 +606,7 @@ void Session::ackAll() {
 void Session::sendAcks(const QList<qint64> &msgIds) {
     OutboundPkt p(mSettings);
     p.appendInt(TL_MsgsAck);
-    p.appendInt(TL_Vector);
+    p.appendInt(CoreTypes::typeVector);
     int n = msgIds.length();
     p.appendInt(n);
     Q_FOREACH (qint64 msgId, msgIds) {

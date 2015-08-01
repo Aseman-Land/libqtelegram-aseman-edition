@@ -27,7 +27,7 @@
 #include <QSharedPointer>
 
 #include "libqtelegram_global.h"
-#include "types/types.h"
+#include "telegram/types/types.h"
 #include "secret/secretchat.h"
 #include "secret/secretchatmessage.h"
 
@@ -276,13 +276,13 @@ Q_SIGNALS:
 
     // Working with messages
     void messagesSendMessageAnswer(qint64 id, qint32 msgId, qint32 date, const MessageMedia &media, qint32 pts, qint32 pts_count, qint32 seq, const QList<ContactsLink> &links);
-    void messagesSendMediaAnswer(qint64 id, const Message &message, const QList<Chat> &chats, const QList<User> &users, const QList<ContactsLink> &links, qint32 pts, qint32 ptsCount);
-    void messagesSendPhotoAnswer(qint64 id, const Message &message, const QList<Chat> &chats, const QList<User> &users, const QList<ContactsLink> &links, qint32 pts, qint32 ptsCount);
-    void messagesSendGeoPointAnswer(qint64 id, const Message &message, const QList<Chat> &chats, const QList<User> &users, const QList<ContactsLink> &links, qint32 pts, qint32 ptsCount);
-    void messagesSendContactAnswer(qint64 id, const Message &message, const QList<Chat> &chats, const QList<User> &users, const QList<ContactsLink> &links, qint32 pts, qint32 ptsCount);
-    void messagesSendVideoAnswer(qint64 id, const Message &message, const QList<Chat> &chats, const QList<User> &users, const QList<ContactsLink> &links, qint32 pts, qint32 ptsCount);
-    void messagesSendAudioAnswer(qint64 id, const Message &message, const QList<Chat> &chats, const QList<User> &users, const QList<ContactsLink> &links, qint32 pts, qint32 ptsCount);
-    void messagesSendDocumentAnswer(qint64 id, const Message &message, const QList<Chat> &chats, const QList<User> &users, const QList<ContactsLink> &links, qint32 pts, qint32 ptsCount);
+    void messagesSendMediaAnswer(qint64 id, const UpdatesType &updates);
+    void messagesSendPhotoAnswer(qint64 id, const UpdatesType &updates);
+    void messagesSendGeoPointAnswer(qint64 id, const UpdatesType &updates);
+    void messagesSendContactAnswer(qint64 id, const UpdatesType &updates);
+    void messagesSendVideoAnswer(qint64 id, const UpdatesType &updates);
+    void messagesSendAudioAnswer(qint64 id, const UpdatesType &updates);
+    void messagesSendDocumentAnswer(qint64 id, const UpdatesType &updates);
     void messagesSetTypingAnswer(qint64 id, bool ok);
     void messagesGetMessagesAnswer(qint64 id, qint32 sliceCount, const QList<Message> &messages, const QList<Chat> &chats, const QList<User> &users);
     void messagesGetDialogsAnswer(qint64 id, qint32 sliceCount, const QList<Dialog> &dialogs, const QList<Message> &messages, const QList<Chat> &chats, const QList<User> &users);

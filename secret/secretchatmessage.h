@@ -2,7 +2,7 @@
 #define SECRETCHATMESSAGE_H
 
 #include "secret/decryptedmessage.h"
-#include "types/encryptedfile.h"
+#include "telegram/types/encryptedfile.h"
 
 class SecretChatMessage {
 

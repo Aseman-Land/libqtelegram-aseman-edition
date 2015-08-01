@@ -36,7 +36,7 @@
 #include <QImageReader>
 
 #include "util/tlvalues.h"
-#include "types/types.h"
+#include "telegram/types/types.h"
 #include "core/dcprovider.h"
 #include "core/api.h"
 #include "secret/secretstate.h"
@@ -46,6 +46,7 @@
 #include "secret/decryptedmessagebuilder.h"
 #include "file/filehandler.h"
 #include "core/dcprovider.h"
+#include "telegram/coretypes.h"
 
 Q_LOGGING_CATEGORY(TG_TELEGRAM, "tg.telegram")
 Q_LOGGING_CATEGORY(TG_LIB_SECRET, "tg.lib.secret")
@@ -722,7 +723,7 @@ void Telegram::onMessagesAcceptEncryptionEncryptedChat(qint64, const EncryptedCh
     Utils::randomBytes(&randomId, 8);
     QList<qint64> previousMsgs = secretChat->sequence();
     DecryptedMessageBuilder builder(secretChat->layer());
-    DecryptedMessage decryptedMessage = builder.buildDecryptedMessageForNotifyLayer(randomId, LAYER);
+    DecryptedMessage decryptedMessage = builder.buildDecryptedMessageForNotifyLayer(randomId, CoreTypes::typeLayerVersion);
     QByteArray data = prv->mEncrypter->generateEncryptedData(decryptedMessage);
     prv->mApi->messagesSendEncryptedService(previousMsgs, inputEncryptedChat, randomId, data);
 
@@ -730,7 +731,7 @@ void Telegram::onMessagesAcceptEncryptionEncryptedChat(qint64, const EncryptedCh
     secretChat->appendToSequence(randomId);
     prv->mSecretState->save();
 
-    qCDebug(TG_LIB_SECRET) << "Notified our layer:" << LAYER;
+    qCDebug(TG_LIB_SECRET) << "Notified our layer:" << CoreTypes::typeLayerVersion;
 }
 
 void Telegram::onMessagesDiscardEncryptionResult(qint64 requestId, bool ok) {
@@ -921,7 +922,7 @@ void Telegram::processSecretChatUpdate(const Update &update) {
                 Utils::randomBytes(&randomId, 8);
                 QList<qint64> previousMsgs = secretChat->sequence();
                 DecryptedMessageBuilder builder(secretChat->layer());
-                DecryptedMessage decryptedMessage = builder.buildDecryptedMessageForNotifyLayer(randomId, LAYER);
+                DecryptedMessage decryptedMessage = builder.buildDecryptedMessageForNotifyLayer(randomId, CoreTypes::typeLayerVersion);
                 QByteArray data = prv->mEncrypter->generateEncryptedData(decryptedMessage);
                 prv->mApi->messagesSendEncryptedService(previousMsgs, inputEncryptedChat, randomId, data);
 
@@ -929,7 +930,7 @@ void Telegram::processSecretChatUpdate(const Update &update) {
                 secretChat->appendToSequence(randomId);
                 prv->mSecretState->save();
 
-                qCDebug(TG_LIB_SECRET) << "Notified our layer:" << LAYER;
+                qCDebug(TG_LIB_SECRET) << "Notified our layer:" << CoreTypes::typeLayerVersion;
             } else {
                 qCCritical(TG_LIB_SECRET) << "Key fingerprint mismatch. Discarding encryption";
                 messagesDiscardEncryptedChat(chatId);
@@ -1087,29 +1088,27 @@ void Telegram::onMessagesSentMessage(qint64 id, qint32 msgId, qint32 date, const
 
 void Telegram::onMessagesSendMediaAnswer(qint64 fileId, const UpdatesType &updates) {
     //depending on responded media, emit one signal or another
-    const Message &message = updates.update().message();
-    QList<ContactsLink> links;
-    switch (message.media().classType()) {
+    switch (static_cast<int>(MessageMedia::typeMessageMediaPhoto)) {
     case MessageMedia::typeMessageMediaPhoto:
-        Q_EMIT messagesSendPhotoAnswer(fileId, message, updates.chats(), updates.users(), links, updates.pts(), updates.ptsCount());
+        Q_EMIT messagesSendPhotoAnswer(fileId, updates);
         break;
     case MessageMedia::typeMessageMediaVideo:
-        Q_EMIT messagesSendVideoAnswer(fileId, message, updates.chats(), updates.users(), links, updates.pts(), updates.ptsCount());
+        Q_EMIT messagesSendVideoAnswer(fileId, updates);
         break;
     case MessageMedia::typeMessageMediaGeo:
-        Q_EMIT messagesSendGeoPointAnswer(fileId, message, updates.chats(), updates.users(), links, updates.pts(), updates.ptsCount());
+        Q_EMIT messagesSendGeoPointAnswer(fileId, updates);
         break;
     case MessageMedia::typeMessageMediaContact:
-        Q_EMIT messagesSendContactAnswer(fileId, message, updates.chats(), updates.users(), links, updates.pts(), updates.ptsCount());
+        Q_EMIT messagesSendContactAnswer(fileId, updates);
         break;
     case MessageMedia::typeMessageMediaDocument:
-        Q_EMIT messagesSendDocumentAnswer(fileId, message, updates.chats(), updates.users(), links, updates.pts(), updates.ptsCount());
+        Q_EMIT messagesSendDocumentAnswer(fileId, updates);
         break;
     case MessageMedia::typeMessageMediaAudio:
-        Q_EMIT messagesSendAudioAnswer(fileId, message, updates.chats(), updates.users(), links, updates.pts(), updates.ptsCount());
+        Q_EMIT messagesSendAudioAnswer(fileId, updates);
         break;
     default:
-        Q_EMIT messagesSendMediaAnswer(fileId, message, updates.chats(), updates.users(), links, updates.pts(), updates.ptsCount());
+        Q_EMIT messagesSendMediaAnswer(fileId, updates);
     }
 }
 

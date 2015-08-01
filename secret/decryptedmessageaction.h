@@ -22,7 +22,7 @@
 #define DECRYPTEDMESSAGEACTION_H
 
 #include <QList>
-#include "types/sendmessageaction.h"
+#include "telegram/types/sendmessageaction.h"
 
 class DecryptedMessageAction
 {

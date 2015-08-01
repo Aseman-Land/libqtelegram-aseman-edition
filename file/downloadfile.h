@@ -25,7 +25,7 @@
 #include <QByteArray>
 #include <QSharedPointer>
 #include "util/constants.h"
-#include "types/inputfilelocation.h"
+#include "telegram/types/inputfilelocation.h"
 #include "file.h"
 #include "core/session.h"
 
