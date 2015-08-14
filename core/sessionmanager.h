@@ -24,6 +24,8 @@
 #include <QObject>
 #include <QMap>
 #include <QLoggingCategory>
+#include <QPointer>
+
 #include "session.h"
 #include "dc.h"
 
@@ -51,7 +53,7 @@ Q_SIGNALS:
 protected:
     Settings *mSettings;
     CryptoUtils *mCrypto;
-    Session *mMainSession;
+    QPointer<Session> mMainSession;
     // sessionId -> Session object
     QMap<qint64, Session *> mFileSessions;
     // dcId -> sessionId
