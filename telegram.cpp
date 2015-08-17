@@ -51,8 +51,11 @@
 Q_LOGGING_CATEGORY(TG_TELEGRAM, "tg.telegram")
 Q_LOGGING_CATEGORY(TG_LIB_SECRET, "tg.lib.secret")
 
+#define CHECK_API if(!prv->mApi) {qDebug() << __FUNCTION__ << "Error: API is not ready."; return 0;}
+
 QHash<QString, Settings*> qtelegram_settings_per_number;
 QHash<QString, CryptoUtils*> qtelegram_cryptos_per_number;
+QSettings::Format qtelegram_default_settings_format = QSettings::IniFormat;
 
 class TelegramPrivate
 {
@@ -164,6 +167,7 @@ bool Telegram::sleep() {
 bool Telegram::wake() {
     // wake only if slept and library already logged in. Returns true if wake operation completes
     if (prv->mSlept && prv->mLibraryState >= LoggedIn) {
+        CHECK_API;
         connect(prv->mApi, SIGNAL(mainSessionReady()), this, SIGNAL(woken()), Qt::UniqueConnection);
         DC *dc = prv->mDcProvider->getWorkingDc();
         prv->mApi->createMainSessionToDc(dc);
@@ -223,6 +227,16 @@ Settings *Telegram::settings() const
 CryptoUtils *Telegram::crypto() const
 {
     return prv->mCrypto;
+}
+
+void Telegram::setDefaultSettingsFormat(const QSettings::Format &format)
+{
+    qtelegram_default_settings_format = format;
+}
+
+QSettings::Format Telegram::defaultSettingsFormat()
+{
+    return qtelegram_default_settings_format;
 }
 
 bool Telegram::isConnected() {
@@ -424,6 +438,7 @@ qint64 Telegram::messagesAcceptEncryptedChat(qint32 chatId) {
 }
 
 qint64 Telegram::messagesDiscardEncryptedChat(qint32 chatId) {
+    CHECK_API;
     qCDebug(TG_LIB_SECRET) << "discarding encrypted chat with id" << chatId;
     SecretChat *secretChat = prv->mSecretState->chats().value(chatId);
     if (!secretChat) {
@@ -439,6 +454,7 @@ qint64 Telegram::messagesDiscardEncryptedChat(qint32 chatId) {
 }
 
 qint64 Telegram::messagesSetEncryptedTTL(qint64 randomId, qint32 chatId, qint32 ttl) {
+    CHECK_API;
     SecretChat *secretChat = prv->mSecretState->chats().value(chatId);
     if (!secretChat) {
         qCWarning(TG_LIB_SECRET) << "Could not set secret chat TTL, chat not found.";
@@ -465,6 +481,7 @@ qint64 Telegram::messagesSetEncryptedTTL(qint64 randomId, qint32 chatId, qint32 
 }
 
 qint64 Telegram::messagesReadEncryptedHistory(qint32 chatId, qint32 maxDate) {
+    CHECK_API;
     SecretChat *secretChat = prv->mSecretState->chats().value(chatId);
     if (!secretChat) {
         qCWarning(TG_LIB_SECRET) << "Could not read history of a not yet existant chat";
@@ -478,6 +495,7 @@ qint64 Telegram::messagesReadEncryptedHistory(qint32 chatId, qint32 maxDate) {
 }
 
 qint64 Telegram::messagesSendEncrypted(qint32 chatId, qint64 randomId, qint32 ttl, const QString &text) {
+    CHECK_API;
 
     SecretChat *secretChat = prv->mSecretState->chats().value(chatId);
     if (!secretChat) {
@@ -624,42 +642,52 @@ qint64 Telegram::messagesSendEncryptedDocument(qint32 chatId, qint64 randomId, q
 }
 
 qint64 Telegram::messagesReceivedQueue(qint32 maxQts) {
+    CHECK_API;
     return prv->mApi->messagesReceivedQueue(maxQts);
 }
 
 qint64 Telegram::messagesGetStickers(const QString &emoticon, const QString &hash) {
+    CHECK_API;
     return prv->mApi->messagesGetStickers(emoticon, hash);
 }
 
 qint64 Telegram::messagesGetAllStickers(const QString &hash) {
+    CHECK_API;
     return prv->mApi->messagesGetAllStickers(hash);
 }
 
 qint64 Telegram::messagesGetStickerSet(const InputStickerSet &stickerset) {
+    CHECK_API;
     return prv->mApi->messagesGetStickerSet(stickerset);
 }
 
 qint64 Telegram::messagesInstallStickerSet(const InputStickerSet &stickerset) {
+    CHECK_API;
     return prv->mApi->messagesInstallStickerSet(stickerset);
 }
 
 qint64 Telegram::messagesUninstallStickerSet(const InputStickerSet &stickerset) {
+    CHECK_API;
     return prv->mApi->messagesUninstallStickerSet(stickerset);
 }
 
 qint64 Telegram::messagesExportChatInvite(qint32 chatId) {
+    CHECK_API;
     return prv->mApi->messagesExportChatInvite(chatId);
 }
 
 qint64 Telegram::messagesCheckChatInvite(const QString &hash) {
+    CHECK_API;
     return prv->mApi->messagesCheckChatInvite(hash);
 }
 
 qint64 Telegram::messagesImportChatInvite(const QString &hash) {
+    CHECK_API;
     return prv->mApi->messagesImportChatInvite(hash);
 }
 
 qint64 Telegram::generateGAorB(SecretChat *secretChat) {
+    CHECK_API;
     qCDebug(TG_LIB_SECRET) << "requesting for DH config parameters";
     // call messages.getDhConfig to get p and g for start creating shared key
     qint64 reqId = prv->mApi->messagesGetDhConfig(prv->mSecretState->version(), DH_CONFIG_SERVER_RANDOM_LENGTH);
@@ -1193,6 +1221,7 @@ void Telegram::processDifferences(qint64 id, const QList<Message> &messages, con
 
 // Requests
 qint64 Telegram::helpGetInviteText(const QString &langCode) {
+    CHECK_API;
     prv->mLastLangCode = langCode;
     prv->mLastRetryType = GetInviteText;
     return prv->mApi->helpGetInviteText(langCode);
@@ -1202,47 +1231,58 @@ qint64 Telegram::authCheckPhone() {
    return authCheckPhone(prv->mSettings->phoneNumber());
 }
 qint64 Telegram::authCheckPhone(const QString &phoneNumber) {
+    CHECK_API;
     prv->mLastRetryType = PhoneCheck;
     prv->mLastPhoneChecked = phoneNumber;
     return prv->mApi->authCheckPhone(phoneNumber);
 }
 qint64 Telegram::authSendCode() {
+    CHECK_API;
     return prv->mApi->authSendCode(prv->mSettings->phoneNumber(), 0, prv->mSettings->appId(), prv->mSettings->appHash(), LANG_CODE);
 }
 
 qint64 Telegram::authSendSms() {
+    CHECK_API;
     return prv->mApi->authSendSms(prv->mSettings->phoneNumber(), prv->m_phoneCodeHash);
 }
 
 qint64 Telegram::authSendCall() {
+    CHECK_API;
     return prv->mApi->authSendCall(prv->mSettings->phoneNumber(), prv->m_phoneCodeHash);
 }
 
 qint64 Telegram::authSignIn(const QString &code) {
+    CHECK_API;
     return prv->mApi->authSignIn(prv->mSettings->phoneNumber(), prv->m_phoneCodeHash, code);
 }
 
 qint64 Telegram::authSignUp(const QString &code, const QString &firstName, const QString &lastName) {
+    CHECK_API;
     return prv->mApi->authSignUp(prv->mSettings->phoneNumber(), prv->m_phoneCodeHash, code, firstName, lastName);
 }
 
 qint64 Telegram::authLogOut() {
+    CHECK_API;
     return prv->mApi->authLogOut();
 }
 
 qint64 Telegram::authSendInvites(const QStringList &phoneNumbers, const QString &inviteText) {
+    CHECK_API;
     return prv->mApi->authSendInvites(phoneNumbers, inviteText);
 }
 
 qint64 Telegram::authResetAuthorizations() {
+    CHECK_API;
     return prv->mApi->authResetAuthorizations();
 }
 
 qint64 Telegram::authCheckPassword(const QByteArray &passwordHash) {
+    CHECK_API;
     return prv->mApi->authCheckPassword(passwordHash);
 }
 
 qint64 Telegram::accountRegisterDevice(const QString &token, const QString &appVersion, bool appSandbox) {
+    CHECK_API;
     if (token.length() == 0) {
         qCCritical(TG_TELEGRAM) << "refuse to register with empty token!";
         return -1;
@@ -1256,90 +1296,112 @@ qint64 Telegram::accountRegisterDevice(const QString &token, const QString &appV
 }
 
 qint64 Telegram::accountUnregisterDevice(const QString &token) {
+    CHECK_API;
     return prv->mApi->accountUnregisterDevice(UBUNTU_PHONE_TOKEN_TYPE, token);
 }
 
 qint64 Telegram::accountUpdateNotifySettings(const InputNotifyPeer &peer, const InputPeerNotifySettings &settings) {
+    CHECK_API;
     return prv->mApi->accountUpdateNotifySettings(peer, settings);
 }
 
 qint64 Telegram::accountGetNotifySettings(const InputNotifyPeer &peer) {
+    CHECK_API;
     return prv->mApi->accountGetNotifySettings(peer);
 }
 
 qint64 Telegram::accountResetNotifySettings() {
+    CHECK_API;
     return prv->mApi->accountResetNotifySettings();
 }
 
 qint64 Telegram::accountUpdateProfile(const QString &firstName, const QString &lastName) {
+    CHECK_API;
     return prv->mApi->accountUpdateProfile(firstName, lastName);
 }
 
 qint64 Telegram::accountUpdateStatus(bool offline) {
+    CHECK_API;
     return prv->mApi->accountUpdateStatus(offline);
 }
 
 qint64 Telegram::accountGetWallPapers() {
+    CHECK_API;
     return prv->mApi->accountGetWallPapers();
 }
 
 qint64 Telegram::accountCheckUsername(const QString &username) {
+    CHECK_API;
     return prv->mApi->accountCheckUsername(username);
 }
 
 qint64 Telegram::accountUpdateUsername(const QString &username) {
+    CHECK_API;
     return prv->mApi->accountUpdateUsername(username);
 }
 
 qint64 Telegram::accountGetPrivacy(const InputPrivacyKey &key) {
+    CHECK_API;
     return prv->mApi->accountGetPrivacy(key);
 }
 
 qint64 Telegram::accountSetPrivacy(const InputPrivacyKey &key, const QList<InputPrivacyRule> &rules) {
+    CHECK_API;
     return prv->mApi->accountSetPrivacy(key, rules);
 }
 
 qint64 Telegram::accountDeleteAccount(const QString &reason) {
+    CHECK_API;
     return prv->mApi->accountDeleteAccount(reason);
 }
 
 qint64 Telegram::accountGetAccountTTL() {
+    CHECK_API;
     return prv->mApi->accountGetAccountTTL();
 }
 
 qint64 Telegram::accountSetAccountTTL(const AccountDaysTTL &ttl) {
+    CHECK_API;
     return prv->mApi->accountSetAccountTTL(ttl);
 }
 
 qint64 Telegram::accountUpdateDeviceLocked(int period) {
+    CHECK_API;
     return prv->mApi->accountUpdateDeviceLocked(period);
 }
 
 qint64 Telegram::accountSendChangePhoneCode(const QString &phone_number) {
+    CHECK_API;
     return prv->mApi->accountSendChangePhoneCode(phone_number);
 }
 
 qint64 Telegram::accountChangePhone(const QString &phone_number, const QString &phone_code_hash, const QString &phone_code) {
+    CHECK_API;
     return prv->mApi->accountChangePhone(phone_number, phone_code_hash, phone_code);
 }
 
 qint64 Telegram::accountGetPassword() {
+    CHECK_API;
     return prv->mApi->accountGetPassword();
 }
 
 qint64 Telegram::accountGetAuthorizations() {
+    CHECK_API;
     return prv->mApi->accountGetAuthorizations();
 }
 
 qint64 Telegram::accountResetAuthorization(qint64 hash) {
+    CHECK_API;
     return prv->mApi->accountResetAuthorization(hash);
 }
 
 qint64 Telegram::accountGetPasswordSettings(const QByteArray &currentPasswordHash) {
+    CHECK_API;
     return prv->mApi->accountGetPasswordSettings(currentPasswordHash);
 }
 
 qint64 Telegram::accountUpdatePasswordSettings(const QByteArray &currentPasswordHash, const AccountPasswordInputSettings &newSettings) {
+    CHECK_API;
     return prv->mApi->accountUpdatePasswordSettings(currentPasswordHash, newSettings);
 }
 
@@ -1360,6 +1422,7 @@ qint64 Telegram::photosUploadProfilePhoto(const QString &filePath, const QString
 }
 
 qint64 Telegram::photosUpdateProfilePhoto(qint64 photoId, qint64 accessHash, const InputPhotoCrop &crop) {
+    CHECK_API;
     InputPhoto inputPhoto(InputPhoto::typeInputPhoto);
     inputPhoto.setId(photoId);
     inputPhoto.setAccessHash(accessHash);
@@ -1367,18 +1430,22 @@ qint64 Telegram::photosUpdateProfilePhoto(qint64 photoId, qint64 accessHash, con
 }
 
 qint64 Telegram::usersGetUsers(const QList<InputUser> &users) {
+    CHECK_API;
     return prv->mApi->usersGetUsers(users);
 }
 
 qint64 Telegram::usersGetFullUser(const InputUser &user) {
+    CHECK_API;
     return prv->mApi->usersGetFullUser(user);
 }
 
 qint64 Telegram::photosGetUserPhotos(const InputUser &user, qint32 offset, qint32 maxId, qint32 limit) {
+    CHECK_API;
     return prv->mApi->photosGetUserPhotos(user, offset, maxId, limit);
 }
 
 qint64 Telegram::contactsGetStatuses() {
+    CHECK_API;
     return prv->mApi->contactsGetStatuses();
 }
 
@@ -1391,6 +1458,7 @@ qint64 Telegram::contactsGetContacts() {
     //in ascending order may be passed in this 'hash' parameter. If the contact set was not changed,
     //contactsContactsNotModified() will be returned from Api, so the cached client list is returned with the
     //signal that they are the same contacts as previous request
+    CHECK_API;
     QString hash;
     if (!prv->m_cachedContacts.isEmpty()) {
         qSort(prv->m_cachedContacts.begin(), prv->m_cachedContacts.end(), lessThan); //lessThan method must be outside any class or be static
@@ -1410,40 +1478,49 @@ qint64 Telegram::contactsGetContacts() {
 }
 
 qint64 Telegram::contactsImportContacts(const QList<InputContact> &contacts, bool replace) {
+    CHECK_API;
     prv->mLastContacts = contacts;
     prv->mLastRetryType = ImportContacts;
     return prv->mApi->contactsImportContacts(contacts, replace);
 }
 
 qint64 Telegram::contactsDeleteContact(const InputUser &user) {
+    CHECK_API;
     return prv->mApi->contactsDeleteContact(user);
 }
 
 qint64 Telegram::contactsDeleteContacts(const QList<InputUser> &users) {
+    CHECK_API;
     return prv->mApi->contactsDeleteContacts(users);
 }
 
 qint64 Telegram::contactsSearch(const QString &q, qint32 limit) {
+    CHECK_API;
     return prv->mApi->contactsSearch(q, limit);
 }
 
 qint64 Telegram::contactsResolveUsername(const QString &username) {
+    CHECK_API;
     return prv->mApi->contactsResolveUsername(username);
 }
 
 qint64 Telegram::contactsBlock(const InputUser &user) {
+    CHECK_API;
     return prv->mApi->contactsBlock(user);
 }
 
 qint64 Telegram::contactsUnblock(const InputUser &user) {
+    CHECK_API;
     return prv->mApi->contactsUnblock(user);
 }
 
 qint64 Telegram::contactsGetBlocked(qint32 offset, qint32 limit) {
+    CHECK_API;
     return prv->mApi->contactsGetBlocked(offset, limit);
 }
 
 qint64 Telegram::messagesSendMessage(const InputPeer &peer, qint64 randomId, const QString &message, int replyToMsgId) {
+    CHECK_API;
     return prv->mApi->messagesSendMessage(peer, message, randomId, replyToMsgId);
 }
 
@@ -1468,12 +1545,14 @@ qint64 Telegram::messagesSendPhoto(const InputPeer &peer, qint64 randomId, const
 }
 
 qint64 Telegram::messagesSendGeoPoint(const InputPeer &peer, qint64 randomId, const InputGeoPoint &inputGeoPoint, qint32 replyToMsgId) {
+    CHECK_API;
     InputMedia inputMedia(InputMedia::typeInputMediaGeoPoint);
     inputMedia.setGeoPoint(inputGeoPoint);
     return prv->mApi->messagesSendMedia(peer, inputMedia, randomId, replyToMsgId);
 }
 
 qint64 Telegram::messagesSendContact(const InputPeer &peer, qint64 randomId, const QString &phoneNumber, const QString &firstName, const QString &lastName, qint32 replyToMsgId) {
+    CHECK_API;
     InputMedia inputMedia(InputMedia::typeInputMediaContact);
     inputMedia.setPhoneNumber(phoneNumber);
     inputMedia.setFirstName(firstName);
@@ -1597,6 +1676,7 @@ qint64 Telegram::messagesSendDocument(const InputPeer &peer, qint64 randomId, co
 }
 
 qint64 Telegram::messagesForwardPhoto(const InputPeer &peer, qint64 randomId, qint64 photoId, qint64 accessHash, qint32 replyToMsgId) {
+    CHECK_API;
     InputPhoto inputPhoto(InputPhoto::typeInputPhoto);
     inputPhoto.setId(photoId);
     inputPhoto.setAccessHash(accessHash);
@@ -1606,6 +1686,7 @@ qint64 Telegram::messagesForwardPhoto(const InputPeer &peer, qint64 randomId, qi
 }
 
 qint64 Telegram::messagesForwardVideo(const InputPeer &peer, qint64 randomId, qint64 videoId, qint64 accessHash, qint32 replyToMsgId) {
+    CHECK_API;
     InputVideo inputVideo(InputVideo::typeInputVideo);
     inputVideo.setId(videoId);
     inputVideo.setAccessHash(accessHash);
@@ -1615,6 +1696,7 @@ qint64 Telegram::messagesForwardVideo(const InputPeer &peer, qint64 randomId, qi
 }
 
 qint64 Telegram::messagesForwardAudio(const InputPeer &peer, qint64 randomId, qint64 audioId, qint64 accessHash, qint32 replyToMsgId) {
+    CHECK_API;
     InputAudio inputAudio(InputAudio::typeInputAudio);
     inputAudio.setId(audioId);
     inputAudio.setAccessHash(accessHash);
@@ -1624,6 +1706,7 @@ qint64 Telegram::messagesForwardAudio(const InputPeer &peer, qint64 randomId, qi
 }
 
 qint64 Telegram::messagesForwardDocument(const InputPeer &peer, qint64 randomId, qint64 documentId, qint64 accessHash, qint32 replyToMsgId) {
+    CHECK_API;
     InputDocument inputDocument(InputDocument::typeInputDocument);
     inputDocument.setId(documentId);
     inputDocument.setAccessHash(accessHash);
@@ -1633,6 +1716,7 @@ qint64 Telegram::messagesForwardDocument(const InputPeer &peer, qint64 randomId,
 }
 
 qint64 Telegram::messagesSetEncryptedTyping(qint32 chatId, bool typing) {
+    CHECK_API;
     SecretChat *secretChat = prv->mSecretState->chats().value(chatId);
     if (!secretChat) {
         qCWarning(TG_LIB_SECRET) << "Could not read history of a not yet existant chat";
@@ -1645,68 +1729,84 @@ qint64 Telegram::messagesSetEncryptedTyping(qint32 chatId, bool typing) {
 }
 
 qint64 Telegram::messagesSetTyping(const InputPeer &peer, const SendMessageAction &action) {
+    CHECK_API;
     return prv->mApi->messagesSetTyping(peer, action);
 }
 
 qint64 Telegram::messagesGetMessages(const QList<qint32> &msgIds) {
+    CHECK_API;
     return prv->mApi->messagesGetMessages(msgIds);
 }
 
 qint64 Telegram::messagesGetDialogs(qint32 offset, qint32 maxId, qint32 limit) {
+    CHECK_API;
     return prv->mApi->messagesGetDialogs(offset, maxId, limit);
 }
 
 qint64 Telegram::messagesGetHistory(const InputPeer &peer, qint32 offset, qint32 maxId, qint32 limit) {
+    CHECK_API;
     return prv->mApi->messagesGetHistory(peer, offset, maxId, limit);
 }
 
 qint64 Telegram::messagesSearch(const InputPeer &peer, const QString &query, const MessagesFilter &filter, qint32 minDate, qint32 maxDate, qint32 offset, qint32 maxId, qint32 limit) {
+    CHECK_API;
     return prv->mApi->messagesSearch(peer, query, filter, minDate, maxDate, offset, maxId, limit);
 }
 
 qint64 Telegram::messagesReadHistory(const InputPeer &peer, qint32 maxId, qint32 offset) {
+    CHECK_API;
     return prv->mApi->messagesReadHistory(peer, maxId, offset);
 }
 
 qint64 Telegram::messagesReadMessageContents(const QList<qint32> &ids) {
+    CHECK_API;
     return prv->mApi->messagesReadMessageContents(ids);
 }
 
 qint64 Telegram::messagesDeleteHistory(const InputPeer &peer, qint32 offset) {
+    CHECK_API;
     return prv->mApi->messagesDeleteHistory(peer, offset);
 }
 
 qint64 Telegram::messagesDeleteMessages(const QList<qint32> &msgIds) {
+    CHECK_API;
     return prv->mApi->messagesDeleteMessages(msgIds);
 }
 
 qint64 Telegram::messagesReceivedMessages(qint32 maxId) {
+    CHECK_API;
     return prv->mApi->messagesReceivedMessages(maxId);
 }
 
 qint64 Telegram::messagesForwardMessage(const InputPeer &peer, qint32 msgId) {
+    CHECK_API;
     qint64 randomId;
     Utils::randomBytes(&randomId, 8);
     return prv->mApi->messagesForwardMessage(peer, msgId, randomId);
 }
 
 qint64 Telegram::messagesForwardMessages(const InputPeer &peer, const QList<qint32> &msgIds, const QList<qint64> &randomIds) {
+    CHECK_API;
     return prv->mApi->messagesForwardMessages(peer, msgIds, randomIds);
 }
 
 qint64 Telegram::messagesSendBroadcast(const QList<InputUser> &users, const QList<qint64> &randomIds, const QString &message, const InputMedia &media) {
+    CHECK_API;
     return prv->mApi->messagesSendBroadcast(users, randomIds, message, media);
 }
 
 qint64 Telegram::messagesGetChats(const QList<qint32> &chatIds) {
+    CHECK_API;
     return prv->mApi->messagesGetChats(chatIds);
 }
 
 qint64 Telegram::messagesGetFullChat(qint32 chatId) {
+    CHECK_API;
     return prv->mApi->messagesGetFullChat(chatId);
 }
 
 qint64 Telegram::messagesEditChatTitle(qint32 chatId, const QString &title) {
+    CHECK_API;
     return prv->mApi->messagesEditChatTitle(chatId, title);
 }
 
@@ -1720,6 +1820,7 @@ qint64 Telegram::messagesEditChatPhoto(qint32 chatId, const QString &filePath, c
 }
 
 qint64 Telegram::messagesEditChatPhoto(qint32 chatId, qint64 photoId, qint64 accessHash, const InputPhotoCrop &crop) {
+    CHECK_API;
     InputChatPhoto inputChatPhoto(InputChatPhoto::typeInputChatPhoto);
     InputPhoto inputPhoto(InputPhoto::typeInputPhoto);
     inputPhoto.setId(photoId);
@@ -1730,22 +1831,27 @@ qint64 Telegram::messagesEditChatPhoto(qint32 chatId, qint64 photoId, qint64 acc
 }
 
 qint64 Telegram::messagesAddChatUser(qint32 chatId, const InputUser &user, qint32 fwdLimit) {
+    CHECK_API;
     return prv->mApi->messagesAddChatUser(chatId, user, fwdLimit);
 }
 
 qint64 Telegram::messagesDeleteChatUser(qint32 chatId, const InputUser &user) {
+    CHECK_API;
     return prv->mApi->messagesDeleteChatUser(chatId, user);
 }
 
 qint64 Telegram::messagesCreateChat(const QList<InputUser> &users, const QString &chatTopic) {
+    CHECK_API;
     return prv->mApi->messagesCreateChat(users, chatTopic);
 }
 
 qint64 Telegram::updatesGetState() {
+    CHECK_API;
     return prv->mApi->updatesGetState();
 }
 
 qint64 Telegram::updatesGetDifference(qint32 pts, qint32 date, qint32 qts) {
+    CHECK_API;
     return prv->mApi->updatesGetDifference(pts, date, qts);
 }
 

@@ -25,6 +25,7 @@
 #include <QMap>
 #include <QLoggingCategory>
 #include <QSharedPointer>
+#include <QSettings>
 
 #include "libqtelegram_global.h"
 #include "telegram/types/types.h"
@@ -57,6 +58,9 @@ public:
 
     Settings *settings() const;
     CryptoUtils *crypto() const;
+
+    static void setDefaultSettingsFormat(const QSettings::Format &format);
+    static QSettings::Format defaultSettingsFormat();
 
     // Registration / authorization
     qint64 authCheckPhone();
