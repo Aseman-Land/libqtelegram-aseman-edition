@@ -166,14 +166,6 @@ HEADERS += \
     types/accountpassword.h \
     types/affectedmessages.h
 
-linux {
-    contains(QMAKE_HOST.arch, x86_64) {
-        LIB_PATH = x86_64-linux-gnu
-    } else {
-        LIB_PATH = i386-linux-gnu
-    }
-}
-
 INSTALL_PREFIX = $$[QT_INSTALL_HEADERS]/libqtelegram-ae
 INSTALL_HEADERS = $$HEADERS
 include(qmake/headerinstall.pri)
