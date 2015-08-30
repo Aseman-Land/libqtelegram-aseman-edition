@@ -98,25 +98,13 @@ HEADERS += \
     libqtelegram_global.h \
     file/uploadfileengine.h
 
-linux {
-    contains(QMAKE_HOST.arch, x86_64) {
-        LIB_PATH = x86_64-linux-gnu
-    } else {
-        LIB_PATH = i386-linux-gnu
-    }
-}
-
-isEmpty(PREFIX) {
-    PREFIX = /usr
-}
-
-INSTALL_PREFIX = $$PREFIX/include/libqtelegram-ae
+INSTALL_PREFIX = $$[QT_INSTALL_HEADERS]/libqtelegram-ae
 INSTALL_HEADERS = $$HEADERS
 include(qmake/headerinstall.pri)
 
 target = $$TARGET
 isEmpty(LIBDIR) {
-    target.path = $$PREFIX/lib/$$LIB_PATH
+    target.path = $$[QT_INSTALL_LIBS]
 } else {
     target.path = $$LIBDIR
 }
