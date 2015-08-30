@@ -40,6 +40,7 @@ Q_DECLARE_LOGGING_CATEGORY(TG_LIB_SECRET)
 class Settings;
 class CryptoUtils;
 class TelegramPrivate;
+class FileOperation;
 class LIBQTELEGRAMSHARED_EXPORT Telegram : public QObject
 {
     Q_OBJECT
@@ -308,6 +309,11 @@ Q_SIGNALS:
     void messagesSendVideoAnswer(qint64 id, const UpdatesType &updates);
     void messagesSendAudioAnswer(qint64 id, const UpdatesType &updates);
     void messagesSendDocumentAnswer(qint64 id, const UpdatesType &updates);
+    void messagesForwardMediaAnswer(qint64 id, const UpdatesType &updates);
+    void messagesForwardPhotoAnswer(qint64 id, const UpdatesType &updates);
+    void messagesForwardVideoAnswer(qint64 id, const UpdatesType &updates);
+    void messagesForwardAudioAnswer(qint64 id, const UpdatesType &updates);
+    void messagesForwardDocumentAnswer(qint64 id, const UpdatesType &updates);
     void messagesSetTypingAnswer(qint64 id, bool ok);
     void messagesGetMessagesAnswer(qint64 id, qint32 sliceCount, const QList<Message> &messages, const QList<Chat> &chats, const QList<User> &users);
     void messagesGetDialogsAnswer(qint64 id, qint32 sliceCount, const QList<Dialog> &dialogs, const QList<Message> &messages, const QList<Chat> &chats, const QList<User> &users);
@@ -417,6 +423,9 @@ protected:
     };
 
 private:
+    qint64 messagesForwardMedia(const InputPeer &peer, const InputMedia &media, qint64 randomId, qint32 replyToMsgId);
+    qint64 uploadSendFile(FileOperation &op, int mediaType, const QString &fileName, const QByteArray &bytes, const QByteArray &thumbnailBytes = 0, const QString &thumbnailName = QString::null);
+    qint64 uploadSendFile(FileOperation &op, int mediaType, const QString &filePath, const QString &thumbnailPath = QString::null);
     void processSecretChatUpdate(const Update &update);
     qint64 generateGAorB(SecretChat *secretChat);
     void createSharedKey(SecretChat * secretChat, BIGNUM *p, QByteArray gAOrB);
@@ -441,6 +450,7 @@ private Q_SLOTS:
     void onContactsBlocked(qint64 msgId, const QList<ContactBlocked> &blocked, const QList<User> &users);
     void onMessagesSentMessage(qint64 id, qint32 msgId, qint32 date, const MessageMedia &media, qint32 pts, qint32 pts_count, qint32 seq);
     void onMessagesSendMediaAnswer(qint64 fileId, const UpdatesType &updates);
+    void onMessagesForwardMediaAnswer(qint64 msgId, const UpdatesType &updates);
     void onMessagesGetMessagesMessages(qint64 msgId, const QList<Message> &messages, const QList<Chat> &chats, const QList<User> &users);
     void onMessagesDialogs(qint64 msgId, const QList<Dialog> &dialogs, const QList<Message> &messages, const QList<Chat> &chats, const QList<User> &users);
     void onMessagesGetHistoryMessages(qint64 msgId, const QList<Message> &messages, const QList<Chat> &chats, const QList<User> &users);

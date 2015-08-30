@@ -413,7 +413,9 @@ qint64 FileHandler::uploadCancelFile(qint64 fileId) {
 void FileHandler::onMessagesSentMedia(qint64 id, const UpdatesType &updates) {
     //recover correlated send media request id -> fileId
     qint64 fileId = mFileIdsMap.take(id);
-    Q_ASSERT(fileId);
+    if(!fileId) // It's uploaded file
+        return;
+
     Q_EMIT messagesSentMedia(fileId, updates);
 }
 

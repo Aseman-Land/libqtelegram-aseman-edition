@@ -153,6 +153,8 @@ Api::Api(Session *session, Settings *settings, CryptoUtils *crypto, QObject *par
 
     messagesSendMediaMethods.onAnswer = &Api::onMessagesSendMediaAnswer;
 
+    messagesForwardMediaMethods.onAnswer = &Api::onMessagesForwardMediaAnswer;
+
     messagesSetTypingMethods.onAnswer = &Api::onMessagesSetTypingAnswer;
 
     messagesGetMessagesMethods.onAnswer = &Api::onMessagesGetMessagesAnswer;
@@ -920,6 +922,21 @@ qint64 Api::messagesSendMedia(const InputPeer &peer, const InputMedia &media, qi
 
     Functions::Messages::sendMedia(&p, flag, peer, replyToMsgId, media, randomId);
     return mMainSession->sendQuery(p, &messagesSendMediaMethods, QVariant(), __FUNCTION__ );
+}
+
+void Api::onMessagesForwardMediaAnswer(Query *q, InboundPkt &inboundPkt) {
+    const UpdatesType &result = Functions::Messages::sendMediaResult(&inboundPkt);
+    Q_EMIT messagesForwardedMedia(q->msgId(), result);
+}
+
+qint64 Api::messagesForwardMedia(const InputPeer &peer, const InputMedia &media, qint64 randomId, qint32 replyToMsgId) {
+    OutboundPkt p(mSettings);
+    int flag = 0;
+    if(replyToMsgId)
+        flag = flag | (1<<0);
+
+    Functions::Messages::sendMedia(&p, flag, peer, replyToMsgId, media, randomId);
+    return mMainSession->sendQuery(p, &messagesForwardMediaMethods, QVariant(), __FUNCTION__ );
 }
 
 void Api::onMessagesSetTypingAnswer(Query *q, InboundPkt &inboundPkt) {

@@ -100,6 +100,7 @@ public:
     // Messages
     qint64 messagesSendMessage(const InputPeer &peer, const QString &message, qint64 randomId, qint32 replyToMsgId);
     qint64 messagesSendMedia(const InputPeer &peer, const InputMedia &media, qint64 randomId, qint32 replyToMsgId);
+    qint64 messagesForwardMedia(const InputPeer &peer, const InputMedia &media, qint64 randomId, qint32 replyToMsgId);
     qint64 messagesSetTyping(const InputPeer &peer, const SendMessageAction &action);
     qint64 messagesGetMessages(const QList<qint32> &ids);
     qint64 messagesGetDialogs(qint32 offset = 0, qint32 maxId = 0, qint32 limit = 0);
@@ -221,6 +222,7 @@ Q_SIGNALS:
     void messagesSentMessage(qint64 msgId, qint32 id, qint32 date, const MessageMedia &media, qint32 pts, qint32 pts_count, qint32 seq = 0);
     void messagesSentMessageLink(qint64 msgId, qint32 id, qint32 date, const MessageMedia &media, qint32 pts, qint32 pts_count, qint32 seq, const QList<ContactsLink> &links);
     void messagesSentMedia(qint64 msgId, const UpdatesType &updates);
+    void messagesForwardedMedia(qint64 msgId, const UpdatesType &updates);
     void messagesSetTypingResult(qint64 msgId, bool ok);
     void messagesGetMessagesMessages(qint64 msgId, const QList<Message> &messages, const QList<Chat> &chats, const QList<User> &users);
     void messagesGetMessagesMessagesSlice(qint64 msgId, qint32 count, const QList<Message> &messages, const QList<Chat> &chats, const QList<User> &users);
@@ -349,6 +351,7 @@ private:
     QueryMethods contactsResolveUsernameMethods;
     QueryMethods messagesSendMessageMethods;
     QueryMethods messagesSendMediaMethods;
+    QueryMethods messagesForwardMediaMethods;
     QueryMethods messagesSetTypingMethods;
     QueryMethods messagesGetMessagesMethods;
     QueryMethods messagesGetDialogsMethods;
@@ -451,6 +454,7 @@ private:
     void onContactsResolveUsernameAnswer(Query *q, InboundPkt &inboundPkt);
     void onMessagesSendMessageAnswer(Query *q, InboundPkt &inboundPkt);
     void onMessagesSendMediaAnswer(Query *q, InboundPkt &inboundPkt);
+    void onMessagesForwardMediaAnswer(Query *q, InboundPkt &inboundPkt);
     void onMessagesSetTypingAnswer(Query *q, InboundPkt &inboundPkt);
     void onMessagesGetMessagesAnswer(Query *q, InboundPkt &inboundPkt);
     void onMessagesGetDialogsAnswer(Query *q, InboundPkt &inboundPkt);
