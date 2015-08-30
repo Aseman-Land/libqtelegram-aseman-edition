@@ -409,7 +409,10 @@ QString Utils::getSystemVersion() {
 }
 
 QString Utils::getAppVersion() {
-    return QCoreApplication::applicationVersion();
+    if(QCoreApplication::applicationVersion().isEmpty())
+        return "1.0";
+    else
+        return QCoreApplication::applicationVersion();
 }
 
 QString Utils::parsePhoneNumberDigits(const QString &phoneNumber) {

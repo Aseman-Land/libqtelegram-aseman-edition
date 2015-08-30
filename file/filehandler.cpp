@@ -250,6 +250,8 @@ qint64 FileHandler::uploadGetFile(const InputFileLocation &location, qint32 file
     // change of dc if received a dcNum
     DC *dc;
     dcNum ? dc = mDcProvider.getDc(dcNum) : dc = mDcProvider.getWorkingDc();
+    if(!dc)
+        return 0;
     Session *session = mApi->fileSession(dc);
     if(!session)
         return 0;
