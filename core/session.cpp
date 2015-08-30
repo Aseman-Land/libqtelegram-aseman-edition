@@ -125,7 +125,8 @@ void Session::processRpcMessage(InboundPkt &inboundPkt) {
     //check msg_key is indeed equal to SHA1 of the plaintext obtained after decription (without final padding bytes).
     static uchar sha1Buffer[20];
     SHA1((uchar *)&enc->serverSalt, enc->msgLen + (MINSZ - UNENCSZ), sha1Buffer);
-    Q_ASSERT(!memcmp (&enc->msgKey, sha1Buffer + 4, 16));
+    if(memcmp (&enc->msgKey, sha1Buffer + 4, 16))
+        return;
 
     if (m_dc->serverSalt() != enc->serverSalt) {
         m_dc->setServerSalt(enc->serverSalt);
