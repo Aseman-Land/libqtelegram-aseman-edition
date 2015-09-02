@@ -52,8 +52,6 @@ Q_SIGNALS:
     void mainSessionClosed();
 
 protected:
-    Settings *mSettings;
-    CryptoUtils *mCrypto;
     QPointer<Settings> mSettings;
     QPointer<CryptoUtils> mCrypto;
     QPointer<Session> mMainSession;
