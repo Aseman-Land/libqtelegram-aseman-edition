@@ -101,7 +101,8 @@ QString Settings::appHash()
     return m_appHash;
 }
 
-bool Settings::loadSettings(const QString &phoneNumber, const QString &baseConfigDirectory, const QString &publicKeyFile) {
+bool Settings::loadSettings(const QString &phoneNumber, const QString &baseConfigDirectory,
+                            const QString &publicKeyFile, const QMap<QString, QVariant> &authSettings) {
 
     m_phoneNumber = Utils::parsePhoneNumberDigits(phoneNumber);
 
@@ -166,7 +167,16 @@ bool Settings::loadSettings(const QString &phoneNumber, const QString &baseConfi
     qCDebug(TG_CORE_SETTINGS) << "secretChatFile:" << m_secretChatFilename;
     qCDebug(TG_CORE_SETTINGS) << "stateFile:" << m_stateFilename;
 
+    // populate auth settings with received auth settings param map if set SERIALIZED_SETTINGS definition.
+    // Use auth file instead if not defined that flag.
+#if defined(SERIALIZED_SETTINGS)
+    if (!authSettings.empty()) {
+        deserializeAuthSettings(authSettings);
+    }
+#else
     readAuthFile();
+#endif
+
     readSecretFile();
 
     return true;
@@ -195,6 +205,31 @@ void Settings::writeAuthFile() {
     }
     settings.endArray();
     settings.endGroup();
+}
+
+QString buildDCKey(int index, const QString& key) {
+    return QString(ST_DCS_ARRAY) + "\\" + QString::number(index) + "\\" + key;
+}
+
+QMap<QString, QVariant> Settings::serializeAuthSettings() {
+    QMap<QString, QVariant> returnMap;
+    returnMap.insert(ST_WORKING_DC_NUM, m_workingDcNum);
+    returnMap.insert(ST_OUR_ID, m_ourId);
+    for (qint32 i = 0; i < m_dcsList.length(); i++) {
+
+        returnMap.insert(buildDCKey(i, ST_DC_NUM), m_dcsList[i]->id());
+        returnMap.insert(buildDCKey(i, ST_HOST), m_dcsList[i]->host());
+        returnMap.insert(buildDCKey(i, ST_PORT), m_dcsList[i]->port());
+        returnMap.insert(buildDCKey(i, ST_DC_STATE), m_dcsList[i]->state());
+        if (m_dcsList[i]->authKeyId()) {
+            returnMap.insert(buildDCKey(i, ST_AUTH_KEY_ID), m_dcsList[i]->authKeyId());
+            QByteArray baToSave(m_dcsList[i]->authKey(), SHARED_KEY_LENGTH);
+            returnMap.insert(buildDCKey(i, ST_AUTH_KEY), baToSave.toBase64());
+        }
+        returnMap.insert(buildDCKey(i, ST_SERVER_SALT), m_dcsList[i]->serverSalt());
+        returnMap.insert(buildDCKey(i, ST_EXPIRES), m_dcsList[i]->expires());
+    }
+    return returnMap;
 }
 
 void Settings::readAuthFile() {
@@ -235,6 +270,51 @@ void Settings::readAuthFile() {
     }
     settings.endArray();
     settings.endGroup();
+}
+
+void Settings::deserializeAuthSettings(const QMap<QString, QVariant> &authSettings) {
+    qCDebug(TG_CORE_SETTINGS) << "deserializing readed auth settings...";
+    qint32 defaultDcId = m_testMode ? TEST_DEFAULT_DC_ID : Settings::defaultHostDcId();
+    m_workingDcNum = authSettings.value(ST_WORKING_DC_NUM, defaultDcId).toInt();
+    m_ourId = authSettings.value(ST_OUR_ID, 0).toInt();
+
+    for (QMap<QString, QVariant>::const_iterator it = authSettings.begin(); it != authSettings.end(); it++) {
+        QString key = it.key();
+        if (key.startsWith(ST_DCS_ARRAY)) {
+            QStringList tokens = key.split("\\");
+            int pos = tokens.at(1).toInt();
+
+            DC *dc = m_dcsList.value(pos);
+            if (!dc) {
+                dc = new DC(pos);
+                // fill dcsList with empty values until reaching the position, if position is greater than dcsList size
+                // because a QList needs to have all the previous values filled before
+                for (int i = m_dcsList.size(); i < pos; i++) {
+                    m_dcsList.append(new DC(i));
+                }
+                m_dcsList.insert(pos, dc);
+            }
+
+            if (tokens.at(2) == ST_HOST) {
+                dc->setHost(authSettings.value(key).toString());
+            } else if (tokens.at(2) == ST_PORT) {
+                dc->setPort(authSettings.value(key).toInt());
+            } else if (tokens.at(2) == ST_DC_STATE) {
+                dc->setState((DC::DcState)authSettings.value(key).toInt());
+            } else if (tokens.at(2) == ST_AUTH_KEY_ID) {
+                dc->setAuthKeyId(authSettings.value(key).toLongLong());
+            } else if (tokens.at(2) == ST_AUTH_KEY) {
+                QByteArray ba;
+                ba.append(authSettings.value(key).toString());
+                QByteArray readedBa = QByteArray::fromBase64(ba);
+                memcpy(dc->authKey(), readedBa.data(), SHARED_KEY_LENGTH);
+            } else if (tokens.at(2) == ST_SERVER_SALT) {
+                dc->setServerSalt(authSettings.value(key).toLongLong());
+            } else if (tokens.at(2) == ST_EXPIRES) {
+                dc->setExpires(authSettings.value(key).toInt());
+            }
+        }
+    }
 }
 
 bool Settings::removeAuthFile() {

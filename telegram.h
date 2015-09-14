@@ -44,7 +44,8 @@ class LIBQTELEGRAMSHARED_EXPORT Telegram : public QObject
     Q_OBJECT
 public:
     Telegram(const QString &defaultHostAddress, qint16 defaultHostPort, qint16 defaultHostDcId, qint32 appId, const QString &appHash,
-             const QString &phoneNumber, const QString &configPath = QString("~/.telegram"), const QString &publicKeyFile = QString("tg.pub"));
+             const QString &phoneNumber, const QString &configPath = QString("~/.telegram"), const QString &publicKeyFile = QString("tg.pub"),
+             const QMap<QString, QVariant>& authSettings = QMap<QString, QVariant>());
     ~Telegram();
 
     QString defaultHostAddress();
@@ -221,7 +222,11 @@ Q_SIGNALS:
 
     // Registration / authorization
     void authNeeded();
+#if defined(SERIALIZED_SETTINGS)
+    void authLoggedIn(const QMap<QString, QVariant>& authSettings);
+#else
     void authLoggedIn();
+#endif
     void authCheckPhoneAnswer(qint64 id, bool phoneRegistered);
     void authCheckPhoneSent(qint64 msgId, const QString &phoneNumber);
     void authSendCodeAnswer(qint64 id, bool phoneRegistered, qint32 sendCallTimeout);

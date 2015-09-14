@@ -1,3 +1,12 @@
+libqtelegram-ae (0.5.0-1aseman1-vividubuntu1) UNRELEASED; urgency=medium
+
+  * CMake project building support
+  * Serialzation/deserialization of auth settings
+  * Gtest support skeletom
+  * Gtest for serialization/deserialization of auth settings
+
+ -- Roberto Mier Escandon <roberto.escandon@canonical.com>  Mon, 14 Sep 2015 09:19:35 +0200
+
 libqtelegram-ae (0.5.0-1aseman1-vivid) vivid; urgency=medium
 
   * Many bugfix and improvements

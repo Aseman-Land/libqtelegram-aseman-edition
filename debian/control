@@ -16,13 +16,13 @@ Vcs-Browser: https://github.com/Aseman-Land/libqtelegram-aseman-edition
 Package: libqtelegram-ae-dev
 Section: libdevel
 Architecture: any
-Depends: libqtelegram-ae (= ${binary:Version})
+Depends: libqtelegram-ae0 (= ${binary:Version})
 Description: Forked libqtelegram. Telegram protocol access library.
  This is a Qt asynchronous library to be used as Telegram client. 
  Using signal-slot mechanism to communicate to telegram servers, 
  exposes an easy to use API for applications to interact to. 
 
-Package: libqtelegram-ae
+Package: libqtelegram-ae0
 Section: libs
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}

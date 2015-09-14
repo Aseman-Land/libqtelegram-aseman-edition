@@ -1,0 +1,10 @@
+#include "tests/tests_config.h"
+
+QString fakePhoneNumber() {
+    return QString("+66777888999");
+}
+
+QString pubKeyTestPath() {
+    return QString("${CMAKE_CURRENT_SOURCE_DIR}/data/tg.pub");
+}
+

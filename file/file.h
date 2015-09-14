@@ -31,7 +31,6 @@ Q_DECLARE_LOGGING_CATEGORY(TG_FILE_FILEHANDLER)
 
 class File : public QObject
 {
-    Q_OBJECT
 public:
     explicit File(Session *session, qint64 length, QObject *parent = 0) :
         QObject(parent),

@@ -44,7 +44,9 @@ Q_LOGGING_CATEGORY(TG_LIB_SECRET, "tg.lib.secret")
 QHash<QString, Settings*> qtelegram_settings_per_number;
 QHash<QString, CryptoUtils*> qtelegram_cryptos_per_number;
 
-Telegram::Telegram(const QString &defaultHostAddress, qint16 defaultHostPort, qint16 defaultHostDcId, qint32 appId, const QString &appHash, const QString &phoneNumber, const QString &configPath, const QString &publicKeyFile) :
+Telegram::Telegram(const QString &defaultHostAddress, qint16 defaultHostPort, qint16 defaultHostDcId,
+                   qint32 appId, const QString &appHash, const QString &phoneNumber, const QString &configPath,
+                   const QString &publicKeyFile, const QMap<QString, QVariant>& authSettings) :
     mLibraryState(LoggedOut),
     mLastRetryType(NotRetry),
     mSlept(false),
@@ -69,7 +71,7 @@ Telegram::Telegram(const QString &defaultHostAddress, qint16 defaultHostPort, qi
     }
 
     // load settings
-    if (!mSettings->loadSettings(phoneNumber, configPath, publicKeyFile)) {
+    if (!mSettings->loadSettings(phoneNumber, configPath, publicKeyFile, authSettings)) {
         throw std::runtime_error("loadSettings failure");
     }
 
@@ -187,7 +189,12 @@ bool Telegram::isLoggedIn() {
 
 void Telegram::onAuthLoggedIn() {
     mLibraryState = LoggedIn;
+#if defined(SERIALIZED_SETTINGS)
+    QMap<QString, QVariant> serializedSettings = mSettings->serializeAuthSettings();
+    Q_EMIT authLoggedIn(serializedSettings);
+#else
     Q_EMIT authLoggedIn();
+#endif
 }
 
 void Telegram::onAuthLogOutAnswer(qint64 id, bool ok) {

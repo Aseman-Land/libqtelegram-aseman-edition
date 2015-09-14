@@ -89,8 +89,8 @@ class LIBQTELEGRAMSHARED_EXPORT Settings : public QObject
 public:
     Settings();
     ~Settings();
-    Settings(const Settings &); // hide copy constructor
-    Settings& operator=(const Settings &); // hide asignment
+    Settings(const Settings &);
+    Settings& operator=(const Settings &);
 
     void setDefaultHostAddress(const QString &host);
     void setDefaultHostPort(qint16 port);
@@ -104,7 +104,10 @@ public:
     qint32 appId();
     QString appHash();
 
-    bool loadSettings(const QString &phoneNumber, const QString &configPath = DEFAULT_CONFIG_PATH, const QString &publicKeyFile = DEFAULT_PUBLIC_KEY_FILE);
+    bool loadSettings(const QString &phoneNumber,
+                      const QString &configPath = DEFAULT_CONFIG_PATH,
+                      const QString &publicKeyFile = DEFAULT_PUBLIC_KEY_FILE,
+                      const QMap<QString, QVariant> &authSettings = QMap<QString, QVariant>());
     void writeAuthFile();
     void writeSecretFile();
     bool workingDcConfigAvailabe() const {return  m_workingDcConfigAvailabe;}
@@ -134,9 +137,16 @@ public:
     bool removeAuthFile();
     void writeCrashFile();
 
+    /// @brief serialize takes authorization parameters and composes key - value related to every dc content,
+    /// workingDc and ourId, so that you'll find the same content as the 'auth' file but as QMap
+    QMap<QString, QVariant> serializeAuthSettings();
+
 private:
     void readAuthFile();
     void readSecretFile();
+
+    /// @brief deserializeAuthSettings takes auth parameters and fulfills this Settings object
+    void deserializeAuthSettings(const QMap<QString, QVariant>& authSettings);
 
     QString m_defaultHostAddress;
     qint16 m_defaultHostPort;
