@@ -102,7 +102,7 @@ QString Settings::appHash()
 }
 
 bool Settings::loadSettings(const QString &phoneNumber, const QString &baseConfigDirectory,
-                            const QString &publicKeyFile, const QMap<QString, QVariant> &authSettings) {
+                            const QString &publicKeyFile, const QVariantMap& authSettings) {
 
     m_phoneNumber = Utils::parsePhoneNumberDigits(phoneNumber);
 
@@ -211,8 +211,8 @@ QString buildDCKey(int index, const QString& key) {
     return QString(ST_DCS_ARRAY) + "\\" + QString::number(index) + "\\" + key;
 }
 
-QMap<QString, QVariant> Settings::serializeAuthSettings() {
-    QMap<QString, QVariant> returnMap;
+QVariantMap Settings::serializeAuthSettings() {
+    QVariantMap returnMap;
     returnMap.insert(ST_WORKING_DC_NUM, m_workingDcNum);
     returnMap.insert(ST_OUR_ID, m_ourId);
     for (qint32 i = 0; i < m_dcsList.length(); i++) {
@@ -272,13 +272,13 @@ void Settings::readAuthFile() {
     settings.endGroup();
 }
 
-void Settings::deserializeAuthSettings(const QMap<QString, QVariant> &authSettings) {
+void Settings::deserializeAuthSettings(const QVariantMap &authSettings) {
     qCDebug(TG_CORE_SETTINGS) << "deserializing readed auth settings...";
     qint32 defaultDcId = m_testMode ? TEST_DEFAULT_DC_ID : Settings::defaultHostDcId();
     m_workingDcNum = authSettings.value(ST_WORKING_DC_NUM, defaultDcId).toInt();
     m_ourId = authSettings.value(ST_OUR_ID, 0).toInt();
 
-    for (QMap<QString, QVariant>::const_iterator it = authSettings.begin(); it != authSettings.end(); it++) {
+    for (QVariantMap::const_iterator it = authSettings.begin(); it != authSettings.end(); it++) {
         QString key = it.key();
         if (key.startsWith(ST_DCS_ARRAY)) {
             QStringList tokens = key.split("\\");

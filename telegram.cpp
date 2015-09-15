@@ -46,7 +46,7 @@ QHash<QString, CryptoUtils*> qtelegram_cryptos_per_number;
 
 Telegram::Telegram(const QString &defaultHostAddress, qint16 defaultHostPort, qint16 defaultHostDcId,
                    qint32 appId, const QString &appHash, const QString &phoneNumber, const QString &configPath,
-                   const QString &publicKeyFile, const QMap<QString, QVariant>& authSettings) :
+                   const QString &publicKeyFile, const QVariantMap& authSettings) :
     mLibraryState(LoggedOut),
     mLastRetryType(NotRetry),
     mSlept(false),

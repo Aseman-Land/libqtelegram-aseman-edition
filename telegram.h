@@ -45,7 +45,7 @@ class LIBQTELEGRAMSHARED_EXPORT Telegram : public QObject
 public:
     Telegram(const QString &defaultHostAddress, qint16 defaultHostPort, qint16 defaultHostDcId, qint32 appId, const QString &appHash,
              const QString &phoneNumber, const QString &configPath = QString("~/.telegram"), const QString &publicKeyFile = QString("tg.pub"),
-             const QMap<QString, QVariant>& authSettings = QMap<QString, QVariant>());
+             const QVariantMap& authSettings = QVariantMap());
     ~Telegram();
 
     QString defaultHostAddress();

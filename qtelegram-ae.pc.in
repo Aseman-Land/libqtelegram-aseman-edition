@@ -3,7 +3,7 @@ exec_prefix=@PREFIX@
 libdir=@LIBDIR@
 includedir=@INCLUDEDIR@
 
-Name: Lib QTelegram Aseman Edition
+Name: QTelegram-ae
 Version: @SO_VERSION@
 Description: Telegram library written in Qt
 Cflags: -I${includedir}
