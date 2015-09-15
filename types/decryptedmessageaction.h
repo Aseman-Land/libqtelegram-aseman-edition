@@ -22,7 +22,7 @@
 #define DECRYPTEDMESSAGEACTION_H
 
 #include <QList>
-#include "types/sendmessageaction.h"
+#include "sendmessageaction.h"
 
 class DecryptedMessageAction
 {

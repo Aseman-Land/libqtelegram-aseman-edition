@@ -21,7 +21,7 @@
 #define DECRYPTEDMESSAGEMEDIA_H
 
 #include <QByteArray>
-#include "types/types.h"
+#include "types.h"
 
 class DecryptedMessageMedia {
 

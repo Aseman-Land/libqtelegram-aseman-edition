@@ -28,17 +28,18 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 add_definitions(-DQT_NO_KEYWORDS)
 add_definitions(-DSERIALIZED_SETTINGS)
 
-include(GNUInstallDirs)
 find_package(PkgConfig REQUIRED)
 find_package(Qt5Core REQUIRED)
 find_package(Qt5Network REQUIRED)
 find_package(Qt5Multimedia REQUIRED)
 find_package(OpenSSL REQUIRED)
+find_package(ZLIB REQUIRED)
 
 message(STATUS "Using OpenSSL ${OPENSSL_VERSION}")
 
 include_directories(
     ${OPENSSL_INCLUDE_DIR}/openssl
+    ${ZLIB_INCLUDE_DIR}
 )
 
 set(LIB_NAME qtelegram-ae)
@@ -66,7 +67,8 @@ target_link_libraries(${LIB_NAME}
     Qt5::Network
     Qt5::Multimedia
     ${OPENSSL_LIBRARIES}
-    z
+    ${OPENSSL_LDFLAGS}
+    ${ZLIB_LIBRARIES}
 )
 
 install(TARGETS ${LIB_NAME}
@@ -90,7 +92,7 @@ install(FILES ${UTIL_H_FILES} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_
 # Compose the pkg-config file needed to find the library using that tool
 set(PREFIX "${CMAKE_INSTALL_PREFIX}") # /usr
 set(LIBDIR "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}") # /usr/lib
-set(INCLUDEDIR "${CMAKE_INSTALL_PREFIX}/include") # /usr/include
+set(INCLUDEDIR "${CMAKE_INSTALL_PREFIX}/include/${PROJECT_NAME}") # /usr/include/libqtelegram-ae
 configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/qtelegram-ae.pc.in
     ${CMAKE_CURRENT_BINARY_DIR}/qtelegram-ae.pc

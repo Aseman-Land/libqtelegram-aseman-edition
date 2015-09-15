@@ -1,10 +1,8 @@
 prefix=@PREFIX@
+exec_prefix=@PREFIX@
 libdir=@LIBDIR@
 includedir=@INCLUDEDIR@
 
-name = @LIB_NAME@
-pkgname = lib@LIB_NAME@0
- 
 Name: Lib QTelegram Aseman Edition
 Version: @SO_VERSION@
 Description: Telegram library written in Qt

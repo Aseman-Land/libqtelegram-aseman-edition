@@ -1,2 +1,2 @@
-usr/lib/*/libqtelegram*.so.*
-
+usr/lib/*/lib*.so*
+usr/lib/*/pkgconfig/*
