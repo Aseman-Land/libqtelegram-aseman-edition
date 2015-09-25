@@ -4,29 +4,29 @@
 
 
 HEADERS += \
-    telegram/functions/functions.h \
-    telegram/functions/telegramfunctionobject.h \
-    telegram/functions/account.h \
-    telegram/functions/auth.h \
-    telegram/functions/contacts.h \
-    telegram/functions/geochats.h \
-    telegram/functions/help.h \
-    telegram/functions/messages.h \
-    telegram/functions/photos.h \
-    telegram/functions/updates.h \
-    telegram/functions/upload.h \
-    telegram/functions/users.h
+    $$PWD/functions.h \
+    $$PWD/telegramfunctionobject.h \
+    $$PWD/account.h \
+    $$PWD/auth.h \
+    $$PWD/contacts.h \
+    $$PWD/geochats.h \
+    $$PWD/help.h \
+    $$PWD/messages.h \
+    $$PWD/photos.h \
+    $$PWD/updates.h \
+    $$PWD/upload.h \
+    $$PWD/users.h
 
 SOURCES += \
-    telegram/functions/telegramfunctionobject.cpp \
-    telegram/functions/account.cpp \
-    telegram/functions/auth.cpp \
-    telegram/functions/contacts.cpp \
-    telegram/functions/geochats.cpp \
-    telegram/functions/help.cpp \
-    telegram/functions/messages.cpp \
-    telegram/functions/photos.cpp \
-    telegram/functions/updates.cpp \
-    telegram/functions/upload.cpp \
-    telegram/functions/users.cpp
+    $$PWD/telegramfunctionobject.cpp \
+    $$PWD/account.cpp \
+    $$PWD/auth.cpp \
+    $$PWD/contacts.cpp \
+    $$PWD/geochats.cpp \
+    $$PWD/help.cpp \
+    $$PWD/messages.cpp \
+    $$PWD/photos.cpp \
+    $$PWD/updates.cpp \
+    $$PWD/upload.cpp \
+    $$PWD/users.cpp
 

@@ -7,5 +7,5 @@ include(functions/functions.pri)
 include(types/types.pri)
 
 HEADERS += \
-    telegram/coretypes.h 
+    $$PWD/coretypes.h
 
