@@ -44,6 +44,10 @@ include_directories(
 
 set(LIB_NAME qtelegram-ae)
 
+#Utils class reads SO_VERSION from this cmake, so must be configured and
+#resulting file included in sources
+configure_file(util/utils.cpp.in util/utils.cpp)
+
 aux_source_directory(. TG_SRC)
 aux_source_directory(core TG_CORE_SRC)
 aux_source_directory(file TG_FILES_SRC)
@@ -56,6 +60,7 @@ add_library(${LIB_NAME} SHARED
     ${TG_FILES_SRC}
     ${TG_SECRET_SRC}
     ${TG_UTIL_SRC}
+    ${CMAKE_BINARY_DIR}/util/utils.cpp
 )
 
 set_target_properties(${LIB_NAME} PROPERTIES
@@ -82,22 +87,22 @@ file(GLOB FILE_H_FILES ${CMAKE_CURRENT_SOURCE_DIR}/file/*.h)
 file(GLOB SECRET_H_FILES ${CMAKE_CURRENT_SOURCE_DIR}/secret/*.h)
 file(GLOB TYPES_H_FILES ${CMAKE_CURRENT_SOURCE_DIR}/types/*.h)
 file(GLOB UTIL_H_FILES ${CMAKE_CURRENT_SOURCE_DIR}/util/*.h)
-install(FILES ${ROOT_H_FILES} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME})
-install(FILES ${CORE_H_FILES} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}/core)
-install(FILES ${FILE_H_FILES} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}/file)
-install(FILES ${SECRET_H_FILES} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}/secret)
-install(FILES ${TYPES_H_FILES} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}/types)
-install(FILES ${UTIL_H_FILES} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}/util)
+install(FILES ${ROOT_H_FILES} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${LIB_NAME})
+install(FILES ${CORE_H_FILES} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${LIB_NAME}/core)
+install(FILES ${FILE_H_FILES} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${LIB_NAME}/file)
+install(FILES ${SECRET_H_FILES} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${LIB_NAME}/secret)
+install(FILES ${TYPES_H_FILES} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${LIB_NAME}/types)
+install(FILES ${UTIL_H_FILES} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${LIB_NAME}/util)
 
 # Compose the pkg-config file needed to find the library using that tool
 set(PREFIX "${CMAKE_INSTALL_PREFIX}") # /usr
 set(LIBDIR "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}") # /usr/lib
-set(INCLUDEDIR "${CMAKE_INSTALL_PREFIX}/include/${PROJECT_NAME}") # /usr/include/libqtelegram-ae
+set(INCLUDEDIR "${CMAKE_INSTALL_PREFIX}/include") # /usr/include
 configure_file(
-    ${CMAKE_CURRENT_SOURCE_DIR}/qtelegram-ae.pc.in
-    ${CMAKE_CURRENT_BINARY_DIR}/qtelegram-ae.pc
+    ${CMAKE_CURRENT_SOURCE_DIR}/${LIB_NAME}.pc.in
+    ${CMAKE_CURRENT_BINARY_DIR}/${LIB_NAME}.pc
     @ONLY)
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/qtelegram-ae.pc
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${LIB_NAME}.pc
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
 
 add_subdirectory(tests)

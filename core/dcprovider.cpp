@@ -33,7 +33,7 @@ DcProvider::DcProvider(Settings *settings, CryptoUtils *crypto) :
 }
 
 DcProvider::~DcProvider() {
-   clean();
+    clean();
 }
 
 void DcProvider::clean() {

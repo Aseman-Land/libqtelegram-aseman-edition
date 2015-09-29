@@ -97,6 +97,7 @@ void SessionManager::onSessionReleased(qint64 sessionId) {
 }
 
 void SessionManager::onSessionClosed(qint64 sessionId) {
+
     Session *session = mFileSessions.take(sessionId);
     if (session) {
         session->deleteLater();

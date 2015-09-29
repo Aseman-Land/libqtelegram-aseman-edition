@@ -6,6 +6,6 @@ includedir=@INCLUDEDIR@
 Name: QTelegram-ae
 Version: @SO_VERSION@
 Description: Telegram library written in Qt
-Cflags: -I${includedir}
+Cflags: -I${includedir}/qtelegram-ae
 Libs: -L${libdir} -lqtelegram-ae
 

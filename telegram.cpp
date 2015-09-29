@@ -82,7 +82,6 @@ Telegram::Telegram(const QString &defaultHostAddress, qint16 defaultHostPort, qi
     }
 
     mDcProvider = new DcProvider(mSettings, mCrypto);
-    mDcProvider->setParent(this);
 
     mSecretState = new SecretState(mSettings, this);
     mEncrypter = new Encrypter(mSettings);
@@ -99,6 +98,9 @@ Telegram::Telegram(const QString &defaultHostAddress, qint16 defaultHostPort, qi
     connect(mDcProvider, SIGNAL(authNeeded()), this, SIGNAL(authNeeded()));
     connect(mDcProvider, SIGNAL(authTransferCompleted()), this, SLOT(onAuthLoggedIn()));
     connect(mDcProvider, SIGNAL(error(qint64,qint32,const QString&)), this, SIGNAL(error(qint64,qint32,const QString&)));
+}
+
+Telegram::~Telegram() {
 }
 
 bool Telegram::sleep() {
@@ -136,9 +138,6 @@ void Telegram::init() {
     // check the auth values stored in settings, check the available DCs config data if there is
     // connection to servers, and emit signals depending on user authenticated or not.
     mDcProvider->initialize();
-}
-
-Telegram::~Telegram() {
 }
 
 QString Telegram::defaultHostAddress()
@@ -335,6 +334,7 @@ void Telegram::onDcProviderReady() {
     connect(mApi, SIGNAL(updatesDifferenceSlice(qint64,const QList<Message>,const QList<EncryptedMessage>,const QList<Update>&,const QList<Chat>&,const QList<User>&,const UpdatesState&)), this, SLOT(onUpdatesDifferenceSlice(qint64,const QList<Message>&,const QList<EncryptedMessage>&,const QList<Update>&,const QList<Chat>&,const QList<User>&,const UpdatesState&)));
     // logic additional signal slots
     connect(mApi, SIGNAL(mainSessionDcChanged(DC*)), this, SLOT(onAuthCheckPhoneDcChanged()));
+    connect(mApi, SIGNAL(mainSessionDcChanged(DC*)), this, SLOT(onAuthSendCodeDcChanged()));
     connect(mApi, SIGNAL(mainSessionDcChanged(DC*)), this, SLOT(onHelpGetInviteTextDcChanged()));
     connect(mApi, SIGNAL(mainSessionDcChanged(DC*)), this, SLOT(onImportContactsDcChanged()));
     connect(mApi, SIGNAL(mainSessionReady()), this, SIGNAL(connected()));
@@ -1000,6 +1000,11 @@ void Telegram::onAuthCheckPhoneDcChanged() {
     if (mLastRetryType != PhoneCheck) return;
     authCheckPhone(mLastPhoneChecked);
 }
+void Telegram::onAuthSendCodeDcChanged() {
+    if (mLastRetryType != SendCode) return;
+    authSendCode();
+}
+
 void Telegram::onHelpGetInviteTextDcChanged() {
     if (mLastRetryType != GetInviteText) return;
     helpGetInviteText(mLastLangCode);
@@ -1021,7 +1026,10 @@ void Telegram::onUserAuthorized(qint64, qint32 expires, const User &) {
     QList<DC *> dcsList = mDcProvider->getDcs();
     // save the settings here, after user auth ready in current dc
     mSettings->setDcsList(dcsList);
+
+#if !defined(SERIALIZED_SETTINGS)
     mSettings->writeAuthFile();
+#endif
     // transfer current dc authorization to other dcs
     mDcProvider->transferAuth();
 }
@@ -1184,7 +1192,8 @@ qint64 Telegram::authCheckPhone(const QString &phoneNumber) {
     return mApi->authCheckPhone(phoneNumber);
 }
 qint64 Telegram::authSendCode() {
-    return mApi->authSendCode(mSettings->phoneNumber(), 0, mSettings->appId(), mSettings->appHash(), LANG_CODE);
+    mLastRetryType = SendCode;
+    return mApi->authSendCode(mSettings->phoneNumber(), 5, mSettings->appId(), mSettings->appHash(), LANG_CODE);
 }
 
 qint64 Telegram::authSendSms() {

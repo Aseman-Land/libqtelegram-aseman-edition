@@ -10,7 +10,11 @@ TEST(Settings, populate_settings_with_external_auth_and_deserialize)
     QMap<QString, QVariant> authSettings;   
 
     //Insert first the second value, to test that order is not relevant
-    const char* authKey_2 = "u/EBkd2MNIHyX9q1nPf8Vor9TOcz8VJdNDyAzXTVVWk6OrnL5FDdfvHNuJ+OGn6xp8psWxrWGIx/jXFQKU1m3kiSdtYnGIzgQ4sA016qgjMrFvik8Z2pL7BdPoajepmfsM8Uv4H82GLkub/xGPgD8vCyHDBqqP14mwgKJOYdHYZDgsD8pKtCyG3Kz4Qs2rowOIBCdJoAs2YIz8qYipi9kY0re5HtT3pRoFR03Ex3zNARKfBF1c/QVXN3DBH1X7x2hWm7r1xBxcTuzLMuodYR+cYzi3WOhNnpow3Hski+atF7LqFIK5E7RrLVS3XA64uvvJEAQibQV4WZ0YcFkHQ0Ew==";
+    const char* authKey_2 = "u/EBkd2MNIHyX9q1nPf8Vor9TOcz8VJdNDyAzXTVVWk6OrnL5FDdfvHNuJ+" \
+            "OGn6xp8psWxrWGIx/jXFQKU1m3kiSdtYnGIzgQ4sA016qgjMrFvik8Z2pL7BdPoajepmfsM8Uv4" \
+            "H82GLkub/xGPgD8vCyHDBqqP14mwgKJOYdHYZDgsD8pKtCyG3Kz4Qs2rowOIBCdJoAs2YIz8qYi" \
+            "pi9kY0re5HtT3pRoFR03Ex3zNARKfBF1c/QVXN3DBH1X7x2hWm7r1xBxcTuzLMuodYR+cYzi3WO" \
+            "hNnpow3Hski+atF7LqFIK5E7RrLVS3XA64uvvJEAQibQV4WZ0YcFkHQ0Ew==";
     qint64 authKeyId_2 = -5157031044019280201;
     int dcNum_2 = 2;
     int expires_2 = 2147483647;
@@ -28,7 +32,11 @@ TEST(Settings, populate_settings_with_external_auth_and_deserialize)
     authSettings.insert("dcs\\2\\serverSalt", serverSalt_2);
     authSettings.insert("dcs\\2\\state", state_2);
 
-    const char* authKey_1 = "MOFFQGijXwwZ9no5FLulN33bLDY3rwOtIy0ohZqBo0b+peD40Bbb0TuDpreMU0NkjVlLYe8okdCOt0Lp5OD5Uh/cVE/6fxMqgu4q+sb16Z+1O8zqbkF27q8i9HYjGrDXSN1LG6yLhcB5oMAC7Yl/mm6OXxqSZmn0O84H/Wehw/2eH4mnSF3h6FoQ9CTbBQzhSYth0xJU2g5pOXMJ2EY7IssMSySM6cFthCkmBO5RfeD2yQpaCmdcUdPMw5gQkDUiVuYEAVlsrasFkJCQjQXphkD1bKv/NZ5srdLvPgRX3l8/TtyyTBlhQxl76UISA3RnsEXokdWCxG++9uWGeRSlJQ==";
+    const char* authKey_1 = "MOFFQGijXwwZ9no5FLulN33bLDY3rwOtIy0ohZqBo0b+peD40Bbb0TuDpreM" \
+            "U0NkjVlLYe8okdCOt0Lp5OD5Uh/cVE/6fxMqgu4q+sb16Z+1O8zqbkF27q8i9HYjGrDXSN1LG6yL" \
+            "hcB5oMAC7Yl/mm6OXxqSZmn0O84H/Wehw/2eH4mnSF3h6FoQ9CTbBQzhSYth0xJU2g5pOXMJ2EY7" \
+            "IssMSySM6cFthCkmBO5RfeD2yQpaCmdcUdPMw5gQkDUiVuYEAVlsrasFkJCQjQXphkD1bKv/NZ5s" \
+            "rdLvPgRX3l8/TtyyTBlhQxl76UISA3RnsEXokdWCxG++9uWGeRSlJQ==";
     qint64 authKeyId_1 = -332702849868299254;
     int dcNum_1 = 1;
     int expires_1 = 2147483647;
@@ -47,7 +55,7 @@ TEST(Settings, populate_settings_with_external_auth_and_deserialize)
     authSettings.insert("dcs\\1\\state", state_1);
 
     Settings settings;
-    settings.loadSettings(fakePhoneNumber(), "/tmp", pubKeyTestPath(), authSettings);
+    settings.loadSettings(thePhoneNumber(), "/tmp", thePublicKeyFile(), authSettings);
 
     // check if properly readed. There should be 3 elements, since element at position 0 is an empty one
     // to avoid problems of having null intermediate elements in a QList (something not permited). This way

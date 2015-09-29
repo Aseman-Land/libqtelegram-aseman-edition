@@ -223,7 +223,7 @@ Q_SIGNALS:
     // Registration / authorization
     void authNeeded();
 #if defined(SERIALIZED_SETTINGS)
-    void authLoggedIn(const QMap<QString, QVariant>& authSettings);
+    void authLoggedIn(const QVariantMap& authSettings);
 #else
     void authLoggedIn();
 #endif
@@ -385,6 +385,7 @@ protected:
 
     enum LastRetryType {
         PhoneCheck,
+        SendCode,
         GetInviteText,
         ImportContacts,
         NotRetry
@@ -434,6 +435,7 @@ private Q_SLOTS:
     void onError(qint64 id, qint32 errorCode, const QString &errorText, const QString &functionName = QString());
     void onErrorRetry(qint64 id, qint32 errorCode, const QString &errorText);
     void onAuthCheckPhoneDcChanged();
+    void onAuthSendCodeDcChanged();
     void onHelpGetInviteTextDcChanged();
     void onImportContactsDcChanged();
     void onAuthSentCode(qint64 id, bool phoneRegistered, const QString &phoneCodeHash, qint32 sendCallTimeout, bool isPassword);

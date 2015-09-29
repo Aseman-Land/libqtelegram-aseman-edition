@@ -1,10 +1,80 @@
 #include "tests/tests_config.h"
 
-QString fakePhoneNumber() {
-    return QString("+66777888999");
+/**
+ There are reserved phone number prefixes to test the correctness of the application’s handling of
+ redirects between DCs. If you wish to emulate an application of a user associated with DC number X,
+ it is sufficient to specify the phone number as 99966XYYYY, where YYYY are random numbers, when
+ registering the user. A user like this would always get XXXXX as the confirmation code (the DC number,
+ repeated five times).
+ Do not store any important or private information in such test users’ messages; anyone can make use of
+ the simplified authorization mechanism.
+
+ NOTE: Use the test DC addresses obtained from http://my.telegram.org/apps
+*/
+
+// this phone number is a test number in DC 2
+const QString thePhoneNumber() {
+    return phoneNumberAtDC(theDefaultHostDcId());
 }
 
-QString pubKeyTestPath() {
+// get initial random value into [0-3]
+uint theCount = rand() % 4;
+
+// "9996621111", for instance
+const QString phoneNumberAtDC(qint8 dc) {
+
+    uint extraDigit =  theCount++ % 4;
+
+    QString suffix;
+    for (int i = 0; i < 4; i++) {
+        suffix.append(QString::number(extraDigit));
+    }
+
+    return "99966" + QString::number(dc) + suffix;
+}
+
+const QString thePublicKeyFile() {
     return QString("${CMAKE_CURRENT_SOURCE_DIR}/data/tg.pub");
 }
 
+const QString theConfigPath() {
+    return QString("~/.config/com.ubuntu.telegram/");
+}
+
+const QString theDefaultHostAddress() {
+    return QString("149.154.167.40");
+}
+
+qint16 theDefaultHostPort() {
+    return qint16(443);
+}
+
+qint16 theDefaultHostDcId() {
+    return qint16(2);
+}
+
+qint32 theAppId() {
+    return qint32(12433);
+}
+
+const QString theAppHash() {
+    return QString("c68fd5e560aa84dd4b6ad6f489164790");
+}
+
+const QString theCode() {
+    return codeAtDC(theDefaultHostDcId());
+}
+
+// "22222" for example
+const QString codeAtDC(qint8 dc) {
+    QString code;
+    QString number = QString::number(dc);
+    for (int i = 0; i < 5; i++) {
+        code.append(number);
+    }
+    return code;
+}
+
+qint32 theTimeout() {
+    return 5000;
+}

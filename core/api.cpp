@@ -40,6 +40,7 @@ Api::Api(Session *session, Settings *settings, CryptoUtils *crypto, QObject *par
     authCheckPhoneMethods.onError = &Api::onErrorRetry;
 
     authSendCodeMethods.onAnswer = &Api::onAuthSendCodeAnswer;
+    authSendCodeMethods.onError = &Api::onErrorRetry;
 
     authSendSmsMethods.onAnswer = &Api::onAuthSendSmsAnswer;
 
@@ -216,6 +217,9 @@ Api::Api(Session *session, Settings *settings, CryptoUtils *crypto, QObject *par
     uploadGetFileMethods.onError = &Api::onUploadGetFileError;
 }
 
+Api::~Api() {
+}
+
 void Api::onError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT error(q->msgId(), errorCode, errorText, q->name() );
 }
@@ -329,6 +333,10 @@ void Api::onAuthSendCodeAnswer(Query *q, InboundPkt &inboundPkt) {
 
 qint64 Api::authSendCode(const QString &phoneNumber, qint32 smsType, qint32 apiId, const QString &apiHash, const QString &langCode) {
     OutboundPkt p(mSettings);
+    if (mMainSession->initConnectionNeeded()) {
+        p.initConnection();
+        mMainSession->setInitConnectionNeeded(false);
+    }
     p.appendInt(TL_AuthSendCode);
     p.appendQString(phoneNumber);
     p.appendInt(smsType);

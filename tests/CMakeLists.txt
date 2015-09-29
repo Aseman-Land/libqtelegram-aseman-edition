@@ -23,3 +23,4 @@ include_directories(
 configure_file(tests_config.cpp.in tests_config.cpp)
 
 add_subdirectory(unit)
+add_subdirectory(acceptance)

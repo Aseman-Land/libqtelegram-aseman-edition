@@ -166,7 +166,7 @@ HEADERS += \
     types/accountpassword.h \
     types/affectedmessages.h
 
-INSTALL_PREFIX = $$[QT_INSTALL_HEADERS]/libqtelegram-ae
+INSTALL_PREFIX = $$[QT_INSTALL_HEADERS]/qtelegram-ae
 INSTALL_HEADERS = $$HEADERS
 include(qmake/headerinstall.pri)
 

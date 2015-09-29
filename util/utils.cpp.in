@@ -19,7 +19,7 @@
  *
  */
 
-#include "utils.h"
+#include <util/utils.h>
 #include <rand.h>
 #include <pem.h>
 #include <err.h>
@@ -123,11 +123,6 @@ int clock_gettime(int /*X*/, struct timespec *ts)
     return (0);
 }
 #endif
-
-Utils::Utils(QObject *parent) :
-    QObject(parent)
-{
-}
 
 qint32 Utils::randomBytes(void *buffer, qint32 count) {
     qint32 returnValue = RAND_bytes ((uchar *)buffer, count);
@@ -409,7 +404,11 @@ QString Utils::getSystemVersion() {
 }
 
 QString Utils::getAppVersion() {
-    return QCoreApplication::applicationVersion();
+    QString version = QCoreApplication::applicationVersion();
+    if (version.isNull()) {
+        version = "${SO_VERSION}";
+    }
+    return version;
 }
 
 QString Utils::parsePhoneNumberDigits(const QString &phoneNumber) {

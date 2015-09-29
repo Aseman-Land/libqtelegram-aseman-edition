@@ -49,6 +49,13 @@ Settings::~Settings() {
     if (m_pubKey) {
         delete m_pubKey;
     }
+
+    Q_FOREACH (DC *dc, m_dcsList) {
+        delete dc;
+        dc = 0;
+    }
+
+    m_dcsList.clear();
 }
 
 void Settings::setDefaultHostAddress(const QString &host)
@@ -170,9 +177,7 @@ bool Settings::loadSettings(const QString &phoneNumber, const QString &baseConfi
     // populate auth settings with received auth settings param map if set SERIALIZED_SETTINGS definition.
     // Use auth file instead if not defined that flag.
 #if defined(SERIALIZED_SETTINGS)
-    if (!authSettings.empty()) {
-        deserializeAuthSettings(authSettings);
-    }
+    deserializeAuthSettings(authSettings);
 #else
     readAuthFile();
 #endif
@@ -183,6 +188,8 @@ bool Settings::loadSettings(const QString &phoneNumber, const QString &baseConfi
 }
 
 void Settings::writeAuthFile() {
+// only create auth file if not using settings serialization
+#if !defined(SERIALIZED_SETTINGS)
     QSettings settings(m_authFilename, QSettings::IniFormat);
     testMode() ? settings.beginGroup(ST_TEST) : settings.beginGroup(ST_PRODUCTION);
     settings.setValue(ST_WORKING_DC_NUM, m_workingDcNum);
@@ -205,6 +212,7 @@ void Settings::writeAuthFile() {
     }
     settings.endArray();
     settings.endGroup();
+#endif
 }
 
 QString buildDCKey(int index, const QString& key) {

@@ -41,12 +41,9 @@ qint32 freeBlocksCnt;
 Q_DECLARE_LOGGING_CATEGORY(TG_UTIL_UTILS)
 
 
-class LIBQTELEGRAMSHARED_EXPORT Utils : public QObject
+class LIBQTELEGRAMSHARED_EXPORT Utils
 {
-    Q_OBJECT
 public:
-    explicit Utils(QObject *parent = 0);
-
     static qint32 randomBytes(void *buffer, qint32 count);
     static qint32 serializeBignum(BIGNUM *b, char *buffer, qint32 maxlen);
     static double getUTime(qint32 clockId);
