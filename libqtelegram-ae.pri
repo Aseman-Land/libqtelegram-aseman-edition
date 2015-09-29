@@ -6,12 +6,12 @@ DEFINES += LQTG_DISABLE_LOG
 
 win32 {
     isEmpty(OPENSSL_LIB_DIR): OPENSSL_LIB_DIR = $${DESTDIR}
-    isEmpty(OPENSSL_INCLUDE_PATH): OPENSSL_INCLUDE_PATH = $${DESTDIR}/include/openssl
+    isEmpty(OPENSSL_INCLUDE_PATH): OPENSSL_INCLUDE_PATH = $${DESTDIR}/include
 
     LIBS += -L$${OPENSSL_LIB_DIR} -lssleay32 -lcrypto -lz
     INCLUDEPATH += $${OPENSSL_INCLUDE_PATH}
 } else {
-    isEmpty(OPENSSL_INCLUDE_PATH): OPENSSL_INCLUDE_PATH = /usr/include/openssl /usr/local/include/openssl
+    isEmpty(OPENSSL_INCLUDE_PATH): OPENSSL_INCLUDE_PATH = /usr/include/ /usr/local/include/
     isEmpty(OPENSSL_LIB_DIR) {
         LIBS += -lssl -lcrypto -lz
     } else {

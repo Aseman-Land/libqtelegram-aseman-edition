@@ -32,7 +32,7 @@
 #include <unistd.h>
 #endif
 
-#include <bn.h>
+#include <openssl/bn.h>
 
 Q_LOGGING_CATEGORY(TG_CORE_SETTINGS, "tg.core.settings")
 

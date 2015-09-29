@@ -20,8 +20,8 @@
  */
 
 #include "session.h"
-#include <rand.h>
-#include <sha.h>
+#include <openssl/rand.h>
+#include <openssl/sha.h>
 #include <QDateTime>
 #include "util/tlvalues.h"
 #include "telegram/coretypes.h"

@@ -25,7 +25,7 @@
 #include <QObject>
 #include <QLoggingCategory>
 
-#include <bn.h>
+#include <openssl/bn.h>
 
 Q_DECLARE_LOGGING_CATEGORY(TG_CORE_INBOUNDPKT)
 

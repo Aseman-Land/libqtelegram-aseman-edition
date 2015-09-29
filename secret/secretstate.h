@@ -20,7 +20,7 @@
 
 #include <QObject>
 #include <QMap>
-#include <bn.h>
+#include <openssl/bn.h>
 #include "util/utils.h"
 #include "telegram/types/inputuser.h"
 #include "secretchat.h"

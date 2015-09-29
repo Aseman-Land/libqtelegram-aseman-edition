@@ -27,7 +27,7 @@
 #include <QLoggingCategory>
 #include <QSharedPointer>
 
-#include <bn.h>
+#include <openssl/bn.h>
 
 Q_DECLARE_LOGGING_CATEGORY(TG_CORE_OUTBOUNDPKT)
 

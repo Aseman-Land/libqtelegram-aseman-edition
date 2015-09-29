@@ -25,8 +25,8 @@
 #include <QObject>
 #include "core/outboundpkt.h"
 
-#include <bn.h>
-#include <aes.h>
+#include <openssl/bn.h>
+#include <openssl/aes.h>
 
 class CryptoUtils : public QObject
 {

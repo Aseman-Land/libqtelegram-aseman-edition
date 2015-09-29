@@ -21,8 +21,8 @@
 #include "util/utils.h"
 #include "core/settings.h"
 #include "telegram/coretypes.h"
-#include <sha.h>
-#include <aes.h>
+#include <openssl/sha.h>
+#include <openssl/aes.h>
 
 Q_LOGGING_CATEGORY(TG_SECRET_DECRYPTER, "tg.secret.decrypter")
 

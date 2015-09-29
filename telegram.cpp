@@ -22,8 +22,8 @@
 
 #include <exception>
 #include <stdexcept>
-#include <sha.h>
-#include <md5.h>
+#include <openssl/sha.h>
+#include <openssl/md5.h>
 
 #include <QDebug>
 #include <QLoggingCategory>

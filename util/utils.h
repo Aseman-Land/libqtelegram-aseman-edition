@@ -33,7 +33,7 @@ qint32 freeBlocksCnt;
 #endif
 
 #include <QObject>
-#include <bn.h>
+#include <openssl/bn.h>
 #include "constants.h"
 #include "libqtelegram_global.h"
 #include <QLoggingCategory>

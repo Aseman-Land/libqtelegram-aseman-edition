@@ -21,7 +21,7 @@
 
 #include "dcauth.h"
 
-#include <sha.h>
+#include <openssl/sha.h>
 #include "util/utils.h"
 #include "util/tlvalues.h"
 #include "util/asserter.h"
