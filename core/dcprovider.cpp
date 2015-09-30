@@ -269,6 +269,7 @@ void DcProvider::onConfigReceived(qint64 msgId, const Config &config) {
         DC *dc = mDcs.value(dcOption.id());
 
         // check if dc is not null or if received host and port are not equals than settings ones
+//        if ((!dc) || ((dc->host() != dcOption.ipAddress()) || (dc->port() != dcOption.port()))) {
         if ((!dc) || (dc->state() < DC::authKeyCreated && ((dc->host() != dcOption.ipAddress()) || (dc->port() != dcOption.port()))) ) {
             // if not exists dc or host and port different, create a new dc object for this dcId and add it to m_dcs map
             dc = new DC(dcOption.id());
