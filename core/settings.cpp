@@ -309,6 +309,11 @@ void Settings::setAuthConfigMethods(Settings::ReadFunc readFunc, Settings::Write
     _telegram_settings_write_fnc = writeFunc;
 }
 
+void Settings::clearAuth(const QString &configPath, const QString &phone)
+{
+    _telegram_settings_write_fnc(configPath, phone, QVariantMap());
+}
+
 void Settings::readSecretFile() {
     QSettings settings(m_secretChatFilename, QSettings::IniFormat);
     mVersion = settings.value(ST_VERSION, 0).toInt();

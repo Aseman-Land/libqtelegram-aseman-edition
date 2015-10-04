@@ -138,6 +138,7 @@ public:
     typedef bool (*WriteFunc)(const QString &configPath, const QString &phone, const QVariantMap &map);
 
     static void setAuthConfigMethods(ReadFunc readFunc, WriteFunc writeFunc);
+    static void clearAuth(const QString &configPath, const QString &phone);
 
 private:
     void readAuthFile();
