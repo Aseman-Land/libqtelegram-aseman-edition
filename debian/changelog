@@ -1,3 +1,17 @@
+libqtelegram-ae (0.6.0-6aseman1-vivid) vivid; urgency=medium
+
+  * API 29 support
+  * Many bugfix and improvements
+
+ -- Aseman Team <contact@aseman.co>  Mon, 5 Oct 2015 10:30:00 +0330
+ 
+libqtelegram-ae (0.6.0-6aseman1-trusty) trusty; urgency=medium
+
+  * API 29 support
+  * Many bugfix and improvements
+
+ -- Aseman Team <contact@aseman.co>  Mon, 5 Oct 2015 10:30:00 +0330
+ 
 libqtelegram-ae (0.5.0-1aseman1-vivid) vivid; urgency=medium
 
   * Many bugfix and improvements
