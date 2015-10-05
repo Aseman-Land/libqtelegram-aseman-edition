@@ -160,6 +160,7 @@ void Connection::onReadyRead() {
             if (mOpLength == 0x7f) {
                 readed = readIn(&mOpLength, 3);
             }
+            Q_UNUSED(readed)
             mOpLength *= 4;
         }
 

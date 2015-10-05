@@ -20,9 +20,9 @@
 
 #include <QObject>
 #include <QMap>
-#include <bn.h>
+#include <openssl/bn.h>
 #include "util/utils.h"
-#include "types/inputuser.h"
+#include "telegram/types/inputuser.h"
 #include "secretchat.h"
 
 class SecretState : public QObject

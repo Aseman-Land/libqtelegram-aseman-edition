@@ -27,12 +27,13 @@
 #include <QMap>
 #include <QPair>
 #include <QLoggingCategory>
-#include "types/inputuser.h"
-#include <bn.h>
-#include "types/encryptedchat.h"
-#include "types/decryptedmessage.h"
-#include "libqtelegram_global.h"
+#include <openssl/bn.h>
+
+#include "telegram/types/inputuser.h"
+#include "telegram/types/encryptedchat.h"
+#include "secret/decryptedmessage.h"
 #include "util/constants.h"
+#include "libqtelegram_global.h"
 
 Q_DECLARE_LOGGING_CATEGORY(TG_SECRET_SECRETCHAT)
 

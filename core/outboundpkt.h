@@ -25,36 +25,13 @@
 #include <QObject>
 #include <QByteArray>
 #include <QLoggingCategory>
-#include <bn.h>
-#include "util/constants.h"
-#include "settings.h"
-#include "types/inputpeer.h"
-#include "types/inputuser.h"
-#include "types/inputcontact.h"
-#include "types/messagesfilter.h"
-#include "types/inputmedia.h"
-#include "types/inputfile.h"
-#include "types/inputphoto.h"
-#include "types/inputgeopoint.h"
-#include "types/inputvideo.h"
-#include "types/inputaudio.h"
-#include "types/inputdocument.h"
-#include "types/inputfilelocation.h"
-#include "types/inputchatphoto.h"
-#include "types/inputphotocrop.h"
-#include "types/inputnotifypeer.h"
-#include "types/inputpeernotifysettings.h"
-#include "types/inputgeochat.h"
-#include "types/inputencryptedchat.h"
-#include "types/inputencryptedfile.h"
-#include "types/inputprivacykey.h"
-#include "types/inputprivacyrule.h"
-#include "types/accountdaysttl.h"
-
 #include <QSharedPointer>
+
+#include <openssl/bn.h>
 
 Q_DECLARE_LOGGING_CATEGORY(TG_CORE_OUTBOUNDPKT)
 
+class Settings;
 class OutboundPkt
 {
 public:
@@ -78,27 +55,6 @@ public:
     void appendRandom(qint32 n);
     void appendBool(bool b);
 
-    void appendInputPeer(const InputPeer &peer);
-    void appendInputUser(const InputUser &user);
-    void appendInputContact(const InputContact &contact);
-    void appendMessagesFilter(const MessagesFilter &filter);
-    void appendInputMedia(const InputMedia &media);
-    void appendInputFileLocation(const InputFileLocation &location);
-    void appendInputChatPhoto(const InputChatPhoto &photo);
-    void appendInputNotifyPeer(const InputNotifyPeer &peer);
-    void appendInputPeerNotifySettings(const InputPeerNotifySettings &settings);
-    void appendInputFile(const InputFile &file);
-    void appendInputGeoPoint(const InputGeoPoint &geo);
-    void appendInputPhotoCrop(const InputPhotoCrop &crop);
-    void appendInputPhoto(const InputPhoto &photo);
-    void appendInputEncryptedChat(const InputEncryptedChat &inputEncryptedChat);
-    void appendInputEncryptedFile(const InputEncryptedFile &inputEncryptedFile);
-    void appendSendMessageAction(const SendMessageAction &action);
-    void appendDocumentAttribute(const DocumentAttribute &attr);
-    void appendInputPrivacyKey(const InputPrivacyKey &key);
-    void appendInputPrivacyRule(const InputPrivacyRule &rule);
-    void appendAccountDaysTTL(const AccountDaysTTL &ttl);
-
     qint32 length() const;
     qint32 *buffer();
 
@@ -106,11 +62,6 @@ protected:
     qint32 *m_packetPtr;
     QSharedPointer<qint32> __buffer;
     qint32 *m_packetBuffer;
-
-    void appendInputAudio(const InputAudio &audio);
-    void appendInputVideo(const InputVideo &video);
-    void appendInputDocument(const InputDocument &document);
-    void appendInputGeoChat(const InputGeoChat &geoChat);
 
 private:
     Settings *mSettings;

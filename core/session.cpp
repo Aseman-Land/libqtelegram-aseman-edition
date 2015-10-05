@@ -20,14 +20,16 @@
  */
 
 #include "session.h"
-#include <rand.h>
-#include <sha.h>
+#include <openssl/rand.h>
+#include <openssl/sha.h>
 #include <QDateTime>
 #include "util/tlvalues.h"
+#include "telegram/coretypes.h"
 
 Q_LOGGING_CATEGORY(TG_CORE_SESSION, "tg.core.session")
 
 qint64 Session::m_clientLastMsgId = 0;
+
 
 Session::Session(DC *dc, Settings *settings, CryptoUtils *crypto, QObject *parent) :
     Connection(dc->host(), dc->port(), parent),
@@ -123,7 +125,8 @@ void Session::processRpcMessage(InboundPkt &inboundPkt) {
     //check msg_key is indeed equal to SHA1 of the plaintext obtained after decription (without final padding bytes).
     static uchar sha1Buffer[20];
     SHA1((uchar *)&enc->serverSalt, enc->msgLen + (MINSZ - UNENCSZ), sha1Buffer);
-    Q_ASSERT(!memcmp (&enc->msgKey, sha1Buffer + 4, 16));
+    if(memcmp (&enc->msgKey, sha1Buffer + 4, 16))
+        return;
 
     if (m_dc->serverSalt() != enc->serverSalt) {
         m_dc->setServerSalt(enc->serverSalt);
@@ -175,18 +178,18 @@ void Session::rpcExecuteAnswer(InboundPkt &inboundPkt, qint64 msgId) {
     case TL_RpcResult:
         workRpcResult(inboundPkt, msgId);
         return;
-    case TL_UpdateShort:
+    case UpdatesType::typeUpdateShort:
         workUpdateShort(inboundPkt, msgId);
         return;
-    case TL_UpdatesCombined:
+    case UpdatesType::typeUpdatesCombined:
         workUpdatesCombined(inboundPkt, msgId);
-    case TL_Updates:
+    case UpdatesType::typeUpdates:
         workUpdates(inboundPkt, msgId);
         return;
-    case TL_UpdateShortMessage:
+    case UpdatesType::typeUpdateShortMessage:
         workUpdateShortMessage(inboundPkt, msgId);
         return;
-    case TL_UpdateShortChatMessage:
+    case UpdatesType::typeUpdateShortChatMessage:
         workUpdateShortChatMessage(inboundPkt, msgId);
         return;
     case TL_GZipPacked:
@@ -204,7 +207,7 @@ void Session::rpcExecuteAnswer(InboundPkt &inboundPkt, qint64 msgId) {
     case TL_MsgNewDetailedInfo:
         workNewDetailedInfo(inboundPkt, msgId);
         return;
-    case TL_UpdatesTooLong:
+    case UpdatesType::typeUpdatesTooLong:
         workUpdatesTooLong(inboundPkt, msgId);
         return;
     case TL_BadMsgNotification:
@@ -245,7 +248,7 @@ void Session::workNewSessionCreated(InboundPkt &inboundPkt, qint64 msgId) {
 void Session::workMsgsAck(InboundPkt &inboundPkt, qint64 msgId) {
     qCDebug(TG_CORE_SESSION) << "workMsgsAck: msgId =" << QString::number(msgId, 16);
     mAsserter.check(inboundPkt.fetchInt() == (qint32)TL_MsgsAck);
-    mAsserter.check(inboundPkt.fetchInt () == (qint32)TL_Vector);
+    mAsserter.check(inboundPkt.fetchInt () == (qint32)CoreTypes::typeVector);
     qint32 n = inboundPkt.fetchInt();
     for (qint32 i = 0; i < n; i++) {
         qint64 id = inboundPkt.fetchLong ();
@@ -272,120 +275,38 @@ void Session::workRpcResult(InboundPkt &inboundPkt, qint64 msgId) {
 
 void Session::workUpdateShort(InboundPkt &inboundPkt, qint64 msgId) {
     qCDebug(TG_CORE_SESSION) << "workUpdateShort: msgId =" << QString::number(msgId, 16);
-    mAsserter.check(inboundPkt.fetchInt() == (qint32)TL_UpdateShort);
-    Update update = inboundPkt.fetchUpdate();
-    qint32 date = inboundPkt.fetchInt();
-    Q_EMIT updateShort(update, date);
+    UpdatesType upd(&inboundPkt);
+    Q_EMIT updateShort(upd.update(), upd.date());
 }
 
 void Session::workUpdatesCombined(InboundPkt &inboundPkt, qint64 msgId) {
     qCDebug(TG_CORE_SESSION) << "workUpdatesCombined: msgId =" << QString::number(msgId, 16);
-    mAsserter.check(inboundPkt.fetchInt() == (qint32)TL_UpdatesCombined);
-    //updates
-    mAsserter.check(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    qint32 n = inboundPkt.fetchInt();
-    QList<Update> updates;
-    for (qint32 i = 0; i < n; i++) {
-        updates.append(inboundPkt.fetchUpdate());
-    }
-    //users
-    mAsserter.check(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    n = inboundPkt.fetchInt();
-    QList<User> users;
-    for (qint32 i = 0; i < n; i++) {
-        users.append(inboundPkt.fetchUser());
-    }
-    //chats
-    mAsserter.check(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    n = inboundPkt.fetchInt();
-    QList<Chat> chats;
-    for (qint32 i = 0; i < n; i++) {
-        chats.append(inboundPkt.fetchChat());
-    }
-    qint32 date = inboundPkt.fetchInt();
-    qint32 seqStart = inboundPkt.fetchInt();
-    qint32 seq = inboundPkt.fetchInt();
-    Q_EMIT updatesCombined(updates, users, chats, date, seqStart, seq);
+    UpdatesType upd(&inboundPkt);
+    Q_EMIT updatesCombined(upd.updates(), upd.users(), upd.chats(), upd.date(), upd.seqStart(), upd.seq());
 }
 
 void Session::workUpdates(InboundPkt &inboundPkt, qint64 msgId) {
     qCDebug(TG_CORE_SESSION) << "workUpdates: msgId =" << QString::number(msgId, 16);
-    mAsserter.check(inboundPkt.fetchInt() == (qint32)TL_Updates);
-    //updates
-    mAsserter.check(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    qint32 n = inboundPkt.fetchInt();
-    QList<Update> updatesList;
-    for (qint32 i = 0; i < n; i++) {
-        updatesList.append(inboundPkt.fetchUpdate());
-    }
-    //users
-    mAsserter.check(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    n = inboundPkt.fetchInt();
-    QList<User> users;
-    for (qint32 i = 0; i < n; i++) {
-        users.append(inboundPkt.fetchUser());
-    }
-    //chats
-    mAsserter.check(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    n = inboundPkt.fetchInt();
-    QList<Chat> chats;
-    for (qint32 i = 0; i < n; i++) {
-        chats.append(inboundPkt.fetchChat());
-    }
-    qint32 date = inboundPkt.fetchInt();
-    qint32 seq = inboundPkt.fetchInt();
-    Q_EMIT updates(updatesList, users, chats, date, seq);
+    UpdatesType upd(&inboundPkt);
+    Q_EMIT updates(upd.updates(), upd.users(), upd.chats(), upd.date(), upd.seq());
 }
 
 void Session::workUpdateShortMessage(InboundPkt &inboundPkt, qint64 msgId) {
     qCDebug(TG_CORE_SESSION) << "workUpdateShortMessage: msgId =" << QString::number(msgId, 16);
-    mAsserter.check(inboundPkt.fetchInt() == (qint32)TL_UpdateShortMessage);
-    qint32 flags = inboundPkt.fetchInt();
-    qint32 id = inboundPkt.fetchInt();
-    qint32 userId = inboundPkt.fetchInt();
-    QString message = inboundPkt.fetchQString();
-    qint32 pts = inboundPkt.fetchInt();
-    qint32 ptsCount = inboundPkt.fetchInt();
-    qint32 date = inboundPkt.fetchInt();
-    qint32 fwd_from_id = 0;
-    qint32 fwd_date = 0;
-    qint32 reply_to_msg_id = 0;
-    bool unread = (flags & 1<<0);
-    bool out = (flags & 1<<1);
-    if(flags & (1<<2)) {
-        fwd_from_id = inboundPkt.fetchInt();
-        fwd_date = inboundPkt.fetchInt();
-    }
-    if(flags & (1<<3)) {
-        reply_to_msg_id = inboundPkt.fetchInt();
-    }
-    Q_EMIT updateShortMessage(id, userId, message, pts, ptsCount, date, fwd_from_id, fwd_date, reply_to_msg_id, unread, out);
+    Q_UNUSED(msgId)
+    UpdatesType upd(&inboundPkt);
+    bool unread = (upd.flags() & 0x1);
+    bool out = (upd.flags() & 0x2);
+    Q_EMIT updateShortMessage(upd.id(), upd.userId(), upd.message(), upd.pts(), upd.ptsCount(), upd.date(), upd.fwdFromId(), upd.fwdDate(), upd.replyToMsgId(), unread, out);
 }
 
 void Session::workUpdateShortChatMessage(InboundPkt &inboundPkt, qint64 msgId) {
     qCDebug(TG_CORE_SESSION) << "workUpdateShortChatMessage: msgId =" << QString::number(msgId, 16);
-    mAsserter.check(inboundPkt.fetchInt() == (qint32)TL_UpdateShortChatMessage);
-    qint32 flags = inboundPkt.fetchInt();
-    qint32 id = inboundPkt.fetchInt();
-    qint32 fromId = inboundPkt.fetchInt();
-    qint32 chatId = inboundPkt.fetchInt();
-    QString message = inboundPkt.fetchQString();
-    qint32 pts = inboundPkt.fetchInt();
-    qint32 pts_count = inboundPkt.fetchInt();
-    qint32 date = inboundPkt.fetchInt();
-    qint32 fwd_from_id = 0;
-    qint32 fwd_date = 0;
-    qint32 reply_to_msg_id = 0;
-    bool unread = (flags & 1<<0);
-    bool out = (flags & 1<<1);
-    if(flags & (1<<2)) {
-        fwd_from_id = inboundPkt.fetchInt();
-        fwd_date = inboundPkt.fetchInt();
-    }
-    if(flags & (1<<3)) {
-        reply_to_msg_id = inboundPkt.fetchInt();
-    }
-    Q_EMIT updateShortChatMessage(id, fromId, chatId, message, pts, pts_count, date, fwd_from_id, fwd_date, reply_to_msg_id, unread, out);
+    Q_UNUSED(msgId)
+    UpdatesType upd(&inboundPkt);
+    bool unread = (upd.flags() & 0x1);
+    bool out = (upd.flags() & 0x2);
+    Q_EMIT updateShortChatMessage(upd.id(), upd.fromId(), upd.chatId(), upd.message(), upd.pts(), upd.ptsCount(), upd.date(), upd.fwdFromId(), upd.date(), upd.replyToMsgId(), unread, out);
 }
 
 void Session::workPacked(InboundPkt &inboundPkt, qint64 msgId) {
@@ -445,7 +366,8 @@ void Session::workNewDetailedInfo(InboundPkt &inboundPkt, qint64 msgId) {
 
 void Session::workUpdatesTooLong(InboundPkt &inboundPkt, qint64 msgId) {
     qCDebug(TG_CORE_SESSION) << "workUpdatesTooLong: msgId =" << QString::number(msgId, 16);
-    mAsserter.check(inboundPkt.fetchInt() == (qint32)TL_UpdatesTooLong);
+    UpdatesType upd(&inboundPkt);
+    Q_UNUSED(upd)
     Q_EMIT updatesTooLong();
 }
 
@@ -685,7 +607,7 @@ void Session::ackAll() {
 void Session::sendAcks(const QList<qint64> &msgIds) {
     OutboundPkt p(mSettings);
     p.appendInt(TL_MsgsAck);
-    p.appendInt(TL_Vector);
+    p.appendInt(CoreTypes::typeVector);
     int n = msgIds.length();
     p.appendInt(n);
     Q_FOREACH (qint64 msgId, msgIds) {

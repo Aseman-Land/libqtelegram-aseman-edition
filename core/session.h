@@ -25,12 +25,15 @@
 #include "dc.h"
 #include "connection.h"
 #include "query.h"
+#include "telegram/types/updatestype.h"
 #include <QMap>
 #include <QLoggingCategory>
 
 #include "eventtimer.h"
 
 Q_DECLARE_LOGGING_CATEGORY(TG_CORE_SESSION)
+
+
 
 class Session : public Connection
 {

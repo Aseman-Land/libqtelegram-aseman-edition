@@ -75,7 +75,7 @@
 #include <QObject>
 #include <QList>
 #include <QLoggingCategory>
-#include <rsa.h>
+#include <openssl/rsa.h>
 #include "secret/secretchat.h"
 #include "libqtelegram_global.h"
 
@@ -133,6 +133,12 @@ public:
 
     bool removeAuthFile();
     void writeCrashFile();
+
+    typedef bool (*ReadFunc)(const QString &configPath, const QString &phone, QVariantMap &map);
+    typedef bool (*WriteFunc)(const QString &configPath, const QString &phone, const QVariantMap &map);
+
+    static void setAuthConfigMethods(ReadFunc readFunc, WriteFunc writeFunc);
+    static void clearAuth(const QString &configPath, const QString &phone);
 
 private:
     void readAuthFile();

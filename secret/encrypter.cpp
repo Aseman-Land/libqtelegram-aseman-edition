@@ -17,14 +17,17 @@
 
 #include "encrypter.h"
 #include "util/utils.h"
-#include <sha.h>
-#include <aes.h>
+#include <openssl/sha.h>
+#include <openssl/aes.h>
 #include "decryptedmessagebuilder.h"
 #include "util/tlvalues.h"
+#include "telegram/coretypes.h"
 
 Q_LOGGING_CATEGORY(TG_SECRET_ENCRYPTER, "tg.secret.encrypter")
 
 #include <stdlib.h>
+
+
 
 Encrypter::Encrypter(Settings *settings) :
     OutboundPkt(settings),
@@ -49,7 +52,7 @@ QByteArray Encrypter::generateEncryptedData(const DecryptedMessage &decryptedMes
     if (mSecretChat->layer() >= 17) {
         appendInt(TL_DecryptedMessageLayer);
         appendBytes(DecryptedMessageBuilder::generateRandomBytes());
-        appendInt(LAYER);
+        appendInt(CoreTypes::typeLayerVersion);
         appendInt(mSecretChat->getInSeqNoParam());
         appendInt(mSecretChat->getOutSeqNoParam());
     }
@@ -88,7 +91,7 @@ void Encrypter::appendDecryptedMessage(const DecryptedMessage &decryptedMessage)
 void Encrypter::appendDecryptedMessageMedia(const DecryptedMessageMedia &media) {
     DecryptedMessageMedia::DecryptedMessageMediaType x = media.classType();
     appendInt(x);
-    switch(x) {
+    switch(static_cast<int>(x)) {
     case DecryptedMessageMedia::typeDecryptedMessageMediaEmpty: {
         break;
     }
@@ -180,7 +183,7 @@ void Encrypter::appendDecryptedMessageAction(const DecryptedMessageAction &actio
     case DecryptedMessageAction::typeDecryptedMessageActionReadMessages:
     case DecryptedMessageAction::typeDecryptedMessageActionDeleteMessages:
     case DecryptedMessageAction::typeDecryptedMessageActionScreenshotMessages: {
-        appendInt(TL_Vector);
+        appendInt(CoreTypes::typeVector);
         appendInt(action.randomIds().size());
         Q_FOREACH (qint64 randomId, action.randomIds()) {
             appendLong(randomId);

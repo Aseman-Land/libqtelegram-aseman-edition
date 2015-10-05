@@ -21,10 +21,11 @@
 
 #include "dcauth.h"
 
-#include <sha.h>
+#include <openssl/sha.h>
 #include "util/utils.h"
 #include "util/tlvalues.h"
 #include "util/asserter.h"
+#include "telegram/coretypes.h"
 #include <QDateTime>
 
 #if defined(Q_OS_MAC) || defined(Q_OS_WIN)
@@ -118,7 +119,7 @@ void DCAuth::processResPQAnswer(const InboundPkt &inboundPkt) {
     qCDebug(TG_CORE_DCAUTH) << "received pq =" << what;
 
     qint64 g = Utils::findDivider(what);
-    mAsserter.check(g > 1 && g < what);
+    mAsserter.check(g > 1 && g < (qint64)what);
     p1 = g;
     p2 = what / g;
     if (p1 > p2) {
@@ -127,7 +128,7 @@ void DCAuth::processResPQAnswer(const InboundPkt &inboundPkt) {
 
     qCDebug(TG_CORE_DCAUTH) << "p1 =" << p1 << ", p2 =" << p2;
 
-    mAsserter.check(*(qint32 *) (from) == TL_Vector);
+    mAsserter.check(*(qint32 *) (from) == CoreTypes::typeVector);
     qint32 fingerprints_num = *(qint32 *)(from + 4);
     mAsserter.check(fingerprints_num >= 1 && fingerprints_num <= 64 && len == fingerprints_num * 8 + 8 + (from - buffer));
     qint64 *fingerprints = (qint64 *) (from + 8);

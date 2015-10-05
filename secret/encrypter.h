@@ -19,7 +19,7 @@
 #define ENCRYPTER_H
 
 #include "core/outboundpkt.h"
-#include "types/decryptedmessage.h"
+#include "secret/decryptedmessage.h"
 #include "secret/secretchat.h"
 #include <QLoggingCategory>
 

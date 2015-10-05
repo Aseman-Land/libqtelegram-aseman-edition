@@ -20,9 +20,9 @@
  */
 
 #include "utils.h"
-#include <rand.h>
-#include <pem.h>
-#include <err.h>
+#include <openssl/rand.h>
+#include <openssl/pem.h>
+#include <openssl/err.h>
 #include <zlib.h>
 #if (QT_VERSION < QT_VERSION_CHECK(5, 4, 0))
 #include <sys/utsname.h>
@@ -409,7 +409,10 @@ QString Utils::getSystemVersion() {
 }
 
 QString Utils::getAppVersion() {
-    return QCoreApplication::applicationVersion();
+    if(QCoreApplication::applicationVersion().isEmpty())
+        return "1.0";
+    else
+        return QCoreApplication::applicationVersion();
 }
 
 QString Utils::parsePhoneNumberDigits(const QString &phoneNumber) {
@@ -461,12 +464,12 @@ qint64 Utils::findDivider(qint64 pq) {
             while (b) {
                 if (b & 1) {
                     c += a;
-                    if (c >= pq) {
+                    if ((qint64)c >= pq) {
                         c -= pq;
                     }
                 }
                 a += a;
-                if (a >= pq) {
+                if ((qint64)a >= pq) {
                     a -= pq;
                 }
                 b >>= 1;
@@ -481,7 +484,7 @@ qint64 Utils::findDivider(qint64 pq) {
                 y = x;
             }
         }
-        if (g > 1 && g < pq) break;
+        if (g > 1 && (qint64)g < pq) break;
     }
     qCDebug(TG_UTIL_UTILS) << "got" << g << "divider after" << it << "iterations";
     return g;
