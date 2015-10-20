@@ -216,6 +216,9 @@ Api::Api(Session *session, Settings *settings, CryptoUtils *crypto, QObject *par
     uploadGetFileMethods.onError = &Api::onUploadGetFileError;
 }
 
+Api::~Api() {
+}
+
 void Api::onError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT error(q->msgId(), errorCode, errorText, q->name() );
 }

@@ -18,8 +18,7 @@
 #include "secretstate.h"
 #include "core/settings.h"
 
-SecretState::SecretState(Settings *settings, QObject *parent) :
-    QObject(parent),
+SecretState::SecretState(Settings *settings) :
     mSettings(settings),
     mVersion(0),
     mG(0),

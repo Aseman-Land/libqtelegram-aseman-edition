@@ -80,9 +80,8 @@ Telegram::Telegram(const QString &defaultHostAddress, qint16 defaultHostPort, qi
     }
 
     mDcProvider = new DcProvider(mSettings, mCrypto);
-    mDcProvider->setParent(this);
 
-    mSecretState = new SecretState(mSettings, this);
+    mSecretState = new SecretState(mSettings);
     mEncrypter = new Encrypter(mSettings);
     mDecrypter = new Decrypter(mSettings);
 
@@ -354,7 +353,7 @@ void Telegram::onDcProviderReady() {
 qint64 Telegram::messagesCreateEncryptedChat(const InputUser &user) {
     qCDebug(TG_LIB_SECRET) << "creating new encrypted chat";
     // generate a new object where store all the needed secret chat data
-    SecretChat *secretChat = new SecretChat(mSettings, this);
+    SecretChat *secretChat = new SecretChat(mSettings);
     secretChat->setRequestedUser(user);
     return generateGAorB(secretChat);
 }
@@ -815,7 +814,7 @@ void Telegram::processSecretChatUpdate(const Update &update) {
 
             ASSERT(participantId == ourId());
 
-            SecretChat* secretChat = new SecretChat(mSettings, this);
+            SecretChat* secretChat = new SecretChat(mSettings);
             secretChat->setChatId(encryptedChat.id());
             secretChat->setAccessHash(encryptedChat.accessHash());
             secretChat->setDate(encryptedChat.date());

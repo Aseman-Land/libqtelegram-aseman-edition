@@ -37,9 +37,8 @@
 Q_DECLARE_LOGGING_CATEGORY(TG_SECRET_SECRETCHAT)
 
 class Settings;
-class LIBQTELEGRAMSHARED_EXPORT SecretChat : public QObject
+class LIBQTELEGRAMSHARED_EXPORT SecretChat
 {
-    Q_OBJECT
 public:
 
     enum State {
@@ -51,7 +50,7 @@ public:
 
     typedef QMap<QPair<qint32,qint32>, qint64> Sequence;
 
-    explicit SecretChat(Settings *settings, QObject *parent = 0);
+    explicit SecretChat(Settings *settings);
     ~SecretChat();
 
     void createMyKey(const QByteArray &serverRandom);
