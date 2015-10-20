@@ -25,11 +25,10 @@
 #include "types/inputuser.h"
 #include "secretchat.h"
 
-class SecretState : public QObject
+class SecretState
 {
-    Q_OBJECT
 public:
-    explicit SecretState(Settings *settings, QObject *parent = 0);
+    explicit SecretState(Settings *settings);
     ~SecretState();
 
     qint32 version() { return mVersion; }
