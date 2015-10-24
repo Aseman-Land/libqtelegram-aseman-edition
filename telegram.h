@@ -473,4 +473,6 @@ private:
     TelegramPrivate *prv;
 };
 
+Q_DECLARE_METATYPE(Telegram*)
+
 #endif // TELEGRAM_H
