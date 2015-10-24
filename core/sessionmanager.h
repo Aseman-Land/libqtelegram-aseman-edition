@@ -37,7 +37,7 @@ class SessionManager : public QObject
     Q_OBJECT
 public:
     explicit SessionManager(Session *session, Settings *settings, CryptoUtils *crypto, QObject *parent = 0);
-    ~SessionManager();
+    virtual ~SessionManager();
 
     void createMainSessionToDc(DC *dc);
     void changeMainSessionToDc(DC *dc);

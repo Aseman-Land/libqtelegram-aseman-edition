@@ -64,7 +64,8 @@ public:
         mLibraryState(Telegram::LoggedOut),
         mLastRetryType(Telegram::NotRetry),
         mSlept(false),
-        mApi(0) {}
+        mApi(0),
+        mSecretState(0) {}
 
     Telegram::LibraryState mLibraryState;
     Telegram::LastRetryType mLastRetryType;
@@ -88,7 +89,7 @@ public:
     QHash<qint64, int> pendingMediaSends;
 
     // encrypted chats
-    SecretState *mSecretState;
+    SecretState mSecretState;
     Encrypter *mEncrypter;
     Decrypter *mDecrypter;
 
@@ -137,13 +138,13 @@ Telegram::Telegram(const QString &defaultHostAddress, qint16 defaultHostPort, qi
     prv->mDcProvider = new DcProvider(prv->mSettings, prv->mCrypto);
     prv->mDcProvider->setParent(this);
 
-    prv->mSecretState = new SecretState(prv->mSettings, this);
+    prv->mSecretState = SecretState(prv->mSettings);
     prv->mEncrypter = new Encrypter(prv->mSettings);
     prv->mDecrypter = new Decrypter(prv->mSettings);
 
     connect(prv->mDecrypter, SIGNAL(sequenceNumberGap(qint32,qint32,qint32)), SLOT(onSequenceNumberGap(qint32,qint32,qint32)));
 
-    prv->mSecretState->load();
+    prv->mSecretState.load();
 
     connect(prv->mDcProvider, SIGNAL(fatalError()), this, SIGNAL(fatalError()));
     // activate dc provider ready signal
@@ -183,7 +184,7 @@ void Telegram::setPhoneNumber(const QString &phoneNumber) {
     if (!prv->mSettings->loadSettings(phoneNumber)) {
         throw std::runtime_error("setPhoneNumber: could not load settings");
     }
-    prv->mSecretState->load();
+    prv->mSecretState.load();
 }
 
 void Telegram::init() {
@@ -403,7 +404,7 @@ void Telegram::onDcProviderReady() {
     connect(prv->mApi, SIGNAL(mainSessionReady()), this, SIGNAL(connected()));
     connect(prv->mApi, SIGNAL(mainSessionClosed()), this, SIGNAL(disconnected()));
 
-    prv->mFileHandler = FileHandler::Ptr(new FileHandler(prv->mApi, prv->mCrypto, prv->mSettings, *prv->mDcProvider, *prv->mSecretState));
+    prv->mFileHandler = FileHandler::Ptr(new FileHandler(prv->mApi, prv->mCrypto, prv->mSettings, *prv->mDcProvider, prv->mSecretState));
     connect(prv->mFileHandler.data(), SIGNAL(uploadSendFileAnswer(qint64,qint32,qint32,qint32)), SIGNAL(uploadSendFileAnswer(qint64,qint32,qint32,qint32)));
     connect(prv->mFileHandler.data(), SIGNAL(uploadGetFileAnswer(qint64,const StorageFileType&,qint32,const QByteArray&,qint32,qint32,qint32)), SIGNAL(uploadGetFileAnswer(qint64,const StorageFileType&,qint32,const QByteArray&,qint32,qint32,qint32)));
     connect(prv->mFileHandler.data(), SIGNAL(uploadCancelFileAnswer(qint64,bool)), SIGNAL(uploadCancelFileAnswer(qint64,bool)));
@@ -424,14 +425,14 @@ void Telegram::onDcProviderReady() {
 qint64 Telegram::messagesCreateEncryptedChat(const InputUser &user) {
     qCDebug(TG_LIB_SECRET) << "creating new encrypted chat";
     // generate a new object where store all the needed secret chat data
-    SecretChat *secretChat = new SecretChat(prv->mSettings, this);
+    SecretChat *secretChat = new SecretChat(prv->mSettings);
     secretChat->setRequestedUser(user);
     return generateGAorB(secretChat);
 }
 
 qint64 Telegram::messagesAcceptEncryptedChat(qint32 chatId) {
     qCDebug(TG_LIB_SECRET) << "accepting requested encrypted chat with id" << chatId;
-    SecretChat *secretChat = prv->mSecretState->chats().value(chatId);
+    SecretChat *secretChat = prv->mSecretState.chats().value(chatId);
 
     if (!secretChat) {
         qCWarning(TG_LIB_SECRET) << "Not found any chat related to" << chatId;
@@ -443,7 +444,7 @@ qint64 Telegram::messagesAcceptEncryptedChat(qint32 chatId) {
 qint64 Telegram::messagesDiscardEncryptedChat(qint32 chatId) {
     CHECK_API;
     qCDebug(TG_LIB_SECRET) << "discarding encrypted chat with id" << chatId;
-    SecretChat *secretChat = prv->mSecretState->chats().value(chatId);
+    SecretChat *secretChat = prv->mSecretState.chats().value(chatId);
     if (!secretChat) {
         qCWarning(TG_LIB_SECRET) << "Trying to discard a not existant chat";
         Q_EMIT messagesEncryptedChatDiscarded(chatId);
@@ -452,13 +453,13 @@ qint64 Telegram::messagesDiscardEncryptedChat(qint32 chatId) {
 
     qint64 requestId = prv->mApi->messagesDiscardEncryption(chatId);
     // insert another entry related to this request for deleting chat only when response is ok
-    prv->mSecretState->chats().insert(requestId, secretChat);
+    prv->mSecretState.chats().insert(requestId, secretChat);
     return requestId;
 }
 
 qint64 Telegram::messagesSetEncryptedTTL(qint64 randomId, qint32 chatId, qint32 ttl) {
     CHECK_API;
-    SecretChat *secretChat = prv->mSecretState->chats().value(chatId);
+    SecretChat *secretChat = prv->mSecretState.chats().value(chatId);
     if (!secretChat) {
         qCWarning(TG_LIB_SECRET) << "Could not set secret chat TTL, chat not found.";
         return -1;
@@ -478,14 +479,14 @@ qint64 Telegram::messagesSetEncryptedTTL(qint64 randomId, qint32 chatId, qint32 
 
     secretChat->increaseOutSeqNo();
     secretChat->appendToSequence(randomId);
-    prv->mSecretState->save();
+    prv->mSecretState.save();
 
     return requestId;
 }
 
 qint64 Telegram::messagesReadEncryptedHistory(qint32 chatId, qint32 maxDate) {
     CHECK_API;
-    SecretChat *secretChat = prv->mSecretState->chats().value(chatId);
+    SecretChat *secretChat = prv->mSecretState.chats().value(chatId);
     if (!secretChat) {
         qCWarning(TG_LIB_SECRET) << "Could not read history of a not yet existant chat";
         return -1;
@@ -500,7 +501,7 @@ qint64 Telegram::messagesReadEncryptedHistory(qint32 chatId, qint32 maxDate) {
 qint64 Telegram::messagesSendEncrypted(qint32 chatId, qint64 randomId, qint32 ttl, const QString &text) {
     CHECK_API;
 
-    SecretChat *secretChat = prv->mSecretState->chats().value(chatId);
+    SecretChat *secretChat = prv->mSecretState.chats().value(chatId);
     if (!secretChat) {
         qCWarning(TG_LIB_SECRET) << "Could not find any related secret chat to send the message";
         return -1;
@@ -520,13 +521,13 @@ qint64 Telegram::messagesSendEncrypted(qint32 chatId, qint64 randomId, qint32 tt
 
     secretChat->increaseOutSeqNo();
     secretChat->appendToSequence(randomId);
-    prv->mSecretState->save();
+    prv->mSecretState.save();
 
     return request;
 }
 
 void Telegram::onSequenceNumberGap(qint32 chatId, qint32 startSeqNo, qint32 endSeqNo) {
-    SecretChat *secretChat = prv->mSecretState->chats().value(chatId);
+    SecretChat *secretChat = prv->mSecretState.chats().value(chatId);
     ASSERT(secretChat);
 
     InputEncryptedChat inputEncryptedChat;
@@ -546,12 +547,12 @@ void Telegram::onSequenceNumberGap(qint32 chatId, qint32 startSeqNo, qint32 endS
 
     secretChat->increaseOutSeqNo();
     secretChat->appendToSequence(randomId);
-    prv->mSecretState->save();
+    prv->mSecretState.save();
 }
 
 qint64 Telegram::messagesSendEncryptedPhoto(qint32 chatId, qint64 randomId, qint32 ttl, const QString &filePath) {
 
-    SecretChat *secretChat = prv->mSecretState->chats().value(chatId);
+    SecretChat *secretChat = prv->mSecretState.chats().value(chatId);
     if (!secretChat) {
         qCWarning(TG_LIB_SECRET) << "Could not find any related secret chat to send the photo";
         return -1;
@@ -584,7 +585,7 @@ qint64 Telegram::messagesSendEncryptedPhoto(qint32 chatId, qint64 randomId, qint
 }
 
 qint64 Telegram::messagesSendEncryptedVideo(qint32 chatId, qint64 randomId, qint32 ttl, const QString &filePath, qint32 duration, qint32 width, qint32 height, const QByteArray &thumbnailBytes) {
-    SecretChat *secretChat = prv->mSecretState->chats().value(chatId);
+    SecretChat *secretChat = prv->mSecretState.chats().value(chatId);
     if (!secretChat) {
         qCWarning(TG_LIB_SECRET) << "Could not find any related secret chat to send the video";
         return -1;
@@ -615,7 +616,7 @@ qint64 Telegram::messagesSendEncryptedVideo(qint32 chatId, qint64 randomId, qint
 
 qint64 Telegram::messagesSendEncryptedDocument(qint32 chatId, qint64 randomId, qint32 ttl, const QString &filePath) {
 
-    SecretChat *secretChat = prv->mSecretState->chats().value(chatId);
+    SecretChat *secretChat = prv->mSecretState.chats().value(chatId);
     if (!secretChat) {
         qCWarning(TG_LIB_SECRET) << "Could not find any related secret chat to send the document";
         return -1;
@@ -693,20 +694,20 @@ qint64 Telegram::generateGAorB(SecretChat *secretChat) {
     CHECK_API;
     qCDebug(TG_LIB_SECRET) << "requesting for DH config parameters";
     // call messages.getDhConfig to get p and g for start creating shared key
-    qint64 reqId = prv->mApi->messagesGetDhConfig(prv->mSecretState->version(), DH_CONFIG_SERVER_RANDOM_LENGTH);
+    qint64 reqId = prv->mApi->messagesGetDhConfig(prv->mSecretState.version(), DH_CONFIG_SERVER_RANDOM_LENGTH);
     // store in secret chats map related to this request id, temporally
-    prv->mSecretState->chats().insert(reqId, secretChat);
+    prv->mSecretState.chats().insert(reqId, secretChat);
     return reqId;
 }
 
 void Telegram::onMessagesDhConfig(qint64 msgId, qint32 g, const QByteArray &p, qint32 version, const QByteArray &random) {
     qCDebug(TG_LIB_SECRET) << "received new DH parameters g ="<< QString::number(g) << ",p =" << p.toBase64()
                            << ",version =" << version;
-    prv->mSecretState->setVersion(version);
-    prv->mSecretState->setG(g);
-    prv->mSecretState->setP(p);
+    prv->mSecretState.setVersion(version);
+    prv->mSecretState.setG(g);
+    prv->mSecretState.setP(p);
 
-    if (prv->mCrypto->checkDHParams(prv->mSecretState->p(), g) < 0) {
+    if (prv->mCrypto->checkDHParams(prv->mSecretState.p(), g) < 0) {
         qCCritical(TG_TELEGRAM) << "Diffie-Hellman config parameters are not valid";
         return;
     }
@@ -716,7 +717,7 @@ void Telegram::onMessagesDhConfig(qint64 msgId, qint32 g, const QByteArray &p, q
 
 void Telegram::onMessagesDhConfigNotModified(qint64 msgId, const QByteArray &random) {
     qCDebug(TG_LIB_SECRET) << "processing DH parameters";
-    SecretChat *secretChat = prv->mSecretState->chats().take(msgId);
+    SecretChat *secretChat = prv->mSecretState.chats().take(msgId);
     ASSERT(secretChat);
     // create secret a number by taking server random (and generating a client random also to have more entrophy)
     secretChat->createMyKey(random);
@@ -724,9 +725,9 @@ void Telegram::onMessagesDhConfigNotModified(qint64 msgId, const QByteArray &ran
     BIGNUM *r = BN_new();
     Utils::ensurePtr(r);
     // do the opeation -> r = g^a mod p
-    Utils::ensure(prv->mCrypto->BNModExp(r, prv->mSecretState->g(), secretChat->myKey(), prv->mSecretState->p()));
+    Utils::ensure(prv->mCrypto->BNModExp(r, prv->mSecretState.g(), secretChat->myKey(), prv->mSecretState.p()));
     // check that g and r are greater than one and smaller than p-1. Also checking that r is between 2^{2048-64} and p - 2^{2048-64}
-    if (prv->mCrypto->checkCalculatedParams(r, prv->mSecretState->g(), prv->mSecretState->p()) < 0) {
+    if (prv->mCrypto->checkCalculatedParams(r, prv->mSecretState.g(), prv->mSecretState.p()) < 0) {
         qCCritical(TG_LIB_SECRET) << "gAOrB or g params are not valid";
         return;
     }
@@ -742,7 +743,7 @@ void Telegram::onMessagesDhConfigNotModified(qint64 msgId, const QByteArray &ran
         qint32 randomId;
         Utils::randomBytes(&randomId, 4);
         secretChat->setChatId(randomId);
-        prv->mSecretState->chats().insert(randomId, secretChat);
+        prv->mSecretState.chats().insert(randomId, secretChat);
         qCDebug(TG_LIB_SECRET) << "Requesting encryption for chatId" << secretChat->chatId();
         prv->mApi->messagesRequestEncryption(secretChat->requestedUser(), randomId, gAOrB);
         break;
@@ -750,7 +751,7 @@ void Telegram::onMessagesDhConfigNotModified(qint64 msgId, const QByteArray &ran
     case SecretChat::Requested: {
         QByteArray gA = secretChat->gAOrB();
 
-        createSharedKey(secretChat, prv->mSecretState->p(), gA);
+        createSharedKey(secretChat, prv->mSecretState.p(), gA);
         qint64 keyFingerprint = secretChat->keyFingerprint();
 
         InputEncryptedChat inputEncryptedChat;
@@ -766,7 +767,7 @@ void Telegram::onMessagesDhConfigNotModified(qint64 msgId, const QByteArray &ran
     }
 
     BN_free(r);
-    prv->mSecretState->save();
+    prv->mSecretState.save();
 }
 
 void Telegram::onMessagesRequestEncryptionEncryptedChat(qint64, const EncryptedChat &chat) {
@@ -775,9 +776,9 @@ void Telegram::onMessagesRequestEncryptionEncryptedChat(qint64, const EncryptedC
 
 void Telegram::onMessagesAcceptEncryptionEncryptedChat(qint64, const EncryptedChat &chat) {
     qCDebug(TG_LIB_SECRET) << "Joined to secret chat" << chat.id() << "with peer" << chat.adminId();
-    SecretChat *secretChat = prv->mSecretState->chats().value(chat.id());
+    SecretChat *secretChat = prv->mSecretState.chats().value(chat.id());
     secretChat->setState(SecretChat::Accepted);
-    prv->mSecretState->save();
+    prv->mSecretState.save();
     Q_EMIT messagesEncryptedChatCreated(chat.id(), chat.date(), chat.adminId(), chat.accessHash());
 
     //notify peer about our layer
@@ -796,18 +797,18 @@ void Telegram::onMessagesAcceptEncryptionEncryptedChat(qint64, const EncryptedCh
 
     secretChat->increaseOutSeqNo();
     secretChat->appendToSequence(randomId);
-    prv->mSecretState->save();
+    prv->mSecretState.save();
 
     qCDebug(TG_LIB_SECRET) << "Notified our layer:" << CoreTypes::typeLayerVersion;
 }
 
 void Telegram::onMessagesDiscardEncryptionResult(qint64 requestId, bool ok) {
-    SecretChat *secretChat = prv->mSecretState->chats().take(requestId);
+    SecretChat *secretChat = prv->mSecretState.chats().take(requestId);
     ASSERT(secretChat);
     qint32 chatId = secretChat->chatId();
     if (ok) {
-        prv->mSecretState->chats().remove(chatId);
-        prv->mSecretState->save();
+        prv->mSecretState.chats().remove(chatId);
+        prv->mSecretState.save();
         qCDebug(TG_LIB_SECRET) << "Discarded secret chat" << chatId;
         delete secretChat;
         secretChat = 0;
@@ -838,7 +839,7 @@ SecretChatMessage Telegram::toSecretChatMessage(const EncryptedMessage &encrypte
     SecretChatMessage secretChatMessage;
 
     qint32 chatId = encrypted.chatId();
-    SecretChat *secretChat = prv->mSecretState->chats().value(chatId);
+    SecretChat *secretChat = prv->mSecretState.chats().value(chatId);
 
     if (!secretChat) {
         qCWarning(TG_LIB_SECRET) << "received encrypted message does not belong to any known secret chat";
@@ -876,7 +877,7 @@ SecretChatMessage Telegram::toSecretChatMessage(const EncryptedMessage &encrypte
             secretChatMessage.setAttachment(attachment);
         }
 
-        prv->mSecretState->save();
+        prv->mSecretState.save();
     }
 
     return secretChatMessage;
@@ -891,7 +892,7 @@ void Telegram::processSecretChatUpdate(const Update &update) {
 
         // if having a not 0 randomId, the decrypted message is valid
         if (secretChatMessage.decryptedMessage().randomId()) {
-            prv->mSecretState->save();
+            prv->mSecretState.save();
             qint32 qts = update.qts();
             Q_EMIT updateSecretChatMessage(secretChatMessage, qts);
         }
@@ -923,7 +924,7 @@ void Telegram::processSecretChatUpdate(const Update &update) {
 
             ASSERT(participantId == ourId());
 
-            SecretChat* secretChat = new SecretChat(prv->mSettings, this);
+            SecretChat* secretChat = new SecretChat(prv->mSettings);
             secretChat->setChatId(encryptedChat.id());
             secretChat->setAccessHash(encryptedChat.accessHash());
             secretChat->setDate(encryptedChat.date());
@@ -932,7 +933,7 @@ void Telegram::processSecretChatUpdate(const Update &update) {
             secretChat->setGAOrB(gA);
             secretChat->setState(SecretChat::Requested);
 
-            prv->mSecretState->chats().insert(chatId, secretChat);
+            prv->mSecretState.chats().insert(chatId, secretChat);
             Q_EMIT messagesEncryptedChatRequested(chatId, date, adminId, accessHash);
             break;
         }
@@ -956,13 +957,13 @@ void Telegram::processSecretChatUpdate(const Update &update) {
             qCDebug(TG_LIB_SECRET) << "gB:" << gB.toBase64();
             qCDebug(TG_LIB_SECRET) << "received keyFingerprint:" << keyFingerprint;
 
-            SecretChat *secretChat = prv->mSecretState->chats().value(chatId);
+            SecretChat *secretChat = prv->mSecretState.chats().value(chatId);
             if (!secretChat) {
                 qCWarning(TG_LIB_SECRET) << "Could not find secret chat with id" << chatId;
                 return;
             }
 
-            createSharedKey(secretChat, prv->mSecretState->p(), gB);
+            createSharedKey(secretChat, prv->mSecretState.p(), gB);
 
             qint64 calculatedKeyFingerprint = secretChat->keyFingerprint();
             qCDebug(TG_LIB_SECRET) << "calculated keyFingerprint:" << calculatedKeyFingerprint;
@@ -976,7 +977,7 @@ void Telegram::processSecretChatUpdate(const Update &update) {
                 secretChat->setParticipantId(participantId);
                 secretChat->setState(SecretChat::Accepted);
                 qCDebug(TG_LIB_SECRET) << "Joined to secret chat" << chatId << "with peer" << participantId;
-                prv->mSecretState->save();
+                prv->mSecretState.save();
                 Q_EMIT messagesEncryptedChatCreated(chatId, date, participantId, accessHash);
 
                 //notify peer about our layer
@@ -995,7 +996,7 @@ void Telegram::processSecretChatUpdate(const Update &update) {
 
                 secretChat->increaseOutSeqNo();
                 secretChat->appendToSequence(randomId);
-                prv->mSecretState->save();
+                prv->mSecretState.save();
 
                 qCDebug(TG_LIB_SECRET) << "Notified our layer:" << CoreTypes::typeLayerVersion;
             } else {
@@ -1006,9 +1007,9 @@ void Telegram::processSecretChatUpdate(const Update &update) {
         }
         case EncryptedChat::typeEncryptedChatDiscarded: {
             qCDebug(TG_LIB_SECRET) << "Discarded chat" << chatId;
-            SecretChat *secretChat = prv->mSecretState->chats().take(chatId);
+            SecretChat *secretChat = prv->mSecretState.chats().take(chatId);
             if (secretChat) {
-                prv->mSecretState->save();
+                prv->mSecretState.save();
                 delete secretChat;
                 secretChat = 0;
             }
@@ -1025,7 +1026,7 @@ void Telegram::processSecretChatUpdate(const Update &update) {
                 return;
             }
 
-            SecretChat* secretChat = prv->mSecretState->chats().value(chatId);
+            SecretChat* secretChat = prv->mSecretState.chats().value(chatId);
             if (secretChat) {
                 secretChat->setState(SecretChat::Requested);
                 qint32 date = encryptedChat.date();
@@ -1773,7 +1774,7 @@ qint64 Telegram::uploadSendFile(FileOperation &op, int mediaType, const QString 
 
 qint64 Telegram::messagesSetEncryptedTyping(qint32 chatId, bool typing) {
     CHECK_API;
-    SecretChat *secretChat = prv->mSecretState->chats().value(chatId);
+    SecretChat *secretChat = prv->mSecretState.chats().value(chatId);
     if (!secretChat) {
         qCWarning(TG_LIB_SECRET) << "Could not read history of a not yet existant chat";
         return -1;

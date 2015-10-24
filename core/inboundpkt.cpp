@@ -35,6 +35,9 @@ InboundPkt::InboundPkt(char *buffer, qint32 length) :
     m_inEnd(m_inPtr + (m_length / 4)) {
 }
 
+InboundPkt::~InboundPkt() {
+}
+
 const char *InboundPkt::buffer() const{
     return m_buffer;
 }

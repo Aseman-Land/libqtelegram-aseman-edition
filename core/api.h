@@ -36,6 +36,7 @@ class Api : public AbstractApi
     Q_OBJECT
 public:
     explicit Api(Session *session, Settings *settings, CryptoUtils *crypto, QObject *parent = 0);
+    virtual ~Api();
 
     // Registration / authorization
     qint64 helpGetConfig();

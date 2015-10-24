@@ -33,6 +33,7 @@ class InboundPkt
 {
 public:
     explicit InboundPkt(char* buffer, qint32 len);
+    virtual ~InboundPkt();
 
     virtual const char *buffer() const;
     virtual qint32 length() const;
