@@ -75,8 +75,12 @@ DC *Session::dc() {
     return m_dc;
 }
 
+qint64 Session::generatePlainNextMsgId() {
+    return (qint64) ((QDateTime::currentDateTime().toTime_t() - mTimeDifference) * (1LL << 32)) & -4;
+}
+
 qint64 Session::generateNextMsgId() {
-    qint64 nextId = (qint64) ((QDateTime::currentDateTime().toTime_t() - mTimeDifference) * (1LL << 32)) & -4;
+    qint64 nextId = generatePlainNextMsgId();
     if (nextId <= m_clientLastMsgId) {
         nextId = m_clientLastMsgId += 4;
     } else {
@@ -466,7 +470,12 @@ void Session::workBadMsgNotification(InboundPkt &inboundPkt, qint64 msgId) {
         // update time sync difference and reset msgIds counter
         qint32 serverTime = msgId >> 32LL;
         mTimeDifference = QDateTime::currentDateTime().toTime_t() - serverTime;
-        m_clientLastMsgId = 0;
+
+        qint64 nextId = generatePlainNextMsgId();
+        if (!m_pendingQueries.contains(nextId)) {
+            m_clientLastMsgId = 0;
+        }
+
         // read removing from pending queries, recompose and send the last query
         Query *q = m_pendingQueries.take(badMsgId);
         recomposeAndSendQuery(q);
