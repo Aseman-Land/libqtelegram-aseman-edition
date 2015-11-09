@@ -459,6 +459,10 @@ void Session::workBadMsgNotification(InboundPkt &inboundPkt, qint64 msgId) {
     switch (errorCode) {
     case 16:
     case 17:
+    case 19:
+    case 32:
+    case 33:
+    case 64:
         // update time sync difference and reset msgIds counter
         qint32 serverTime = msgId >> 32LL;
         mTimeDifference = QDateTime::currentDateTime().toTime_t() - serverTime;
