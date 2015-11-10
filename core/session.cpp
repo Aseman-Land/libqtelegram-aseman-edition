@@ -411,16 +411,15 @@ void Session::workPacked(InboundPkt &inboundPkt, qint64 msgId) {
 }
 
 void Session::workBadServerSalt(InboundPkt &inboundPkt, qint64 msgId) {
-    qCDebug(TG_CORE_SESSION) << "workBadServerSalt: msgId =" << QString::number(msgId, 16);
     mAsserter.check(inboundPkt.fetchInt() == (qint32)TL_BadServerSalt);
     qint64 badMsgId = inboundPkt.fetchLong();
-    inboundPkt.fetchInt(); // badMsgSeqNo
-    inboundPkt.fetchInt(); // errorCode
+    qint32 badMsgSeqNo = inboundPkt.fetchInt();
+    qint32 errorCode = inboundPkt.fetchInt();
+    qCDebug(TG_CORE_SESSION) << "workBadServerSalt: badMsgId =" << QString::number(badMsgId, 16)
+            << ", badMsgSeqNo =" << badMsgSeqNo << ", errorCode =" << errorCode;
     m_dc->setServerSalt(inboundPkt.fetchLong()); // new server_salt
-    // resend the last query
-    Query *q = m_pendingQueries.value(badMsgId);
-    if(q)
-        resendQuery(q);
+    Query *q = m_pendingQueries.take(badMsgId);
+    recomposeAndSendQuery(q);
 }
 
 void Session::workPong(InboundPkt &inboundPkt, qint64 msgId) {
@@ -458,8 +457,8 @@ void Session::workBadMsgNotification(InboundPkt &inboundPkt, qint64 msgId) {
     qint64 badMsgId = inboundPkt.fetchLong();
     qint32 badMsgSeqNo = inboundPkt.fetchInt();
     qint32 errorCode = inboundPkt.fetchInt();
-    qCWarning(TG_CORE_SESSION) << "workBadMsgNotification: msgId =" << badMsgId <<
-                  ", seqNo =" << badMsgSeqNo << ", errorCode =" << errorCode;
+    qCWarning(TG_CORE_SESSION) << "workBadMsgNotification: badMsgId =" << QString::number(badMsgId, 16) <<
+            ", badMsgSeqNo =" << badMsgSeqNo << ", errorCode =" << errorCode;
     switch (errorCode) {
     case 16:
     case 17:
