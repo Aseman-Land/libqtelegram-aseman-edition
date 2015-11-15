@@ -46,6 +46,7 @@ Q_SIGNALS:
     void fatalError();
 
 protected:
+    void setupSocket();
     qint64 writeOut(const void *data, qint64 length);
     QByteArray readAll();
     QByteArray readIn(qint32 len);
@@ -67,6 +68,7 @@ private:
 
 protected Q_SLOTS:
     void onConnected();
+    void onDisconnected();
     void onReadyRead();
     void onError(QAbstractSocket::SocketError error);
 };

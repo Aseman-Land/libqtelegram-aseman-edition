@@ -19,6 +19,10 @@
  *
  */
 
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <netinet/tcp.h>
+
 #include "connection.h"
 #include "util/constants.h"
 
@@ -31,6 +35,8 @@ Connection::Connection(const QString &host, qint32 port, QObject *parent) :
     mOpLength(0) {
     mBuffer.clear();
 
+    setupSocket();
+
     connect(&mAsserter,SIGNAL(fatalError()), SIGNAL(fatalError()));
 }
 
@@ -38,10 +44,34 @@ Connection::~Connection() {
     stopReconnecting();
 }
 
+void Connection::setupSocket() {
+    // See: http://goo.gl/0pjCQo
+    // setSocketOption(QAbstractSocket::KeepAliveOption, 1);
+
+    int enableKeepAlive = 1;
+    int fd = socketDescriptor();
+    setsockopt(fd, SOL_SOCKET, SO_KEEPALIVE, &enableKeepAlive, sizeof(enableKeepAlive));
+
+    int maxIdle = 10; // half seconds = 5 seconds
+    setsockopt(fd, IPPROTO_TCP, TCP_KEEPIDLE, &maxIdle, sizeof(maxIdle));
+
+    int count = 3; // send up to 3 keepalive packets out, then disconnect if no response
+    setsockopt(fd, SOL_TCP, TCP_KEEPCNT, &count, sizeof(count));
+
+    int interval = 2; // send a keepalive packet out every 2 seconds (after the first idle period)
+    setsockopt(fd, SOL_TCP, TCP_KEEPINTVL, &interval, sizeof(interval));
+}
+
 qint64 Connection::writeOut(const void *data, qint64 length){
     if (!length) { return 0; }
     Q_ASSERT(length > 0);
-    return write((const char *)data, length);
+    qint32 bytesWritten = write((const char *)data, length);
+    qCWarning(TG_CORE_CONNECTION) << "bytes written:" << bytesWritten;
+    if (bytesWritten == -1) {
+        abort();
+        connectToServer();
+    }
+    return bytesWritten;
 }
 
 qint32 Connection::peekIn(void *data, qint32 len) {
@@ -81,6 +111,7 @@ void Connection::connectToServer() {
     Q_ASSERT(m_port);
 
     connect(this, SIGNAL(connected()), SLOT(onConnected()), Qt::UniqueConnection);
+    connect(this, SIGNAL(disconnected()), SLOT(onDisconnected()), Qt::UniqueConnection);
     connect(this, SIGNAL(readyRead()), SLOT(onReadyRead()), Qt::UniqueConnection);
     connect(this, SIGNAL(error(QAbstractSocket::SocketError)), SLOT(onError(QAbstractSocket::SocketError)), Qt::UniqueConnection);
 
@@ -114,8 +145,8 @@ QAbstractSocket::TemporaryError                     22	A temporary error occurre
 QAbstractSocket::UnknownSocketError                 -1	An unidentified error occurred.
 */
 void Connection::onError(QAbstractSocket::SocketError error) {
-    qCWarning(TG_CORE_CONNECTION) << "SocketError:" << QString::number(error) << ",Description:" << errorString();
-
+    qCWarning(TG_CORE_CONNECTION) << "SocketError:" << QString::number(error) << errorString();
+    abort();
     if (!mReconnectTimerId) {
         mReconnectTimerId = startTimer(RECONNECT_TIMEOUT);
     }
@@ -149,6 +180,10 @@ void Connection::onConnected() {
 
     // process the rest of operations in inherited classes
     processConnected();
+}
+
+void Connection::onDisconnected() {
+    qCWarning(TG_CORE_CONNECTION) << "Socket disconnected";
 }
 
 void Connection::onReadyRead() {

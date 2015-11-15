@@ -145,6 +145,7 @@ private:
     qint64 encryptSendMessage(qint32 *msg, qint32 msgInts, qint32 useful);
     qint32 aesEncryptMessage(EncryptedMsg *encMsg);
     bool rpcSendMessage(void *data, qint32 len);
+    qint64 generatePlainNextMsgId();
     qint64 generateNextMsgId();
 
     // query results

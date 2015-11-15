@@ -77,8 +77,12 @@ DC *Session::dc() {
     return m_dc;
 }
 
+qint64 Session::generatePlainNextMsgId() {
+    return (qint64) ((QDateTime::currentDateTime().toTime_t() - mTimeDifference) * (1LL << 32)) & -4;
+}
+
 qint64 Session::generateNextMsgId() {
-    qint64 nextId = (qint64) ((QDateTime::currentDateTime().toTime_t() - mTimeDifference) * (1LL << 32)) & -4;
+    qint64 nextId = generatePlainNextMsgId();
     if (nextId <= m_clientLastMsgId) {
         nextId = m_clientLastMsgId += 4;
     } else {
@@ -328,16 +332,15 @@ void Session::workPacked(InboundPkt &inboundPkt, qint64 msgId) {
 }
 
 void Session::workBadServerSalt(InboundPkt &inboundPkt, qint64 msgId) {
-    qCDebug(TG_CORE_SESSION) << "workBadServerSalt: msgId =" << QString::number(msgId, 16);
     mAsserter.check(inboundPkt.fetchInt() == (qint32)TL_BadServerSalt);
     qint64 badMsgId = inboundPkt.fetchLong();
-    inboundPkt.fetchInt(); // badMsgSeqNo
-    inboundPkt.fetchInt(); // errorCode
+    qint32 badMsgSeqNo = inboundPkt.fetchInt();
+    qint32 errorCode = inboundPkt.fetchInt();
+    qCDebug(TG_CORE_SESSION) << "workBadServerSalt: badMsgId =" << QString::number(badMsgId, 16)
+            << ", badMsgSeqNo =" << badMsgSeqNo << ", errorCode =" << errorCode;
     m_dc->setServerSalt(inboundPkt.fetchLong()); // new server_salt
-    // resend the last query
-    Query *q = m_pendingQueries.value(badMsgId);
-    if(q)
-        resendQuery(q);
+    Query *q = m_pendingQueries.take(badMsgId);
+    recomposeAndSendQuery(q);
 }
 
 void Session::workPong(InboundPkt &inboundPkt, qint64 msgId) {
@@ -376,15 +379,24 @@ void Session::workBadMsgNotification(InboundPkt &inboundPkt, qint64 msgId) {
     qint64 badMsgId = inboundPkt.fetchLong();
     qint32 badMsgSeqNo = inboundPkt.fetchInt();
     qint32 errorCode = inboundPkt.fetchInt();
-    qCWarning(TG_CORE_SESSION) << "workBadMsgNotification: msgId =" << badMsgId <<
-                  ", seqNo =" << badMsgSeqNo << ", errorCode =" << errorCode;
+    qCWarning(TG_CORE_SESSION) << "workBadMsgNotification: badMsgId =" << QString::number(badMsgId, 16) <<
+            ", badMsgSeqNo =" << badMsgSeqNo << ", errorCode =" << errorCode;
     switch (errorCode) {
     case 16:
     case 17:
+    case 19:
+    case 32:
+    case 33:
+    case 64:
         // update time sync difference and reset msgIds counter
         qint32 serverTime = msgId >> 32LL;
         mTimeDifference = QDateTime::currentDateTime().toTime_t() - serverTime;
-        m_clientLastMsgId = 0;
+
+        qint64 nextId = generatePlainNextMsgId();
+        if (!m_pendingQueries.contains(nextId)) {
+            m_clientLastMsgId = 0;
+        }
+
         // read removing from pending queries, recompose and send the last query
         Query *q = m_pendingQueries.take(badMsgId);
         recomposeAndSendQuery(q);
