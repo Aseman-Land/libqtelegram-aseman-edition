@@ -419,7 +419,10 @@ void Session::workBadServerSalt(InboundPkt &inboundPkt, qint64 msgId) {
             << ", badMsgSeqNo =" << badMsgSeqNo << ", errorCode =" << errorCode;
     m_dc->setServerSalt(inboundPkt.fetchLong()); // new server_salt
     Query *q = m_pendingQueries.take(badMsgId);
-    recomposeAndSendQuery(q);
+    qint64 newMsgId = recomposeAndSendQuery(q);
+    if (newMsgId != 0) {
+        Q_EMIT updateMessageId(badMsgId, newMsgId);
+    }
 }
 
 void Session::workPong(InboundPkt &inboundPkt, qint64 msgId) {
@@ -477,7 +480,10 @@ void Session::workBadMsgNotification(InboundPkt &inboundPkt, qint64 msgId) {
 
         // read removing from pending queries, recompose and send the last query
         Query *q = m_pendingQueries.take(badMsgId);
-        recomposeAndSendQuery(q);
+        qint64 newMsgId = recomposeAndSendQuery(q);
+        if (newMsgId != 0) {
+            Q_EMIT updateMessageId(badMsgId, newMsgId);
+        }
         break;
     }
 }
@@ -592,9 +598,9 @@ qint64 Session::sendQuery(OutboundPkt &outboundPkt, QueryMethods *methods, const
     return q->msgId();
 }
 
-void Session::recomposeAndSendQuery(Query *q) {
+qint64 Session::recomposeAndSendQuery(Query *q) {
     if(!q)
-        return;
+        return 0;
 
     qCDebug(TG_CORE_SESSION) << "Resending query with previous msgId" << QString::number(q->msgId(), 16);
     q->setMsgId(encryptSendMessage((qint32 *)q->data(), q->dataLength(), 1));
@@ -602,6 +608,7 @@ void Session::recomposeAndSendQuery(Query *q) {
     qCDebug(TG_CORE_SESSION) << "new msgId is" << QString::number(q->msgId(), 16);
     q->setAcked(false);
     m_pendingQueries.insert(q->msgId(), q);
+    return q->msgId();
 }
 
 void Session::resendQuery(Query *q) {

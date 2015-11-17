@@ -76,6 +76,8 @@ private Q_SLOTS:
     void onMessagesSendMediaStatedMessage(qint64 id, const Message &message, const QList<Chat> &chats, const QList<User> &users, qint32 pts, qint32 ptsCount);
     void onMessagesSendMediaStatedMessageLink(qint64 id, const Message &message, const QList<Chat> &chats, const QList<User> &users, const QList<ContactsLink> &links, qint32 pts, qint32 pts_count, qint32 seq = 0);
     void onMessagesSentEncryptedFile(qint64, qint32 date, const EncryptedFile &encryptedFile = EncryptedFile());
+
+    void onUpdateMessageId(qint64 oldMsgId, qint64 newMsgId);
 };
 
 #endif // FILEHANDLER_H
