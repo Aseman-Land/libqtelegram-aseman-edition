@@ -332,6 +332,7 @@ void Session::workPacked(InboundPkt &inboundPkt, qint64 msgId) {
 }
 
 void Session::workBadServerSalt(InboundPkt &inboundPkt, qint64 msgId) {
+    Q_UNUSED(msgId)
     mAsserter.check(inboundPkt.fetchInt() == (qint32)TL_BadServerSalt);
     qint64 badMsgId = inboundPkt.fetchLong();
     qint32 badMsgSeqNo = inboundPkt.fetchInt();
