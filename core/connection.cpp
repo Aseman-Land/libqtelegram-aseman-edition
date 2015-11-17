@@ -19,9 +19,11 @@
  *
  */
 
+#ifdef Q_OS_LINUX
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netinet/tcp.h>
+#endif
 
 #include "connection.h"
 #include "util/constants.h"
@@ -48,6 +50,7 @@ void Connection::setupSocket() {
     // See: http://goo.gl/0pjCQo
     // setSocketOption(QAbstractSocket::KeepAliveOption, 1);
 
+#ifdef Q_OS_LINUX
     int enableKeepAlive = 1;
     int fd = socketDescriptor();
     setsockopt(fd, SOL_SOCKET, SO_KEEPALIVE, &enableKeepAlive, sizeof(enableKeepAlive));
@@ -60,6 +63,7 @@ void Connection::setupSocket() {
 
     int interval = 2; // send a keepalive packet out every 2 seconds (after the first idle period)
     setsockopt(fd, SOL_TCP, TCP_KEEPINTVL, &interval, sizeof(interval));
+#endif
 }
 
 qint64 Connection::writeOut(const void *data, qint64 length){
