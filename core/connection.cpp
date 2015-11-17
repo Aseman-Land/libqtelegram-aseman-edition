@@ -19,14 +19,14 @@
  *
  */
 
+#include "connection.h"
+#include "util/constants.h"
+
 #ifdef Q_OS_LINUX
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netinet/tcp.h>
 #endif
-
-#include "connection.h"
-#include "util/constants.h"
 
 Q_LOGGING_CATEGORY(TG_CORE_CONNECTION, "tg.core.connection")
 
