@@ -19,6 +19,10 @@
  *
  */
 
+#define CHECK_SESSION \
+    if(!mMainSession) \
+        return 0;
+
 #include "api.h"
 #include "telegram/types/types.h"
 #include "telegram/functions/functions.h"
@@ -258,6 +262,7 @@ void Api::onHelpGetConfigAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::helpGetConfig() {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     if (mMainSession->initConnectionNeeded()) {
         p.initConnection();
@@ -273,6 +278,7 @@ void Api::onHelpGetInviteTextAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::helpGetInviteText(const QString &langCode) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     if (mMainSession->initConnectionNeeded()) {
         p.initConnection();
@@ -292,6 +298,7 @@ void Api::onAuthCheckPhoneAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::authCheckPhone(const QString &phoneNumber) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     if (mMainSession->initConnectionNeeded()) {
         p.initConnection();
@@ -313,6 +320,7 @@ void Api::onAuthSendCodeAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::authSendCode(const QString &phoneNumber, qint32 smsType, qint32 apiId, const QString &apiHash, const QString &langCode) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Auth::sendCode(&p, phoneNumber, smsType, apiId, apiHash, langCode);
     return mMainSession->sendQuery(p, &authSendCodeMethods, QVariant(), __FUNCTION__ );
@@ -324,6 +332,7 @@ void Api::onAuthSendSmsAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::authSendSms(const QString &phoneNumber, const QString &phoneCodeHash) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Auth::sendSms(&p, phoneNumber, phoneCodeHash);
     return mMainSession->sendQuery(p, &authSendSmsMethods, QVariant(), __FUNCTION__ );
@@ -335,6 +344,7 @@ void Api::onAuthSendCallAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::authSendCall(const QString &phoneNumber, const QString &phoneCodeHash) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Auth::sendCall(&p, phoneNumber, phoneCodeHash);
     return mMainSession->sendQuery(p, &authSendCallMethods, QVariant(), __FUNCTION__ );
@@ -350,6 +360,7 @@ void Api::onAuthSignInAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::authSignIn(const QString &phoneNumber, const QString &phoneCodeHash, const QString &phoneCode) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Auth::signIn(&p, phoneNumber, phoneCodeHash, phoneCode);
     return mMainSession->sendQuery(p, &authSignInMethods, QVariant(), __FUNCTION__ );
@@ -365,6 +376,7 @@ void Api::onAuthSignUpAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::authSignUp(const QString &phoneNumber, const QString &phoneCodeHash, const QString &phoneCode, const QString &firstName, const QString &lastName) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Auth::signUp(&p, phoneNumber, phoneCodeHash, phoneCode, firstName, lastName);
     return mMainSession->sendQuery(p, &authSignUpMethods, QVariant(), __FUNCTION__ );
@@ -376,6 +388,7 @@ void Api::onAuthLogOutAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::authLogOut() {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Auth::logOut(&p);
     return mMainSession->sendQuery(p, &authLogOutMethods, QVariant(), __FUNCTION__ );
@@ -387,6 +400,7 @@ void Api::onAuthSendInvitesAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::authSendInvites(const QStringList &phoneNumbers, const QString &message) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Auth::sendInvites(&p, phoneNumbers, message);
     return mMainSession->sendQuery(p, &authSendInvitesMethods, QVariant(), __FUNCTION__ );
@@ -398,6 +412,7 @@ void Api::onAuthResetAuthorizationsAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::authResetAuthorizations() {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Auth::resetAuthorizations(&p);
     return mMainSession->sendQuery(p, &authResetAuthorizationsMethods, QVariant(), __FUNCTION__ );
@@ -409,6 +424,7 @@ void Api::onAuthImportAuthorizationAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::authImportAuthorization(qint32 id, const QByteArray &bytes) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     if (mMainSession->initConnectionNeeded()) {
         p.initConnection();
@@ -424,6 +440,7 @@ void Api::onAuthCheckPasswordAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::authCheckPassword(const QByteArray &passwordHash) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Auth::checkPassword(&p, passwordHash);
     return mMainSession->sendQuery(p, &authCheckPasswordMethods, QVariant(), __FUNCTION__ );
@@ -435,6 +452,7 @@ void Api::onAuthRequestPasswordRecoveryAnswer(Query *q, InboundPkt &inboundPkt) 
 }
 
 qint64 Api::authRequestPasswordRecovery() {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Auth::requestPasswordRecovery(&p);
     return mMainSession->sendQuery(p, &authRequestPasswordRecoveryMethods, QVariant(), __FUNCTION__ );
@@ -446,6 +464,7 @@ void Api::onAuthRecoverPasswordAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::authRecoverPassword(const QString &code) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Auth::recoverPassword(&p, code);
     return mMainSession->sendQuery(p, &authRecoverPasswordMethods, QVariant(), __FUNCTION__ );
@@ -457,6 +476,7 @@ void Api::onAuthExportAuthorizationAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::authExportAuthorization(qint32 dcId) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Auth::exportAuthorization(&p, dcId);
     return mMainSession->sendQuery(p, &authExportAuthorizationMethods, QVariant(), __FUNCTION__ );
@@ -468,6 +488,7 @@ void Api::onAccountRegisterDeviceAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::accountRegisterDevice(qint32 tokenType, const QString &token, const QString &deviceModel, const QString &systemVersion, const QString &appVersion, bool appSandbox, const QString &langCode) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Account::registerDevice(&p, tokenType, token, deviceModel, systemVersion, appVersion, appSandbox, langCode);
     return mMainSession->sendQuery(p, &accountRegisterDeviceMethods, QVariant(), __FUNCTION__ );
@@ -479,6 +500,7 @@ void Api::onAccountUnregisterDeviceAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::accountUnregisterDevice(qint32 tokenType, const QString &token) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Account::unregisterDevice(&p, tokenType, token);
     return mMainSession->sendQuery(p, &accountUnregisterDeviceMethods, QVariant(), __FUNCTION__ );
@@ -490,6 +512,7 @@ void Api::onAccountUpdateNotifySettingsAnswer(Query *q, InboundPkt &inboundPkt) 
 }
 
 qint64 Api::accountUpdateNotifySettings(const InputNotifyPeer &peer, const InputPeerNotifySettings &settings) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Account::updateNotifySettings(&p, peer, settings);
     return mMainSession->sendQuery(p, &accountUpdateNotifySettingsMethods, QVariant(), __FUNCTION__ );
@@ -501,6 +524,7 @@ void Api::onAccountGetNotifySettingsAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::accountGetNotifySettings(const InputNotifyPeer &peer) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Account::getNotifySettings(&p, peer);
     return mMainSession->sendQuery(p, &accountGetNotifySettingsMethods, QVariant(), __FUNCTION__ );
@@ -512,6 +536,7 @@ void Api::onAccountResetNotifySettingsAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::accountResetNotifySettings() {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Account::resetNotifySettings(&p);
     return mMainSession->sendQuery(p, &accountResetNotifySettingsMethods, QVariant(), __FUNCTION__ );
@@ -523,6 +548,7 @@ void Api::onAccountUpdateProfileAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::accountUpdateProfile(const QString &firstName, const QString &lastName) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Account::updateProfile(&p, firstName, lastName);
     return mMainSession->sendQuery(p, &accountUpdateProfileMethods, QVariant(), __FUNCTION__ );
@@ -534,6 +560,7 @@ void Api::onAccountUpdateStatusAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::accountUpdateStatus(bool offline) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Account::updateStatus(&p, offline);
     return mMainSession->sendQuery(p, &accountUpdateStatusMethods, QVariant(), __FUNCTION__ );
@@ -545,6 +572,7 @@ void Api::onAccountGetWallPapersAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::accountGetWallPapers() {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Account::getWallPapers(&p);
     return mMainSession->sendQuery(p, &accountGetWallPapersMethods, QVariant(), __FUNCTION__ );
@@ -556,6 +584,7 @@ void Api::onAccountCheckUsernameAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::accountCheckUsername(const QString &username) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Account::checkUsername(&p, username);
     return mMainSession->sendQuery(p, &accountCheckUsernameMethods, QVariant(), __FUNCTION__ );
@@ -567,6 +596,7 @@ void Api::onAccountUpdateUsernameAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::accountUpdateUsername(const QString &username) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Account::updateUsername(&p, username);
     return mMainSession->sendQuery(p, &accountUpdateUsernameMethods, QVariant(), __FUNCTION__ );
@@ -578,6 +608,7 @@ void Api::onAccountGetPrivacyRules(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::accountGetPrivacy(const InputPrivacyKey &key) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Account::getPrivacy(&p, key);
     return mMainSession->sendQuery(p, &accountAccountGetPrivacyMethods, QVariant(), __FUNCTION__ );
@@ -589,6 +620,7 @@ void Api::onAccountSetPrivacyRules(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::accountSetPrivacy(const InputPrivacyKey &key, const QList<InputPrivacyRule> &rules) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Account::setPrivacy(&p, key, rules);
     return mMainSession->sendQuery(p, &accountAccountSetPrivacyMethods, QVariant(), __FUNCTION__ );
@@ -600,6 +632,7 @@ void Api::onAccountDeleteAccountAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::accountDeleteAccount(const QString &reason) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Account::deleteAccount(&p, reason);
     return mMainSession->sendQuery(p, &accountDeleteAccountMethods, QVariant(), __FUNCTION__ );
@@ -610,8 +643,8 @@ void Api::onAccountGetAccountTTLAnswer(Query *q, InboundPkt &inboundPkt) {
     Q_EMIT accountGetAccountTTLResult(q->msgId(), result);
 }
 
-qint64 Api::accountGetAccountTTL()
-{
+qint64 Api::accountGetAccountTTL() {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Account::getAccountTTL(&p);
     return mMainSession->sendQuery(p, &accountGetAccountTTLMethods, QVariant(), __FUNCTION__ );
@@ -623,6 +656,7 @@ void Api::onAccountSetAccountTTLAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::accountSetAccountTTL(const AccountDaysTTL &ttl) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Account::setAccountTTL(&p, ttl);
     return mMainSession->sendQuery(p, &accountSetAccountTTLMethods, QVariant(), __FUNCTION__ );
@@ -634,6 +668,7 @@ void Api::onAccountChangePhoneAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::accountChangePhone(const QString &phone_number, const QString &phone_code_hash, const QString &phone_code) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Account::changePhone(&p, phone_number, phone_code_hash, phone_code);
     return mMainSession->sendQuery(p, &accountChangePhoneMethods, QVariant(), __FUNCTION__ );
@@ -645,6 +680,7 @@ void Api::onAccountUpdateDeviceLockedAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::accountUpdateDeviceLocked(int period) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Account::updateDeviceLocked(&p, period);
     return mMainSession->sendQuery(p, &accountUpdateDeviceLockedMethods, QVariant(), __FUNCTION__ );
@@ -656,6 +692,7 @@ void Api::onAccountSentChangePhoneCode(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::accountSendChangePhoneCode(const QString &phone_number) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Account::sendChangePhoneCode(&p, phone_number);
     return mMainSession->sendQuery(p, &accountSendChangePhoneCodeMethods, QVariant(), __FUNCTION__ );
@@ -667,6 +704,7 @@ void Api::onAccountGetPasswordAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::accountGetPassword() {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Account::getPassword(&p);
     return mMainSession->sendQuery(p, &accountGetPasswordMethods, QVariant(), __FUNCTION__ );
@@ -678,6 +716,7 @@ void Api::onAccountGetAuthorizationsAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::accountGetAuthorizations() {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Account::getAuthorizations(&p);
     return mMainSession->sendQuery(p, &accountGetAuthorizationsMethods, QVariant(), __FUNCTION__ );
@@ -689,6 +728,7 @@ void Api::onAccountResetAuthorizationAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::accountResetAuthorization(qint64 hash) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Account::resetAuthorization(&p, hash);
     return mMainSession->sendQuery(p, &accountResetAuthorizationMethods, QVariant(), __FUNCTION__ );
@@ -700,6 +740,7 @@ void Api::onAccountGetPasswordSettingsAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::accountGetPasswordSettings(const QByteArray &currentPasswordHash) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Account::getPasswordSettings(&p, currentPasswordHash);
     return mMainSession->sendQuery(p, &accountGetPasswordSettingsMethods, QVariant(), __FUNCTION__ );
@@ -711,6 +752,7 @@ void Api::onAccountUpdatePasswordSettingsAnswer(Query *q, InboundPkt &inboundPkt
 }
 
 qint64 Api::accountUpdatePasswordSettings(const QByteArray &currentPasswordHash, const AccountPasswordInputSettings &newSettings) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Account::updatePasswordSettings(&p, currentPasswordHash, newSettings);
     return mMainSession->sendQuery(p, &accountUpdatePasswordSettingsMethods, QVariant(), __FUNCTION__ );
@@ -722,6 +764,7 @@ void Api::onPhotosUploadProfilePhotoAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::photosUploadProfilePhoto(const InputFile &file, const QString &caption, const InputGeoPoint &geoPoint, const InputPhotoCrop &crop) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Photos::uploadProfilePhoto(&p, file, caption, geoPoint, crop);
     return mMainSession->sendQuery(p, &photosUploadProfilePhotoMethods, QVariant(), __FUNCTION__ );
@@ -733,6 +776,7 @@ void Api::onPhotosUpdateProfilePhotoAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::photosUpdateProfilePhoto(const InputPhoto &id, const InputPhotoCrop &crop) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Photos::updateProfilePhoto(&p, id, crop);
     return mMainSession->sendQuery(p, &photosUpdateProfilePhotoMethods, QVariant(), __FUNCTION__ );
@@ -744,6 +788,7 @@ void Api::onUsersGetUsersAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::usersGetUsers(const QList<InputUser> &users) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Users::getUsers(&p, users);
     return mMainSession->sendQuery(p, &usersGetUsersMethods, QVariant(), __FUNCTION__ );
@@ -755,6 +800,7 @@ void Api::onUsersGetFullUserAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::usersGetFullUser(const InputUser &user) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Users::getFullUser(&p, user);
     return mMainSession->sendQuery(p, &usersGetFullUserMethods, QVariant(), __FUNCTION__ );
@@ -770,6 +816,7 @@ void Api::onPhotosGetUserPhotos(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::photosGetUserPhotos(const InputUser &user, qint32 offset, qint32 maxId, qint32 limit) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Photos::getUserPhotos(&p, user, offset, maxId, limit);
     return mMainSession->sendQuery(p, &photosGetUserPhotosMethods, QVariant(), __FUNCTION__ );
@@ -781,6 +828,7 @@ void Api::onContactsGetStatusesAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::contactsGetStatuses() {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Contacts::getStatuses(&p);
     return mMainSession->sendQuery(p, &contactsGetStatusesMethods, QVariant(), __FUNCTION__ );
@@ -796,6 +844,7 @@ void Api::onContactsGetContactsAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::contactsGetContacts(const QString &hash) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Contacts::getContacts(&p, hash);
     return mMainSession->sendQuery(p, &contactsGetContactsMethods, QVariant(), __FUNCTION__ );
@@ -807,6 +856,7 @@ void Api::onContactsImportContactsAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::contactsImportContacts(const QList<InputContact> &contacts, bool replace) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Contacts::importContacts(&p, contacts, replace);
     return mMainSession->sendQuery(p, &contactsImportContactsMethods, QVariant(), __FUNCTION__ );
@@ -818,6 +868,7 @@ void Api::onContactsDeleteContactAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::contactsDeleteContact(const InputUser &id) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Contacts::deleteContact(&p, id);
     return mMainSession->sendQuery(p, &contactsDeleteContactMethods, QVariant(), __FUNCTION__ );
@@ -829,6 +880,7 @@ void Api::onContactsDeleteContactsAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::contactsDeleteContacts(const QList<InputUser> &ids) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Contacts::deleteContacts(&p, ids);
     return mMainSession->sendQuery(p, &contactsDeleteContactsMethods, QVariant(), __FUNCTION__ );
@@ -840,6 +892,7 @@ void Api::onContactsSearchAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::contactsSearch(const QString &q, qint32 limit) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Contacts::search(&p, q, limit);
     return mMainSession->sendQuery(p, &contactsSearchMethods, QVariant(), __FUNCTION__ );
@@ -851,6 +904,7 @@ void Api::onContactsResolveUsernameAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::contactsResolveUsername(const QString &username) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Contacts::resolveUsername(&p, username);
     return mMainSession->sendQuery(p, &contactsResolveUsernameMethods, QVariant(), __FUNCTION__ );
@@ -862,6 +916,7 @@ void Api::onContactsBlockAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::contactsBlock(const InputUser &id) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Contacts::block(&p, id);
     return mMainSession->sendQuery(p, &contactsBlockMethods, QVariant(), __FUNCTION__ );
@@ -873,6 +928,7 @@ void Api::onContactsUnblockAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::contactsUnblock(const InputUser &id) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Contacts::unblock(&p, id);
     return mMainSession->sendQuery(p, &contactsUnblockMethods, QVariant(), __FUNCTION__ );
@@ -888,6 +944,7 @@ void Api::onContactsGetBlockedAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::contactsGetBlocked(qint32 offset, qint32 limit) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Contacts::getBlocked(&p, offset, limit);
     return mMainSession->sendQuery(p, &contactsGetBlockedMethods, QVariant(), __FUNCTION__ );
@@ -903,6 +960,7 @@ void Api::onMessagesSendMessageAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::messagesSendMessage(const InputPeer &peer, const QString &message, qint64 randomId, qint32 replyToMsgId) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     int flag = 0;
     if(replyToMsgId)
@@ -918,6 +976,7 @@ void Api::onMessagesSendMediaAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::messagesSendMedia(const InputPeer &peer, const InputMedia &media, qint64 randomId, qint32 replyToMsgId) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     int flag = 0;
     if(replyToMsgId)
@@ -933,6 +992,7 @@ void Api::onMessagesForwardMediaAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::messagesForwardMedia(const InputPeer &peer, const InputMedia &media, qint64 randomId, qint32 replyToMsgId) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     int flag = 0;
     if(replyToMsgId)
@@ -948,6 +1008,7 @@ void Api::onMessagesSetTypingAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::messagesSetTyping(const InputPeer &peer, const SendMessageAction &action) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Messages::setTyping(&p, peer, action);
     return mMainSession->sendQuery(p, &messagesSetTypingMethods, QVariant(), __FUNCTION__ );
@@ -963,6 +1024,7 @@ void Api::onMessagesGetMessagesAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::messagesGetMessages(const QList<qint32> &ids) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Messages::getMessages(&p, ids);
     return mMainSession->sendQuery(p, &messagesGetMessagesMethods, QVariant(), __FUNCTION__ );
@@ -978,6 +1040,7 @@ void Api::onMessagesGetDialogsAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::messagesGetDialogs(qint32 offset, qint32 maxId, qint32 limit) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Messages::getDialogs(&p, offset, maxId, limit);
     return mMainSession->sendQuery(p, &messagesGetDialogsMethods, QVariant(), __FUNCTION__ );
@@ -993,6 +1056,7 @@ void Api::onMessagesGetHistoryAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::messagesGetHistory(const InputPeer &peer, qint32 offset, qint32 maxId, qint32 limit) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Messages::getHistory(&p, peer, offset, maxId, limit);
     return mMainSession->sendQuery(p, &messagesGetHistoryMethods, QVariant(), __FUNCTION__ );
@@ -1008,6 +1072,7 @@ void Api::onMessagesSearchAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::messagesSearch(const InputPeer &peer, const QString &q, const MessagesFilter &filter, qint32 minDate, qint32 maxDate, qint32 offset, qint32 maxId, qint32 limit) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Messages::search(&p, peer, q, filter, minDate, maxDate, offset, maxId, limit);
     return mMainSession->sendQuery(p, &messagesSearchMethods, QVariant(), __FUNCTION__ );
@@ -1019,6 +1084,7 @@ void Api::onMessagesReadHistoryAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::messagesReadHistory(const InputPeer &peer, qint32 maxId, qint32 offset) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     if (mMainSession->initConnectionNeeded()) {
         p.initConnection();
@@ -1034,6 +1100,7 @@ void Api::onMessagesReadMessageContentsAnswer(Query *q, InboundPkt &inboundPkt) 
 }
 
 qint64 Api::messagesReadMessageContents(const QList<qint32> &ids) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Messages::readMessageContents(&p, ids);
     return mMainSession->sendQuery(p, &messagesReadMessageContentsMethods, QVariant(), __FUNCTION__ );
@@ -1045,6 +1112,7 @@ void Api::onMessagesDeleteHistoryAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::messagesDeleteHistory(const InputPeer &peer, qint32 offset) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Messages::deleteHistory(&p, peer, offset);
     return mMainSession->sendQuery(p, &messagesDeleteHistoryMethods, QVariant(), __FUNCTION__ );
@@ -1056,6 +1124,7 @@ void Api::onMessagesDeleteMessagesAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::messagesDeleteMessages(const QList<qint32> &ids) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Messages::deleteMessages(&p, ids);
     return mMainSession->sendQuery(p, &messagesDeleteMessagesMethods, QVariant(), __FUNCTION__ );
@@ -1067,6 +1136,7 @@ void Api::onMessagesReceivedMessagesAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::messagesReceivedMessages(qint32 maxId) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Messages::receivedMessages(&p, maxId);
     return mMainSession->sendQuery(p, &messagesReceivedMessagesMethods, QVariant(), __FUNCTION__ );
@@ -1078,6 +1148,7 @@ void Api::onMessagesForwardMessageAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::messagesForwardMessage(const InputPeer &peer, qint32 id, qint64 randomId) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Messages::forwardMessage(&p, peer, id, randomId);
     return mMainSession->sendQuery(p, &messagesForwardMessageMethods, QVariant(), __FUNCTION__ );
@@ -1089,6 +1160,7 @@ void Api::onMessagesForwardMessagesAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::messagesForwardMessages(const InputPeer &peer, const QList<qint32> &ids, const QList<qint64> &randomIds) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Messages::forwardMessages(&p, peer, ids, randomIds);
     return mMainSession->sendQuery(p, &messagesForwardMessagesMethods, QVariant(), __FUNCTION__ );
@@ -1100,6 +1172,7 @@ void Api::onMessagesSendBroadcastAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::messagesSendBroadcast(const QList<InputUser> &contacts, const QList<qint64> &randomIds, const QString &message, const InputMedia &media) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Messages::sendBroadcast(&p, contacts, randomIds, message, media);
     return mMainSession->sendQuery(p, &messagesSendBroadcastMethods, QVariant(), __FUNCTION__ );
@@ -1111,6 +1184,7 @@ void Api::onMessagesGetWebPagePreviewAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::messagesGetWebPagePreview(const QString &message) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Messages::getWebPagePreview(&p, message);
     return mMainSession->sendQuery(p, &messagesGetWebPagePreviewMethods, QVariant(), __FUNCTION__ );
@@ -1122,6 +1196,7 @@ void Api::onMessagesGetChatsAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::messagesGetChats(const QList<qint32> &chatIds) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Messages::getChats(&p, chatIds);
     return mMainSession->sendQuery(p, &messagesGetChatsMethods, QVariant(), __FUNCTION__ );
@@ -1133,6 +1208,7 @@ void Api::onMessagesGetFullChatAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::messagesGetFullChat(qint32 chatId) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Messages::getFullChat(&p, chatId);
     return mMainSession->sendQuery(p, &messagesGetFullChatMethods, QVariant(), __FUNCTION__ );
@@ -1144,6 +1220,7 @@ void Api::onMessagesEditChatTitleAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::messagesEditChatTitle(qint32 chatId, const QString &title) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Messages::editChatTitle(&p, chatId, title);
     return mMainSession->sendQuery(p, &messagesEditChatTitleMethods, QVariant(), __FUNCTION__ );
@@ -1155,6 +1232,7 @@ void Api::onMessagesEditChatPhotoAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::messagesEditChatPhoto(qint32 chatId, const InputChatPhoto &photo) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Messages::editChatPhoto(&p, chatId, photo);
     return mMainSession->sendQuery(p, &messagesEditChatPhotoMethods, QVariant(), __FUNCTION__ );
@@ -1166,6 +1244,7 @@ void Api::onMessagesAddChatUserAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::messagesAddChatUser(qint32 chatId, const InputUser &user, qint32 fwdLimit) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Messages::addChatUser(&p, chatId, user, fwdLimit);
     return mMainSession->sendQuery(p, &messagesAddChatUserMethods, QVariant(), __FUNCTION__ );
@@ -1177,6 +1256,7 @@ void Api::onMessagesDeleteChatUserAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::messagesDeleteChatUser(qint32 chatId, const InputUser &user) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Messages::deleteChatUser(&p, chatId, user);
     return mMainSession->sendQuery(p, &messagesDeleteChatUserMethods, QVariant(), __FUNCTION__ );
@@ -1188,6 +1268,7 @@ void Api::onMessagesCreateChatAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::messagesCreateChat(const QList<InputUser> &users, const QString &title) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Messages::createChat(&p, users, title);
     return mMainSession->sendQuery(p, &messagesCreateChatMethods, QVariant(), __FUNCTION__ );
@@ -1202,6 +1283,7 @@ void Api::onMessagesGetDhConfigAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::messagesGetDhConfig(qint32 version, qint32 randomLength) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Messages::getDhConfig(&p, version, randomLength);
     return mMainSession->sendQuery(p, &messagesGetDhConfigMethods, QVariant(), __FUNCTION__ );
@@ -1213,6 +1295,7 @@ void Api::onMessagesRequestEncryptionAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::messagesRequestEncryption(const InputUser &user, qint32 randomId, QByteArray g_a) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Messages::requestEncryption(&p, user, randomId, g_a);
     return mMainSession->sendQuery(p, &messagesRequestEncryptionMethods, QVariant(), __FUNCTION__ );
@@ -1224,6 +1307,7 @@ void Api::onMessagesAcceptEncryptionAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::messagesAcceptEncryption(const InputEncryptedChat &inputEncryptedChat, QByteArray g_b, qint64 keyFingerprint) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Messages::acceptEncryption(&p, inputEncryptedChat, g_b, keyFingerprint);
     return mMainSession->sendQuery(p, &messagesAcceptEncryptionMethods, QVariant(), __FUNCTION__ );
@@ -1235,6 +1319,7 @@ void Api::onMessagesDiscardEncryptionAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::messagesDiscardEncryption(qint32 chatId) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Messages::discardEncryption(&p, chatId);
     return mMainSession->sendQuery(p, &messagesDiscardEncryptionMethods, QVariant(), __FUNCTION__ );
@@ -1246,6 +1331,7 @@ void Api::onMessagesSetEncryptedTypingAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::messagesSetEncryptedTyping(const InputEncryptedChat &inputEncryptedChat, bool typing) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Messages::setEncryptedTyping(&p, inputEncryptedChat, typing);
     return mMainSession->sendQuery(p, &messagesSetEncryptedTypingMethods, QVariant(), __FUNCTION__ );
@@ -1257,6 +1343,7 @@ void Api::onMessagesReadEncryptedHistoryAnswer(Query *q, InboundPkt &inboundPkt)
 }
 
 qint64 Api::messagesReadEncryptedHistory(const InputEncryptedChat &inputEncryptedChat, qint32 maxDate){
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Messages::readEncryptedHistory(&p, inputEncryptedChat, maxDate);
     return mMainSession->sendQuery(p, &messagesReadEncryptedHistoryMethods, QVariant(), __FUNCTION__ );
@@ -1272,6 +1359,7 @@ void Api::onMessagesSendEncryptedAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::messagesSendEncrypted(const QList<qint64> &previousMsgs, const InputEncryptedChat &inputEncryptedChat, qint64 randomId, QByteArray data) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     // include invokeAfterMsgs with the sequence of previous messages to manage before this one
     qint32 n = previousMsgs.size();
@@ -1299,6 +1387,7 @@ void Api::onMessagesSendEncryptedFileAnswer(Query *q, InboundPkt &inboundPkt) {
 
 qint64 Api::messagesSendEncryptedFile(const QList<qint64> &previousMsgs, const InputEncryptedChat &inputEncryptedChat, qint64 randomId, QByteArray data,
                                       const InputEncryptedFile &inputEncryptedFile) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     // include invokeAfterMsgs with the sequence of previous messages to manage before this one
     qint32 n = previousMsgs.size();
@@ -1325,6 +1414,7 @@ void Api::onMessagesSendEncryptedServiceAnswer(Query *q, InboundPkt &inboundPkt)
 }
 
 qint64 Api::messagesSendEncryptedService(const QList<qint64> &previousMsgs, const InputEncryptedChat &inputEncryptedChat, qint64 randomId, QByteArray data) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     // include invokeAfterMsgs with the sequence of previous messages to manage before this one
     qint32 n = previousMsgs.size();
@@ -1348,6 +1438,7 @@ void Api::onMessagesReceivedQueueAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::messagesReceivedQueue(qint32 maxQts) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Messages::receivedQueue(&p, maxQts);
     return mMainSession->sendQuery(p, &messagesReceivedQueueMethods, QVariant(), __FUNCTION__ );
@@ -1359,6 +1450,7 @@ void Api::onMessagesGetStickersAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::messagesGetStickers(const QString &emoticon, const QString &hash) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Messages::getStickers(&p, emoticon, hash);
     return mMainSession->sendQuery(p, &messagesGetStickersMethods, QVariant(), __FUNCTION__ );
@@ -1370,6 +1462,7 @@ void Api::onMessagesGetAllStickersAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::messagesGetAllStickers(const QString &hash) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Messages::getAllStickers(&p, hash);
     return mMainSession->sendQuery(p, &messagesGetAllStickersMethods, QVariant(), __FUNCTION__ );
@@ -1381,6 +1474,7 @@ void Api::onMessagesGetStickerSetAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::messagesGetStickerSet(const InputStickerSet &stickerset) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Messages::getStickerSet(&p, stickerset);
     return mMainSession->sendQuery(p, &messagesGetStickerSetMethods, QVariant(), __FUNCTION__ );
@@ -1392,6 +1486,7 @@ void Api::onMessagesInstallStickerSetAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::messagesInstallStickerSet(const InputStickerSet &stickerset) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Messages::installStickerSet(&p, stickerset);
     return mMainSession->sendQuery(p, &messagesInstallStickerSetMethods, QVariant(), __FUNCTION__ );
@@ -1403,6 +1498,7 @@ void Api::onMessagesUninstallStickerSetAnswer(Query *q, InboundPkt &inboundPkt) 
 }
 
 qint64 Api::messagesUninstallStickerSet(const InputStickerSet &stickerset) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Messages::uninstallStickerSet(&p, stickerset);
     return mMainSession->sendQuery(p, &messagesUninstallStickerSetMethods, QVariant(), __FUNCTION__ );
@@ -1414,6 +1510,7 @@ void Api::onMessagesExportChatInviteAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::messagesExportChatInvite(qint32 chatId) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Messages::exportChatInvite(&p, chatId);
     return mMainSession->sendQuery(p, &messagesExportChatInviteMethods, QVariant(), __FUNCTION__ );
@@ -1425,6 +1522,7 @@ void Api::onMessagesCheckChatInviteAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::messagesCheckChatInvite(const QString &hash) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Messages::checkChatInvite(&p, hash);
     return mMainSession->sendQuery(p, &messagesCheckChatInviteMethods, QVariant(), __FUNCTION__ );
@@ -1436,6 +1534,7 @@ void Api::onMessagesImportChatInviteAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::messagesImportChatInvite(const QString &hash) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Messages::importChatInvite(&p, hash);
     return mMainSession->sendQuery(p, &messagesImportChatInviteMethods, QVariant(), __FUNCTION__ );
@@ -1447,6 +1546,7 @@ void Api::onUpdatesGetStateAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::updatesGetState() {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Updates::getState(&p);
     return mMainSession->sendQuery(p, &updatesGetStateMethods, QVariant(), __FUNCTION__ );
@@ -1471,6 +1571,7 @@ void Api::onUpdatesGetDifferenceAnswer(Query *q, InboundPkt &inboundPkt) {
 }
 
 qint64 Api::updatesGetDifference(qint32 pts, qint32 date, qint32 qts) {
+    CHECK_SESSION
     OutboundPkt p(mSettings);
     Functions::Updates::getDifference(&p, pts, date, qts);
     return mMainSession->sendQuery(p, &updatesGetDifferenceMethods, QVariant(), __FUNCTION__ );
