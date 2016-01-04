@@ -86,6 +86,9 @@ private:
     // is the reference for exporting data to any dc transfer auth receipt
     Session *mWorkingDcSession;
 
+    // In order to map getConfigRequests and sessions
+    QMap<Session*, qint64> mGetConfigRequests;
+
 
 private Q_SLOTS:
     void onDcReady(DC *dc);
