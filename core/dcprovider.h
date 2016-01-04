@@ -87,7 +87,8 @@ private:
     Session *mWorkingDcSession;
 
     // In order to map getConfigRequests and sessions
-    QMap<Session*, qint64> mGetConfigRequests;
+    QMap<qint64, Session*> mGetConfigRequests;
+    bool mConfigReceived;
 
 
 private Q_SLOTS:
