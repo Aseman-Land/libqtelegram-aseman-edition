@@ -245,8 +245,7 @@ void DcProvider::onApiReady(DC*) {
     disconnect(session, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(onApiError()));
 
     // get the config
-    connect(mApi, SIGNAL(config(qint64,const Config&)), this, SLOT(onConfigReceived(qint64,const Config&)),
-            static_cast<Qt::ConnectionType>(Qt::AutoConnection | Qt::UniqueConnection) );
+    connect(mApi, SIGNAL(config(qint64,const Config&)), this, SLOT(onConfigReceived(qint64,const Config&)), Qt::UniqueConnection );
 
     qint64 rid = mApi->helpGetConfig();
     mGetConfigRequests[rid] = session;
