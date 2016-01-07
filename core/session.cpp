@@ -66,6 +66,10 @@ void Session::close() {
 }
 
 void Session::onDisconnected() {
+    if(error() == QAbstractSocket::RemoteHostClosedError) {
+        return; // Trying to reconnect...
+    }
+
     Q_EMIT sessionClosed(m_sessionId);
 }
 
