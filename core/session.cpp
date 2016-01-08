@@ -471,6 +471,8 @@ qint64 Session::encryptSendMessage(qint32 *msg, qint32 msgInts, qint32 useful) {
 }
 
 bool Session::rpcSendMessage(void *data, qint32 len) {
+    qCDebug(TG_CORE_SESSION) << "rpcSendMessage()," << len;
+
     qint32 written;
     Q_UNUSED(written);
 
