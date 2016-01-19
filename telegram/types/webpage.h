@@ -6,8 +6,11 @@
 #define LQTG_TYPE_WEBPAGE
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QString>
 #include <QtGlobal>
+#include "document.h"
 #include "photo.h"
 
 class LIBQTELEGRAMSHARED_EXPORT WebPage : public TelegramTypeObject
@@ -16,11 +19,12 @@ public:
     enum WebPageType {
         typeWebPageEmpty = 0xeb1477e8,
         typeWebPagePending = 0xc586da1c,
-        typeWebPage = 0xa31ea0b5
+        typeWebPage = 0xca820ed7
     };
 
     WebPage(WebPageType classType = typeWebPageEmpty, InboundPkt *in = 0);
     WebPage(InboundPkt *in);
+    WebPage(const Null&);
     virtual ~WebPage();
 
     void setAuthor(const QString &author);
@@ -34,6 +38,9 @@ public:
 
     void setDisplayUrl(const QString &displayUrl);
     QString displayUrl() const;
+
+    void setDocument(const Document &document);
+    Document document() const;
 
     void setDuration(qint32 duration);
     qint32 duration() const;
@@ -77,13 +84,17 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const WebPage &b);
+    bool operator ==(const WebPage &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     QString m_author;
     qint32 m_date;
     QString m_description;
     QString m_displayUrl;
+    Document m_document;
     qint32 m_duration;
     qint32 m_embedHeight;
     QString m_embedType;
@@ -98,5 +109,7 @@ private:
     QString m_url;
     WebPageType m_classType;
 };
+
+Q_DECLARE_METATYPE(WebPage)
 
 #endif // LQTG_TYPE_WEBPAGE

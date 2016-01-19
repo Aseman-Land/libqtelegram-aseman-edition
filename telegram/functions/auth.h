@@ -35,6 +35,7 @@ public:
         fncAuthImportAuthorization = 0xe3ef9613,
         fncAuthBindTempAuthKey = 0xcdd42a05,
         fncAuthSendSms = 0xda9f3e8,
+        fncAuthImportBotAuthorization = 0x67a3ff2c,
         fncAuthCheckPassword = 0xa63011e,
         fncAuthRequestPasswordRecovery = 0xd897bc66,
         fncAuthRecoverPassword = 0x4ea56e92
@@ -78,6 +79,9 @@ public:
 
     static bool sendSms(OutboundPkt *out, const QString &phoneNumber, const QString &phoneCodeHash);
     static bool sendSmsResult(InboundPkt *in);
+
+    static bool importBotAuthorization(OutboundPkt *out, qint32 flags, qint32 apiId, const QString &apiHash, const QString &botAuthToken);
+    static AuthAuthorization importBotAuthorizationResult(InboundPkt *in);
 
     static bool checkPassword(OutboundPkt *out, const QByteArray &passwordHash);
     static AuthAuthorization checkPasswordResult(InboundPkt *in);

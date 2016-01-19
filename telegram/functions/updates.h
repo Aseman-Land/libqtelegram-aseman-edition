@@ -9,6 +9,9 @@
 #include "telegram/types/updatesstate.h"
 #include "telegram/types/updatesdifference.h"
 #include <QtGlobal>
+#include "telegram/types/updateschanneldifference.h"
+#include "telegram/types/inputchannel.h"
+#include "telegram/types/channelmessagesfilter.h"
 
 namespace Tg {
 namespace Functions {
@@ -18,7 +21,8 @@ class LIBQTELEGRAMSHARED_EXPORT Updates : public TelegramFunctionObject
 public:
     enum UpdatesFunction {
         fncUpdatesGetState = 0xedd4882a,
-        fncUpdatesGetDifference = 0xa041495
+        fncUpdatesGetDifference = 0xa041495,
+        fncUpdatesGetChannelDifference = 0xbb32d7c0
     };
 
     Updates();
@@ -29,6 +33,9 @@ public:
 
     static bool getDifference(OutboundPkt *out, qint32 pts, qint32 date, qint32 qts);
     static UpdatesDifference getDifferenceResult(InboundPkt *in);
+
+    static bool getChannelDifference(OutboundPkt *out, const InputChannel &channel, const ChannelMessagesFilter &filter, qint32 pts, qint32 limit);
+    static UpdatesChannelDifference getChannelDifferenceResult(InboundPkt *in);
 
 };
 

@@ -6,6 +6,8 @@
 #define LQTG_TYPE_INPUTPEERNOTIFYSETTINGS
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QtGlobal>
 #include <QString>
 
@@ -18,6 +20,7 @@ public:
 
     InputPeerNotifySettings(InputPeerNotifySettingsType classType = typeInputPeerNotifySettings, InboundPkt *in = 0);
     InputPeerNotifySettings(InboundPkt *in);
+    InputPeerNotifySettings(const Null&);
     virtual ~InputPeerNotifySettings();
 
     void setEventsMask(qint32 eventsMask);
@@ -38,7 +41,10 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const InputPeerNotifySettings &b);
+    bool operator ==(const InputPeerNotifySettings &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     qint32 m_eventsMask;
@@ -47,5 +53,7 @@ private:
     QString m_sound;
     InputPeerNotifySettingsType m_classType;
 };
+
+Q_DECLARE_METATYPE(InputPeerNotifySettings)
 
 #endif // LQTG_TYPE_INPUTPEERNOTIFYSETTINGS

@@ -19,6 +19,12 @@ MessagesStickerSet::MessagesStickerSet(InboundPkt *in) :
     fetch(in);
 }
 
+MessagesStickerSet::MessagesStickerSet(const Null &null) :
+    TelegramTypeObject(null),
+    m_classType(typeMessagesStickerSet)
+{
+}
+
 MessagesStickerSet::~MessagesStickerSet() {
 }
 
@@ -46,8 +52,9 @@ StickerSet MessagesStickerSet::set() const {
     return m_set;
 }
 
-bool MessagesStickerSet::operator ==(const MessagesStickerSet &b) {
-    return m_documents == b.m_documents &&
+bool MessagesStickerSet::operator ==(const MessagesStickerSet &b) const {
+    return m_classType == b.m_classType &&
+           m_documents == b.m_documents &&
            m_packs == b.m_packs &&
            m_set == b.m_set;
 }

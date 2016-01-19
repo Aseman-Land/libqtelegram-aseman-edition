@@ -6,6 +6,8 @@
 #define LQTG_TYPE_AUTHORIZATION
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QtGlobal>
 #include <QString>
 
@@ -18,6 +20,7 @@ public:
 
     Authorization(AuthorizationType classType = typeAuthorization, InboundPkt *in = 0);
     Authorization(InboundPkt *in);
+    Authorization(const Null&);
     virtual ~Authorization();
 
     void setApiId(qint32 apiId);
@@ -65,7 +68,10 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const Authorization &b);
+    bool operator ==(const Authorization &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     qint32 m_apiId;
@@ -83,5 +89,7 @@ private:
     QString m_systemVersion;
     AuthorizationType m_classType;
 };
+
+Q_DECLARE_METATYPE(Authorization)
 
 #endif // LQTG_TYPE_AUTHORIZATION

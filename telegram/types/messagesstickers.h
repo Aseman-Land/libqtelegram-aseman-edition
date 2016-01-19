@@ -6,6 +6,8 @@
 #define LQTG_TYPE_MESSAGESSTICKERS
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QString>
 #include <QList>
 #include "document.h"
@@ -20,6 +22,7 @@ public:
 
     MessagesStickers(MessagesStickersType classType = typeMessagesStickersNotModified, InboundPkt *in = 0);
     MessagesStickers(InboundPkt *in);
+    MessagesStickers(const Null&);
     virtual ~MessagesStickers();
 
     void setHash(const QString &hash);
@@ -34,12 +37,17 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const MessagesStickers &b);
+    bool operator ==(const MessagesStickers &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     QString m_hash;
     QList<Document> m_stickers;
     MessagesStickersType m_classType;
 };
+
+Q_DECLARE_METATYPE(MessagesStickers)
 
 #endif // LQTG_TYPE_MESSAGESSTICKERS

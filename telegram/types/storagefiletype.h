@@ -7,6 +7,8 @@
 
 #include "telegramtypeobject.h"
 
+#include <QMetaType>
+
 class LIBQTELEGRAMSHARED_EXPORT StorageFileType : public TelegramTypeObject
 {
 public:
@@ -25,6 +27,7 @@ public:
 
     StorageFileType(StorageFileTypeType classType = typeStorageFileUnknown, InboundPkt *in = 0);
     StorageFileType(InboundPkt *in);
+    StorageFileType(const Null&);
     virtual ~StorageFileType();
 
     void setClassType(StorageFileTypeType classType);
@@ -33,10 +36,15 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const StorageFileType &b);
+    bool operator ==(const StorageFileType &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     StorageFileTypeType m_classType;
 };
+
+Q_DECLARE_METATYPE(StorageFileType)
 
 #endif // LQTG_TYPE_STORAGEFILETYPE

@@ -6,6 +6,8 @@
 #define LQTG_TYPE_USERSTATUS
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QtGlobal>
 
 class LIBQTELEGRAMSHARED_EXPORT UserStatus : public TelegramTypeObject
@@ -22,6 +24,7 @@ public:
 
     UserStatus(UserStatusType classType = typeUserStatusEmpty, InboundPkt *in = 0);
     UserStatus(InboundPkt *in);
+    UserStatus(const Null&);
     virtual ~UserStatus();
 
     void setExpires(qint32 expires);
@@ -36,12 +39,17 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const UserStatus &b);
+    bool operator ==(const UserStatus &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     qint32 m_expires;
     qint32 m_wasOnline;
     UserStatusType m_classType;
 };
+
+Q_DECLARE_METATYPE(UserStatus)
 
 #endif // LQTG_TYPE_USERSTATUS

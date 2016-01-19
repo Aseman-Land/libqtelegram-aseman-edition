@@ -21,6 +21,13 @@ ContactStatus::ContactStatus(InboundPkt *in) :
     fetch(in);
 }
 
+ContactStatus::ContactStatus(const Null &null) :
+    TelegramTypeObject(null),
+    m_userId(0),
+    m_classType(typeContactStatus)
+{
+}
+
 ContactStatus::~ContactStatus() {
 }
 
@@ -40,8 +47,9 @@ qint32 ContactStatus::userId() const {
     return m_userId;
 }
 
-bool ContactStatus::operator ==(const ContactStatus &b) {
-    return m_status == b.m_status &&
+bool ContactStatus::operator ==(const ContactStatus &b) const {
+    return m_classType == b.m_classType &&
+           m_status == b.m_status &&
            m_userId == b.m_userId;
 }
 

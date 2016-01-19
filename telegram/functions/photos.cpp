@@ -66,11 +66,11 @@ QList<qint64> Functions::Photos::deletePhotosResult(InboundPkt *in) {
     return result;
 }
 
-bool Functions::Photos::getUserPhotos(OutboundPkt *out, const InputUser &userId, qint32 offset, qint32 maxId, qint32 limit) {
+bool Functions::Photos::getUserPhotos(OutboundPkt *out, const InputUser &userId, qint32 offset, qint64 maxId, qint32 limit) {
     out->appendInt(fncPhotosGetUserPhotos);
     if(!userId.push(out)) return false;
     out->appendInt(offset);
-    out->appendInt(maxId);
+    out->appendLong(maxId);
     out->appendInt(limit);
     return true;
 }

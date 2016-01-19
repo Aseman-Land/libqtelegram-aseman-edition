@@ -19,12 +19,17 @@ PrivacyKey::PrivacyKey(InboundPkt *in) :
     fetch(in);
 }
 
+PrivacyKey::PrivacyKey(const Null &null) :
+    TelegramTypeObject(null),
+    m_classType(typePrivacyKeyStatusTimestamp)
+{
+}
+
 PrivacyKey::~PrivacyKey() {
 }
 
-bool PrivacyKey::operator ==(const PrivacyKey &b) {
-    Q_UNUSED(b);
-    return true;
+bool PrivacyKey::operator ==(const PrivacyKey &b) const {
+    return m_classType == b.m_classType;
 }
 
 void PrivacyKey::setClassType(PrivacyKey::PrivacyKeyType classType) {

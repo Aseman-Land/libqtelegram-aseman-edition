@@ -19,6 +19,12 @@ AccountAuthorizations::AccountAuthorizations(InboundPkt *in) :
     fetch(in);
 }
 
+AccountAuthorizations::AccountAuthorizations(const Null &null) :
+    TelegramTypeObject(null),
+    m_classType(typeAccountAuthorizations)
+{
+}
+
 AccountAuthorizations::~AccountAuthorizations() {
 }
 
@@ -30,8 +36,9 @@ QList<Authorization> AccountAuthorizations::authorizations() const {
     return m_authorizations;
 }
 
-bool AccountAuthorizations::operator ==(const AccountAuthorizations &b) {
-    return m_authorizations == b.m_authorizations;
+bool AccountAuthorizations::operator ==(const AccountAuthorizations &b) const {
+    return m_classType == b.m_classType &&
+           m_authorizations == b.m_authorizations;
 }
 
 void AccountAuthorizations::setClassType(AccountAuthorizations::AccountAuthorizationsType classType) {

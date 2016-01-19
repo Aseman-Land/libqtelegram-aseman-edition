@@ -23,6 +23,14 @@ GeoPoint::GeoPoint(InboundPkt *in) :
     fetch(in);
 }
 
+GeoPoint::GeoPoint(const Null &null) :
+    TelegramTypeObject(null),
+    m_lat(0),
+    m_longValue(0),
+    m_classType(typeGeoPointEmpty)
+{
+}
+
 GeoPoint::~GeoPoint() {
 }
 
@@ -42,8 +50,9 @@ qreal GeoPoint::longValue() const {
     return m_longValue;
 }
 
-bool GeoPoint::operator ==(const GeoPoint &b) {
-    return m_lat == b.m_lat &&
+bool GeoPoint::operator ==(const GeoPoint &b) const {
+    return m_classType == b.m_classType &&
+           m_lat == b.m_lat &&
            m_longValue == b.m_longValue;
 }
 

@@ -6,7 +6,10 @@
 #define LQTG_TYPE_VIDEO
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QtGlobal>
+#include <QString>
 #include "photosize.h"
 
 class LIBQTELEGRAMSHARED_EXPORT Video : public TelegramTypeObject
@@ -14,11 +17,12 @@ class LIBQTELEGRAMSHARED_EXPORT Video : public TelegramTypeObject
 public:
     enum VideoType {
         typeVideoEmpty = 0xc10658a8,
-        typeVideo = 0xee9f4a4d
+        typeVideo = 0xf72887d3
     };
 
     Video(VideoType classType = typeVideoEmpty, InboundPkt *in = 0);
     Video(InboundPkt *in);
+    Video(const Null&);
     virtual ~Video();
 
     void setAccessHash(qint64 accessHash);
@@ -39,14 +43,14 @@ public:
     void setId(qint64 id);
     qint64 id() const;
 
+    void setMimeType(const QString &mimeType);
+    QString mimeType() const;
+
     void setSize(qint32 size);
     qint32 size() const;
 
     void setThumb(const PhotoSize &thumb);
     PhotoSize thumb() const;
-
-    void setUserId(qint32 userId);
-    qint32 userId() const;
 
     void setW(qint32 w);
     qint32 w() const;
@@ -57,7 +61,10 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const Video &b);
+    bool operator ==(const Video &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     qint64 m_accessHash;
@@ -66,11 +73,13 @@ private:
     qint32 m_duration;
     qint32 m_h;
     qint64 m_id;
+    QString m_mimeType;
     qint32 m_size;
     PhotoSize m_thumb;
-    qint32 m_userId;
     qint32 m_w;
     VideoType m_classType;
 };
+
+Q_DECLARE_METATYPE(Video)
 
 #endif // LQTG_TYPE_VIDEO

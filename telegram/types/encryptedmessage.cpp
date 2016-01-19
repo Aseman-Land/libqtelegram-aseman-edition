@@ -25,6 +25,15 @@ EncryptedMessage::EncryptedMessage(InboundPkt *in) :
     fetch(in);
 }
 
+EncryptedMessage::EncryptedMessage(const Null &null) :
+    TelegramTypeObject(null),
+    m_chatId(0),
+    m_date(0),
+    m_randomId(0),
+    m_classType(typeEncryptedMessage)
+{
+}
+
 EncryptedMessage::~EncryptedMessage() {
 }
 
@@ -68,8 +77,9 @@ qint64 EncryptedMessage::randomId() const {
     return m_randomId;
 }
 
-bool EncryptedMessage::operator ==(const EncryptedMessage &b) {
-    return m_bytes == b.m_bytes &&
+bool EncryptedMessage::operator ==(const EncryptedMessage &b) const {
+    return m_classType == b.m_classType &&
+           m_bytes == b.m_bytes &&
            m_chatId == b.m_chatId &&
            m_date == b.m_date &&
            m_file == b.m_file &&

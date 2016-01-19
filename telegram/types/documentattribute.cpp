@@ -25,6 +25,15 @@ DocumentAttribute::DocumentAttribute(InboundPkt *in) :
     fetch(in);
 }
 
+DocumentAttribute::DocumentAttribute(const Null &null) :
+    TelegramTypeObject(null),
+    m_duration(0),
+    m_h(0),
+    m_w(0),
+    m_classType(typeDocumentAttributeImageSize)
+{
+}
+
 DocumentAttribute::~DocumentAttribute() {
 }
 
@@ -60,12 +69,28 @@ qint32 DocumentAttribute::h() const {
     return m_h;
 }
 
+void DocumentAttribute::setPerformer(const QString &performer) {
+    m_performer = performer;
+}
+
+QString DocumentAttribute::performer() const {
+    return m_performer;
+}
+
 void DocumentAttribute::setStickerset(const InputStickerSet &stickerset) {
     m_stickerset = stickerset;
 }
 
 InputStickerSet DocumentAttribute::stickerset() const {
     return m_stickerset;
+}
+
+void DocumentAttribute::setTitle(const QString &title) {
+    m_title = title;
+}
+
+QString DocumentAttribute::title() const {
+    return m_title;
 }
 
 void DocumentAttribute::setW(qint32 w) {
@@ -76,12 +101,15 @@ qint32 DocumentAttribute::w() const {
     return m_w;
 }
 
-bool DocumentAttribute::operator ==(const DocumentAttribute &b) {
-    return m_alt == b.m_alt &&
+bool DocumentAttribute::operator ==(const DocumentAttribute &b) const {
+    return m_classType == b.m_classType &&
+           m_alt == b.m_alt &&
            m_duration == b.m_duration &&
            m_fileName == b.m_fileName &&
            m_h == b.m_h &&
+           m_performer == b.m_performer &&
            m_stickerset == b.m_stickerset &&
+           m_title == b.m_title &&
            m_w == b.m_w;
 }
 
@@ -130,6 +158,8 @@ bool DocumentAttribute::fetch(InboundPkt *in) {
     
     case typeDocumentAttributeAudio: {
         m_duration = in->fetchInt();
+        m_title = in->fetchQString();
+        m_performer = in->fetchQString();
         m_classType = static_cast<DocumentAttributeType>(x);
         return true;
     }
@@ -180,6 +210,8 @@ bool DocumentAttribute::push(OutboundPkt *out) const {
     
     case typeDocumentAttributeAudio: {
         out->appendInt(m_duration);
+        out->appendQString(m_title);
+        out->appendQString(m_performer);
         return true;
     }
         break;

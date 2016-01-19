@@ -21,6 +21,13 @@ AccountPassword::AccountPassword(InboundPkt *in) :
     fetch(in);
 }
 
+AccountPassword::AccountPassword(const Null &null) :
+    TelegramTypeObject(null),
+    m_hasRecovery(false),
+    m_classType(typeAccountNoPassword)
+{
+}
+
 AccountPassword::~AccountPassword() {
 }
 
@@ -64,8 +71,9 @@ QByteArray AccountPassword::newSalt() const {
     return m_newSalt;
 }
 
-bool AccountPassword::operator ==(const AccountPassword &b) {
-    return m_currentSalt == b.m_currentSalt &&
+bool AccountPassword::operator ==(const AccountPassword &b) const {
+    return m_classType == b.m_classType &&
+           m_currentSalt == b.m_currentSalt &&
            m_emailUnconfirmedPattern == b.m_emailUnconfirmedPattern &&
            m_hasRecovery == b.m_hasRecovery &&
            m_hint == b.m_hint &&

@@ -6,6 +6,8 @@
 #define LQTG_TYPE_ENCRYPTEDFILE
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QtGlobal>
 
 class LIBQTELEGRAMSHARED_EXPORT EncryptedFile : public TelegramTypeObject
@@ -18,6 +20,7 @@ public:
 
     EncryptedFile(EncryptedFileType classType = typeEncryptedFileEmpty, InboundPkt *in = 0);
     EncryptedFile(InboundPkt *in);
+    EncryptedFile(const Null&);
     virtual ~EncryptedFile();
 
     void setAccessHash(qint64 accessHash);
@@ -41,7 +44,10 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const EncryptedFile &b);
+    bool operator ==(const EncryptedFile &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     qint64 m_accessHash;
@@ -51,5 +57,7 @@ private:
     qint32 m_size;
     EncryptedFileType m_classType;
 };
+
+Q_DECLARE_METATYPE(EncryptedFile)
 
 #endif // LQTG_TYPE_ENCRYPTEDFILE

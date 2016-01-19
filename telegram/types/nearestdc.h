@@ -6,6 +6,8 @@
 #define LQTG_TYPE_NEARESTDC
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QString>
 #include <QtGlobal>
 
@@ -18,6 +20,7 @@ public:
 
     NearestDc(NearestDcType classType = typeNearestDc, InboundPkt *in = 0);
     NearestDc(InboundPkt *in);
+    NearestDc(const Null&);
     virtual ~NearestDc();
 
     void setCountry(const QString &country);
@@ -35,7 +38,10 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const NearestDc &b);
+    bool operator ==(const NearestDc &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     QString m_country;
@@ -43,5 +49,7 @@ private:
     qint32 m_thisDc;
     NearestDcType m_classType;
 };
+
+Q_DECLARE_METATYPE(NearestDc)
 
 #endif // LQTG_TYPE_NEARESTDC

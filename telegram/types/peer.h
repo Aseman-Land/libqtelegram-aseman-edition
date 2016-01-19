@@ -6,6 +6,8 @@
 #define LQTG_TYPE_PEER
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QtGlobal>
 
 class LIBQTELEGRAMSHARED_EXPORT Peer : public TelegramTypeObject
@@ -13,12 +15,17 @@ class LIBQTELEGRAMSHARED_EXPORT Peer : public TelegramTypeObject
 public:
     enum PeerType {
         typePeerUser = 0x9db1bc6d,
-        typePeerChat = 0xbad0e5bb
+        typePeerChat = 0xbad0e5bb,
+        typePeerChannel = 0xbddde532
     };
 
     Peer(PeerType classType = typePeerUser, InboundPkt *in = 0);
     Peer(InboundPkt *in);
+    Peer(const Null&);
     virtual ~Peer();
+
+    void setChannelId(qint32 channelId);
+    qint32 channelId() const;
 
     void setChatId(qint32 chatId);
     qint32 chatId() const;
@@ -32,12 +39,18 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const Peer &b);
+    bool operator ==(const Peer &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
+    qint32 m_channelId;
     qint32 m_chatId;
     qint32 m_userId;
     PeerType m_classType;
 };
+
+Q_DECLARE_METATYPE(Peer)
 
 #endif // LQTG_TYPE_PEER

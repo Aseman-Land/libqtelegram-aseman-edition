@@ -6,6 +6,8 @@
 #define LQTG_TYPE_HELPAPPUPDATE
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QtGlobal>
 #include <QString>
 
@@ -19,6 +21,7 @@ public:
 
     HelpAppUpdate(HelpAppUpdateType classType = typeHelpAppUpdate, InboundPkt *in = 0);
     HelpAppUpdate(InboundPkt *in);
+    HelpAppUpdate(const Null&);
     virtual ~HelpAppUpdate();
 
     void setCritical(bool critical);
@@ -39,7 +42,10 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const HelpAppUpdate &b);
+    bool operator ==(const HelpAppUpdate &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     bool m_critical;
@@ -48,5 +54,7 @@ private:
     QString m_url;
     HelpAppUpdateType m_classType;
 };
+
+Q_DECLARE_METATYPE(HelpAppUpdate)
 
 #endif // LQTG_TYPE_HELPAPPUPDATE

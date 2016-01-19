@@ -6,6 +6,8 @@
 #define LQTG_TYPE_UPDATESDIFFERENCE
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QList>
 #include "chat.h"
 #include <QtGlobal>
@@ -26,6 +28,7 @@ public:
 
     UpdatesDifference(UpdatesDifferenceType classType = typeUpdatesDifferenceEmpty, InboundPkt *in = 0);
     UpdatesDifference(InboundPkt *in);
+    UpdatesDifference(const Null&);
     virtual ~UpdatesDifference();
 
     void setChats(const QList<Chat> &chats);
@@ -61,7 +64,10 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const UpdatesDifference &b);
+    bool operator ==(const UpdatesDifference &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     QList<Chat> m_chats;
@@ -75,5 +81,7 @@ private:
     QList<User> m_users;
     UpdatesDifferenceType m_classType;
 };
+
+Q_DECLARE_METATYPE(UpdatesDifference)
 
 #endif // LQTG_TYPE_UPDATESDIFFERENCE

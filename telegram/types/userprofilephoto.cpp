@@ -21,6 +21,13 @@ UserProfilePhoto::UserProfilePhoto(InboundPkt *in) :
     fetch(in);
 }
 
+UserProfilePhoto::UserProfilePhoto(const Null &null) :
+    TelegramTypeObject(null),
+    m_photoId(0),
+    m_classType(typeUserProfilePhotoEmpty)
+{
+}
+
 UserProfilePhoto::~UserProfilePhoto() {
 }
 
@@ -48,8 +55,9 @@ FileLocation UserProfilePhoto::photoSmall() const {
     return m_photoSmall;
 }
 
-bool UserProfilePhoto::operator ==(const UserProfilePhoto &b) {
-    return m_photoBig == b.m_photoBig &&
+bool UserProfilePhoto::operator ==(const UserProfilePhoto &b) const {
+    return m_classType == b.m_classType &&
+           m_photoBig == b.m_photoBig &&
            m_photoId == b.m_photoId &&
            m_photoSmall == b.m_photoSmall;
 }

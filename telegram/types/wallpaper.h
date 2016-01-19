@@ -6,6 +6,8 @@
 #define LQTG_TYPE_WALLPAPER
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QtGlobal>
 #include <QList>
 #include "photosize.h"
@@ -21,6 +23,7 @@ public:
 
     WallPaper(WallPaperType classType = typeWallPaper, InboundPkt *in = 0);
     WallPaper(InboundPkt *in);
+    WallPaper(const Null&);
     virtual ~WallPaper();
 
     void setBgColor(qint32 bgColor);
@@ -44,7 +47,10 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const WallPaper &b);
+    bool operator ==(const WallPaper &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     qint32 m_bgColor;
@@ -54,5 +60,7 @@ private:
     QString m_title;
     WallPaperType m_classType;
 };
+
+Q_DECLARE_METATYPE(WallPaper)
 
 #endif // LQTG_TYPE_WALLPAPER

@@ -21,6 +21,13 @@ AuthExportedAuthorization::AuthExportedAuthorization(InboundPkt *in) :
     fetch(in);
 }
 
+AuthExportedAuthorization::AuthExportedAuthorization(const Null &null) :
+    TelegramTypeObject(null),
+    m_id(0),
+    m_classType(typeAuthExportedAuthorization)
+{
+}
+
 AuthExportedAuthorization::~AuthExportedAuthorization() {
 }
 
@@ -40,8 +47,9 @@ qint32 AuthExportedAuthorization::id() const {
     return m_id;
 }
 
-bool AuthExportedAuthorization::operator ==(const AuthExportedAuthorization &b) {
-    return m_bytes == b.m_bytes &&
+bool AuthExportedAuthorization::operator ==(const AuthExportedAuthorization &b) const {
+    return m_classType == b.m_classType &&
+           m_bytes == b.m_bytes &&
            m_id == b.m_id;
 }
 

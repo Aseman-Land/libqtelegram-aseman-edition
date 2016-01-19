@@ -6,6 +6,8 @@
 #define LQTG_TYPE_IMPORTEDCONTACT
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QtGlobal>
 
 class LIBQTELEGRAMSHARED_EXPORT ImportedContact : public TelegramTypeObject
@@ -17,6 +19,7 @@ public:
 
     ImportedContact(ImportedContactType classType = typeImportedContact, InboundPkt *in = 0);
     ImportedContact(InboundPkt *in);
+    ImportedContact(const Null&);
     virtual ~ImportedContact();
 
     void setClientId(qint64 clientId);
@@ -31,12 +34,17 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const ImportedContact &b);
+    bool operator ==(const ImportedContact &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     qint64 m_clientId;
     qint32 m_userId;
     ImportedContactType m_classType;
 };
+
+Q_DECLARE_METATYPE(ImportedContact)
 
 #endif // LQTG_TYPE_IMPORTEDCONTACT

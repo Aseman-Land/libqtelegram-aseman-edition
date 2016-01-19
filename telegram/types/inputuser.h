@@ -6,6 +6,8 @@
 #define LQTG_TYPE_INPUTUSER
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QtGlobal>
 
 class LIBQTELEGRAMSHARED_EXPORT InputUser : public TelegramTypeObject
@@ -14,12 +16,12 @@ public:
     enum InputUserType {
         typeInputUserEmpty = 0xb98886cf,
         typeInputUserSelf = 0xf7c1b13f,
-        typeInputUserContact = 0x86e94f65,
-        typeInputUserForeign = 0x655e74ff
+        typeInputUser = 0xd8292816
     };
 
     InputUser(InputUserType classType = typeInputUserEmpty, InboundPkt *in = 0);
     InputUser(InboundPkt *in);
+    InputUser(const Null&);
     virtual ~InputUser();
 
     void setAccessHash(qint64 accessHash);
@@ -34,12 +36,17 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const InputUser &b);
+    bool operator ==(const InputUser &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     qint64 m_accessHash;
     qint32 m_userId;
     InputUserType m_classType;
 };
+
+Q_DECLARE_METATYPE(InputUser)
 
 #endif // LQTG_TYPE_INPUTUSER

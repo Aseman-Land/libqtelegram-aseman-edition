@@ -91,3 +91,30 @@ HelpSupport Functions::Help::getSupportResult(InboundPkt *in) {
     return result;
 }
 
+bool Functions::Help::getAppChangelog(OutboundPkt *out, const QString &deviceModel, const QString &systemVersion, const QString &appVersion, const QString &langCode) {
+    out->appendInt(fncHelpGetAppChangelog);
+    out->appendQString(deviceModel);
+    out->appendQString(systemVersion);
+    out->appendQString(appVersion);
+    out->appendQString(langCode);
+    return true;
+}
+
+HelpAppChangelog Functions::Help::getAppChangelogResult(InboundPkt *in) {
+    HelpAppChangelog result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+bool Functions::Help::getTermsOfService(OutboundPkt *out, const QString &langCode) {
+    out->appendInt(fncHelpGetTermsOfService);
+    out->appendQString(langCode);
+    return true;
+}
+
+HelpTermsOfService Functions::Help::getTermsOfServiceResult(InboundPkt *in) {
+    HelpTermsOfService result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+

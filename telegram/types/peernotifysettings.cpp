@@ -25,6 +25,15 @@ PeerNotifySettings::PeerNotifySettings(InboundPkt *in) :
     fetch(in);
 }
 
+PeerNotifySettings::PeerNotifySettings(const Null &null) :
+    TelegramTypeObject(null),
+    m_eventsMask(0),
+    m_muteUntil(0),
+    m_showPreviews(false),
+    m_classType(typePeerNotifySettingsEmpty)
+{
+}
+
 PeerNotifySettings::~PeerNotifySettings() {
 }
 
@@ -60,8 +69,9 @@ QString PeerNotifySettings::sound() const {
     return m_sound;
 }
 
-bool PeerNotifySettings::operator ==(const PeerNotifySettings &b) {
-    return m_eventsMask == b.m_eventsMask &&
+bool PeerNotifySettings::operator ==(const PeerNotifySettings &b) const {
+    return m_classType == b.m_classType &&
+           m_eventsMask == b.m_eventsMask &&
            m_muteUntil == b.m_muteUntil &&
            m_showPreviews == b.m_showPreviews &&
            m_sound == b.m_sound;

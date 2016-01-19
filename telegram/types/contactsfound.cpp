@@ -19,14 +19,28 @@ ContactsFound::ContactsFound(InboundPkt *in) :
     fetch(in);
 }
 
+ContactsFound::ContactsFound(const Null &null) :
+    TelegramTypeObject(null),
+    m_classType(typeContactsFound)
+{
+}
+
 ContactsFound::~ContactsFound() {
 }
 
-void ContactsFound::setResults(const QList<ContactFound> &results) {
+void ContactsFound::setChats(const QList<Chat> &chats) {
+    m_chats = chats;
+}
+
+QList<Chat> ContactsFound::chats() const {
+    return m_chats;
+}
+
+void ContactsFound::setResults(const QList<Peer> &results) {
     m_results = results;
 }
 
-QList<ContactFound> ContactsFound::results() const {
+QList<Peer> ContactsFound::results() const {
     return m_results;
 }
 
@@ -38,8 +52,10 @@ QList<User> ContactsFound::users() const {
     return m_users;
 }
 
-bool ContactsFound::operator ==(const ContactsFound &b) {
-    return m_results == b.m_results &&
+bool ContactsFound::operator ==(const ContactsFound &b) const {
+    return m_classType == b.m_classType &&
+           m_chats == b.m_chats &&
+           m_results == b.m_results &&
            m_users == b.m_users;
 }
 
@@ -60,9 +76,17 @@ bool ContactsFound::fetch(InboundPkt *in) {
         qint32 m_results_length = in->fetchInt();
         m_results.clear();
         for (qint32 i = 0; i < m_results_length; i++) {
-            ContactFound type;
+            Peer type;
             type.fetch(in);
             m_results.append(type);
+        }
+        if(in->fetchInt() != (qint32)CoreTypes::typeVector) return false;
+        qint32 m_chats_length = in->fetchInt();
+        m_chats.clear();
+        for (qint32 i = 0; i < m_chats_length; i++) {
+            Chat type;
+            type.fetch(in);
+            m_chats.append(type);
         }
         if(in->fetchInt() != (qint32)CoreTypes::typeVector) return false;
         qint32 m_users_length = in->fetchInt();
@@ -91,6 +115,11 @@ bool ContactsFound::push(OutboundPkt *out) const {
         out->appendInt(m_results.count());
         for (qint32 i = 0; i < m_results.count(); i++) {
             m_results[i].push(out);
+        }
+        out->appendInt(CoreTypes::typeVector);
+        out->appendInt(m_chats.count());
+        for (qint32 i = 0; i < m_chats.count(); i++) {
+            m_chats[i].push(out);
         }
         out->appendInt(CoreTypes::typeVector);
         out->appendInt(m_users.count());

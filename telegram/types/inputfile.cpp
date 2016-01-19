@@ -23,6 +23,14 @@ InputFile::InputFile(InboundPkt *in) :
     fetch(in);
 }
 
+InputFile::InputFile(const Null &null) :
+    TelegramTypeObject(null),
+    m_id(0),
+    m_parts(0),
+    m_classType(typeInputFile)
+{
+}
+
 InputFile::~InputFile() {
 }
 
@@ -58,8 +66,9 @@ qint32 InputFile::parts() const {
     return m_parts;
 }
 
-bool InputFile::operator ==(const InputFile &b) {
-    return m_id == b.m_id &&
+bool InputFile::operator ==(const InputFile &b) const {
+    return m_classType == b.m_classType &&
+           m_id == b.m_id &&
            m_md5Checksum == b.m_md5Checksum &&
            m_name == b.m_name &&
            m_parts == b.m_parts;

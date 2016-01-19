@@ -23,6 +23,14 @@ InputDocument::InputDocument(InboundPkt *in) :
     fetch(in);
 }
 
+InputDocument::InputDocument(const Null &null) :
+    TelegramTypeObject(null),
+    m_accessHash(0),
+    m_id(0),
+    m_classType(typeInputDocumentEmpty)
+{
+}
+
 InputDocument::~InputDocument() {
 }
 
@@ -42,8 +50,9 @@ qint64 InputDocument::id() const {
     return m_id;
 }
 
-bool InputDocument::operator ==(const InputDocument &b) {
-    return m_accessHash == b.m_accessHash &&
+bool InputDocument::operator ==(const InputDocument &b) const {
+    return m_classType == b.m_classType &&
+           m_accessHash == b.m_accessHash &&
            m_id == b.m_id;
 }
 

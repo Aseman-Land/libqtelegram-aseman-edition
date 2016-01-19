@@ -21,6 +21,13 @@ AccountSentChangePhoneCode::AccountSentChangePhoneCode(InboundPkt *in) :
     fetch(in);
 }
 
+AccountSentChangePhoneCode::AccountSentChangePhoneCode(const Null &null) :
+    TelegramTypeObject(null),
+    m_sendCallTimeout(0),
+    m_classType(typeAccountSentChangePhoneCode)
+{
+}
+
 AccountSentChangePhoneCode::~AccountSentChangePhoneCode() {
 }
 
@@ -40,8 +47,9 @@ qint32 AccountSentChangePhoneCode::sendCallTimeout() const {
     return m_sendCallTimeout;
 }
 
-bool AccountSentChangePhoneCode::operator ==(const AccountSentChangePhoneCode &b) {
-    return m_phoneCodeHash == b.m_phoneCodeHash &&
+bool AccountSentChangePhoneCode::operator ==(const AccountSentChangePhoneCode &b) const {
+    return m_classType == b.m_classType &&
+           m_phoneCodeHash == b.m_phoneCodeHash &&
            m_sendCallTimeout == b.m_sendCallTimeout;
 }
 

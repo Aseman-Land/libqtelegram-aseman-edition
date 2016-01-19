@@ -6,6 +6,8 @@
 #define LQTG_TYPE_INPUTPHOTO
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QtGlobal>
 
 class LIBQTELEGRAMSHARED_EXPORT InputPhoto : public TelegramTypeObject
@@ -18,6 +20,7 @@ public:
 
     InputPhoto(InputPhotoType classType = typeInputPhotoEmpty, InboundPkt *in = 0);
     InputPhoto(InboundPkt *in);
+    InputPhoto(const Null&);
     virtual ~InputPhoto();
 
     void setAccessHash(qint64 accessHash);
@@ -32,12 +35,17 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const InputPhoto &b);
+    bool operator ==(const InputPhoto &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     qint64 m_accessHash;
     qint64 m_id;
     InputPhotoType m_classType;
 };
+
+Q_DECLARE_METATYPE(InputPhoto)
 
 #endif // LQTG_TYPE_INPUTPHOTO

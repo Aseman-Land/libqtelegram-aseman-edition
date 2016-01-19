@@ -23,6 +23,14 @@ ContactSuggested::ContactSuggested(InboundPkt *in) :
     fetch(in);
 }
 
+ContactSuggested::ContactSuggested(const Null &null) :
+    TelegramTypeObject(null),
+    m_mutualContacts(0),
+    m_userId(0),
+    m_classType(typeContactSuggested)
+{
+}
+
 ContactSuggested::~ContactSuggested() {
 }
 
@@ -42,8 +50,9 @@ qint32 ContactSuggested::userId() const {
     return m_userId;
 }
 
-bool ContactSuggested::operator ==(const ContactSuggested &b) {
-    return m_mutualContacts == b.m_mutualContacts &&
+bool ContactSuggested::operator ==(const ContactSuggested &b) const {
+    return m_classType == b.m_classType &&
+           m_mutualContacts == b.m_mutualContacts &&
            m_userId == b.m_userId;
 }
 

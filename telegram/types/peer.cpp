@@ -8,6 +8,7 @@
 #include "../coretypes.h"
 
 Peer::Peer(PeerType classType, InboundPkt *in) :
+    m_channelId(0),
     m_chatId(0),
     m_userId(0),
     m_classType(classType)
@@ -16,6 +17,7 @@ Peer::Peer(PeerType classType, InboundPkt *in) :
 }
 
 Peer::Peer(InboundPkt *in) :
+    m_channelId(0),
     m_chatId(0),
     m_userId(0),
     m_classType(typePeerUser)
@@ -23,7 +25,24 @@ Peer::Peer(InboundPkt *in) :
     fetch(in);
 }
 
+Peer::Peer(const Null &null) :
+    TelegramTypeObject(null),
+    m_channelId(0),
+    m_chatId(0),
+    m_userId(0),
+    m_classType(typePeerUser)
+{
+}
+
 Peer::~Peer() {
+}
+
+void Peer::setChannelId(qint32 channelId) {
+    m_channelId = channelId;
+}
+
+qint32 Peer::channelId() const {
+    return m_channelId;
 }
 
 void Peer::setChatId(qint32 chatId) {
@@ -42,8 +61,10 @@ qint32 Peer::userId() const {
     return m_userId;
 }
 
-bool Peer::operator ==(const Peer &b) {
-    return m_chatId == b.m_chatId &&
+bool Peer::operator ==(const Peer &b) const {
+    return m_classType == b.m_classType &&
+           m_channelId == b.m_channelId &&
+           m_chatId == b.m_chatId &&
            m_userId == b.m_userId;
 }
 
@@ -73,6 +94,13 @@ bool Peer::fetch(InboundPkt *in) {
     }
         break;
     
+    case typePeerChannel: {
+        m_channelId = in->fetchInt();
+        m_classType = static_cast<PeerType>(x);
+        return true;
+    }
+        break;
+    
     default:
         LQTG_FETCH_ASSERT;
         return false;
@@ -90,6 +118,12 @@ bool Peer::push(OutboundPkt *out) const {
     
     case typePeerChat: {
         out->appendInt(m_chatId);
+        return true;
+    }
+        break;
+    
+    case typePeerChannel: {
+        out->appendInt(m_channelId);
         return true;
     }
         break;

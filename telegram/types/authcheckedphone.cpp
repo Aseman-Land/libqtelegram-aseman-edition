@@ -21,6 +21,13 @@ AuthCheckedPhone::AuthCheckedPhone(InboundPkt *in) :
     fetch(in);
 }
 
+AuthCheckedPhone::AuthCheckedPhone(const Null &null) :
+    TelegramTypeObject(null),
+    m_phoneRegistered(false),
+    m_classType(typeAuthCheckedPhone)
+{
+}
+
 AuthCheckedPhone::~AuthCheckedPhone() {
 }
 
@@ -32,8 +39,9 @@ bool AuthCheckedPhone::phoneRegistered() const {
     return m_phoneRegistered;
 }
 
-bool AuthCheckedPhone::operator ==(const AuthCheckedPhone &b) {
-    return m_phoneRegistered == b.m_phoneRegistered;
+bool AuthCheckedPhone::operator ==(const AuthCheckedPhone &b) const {
+    return m_classType == b.m_classType &&
+           m_phoneRegistered == b.m_phoneRegistered;
 }
 
 void AuthCheckedPhone::setClassType(AuthCheckedPhone::AuthCheckedPhoneType classType) {

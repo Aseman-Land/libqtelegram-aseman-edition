@@ -10,10 +10,13 @@
 Update::Update(UpdateType classType, InboundPkt *in) :
     m_authKeyId(0),
     m_blocked(false),
+    m_channelId(0),
     m_chatId(0),
     m_date(0),
+    m_enabled(false),
     m_id(0),
     m_inviterId(0),
+    m_isAdmin(false),
     m_maxDate(0),
     m_maxId(0),
     m_popup(false),
@@ -21,9 +24,11 @@ Update::Update(UpdateType classType, InboundPkt *in) :
     m_pts(0),
     m_ptsCount(0),
     m_qts(0),
+    m_queryId(0),
     m_randomId(0),
     m_userId(0),
     m_version(0),
+    m_views(0),
     m_classType(classType)
 {
     if(in) fetch(in);
@@ -32,10 +37,13 @@ Update::Update(UpdateType classType, InboundPkt *in) :
 Update::Update(InboundPkt *in) :
     m_authKeyId(0),
     m_blocked(false),
+    m_channelId(0),
     m_chatId(0),
     m_date(0),
+    m_enabled(false),
     m_id(0),
     m_inviterId(0),
+    m_isAdmin(false),
     m_maxDate(0),
     m_maxId(0),
     m_popup(false),
@@ -43,12 +51,41 @@ Update::Update(InboundPkt *in) :
     m_pts(0),
     m_ptsCount(0),
     m_qts(0),
+    m_queryId(0),
     m_randomId(0),
     m_userId(0),
     m_version(0),
+    m_views(0),
     m_classType(typeUpdateNewMessage)
 {
     fetch(in);
+}
+
+Update::Update(const Null &null) :
+    TelegramTypeObject(null),
+    m_authKeyId(0),
+    m_blocked(false),
+    m_channelId(0),
+    m_chatId(0),
+    m_date(0),
+    m_enabled(false),
+    m_id(0),
+    m_inviterId(0),
+    m_isAdmin(false),
+    m_maxDate(0),
+    m_maxId(0),
+    m_popup(false),
+    m_previous(false),
+    m_pts(0),
+    m_ptsCount(0),
+    m_qts(0),
+    m_queryId(0),
+    m_randomId(0),
+    m_userId(0),
+    m_version(0),
+    m_views(0),
+    m_classType(typeUpdateNewMessage)
+{
 }
 
 Update::~Update() {
@@ -76,6 +113,14 @@ void Update::setBlocked(bool blocked) {
 
 bool Update::blocked() const {
     return m_blocked;
+}
+
+void Update::setChannelId(qint32 channelId) {
+    m_channelId = channelId;
+}
+
+qint32 Update::channelId() const {
+    return m_channelId;
 }
 
 void Update::setChat(const EncryptedChat &chat) {
@@ -118,6 +163,14 @@ QString Update::device() const {
     return m_device;
 }
 
+void Update::setEnabled(bool enabled) {
+    m_enabled = enabled;
+}
+
+bool Update::enabled() const {
+    return m_enabled;
+}
+
 void Update::setFirstName(const QString &firstName) {
     m_firstName = firstName;
 }
@@ -134,6 +187,14 @@ ContactLink Update::foreignLink() const {
     return m_foreignLink;
 }
 
+void Update::setGroup(const MessageGroup &group) {
+    m_group = group;
+}
+
+MessageGroup Update::group() const {
+    return m_group;
+}
+
 void Update::setId(qint32 id) {
     m_id = id;
 }
@@ -148,6 +209,14 @@ void Update::setInviterId(qint32 inviterId) {
 
 qint32 Update::inviterId() const {
     return m_inviterId;
+}
+
+void Update::setIsAdmin(bool isAdmin) {
+    m_isAdmin = isAdmin;
+}
+
+bool Update::isAdmin() const {
+    return m_isAdmin;
 }
 
 void Update::setKey(const PrivacyKey &key) {
@@ -206,14 +275,6 @@ EncryptedMessage Update::messageEncrypted() const {
     return m_messageEncrypted;
 }
 
-void Update::setMessageGeoChat(const GeoChatMessage &messageGeoChat) {
-    m_messageGeoChat = messageGeoChat;
-}
-
-GeoChatMessage Update::messageGeoChat() const {
-    return m_messageGeoChat;
-}
-
 void Update::setMessage(const Message &message) {
     m_message = message;
 }
@@ -252,6 +313,22 @@ void Update::setNotifySettings(const PeerNotifySettings &notifySettings) {
 
 PeerNotifySettings Update::notifySettings() const {
     return m_notifySettings;
+}
+
+void Update::setOffset(const QString &offset) {
+    m_offset = offset;
+}
+
+QString Update::offset() const {
+    return m_offset;
+}
+
+void Update::setOrder(const QList<qint64> &order) {
+    m_order = order;
+}
+
+QList<qint64> Update::order() const {
+    return m_order;
 }
 
 void Update::setParticipants(const ChatParticipants &participants) {
@@ -334,6 +411,22 @@ qint32 Update::qts() const {
     return m_qts;
 }
 
+void Update::setQuery(const QString &query) {
+    m_query = query;
+}
+
+QString Update::query() const {
+    return m_query;
+}
+
+void Update::setQueryId(qint64 queryId) {
+    m_queryId = queryId;
+}
+
+qint64 Update::queryId() const {
+    return m_queryId;
+}
+
 void Update::setRandomId(qint64 randomId) {
     m_randomId = randomId;
 }
@@ -356,6 +449,14 @@ void Update::setStatus(const UserStatus &status) {
 
 UserStatus Update::status() const {
     return m_status;
+}
+
+void Update::setStickerset(const MessagesStickerSet &stickerset) {
+    m_stickerset = stickerset;
+}
+
+MessagesStickerSet Update::stickerset() const {
+    return m_stickerset;
 }
 
 void Update::setType(const QString &type) {
@@ -390,6 +491,14 @@ qint32 Update::version() const {
     return m_version;
 }
 
+void Update::setViews(qint32 views) {
+    m_views = views;
+}
+
+qint32 Update::views() const {
+    return m_views;
+}
+
 void Update::setWebpage(const WebPage &webpage) {
     m_webpage = webpage;
 }
@@ -398,19 +507,24 @@ WebPage Update::webpage() const {
     return m_webpage;
 }
 
-bool Update::operator ==(const Update &b) {
-    return m_action == b.m_action &&
+bool Update::operator ==(const Update &b) const {
+    return m_classType == b.m_classType &&
+           m_action == b.m_action &&
            m_authKeyId == b.m_authKeyId &&
            m_blocked == b.m_blocked &&
+           m_channelId == b.m_channelId &&
            m_chat == b.m_chat &&
            m_chatId == b.m_chatId &&
            m_date == b.m_date &&
            m_dcOptions == b.m_dcOptions &&
            m_device == b.m_device &&
+           m_enabled == b.m_enabled &&
            m_firstName == b.m_firstName &&
            m_foreignLink == b.m_foreignLink &&
+           m_group == b.m_group &&
            m_id == b.m_id &&
            m_inviterId == b.m_inviterId &&
+           m_isAdmin == b.m_isAdmin &&
            m_key == b.m_key &&
            m_lastName == b.m_lastName &&
            m_location == b.m_location &&
@@ -418,12 +532,13 @@ bool Update::operator ==(const Update &b) {
            m_maxId == b.m_maxId &&
            m_media == b.m_media &&
            m_messageEncrypted == b.m_messageEncrypted &&
-           m_messageGeoChat == b.m_messageGeoChat &&
            m_message == b.m_message &&
            m_messageString == b.m_messageString &&
            m_messages == b.m_messages &&
            m_myLink == b.m_myLink &&
            m_notifySettings == b.m_notifySettings &&
+           m_offset == b.m_offset &&
+           m_order == b.m_order &&
            m_participants == b.m_participants &&
            m_peerNotify == b.m_peerNotify &&
            m_peer == b.m_peer &&
@@ -434,13 +549,17 @@ bool Update::operator ==(const Update &b) {
            m_pts == b.m_pts &&
            m_ptsCount == b.m_ptsCount &&
            m_qts == b.m_qts &&
+           m_query == b.m_query &&
+           m_queryId == b.m_queryId &&
            m_randomId == b.m_randomId &&
            m_rules == b.m_rules &&
            m_status == b.m_status &&
+           m_stickerset == b.m_stickerset &&
            m_type == b.m_type &&
            m_userId == b.m_userId &&
            m_username == b.m_username &&
            m_version == b.m_version &&
+           m_views == b.m_views &&
            m_webpage == b.m_webpage;
 }
 
@@ -568,13 +687,6 @@ bool Update::fetch(InboundPkt *in) {
     }
         break;
     
-    case typeUpdateNewGeoChatMessage: {
-        m_messageGeoChat.fetch(in);
-        m_classType = static_cast<UpdateType>(x);
-        return true;
-    }
-        break;
-    
     case typeUpdateNewEncryptedMessage: {
         m_messageEncrypted.fetch(in);
         m_qts = in->fetchInt();
@@ -611,6 +723,7 @@ bool Update::fetch(InboundPkt *in) {
         m_chatId = in->fetchInt();
         m_userId = in->fetchInt();
         m_inviterId = in->fetchInt();
+        m_date = in->fetchInt();
         m_version = in->fetchInt();
         m_classType = static_cast<UpdateType>(x);
         return true;
@@ -711,6 +824,8 @@ bool Update::fetch(InboundPkt *in) {
     
     case typeUpdateWebPage: {
         m_webpage.fetch(in);
+        m_pts = in->fetchInt();
+        m_ptsCount = in->fetchInt();
         m_classType = static_cast<UpdateType>(x);
         return true;
     }
@@ -727,6 +842,133 @@ bool Update::fetch(InboundPkt *in) {
         }
         m_pts = in->fetchInt();
         m_ptsCount = in->fetchInt();
+        m_classType = static_cast<UpdateType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateChannelTooLong: {
+        m_channelId = in->fetchInt();
+        m_classType = static_cast<UpdateType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateChannel: {
+        m_channelId = in->fetchInt();
+        m_classType = static_cast<UpdateType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateChannelGroup: {
+        m_channelId = in->fetchInt();
+        m_group.fetch(in);
+        m_classType = static_cast<UpdateType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateNewChannelMessage: {
+        m_message.fetch(in);
+        m_pts = in->fetchInt();
+        m_ptsCount = in->fetchInt();
+        m_classType = static_cast<UpdateType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateReadChannelInbox: {
+        m_channelId = in->fetchInt();
+        m_maxId = in->fetchInt();
+        m_classType = static_cast<UpdateType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateDeleteChannelMessages: {
+        m_channelId = in->fetchInt();
+        if(in->fetchInt() != (qint32)CoreTypes::typeVector) return false;
+        qint32 m_messages_length = in->fetchInt();
+        m_messages.clear();
+        for (qint32 i = 0; i < m_messages_length; i++) {
+            qint32 type;
+            type = in->fetchInt();
+            m_messages.append(type);
+        }
+        m_pts = in->fetchInt();
+        m_ptsCount = in->fetchInt();
+        m_classType = static_cast<UpdateType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateChannelMessageViews: {
+        m_channelId = in->fetchInt();
+        m_id = in->fetchInt();
+        m_views = in->fetchInt();
+        m_classType = static_cast<UpdateType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateChatAdmins: {
+        m_chatId = in->fetchInt();
+        m_enabled = in->fetchBool();
+        m_version = in->fetchInt();
+        m_classType = static_cast<UpdateType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateChatParticipantAdmin: {
+        m_chatId = in->fetchInt();
+        m_userId = in->fetchInt();
+        m_isAdmin = in->fetchBool();
+        m_version = in->fetchInt();
+        m_classType = static_cast<UpdateType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateNewStickerSet: {
+        m_stickerset.fetch(in);
+        m_classType = static_cast<UpdateType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateStickerSetsOrder: {
+        if(in->fetchInt() != (qint32)CoreTypes::typeVector) return false;
+        qint32 m_order_length = in->fetchInt();
+        m_order.clear();
+        for (qint32 i = 0; i < m_order_length; i++) {
+            qint64 type;
+            type = in->fetchLong();
+            m_order.append(type);
+        }
+        m_classType = static_cast<UpdateType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateStickerSets: {
+        m_classType = static_cast<UpdateType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateSavedGifs: {
+        m_classType = static_cast<UpdateType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateBotInlineQuery: {
+        m_queryId = in->fetchLong();
+        m_userId = in->fetchInt();
+        m_query = in->fetchQString();
+        m_offset = in->fetchQString();
         m_classType = static_cast<UpdateType>(x);
         return true;
     }
@@ -838,12 +1080,6 @@ bool Update::push(OutboundPkt *out) const {
     }
         break;
     
-    case typeUpdateNewGeoChatMessage: {
-        m_messageGeoChat.push(out);
-        return true;
-    }
-        break;
-    
     case typeUpdateNewEncryptedMessage: {
         m_messageEncrypted.push(out);
         out->appendInt(m_qts);
@@ -876,6 +1112,7 @@ bool Update::push(OutboundPkt *out) const {
         out->appendInt(m_chatId);
         out->appendInt(m_userId);
         out->appendInt(m_inviterId);
+        out->appendInt(m_date);
         out->appendInt(m_version);
         return true;
     }
@@ -960,6 +1197,8 @@ bool Update::push(OutboundPkt *out) const {
     
     case typeUpdateWebPage: {
         m_webpage.push(out);
+        out->appendInt(m_pts);
+        out->appendInt(m_ptsCount);
         return true;
     }
         break;
@@ -972,6 +1211,113 @@ bool Update::push(OutboundPkt *out) const {
         }
         out->appendInt(m_pts);
         out->appendInt(m_ptsCount);
+        return true;
+    }
+        break;
+    
+    case typeUpdateChannelTooLong: {
+        out->appendInt(m_channelId);
+        return true;
+    }
+        break;
+    
+    case typeUpdateChannel: {
+        out->appendInt(m_channelId);
+        return true;
+    }
+        break;
+    
+    case typeUpdateChannelGroup: {
+        out->appendInt(m_channelId);
+        m_group.push(out);
+        return true;
+    }
+        break;
+    
+    case typeUpdateNewChannelMessage: {
+        m_message.push(out);
+        out->appendInt(m_pts);
+        out->appendInt(m_ptsCount);
+        return true;
+    }
+        break;
+    
+    case typeUpdateReadChannelInbox: {
+        out->appendInt(m_channelId);
+        out->appendInt(m_maxId);
+        return true;
+    }
+        break;
+    
+    case typeUpdateDeleteChannelMessages: {
+        out->appendInt(m_channelId);
+        out->appendInt(CoreTypes::typeVector);
+        out->appendInt(m_messages.count());
+        for (qint32 i = 0; i < m_messages.count(); i++) {
+            out->appendInt(m_messages[i]);
+        }
+        out->appendInt(m_pts);
+        out->appendInt(m_ptsCount);
+        return true;
+    }
+        break;
+    
+    case typeUpdateChannelMessageViews: {
+        out->appendInt(m_channelId);
+        out->appendInt(m_id);
+        out->appendInt(m_views);
+        return true;
+    }
+        break;
+    
+    case typeUpdateChatAdmins: {
+        out->appendInt(m_chatId);
+        out->appendBool(m_enabled);
+        out->appendInt(m_version);
+        return true;
+    }
+        break;
+    
+    case typeUpdateChatParticipantAdmin: {
+        out->appendInt(m_chatId);
+        out->appendInt(m_userId);
+        out->appendBool(m_isAdmin);
+        out->appendInt(m_version);
+        return true;
+    }
+        break;
+    
+    case typeUpdateNewStickerSet: {
+        m_stickerset.push(out);
+        return true;
+    }
+        break;
+    
+    case typeUpdateStickerSetsOrder: {
+        out->appendInt(CoreTypes::typeVector);
+        out->appendInt(m_order.count());
+        for (qint32 i = 0; i < m_order.count(); i++) {
+            out->appendLong(m_order[i]);
+        }
+        return true;
+    }
+        break;
+    
+    case typeUpdateStickerSets: {
+        return true;
+    }
+        break;
+    
+    case typeUpdateSavedGifs: {
+        return true;
+    }
+        break;
+    
+    case typeUpdateBotInlineQuery: {
+        out->appendLong(m_queryId);
+        out->appendInt(m_userId);
+        out->appendQString(m_query);
+        out->appendQString(m_offset);
         return true;
     }
         break;

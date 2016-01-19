@@ -19,6 +19,7 @@
 #include "telegram/types/contactsblocked.h"
 #include "telegram/types/user.h"
 #include "telegram/types/contactsfound.h"
+#include "telegram/types/contactsresolvedpeer.h"
 
 namespace Tg {
 namespace Functions {
@@ -39,7 +40,7 @@ public:
         fncContactsExportCard = 0x84e53737,
         fncContactsImportCard = 0x4fe196fe,
         fncContactsSearch = 0x11f812d8,
-        fncContactsResolveUsername = 0xbf0131c
+        fncContactsResolveUsername = 0xf93ccba3
     };
 
     Contacts();
@@ -82,7 +83,7 @@ public:
     static ContactsFound searchResult(InboundPkt *in);
 
     static bool resolveUsername(OutboundPkt *out, const QString &username);
-    static User resolveUsernameResult(InboundPkt *in);
+    static ContactsResolvedPeer resolveUsernameResult(InboundPkt *in);
 
 };
 

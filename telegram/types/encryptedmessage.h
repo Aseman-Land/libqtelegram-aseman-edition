@@ -6,6 +6,8 @@
 #define LQTG_TYPE_ENCRYPTEDMESSAGE
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QByteArray>
 #include <QtGlobal>
 #include "encryptedfile.h"
@@ -20,6 +22,7 @@ public:
 
     EncryptedMessage(EncryptedMessageType classType = typeEncryptedMessage, InboundPkt *in = 0);
     EncryptedMessage(InboundPkt *in);
+    EncryptedMessage(const Null&);
     virtual ~EncryptedMessage();
 
     void setBytes(const QByteArray &bytes);
@@ -43,7 +46,10 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const EncryptedMessage &b);
+    bool operator ==(const EncryptedMessage &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     QByteArray m_bytes;
@@ -53,5 +59,7 @@ private:
     qint64 m_randomId;
     EncryptedMessageType m_classType;
 };
+
+Q_DECLARE_METATYPE(EncryptedMessage)
 
 #endif // LQTG_TYPE_ENCRYPTEDMESSAGE

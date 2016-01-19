@@ -6,6 +6,8 @@
 #define LQTG_TYPE_MESSAGESCHATFULL
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QList>
 #include "chat.h"
 #include "chatfull.h"
@@ -20,6 +22,7 @@ public:
 
     MessagesChatFull(MessagesChatFullType classType = typeMessagesChatFull, InboundPkt *in = 0);
     MessagesChatFull(InboundPkt *in);
+    MessagesChatFull(const Null&);
     virtual ~MessagesChatFull();
 
     void setChats(const QList<Chat> &chats);
@@ -37,7 +40,10 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const MessagesChatFull &b);
+    bool operator ==(const MessagesChatFull &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     QList<Chat> m_chats;
@@ -45,5 +51,7 @@ private:
     QList<User> m_users;
     MessagesChatFullType m_classType;
 };
+
+Q_DECLARE_METATYPE(MessagesChatFull)
 
 #endif // LQTG_TYPE_MESSAGESCHATFULL

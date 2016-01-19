@@ -19,6 +19,12 @@ PhotosPhoto::PhotosPhoto(InboundPkt *in) :
     fetch(in);
 }
 
+PhotosPhoto::PhotosPhoto(const Null &null) :
+    TelegramTypeObject(null),
+    m_classType(typePhotosPhoto)
+{
+}
+
 PhotosPhoto::~PhotosPhoto() {
 }
 
@@ -38,8 +44,9 @@ QList<User> PhotosPhoto::users() const {
     return m_users;
 }
 
-bool PhotosPhoto::operator ==(const PhotosPhoto &b) {
-    return m_photo == b.m_photo &&
+bool PhotosPhoto::operator ==(const PhotosPhoto &b) const {
+    return m_classType == b.m_classType &&
+           m_photo == b.m_photo &&
            m_users == b.m_users;
 }
 

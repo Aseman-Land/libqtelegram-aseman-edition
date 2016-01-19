@@ -19,6 +19,12 @@ AuthPasswordRecovery::AuthPasswordRecovery(InboundPkt *in) :
     fetch(in);
 }
 
+AuthPasswordRecovery::AuthPasswordRecovery(const Null &null) :
+    TelegramTypeObject(null),
+    m_classType(typeAuthPasswordRecovery)
+{
+}
+
 AuthPasswordRecovery::~AuthPasswordRecovery() {
 }
 
@@ -30,8 +36,9 @@ QString AuthPasswordRecovery::emailPattern() const {
     return m_emailPattern;
 }
 
-bool AuthPasswordRecovery::operator ==(const AuthPasswordRecovery &b) {
-    return m_emailPattern == b.m_emailPattern;
+bool AuthPasswordRecovery::operator ==(const AuthPasswordRecovery &b) const {
+    return m_classType == b.m_classType &&
+           m_emailPattern == b.m_emailPattern;
 }
 
 void AuthPasswordRecovery::setClassType(AuthPasswordRecovery::AuthPasswordRecoveryType classType) {

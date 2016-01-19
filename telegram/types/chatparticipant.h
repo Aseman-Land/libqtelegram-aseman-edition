@@ -6,17 +6,22 @@
 #define LQTG_TYPE_CHATPARTICIPANT
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QtGlobal>
 
 class LIBQTELEGRAMSHARED_EXPORT ChatParticipant : public TelegramTypeObject
 {
 public:
     enum ChatParticipantType {
-        typeChatParticipant = 0xc8d7493e
+        typeChatParticipant = 0xc8d7493e,
+        typeChatParticipantCreator = 0xda13538a,
+        typeChatParticipantAdmin = 0xe2d6e436
     };
 
     ChatParticipant(ChatParticipantType classType = typeChatParticipant, InboundPkt *in = 0);
     ChatParticipant(InboundPkt *in);
+    ChatParticipant(const Null&);
     virtual ~ChatParticipant();
 
     void setDate(qint32 date);
@@ -34,7 +39,10 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const ChatParticipant &b);
+    bool operator ==(const ChatParticipant &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     qint32 m_date;
@@ -42,5 +50,7 @@ private:
     qint32 m_userId;
     ChatParticipantType m_classType;
 };
+
+Q_DECLARE_METATYPE(ChatParticipant)
 
 #endif // LQTG_TYPE_CHATPARTICIPANT

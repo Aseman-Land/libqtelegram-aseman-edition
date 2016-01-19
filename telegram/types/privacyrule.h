@@ -6,6 +6,8 @@
 #define LQTG_TYPE_PRIVACYRULE
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QList>
 #include <QtGlobal>
 
@@ -23,6 +25,7 @@ public:
 
     PrivacyRule(PrivacyRuleType classType = typePrivacyValueAllowContacts, InboundPkt *in = 0);
     PrivacyRule(InboundPkt *in);
+    PrivacyRule(const Null&);
     virtual ~PrivacyRule();
 
     void setUsers(const QList<qint32> &users);
@@ -34,11 +37,16 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const PrivacyRule &b);
+    bool operator ==(const PrivacyRule &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     QList<qint32> m_users;
     PrivacyRuleType m_classType;
 };
+
+Q_DECLARE_METATYPE(PrivacyRule)
 
 #endif // LQTG_TYPE_PRIVACYRULE

@@ -178,6 +178,21 @@ bool Functions::Auth::sendSmsResult(InboundPkt *in) {
     return result;
 }
 
+bool Functions::Auth::importBotAuthorization(OutboundPkt *out, qint32 flags, qint32 apiId, const QString &apiHash, const QString &botAuthToken) {
+    out->appendInt(fncAuthImportBotAuthorization);
+    out->appendInt(flags);
+    out->appendInt(apiId);
+    out->appendQString(apiHash);
+    out->appendQString(botAuthToken);
+    return true;
+}
+
+AuthAuthorization Functions::Auth::importBotAuthorizationResult(InboundPkt *in) {
+    AuthAuthorization result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
 bool Functions::Auth::checkPassword(OutboundPkt *out, const QByteArray &passwordHash) {
     out->appendInt(fncAuthCheckPassword);
     out->appendBytes(passwordHash);

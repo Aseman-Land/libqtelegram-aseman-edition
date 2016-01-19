@@ -7,6 +7,8 @@
 
 #include "telegramtypeobject.h"
 
+#include <QMetaType>
+
 class LIBQTELEGRAMSHARED_EXPORT ContactLink : public TelegramTypeObject
 {
 public:
@@ -19,6 +21,7 @@ public:
 
     ContactLink(ContactLinkType classType = typeContactLinkUnknown, InboundPkt *in = 0);
     ContactLink(InboundPkt *in);
+    ContactLink(const Null&);
     virtual ~ContactLink();
 
     void setClassType(ContactLinkType classType);
@@ -27,10 +30,15 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const ContactLink &b);
+    bool operator ==(const ContactLink &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     ContactLinkType m_classType;
 };
+
+Q_DECLARE_METATYPE(ContactLink)
 
 #endif // LQTG_TYPE_CONTACTLINK

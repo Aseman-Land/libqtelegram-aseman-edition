@@ -6,7 +6,10 @@
 #define LQTG_TYPE_CHATINVITE
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include "chat.h"
+#include <QtGlobal>
 #include <QString>
 
 class LIBQTELEGRAMSHARED_EXPORT ChatInvite : public TelegramTypeObject
@@ -14,15 +17,31 @@ class LIBQTELEGRAMSHARED_EXPORT ChatInvite : public TelegramTypeObject
 public:
     enum ChatInviteType {
         typeChatInviteAlready = 0x5a686d7c,
-        typeChatInvite = 0xce917dcd
+        typeChatInvite = 0x93e99b60
     };
 
     ChatInvite(ChatInviteType classType = typeChatInviteAlready, InboundPkt *in = 0);
     ChatInvite(InboundPkt *in);
+    ChatInvite(const Null&);
     virtual ~ChatInvite();
+
+    void setBroadcast(bool broadcast);
+    bool broadcast() const;
+
+    void setChannel(bool channel);
+    bool channel() const;
 
     void setChat(const Chat &chat);
     Chat chat() const;
+
+    void setFlags(qint32 flags);
+    qint32 flags() const;
+
+    void setMegagroup(bool megagroup);
+    bool megagroup() const;
+
+    void setPublicValue(bool publicValue);
+    bool publicValue() const;
 
     void setTitle(const QString &title);
     QString title() const;
@@ -33,12 +52,18 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const ChatInvite &b);
+    bool operator ==(const ChatInvite &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     Chat m_chat;
+    qint32 m_flags;
     QString m_title;
     ChatInviteType m_classType;
 };
+
+Q_DECLARE_METATYPE(ChatInvite)
 
 #endif // LQTG_TYPE_CHATINVITE

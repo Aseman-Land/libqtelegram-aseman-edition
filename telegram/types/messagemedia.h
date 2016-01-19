@@ -6,6 +6,8 @@
 #define LQTG_TYPE_MESSAGEMEDIA
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QString>
 #include "audio.h"
 #include "document.h"
@@ -25,7 +27,7 @@ public:
         typeMessageMediaGeo = 0x56e0d474,
         typeMessageMediaContact = 0x5e7d2f39,
         typeMessageMediaUnsupported = 0x9f84f49e,
-        typeMessageMediaDocument = 0x2fda2204,
+        typeMessageMediaDocument = 0xf3e02ea8,
         typeMessageMediaAudio = 0xc6b68300,
         typeMessageMediaWebPage = 0xa32dd600,
         typeMessageMediaVenue = 0x7912b71f
@@ -33,6 +35,7 @@ public:
 
     MessageMedia(MessageMediaType classType = typeMessageMediaEmpty, InboundPkt *in = 0);
     MessageMedia(InboundPkt *in);
+    MessageMedia(const Null&);
     virtual ~MessageMedia();
 
     void setAddress(const QString &address);
@@ -86,7 +89,10 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const MessageMedia &b);
+    bool operator ==(const MessageMedia &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     QString m_address;
@@ -106,5 +112,7 @@ private:
     WebPage m_webpage;
     MessageMediaType m_classType;
 };
+
+Q_DECLARE_METATYPE(MessageMedia)
 
 #endif // LQTG_TYPE_MESSAGEMEDIA

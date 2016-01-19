@@ -29,6 +29,17 @@ Document::Document(InboundPkt *in) :
     fetch(in);
 }
 
+Document::Document(const Null &null) :
+    TelegramTypeObject(null),
+    m_accessHash(0),
+    m_date(0),
+    m_dcId(0),
+    m_id(0),
+    m_size(0),
+    m_classType(typeDocumentEmpty)
+{
+}
+
 Document::~Document() {
 }
 
@@ -96,8 +107,9 @@ PhotoSize Document::thumb() const {
     return m_thumb;
 }
 
-bool Document::operator ==(const Document &b) {
-    return m_accessHash == b.m_accessHash &&
+bool Document::operator ==(const Document &b) const {
+    return m_classType == b.m_classType &&
+           m_accessHash == b.m_accessHash &&
            m_attributes == b.m_attributes &&
            m_date == b.m_date &&
            m_dcId == b.m_dcId &&

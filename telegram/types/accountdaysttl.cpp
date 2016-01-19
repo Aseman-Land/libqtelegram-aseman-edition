@@ -21,6 +21,13 @@ AccountDaysTTL::AccountDaysTTL(InboundPkt *in) :
     fetch(in);
 }
 
+AccountDaysTTL::AccountDaysTTL(const Null &null) :
+    TelegramTypeObject(null),
+    m_days(0),
+    m_classType(typeAccountDaysTTL)
+{
+}
+
 AccountDaysTTL::~AccountDaysTTL() {
 }
 
@@ -32,8 +39,9 @@ qint32 AccountDaysTTL::days() const {
     return m_days;
 }
 
-bool AccountDaysTTL::operator ==(const AccountDaysTTL &b) {
-    return m_days == b.m_days;
+bool AccountDaysTTL::operator ==(const AccountDaysTTL &b) const {
+    return m_classType == b.m_classType &&
+           m_days == b.m_days;
 }
 
 void AccountDaysTTL::setClassType(AccountDaysTTL::AccountDaysTTLType classType) {

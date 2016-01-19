@@ -19,12 +19,17 @@ PeerNotifyEvents::PeerNotifyEvents(InboundPkt *in) :
     fetch(in);
 }
 
+PeerNotifyEvents::PeerNotifyEvents(const Null &null) :
+    TelegramTypeObject(null),
+    m_classType(typePeerNotifyEventsEmpty)
+{
+}
+
 PeerNotifyEvents::~PeerNotifyEvents() {
 }
 
-bool PeerNotifyEvents::operator ==(const PeerNotifyEvents &b) {
-    Q_UNUSED(b);
-    return true;
+bool PeerNotifyEvents::operator ==(const PeerNotifyEvents &b) const {
+    return m_classType == b.m_classType;
 }
 
 void PeerNotifyEvents::setClassType(PeerNotifyEvents::PeerNotifyEventsType classType) {

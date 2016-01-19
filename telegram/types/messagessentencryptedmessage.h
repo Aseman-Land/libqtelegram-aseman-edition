@@ -6,6 +6,8 @@
 #define LQTG_TYPE_MESSAGESSENTENCRYPTEDMESSAGE
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QtGlobal>
 #include "encryptedfile.h"
 
@@ -19,6 +21,7 @@ public:
 
     MessagesSentEncryptedMessage(MessagesSentEncryptedMessageType classType = typeMessagesSentEncryptedMessage, InboundPkt *in = 0);
     MessagesSentEncryptedMessage(InboundPkt *in);
+    MessagesSentEncryptedMessage(const Null&);
     virtual ~MessagesSentEncryptedMessage();
 
     void setDate(qint32 date);
@@ -33,12 +36,17 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const MessagesSentEncryptedMessage &b);
+    bool operator ==(const MessagesSentEncryptedMessage &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     qint32 m_date;
     EncryptedFile m_file;
     MessagesSentEncryptedMessageType m_classType;
 };
+
+Q_DECLARE_METATYPE(MessagesSentEncryptedMessage)
 
 #endif // LQTG_TYPE_MESSAGESSENTENCRYPTEDMESSAGE

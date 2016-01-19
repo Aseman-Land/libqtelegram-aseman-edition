@@ -6,6 +6,8 @@
 #define LQTG_TYPE_PHOTOSPHOTO
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include "photo.h"
 #include <QList>
 #include "user.h"
@@ -19,6 +21,7 @@ public:
 
     PhotosPhoto(PhotosPhotoType classType = typePhotosPhoto, InboundPkt *in = 0);
     PhotosPhoto(InboundPkt *in);
+    PhotosPhoto(const Null&);
     virtual ~PhotosPhoto();
 
     void setPhoto(const Photo &photo);
@@ -33,12 +36,17 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const PhotosPhoto &b);
+    bool operator ==(const PhotosPhoto &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     Photo m_photo;
     QList<User> m_users;
     PhotosPhotoType m_classType;
 };
+
+Q_DECLARE_METATYPE(PhotosPhoto)
 
 #endif // LQTG_TYPE_PHOTOSPHOTO

@@ -6,6 +6,8 @@
 #define LQTG_TYPE_ACCOUNTPASSWORDSETTINGS
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QString>
 
 class LIBQTELEGRAMSHARED_EXPORT AccountPasswordSettings : public TelegramTypeObject
@@ -17,6 +19,7 @@ public:
 
     AccountPasswordSettings(AccountPasswordSettingsType classType = typeAccountPasswordSettings, InboundPkt *in = 0);
     AccountPasswordSettings(InboundPkt *in);
+    AccountPasswordSettings(const Null&);
     virtual ~AccountPasswordSettings();
 
     void setEmail(const QString &email);
@@ -28,11 +31,16 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const AccountPasswordSettings &b);
+    bool operator ==(const AccountPasswordSettings &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     QString m_email;
     AccountPasswordSettingsType m_classType;
 };
+
+Q_DECLARE_METATYPE(AccountPasswordSettings)
 
 #endif // LQTG_TYPE_ACCOUNTPASSWORDSETTINGS

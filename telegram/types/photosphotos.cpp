@@ -21,6 +21,13 @@ PhotosPhotos::PhotosPhotos(InboundPkt *in) :
     fetch(in);
 }
 
+PhotosPhotos::PhotosPhotos(const Null &null) :
+    TelegramTypeObject(null),
+    m_count(0),
+    m_classType(typePhotosPhotos)
+{
+}
+
 PhotosPhotos::~PhotosPhotos() {
 }
 
@@ -48,8 +55,9 @@ QList<User> PhotosPhotos::users() const {
     return m_users;
 }
 
-bool PhotosPhotos::operator ==(const PhotosPhotos &b) {
-    return m_count == b.m_count &&
+bool PhotosPhotos::operator ==(const PhotosPhotos &b) const {
+    return m_classType == b.m_classType &&
+           m_count == b.m_count &&
            m_photos == b.m_photos &&
            m_users == b.m_users;
 }

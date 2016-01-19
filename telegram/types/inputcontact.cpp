@@ -21,6 +21,13 @@ InputContact::InputContact(InboundPkt *in) :
     fetch(in);
 }
 
+InputContact::InputContact(const Null &null) :
+    TelegramTypeObject(null),
+    m_clientId(0),
+    m_classType(typeInputPhoneContact)
+{
+}
+
 InputContact::~InputContact() {
 }
 
@@ -56,8 +63,9 @@ QString InputContact::phone() const {
     return m_phone;
 }
 
-bool InputContact::operator ==(const InputContact &b) {
-    return m_clientId == b.m_clientId &&
+bool InputContact::operator ==(const InputContact &b) const {
+    return m_classType == b.m_classType &&
+           m_clientId == b.m_clientId &&
            m_firstName == b.m_firstName &&
            m_lastName == b.m_lastName &&
            m_phone == b.m_phone;

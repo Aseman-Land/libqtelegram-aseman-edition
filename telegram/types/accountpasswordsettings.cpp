@@ -19,6 +19,12 @@ AccountPasswordSettings::AccountPasswordSettings(InboundPkt *in) :
     fetch(in);
 }
 
+AccountPasswordSettings::AccountPasswordSettings(const Null &null) :
+    TelegramTypeObject(null),
+    m_classType(typeAccountPasswordSettings)
+{
+}
+
 AccountPasswordSettings::~AccountPasswordSettings() {
 }
 
@@ -30,8 +36,9 @@ QString AccountPasswordSettings::email() const {
     return m_email;
 }
 
-bool AccountPasswordSettings::operator ==(const AccountPasswordSettings &b) {
-    return m_email == b.m_email;
+bool AccountPasswordSettings::operator ==(const AccountPasswordSettings &b) const {
+    return m_classType == b.m_classType &&
+           m_email == b.m_email;
 }
 
 void AccountPasswordSettings::setClassType(AccountPasswordSettings::AccountPasswordSettingsType classType) {

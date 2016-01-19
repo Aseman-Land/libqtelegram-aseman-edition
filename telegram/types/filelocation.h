@@ -6,6 +6,8 @@
 #define LQTG_TYPE_FILELOCATION
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QtGlobal>
 
 class LIBQTELEGRAMSHARED_EXPORT FileLocation : public TelegramTypeObject
@@ -18,6 +20,7 @@ public:
 
     FileLocation(FileLocationType classType = typeFileLocationUnavailable, InboundPkt *in = 0);
     FileLocation(InboundPkt *in);
+    FileLocation(const Null&);
     virtual ~FileLocation();
 
     void setDcId(qint32 dcId);
@@ -38,7 +41,10 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const FileLocation &b);
+    bool operator ==(const FileLocation &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     qint32 m_dcId;
@@ -47,5 +53,7 @@ private:
     qint64 m_volumeId;
     FileLocationType m_classType;
 };
+
+Q_DECLARE_METATYPE(FileLocation)
 
 #endif // LQTG_TYPE_FILELOCATION

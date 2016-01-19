@@ -25,6 +25,15 @@ ChatParticipant::ChatParticipant(InboundPkt *in) :
     fetch(in);
 }
 
+ChatParticipant::ChatParticipant(const Null &null) :
+    TelegramTypeObject(null),
+    m_date(0),
+    m_inviterId(0),
+    m_userId(0),
+    m_classType(typeChatParticipant)
+{
+}
+
 ChatParticipant::~ChatParticipant() {
 }
 
@@ -52,8 +61,9 @@ qint32 ChatParticipant::userId() const {
     return m_userId;
 }
 
-bool ChatParticipant::operator ==(const ChatParticipant &b) {
-    return m_date == b.m_date &&
+bool ChatParticipant::operator ==(const ChatParticipant &b) const {
+    return m_classType == b.m_classType &&
+           m_date == b.m_date &&
            m_inviterId == b.m_inviterId &&
            m_userId == b.m_userId;
 }
@@ -79,6 +89,22 @@ bool ChatParticipant::fetch(InboundPkt *in) {
     }
         break;
     
+    case typeChatParticipantCreator: {
+        m_userId = in->fetchInt();
+        m_classType = static_cast<ChatParticipantType>(x);
+        return true;
+    }
+        break;
+    
+    case typeChatParticipantAdmin: {
+        m_userId = in->fetchInt();
+        m_inviterId = in->fetchInt();
+        m_date = in->fetchInt();
+        m_classType = static_cast<ChatParticipantType>(x);
+        return true;
+    }
+        break;
+    
     default:
         LQTG_FETCH_ASSERT;
         return false;
@@ -89,6 +115,20 @@ bool ChatParticipant::push(OutboundPkt *out) const {
     out->appendInt(m_classType);
     switch(m_classType) {
     case typeChatParticipant: {
+        out->appendInt(m_userId);
+        out->appendInt(m_inviterId);
+        out->appendInt(m_date);
+        return true;
+    }
+        break;
+    
+    case typeChatParticipantCreator: {
+        out->appendInt(m_userId);
+        return true;
+    }
+        break;
+    
+    case typeChatParticipantAdmin: {
         out->appendInt(m_userId);
         out->appendInt(m_inviterId);
         out->appendInt(m_date);

@@ -6,6 +6,8 @@
 #define LQTG_TYPE_INPUTENCRYPTEDCHAT
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QtGlobal>
 
 class LIBQTELEGRAMSHARED_EXPORT InputEncryptedChat : public TelegramTypeObject
@@ -17,6 +19,7 @@ public:
 
     InputEncryptedChat(InputEncryptedChatType classType = typeInputEncryptedChat, InboundPkt *in = 0);
     InputEncryptedChat(InboundPkt *in);
+    InputEncryptedChat(const Null&);
     virtual ~InputEncryptedChat();
 
     void setAccessHash(qint64 accessHash);
@@ -31,12 +34,17 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const InputEncryptedChat &b);
+    bool operator ==(const InputEncryptedChat &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     qint64 m_accessHash;
     qint32 m_chatId;
     InputEncryptedChatType m_classType;
 };
+
+Q_DECLARE_METATYPE(InputEncryptedChat)
 
 #endif // LQTG_TYPE_INPUTENCRYPTEDCHAT

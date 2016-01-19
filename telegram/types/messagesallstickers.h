@@ -6,10 +6,10 @@
 #define LQTG_TYPE_MESSAGESALLSTICKERS
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
+#include <QtGlobal>
 #include <QList>
-#include "document.h"
-#include <QString>
-#include "stickerpack.h"
 #include "stickerset.h"
 
 class LIBQTELEGRAMSHARED_EXPORT MessagesAllStickers : public TelegramTypeObject
@@ -17,21 +17,16 @@ class LIBQTELEGRAMSHARED_EXPORT MessagesAllStickers : public TelegramTypeObject
 public:
     enum MessagesAllStickersType {
         typeMessagesAllStickersNotModified = 0xe86602c3,
-        typeMessagesAllStickers = 0x5ce352ec
+        typeMessagesAllStickers = 0xedfd405f
     };
 
     MessagesAllStickers(MessagesAllStickersType classType = typeMessagesAllStickersNotModified, InboundPkt *in = 0);
     MessagesAllStickers(InboundPkt *in);
+    MessagesAllStickers(const Null&);
     virtual ~MessagesAllStickers();
 
-    void setDocuments(const QList<Document> &documents);
-    QList<Document> documents() const;
-
-    void setHash(const QString &hash);
-    QString hash() const;
-
-    void setPacks(const QList<StickerPack> &packs);
-    QList<StickerPack> packs() const;
+    void setHash(qint32 hash);
+    qint32 hash() const;
 
     void setSets(const QList<StickerSet> &sets);
     QList<StickerSet> sets() const;
@@ -42,14 +37,17 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const MessagesAllStickers &b);
+    bool operator ==(const MessagesAllStickers &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
-    QList<Document> m_documents;
-    QString m_hash;
-    QList<StickerPack> m_packs;
+    qint32 m_hash;
     QList<StickerSet> m_sets;
     MessagesAllStickersType m_classType;
 };
+
+Q_DECLARE_METATYPE(MessagesAllStickers)
 
 #endif // LQTG_TYPE_MESSAGESALLSTICKERS

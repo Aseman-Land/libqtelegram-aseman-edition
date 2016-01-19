@@ -6,6 +6,8 @@
 #define LQTG_TYPE_ACCOUNTPASSWORDINPUTSETTINGS
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QString>
 #include <QtGlobal>
 #include <QByteArray>
@@ -19,6 +21,7 @@ public:
 
     AccountPasswordInputSettings(AccountPasswordInputSettingsType classType = typeAccountPasswordInputSettings, InboundPkt *in = 0);
     AccountPasswordInputSettings(InboundPkt *in);
+    AccountPasswordInputSettings(const Null&);
     virtual ~AccountPasswordInputSettings();
 
     void setEmail(const QString &email);
@@ -42,7 +45,10 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const AccountPasswordInputSettings &b);
+    bool operator ==(const AccountPasswordInputSettings &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     QString m_email;
@@ -52,5 +58,7 @@ private:
     QByteArray m_newSalt;
     AccountPasswordInputSettingsType m_classType;
 };
+
+Q_DECLARE_METATYPE(AccountPasswordInputSettings)
 
 #endif // LQTG_TYPE_ACCOUNTPASSWORDINPUTSETTINGS

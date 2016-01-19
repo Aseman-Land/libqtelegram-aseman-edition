@@ -29,6 +29,17 @@ Authorization::Authorization(InboundPkt *in) :
     fetch(in);
 }
 
+Authorization::Authorization(const Null &null) :
+    TelegramTypeObject(null),
+    m_apiId(0),
+    m_dateActive(0),
+    m_dateCreated(0),
+    m_flags(0),
+    m_hash(0),
+    m_classType(typeAuthorization)
+{
+}
+
 Authorization::~Authorization() {
 }
 
@@ -136,8 +147,9 @@ QString Authorization::systemVersion() const {
     return m_systemVersion;
 }
 
-bool Authorization::operator ==(const Authorization &b) {
-    return m_apiId == b.m_apiId &&
+bool Authorization::operator ==(const Authorization &b) const {
+    return m_classType == b.m_classType &&
+           m_apiId == b.m_apiId &&
            m_appName == b.m_appName &&
            m_appVersion == b.m_appVersion &&
            m_country == b.m_country &&

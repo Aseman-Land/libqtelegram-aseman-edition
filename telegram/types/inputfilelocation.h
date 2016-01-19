@@ -6,6 +6,8 @@
 #define LQTG_TYPE_INPUTFILELOCATION
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QtGlobal>
 
 class LIBQTELEGRAMSHARED_EXPORT InputFileLocation : public TelegramTypeObject
@@ -21,6 +23,7 @@ public:
 
     InputFileLocation(InputFileLocationType classType = typeInputFileLocation, InboundPkt *in = 0);
     InputFileLocation(InboundPkt *in);
+    InputFileLocation(const Null&);
     virtual ~InputFileLocation();
 
     void setAccessHash(qint64 accessHash);
@@ -44,7 +47,10 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const InputFileLocation &b);
+    bool operator ==(const InputFileLocation &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     qint64 m_accessHash;
@@ -54,5 +60,7 @@ private:
     qint64 m_volumeId;
     InputFileLocationType m_classType;
 };
+
+Q_DECLARE_METATYPE(InputFileLocation)
 
 #endif // LQTG_TYPE_INPUTFILELOCATION

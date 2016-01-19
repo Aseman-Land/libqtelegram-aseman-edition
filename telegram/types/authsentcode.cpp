@@ -25,6 +25,15 @@ AuthSentCode::AuthSentCode(InboundPkt *in) :
     fetch(in);
 }
 
+AuthSentCode::AuthSentCode(const Null &null) :
+    TelegramTypeObject(null),
+    m_isPassword(false),
+    m_phoneRegistered(false),
+    m_sendCallTimeout(0),
+    m_classType(typeAuthSentCode)
+{
+}
+
 AuthSentCode::~AuthSentCode() {
 }
 
@@ -60,8 +69,9 @@ qint32 AuthSentCode::sendCallTimeout() const {
     return m_sendCallTimeout;
 }
 
-bool AuthSentCode::operator ==(const AuthSentCode &b) {
-    return m_isPassword == b.m_isPassword &&
+bool AuthSentCode::operator ==(const AuthSentCode &b) const {
+    return m_classType == b.m_classType &&
+           m_isPassword == b.m_isPassword &&
            m_phoneCodeHash == b.m_phoneCodeHash &&
            m_phoneRegistered == b.m_phoneRegistered &&
            m_sendCallTimeout == b.m_sendCallTimeout;

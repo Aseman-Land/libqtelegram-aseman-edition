@@ -6,6 +6,8 @@
 #define LQTG_TYPE_HELPSUPPORT
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QString>
 #include "user.h"
 
@@ -18,6 +20,7 @@ public:
 
     HelpSupport(HelpSupportType classType = typeHelpSupport, InboundPkt *in = 0);
     HelpSupport(InboundPkt *in);
+    HelpSupport(const Null&);
     virtual ~HelpSupport();
 
     void setPhoneNumber(const QString &phoneNumber);
@@ -32,12 +35,17 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const HelpSupport &b);
+    bool operator ==(const HelpSupport &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     QString m_phoneNumber;
     User m_user;
     HelpSupportType m_classType;
 };
+
+Q_DECLARE_METATYPE(HelpSupport)
 
 #endif // LQTG_TYPE_HELPSUPPORT

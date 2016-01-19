@@ -125,6 +125,19 @@ QList<WallPaper> Functions::Account::getWallPapersResult(InboundPkt *in) {
     return result;
 }
 
+bool Functions::Account::reportPeer(OutboundPkt *out, const InputPeer &peer, const ReportReason &reason) {
+    out->appendInt(fncAccountReportPeer);
+    if(!peer.push(out)) return false;
+    if(!reason.push(out)) return false;
+    return true;
+}
+
+bool Functions::Account::reportPeerResult(InboundPkt *in) {
+    bool result;
+    result = in->fetchBool();
+    return result;
+}
+
 bool Functions::Account::checkUsername(OutboundPkt *out, const QString &username) {
     out->appendInt(fncAccountCheckUsername);
     out->appendQString(username);

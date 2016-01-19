@@ -6,6 +6,8 @@
 #define LQTG_TYPE_HELPINVITETEXT
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QString>
 
 class LIBQTELEGRAMSHARED_EXPORT HelpInviteText : public TelegramTypeObject
@@ -17,6 +19,7 @@ public:
 
     HelpInviteText(HelpInviteTextType classType = typeHelpInviteText, InboundPkt *in = 0);
     HelpInviteText(InboundPkt *in);
+    HelpInviteText(const Null&);
     virtual ~HelpInviteText();
 
     void setMessage(const QString &message);
@@ -28,11 +31,16 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const HelpInviteText &b);
+    bool operator ==(const HelpInviteText &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     QString m_message;
     HelpInviteTextType m_classType;
 };
+
+Q_DECLARE_METATYPE(HelpInviteText)
 
 #endif // LQTG_TYPE_HELPINVITETEXT

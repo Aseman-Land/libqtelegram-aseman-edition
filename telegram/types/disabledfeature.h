@@ -6,6 +6,8 @@
 #define LQTG_TYPE_DISABLEDFEATURE
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QString>
 
 class LIBQTELEGRAMSHARED_EXPORT DisabledFeature : public TelegramTypeObject
@@ -17,6 +19,7 @@ public:
 
     DisabledFeature(DisabledFeatureType classType = typeDisabledFeature, InboundPkt *in = 0);
     DisabledFeature(InboundPkt *in);
+    DisabledFeature(const Null&);
     virtual ~DisabledFeature();
 
     void setDescription(const QString &description);
@@ -31,12 +34,17 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const DisabledFeature &b);
+    bool operator ==(const DisabledFeature &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     QString m_description;
     QString m_feature;
     DisabledFeatureType m_classType;
 };
+
+Q_DECLARE_METATYPE(DisabledFeature)
 
 #endif // LQTG_TYPE_DISABLEDFEATURE

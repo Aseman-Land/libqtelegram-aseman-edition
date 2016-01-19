@@ -31,6 +31,18 @@ WebPage::WebPage(InboundPkt *in) :
     fetch(in);
 }
 
+WebPage::WebPage(const Null &null) :
+    TelegramTypeObject(null),
+    m_date(0),
+    m_duration(0),
+    m_embedHeight(0),
+    m_embedWidth(0),
+    m_flags(0),
+    m_id(0),
+    m_classType(typeWebPageEmpty)
+{
+}
+
 WebPage::~WebPage() {
 }
 
@@ -64,6 +76,14 @@ void WebPage::setDisplayUrl(const QString &displayUrl) {
 
 QString WebPage::displayUrl() const {
     return m_displayUrl;
+}
+
+void WebPage::setDocument(const Document &document) {
+    m_document = document;
+}
+
+Document WebPage::document() const {
+    return m_document;
 }
 
 void WebPage::setDuration(qint32 duration) {
@@ -162,11 +182,13 @@ QString WebPage::url() const {
     return m_url;
 }
 
-bool WebPage::operator ==(const WebPage &b) {
-    return m_author == b.m_author &&
+bool WebPage::operator ==(const WebPage &b) const {
+    return m_classType == b.m_classType &&
+           m_author == b.m_author &&
            m_date == b.m_date &&
            m_description == b.m_description &&
            m_displayUrl == b.m_displayUrl &&
+           m_document == b.m_document &&
            m_duration == b.m_duration &&
            m_embedHeight == b.m_embedHeight &&
            m_embedType == b.m_embedType &&
@@ -246,6 +268,9 @@ bool WebPage::fetch(InboundPkt *in) {
         if(m_flags & 1<<8) {
             m_author = in->fetchQString();
         }
+        if(m_flags & 1<<9) {
+            m_document.fetch(in);
+        }
         m_classType = static_cast<WebPageType>(x);
         return true;
     }
@@ -289,6 +314,7 @@ bool WebPage::push(OutboundPkt *out) const {
         out->appendInt(m_embedHeight);
         out->appendInt(m_duration);
         out->appendQString(m_author);
+        m_document.push(out);
         return true;
     }
         break;

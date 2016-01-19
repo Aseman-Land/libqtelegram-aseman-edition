@@ -9,17 +9,23 @@ HEADERS += \
     $$PWD/accountdaysttl.h \
     $$PWD/audio.h \
     $$PWD/authorization.h \
+    $$PWD/botcommand.h \
+    $$PWD/botinfo.h \
+    $$PWD/botinlinemessage.h \
+    $$PWD/botinlineresult.h \
+    $$PWD/channelmessagesfilter.h \
+    $$PWD/channelparticipant.h \
+    $$PWD/channelparticipantrole.h \
+    $$PWD/channelparticipantsfilter.h \
     $$PWD/chat.h \
     $$PWD/chatfull.h \
     $$PWD/chatinvite.h \
-    $$PWD/chatlocated.h \
     $$PWD/chatparticipant.h \
     $$PWD/chatparticipants.h \
     $$PWD/chatphoto.h \
     $$PWD/config.h \
     $$PWD/contact.h \
     $$PWD/contactblocked.h \
-    $$PWD/contactfound.h \
     $$PWD/contactlink.h \
     $$PWD/contactstatus.h \
     $$PWD/contactsuggested.h \
@@ -33,11 +39,14 @@ HEADERS += \
     $$PWD/encryptedmessage.h \
     $$PWD/exportedchatinvite.h \
     $$PWD/filelocation.h \
-    $$PWD/geochatmessage.h \
+    $$PWD/foundgif.h \
     $$PWD/geopoint.h \
     $$PWD/importedcontact.h \
     $$PWD/inputappevent.h \
     $$PWD/inputaudio.h \
+    $$PWD/inputbotinlinemessage.h \
+    $$PWD/inputbotinlineresult.h \
+    $$PWD/inputchannel.h \
     $$PWD/inputchatphoto.h \
     $$PWD/inputcontact.h \
     $$PWD/inputdocument.h \
@@ -45,7 +54,6 @@ HEADERS += \
     $$PWD/inputencryptedfile.h \
     $$PWD/inputfile.h \
     $$PWD/inputfilelocation.h \
-    $$PWD/inputgeochat.h \
     $$PWD/inputgeopoint.h \
     $$PWD/inputmedia.h \
     $$PWD/inputnotifypeer.h \
@@ -59,9 +67,14 @@ HEADERS += \
     $$PWD/inputstickerset.h \
     $$PWD/inputuser.h \
     $$PWD/inputvideo.h \
+    $$PWD/keyboardbutton.h \
+    $$PWD/keyboardbuttonrow.h \
     $$PWD/message.h \
     $$PWD/messageaction.h \
+    $$PWD/messageentity.h \
+    $$PWD/messagegroup.h \
     $$PWD/messagemedia.h \
+    $$PWD/messagerange.h \
     $$PWD/messagesfilter.h \
     $$PWD/nearestdc.h \
     $$PWD/notifypeer.h \
@@ -73,6 +86,8 @@ HEADERS += \
     $$PWD/privacykey.h \
     $$PWD/privacyrule.h \
     $$PWD/receivednotifymessage.h \
+    $$PWD/replymarkup.h \
+    $$PWD/reportreason.h \
     $$PWD/sendmessageaction.h \
     $$PWD/stickerpack.h \
     $$PWD/stickerset.h \
@@ -96,34 +111,38 @@ HEADERS += \
     $$PWD/authexportedauthorization.h \
     $$PWD/authpasswordrecovery.h \
     $$PWD/authsentcode.h \
+    $$PWD/channelschannelparticipant.h \
+    $$PWD/channelschannelparticipants.h \
     $$PWD/contactsblocked.h \
     $$PWD/contactscontacts.h \
     $$PWD/contactsfound.h \
     $$PWD/contactsimportedcontacts.h \
     $$PWD/contactslink.h \
+    $$PWD/contactsresolvedpeer.h \
     $$PWD/contactssuggested.h \
-    $$PWD/geochatslocated.h \
-    $$PWD/geochatsmessages.h \
-    $$PWD/geochatsstatedmessage.h \
+    $$PWD/helpappchangelog.h \
     $$PWD/helpappupdate.h \
     $$PWD/helpinvitetext.h \
     $$PWD/helpsupport.h \
+    $$PWD/helptermsofservice.h \
     $$PWD/messagesaffectedhistory.h \
     $$PWD/messagesaffectedmessages.h \
     $$PWD/messagesallstickers.h \
+    $$PWD/messagesbotresults.h \
     $$PWD/messageschatfull.h \
     $$PWD/messageschats.h \
     $$PWD/messagesdhconfig.h \
     $$PWD/messagesdialogs.h \
-    $$PWD/messagesmessage.h \
+    $$PWD/messagesfoundgifs.h \
     $$PWD/messagesmessages.h \
+    $$PWD/messagessavedgifs.h \
     $$PWD/messagessentencryptedmessage.h \
-    $$PWD/messagessentmessage.h \
     $$PWD/messagesstickerset.h \
     $$PWD/messagesstickers.h \
     $$PWD/photosphoto.h \
     $$PWD/photosphotos.h \
     $$PWD/storagefiletype.h \
+    $$PWD/updateschanneldifference.h \
     $$PWD/updatesdifference.h \
     $$PWD/updatesstate.h \
     $$PWD/uploadfile.h
@@ -133,17 +152,23 @@ SOURCES += \
     $$PWD/accountdaysttl.cpp \
     $$PWD/audio.cpp \
     $$PWD/authorization.cpp \
+    $$PWD/botcommand.cpp \
+    $$PWD/botinfo.cpp \
+    $$PWD/botinlinemessage.cpp \
+    $$PWD/botinlineresult.cpp \
+    $$PWD/channelmessagesfilter.cpp \
+    $$PWD/channelparticipant.cpp \
+    $$PWD/channelparticipantrole.cpp \
+    $$PWD/channelparticipantsfilter.cpp \
     $$PWD/chat.cpp \
     $$PWD/chatfull.cpp \
     $$PWD/chatinvite.cpp \
-    $$PWD/chatlocated.cpp \
     $$PWD/chatparticipant.cpp \
     $$PWD/chatparticipants.cpp \
     $$PWD/chatphoto.cpp \
     $$PWD/config.cpp \
     $$PWD/contact.cpp \
     $$PWD/contactblocked.cpp \
-    $$PWD/contactfound.cpp \
     $$PWD/contactlink.cpp \
     $$PWD/contactstatus.cpp \
     $$PWD/contactsuggested.cpp \
@@ -157,11 +182,14 @@ SOURCES += \
     $$PWD/encryptedmessage.cpp \
     $$PWD/exportedchatinvite.cpp \
     $$PWD/filelocation.cpp \
-    $$PWD/geochatmessage.cpp \
+    $$PWD/foundgif.cpp \
     $$PWD/geopoint.cpp \
     $$PWD/importedcontact.cpp \
     $$PWD/inputappevent.cpp \
     $$PWD/inputaudio.cpp \
+    $$PWD/inputbotinlinemessage.cpp \
+    $$PWD/inputbotinlineresult.cpp \
+    $$PWD/inputchannel.cpp \
     $$PWD/inputchatphoto.cpp \
     $$PWD/inputcontact.cpp \
     $$PWD/inputdocument.cpp \
@@ -169,7 +197,6 @@ SOURCES += \
     $$PWD/inputencryptedfile.cpp \
     $$PWD/inputfile.cpp \
     $$PWD/inputfilelocation.cpp \
-    $$PWD/inputgeochat.cpp \
     $$PWD/inputgeopoint.cpp \
     $$PWD/inputmedia.cpp \
     $$PWD/inputnotifypeer.cpp \
@@ -183,9 +210,14 @@ SOURCES += \
     $$PWD/inputstickerset.cpp \
     $$PWD/inputuser.cpp \
     $$PWD/inputvideo.cpp \
+    $$PWD/keyboardbutton.cpp \
+    $$PWD/keyboardbuttonrow.cpp \
     $$PWD/message.cpp \
     $$PWD/messageaction.cpp \
+    $$PWD/messageentity.cpp \
+    $$PWD/messagegroup.cpp \
     $$PWD/messagemedia.cpp \
+    $$PWD/messagerange.cpp \
     $$PWD/messagesfilter.cpp \
     $$PWD/nearestdc.cpp \
     $$PWD/notifypeer.cpp \
@@ -197,6 +229,8 @@ SOURCES += \
     $$PWD/privacykey.cpp \
     $$PWD/privacyrule.cpp \
     $$PWD/receivednotifymessage.cpp \
+    $$PWD/replymarkup.cpp \
+    $$PWD/reportreason.cpp \
     $$PWD/sendmessageaction.cpp \
     $$PWD/stickerpack.cpp \
     $$PWD/stickerset.cpp \
@@ -220,34 +254,38 @@ SOURCES += \
     $$PWD/authexportedauthorization.cpp \
     $$PWD/authpasswordrecovery.cpp \
     $$PWD/authsentcode.cpp \
+    $$PWD/channelschannelparticipant.cpp \
+    $$PWD/channelschannelparticipants.cpp \
     $$PWD/contactsblocked.cpp \
     $$PWD/contactscontacts.cpp \
     $$PWD/contactsfound.cpp \
     $$PWD/contactsimportedcontacts.cpp \
     $$PWD/contactslink.cpp \
+    $$PWD/contactsresolvedpeer.cpp \
     $$PWD/contactssuggested.cpp \
-    $$PWD/geochatslocated.cpp \
-    $$PWD/geochatsmessages.cpp \
-    $$PWD/geochatsstatedmessage.cpp \
+    $$PWD/helpappchangelog.cpp \
     $$PWD/helpappupdate.cpp \
     $$PWD/helpinvitetext.cpp \
     $$PWD/helpsupport.cpp \
+    $$PWD/helptermsofservice.cpp \
     $$PWD/messagesaffectedhistory.cpp \
     $$PWD/messagesaffectedmessages.cpp \
     $$PWD/messagesallstickers.cpp \
+    $$PWD/messagesbotresults.cpp \
     $$PWD/messageschatfull.cpp \
     $$PWD/messageschats.cpp \
     $$PWD/messagesdhconfig.cpp \
     $$PWD/messagesdialogs.cpp \
-    $$PWD/messagesmessage.cpp \
+    $$PWD/messagesfoundgifs.cpp \
     $$PWD/messagesmessages.cpp \
+    $$PWD/messagessavedgifs.cpp \
     $$PWD/messagessentencryptedmessage.cpp \
-    $$PWD/messagessentmessage.cpp \
     $$PWD/messagesstickerset.cpp \
     $$PWD/messagesstickers.cpp \
     $$PWD/photosphoto.cpp \
     $$PWD/photosphotos.cpp \
     $$PWD/storagefiletype.cpp \
+    $$PWD/updateschanneldifference.cpp \
     $$PWD/updatesdifference.cpp \
     $$PWD/updatesstate.cpp \
     $$PWD/uploadfile.cpp

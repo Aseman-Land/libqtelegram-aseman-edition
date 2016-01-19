@@ -6,6 +6,8 @@
 #define LQTG_TYPE_AUTHEXPORTEDAUTHORIZATION
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QByteArray>
 #include <QtGlobal>
 
@@ -18,6 +20,7 @@ public:
 
     AuthExportedAuthorization(AuthExportedAuthorizationType classType = typeAuthExportedAuthorization, InboundPkt *in = 0);
     AuthExportedAuthorization(InboundPkt *in);
+    AuthExportedAuthorization(const Null&);
     virtual ~AuthExportedAuthorization();
 
     void setBytes(const QByteArray &bytes);
@@ -32,12 +35,17 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const AuthExportedAuthorization &b);
+    bool operator ==(const AuthExportedAuthorization &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     QByteArray m_bytes;
     qint32 m_id;
     AuthExportedAuthorizationType m_classType;
 };
+
+Q_DECLARE_METATYPE(AuthExportedAuthorization)
 
 #endif // LQTG_TYPE_AUTHEXPORTEDAUTHORIZATION

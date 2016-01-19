@@ -19,12 +19,17 @@ MessagesFilter::MessagesFilter(InboundPkt *in) :
     fetch(in);
 }
 
+MessagesFilter::MessagesFilter(const Null &null) :
+    TelegramTypeObject(null),
+    m_classType(typeInputMessagesFilterEmpty)
+{
+}
+
 MessagesFilter::~MessagesFilter() {
 }
 
-bool MessagesFilter::operator ==(const MessagesFilter &b) {
-    Q_UNUSED(b);
-    return true;
+bool MessagesFilter::operator ==(const MessagesFilter &b) const {
+    return m_classType == b.m_classType;
 }
 
 void MessagesFilter::setClassType(MessagesFilter::MessagesFilterType classType) {
@@ -81,6 +86,24 @@ bool MessagesFilter::fetch(InboundPkt *in) {
     }
         break;
     
+    case typeInputMessagesFilterAudioDocuments: {
+        m_classType = static_cast<MessagesFilterType>(x);
+        return true;
+    }
+        break;
+    
+    case typeInputMessagesFilterUrl: {
+        m_classType = static_cast<MessagesFilterType>(x);
+        return true;
+    }
+        break;
+    
+    case typeInputMessagesFilterGif: {
+        m_classType = static_cast<MessagesFilterType>(x);
+        return true;
+    }
+        break;
+    
     default:
         LQTG_FETCH_ASSERT;
         return false;
@@ -121,6 +144,21 @@ bool MessagesFilter::push(OutboundPkt *out) const {
         break;
     
     case typeInputMessagesFilterAudio: {
+        return true;
+    }
+        break;
+    
+    case typeInputMessagesFilterAudioDocuments: {
+        return true;
+    }
+        break;
+    
+    case typeInputMessagesFilterUrl: {
+        return true;
+    }
+        break;
+    
+    case typeInputMessagesFilterGif: {
         return true;
     }
         break;

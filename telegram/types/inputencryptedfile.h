@@ -6,6 +6,8 @@
 #define LQTG_TYPE_INPUTENCRYPTEDFILE
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QtGlobal>
 #include <QString>
 
@@ -21,6 +23,7 @@ public:
 
     InputEncryptedFile(InputEncryptedFileType classType = typeInputEncryptedFileEmpty, InboundPkt *in = 0);
     InputEncryptedFile(InboundPkt *in);
+    InputEncryptedFile(const Null&);
     virtual ~InputEncryptedFile();
 
     void setAccessHash(qint64 accessHash);
@@ -44,7 +47,10 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const InputEncryptedFile &b);
+    bool operator ==(const InputEncryptedFile &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     qint64 m_accessHash;
@@ -54,5 +60,7 @@ private:
     qint32 m_parts;
     InputEncryptedFileType m_classType;
 };
+
+Q_DECLARE_METATYPE(InputEncryptedFile)
 
 #endif // LQTG_TYPE_INPUTENCRYPTEDFILE

@@ -40,3 +40,18 @@ UpdatesDifference Functions::Updates::getDifferenceResult(InboundPkt *in) {
     return result;
 }
 
+bool Functions::Updates::getChannelDifference(OutboundPkt *out, const InputChannel &channel, const ChannelMessagesFilter &filter, qint32 pts, qint32 limit) {
+    out->appendInt(fncUpdatesGetChannelDifference);
+    if(!channel.push(out)) return false;
+    if(!filter.push(out)) return false;
+    out->appendInt(pts);
+    out->appendInt(limit);
+    return true;
+}
+
+UpdatesChannelDifference Functions::Updates::getChannelDifferenceResult(InboundPkt *in) {
+    UpdatesChannelDifference result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+

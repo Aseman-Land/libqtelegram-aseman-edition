@@ -6,23 +6,29 @@
 #define LQTG_TYPE_MESSAGE
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include "messageaction.h"
 #include <QtGlobal>
+#include <QList>
+#include "messageentity.h"
+#include "peer.h"
 #include "messagemedia.h"
 #include <QString>
-#include "peer.h"
+#include "replymarkup.h"
 
 class LIBQTELEGRAMSHARED_EXPORT Message : public TelegramTypeObject
 {
 public:
     enum MessageType {
         typeMessageEmpty = 0x83e5de54,
-        typeMessage = 0xa7ab1991,
-        typeMessageService = 0x1d86f70e
+        typeMessage = 0xc992e15c,
+        typeMessageService = 0xc06b9607
     };
 
     Message(MessageType classType = typeMessageEmpty, InboundPkt *in = 0);
     Message(InboundPkt *in);
+    Message(const Null&);
     virtual ~Message();
 
     void setAction(const MessageAction &action);
@@ -30,6 +36,9 @@ public:
 
     void setDate(qint32 date);
     qint32 date() const;
+
+    void setEntities(const QList<MessageEntity> &entities);
+    QList<MessageEntity> entities() const;
 
     void setFlags(qint32 flags);
     qint32 flags() const;
@@ -40,8 +49,8 @@ public:
     void setFwdDate(qint32 fwdDate);
     qint32 fwdDate() const;
 
-    void setFwdFromId(qint32 fwdFromId);
-    qint32 fwdFromId() const;
+    void setFwdFromId(const Peer &fwdFromId);
+    Peer fwdFromId() const;
 
     void setId(qint32 id);
     qint32 id() const;
@@ -49,8 +58,20 @@ public:
     void setMedia(const MessageMedia &media);
     MessageMedia media() const;
 
+    void setMediaUnread(bool mediaUnread);
+    bool mediaUnread() const;
+
+    void setMentioned(bool mentioned);
+    bool mentioned() const;
+
     void setMessage(const QString &message);
     QString message() const;
+
+    void setOut(bool out);
+    bool out() const;
+
+    void setReplyMarkup(const ReplyMarkup &replyMarkup);
+    ReplyMarkup replyMarkup() const;
 
     void setReplyToMsgId(qint32 replyToMsgId);
     qint32 replyToMsgId() const;
@@ -58,27 +79,45 @@ public:
     void setToId(const Peer &toId);
     Peer toId() const;
 
+    void setUnread(bool unread);
+    bool unread() const;
+
+    void setViaBotId(qint32 viaBotId);
+    qint32 viaBotId() const;
+
+    void setViews(qint32 views);
+    qint32 views() const;
+
     void setClassType(MessageType classType);
     MessageType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const Message &b);
+    bool operator ==(const Message &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     MessageAction m_action;
     qint32 m_date;
+    QList<MessageEntity> m_entities;
     qint32 m_flags;
     qint32 m_fromId;
     qint32 m_fwdDate;
-    qint32 m_fwdFromId;
+    Peer m_fwdFromId;
     qint32 m_id;
     MessageMedia m_media;
     QString m_message;
+    ReplyMarkup m_replyMarkup;
     qint32 m_replyToMsgId;
     Peer m_toId;
+    qint32 m_viaBotId;
+    qint32 m_views;
     MessageType m_classType;
 };
+
+Q_DECLARE_METATYPE(Message)
 
 #endif // LQTG_TYPE_MESSAGE

@@ -6,6 +6,8 @@
 #define LQTG_TYPE_MESSAGESCHATS
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QList>
 #include "chat.h"
 
@@ -18,6 +20,7 @@ public:
 
     MessagesChats(MessagesChatsType classType = typeMessagesChats, InboundPkt *in = 0);
     MessagesChats(InboundPkt *in);
+    MessagesChats(const Null&);
     virtual ~MessagesChats();
 
     void setChats(const QList<Chat> &chats);
@@ -29,11 +32,16 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const MessagesChats &b);
+    bool operator ==(const MessagesChats &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     QList<Chat> m_chats;
     MessagesChatsType m_classType;
 };
+
+Q_DECLARE_METATYPE(MessagesChats)
 
 #endif // LQTG_TYPE_MESSAGESCHATS

@@ -6,23 +6,30 @@
 #define LQTG_TYPE_CONTACTSFOUND
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QList>
-#include "contactfound.h"
+#include "chat.h"
+#include "peer.h"
 #include "user.h"
 
 class LIBQTELEGRAMSHARED_EXPORT ContactsFound : public TelegramTypeObject
 {
 public:
     enum ContactsFoundType {
-        typeContactsFound = 0x566000e
+        typeContactsFound = 0x1aa1f784
     };
 
     ContactsFound(ContactsFoundType classType = typeContactsFound, InboundPkt *in = 0);
     ContactsFound(InboundPkt *in);
+    ContactsFound(const Null&);
     virtual ~ContactsFound();
 
-    void setResults(const QList<ContactFound> &results);
-    QList<ContactFound> results() const;
+    void setChats(const QList<Chat> &chats);
+    QList<Chat> chats() const;
+
+    void setResults(const QList<Peer> &results);
+    QList<Peer> results() const;
 
     void setUsers(const QList<User> &users);
     QList<User> users() const;
@@ -33,12 +40,18 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const ContactsFound &b);
+    bool operator ==(const ContactsFound &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
-    QList<ContactFound> m_results;
+    QList<Chat> m_chats;
+    QList<Peer> m_results;
     QList<User> m_users;
     ContactsFoundType m_classType;
 };
+
+Q_DECLARE_METATYPE(ContactsFound)
 
 #endif // LQTG_TYPE_CONTACTSFOUND

@@ -21,6 +21,13 @@ MessagesDialogs::MessagesDialogs(InboundPkt *in) :
     fetch(in);
 }
 
+MessagesDialogs::MessagesDialogs(const Null &null) :
+    TelegramTypeObject(null),
+    m_count(0),
+    m_classType(typeMessagesDialogs)
+{
+}
+
 MessagesDialogs::~MessagesDialogs() {
 }
 
@@ -64,8 +71,9 @@ QList<User> MessagesDialogs::users() const {
     return m_users;
 }
 
-bool MessagesDialogs::operator ==(const MessagesDialogs &b) {
-    return m_chats == b.m_chats &&
+bool MessagesDialogs::operator ==(const MessagesDialogs &b) const {
+    return m_classType == b.m_classType &&
+           m_chats == b.m_chats &&
            m_count == b.m_count &&
            m_dialogs == b.m_dialogs &&
            m_messages == b.m_messages &&

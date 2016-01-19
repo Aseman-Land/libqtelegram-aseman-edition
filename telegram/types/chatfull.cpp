@@ -8,20 +8,87 @@
 #include "../coretypes.h"
 
 ChatFull::ChatFull(ChatFullType classType, InboundPkt *in) :
+    m_adminsCount(0),
+    m_flags(0),
     m_id(0),
+    m_kickedCount(0),
+    m_migratedFromChatId(0),
+    m_migratedFromMaxId(0),
+    m_participantsCount(0),
+    m_readInboxMaxId(0),
+    m_unreadCount(0),
+    m_unreadImportantCount(0),
     m_classType(classType)
 {
     if(in) fetch(in);
 }
 
 ChatFull::ChatFull(InboundPkt *in) :
+    m_adminsCount(0),
+    m_flags(0),
     m_id(0),
+    m_kickedCount(0),
+    m_migratedFromChatId(0),
+    m_migratedFromMaxId(0),
+    m_participantsCount(0),
+    m_readInboxMaxId(0),
+    m_unreadCount(0),
+    m_unreadImportantCount(0),
     m_classType(typeChatFull)
 {
     fetch(in);
 }
 
+ChatFull::ChatFull(const Null &null) :
+    TelegramTypeObject(null),
+    m_adminsCount(0),
+    m_flags(0),
+    m_id(0),
+    m_kickedCount(0),
+    m_migratedFromChatId(0),
+    m_migratedFromMaxId(0),
+    m_participantsCount(0),
+    m_readInboxMaxId(0),
+    m_unreadCount(0),
+    m_unreadImportantCount(0),
+    m_classType(typeChatFull)
+{
+}
+
 ChatFull::~ChatFull() {
+}
+
+void ChatFull::setAbout(const QString &about) {
+    m_about = about;
+}
+
+QString ChatFull::about() const {
+    return m_about;
+}
+
+void ChatFull::setAdminsCount(qint32 adminsCount) {
+    m_adminsCount = adminsCount;
+}
+
+qint32 ChatFull::adminsCount() const {
+    return m_adminsCount;
+}
+
+void ChatFull::setBotInfo(const QList<BotInfo> &botInfo) {
+    m_botInfo = botInfo;
+}
+
+QList<BotInfo> ChatFull::botInfo() const {
+    return m_botInfo;
+}
+
+void ChatFull::setCanViewParticipants(bool canViewParticipants) {
+    if(canViewParticipants) m_flags = (m_flags | (1<<3));
+    else m_flags = (m_flags & ~(1<<3));
+}
+
+bool ChatFull::canViewParticipants() const {
+    return (m_flags & 1<<3);
 }
 
 void ChatFull::setChatPhoto(const Photo &chatPhoto) {
@@ -40,12 +107,44 @@ ExportedChatInvite ChatFull::exportedInvite() const {
     return m_exportedInvite;
 }
 
+void ChatFull::setFlags(qint32 flags) {
+    m_flags = flags;
+}
+
+qint32 ChatFull::flags() const {
+    return m_flags;
+}
+
 void ChatFull::setId(qint32 id) {
     m_id = id;
 }
 
 qint32 ChatFull::id() const {
     return m_id;
+}
+
+void ChatFull::setKickedCount(qint32 kickedCount) {
+    m_kickedCount = kickedCount;
+}
+
+qint32 ChatFull::kickedCount() const {
+    return m_kickedCount;
+}
+
+void ChatFull::setMigratedFromChatId(qint32 migratedFromChatId) {
+    m_migratedFromChatId = migratedFromChatId;
+}
+
+qint32 ChatFull::migratedFromChatId() const {
+    return m_migratedFromChatId;
+}
+
+void ChatFull::setMigratedFromMaxId(qint32 migratedFromMaxId) {
+    m_migratedFromMaxId = migratedFromMaxId;
+}
+
+qint32 ChatFull::migratedFromMaxId() const {
+    return m_migratedFromMaxId;
 }
 
 void ChatFull::setNotifySettings(const PeerNotifySettings &notifySettings) {
@@ -64,12 +163,56 @@ ChatParticipants ChatFull::participants() const {
     return m_participants;
 }
 
-bool ChatFull::operator ==(const ChatFull &b) {
-    return m_chatPhoto == b.m_chatPhoto &&
+void ChatFull::setParticipantsCount(qint32 participantsCount) {
+    m_participantsCount = participantsCount;
+}
+
+qint32 ChatFull::participantsCount() const {
+    return m_participantsCount;
+}
+
+void ChatFull::setReadInboxMaxId(qint32 readInboxMaxId) {
+    m_readInboxMaxId = readInboxMaxId;
+}
+
+qint32 ChatFull::readInboxMaxId() const {
+    return m_readInboxMaxId;
+}
+
+void ChatFull::setUnreadCount(qint32 unreadCount) {
+    m_unreadCount = unreadCount;
+}
+
+qint32 ChatFull::unreadCount() const {
+    return m_unreadCount;
+}
+
+void ChatFull::setUnreadImportantCount(qint32 unreadImportantCount) {
+    m_unreadImportantCount = unreadImportantCount;
+}
+
+qint32 ChatFull::unreadImportantCount() const {
+    return m_unreadImportantCount;
+}
+
+bool ChatFull::operator ==(const ChatFull &b) const {
+    return m_classType == b.m_classType &&
+           m_about == b.m_about &&
+           m_adminsCount == b.m_adminsCount &&
+           m_botInfo == b.m_botInfo &&
+           m_chatPhoto == b.m_chatPhoto &&
            m_exportedInvite == b.m_exportedInvite &&
+           m_flags == b.m_flags &&
            m_id == b.m_id &&
+           m_kickedCount == b.m_kickedCount &&
+           m_migratedFromChatId == b.m_migratedFromChatId &&
+           m_migratedFromMaxId == b.m_migratedFromMaxId &&
            m_notifySettings == b.m_notifySettings &&
-           m_participants == b.m_participants;
+           m_participants == b.m_participants &&
+           m_participantsCount == b.m_participantsCount &&
+           m_readInboxMaxId == b.m_readInboxMaxId &&
+           m_unreadCount == b.m_unreadCount &&
+           m_unreadImportantCount == b.m_unreadImportantCount;
 }
 
 void ChatFull::setClassType(ChatFull::ChatFullType classType) {
@@ -90,6 +233,52 @@ bool ChatFull::fetch(InboundPkt *in) {
         m_chatPhoto.fetch(in);
         m_notifySettings.fetch(in);
         m_exportedInvite.fetch(in);
+        if(in->fetchInt() != (qint32)CoreTypes::typeVector) return false;
+        qint32 m_botInfo_length = in->fetchInt();
+        m_botInfo.clear();
+        for (qint32 i = 0; i < m_botInfo_length; i++) {
+            BotInfo type;
+            type.fetch(in);
+            m_botInfo.append(type);
+        }
+        m_classType = static_cast<ChatFullType>(x);
+        return true;
+    }
+        break;
+    
+    case typeChannelFull: {
+        m_flags = in->fetchInt();
+        m_id = in->fetchInt();
+        m_about = in->fetchQString();
+        if(m_flags & 1<<0) {
+            m_participantsCount = in->fetchInt();
+        }
+        if(m_flags & 1<<1) {
+            m_adminsCount = in->fetchInt();
+        }
+        if(m_flags & 1<<2) {
+            m_kickedCount = in->fetchInt();
+        }
+        m_readInboxMaxId = in->fetchInt();
+        m_unreadCount = in->fetchInt();
+        m_unreadImportantCount = in->fetchInt();
+        m_chatPhoto.fetch(in);
+        m_notifySettings.fetch(in);
+        m_exportedInvite.fetch(in);
+        if(in->fetchInt() != (qint32)CoreTypes::typeVector) return false;
+        qint32 m_botInfo_length = in->fetchInt();
+        m_botInfo.clear();
+        for (qint32 i = 0; i < m_botInfo_length; i++) {
+            BotInfo type;
+            type.fetch(in);
+            m_botInfo.append(type);
+        }
+        if(m_flags & 1<<4) {
+            m_migratedFromChatId = in->fetchInt();
+        }
+        if(m_flags & 1<<4) {
+            m_migratedFromMaxId = in->fetchInt();
+        }
         m_classType = static_cast<ChatFullType>(x);
         return true;
     }
@@ -110,6 +299,35 @@ bool ChatFull::push(OutboundPkt *out) const {
         m_chatPhoto.push(out);
         m_notifySettings.push(out);
         m_exportedInvite.push(out);
+        out->appendInt(CoreTypes::typeVector);
+        out->appendInt(m_botInfo.count());
+        for (qint32 i = 0; i < m_botInfo.count(); i++) {
+            m_botInfo[i].push(out);
+        }
+        return true;
+    }
+        break;
+    
+    case typeChannelFull: {
+        out->appendInt(m_flags);
+        out->appendInt(m_id);
+        out->appendQString(m_about);
+        out->appendInt(m_participantsCount);
+        out->appendInt(m_adminsCount);
+        out->appendInt(m_kickedCount);
+        out->appendInt(m_readInboxMaxId);
+        out->appendInt(m_unreadCount);
+        out->appendInt(m_unreadImportantCount);
+        m_chatPhoto.push(out);
+        m_notifySettings.push(out);
+        m_exportedInvite.push(out);
+        out->appendInt(CoreTypes::typeVector);
+        out->appendInt(m_botInfo.count());
+        for (qint32 i = 0; i < m_botInfo.count(); i++) {
+            m_botInfo[i].push(out);
+        }
+        out->appendInt(m_migratedFromChatId);
+        out->appendInt(m_migratedFromMaxId);
         return true;
     }
         break;

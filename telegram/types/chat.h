@@ -6,45 +6,73 @@
 #define LQTG_TYPE_CHAT
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QtGlobal>
-#include <QString>
-#include "geopoint.h"
+#include "inputchannel.h"
 #include "chatphoto.h"
+#include <QString>
 
 class LIBQTELEGRAMSHARED_EXPORT Chat : public TelegramTypeObject
 {
 public:
     enum ChatType {
         typeChatEmpty = 0x9ba2d800,
-        typeChat = 0x6e9c9bc7,
-        typeChatForbidden = 0xfb0ccc41,
-        typeGeoChat = 0x75eaea5a
+        typeChat = 0xd91cdd54,
+        typeChatForbidden = 0x7328bdb,
+        typeChannel = 0x4b1b7506,
+        typeChannelForbidden = 0x2d85832c
     };
 
     Chat(ChatType classType = typeChatEmpty, InboundPkt *in = 0);
     Chat(InboundPkt *in);
+    Chat(const Null&);
     virtual ~Chat();
 
     void setAccessHash(qint64 accessHash);
     qint64 accessHash() const;
 
-    void setAddress(const QString &address);
-    QString address() const;
+    void setAdmin(bool admin);
+    bool admin() const;
 
-    void setCheckedIn(bool checkedIn);
-    bool checkedIn() const;
+    void setAdminsEnabled(bool adminsEnabled);
+    bool adminsEnabled() const;
+
+    void setBroadcast(bool broadcast);
+    bool broadcast() const;
+
+    void setCreator(bool creator);
+    bool creator() const;
 
     void setDate(qint32 date);
     qint32 date() const;
 
-    void setGeo(const GeoPoint &geo);
-    GeoPoint geo() const;
+    void setDeactivated(bool deactivated);
+    bool deactivated() const;
+
+    void setEditor(bool editor);
+    bool editor() const;
+
+    void setFlags(qint32 flags);
+    qint32 flags() const;
 
     void setId(qint32 id);
     qint32 id() const;
 
+    void setKicked(bool kicked);
+    bool kicked() const;
+
     void setLeft(bool left);
     bool left() const;
+
+    void setMegagroup(bool megagroup);
+    bool megagroup() const;
+
+    void setMigratedTo(const InputChannel &migratedTo);
+    InputChannel migratedTo() const;
+
+    void setModerator(bool moderator);
+    bool moderator() const;
 
     void setParticipantsCount(qint32 participantsCount);
     qint32 participantsCount() const;
@@ -52,11 +80,20 @@ public:
     void setPhoto(const ChatPhoto &photo);
     ChatPhoto photo() const;
 
+    void setRestricted(bool restricted);
+    bool restricted() const;
+
+    void setRestrictionReason(const QString &restrictionReason);
+    QString restrictionReason() const;
+
     void setTitle(const QString &title);
     QString title() const;
 
-    void setVenue(const QString &venue);
-    QString venue() const;
+    void setUsername(const QString &username);
+    QString username() const;
+
+    void setVerified(bool verified);
+    bool verified() const;
 
     void setVersion(qint32 version);
     qint32 version() const;
@@ -67,22 +104,26 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const Chat &b);
+    bool operator ==(const Chat &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     qint64 m_accessHash;
-    QString m_address;
-    bool m_checkedIn;
     qint32 m_date;
-    GeoPoint m_geo;
+    qint32 m_flags;
     qint32 m_id;
-    bool m_left;
+    InputChannel m_migratedTo;
     qint32 m_participantsCount;
     ChatPhoto m_photo;
+    QString m_restrictionReason;
     QString m_title;
-    QString m_venue;
+    QString m_username;
     qint32 m_version;
     ChatType m_classType;
 };
+
+Q_DECLARE_METATYPE(Chat)
 
 #endif // LQTG_TYPE_CHAT

@@ -19,6 +19,12 @@ ContactsLink::ContactsLink(InboundPkt *in) :
     fetch(in);
 }
 
+ContactsLink::ContactsLink(const Null &null) :
+    TelegramTypeObject(null),
+    m_classType(typeContactsLink)
+{
+}
+
 ContactsLink::~ContactsLink() {
 }
 
@@ -46,8 +52,9 @@ User ContactsLink::user() const {
     return m_user;
 }
 
-bool ContactsLink::operator ==(const ContactsLink &b) {
-    return m_foreignLink == b.m_foreignLink &&
+bool ContactsLink::operator ==(const ContactsLink &b) const {
+    return m_classType == b.m_classType &&
+           m_foreignLink == b.m_foreignLink &&
            m_myLink == b.m_myLink &&
            m_user == b.m_user;
 }

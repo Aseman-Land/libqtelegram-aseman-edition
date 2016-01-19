@@ -13,7 +13,6 @@ UpdatesType::UpdatesType(UpdatesTypeType classType, InboundPkt *in) :
     m_flags(0),
     m_fromId(0),
     m_fwdDate(0),
-    m_fwdFromId(0),
     m_id(0),
     m_pts(0),
     m_ptsCount(0),
@@ -21,6 +20,7 @@ UpdatesType::UpdatesType(UpdatesTypeType classType, InboundPkt *in) :
     m_seq(0),
     m_seqStart(0),
     m_userId(0),
+    m_viaBotId(0),
     m_classType(classType)
 {
     if(in) fetch(in);
@@ -32,7 +32,6 @@ UpdatesType::UpdatesType(InboundPkt *in) :
     m_flags(0),
     m_fromId(0),
     m_fwdDate(0),
-    m_fwdFromId(0),
     m_id(0),
     m_pts(0),
     m_ptsCount(0),
@@ -40,9 +39,29 @@ UpdatesType::UpdatesType(InboundPkt *in) :
     m_seq(0),
     m_seqStart(0),
     m_userId(0),
+    m_viaBotId(0),
     m_classType(typeUpdatesTooLong)
 {
     fetch(in);
+}
+
+UpdatesType::UpdatesType(const Null &null) :
+    TelegramTypeObject(null),
+    m_chatId(0),
+    m_date(0),
+    m_flags(0),
+    m_fromId(0),
+    m_fwdDate(0),
+    m_id(0),
+    m_pts(0),
+    m_ptsCount(0),
+    m_replyToMsgId(0),
+    m_seq(0),
+    m_seqStart(0),
+    m_userId(0),
+    m_viaBotId(0),
+    m_classType(typeUpdatesTooLong)
+{
 }
 
 UpdatesType::~UpdatesType() {
@@ -72,6 +91,14 @@ qint32 UpdatesType::date() const {
     return m_date;
 }
 
+void UpdatesType::setEntities(const QList<MessageEntity> &entities) {
+    m_entities = entities;
+}
+
+QList<MessageEntity> UpdatesType::entities() const {
+    return m_entities;
+}
+
 void UpdatesType::setFlags(qint32 flags) {
     m_flags = flags;
 }
@@ -96,11 +123,11 @@ qint32 UpdatesType::fwdDate() const {
     return m_fwdDate;
 }
 
-void UpdatesType::setFwdFromId(qint32 fwdFromId) {
+void UpdatesType::setFwdFromId(const Peer &fwdFromId) {
     m_fwdFromId = fwdFromId;
 }
 
-qint32 UpdatesType::fwdFromId() const {
+Peer UpdatesType::fwdFromId() const {
     return m_fwdFromId;
 }
 
@@ -112,12 +139,47 @@ qint32 UpdatesType::id() const {
     return m_id;
 }
 
+void UpdatesType::setMedia(const MessageMedia &media) {
+    m_media = media;
+}
+
+MessageMedia UpdatesType::media() const {
+    return m_media;
+}
+
+void UpdatesType::setMediaUnread(bool mediaUnread) {
+    if(mediaUnread) m_flags = (m_flags | (1<<5));
+    else m_flags = (m_flags & ~(1<<5));
+}
+
+bool UpdatesType::mediaUnread() const {
+    return (m_flags & 1<<5);
+}
+
+void UpdatesType::setMentioned(bool mentioned) {
+    if(mentioned) m_flags = (m_flags | (1<<4));
+    else m_flags = (m_flags & ~(1<<4));
+}
+
+bool UpdatesType::mentioned() const {
+    return (m_flags & 1<<4);
+}
+
 void UpdatesType::setMessage(const QString &message) {
     m_message = message;
 }
 
 QString UpdatesType::message() const {
     return m_message;
+}
+
+void UpdatesType::setOut(bool out) {
+    if(out) m_flags = (m_flags | (1<<1));
+    else m_flags = (m_flags & ~(1<<1));
+}
+
+bool UpdatesType::out() const {
+    return (m_flags & 1<<1);
 }
 
 void UpdatesType::setPts(qint32 pts) {
@@ -160,6 +222,15 @@ qint32 UpdatesType::seqStart() const {
     return m_seqStart;
 }
 
+void UpdatesType::setUnread(bool unread) {
+    if(unread) m_flags = (m_flags | (1<<0));
+    else m_flags = (m_flags & ~(1<<0));
+}
+
+bool UpdatesType::unread() const {
+    return (m_flags & 1<<0);
+}
+
 void UpdatesType::setUpdate(const Update &update) {
     m_update = update;
 }
@@ -192,15 +263,26 @@ QList<User> UpdatesType::users() const {
     return m_users;
 }
 
-bool UpdatesType::operator ==(const UpdatesType &b) {
-    return m_chatId == b.m_chatId &&
+void UpdatesType::setViaBotId(qint32 viaBotId) {
+    m_viaBotId = viaBotId;
+}
+
+qint32 UpdatesType::viaBotId() const {
+    return m_viaBotId;
+}
+
+bool UpdatesType::operator ==(const UpdatesType &b) const {
+    return m_classType == b.m_classType &&
+           m_chatId == b.m_chatId &&
            m_chats == b.m_chats &&
            m_date == b.m_date &&
+           m_entities == b.m_entities &&
            m_flags == b.m_flags &&
            m_fromId == b.m_fromId &&
            m_fwdDate == b.m_fwdDate &&
            m_fwdFromId == b.m_fwdFromId &&
            m_id == b.m_id &&
+           m_media == b.m_media &&
            m_message == b.m_message &&
            m_pts == b.m_pts &&
            m_ptsCount == b.m_ptsCount &&
@@ -210,7 +292,8 @@ bool UpdatesType::operator ==(const UpdatesType &b) {
            m_update == b.m_update &&
            m_updates == b.m_updates &&
            m_userId == b.m_userId &&
-           m_users == b.m_users;
+           m_users == b.m_users &&
+           m_viaBotId == b.m_viaBotId;
 }
 
 void UpdatesType::setClassType(UpdatesType::UpdatesTypeType classType) {
@@ -240,13 +323,28 @@ bool UpdatesType::fetch(InboundPkt *in) {
         m_ptsCount = in->fetchInt();
         m_date = in->fetchInt();
         if(m_flags & 1<<2) {
-            m_fwdFromId = in->fetchInt();
+            m_fwdFromId.fetch(in);
         }
         if(m_flags & 1<<2) {
             m_fwdDate = in->fetchInt();
         }
+        if(m_flags & 1<<11) {
+            m_viaBotId = in->fetchInt();
+        }
         if(m_flags & 1<<3) {
             m_replyToMsgId = in->fetchInt();
+        }
+        if(m_flags & 1<<7) {
+            if(in->fetchInt() != (qint32)CoreTypes::typeVector) return false;
+            qint32 m_entities_length = in->fetchInt();
+            m_entities.clear();
+            for (qint32 i = 0; i < m_entities_length; i++) {
+                MessageEntity type;
+                if(m_flags & 1<<7) {
+                type.fetch(in);
+            }
+                m_entities.append(type);
+            }
         }
         m_classType = static_cast<UpdatesTypeType>(x);
         return true;
@@ -263,13 +361,28 @@ bool UpdatesType::fetch(InboundPkt *in) {
         m_ptsCount = in->fetchInt();
         m_date = in->fetchInt();
         if(m_flags & 1<<2) {
-            m_fwdFromId = in->fetchInt();
+            m_fwdFromId.fetch(in);
         }
         if(m_flags & 1<<2) {
             m_fwdDate = in->fetchInt();
         }
+        if(m_flags & 1<<11) {
+            m_viaBotId = in->fetchInt();
+        }
         if(m_flags & 1<<3) {
             m_replyToMsgId = in->fetchInt();
+        }
+        if(m_flags & 1<<7) {
+            if(in->fetchInt() != (qint32)CoreTypes::typeVector) return false;
+            qint32 m_entities_length = in->fetchInt();
+            m_entities.clear();
+            for (qint32 i = 0; i < m_entities_length; i++) {
+                MessageEntity type;
+                if(m_flags & 1<<7) {
+                type.fetch(in);
+            }
+                m_entities.append(type);
+            }
         }
         m_classType = static_cast<UpdatesTypeType>(x);
         return true;
@@ -349,6 +462,32 @@ bool UpdatesType::fetch(InboundPkt *in) {
     }
         break;
     
+    case typeUpdateShortSentMessage: {
+        m_flags = in->fetchInt();
+        m_id = in->fetchInt();
+        m_pts = in->fetchInt();
+        m_ptsCount = in->fetchInt();
+        m_date = in->fetchInt();
+        if(m_flags & 1<<9) {
+            m_media.fetch(in);
+        }
+        if(m_flags & 1<<7) {
+            if(in->fetchInt() != (qint32)CoreTypes::typeVector) return false;
+            qint32 m_entities_length = in->fetchInt();
+            m_entities.clear();
+            for (qint32 i = 0; i < m_entities_length; i++) {
+                MessageEntity type;
+                if(m_flags & 1<<7) {
+                type.fetch(in);
+            }
+                m_entities.append(type);
+            }
+        }
+        m_classType = static_cast<UpdatesTypeType>(x);
+        return true;
+    }
+        break;
+    
     default:
         LQTG_FETCH_ASSERT;
         return false;
@@ -371,9 +510,15 @@ bool UpdatesType::push(OutboundPkt *out) const {
         out->appendInt(m_pts);
         out->appendInt(m_ptsCount);
         out->appendInt(m_date);
-        out->appendInt(m_fwdFromId);
+        m_fwdFromId.push(out);
         out->appendInt(m_fwdDate);
+        out->appendInt(m_viaBotId);
         out->appendInt(m_replyToMsgId);
+        out->appendInt(CoreTypes::typeVector);
+        out->appendInt(m_entities.count());
+        for (qint32 i = 0; i < m_entities.count(); i++) {
+            m_entities[i].push(out);
+        }
         return true;
     }
         break;
@@ -387,9 +532,15 @@ bool UpdatesType::push(OutboundPkt *out) const {
         out->appendInt(m_pts);
         out->appendInt(m_ptsCount);
         out->appendInt(m_date);
-        out->appendInt(m_fwdFromId);
+        m_fwdFromId.push(out);
         out->appendInt(m_fwdDate);
+        out->appendInt(m_viaBotId);
         out->appendInt(m_replyToMsgId);
+        out->appendInt(CoreTypes::typeVector);
+        out->appendInt(m_entities.count());
+        for (qint32 i = 0; i < m_entities.count(); i++) {
+            m_entities[i].push(out);
+        }
         return true;
     }
         break;
@@ -442,6 +593,22 @@ bool UpdatesType::push(OutboundPkt *out) const {
         }
         out->appendInt(m_date);
         out->appendInt(m_seq);
+        return true;
+    }
+        break;
+    
+    case typeUpdateShortSentMessage: {
+        out->appendInt(m_flags);
+        out->appendInt(m_id);
+        out->appendInt(m_pts);
+        out->appendInt(m_ptsCount);
+        out->appendInt(m_date);
+        m_media.push(out);
+        out->appendInt(CoreTypes::typeVector);
+        out->appendInt(m_entities.count());
+        for (qint32 i = 0; i < m_entities.count(); i++) {
+            m_entities[i].push(out);
+        }
         return true;
     }
         break;

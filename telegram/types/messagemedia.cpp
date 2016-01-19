@@ -21,6 +21,13 @@ MessageMedia::MessageMedia(InboundPkt *in) :
     fetch(in);
 }
 
+MessageMedia::MessageMedia(const Null &null) :
+    TelegramTypeObject(null),
+    m_userId(0),
+    m_classType(typeMessageMediaEmpty)
+{
+}
+
 MessageMedia::~MessageMedia() {
 }
 
@@ -144,8 +151,9 @@ WebPage MessageMedia::webpage() const {
     return m_webpage;
 }
 
-bool MessageMedia::operator ==(const MessageMedia &b) {
-    return m_address == b.m_address &&
+bool MessageMedia::operator ==(const MessageMedia &b) const {
+    return m_classType == b.m_classType &&
+           m_address == b.m_address &&
            m_audio == b.m_audio &&
            m_caption == b.m_caption &&
            m_document == b.m_document &&
@@ -221,6 +229,7 @@ bool MessageMedia::fetch(InboundPkt *in) {
     
     case typeMessageMediaDocument: {
         m_document.fetch(in);
+        m_caption = in->fetchQString();
         m_classType = static_cast<MessageMediaType>(x);
         return true;
     }
@@ -301,6 +310,7 @@ bool MessageMedia::push(OutboundPkt *out) const {
     
     case typeMessageMediaDocument: {
         m_document.push(out);
+        out->appendQString(m_caption);
         return true;
     }
         break;

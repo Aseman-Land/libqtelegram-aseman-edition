@@ -11,7 +11,6 @@ Photo::Photo(PhotoType classType, InboundPkt *in) :
     m_accessHash(0),
     m_date(0),
     m_id(0),
-    m_userId(0),
     m_classType(classType)
 {
     if(in) fetch(in);
@@ -21,10 +20,18 @@ Photo::Photo(InboundPkt *in) :
     m_accessHash(0),
     m_date(0),
     m_id(0),
-    m_userId(0),
     m_classType(typePhotoEmpty)
 {
     fetch(in);
+}
+
+Photo::Photo(const Null &null) :
+    TelegramTypeObject(null),
+    m_accessHash(0),
+    m_date(0),
+    m_id(0),
+    m_classType(typePhotoEmpty)
+{
 }
 
 Photo::~Photo() {
@@ -46,14 +53,6 @@ qint32 Photo::date() const {
     return m_date;
 }
 
-void Photo::setGeo(const GeoPoint &geo) {
-    m_geo = geo;
-}
-
-GeoPoint Photo::geo() const {
-    return m_geo;
-}
-
 void Photo::setId(qint64 id) {
     m_id = id;
 }
@@ -70,21 +69,12 @@ QList<PhotoSize> Photo::sizes() const {
     return m_sizes;
 }
 
-void Photo::setUserId(qint32 userId) {
-    m_userId = userId;
-}
-
-qint32 Photo::userId() const {
-    return m_userId;
-}
-
-bool Photo::operator ==(const Photo &b) {
-    return m_accessHash == b.m_accessHash &&
+bool Photo::operator ==(const Photo &b) const {
+    return m_classType == b.m_classType &&
+           m_accessHash == b.m_accessHash &&
            m_date == b.m_date &&
-           m_geo == b.m_geo &&
            m_id == b.m_id &&
-           m_sizes == b.m_sizes &&
-           m_userId == b.m_userId;
+           m_sizes == b.m_sizes;
 }
 
 void Photo::setClassType(Photo::PhotoType classType) {
@@ -109,9 +99,7 @@ bool Photo::fetch(InboundPkt *in) {
     case typePhoto: {
         m_id = in->fetchLong();
         m_accessHash = in->fetchLong();
-        m_userId = in->fetchInt();
         m_date = in->fetchInt();
-        m_geo.fetch(in);
         if(in->fetchInt() != (qint32)CoreTypes::typeVector) return false;
         qint32 m_sizes_length = in->fetchInt();
         m_sizes.clear();
@@ -143,9 +131,7 @@ bool Photo::push(OutboundPkt *out) const {
     case typePhoto: {
         out->appendLong(m_id);
         out->appendLong(m_accessHash);
-        out->appendInt(m_userId);
         out->appendInt(m_date);
-        m_geo.push(out);
         out->appendInt(CoreTypes::typeVector);
         out->appendInt(m_sizes.count());
         for (qint32 i = 0; i < m_sizes.count(); i++) {

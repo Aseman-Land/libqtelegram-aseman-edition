@@ -7,6 +7,8 @@
 
 #include "telegramtypeobject.h"
 
+#include <QMetaType>
+
 class LIBQTELEGRAMSHARED_EXPORT PrivacyKey : public TelegramTypeObject
 {
 public:
@@ -16,6 +18,7 @@ public:
 
     PrivacyKey(PrivacyKeyType classType = typePrivacyKeyStatusTimestamp, InboundPkt *in = 0);
     PrivacyKey(InboundPkt *in);
+    PrivacyKey(const Null&);
     virtual ~PrivacyKey();
 
     void setClassType(PrivacyKeyType classType);
@@ -24,10 +27,15 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const PrivacyKey &b);
+    bool operator ==(const PrivacyKey &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     PrivacyKeyType m_classType;
 };
+
+Q_DECLARE_METATYPE(PrivacyKey)
 
 #endif // LQTG_TYPE_PRIVACYKEY

@@ -23,6 +23,14 @@ UpdatesDifference::UpdatesDifference(InboundPkt *in) :
     fetch(in);
 }
 
+UpdatesDifference::UpdatesDifference(const Null &null) :
+    TelegramTypeObject(null),
+    m_date(0),
+    m_seq(0),
+    m_classType(typeUpdatesDifferenceEmpty)
+{
+}
+
 UpdatesDifference::~UpdatesDifference() {
 }
 
@@ -98,8 +106,9 @@ QList<User> UpdatesDifference::users() const {
     return m_users;
 }
 
-bool UpdatesDifference::operator ==(const UpdatesDifference &b) {
-    return m_chats == b.m_chats &&
+bool UpdatesDifference::operator ==(const UpdatesDifference &b) const {
+    return m_classType == b.m_classType &&
+           m_chats == b.m_chats &&
            m_date == b.m_date &&
            m_intermediateState == b.m_intermediateState &&
            m_newEncryptedMessages == b.m_newEncryptedMessages &&

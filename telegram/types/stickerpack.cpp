@@ -19,6 +19,12 @@ StickerPack::StickerPack(InboundPkt *in) :
     fetch(in);
 }
 
+StickerPack::StickerPack(const Null &null) :
+    TelegramTypeObject(null),
+    m_classType(typeStickerPack)
+{
+}
+
 StickerPack::~StickerPack() {
 }
 
@@ -38,8 +44,9 @@ QString StickerPack::emoticon() const {
     return m_emoticon;
 }
 
-bool StickerPack::operator ==(const StickerPack &b) {
-    return m_documents == b.m_documents &&
+bool StickerPack::operator ==(const StickerPack &b) const {
+    return m_classType == b.m_classType &&
+           m_documents == b.m_documents &&
            m_emoticon == b.m_emoticon;
 }
 

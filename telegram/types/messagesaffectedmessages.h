@@ -6,6 +6,8 @@
 #define LQTG_TYPE_MESSAGESAFFECTEDMESSAGES
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QtGlobal>
 
 class LIBQTELEGRAMSHARED_EXPORT MessagesAffectedMessages : public TelegramTypeObject
@@ -17,6 +19,7 @@ public:
 
     MessagesAffectedMessages(MessagesAffectedMessagesType classType = typeMessagesAffectedMessages, InboundPkt *in = 0);
     MessagesAffectedMessages(InboundPkt *in);
+    MessagesAffectedMessages(const Null&);
     virtual ~MessagesAffectedMessages();
 
     void setPts(qint32 pts);
@@ -31,12 +34,17 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const MessagesAffectedMessages &b);
+    bool operator ==(const MessagesAffectedMessages &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     qint32 m_pts;
     qint32 m_ptsCount;
     MessagesAffectedMessagesType m_classType;
 };
+
+Q_DECLARE_METATYPE(MessagesAffectedMessages)
 
 #endif // LQTG_TYPE_MESSAGESAFFECTEDMESSAGES

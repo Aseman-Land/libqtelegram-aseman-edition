@@ -6,6 +6,8 @@
 #define LQTG_TYPE_PHOTOSIZE
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QByteArray>
 #include <QtGlobal>
 #include "filelocation.h"
@@ -22,6 +24,7 @@ public:
 
     PhotoSize(PhotoSizeType classType = typePhotoSizeEmpty, InboundPkt *in = 0);
     PhotoSize(InboundPkt *in);
+    PhotoSize(const Null&);
     virtual ~PhotoSize();
 
     void setBytes(const QByteArray &bytes);
@@ -48,7 +51,10 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const PhotoSize &b);
+    bool operator ==(const PhotoSize &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     QByteArray m_bytes;
@@ -59,5 +65,7 @@ private:
     qint32 m_w;
     PhotoSizeType m_classType;
 };
+
+Q_DECLARE_METATYPE(PhotoSize)
 
 #endif // LQTG_TYPE_PHOTOSIZE

@@ -6,6 +6,8 @@
 #define LQTG_TYPE_INPUTGEOPOINT
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QtGlobal>
 
 class LIBQTELEGRAMSHARED_EXPORT InputGeoPoint : public TelegramTypeObject
@@ -18,6 +20,7 @@ public:
 
     InputGeoPoint(InputGeoPointType classType = typeInputGeoPointEmpty, InboundPkt *in = 0);
     InputGeoPoint(InboundPkt *in);
+    InputGeoPoint(const Null&);
     virtual ~InputGeoPoint();
 
     void setLat(qreal lat);
@@ -32,12 +35,17 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const InputGeoPoint &b);
+    bool operator ==(const InputGeoPoint &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     qreal m_lat;
     qreal m_longValue;
     InputGeoPointType m_classType;
 };
+
+Q_DECLARE_METATYPE(InputGeoPoint)
 
 #endif // LQTG_TYPE_INPUTGEOPOINT

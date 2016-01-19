@@ -19,6 +19,12 @@ InputPrivacyRule::InputPrivacyRule(InboundPkt *in) :
     fetch(in);
 }
 
+InputPrivacyRule::InputPrivacyRule(const Null &null) :
+    TelegramTypeObject(null),
+    m_classType(typeInputPrivacyValueAllowContacts)
+{
+}
+
 InputPrivacyRule::~InputPrivacyRule() {
 }
 
@@ -30,8 +36,9 @@ QList<InputUser> InputPrivacyRule::users() const {
     return m_users;
 }
 
-bool InputPrivacyRule::operator ==(const InputPrivacyRule &b) {
-    return m_users == b.m_users;
+bool InputPrivacyRule::operator ==(const InputPrivacyRule &b) const {
+    return m_classType == b.m_classType &&
+           m_users == b.m_users;
 }
 
 void InputPrivacyRule::setClassType(InputPrivacyRule::InputPrivacyRuleType classType) {

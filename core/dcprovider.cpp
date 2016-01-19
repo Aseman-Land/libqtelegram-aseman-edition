@@ -172,7 +172,7 @@ void DcProvider::processDcReady(DC *dc) {
     // create api object if dc is workingDc, and get configuration
     if ((!mApi) && (dc->id() == mSettings->workingDcNum())) {
         Session *session = new Session(dc, mSettings, mCrypto, this);
-        mApi = new Api(session, mSettings, mCrypto, this);
+        mApi = new TelegramApi(session, mSettings, mCrypto, this);
         connect(session, SIGNAL(sessionReady(DC*)), this, SLOT(onApiReady(DC*)));
         connect(session, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(onApiError()));
         session->connectToServer();
@@ -273,7 +273,7 @@ void DcProvider::onConfigReceived(qint64 msgId, const Config &config) {
 
     Q_FOREACH (DcOption dcOption, dcOptions) {
         qCDebug(TG_CORE_DCPROVIDER) << "dcOption | id =" << dcOption.id() << ", ipAddress =" << dcOption.ipAddress() <<
-                    ", port =" << dcOption.port() << ", hostname =" << dcOption.hostname();
+                    ", port =" << dcOption.port() << ", hostname =" << dcOption.ipAddress();
 
         // for every new DC or not authenticated DC, insert into m_dcs and authenticate
         DC *dc = mDcs.value(dcOption.id());
@@ -305,10 +305,9 @@ void DcProvider::onConfigReceived(qint64 msgId, const Config &config) {
     }
 
     qCDebug(TG_CORE_DCPROVIDER) << "chatMaxSize =" << config.chatSizeMax();
-    qCDebug(TG_CORE_DCPROVIDER) << "broadcastMaxSize =" << config.broadcastSizeMax();
 }
 
-Api *DcProvider::getApi() const {
+TelegramApi *DcProvider::getApi() const {
     return mApi;
 }
 

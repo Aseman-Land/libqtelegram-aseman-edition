@@ -25,6 +25,15 @@ MessagesAffectedHistory::MessagesAffectedHistory(InboundPkt *in) :
     fetch(in);
 }
 
+MessagesAffectedHistory::MessagesAffectedHistory(const Null &null) :
+    TelegramTypeObject(null),
+    m_offset(0),
+    m_pts(0),
+    m_ptsCount(0),
+    m_classType(typeMessagesAffectedHistory)
+{
+}
+
 MessagesAffectedHistory::~MessagesAffectedHistory() {
 }
 
@@ -52,8 +61,9 @@ qint32 MessagesAffectedHistory::ptsCount() const {
     return m_ptsCount;
 }
 
-bool MessagesAffectedHistory::operator ==(const MessagesAffectedHistory &b) {
-    return m_offset == b.m_offset &&
+bool MessagesAffectedHistory::operator ==(const MessagesAffectedHistory &b) const {
+    return m_classType == b.m_classType &&
+           m_offset == b.m_offset &&
            m_pts == b.m_pts &&
            m_ptsCount == b.m_ptsCount;
 }

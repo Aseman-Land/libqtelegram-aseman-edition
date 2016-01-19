@@ -6,6 +6,8 @@
 #define LQTG_TYPE_CONTACTSCONTACTS
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QList>
 #include "contact.h"
 #include "user.h"
@@ -20,6 +22,7 @@ public:
 
     ContactsContacts(ContactsContactsType classType = typeContactsContactsNotModified, InboundPkt *in = 0);
     ContactsContacts(InboundPkt *in);
+    ContactsContacts(const Null&);
     virtual ~ContactsContacts();
 
     void setContacts(const QList<Contact> &contacts);
@@ -34,12 +37,17 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const ContactsContacts &b);
+    bool operator ==(const ContactsContacts &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     QList<Contact> m_contacts;
     QList<User> m_users;
     ContactsContactsType m_classType;
 };
+
+Q_DECLARE_METATYPE(ContactsContacts)
 
 #endif // LQTG_TYPE_CONTACTSCONTACTS

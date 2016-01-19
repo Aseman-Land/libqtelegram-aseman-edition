@@ -6,6 +6,8 @@
 #define LQTG_TYPE_AUTHSENTCODE
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QString>
 #include <QtGlobal>
 
@@ -19,6 +21,7 @@ public:
 
     AuthSentCode(AuthSentCodeType classType = typeAuthSentCode, InboundPkt *in = 0);
     AuthSentCode(InboundPkt *in);
+    AuthSentCode(const Null&);
     virtual ~AuthSentCode();
 
     void setIsPassword(bool isPassword);
@@ -39,7 +42,10 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const AuthSentCode &b);
+    bool operator ==(const AuthSentCode &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     bool m_isPassword;
@@ -48,5 +54,7 @@ private:
     qint32 m_sendCallTimeout;
     AuthSentCodeType m_classType;
 };
+
+Q_DECLARE_METATYPE(AuthSentCode)
 
 #endif // LQTG_TYPE_AUTHSENTCODE

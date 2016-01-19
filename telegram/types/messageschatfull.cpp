@@ -19,6 +19,12 @@ MessagesChatFull::MessagesChatFull(InboundPkt *in) :
     fetch(in);
 }
 
+MessagesChatFull::MessagesChatFull(const Null &null) :
+    TelegramTypeObject(null),
+    m_classType(typeMessagesChatFull)
+{
+}
+
 MessagesChatFull::~MessagesChatFull() {
 }
 
@@ -46,8 +52,9 @@ QList<User> MessagesChatFull::users() const {
     return m_users;
 }
 
-bool MessagesChatFull::operator ==(const MessagesChatFull &b) {
-    return m_chats == b.m_chats &&
+bool MessagesChatFull::operator ==(const MessagesChatFull &b) const {
+    return m_classType == b.m_classType &&
+           m_chats == b.m_chats &&
            m_fullChat == b.m_fullChat &&
            m_users == b.m_users;
 }

@@ -21,6 +21,13 @@ MessagesSentEncryptedMessage::MessagesSentEncryptedMessage(InboundPkt *in) :
     fetch(in);
 }
 
+MessagesSentEncryptedMessage::MessagesSentEncryptedMessage(const Null &null) :
+    TelegramTypeObject(null),
+    m_date(0),
+    m_classType(typeMessagesSentEncryptedMessage)
+{
+}
+
 MessagesSentEncryptedMessage::~MessagesSentEncryptedMessage() {
 }
 
@@ -40,8 +47,9 @@ EncryptedFile MessagesSentEncryptedMessage::file() const {
     return m_file;
 }
 
-bool MessagesSentEncryptedMessage::operator ==(const MessagesSentEncryptedMessage &b) {
-    return m_date == b.m_date &&
+bool MessagesSentEncryptedMessage::operator ==(const MessagesSentEncryptedMessage &b) const {
+    return m_classType == b.m_classType &&
+           m_date == b.m_date &&
            m_file == b.m_file;
 }
 

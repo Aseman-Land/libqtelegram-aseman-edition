@@ -6,6 +6,8 @@
 #define LQTG_TYPE_DOCUMENTATTRIBUTE
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QString>
 #include <QtGlobal>
 #include "inputstickerset.h"
@@ -18,12 +20,13 @@ public:
         typeDocumentAttributeAnimated = 0x11b58939,
         typeDocumentAttributeSticker = 0x3a556302,
         typeDocumentAttributeVideo = 0x5910cccb,
-        typeDocumentAttributeAudio = 0x51448e5,
+        typeDocumentAttributeAudio = 0xded218e0,
         typeDocumentAttributeFilename = 0x15590068
     };
 
     DocumentAttribute(DocumentAttributeType classType = typeDocumentAttributeImageSize, InboundPkt *in = 0);
     DocumentAttribute(InboundPkt *in);
+    DocumentAttribute(const Null&);
     virtual ~DocumentAttribute();
 
     void setAlt(const QString &alt);
@@ -38,8 +41,14 @@ public:
     void setH(qint32 h);
     qint32 h() const;
 
+    void setPerformer(const QString &performer);
+    QString performer() const;
+
     void setStickerset(const InputStickerSet &stickerset);
     InputStickerSet stickerset() const;
+
+    void setTitle(const QString &title);
+    QString title() const;
 
     void setW(qint32 w);
     qint32 w() const;
@@ -50,16 +59,23 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const DocumentAttribute &b);
+    bool operator ==(const DocumentAttribute &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     QString m_alt;
     qint32 m_duration;
     QString m_fileName;
     qint32 m_h;
+    QString m_performer;
     InputStickerSet m_stickerset;
+    QString m_title;
     qint32 m_w;
     DocumentAttributeType m_classType;
 };
+
+Q_DECLARE_METATYPE(DocumentAttribute)
 
 #endif // LQTG_TYPE_DOCUMENTATTRIBUTE

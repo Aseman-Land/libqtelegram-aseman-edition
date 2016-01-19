@@ -13,12 +13,13 @@
 #include "telegram/types/inputpeer.h"
 #include <QString>
 #include "telegram/types/messagesfilter.h"
-#include "telegram/types/messagesaffectedhistory.h"
 #include "telegram/types/messagesaffectedmessages.h"
+#include "telegram/types/messagesaffectedhistory.h"
 #include "telegram/types/receivednotifymessage.h"
 #include "telegram/types/sendmessageaction.h"
-#include "telegram/types/messagessentmessage.h"
 #include "telegram/types/updatestype.h"
+#include "telegram/types/replymarkup.h"
+#include "telegram/types/messageentity.h"
 #include "telegram/types/inputmedia.h"
 #include "telegram/types/messageschats.h"
 #include "telegram/types/messageschatfull.h"
@@ -37,6 +38,12 @@
 #include "telegram/types/chatinvite.h"
 #include "telegram/types/messagesstickerset.h"
 #include "telegram/types/inputstickerset.h"
+#include "telegram/types/document.h"
+#include "telegram/types/messagesfoundgifs.h"
+#include "telegram/types/messagessavedgifs.h"
+#include "telegram/types/inputdocument.h"
+#include "telegram/types/messagesbotresults.h"
+#include "telegram/types/inputbotinlineresult.h"
 
 namespace Tg {
 namespace Functions {
@@ -46,17 +53,18 @@ class LIBQTELEGRAMSHARED_EXPORT Messages : public TelegramFunctionObject
 public:
     enum MessagesFunction {
         fncMessagesGetMessages = 0x4222fa74,
-        fncMessagesGetDialogs = 0xeccf1df6,
-        fncMessagesGetHistory = 0x92a1df2f,
-        fncMessagesSearch = 0x7e9f2ab,
-        fncMessagesReadHistory = 0xb04f2510,
-        fncMessagesDeleteHistory = 0xf4f8fb61,
+        fncMessagesGetDialogs = 0x6b47f94d,
+        fncMessagesGetHistory = 0x8a8ec2da,
+        fncMessagesSearch = 0xd4569248,
+        fncMessagesReadHistory = 0xe306d3a,
+        fncMessagesDeleteHistory = 0xb7c13bd9,
         fncMessagesDeleteMessages = 0xa5f18925,
         fncMessagesReceivedMessages = 0x5a954c0,
         fncMessagesSetTyping = 0xa3825e50,
-        fncMessagesSendMessage = 0x9add8f26,
-        fncMessagesSendMedia = 0x2d7923b1,
-        fncMessagesForwardMessages = 0x55e1728d,
+        fncMessagesSendMessage = 0xfa88427a,
+        fncMessagesSendMedia = 0xc8f16791,
+        fncMessagesForwardMessages = 0x708e0195,
+        fncMessagesReportSpam = 0xcf1592db,
         fncMessagesGetChats = 0x3c6aa187,
         fncMessagesGetFullChat = 0x3b831c66,
         fncMessagesEditChatTitle = 0xdc452855,
@@ -78,14 +86,28 @@ public:
         fncMessagesReceivedQueue = 0x55a5bb66,
         fncMessagesReadMessageContents = 0x36a73f77,
         fncMessagesGetStickers = 0xae22e045,
-        fncMessagesGetAllStickers = 0xaa3bc868,
+        fncMessagesGetAllStickers = 0x1c9618b1,
         fncMessagesGetWebPagePreview = 0x25223e24,
         fncMessagesExportChatInvite = 0x7d885289,
         fncMessagesCheckChatInvite = 0x3eadb1bb,
         fncMessagesImportChatInvite = 0x6c50051c,
         fncMessagesGetStickerSet = 0x2619a90e,
-        fncMessagesInstallStickerSet = 0xefbbfae9,
-        fncMessagesUninstallStickerSet = 0xf96e55de
+        fncMessagesInstallStickerSet = 0x7b30c3a6,
+        fncMessagesUninstallStickerSet = 0xf96e55de,
+        fncMessagesStartBot = 0xe6df7378,
+        fncMessagesGetMessagesViews = 0xc4c8a55d,
+        fncMessagesToggleChatAdmins = 0xec8bd9e1,
+        fncMessagesEditChatAdmin = 0xa9e69f2e,
+        fncMessagesMigrateChat = 0x15a3b8e3,
+        fncMessagesSearchGlobal = 0x9e3cacb0,
+        fncMessagesReorderStickerSets = 0x9fcfbc30,
+        fncMessagesGetDocumentByHash = 0x338e2464,
+        fncMessagesSearchGifs = 0xbf9a776b,
+        fncMessagesGetSavedGifs = 0x83bf3d52,
+        fncMessagesSaveGif = 0x327a30cb,
+        fncMessagesGetInlineBotResults = 0x9324600d,
+        fncMessagesSetInlineBotResults = 0x3f23ec12,
+        fncMessagesSendInlineBotResult = 0xb16e06fe
     };
 
     Messages();
@@ -94,19 +116,19 @@ public:
     static bool getMessages(OutboundPkt *out, const QList<qint32> &id);
     static MessagesMessages getMessagesResult(InboundPkt *in);
 
-    static bool getDialogs(OutboundPkt *out, qint32 offset, qint32 maxId, qint32 limit);
+    static bool getDialogs(OutboundPkt *out, qint32 offsetDate, qint32 offsetId, const InputPeer &offsetPeer, qint32 limit);
     static MessagesDialogs getDialogsResult(InboundPkt *in);
 
-    static bool getHistory(OutboundPkt *out, const InputPeer &peer, qint32 offset, qint32 maxId, qint32 limit);
+    static bool getHistory(OutboundPkt *out, const InputPeer &peer, qint32 offsetId, qint32 addOffset, qint32 limit, qint32 maxId, qint32 minId);
     static MessagesMessages getHistoryResult(InboundPkt *in);
 
-    static bool search(OutboundPkt *out, const InputPeer &peer, const QString &q, const MessagesFilter &filter, qint32 minDate, qint32 maxDate, qint32 offset, qint32 maxId, qint32 limit);
+    static bool search(OutboundPkt *out, bool importantOnly, const InputPeer &peer, const QString &q, const MessagesFilter &filter, qint32 minDate, qint32 maxDate, qint32 offset, qint32 maxId, qint32 limit);
     static MessagesMessages searchResult(InboundPkt *in);
 
-    static bool readHistory(OutboundPkt *out, const InputPeer &peer, qint32 maxId, qint32 offset);
-    static MessagesAffectedHistory readHistoryResult(InboundPkt *in);
+    static bool readHistory(OutboundPkt *out, const InputPeer &peer, qint32 maxId);
+    static MessagesAffectedMessages readHistoryResult(InboundPkt *in);
 
-    static bool deleteHistory(OutboundPkt *out, const InputPeer &peer, qint32 offset);
+    static bool deleteHistory(OutboundPkt *out, const InputPeer &peer, qint32 maxId);
     static MessagesAffectedHistory deleteHistoryResult(InboundPkt *in);
 
     static bool deleteMessages(OutboundPkt *out, const QList<qint32> &id);
@@ -118,14 +140,17 @@ public:
     static bool setTyping(OutboundPkt *out, const InputPeer &peer, const SendMessageAction &action);
     static bool setTypingResult(InboundPkt *in);
 
-    static bool sendMessage(OutboundPkt *out, qint32 flags, const InputPeer &peer, qint32 replyToMsgId, const QString &message, qint64 randomId);
-    static MessagesSentMessage sendMessageResult(InboundPkt *in);
+    static bool sendMessage(OutboundPkt *out, bool noWebpage, bool broadcast, const InputPeer &peer, qint32 replyToMsgId, const QString &message, qint64 randomId, const ReplyMarkup &replyMarkup, const QList<MessageEntity> &entities);
+    static UpdatesType sendMessageResult(InboundPkt *in);
 
-    static bool sendMedia(OutboundPkt *out, qint32 flags, const InputPeer &peer, qint32 replyToMsgId, const InputMedia &media, qint64 randomId);
+    static bool sendMedia(OutboundPkt *out, bool broadcast, const InputPeer &peer, qint32 replyToMsgId, const InputMedia &media, qint64 randomId, const ReplyMarkup &replyMarkup);
     static UpdatesType sendMediaResult(InboundPkt *in);
 
-    static bool forwardMessages(OutboundPkt *out, const InputPeer &peer, const QList<qint32> &id, const QList<qint64> &randomId);
+    static bool forwardMessages(OutboundPkt *out, bool broadcast, const InputPeer &fromPeer, const QList<qint32> &id, const QList<qint64> &randomId, const InputPeer &toPeer);
     static UpdatesType forwardMessagesResult(InboundPkt *in);
+
+    static bool reportSpam(OutboundPkt *out, const InputPeer &peer);
+    static bool reportSpamResult(InboundPkt *in);
 
     static bool getChats(OutboundPkt *out, const QList<qint32> &id);
     static MessagesChats getChatsResult(InboundPkt *in);
@@ -190,7 +215,7 @@ public:
     static bool getStickers(OutboundPkt *out, const QString &emoticon, const QString &hash);
     static MessagesStickers getStickersResult(InboundPkt *in);
 
-    static bool getAllStickers(OutboundPkt *out, const QString &hash);
+    static bool getAllStickers(OutboundPkt *out, qint32 hash);
     static MessagesAllStickers getAllStickersResult(InboundPkt *in);
 
     static bool getWebPagePreview(OutboundPkt *out, const QString &message);
@@ -208,11 +233,53 @@ public:
     static bool getStickerSet(OutboundPkt *out, const InputStickerSet &stickerset);
     static MessagesStickerSet getStickerSetResult(InboundPkt *in);
 
-    static bool installStickerSet(OutboundPkt *out, const InputStickerSet &stickerset);
+    static bool installStickerSet(OutboundPkt *out, const InputStickerSet &stickerset, bool disabled);
     static bool installStickerSetResult(InboundPkt *in);
 
     static bool uninstallStickerSet(OutboundPkt *out, const InputStickerSet &stickerset);
     static bool uninstallStickerSetResult(InboundPkt *in);
+
+    static bool startBot(OutboundPkt *out, const InputUser &bot, const InputPeer &peer, qint64 randomId, const QString &startParam);
+    static UpdatesType startBotResult(InboundPkt *in);
+
+    static bool getMessagesViews(OutboundPkt *out, const InputPeer &peer, const QList<qint32> &id, bool increment);
+    static QList<qint32> getMessagesViewsResult(InboundPkt *in);
+
+    static bool toggleChatAdmins(OutboundPkt *out, qint32 chatId, bool enabled);
+    static UpdatesType toggleChatAdminsResult(InboundPkt *in);
+
+    static bool editChatAdmin(OutboundPkt *out, qint32 chatId, const InputUser &userId, bool isAdmin);
+    static bool editChatAdminResult(InboundPkt *in);
+
+    static bool migrateChat(OutboundPkt *out, qint32 chatId);
+    static UpdatesType migrateChatResult(InboundPkt *in);
+
+    static bool searchGlobal(OutboundPkt *out, const QString &q, qint32 offsetDate, const InputPeer &offsetPeer, qint32 offsetId, qint32 limit);
+    static MessagesMessages searchGlobalResult(InboundPkt *in);
+
+    static bool reorderStickerSets(OutboundPkt *out, const QList<qint64> &order);
+    static bool reorderStickerSetsResult(InboundPkt *in);
+
+    static bool getDocumentByHash(OutboundPkt *out, const QByteArray &sha256, qint32 size, const QString &mimeType);
+    static Document getDocumentByHashResult(InboundPkt *in);
+
+    static bool searchGifs(OutboundPkt *out, const QString &q, qint32 offset);
+    static MessagesFoundGifs searchGifsResult(InboundPkt *in);
+
+    static bool getSavedGifs(OutboundPkt *out, qint32 hash);
+    static MessagesSavedGifs getSavedGifsResult(InboundPkt *in);
+
+    static bool saveGif(OutboundPkt *out, const InputDocument &id, bool unsave);
+    static bool saveGifResult(InboundPkt *in);
+
+    static bool getInlineBotResults(OutboundPkt *out, const InputUser &bot, const QString &query, const QString &offset);
+    static MessagesBotResults getInlineBotResultsResult(InboundPkt *in);
+
+    static bool setInlineBotResults(OutboundPkt *out, bool gallery, bool privateValue, qint64 queryId, const QList<InputBotInlineResult> &results, qint32 cacheTime, const QString &nextOffset);
+    static bool setInlineBotResultsResult(InboundPkt *in);
+
+    static bool sendInlineBotResult(OutboundPkt *out, bool broadcast, const InputPeer &peer, qint32 replyToMsgId, qint64 randomId, qint64 queryId, const QString &id);
+    static UpdatesType sendInlineBotResultResult(InboundPkt *in);
 
 };
 

@@ -6,6 +6,8 @@
 #define LQTG_TYPE_SENDMESSAGEACTION
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QtGlobal>
 
 class LIBQTELEGRAMSHARED_EXPORT SendMessageAction : public TelegramTypeObject
@@ -26,6 +28,7 @@ public:
 
     SendMessageAction(SendMessageActionType classType = typeSendMessageTypingAction, InboundPkt *in = 0);
     SendMessageAction(InboundPkt *in);
+    SendMessageAction(const Null&);
     virtual ~SendMessageAction();
 
     void setProgress(qint32 progress);
@@ -37,11 +40,16 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const SendMessageAction &b);
+    bool operator ==(const SendMessageAction &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     qint32 m_progress;
     SendMessageActionType m_classType;
 };
+
+Q_DECLARE_METATYPE(SendMessageAction)
 
 #endif // LQTG_TYPE_SENDMESSAGEACTION

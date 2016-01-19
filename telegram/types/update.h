@@ -6,6 +6,8 @@
 #define LQTG_TYPE_UPDATE
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include "sendmessageaction.h"
 #include <QtGlobal>
 #include "encryptedchat.h"
@@ -13,10 +15,10 @@
 #include "dcoption.h"
 #include <QString>
 #include "contactlink.h"
+#include "messagegroup.h"
 #include "privacykey.h"
 #include "messagemedia.h"
 #include "encryptedmessage.h"
-#include "geochatmessage.h"
 #include "message.h"
 #include "peernotifysettings.h"
 #include "chatparticipants.h"
@@ -25,6 +27,7 @@
 #include "userprofilephoto.h"
 #include "privacyrule.h"
 #include "userstatus.h"
+#include "messagesstickerset.h"
 #include "webpage.h"
 
 class LIBQTELEGRAMSHARED_EXPORT Update : public TelegramTypeObject
@@ -43,12 +46,11 @@ public:
         typeUpdateContactRegistered = 0x2575bbb9,
         typeUpdateContactLink = 0x9d2e67c5,
         typeUpdateNewAuthorization = 0x8f06529a,
-        typeUpdateNewGeoChatMessage = 0x5a68e3f7,
         typeUpdateNewEncryptedMessage = 0x12bcbd9a,
         typeUpdateEncryptedChatTyping = 0x1710f156,
         typeUpdateEncryption = 0xb4a2e88d,
         typeUpdateEncryptedMessagesRead = 0x38fe25b7,
-        typeUpdateChatParticipantAdd = 0x3a0eeb22,
+        typeUpdateChatParticipantAdd = 0xea4b0e5c,
         typeUpdateChatParticipantDelete = 0x6e5f8c22,
         typeUpdateDcOptions = 0x8e5e9873,
         typeUpdateUserBlocked = 0x80ece81a,
@@ -58,12 +60,27 @@ public:
         typeUpdateUserPhone = 0x12b9417b,
         typeUpdateReadHistoryInbox = 0x9961fd5c,
         typeUpdateReadHistoryOutbox = 0x2f2f21bf,
-        typeUpdateWebPage = 0x2cc36971,
-        typeUpdateReadMessagesContents = 0x68c13933
+        typeUpdateWebPage = 0x7f891213,
+        typeUpdateReadMessagesContents = 0x68c13933,
+        typeUpdateChannelTooLong = 0x60946422,
+        typeUpdateChannel = 0xb6d45656,
+        typeUpdateChannelGroup = 0xc36c1e3c,
+        typeUpdateNewChannelMessage = 0x62ba04d9,
+        typeUpdateReadChannelInbox = 0x4214f37f,
+        typeUpdateDeleteChannelMessages = 0xc37521c9,
+        typeUpdateChannelMessageViews = 0x98a12b4b,
+        typeUpdateChatAdmins = 0x6e947941,
+        typeUpdateChatParticipantAdmin = 0xb6901959,
+        typeUpdateNewStickerSet = 0x688a30aa,
+        typeUpdateStickerSetsOrder = 0xf0dfb451,
+        typeUpdateStickerSets = 0x43ae3dec,
+        typeUpdateSavedGifs = 0x9375341e,
+        typeUpdateBotInlineQuery = 0xc01eea08
     };
 
     Update(UpdateType classType = typeUpdateNewMessage, InboundPkt *in = 0);
     Update(InboundPkt *in);
+    Update(const Null&);
     virtual ~Update();
 
     void setAction(const SendMessageAction &action);
@@ -74,6 +91,9 @@ public:
 
     void setBlocked(bool blocked);
     bool blocked() const;
+
+    void setChannelId(qint32 channelId);
+    qint32 channelId() const;
 
     void setChat(const EncryptedChat &chat);
     EncryptedChat chat() const;
@@ -90,17 +110,26 @@ public:
     void setDevice(const QString &device);
     QString device() const;
 
+    void setEnabled(bool enabled);
+    bool enabled() const;
+
     void setFirstName(const QString &firstName);
     QString firstName() const;
 
     void setForeignLink(const ContactLink &foreignLink);
     ContactLink foreignLink() const;
 
+    void setGroup(const MessageGroup &group);
+    MessageGroup group() const;
+
     void setId(qint32 id);
     qint32 id() const;
 
     void setInviterId(qint32 inviterId);
     qint32 inviterId() const;
+
+    void setIsAdmin(bool isAdmin);
+    bool isAdmin() const;
 
     void setKey(const PrivacyKey &key);
     PrivacyKey key() const;
@@ -123,9 +152,6 @@ public:
     void setMessageEncrypted(const EncryptedMessage &messageEncrypted);
     EncryptedMessage messageEncrypted() const;
 
-    void setMessageGeoChat(const GeoChatMessage &messageGeoChat);
-    GeoChatMessage messageGeoChat() const;
-
     void setMessage(const Message &message);
     Message message() const;
 
@@ -140,6 +166,12 @@ public:
 
     void setNotifySettings(const PeerNotifySettings &notifySettings);
     PeerNotifySettings notifySettings() const;
+
+    void setOffset(const QString &offset);
+    QString offset() const;
+
+    void setOrder(const QList<qint64> &order);
+    QList<qint64> order() const;
 
     void setParticipants(const ChatParticipants &participants);
     ChatParticipants participants() const;
@@ -171,6 +203,12 @@ public:
     void setQts(qint32 qts);
     qint32 qts() const;
 
+    void setQuery(const QString &query);
+    QString query() const;
+
+    void setQueryId(qint64 queryId);
+    qint64 queryId() const;
+
     void setRandomId(qint64 randomId);
     qint64 randomId() const;
 
@@ -179,6 +217,9 @@ public:
 
     void setStatus(const UserStatus &status);
     UserStatus status() const;
+
+    void setStickerset(const MessagesStickerSet &stickerset);
+    MessagesStickerSet stickerset() const;
 
     void setType(const QString &type);
     QString type() const;
@@ -192,6 +233,9 @@ public:
     void setVersion(qint32 version);
     qint32 version() const;
 
+    void setViews(qint32 views);
+    qint32 views() const;
+
     void setWebpage(const WebPage &webpage);
     WebPage webpage() const;
 
@@ -201,21 +245,28 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const Update &b);
+    bool operator ==(const Update &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     SendMessageAction m_action;
     qint64 m_authKeyId;
     bool m_blocked;
+    qint32 m_channelId;
     EncryptedChat m_chat;
     qint32 m_chatId;
     qint32 m_date;
     QList<DcOption> m_dcOptions;
     QString m_device;
+    bool m_enabled;
     QString m_firstName;
     ContactLink m_foreignLink;
+    MessageGroup m_group;
     qint32 m_id;
     qint32 m_inviterId;
+    bool m_isAdmin;
     PrivacyKey m_key;
     QString m_lastName;
     QString m_location;
@@ -223,12 +274,13 @@ private:
     qint32 m_maxId;
     MessageMedia m_media;
     EncryptedMessage m_messageEncrypted;
-    GeoChatMessage m_messageGeoChat;
     Message m_message;
     QString m_messageString;
     QList<qint32> m_messages;
     ContactLink m_myLink;
     PeerNotifySettings m_notifySettings;
+    QString m_offset;
+    QList<qint64> m_order;
     ChatParticipants m_participants;
     NotifyPeer m_peerNotify;
     Peer m_peer;
@@ -239,15 +291,21 @@ private:
     qint32 m_pts;
     qint32 m_ptsCount;
     qint32 m_qts;
+    QString m_query;
+    qint64 m_queryId;
     qint64 m_randomId;
     QList<PrivacyRule> m_rules;
     UserStatus m_status;
+    MessagesStickerSet m_stickerset;
     QString m_type;
     qint32 m_userId;
     QString m_username;
     qint32 m_version;
+    qint32 m_views;
     WebPage m_webpage;
     UpdateType m_classType;
 };
+
+Q_DECLARE_METATYPE(Update)
 
 #endif // LQTG_TYPE_UPDATE

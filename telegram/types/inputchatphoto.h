@@ -6,6 +6,8 @@
 #define LQTG_TYPE_INPUTCHATPHOTO
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include "inputphotocrop.h"
 #include "inputfile.h"
 #include "inputphoto.h"
@@ -21,6 +23,7 @@ public:
 
     InputChatPhoto(InputChatPhotoType classType = typeInputChatPhotoEmpty, InboundPkt *in = 0);
     InputChatPhoto(InboundPkt *in);
+    InputChatPhoto(const Null&);
     virtual ~InputChatPhoto();
 
     void setCrop(const InputPhotoCrop &crop);
@@ -38,7 +41,10 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const InputChatPhoto &b);
+    bool operator ==(const InputChatPhoto &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     InputPhotoCrop m_crop;
@@ -46,5 +52,7 @@ private:
     InputPhoto m_id;
     InputChatPhotoType m_classType;
 };
+
+Q_DECLARE_METATYPE(InputChatPhoto)
 
 #endif // LQTG_TYPE_INPUTCHATPHOTO

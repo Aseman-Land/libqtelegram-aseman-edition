@@ -6,8 +6,11 @@
 #define LQTG_TYPE_MESSAGESMESSAGES
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QList>
 #include "chat.h"
+#include "messagegroup.h"
 #include <QtGlobal>
 #include "message.h"
 #include "user.h"
@@ -17,21 +20,32 @@ class LIBQTELEGRAMSHARED_EXPORT MessagesMessages : public TelegramTypeObject
 public:
     enum MessagesMessagesType {
         typeMessagesMessages = 0x8c718e87,
-        typeMessagesMessagesSlice = 0xb446ae3
+        typeMessagesMessagesSlice = 0xb446ae3,
+        typeMessagesChannelMessages = 0xbc0f17bc
     };
 
     MessagesMessages(MessagesMessagesType classType = typeMessagesMessages, InboundPkt *in = 0);
     MessagesMessages(InboundPkt *in);
+    MessagesMessages(const Null&);
     virtual ~MessagesMessages();
 
     void setChats(const QList<Chat> &chats);
     QList<Chat> chats() const;
 
+    void setCollapsed(const QList<MessageGroup> &collapsed);
+    QList<MessageGroup> collapsed() const;
+
     void setCount(qint32 count);
     qint32 count() const;
 
+    void setFlags(qint32 flags);
+    qint32 flags() const;
+
     void setMessages(const QList<Message> &messages);
     QList<Message> messages() const;
+
+    void setPts(qint32 pts);
+    qint32 pts() const;
 
     void setUsers(const QList<User> &users);
     QList<User> users() const;
@@ -42,14 +56,22 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const MessagesMessages &b);
+    bool operator ==(const MessagesMessages &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     QList<Chat> m_chats;
+    QList<MessageGroup> m_collapsed;
     qint32 m_count;
+    qint32 m_flags;
     QList<Message> m_messages;
+    qint32 m_pts;
     QList<User> m_users;
     MessagesMessagesType m_classType;
 };
+
+Q_DECLARE_METATYPE(MessagesMessages)
 
 #endif // LQTG_TYPE_MESSAGESMESSAGES

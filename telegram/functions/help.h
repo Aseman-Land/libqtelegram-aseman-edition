@@ -14,6 +14,8 @@
 #include "telegram/types/inputappevent.h"
 #include "telegram/types/helpinvitetext.h"
 #include "telegram/types/helpsupport.h"
+#include "telegram/types/helpappchangelog.h"
+#include "telegram/types/helptermsofservice.h"
 
 namespace Tg {
 namespace Functions {
@@ -27,7 +29,9 @@ public:
         fncHelpGetAppUpdate = 0xc812ac7e,
         fncHelpSaveAppLog = 0x6f02f748,
         fncHelpGetInviteText = 0xa4a95186,
-        fncHelpGetSupport = 0x9cdf08cd
+        fncHelpGetSupport = 0x9cdf08cd,
+        fncHelpGetAppChangelog = 0x5bab7fb2,
+        fncHelpGetTermsOfService = 0x37d78f83
     };
 
     Help();
@@ -50,6 +54,12 @@ public:
 
     static bool getSupport(OutboundPkt *out);
     static HelpSupport getSupportResult(InboundPkt *in);
+
+    static bool getAppChangelog(OutboundPkt *out, const QString &deviceModel, const QString &systemVersion, const QString &appVersion, const QString &langCode);
+    static HelpAppChangelog getAppChangelogResult(InboundPkt *in);
+
+    static bool getTermsOfService(OutboundPkt *out, const QString &langCode);
+    static HelpTermsOfService getTermsOfServiceResult(InboundPkt *in);
 
 };
 

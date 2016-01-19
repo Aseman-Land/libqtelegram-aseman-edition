@@ -25,6 +25,15 @@ InputMedia::InputMedia(InboundPkt *in) :
     fetch(in);
 }
 
+InputMedia::InputMedia(const Null &null) :
+    TelegramTypeObject(null),
+    m_duration(0),
+    m_h(0),
+    m_w(0),
+    m_classType(typeInputMediaEmpty)
+{
+}
+
 InputMedia::~InputMedia() {
 }
 
@@ -156,6 +165,14 @@ QString InputMedia::provider() const {
     return m_provider;
 }
 
+void InputMedia::setQ(const QString &q) {
+    m_q = q;
+}
+
+QString InputMedia::q() const {
+    return m_q;
+}
+
 void InputMedia::setThumb(const InputFile &thumb) {
     m_thumb = thumb;
 }
@@ -170,6 +187,14 @@ void InputMedia::setTitle(const QString &title) {
 
 QString InputMedia::title() const {
     return m_title;
+}
+
+void InputMedia::setUrl(const QString &url) {
+    m_url = url;
+}
+
+QString InputMedia::url() const {
+    return m_url;
 }
 
 void InputMedia::setVenueId(const QString &venueId) {
@@ -188,8 +213,9 @@ qint32 InputMedia::w() const {
     return m_w;
 }
 
-bool InputMedia::operator ==(const InputMedia &b) {
-    return m_address == b.m_address &&
+bool InputMedia::operator ==(const InputMedia &b) const {
+    return m_classType == b.m_classType &&
+           m_address == b.m_address &&
            m_attributes == b.m_attributes &&
            m_caption == b.m_caption &&
            m_duration == b.m_duration &&
@@ -205,8 +231,10 @@ bool InputMedia::operator ==(const InputMedia &b) {
            m_mimeType == b.m_mimeType &&
            m_phoneNumber == b.m_phoneNumber &&
            m_provider == b.m_provider &&
+           m_q == b.m_q &&
            m_thumb == b.m_thumb &&
            m_title == b.m_title &&
+           m_url == b.m_url &&
            m_venueId == b.m_venueId &&
            m_w == b.m_w;
 }
@@ -266,6 +294,7 @@ bool InputMedia::fetch(InboundPkt *in) {
         m_duration = in->fetchInt();
         m_w = in->fetchInt();
         m_h = in->fetchInt();
+        m_mimeType = in->fetchQString();
         m_caption = in->fetchQString();
         m_classType = static_cast<InputMediaType>(x);
         return true;
@@ -278,6 +307,7 @@ bool InputMedia::fetch(InboundPkt *in) {
         m_duration = in->fetchInt();
         m_w = in->fetchInt();
         m_h = in->fetchInt();
+        m_mimeType = in->fetchQString();
         m_caption = in->fetchQString();
         m_classType = static_cast<InputMediaType>(x);
         return true;
@@ -319,6 +349,7 @@ bool InputMedia::fetch(InboundPkt *in) {
             type.fetch(in);
             m_attributes.append(type);
         }
+        m_caption = in->fetchQString();
         m_classType = static_cast<InputMediaType>(x);
         return true;
     }
@@ -336,6 +367,7 @@ bool InputMedia::fetch(InboundPkt *in) {
             type.fetch(in);
             m_attributes.append(type);
         }
+        m_caption = in->fetchQString();
         m_classType = static_cast<InputMediaType>(x);
         return true;
     }
@@ -343,6 +375,7 @@ bool InputMedia::fetch(InboundPkt *in) {
     
     case typeInputMediaDocument: {
         m_idInputDocument.fetch(in);
+        m_caption = in->fetchQString();
         m_classType = static_cast<InputMediaType>(x);
         return true;
     }
@@ -354,6 +387,14 @@ bool InputMedia::fetch(InboundPkt *in) {
         m_address = in->fetchQString();
         m_provider = in->fetchQString();
         m_venueId = in->fetchQString();
+        m_classType = static_cast<InputMediaType>(x);
+        return true;
+    }
+        break;
+    
+    case typeInputMediaGifExternal: {
+        m_url = in->fetchQString();
+        m_q = in->fetchQString();
         m_classType = static_cast<InputMediaType>(x);
         return true;
     }
@@ -406,6 +447,7 @@ bool InputMedia::push(OutboundPkt *out) const {
         out->appendInt(m_duration);
         out->appendInt(m_w);
         out->appendInt(m_h);
+        out->appendQString(m_mimeType);
         out->appendQString(m_caption);
         return true;
     }
@@ -417,6 +459,7 @@ bool InputMedia::push(OutboundPkt *out) const {
         out->appendInt(m_duration);
         out->appendInt(m_w);
         out->appendInt(m_h);
+        out->appendQString(m_mimeType);
         out->appendQString(m_caption);
         return true;
     }
@@ -451,6 +494,7 @@ bool InputMedia::push(OutboundPkt *out) const {
         for (qint32 i = 0; i < m_attributes.count(); i++) {
             m_attributes[i].push(out);
         }
+        out->appendQString(m_caption);
         return true;
     }
         break;
@@ -464,12 +508,14 @@ bool InputMedia::push(OutboundPkt *out) const {
         for (qint32 i = 0; i < m_attributes.count(); i++) {
             m_attributes[i].push(out);
         }
+        out->appendQString(m_caption);
         return true;
     }
         break;
     
     case typeInputMediaDocument: {
         m_idInputDocument.push(out);
+        out->appendQString(m_caption);
         return true;
     }
         break;
@@ -480,6 +526,13 @@ bool InputMedia::push(OutboundPkt *out) const {
         out->appendQString(m_address);
         out->appendQString(m_provider);
         out->appendQString(m_venueId);
+        return true;
+    }
+        break;
+    
+    case typeInputMediaGifExternal: {
+        out->appendQString(m_url);
+        out->appendQString(m_q);
         return true;
     }
         break;

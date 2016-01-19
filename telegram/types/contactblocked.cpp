@@ -23,6 +23,14 @@ ContactBlocked::ContactBlocked(InboundPkt *in) :
     fetch(in);
 }
 
+ContactBlocked::ContactBlocked(const Null &null) :
+    TelegramTypeObject(null),
+    m_date(0),
+    m_userId(0),
+    m_classType(typeContactBlocked)
+{
+}
+
 ContactBlocked::~ContactBlocked() {
 }
 
@@ -42,8 +50,9 @@ qint32 ContactBlocked::userId() const {
     return m_userId;
 }
 
-bool ContactBlocked::operator ==(const ContactBlocked &b) {
-    return m_date == b.m_date &&
+bool ContactBlocked::operator ==(const ContactBlocked &b) const {
+    return m_classType == b.m_classType &&
+           m_date == b.m_date &&
            m_userId == b.m_userId;
 }
 

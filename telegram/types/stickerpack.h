@@ -6,6 +6,8 @@
 #define LQTG_TYPE_STICKERPACK
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QList>
 #include <QtGlobal>
 #include <QString>
@@ -19,6 +21,7 @@ public:
 
     StickerPack(StickerPackType classType = typeStickerPack, InboundPkt *in = 0);
     StickerPack(InboundPkt *in);
+    StickerPack(const Null&);
     virtual ~StickerPack();
 
     void setDocuments(const QList<qint64> &documents);
@@ -33,12 +36,17 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const StickerPack &b);
+    bool operator ==(const StickerPack &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     QList<qint64> m_documents;
     QString m_emoticon;
     StickerPackType m_classType;
 };
+
+Q_DECLARE_METATYPE(StickerPack)
 
 #endif // LQTG_TYPE_STICKERPACK

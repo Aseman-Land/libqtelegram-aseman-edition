@@ -23,6 +23,14 @@ Contact::Contact(InboundPkt *in) :
     fetch(in);
 }
 
+Contact::Contact(const Null &null) :
+    TelegramTypeObject(null),
+    m_mutual(false),
+    m_userId(0),
+    m_classType(typeContact)
+{
+}
+
 Contact::~Contact() {
 }
 
@@ -42,8 +50,9 @@ qint32 Contact::userId() const {
     return m_userId;
 }
 
-bool Contact::operator ==(const Contact &b) {
-    return m_mutual == b.m_mutual &&
+bool Contact::operator ==(const Contact &b) const {
+    return m_classType == b.m_classType &&
+           m_mutual == b.m_mutual &&
            m_userId == b.m_userId;
 }
 

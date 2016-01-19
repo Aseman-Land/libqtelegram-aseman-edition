@@ -8,6 +8,7 @@
 #include "../coretypes.h"
 
 DcOption::DcOption(DcOptionType classType, InboundPkt *in) :
+    m_flags(0),
     m_id(0),
     m_port(0),
     m_classType(classType)
@@ -16,6 +17,7 @@ DcOption::DcOption(DcOptionType classType, InboundPkt *in) :
 }
 
 DcOption::DcOption(InboundPkt *in) :
+    m_flags(0),
     m_id(0),
     m_port(0),
     m_classType(typeDcOption)
@@ -23,15 +25,24 @@ DcOption::DcOption(InboundPkt *in) :
     fetch(in);
 }
 
+DcOption::DcOption(const Null &null) :
+    TelegramTypeObject(null),
+    m_flags(0),
+    m_id(0),
+    m_port(0),
+    m_classType(typeDcOption)
+{
+}
+
 DcOption::~DcOption() {
 }
 
-void DcOption::setHostname(const QString &hostname) {
-    m_hostname = hostname;
+void DcOption::setFlags(qint32 flags) {
+    m_flags = flags;
 }
 
-QString DcOption::hostname() const {
-    return m_hostname;
+qint32 DcOption::flags() const {
+    return m_flags;
 }
 
 void DcOption::setId(qint32 id) {
@@ -50,6 +61,24 @@ QString DcOption::ipAddress() const {
     return m_ipAddress;
 }
 
+void DcOption::setIpv6(bool ipv6) {
+    if(ipv6) m_flags = (m_flags | (1<<0));
+    else m_flags = (m_flags & ~(1<<0));
+}
+
+bool DcOption::ipv6() const {
+    return (m_flags & 1<<0);
+}
+
+void DcOption::setMediaOnly(bool mediaOnly) {
+    if(mediaOnly) m_flags = (m_flags | (1<<1));
+    else m_flags = (m_flags & ~(1<<1));
+}
+
+bool DcOption::mediaOnly() const {
+    return (m_flags & 1<<1);
+}
+
 void DcOption::setPort(qint32 port) {
     m_port = port;
 }
@@ -58,8 +87,9 @@ qint32 DcOption::port() const {
     return m_port;
 }
 
-bool DcOption::operator ==(const DcOption &b) {
-    return m_hostname == b.m_hostname &&
+bool DcOption::operator ==(const DcOption &b) const {
+    return m_classType == b.m_classType &&
+           m_flags == b.m_flags &&
            m_id == b.m_id &&
            m_ipAddress == b.m_ipAddress &&
            m_port == b.m_port;
@@ -78,8 +108,8 @@ bool DcOption::fetch(InboundPkt *in) {
     int x = in->fetchInt();
     switch(x) {
     case typeDcOption: {
+        m_flags = in->fetchInt();
         m_id = in->fetchInt();
-        m_hostname = in->fetchQString();
         m_ipAddress = in->fetchQString();
         m_port = in->fetchInt();
         m_classType = static_cast<DcOptionType>(x);
@@ -97,8 +127,8 @@ bool DcOption::push(OutboundPkt *out) const {
     out->appendInt(m_classType);
     switch(m_classType) {
     case typeDcOption: {
+        out->appendInt(m_flags);
         out->appendInt(m_id);
-        out->appendQString(m_hostname);
         out->appendQString(m_ipAddress);
         out->appendInt(m_port);
         return true;

@@ -6,6 +6,8 @@
 #define LQTG_TYPE_INPUTPRIVACYRULE
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QList>
 #include "inputuser.h"
 
@@ -23,6 +25,7 @@ public:
 
     InputPrivacyRule(InputPrivacyRuleType classType = typeInputPrivacyValueAllowContacts, InboundPkt *in = 0);
     InputPrivacyRule(InboundPkt *in);
+    InputPrivacyRule(const Null&);
     virtual ~InputPrivacyRule();
 
     void setUsers(const QList<InputUser> &users);
@@ -34,11 +37,16 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const InputPrivacyRule &b);
+    bool operator ==(const InputPrivacyRule &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     QList<InputUser> m_users;
     InputPrivacyRuleType m_classType;
 };
+
+Q_DECLARE_METATYPE(InputPrivacyRule)
 
 #endif // LQTG_TYPE_INPUTPRIVACYRULE

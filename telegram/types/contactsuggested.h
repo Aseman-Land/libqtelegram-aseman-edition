@@ -6,6 +6,8 @@
 #define LQTG_TYPE_CONTACTSUGGESTED
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QtGlobal>
 
 class LIBQTELEGRAMSHARED_EXPORT ContactSuggested : public TelegramTypeObject
@@ -17,6 +19,7 @@ public:
 
     ContactSuggested(ContactSuggestedType classType = typeContactSuggested, InboundPkt *in = 0);
     ContactSuggested(InboundPkt *in);
+    ContactSuggested(const Null&);
     virtual ~ContactSuggested();
 
     void setMutualContacts(qint32 mutualContacts);
@@ -31,12 +34,17 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const ContactSuggested &b);
+    bool operator ==(const ContactSuggested &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     qint32 m_mutualContacts;
     qint32 m_userId;
     ContactSuggestedType m_classType;
 };
+
+Q_DECLARE_METATYPE(ContactSuggested)
 
 #endif // LQTG_TYPE_CONTACTSUGGESTED

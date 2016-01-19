@@ -6,6 +6,8 @@
 #define LQTG_TYPE_CONTACTBLOCKED
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QtGlobal>
 
 class LIBQTELEGRAMSHARED_EXPORT ContactBlocked : public TelegramTypeObject
@@ -17,6 +19,7 @@ public:
 
     ContactBlocked(ContactBlockedType classType = typeContactBlocked, InboundPkt *in = 0);
     ContactBlocked(InboundPkt *in);
+    ContactBlocked(const Null&);
     virtual ~ContactBlocked();
 
     void setDate(qint32 date);
@@ -31,12 +34,17 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const ContactBlocked &b);
+    bool operator ==(const ContactBlocked &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     qint32 m_date;
     qint32 m_userId;
     ContactBlockedType m_classType;
 };
+
+Q_DECLARE_METATYPE(ContactBlocked)
 
 #endif // LQTG_TYPE_CONTACTBLOCKED

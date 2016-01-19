@@ -25,6 +25,15 @@ WallPaper::WallPaper(InboundPkt *in) :
     fetch(in);
 }
 
+WallPaper::WallPaper(const Null &null) :
+    TelegramTypeObject(null),
+    m_bgColor(0),
+    m_color(0),
+    m_id(0),
+    m_classType(typeWallPaper)
+{
+}
+
 WallPaper::~WallPaper() {
 }
 
@@ -68,8 +77,9 @@ QString WallPaper::title() const {
     return m_title;
 }
 
-bool WallPaper::operator ==(const WallPaper &b) {
-    return m_bgColor == b.m_bgColor &&
+bool WallPaper::operator ==(const WallPaper &b) const {
+    return m_classType == b.m_classType &&
+           m_bgColor == b.m_bgColor &&
            m_color == b.m_color &&
            m_id == b.m_id &&
            m_sizes == b.m_sizes &&

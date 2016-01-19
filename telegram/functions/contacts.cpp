@@ -192,8 +192,8 @@ bool Functions::Contacts::resolveUsername(OutboundPkt *out, const QString &usern
     return true;
 }
 
-User Functions::Contacts::resolveUsernameResult(InboundPkt *in) {
-    User result;
+ContactsResolvedPeer Functions::Contacts::resolveUsernameResult(InboundPkt *in) {
+    ContactsResolvedPeer result;
     if(!result.fetch(in)) return result;
     return result;
 }

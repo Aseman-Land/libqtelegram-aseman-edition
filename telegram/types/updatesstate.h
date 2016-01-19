@@ -6,6 +6,8 @@
 #define LQTG_TYPE_UPDATESSTATE
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QtGlobal>
 
 class LIBQTELEGRAMSHARED_EXPORT UpdatesState : public TelegramTypeObject
@@ -17,6 +19,7 @@ public:
 
     UpdatesState(UpdatesStateType classType = typeUpdatesState, InboundPkt *in = 0);
     UpdatesState(InboundPkt *in);
+    UpdatesState(const Null&);
     virtual ~UpdatesState();
 
     void setDate(qint32 date);
@@ -40,7 +43,10 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const UpdatesState &b);
+    bool operator ==(const UpdatesState &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     qint32 m_date;
@@ -50,5 +56,7 @@ private:
     qint32 m_unreadCount;
     UpdatesStateType m_classType;
 };
+
+Q_DECLARE_METATYPE(UpdatesState)
 
 #endif // LQTG_TYPE_UPDATESSTATE

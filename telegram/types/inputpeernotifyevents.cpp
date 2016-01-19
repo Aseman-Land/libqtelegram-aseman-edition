@@ -19,12 +19,17 @@ InputPeerNotifyEvents::InputPeerNotifyEvents(InboundPkt *in) :
     fetch(in);
 }
 
+InputPeerNotifyEvents::InputPeerNotifyEvents(const Null &null) :
+    TelegramTypeObject(null),
+    m_classType(typeInputPeerNotifyEventsEmpty)
+{
+}
+
 InputPeerNotifyEvents::~InputPeerNotifyEvents() {
 }
 
-bool InputPeerNotifyEvents::operator ==(const InputPeerNotifyEvents &b) {
-    Q_UNUSED(b);
-    return true;
+bool InputPeerNotifyEvents::operator ==(const InputPeerNotifyEvents &b) const {
+    return m_classType == b.m_classType;
 }
 
 void InputPeerNotifyEvents::setClassType(InputPeerNotifyEvents::InputPeerNotifyEventsType classType) {

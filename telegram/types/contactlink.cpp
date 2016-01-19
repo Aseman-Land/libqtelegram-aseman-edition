@@ -19,12 +19,17 @@ ContactLink::ContactLink(InboundPkt *in) :
     fetch(in);
 }
 
+ContactLink::ContactLink(const Null &null) :
+    TelegramTypeObject(null),
+    m_classType(typeContactLinkUnknown)
+{
+}
+
 ContactLink::~ContactLink() {
 }
 
-bool ContactLink::operator ==(const ContactLink &b) {
-    Q_UNUSED(b);
-    return true;
+bool ContactLink::operator ==(const ContactLink &b) const {
+    return m_classType == b.m_classType;
 }
 
 void ContactLink::setClassType(ContactLink::ContactLinkType classType) {

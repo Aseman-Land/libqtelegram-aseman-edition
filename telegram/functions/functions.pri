@@ -8,8 +8,8 @@ HEADERS += \
     $$PWD/telegramfunctionobject.h \
     $$PWD/account.h \
     $$PWD/auth.h \
+    $$PWD/channels.h \
     $$PWD/contacts.h \
-    $$PWD/geochats.h \
     $$PWD/help.h \
     $$PWD/messages.h \
     $$PWD/photos.h \
@@ -21,8 +21,8 @@ SOURCES += \
     $$PWD/telegramfunctionobject.cpp \
     $$PWD/account.cpp \
     $$PWD/auth.cpp \
+    $$PWD/channels.cpp \
     $$PWD/contacts.cpp \
-    $$PWD/geochats.cpp \
     $$PWD/help.cpp \
     $$PWD/messages.cpp \
     $$PWD/photos.cpp \

@@ -7,6 +7,8 @@
 
 #include "telegramtypeobject.h"
 
+#include <QMetaType>
+
 class LIBQTELEGRAMSHARED_EXPORT PeerNotifyEvents : public TelegramTypeObject
 {
 public:
@@ -17,6 +19,7 @@ public:
 
     PeerNotifyEvents(PeerNotifyEventsType classType = typePeerNotifyEventsEmpty, InboundPkt *in = 0);
     PeerNotifyEvents(InboundPkt *in);
+    PeerNotifyEvents(const Null&);
     virtual ~PeerNotifyEvents();
 
     void setClassType(PeerNotifyEventsType classType);
@@ -25,10 +28,15 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const PeerNotifyEvents &b);
+    bool operator ==(const PeerNotifyEvents &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     PeerNotifyEventsType m_classType;
 };
+
+Q_DECLARE_METATYPE(PeerNotifyEvents)
 
 #endif // LQTG_TYPE_PEERNOTIFYEVENTS

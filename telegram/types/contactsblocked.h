@@ -6,6 +6,8 @@
 #define LQTG_TYPE_CONTACTSBLOCKED
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QList>
 #include "contactblocked.h"
 #include <QtGlobal>
@@ -21,6 +23,7 @@ public:
 
     ContactsBlocked(ContactsBlockedType classType = typeContactsBlocked, InboundPkt *in = 0);
     ContactsBlocked(InboundPkt *in);
+    ContactsBlocked(const Null&);
     virtual ~ContactsBlocked();
 
     void setBlocked(const QList<ContactBlocked> &blocked);
@@ -38,7 +41,10 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const ContactsBlocked &b);
+    bool operator ==(const ContactsBlocked &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     QList<ContactBlocked> m_blocked;
@@ -46,5 +52,7 @@ private:
     QList<User> m_users;
     ContactsBlockedType m_classType;
 };
+
+Q_DECLARE_METATYPE(ContactsBlocked)
 
 #endif // LQTG_TYPE_CONTACTSBLOCKED

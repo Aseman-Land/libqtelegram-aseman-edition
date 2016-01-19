@@ -19,6 +19,12 @@ ContactsContacts::ContactsContacts(InboundPkt *in) :
     fetch(in);
 }
 
+ContactsContacts::ContactsContacts(const Null &null) :
+    TelegramTypeObject(null),
+    m_classType(typeContactsContactsNotModified)
+{
+}
+
 ContactsContacts::~ContactsContacts() {
 }
 
@@ -38,8 +44,9 @@ QList<User> ContactsContacts::users() const {
     return m_users;
 }
 
-bool ContactsContacts::operator ==(const ContactsContacts &b) {
-    return m_contacts == b.m_contacts &&
+bool ContactsContacts::operator ==(const ContactsContacts &b) const {
+    return m_classType == b.m_classType &&
+           m_contacts == b.m_contacts &&
            m_users == b.m_users;
 }
 

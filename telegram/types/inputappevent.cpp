@@ -23,6 +23,14 @@ InputAppEvent::InputAppEvent(InboundPkt *in) :
     fetch(in);
 }
 
+InputAppEvent::InputAppEvent(const Null &null) :
+    TelegramTypeObject(null),
+    m_peer(0),
+    m_time(0),
+    m_classType(typeInputAppEvent)
+{
+}
+
 InputAppEvent::~InputAppEvent() {
 }
 
@@ -58,8 +66,9 @@ QString InputAppEvent::type() const {
     return m_type;
 }
 
-bool InputAppEvent::operator ==(const InputAppEvent &b) {
-    return m_data == b.m_data &&
+bool InputAppEvent::operator ==(const InputAppEvent &b) const {
+    return m_classType == b.m_classType &&
+           m_data == b.m_data &&
            m_peer == b.m_peer &&
            m_time == b.m_time &&
            m_type == b.m_type;

@@ -25,6 +25,15 @@ PhotoSize::PhotoSize(InboundPkt *in) :
     fetch(in);
 }
 
+PhotoSize::PhotoSize(const Null &null) :
+    TelegramTypeObject(null),
+    m_h(0),
+    m_size(0),
+    m_w(0),
+    m_classType(typePhotoSizeEmpty)
+{
+}
+
 PhotoSize::~PhotoSize() {
 }
 
@@ -76,8 +85,9 @@ qint32 PhotoSize::w() const {
     return m_w;
 }
 
-bool PhotoSize::operator ==(const PhotoSize &b) {
-    return m_bytes == b.m_bytes &&
+bool PhotoSize::operator ==(const PhotoSize &b) const {
+    return m_classType == b.m_classType &&
+           m_bytes == b.m_bytes &&
            m_h == b.m_h &&
            m_location == b.m_location &&
            m_size == b.m_size &&

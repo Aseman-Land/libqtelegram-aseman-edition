@@ -6,6 +6,8 @@
 #define LQTG_TYPE_INPUTPHOTOCROP
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QtGlobal>
 
 class LIBQTELEGRAMSHARED_EXPORT InputPhotoCrop : public TelegramTypeObject
@@ -18,6 +20,7 @@ public:
 
     InputPhotoCrop(InputPhotoCropType classType = typeInputPhotoCropAuto, InboundPkt *in = 0);
     InputPhotoCrop(InboundPkt *in);
+    InputPhotoCrop(const Null&);
     virtual ~InputPhotoCrop();
 
     void setCropLeft(qreal cropLeft);
@@ -35,7 +38,10 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const InputPhotoCrop &b);
+    bool operator ==(const InputPhotoCrop &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     qreal m_cropLeft;
@@ -43,5 +49,7 @@ private:
     qreal m_cropWidth;
     InputPhotoCropType m_classType;
 };
+
+Q_DECLARE_METATYPE(InputPhotoCrop)
 
 #endif // LQTG_TYPE_INPUTPHOTOCROP

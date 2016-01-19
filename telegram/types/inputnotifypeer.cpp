@@ -19,28 +19,26 @@ InputNotifyPeer::InputNotifyPeer(InboundPkt *in) :
     fetch(in);
 }
 
+InputNotifyPeer::InputNotifyPeer(const Null &null) :
+    TelegramTypeObject(null),
+    m_classType(typeInputNotifyPeer)
+{
+}
+
 InputNotifyPeer::~InputNotifyPeer() {
 }
 
-void InputNotifyPeer::setPeerInputGeoChat(const InputGeoChat &peerInputGeoChat) {
-    m_peerInputGeoChat = peerInputGeoChat;
+void InputNotifyPeer::setPeer(const InputPeer &peer) {
+    m_peer = peer;
 }
 
-InputGeoChat InputNotifyPeer::peerInputGeoChat() const {
-    return m_peerInputGeoChat;
+InputPeer InputNotifyPeer::peer() const {
+    return m_peer;
 }
 
-void InputNotifyPeer::setPeerInput(const InputPeer &peerInput) {
-    m_peerInput = peerInput;
-}
-
-InputPeer InputNotifyPeer::peerInput() const {
-    return m_peerInput;
-}
-
-bool InputNotifyPeer::operator ==(const InputNotifyPeer &b) {
-    return m_peerInputGeoChat == b.m_peerInputGeoChat &&
-           m_peerInput == b.m_peerInput;
+bool InputNotifyPeer::operator ==(const InputNotifyPeer &b) const {
+    return m_classType == b.m_classType &&
+           m_peer == b.m_peer;
 }
 
 void InputNotifyPeer::setClassType(InputNotifyPeer::InputNotifyPeerType classType) {
@@ -56,7 +54,7 @@ bool InputNotifyPeer::fetch(InboundPkt *in) {
     int x = in->fetchInt();
     switch(x) {
     case typeInputNotifyPeer: {
-        m_peerInput.fetch(in);
+        m_peer.fetch(in);
         m_classType = static_cast<InputNotifyPeerType>(x);
         return true;
     }
@@ -75,13 +73,6 @@ bool InputNotifyPeer::fetch(InboundPkt *in) {
         break;
     
     case typeInputNotifyAll: {
-        m_classType = static_cast<InputNotifyPeerType>(x);
-        return true;
-    }
-        break;
-    
-    case typeInputNotifyGeoChatPeer: {
-        m_peerInputGeoChat.fetch(in);
         m_classType = static_cast<InputNotifyPeerType>(x);
         return true;
     }
@@ -97,7 +88,7 @@ bool InputNotifyPeer::push(OutboundPkt *out) const {
     out->appendInt(m_classType);
     switch(m_classType) {
     case typeInputNotifyPeer: {
-        m_peerInput.push(out);
+        m_peer.push(out);
         return true;
     }
         break;
@@ -113,12 +104,6 @@ bool InputNotifyPeer::push(OutboundPkt *out) const {
         break;
     
     case typeInputNotifyAll: {
-        return true;
-    }
-        break;
-    
-    case typeInputNotifyGeoChatPeer: {
-        m_peerInputGeoChat.push(out);
         return true;
     }
         break;

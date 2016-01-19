@@ -6,6 +6,8 @@
 #define LQTG_TYPE_ACCOUNTDAYSTTL
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QtGlobal>
 
 class LIBQTELEGRAMSHARED_EXPORT AccountDaysTTL : public TelegramTypeObject
@@ -17,6 +19,7 @@ public:
 
     AccountDaysTTL(AccountDaysTTLType classType = typeAccountDaysTTL, InboundPkt *in = 0);
     AccountDaysTTL(InboundPkt *in);
+    AccountDaysTTL(const Null&);
     virtual ~AccountDaysTTL();
 
     void setDays(qint32 days);
@@ -28,11 +31,16 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const AccountDaysTTL &b);
+    bool operator ==(const AccountDaysTTL &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     qint32 m_days;
     AccountDaysTTLType m_classType;
 };
+
+Q_DECLARE_METATYPE(AccountDaysTTL)
 
 #endif // LQTG_TYPE_ACCOUNTDAYSTTL

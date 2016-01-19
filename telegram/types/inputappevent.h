@@ -6,6 +6,8 @@
 #define LQTG_TYPE_INPUTAPPEVENT
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QString>
 #include <QtGlobal>
 
@@ -18,6 +20,7 @@ public:
 
     InputAppEvent(InputAppEventType classType = typeInputAppEvent, InboundPkt *in = 0);
     InputAppEvent(InboundPkt *in);
+    InputAppEvent(const Null&);
     virtual ~InputAppEvent();
 
     void setData(const QString &data);
@@ -38,7 +41,10 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const InputAppEvent &b);
+    bool operator ==(const InputAppEvent &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     QString m_data;
@@ -47,5 +53,7 @@ private:
     QString m_type;
     InputAppEventType m_classType;
 };
+
+Q_DECLARE_METATYPE(InputAppEvent)
 
 #endif // LQTG_TYPE_INPUTAPPEVENT

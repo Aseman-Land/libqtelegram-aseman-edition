@@ -23,6 +23,14 @@ InputVideo::InputVideo(InboundPkt *in) :
     fetch(in);
 }
 
+InputVideo::InputVideo(const Null &null) :
+    TelegramTypeObject(null),
+    m_accessHash(0),
+    m_id(0),
+    m_classType(typeInputVideoEmpty)
+{
+}
+
 InputVideo::~InputVideo() {
 }
 
@@ -42,8 +50,9 @@ qint64 InputVideo::id() const {
     return m_id;
 }
 
-bool InputVideo::operator ==(const InputVideo &b) {
-    return m_accessHash == b.m_accessHash &&
+bool InputVideo::operator ==(const InputVideo &b) const {
+    return m_classType == b.m_classType &&
+           m_accessHash == b.m_accessHash &&
            m_id == b.m_id;
 }
 

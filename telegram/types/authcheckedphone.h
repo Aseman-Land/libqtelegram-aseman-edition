@@ -7,6 +7,8 @@
 
 #include "telegramtypeobject.h"
 
+#include <QMetaType>
+
 class LIBQTELEGRAMSHARED_EXPORT AuthCheckedPhone : public TelegramTypeObject
 {
 public:
@@ -16,6 +18,7 @@ public:
 
     AuthCheckedPhone(AuthCheckedPhoneType classType = typeAuthCheckedPhone, InboundPkt *in = 0);
     AuthCheckedPhone(InboundPkt *in);
+    AuthCheckedPhone(const Null&);
     virtual ~AuthCheckedPhone();
 
     void setPhoneRegistered(bool phoneRegistered);
@@ -27,11 +30,16 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const AuthCheckedPhone &b);
+    bool operator ==(const AuthCheckedPhone &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     bool m_phoneRegistered;
     AuthCheckedPhoneType m_classType;
 };
+
+Q_DECLARE_METATYPE(AuthCheckedPhone)
 
 #endif // LQTG_TYPE_AUTHCHECKEDPHONE

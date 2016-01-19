@@ -31,6 +31,18 @@ EncryptedChat::EncryptedChat(InboundPkt *in) :
     fetch(in);
 }
 
+EncryptedChat::EncryptedChat(const Null &null) :
+    TelegramTypeObject(null),
+    m_accessHash(0),
+    m_adminId(0),
+    m_date(0),
+    m_id(0),
+    m_keyFingerprint(0),
+    m_participantId(0),
+    m_classType(typeEncryptedChatEmpty)
+{
+}
+
 EncryptedChat::~EncryptedChat() {
 }
 
@@ -98,8 +110,9 @@ qint32 EncryptedChat::participantId() const {
     return m_participantId;
 }
 
-bool EncryptedChat::operator ==(const EncryptedChat &b) {
-    return m_accessHash == b.m_accessHash &&
+bool EncryptedChat::operator ==(const EncryptedChat &b) const {
+    return m_classType == b.m_classType &&
+           m_accessHash == b.m_accessHash &&
            m_adminId == b.m_adminId &&
            m_date == b.m_date &&
            m_gA == b.m_gA &&

@@ -19,6 +19,12 @@ NotifyPeer::NotifyPeer(InboundPkt *in) :
     fetch(in);
 }
 
+NotifyPeer::NotifyPeer(const Null &null) :
+    TelegramTypeObject(null),
+    m_classType(typeNotifyPeer)
+{
+}
+
 NotifyPeer::~NotifyPeer() {
 }
 
@@ -30,8 +36,9 @@ Peer NotifyPeer::peer() const {
     return m_peer;
 }
 
-bool NotifyPeer::operator ==(const NotifyPeer &b) {
-    return m_peer == b.m_peer;
+bool NotifyPeer::operator ==(const NotifyPeer &b) const {
+    return m_classType == b.m_classType &&
+           m_peer == b.m_peer;
 }
 
 void NotifyPeer::setClassType(NotifyPeer::NotifyPeerType classType) {

@@ -6,6 +6,8 @@
 #define LQTG_TYPE_INPUTDOCUMENT
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QtGlobal>
 
 class LIBQTELEGRAMSHARED_EXPORT InputDocument : public TelegramTypeObject
@@ -18,6 +20,7 @@ public:
 
     InputDocument(InputDocumentType classType = typeInputDocumentEmpty, InboundPkt *in = 0);
     InputDocument(InboundPkt *in);
+    InputDocument(const Null&);
     virtual ~InputDocument();
 
     void setAccessHash(qint64 accessHash);
@@ -32,12 +35,17 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const InputDocument &b);
+    bool operator ==(const InputDocument &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     qint64 m_accessHash;
     qint64 m_id;
     InputDocumentType m_classType;
 };
+
+Q_DECLARE_METATYPE(InputDocument)
 
 #endif // LQTG_TYPE_INPUTDOCUMENT

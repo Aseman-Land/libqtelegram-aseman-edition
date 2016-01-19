@@ -19,6 +19,12 @@ MessagesStickers::MessagesStickers(InboundPkt *in) :
     fetch(in);
 }
 
+MessagesStickers::MessagesStickers(const Null &null) :
+    TelegramTypeObject(null),
+    m_classType(typeMessagesStickersNotModified)
+{
+}
+
 MessagesStickers::~MessagesStickers() {
 }
 
@@ -38,8 +44,9 @@ QList<Document> MessagesStickers::stickers() const {
     return m_stickers;
 }
 
-bool MessagesStickers::operator ==(const MessagesStickers &b) {
-    return m_hash == b.m_hash &&
+bool MessagesStickers::operator ==(const MessagesStickers &b) const {
+    return m_classType == b.m_classType &&
+           m_hash == b.m_hash &&
            m_stickers == b.m_stickers;
 }
 

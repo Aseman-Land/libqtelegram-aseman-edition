@@ -6,6 +6,8 @@
 #define LQTG_TYPE_INPUTAUDIO
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QtGlobal>
 
 class LIBQTELEGRAMSHARED_EXPORT InputAudio : public TelegramTypeObject
@@ -18,6 +20,7 @@ public:
 
     InputAudio(InputAudioType classType = typeInputAudioEmpty, InboundPkt *in = 0);
     InputAudio(InboundPkt *in);
+    InputAudio(const Null&);
     virtual ~InputAudio();
 
     void setAccessHash(qint64 accessHash);
@@ -32,12 +35,17 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const InputAudio &b);
+    bool operator ==(const InputAudio &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     qint64 m_accessHash;
     qint64 m_id;
     InputAudioType m_classType;
 };
+
+Q_DECLARE_METATYPE(InputAudio)
 
 #endif // LQTG_TYPE_INPUTAUDIO

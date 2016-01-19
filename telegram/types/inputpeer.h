@@ -6,6 +6,8 @@
 #define LQTG_TYPE_INPUTPEER
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QtGlobal>
 
 class LIBQTELEGRAMSHARED_EXPORT InputPeer : public TelegramTypeObject
@@ -14,17 +16,21 @@ public:
     enum InputPeerType {
         typeInputPeerEmpty = 0x7f3b18ea,
         typeInputPeerSelf = 0x7da07ec9,
-        typeInputPeerContact = 0x1023dbe8,
-        typeInputPeerForeign = 0x9b447325,
-        typeInputPeerChat = 0x179be863
+        typeInputPeerChat = 0x179be863,
+        typeInputPeerUser = 0x7b8e7de6,
+        typeInputPeerChannel = 0x20adaef8
     };
 
     InputPeer(InputPeerType classType = typeInputPeerEmpty, InboundPkt *in = 0);
     InputPeer(InboundPkt *in);
+    InputPeer(const Null&);
     virtual ~InputPeer();
 
     void setAccessHash(qint64 accessHash);
     qint64 accessHash() const;
+
+    void setChannelId(qint32 channelId);
+    qint32 channelId() const;
 
     void setChatId(qint32 chatId);
     qint32 chatId() const;
@@ -38,13 +44,19 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const InputPeer &b);
+    bool operator ==(const InputPeer &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     qint64 m_accessHash;
+    qint32 m_channelId;
     qint32 m_chatId;
     qint32 m_userId;
     InputPeerType m_classType;
 };
+
+Q_DECLARE_METATYPE(InputPeer)
 
 #endif // LQTG_TYPE_INPUTPEER

@@ -6,6 +6,8 @@
 #define LQTG_TYPE_UPLOADFILE
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QByteArray>
 #include <QtGlobal>
 #include "storagefiletype.h"
@@ -19,6 +21,7 @@ public:
 
     UploadFile(UploadFileType classType = typeUploadFile, InboundPkt *in = 0);
     UploadFile(InboundPkt *in);
+    UploadFile(const Null&);
     virtual ~UploadFile();
 
     void setBytes(const QByteArray &bytes);
@@ -36,7 +39,10 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const UploadFile &b);
+    bool operator ==(const UploadFile &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     QByteArray m_bytes;
@@ -44,5 +50,7 @@ private:
     StorageFileType m_type;
     UploadFileType m_classType;
 };
+
+Q_DECLARE_METATYPE(UploadFile)
 
 #endif // LQTG_TYPE_UPLOADFILE

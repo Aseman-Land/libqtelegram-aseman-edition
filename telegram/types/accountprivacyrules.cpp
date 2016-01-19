@@ -19,6 +19,12 @@ AccountPrivacyRules::AccountPrivacyRules(InboundPkt *in) :
     fetch(in);
 }
 
+AccountPrivacyRules::AccountPrivacyRules(const Null &null) :
+    TelegramTypeObject(null),
+    m_classType(typeAccountPrivacyRules)
+{
+}
+
 AccountPrivacyRules::~AccountPrivacyRules() {
 }
 
@@ -38,8 +44,9 @@ QList<User> AccountPrivacyRules::users() const {
     return m_users;
 }
 
-bool AccountPrivacyRules::operator ==(const AccountPrivacyRules &b) {
-    return m_rules == b.m_rules &&
+bool AccountPrivacyRules::operator ==(const AccountPrivacyRules &b) const {
+    return m_classType == b.m_classType &&
+           m_rules == b.m_rules &&
            m_users == b.m_users;
 }
 

@@ -6,6 +6,8 @@
 #define LQTG_TYPE_INPUTMEDIA
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QString>
 #include <QList>
 #include "documentattribute.h"
@@ -26,19 +28,21 @@ public:
         typeInputMediaPhoto = 0xe9bfb4f3,
         typeInputMediaGeoPoint = 0xf9c44144,
         typeInputMediaContact = 0xa6e45987,
-        typeInputMediaUploadedVideo = 0xe13fd4bc,
-        typeInputMediaUploadedThumbVideo = 0x96fb97dc,
+        typeInputMediaUploadedVideo = 0x82713fdf,
+        typeInputMediaUploadedThumbVideo = 0x7780ddf9,
         typeInputMediaVideo = 0x936a4ebd,
         typeInputMediaUploadedAudio = 0x4e498cab,
         typeInputMediaAudio = 0x89938781,
-        typeInputMediaUploadedDocument = 0xffe76b78,
-        typeInputMediaUploadedThumbDocument = 0x41481486,
-        typeInputMediaDocument = 0xd184e841,
-        typeInputMediaVenue = 0x2827a81a
+        typeInputMediaUploadedDocument = 0x1d89306d,
+        typeInputMediaUploadedThumbDocument = 0xad613491,
+        typeInputMediaDocument = 0x1a77f29c,
+        typeInputMediaVenue = 0x2827a81a,
+        typeInputMediaGifExternal = 0x4843b0fd
     };
 
     InputMedia(InputMediaType classType = typeInputMediaEmpty, InboundPkt *in = 0);
     InputMedia(InboundPkt *in);
+    InputMedia(const Null&);
     virtual ~InputMedia();
 
     void setAddress(const QString &address);
@@ -89,11 +93,17 @@ public:
     void setProvider(const QString &provider);
     QString provider() const;
 
+    void setQ(const QString &q);
+    QString q() const;
+
     void setThumb(const InputFile &thumb);
     InputFile thumb() const;
 
     void setTitle(const QString &title);
     QString title() const;
+
+    void setUrl(const QString &url);
+    QString url() const;
 
     void setVenueId(const QString &venueId);
     QString venueId() const;
@@ -107,7 +117,10 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const InputMedia &b);
+    bool operator ==(const InputMedia &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     QString m_address;
@@ -126,11 +139,15 @@ private:
     QString m_mimeType;
     QString m_phoneNumber;
     QString m_provider;
+    QString m_q;
     InputFile m_thumb;
     QString m_title;
+    QString m_url;
     QString m_venueId;
     qint32 m_w;
     InputMediaType m_classType;
 };
+
+Q_DECLARE_METATYPE(InputMedia)
 
 #endif // LQTG_TYPE_INPUTMEDIA

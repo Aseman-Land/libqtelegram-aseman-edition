@@ -6,22 +6,21 @@
 #define LQTG_TYPE_AUTHAUTHORIZATION
 
 #include "telegramtypeobject.h"
-#include <QtGlobal>
+
+#include <QMetaType>
 #include "user.h"
 
 class LIBQTELEGRAMSHARED_EXPORT AuthAuthorization : public TelegramTypeObject
 {
 public:
     enum AuthAuthorizationType {
-        typeAuthAuthorization = 0xf6b673a4
+        typeAuthAuthorization = 0xff036af1
     };
 
     AuthAuthorization(AuthAuthorizationType classType = typeAuthAuthorization, InboundPkt *in = 0);
     AuthAuthorization(InboundPkt *in);
+    AuthAuthorization(const Null&);
     virtual ~AuthAuthorization();
-
-    void setExpires(qint32 expires);
-    qint32 expires() const;
 
     void setUser(const User &user);
     User user() const;
@@ -32,12 +31,16 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const AuthAuthorization &b);
+    bool operator ==(const AuthAuthorization &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
-    qint32 m_expires;
     User m_user;
     AuthAuthorizationType m_classType;
 };
+
+Q_DECLARE_METATYPE(AuthAuthorization)
 
 #endif // LQTG_TYPE_AUTHAUTHORIZATION

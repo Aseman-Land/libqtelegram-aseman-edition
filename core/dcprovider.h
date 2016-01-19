@@ -25,7 +25,7 @@
 #include <QLoggingCategory>
 #include "dc.h"
 #include "dcauth.h"
-#include "api.h"
+#include "telegram/telegramapi.h"
 
 Q_DECLARE_LOGGING_CATEGORY(TG_CORE_DCPROVIDER)
 
@@ -40,7 +40,7 @@ public:
     DC *getDc(qint32 dcNum) const;
     DC *getWorkingDc() const;
     QList<DC *> getDcs() const;
-    Api *getApi() const;
+    TelegramApi *getApi() const;
     void transferAuth();
 
 Q_SIGNALS:
@@ -69,7 +69,7 @@ private:
 
     //api instance for "internal" operations (config, getNearestDc, etc...). This object could be received
     // from outside, as parameter, when completed external public layer
-    Api *mApi;
+    TelegramApi *mApi;
 
     // counter of the dc's pending to be authenticated. When this counter is zero, all available DCs are
     // authenticated and a signal dcProviderReady() is emitted

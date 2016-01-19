@@ -6,6 +6,8 @@
 #define LQTG_TYPE_ACCOUNTSENTCHANGEPHONECODE
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QString>
 #include <QtGlobal>
 
@@ -18,6 +20,7 @@ public:
 
     AccountSentChangePhoneCode(AccountSentChangePhoneCodeType classType = typeAccountSentChangePhoneCode, InboundPkt *in = 0);
     AccountSentChangePhoneCode(InboundPkt *in);
+    AccountSentChangePhoneCode(const Null&);
     virtual ~AccountSentChangePhoneCode();
 
     void setPhoneCodeHash(const QString &phoneCodeHash);
@@ -32,12 +35,17 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const AccountSentChangePhoneCode &b);
+    bool operator ==(const AccountSentChangePhoneCode &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     QString m_phoneCodeHash;
     qint32 m_sendCallTimeout;
     AccountSentChangePhoneCodeType m_classType;
 };
+
+Q_DECLARE_METATYPE(AccountSentChangePhoneCode)
 
 #endif // LQTG_TYPE_ACCOUNTSENTCHANGEPHONECODE

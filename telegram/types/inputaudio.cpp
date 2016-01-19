@@ -23,6 +23,14 @@ InputAudio::InputAudio(InboundPkt *in) :
     fetch(in);
 }
 
+InputAudio::InputAudio(const Null &null) :
+    TelegramTypeObject(null),
+    m_accessHash(0),
+    m_id(0),
+    m_classType(typeInputAudioEmpty)
+{
+}
+
 InputAudio::~InputAudio() {
 }
 
@@ -42,8 +50,9 @@ qint64 InputAudio::id() const {
     return m_id;
 }
 
-bool InputAudio::operator ==(const InputAudio &b) {
-    return m_accessHash == b.m_accessHash &&
+bool InputAudio::operator ==(const InputAudio &b) const {
+    return m_classType == b.m_classType &&
+           m_accessHash == b.m_accessHash &&
            m_id == b.m_id;
 }
 

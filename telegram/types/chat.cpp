@@ -9,10 +9,9 @@
 
 Chat::Chat(ChatType classType, InboundPkt *in) :
     m_accessHash(0),
-    m_checkedIn(false),
     m_date(0),
+    m_flags(0),
     m_id(0),
-    m_left(false),
     m_participantsCount(0),
     m_version(0),
     m_classType(classType)
@@ -22,15 +21,26 @@ Chat::Chat(ChatType classType, InboundPkt *in) :
 
 Chat::Chat(InboundPkt *in) :
     m_accessHash(0),
-    m_checkedIn(false),
     m_date(0),
+    m_flags(0),
     m_id(0),
-    m_left(false),
     m_participantsCount(0),
     m_version(0),
     m_classType(typeChatEmpty)
 {
     fetch(in);
+}
+
+Chat::Chat(const Null &null) :
+    TelegramTypeObject(null),
+    m_accessHash(0),
+    m_date(0),
+    m_flags(0),
+    m_id(0),
+    m_participantsCount(0),
+    m_version(0),
+    m_classType(typeChatEmpty)
+{
 }
 
 Chat::~Chat() {
@@ -44,20 +54,40 @@ qint64 Chat::accessHash() const {
     return m_accessHash;
 }
 
-void Chat::setAddress(const QString &address) {
-    m_address = address;
+void Chat::setAdmin(bool admin) {
+    if(admin) m_flags = (m_flags | (1<<4));
+    else m_flags = (m_flags & ~(1<<4));
 }
 
-QString Chat::address() const {
-    return m_address;
+bool Chat::admin() const {
+    return (m_flags & 1<<4);
 }
 
-void Chat::setCheckedIn(bool checkedIn) {
-    m_checkedIn = checkedIn;
+void Chat::setAdminsEnabled(bool adminsEnabled) {
+    if(adminsEnabled) m_flags = (m_flags | (1<<3));
+    else m_flags = (m_flags & ~(1<<3));
 }
 
-bool Chat::checkedIn() const {
-    return m_checkedIn;
+bool Chat::adminsEnabled() const {
+    return (m_flags & 1<<3);
+}
+
+void Chat::setBroadcast(bool broadcast) {
+    if(broadcast) m_flags = (m_flags | (1<<5));
+    else m_flags = (m_flags & ~(1<<5));
+}
+
+bool Chat::broadcast() const {
+    return (m_flags & 1<<5);
+}
+
+void Chat::setCreator(bool creator) {
+    if(creator) m_flags = (m_flags | (1<<0));
+    else m_flags = (m_flags & ~(1<<0));
+}
+
+bool Chat::creator() const {
+    return (m_flags & 1<<0);
 }
 
 void Chat::setDate(qint32 date) {
@@ -68,12 +98,30 @@ qint32 Chat::date() const {
     return m_date;
 }
 
-void Chat::setGeo(const GeoPoint &geo) {
-    m_geo = geo;
+void Chat::setDeactivated(bool deactivated) {
+    if(deactivated) m_flags = (m_flags | (1<<5));
+    else m_flags = (m_flags & ~(1<<5));
 }
 
-GeoPoint Chat::geo() const {
-    return m_geo;
+bool Chat::deactivated() const {
+    return (m_flags & 1<<5);
+}
+
+void Chat::setEditor(bool editor) {
+    if(editor) m_flags = (m_flags | (1<<3));
+    else m_flags = (m_flags & ~(1<<3));
+}
+
+bool Chat::editor() const {
+    return (m_flags & 1<<3);
+}
+
+void Chat::setFlags(qint32 flags) {
+    m_flags = flags;
+}
+
+qint32 Chat::flags() const {
+    return m_flags;
 }
 
 void Chat::setId(qint32 id) {
@@ -84,12 +132,48 @@ qint32 Chat::id() const {
     return m_id;
 }
 
+void Chat::setKicked(bool kicked) {
+    if(kicked) m_flags = (m_flags | (1<<1));
+    else m_flags = (m_flags & ~(1<<1));
+}
+
+bool Chat::kicked() const {
+    return (m_flags & 1<<1);
+}
+
 void Chat::setLeft(bool left) {
-    m_left = left;
+    if(left) m_flags = (m_flags | (1<<2));
+    else m_flags = (m_flags & ~(1<<2));
 }
 
 bool Chat::left() const {
-    return m_left;
+    return (m_flags & 1<<2);
+}
+
+void Chat::setMegagroup(bool megagroup) {
+    if(megagroup) m_flags = (m_flags | (1<<8));
+    else m_flags = (m_flags & ~(1<<8));
+}
+
+bool Chat::megagroup() const {
+    return (m_flags & 1<<8);
+}
+
+void Chat::setMigratedTo(const InputChannel &migratedTo) {
+    m_migratedTo = migratedTo;
+}
+
+InputChannel Chat::migratedTo() const {
+    return m_migratedTo;
+}
+
+void Chat::setModerator(bool moderator) {
+    if(moderator) m_flags = (m_flags | (1<<4));
+    else m_flags = (m_flags & ~(1<<4));
+}
+
+bool Chat::moderator() const {
+    return (m_flags & 1<<4);
 }
 
 void Chat::setParticipantsCount(qint32 participantsCount) {
@@ -108,6 +192,23 @@ ChatPhoto Chat::photo() const {
     return m_photo;
 }
 
+void Chat::setRestricted(bool restricted) {
+    if(restricted) m_flags = (m_flags | (1<<9));
+    else m_flags = (m_flags & ~(1<<9));
+}
+
+bool Chat::restricted() const {
+    return (m_flags & 1<<9);
+}
+
+void Chat::setRestrictionReason(const QString &restrictionReason) {
+    m_restrictionReason = restrictionReason;
+}
+
+QString Chat::restrictionReason() const {
+    return m_restrictionReason;
+}
+
 void Chat::setTitle(const QString &title) {
     m_title = title;
 }
@@ -116,12 +217,21 @@ QString Chat::title() const {
     return m_title;
 }
 
-void Chat::setVenue(const QString &venue) {
-    m_venue = venue;
+void Chat::setUsername(const QString &username) {
+    m_username = username;
 }
 
-QString Chat::venue() const {
-    return m_venue;
+QString Chat::username() const {
+    return m_username;
+}
+
+void Chat::setVerified(bool verified) {
+    if(verified) m_flags = (m_flags | (1<<7));
+    else m_flags = (m_flags & ~(1<<7));
+}
+
+bool Chat::verified() const {
+    return (m_flags & 1<<7);
 }
 
 void Chat::setVersion(qint32 version) {
@@ -132,18 +242,18 @@ qint32 Chat::version() const {
     return m_version;
 }
 
-bool Chat::operator ==(const Chat &b) {
-    return m_accessHash == b.m_accessHash &&
-           m_address == b.m_address &&
-           m_checkedIn == b.m_checkedIn &&
+bool Chat::operator ==(const Chat &b) const {
+    return m_classType == b.m_classType &&
+           m_accessHash == b.m_accessHash &&
            m_date == b.m_date &&
-           m_geo == b.m_geo &&
+           m_flags == b.m_flags &&
            m_id == b.m_id &&
-           m_left == b.m_left &&
+           m_migratedTo == b.m_migratedTo &&
            m_participantsCount == b.m_participantsCount &&
            m_photo == b.m_photo &&
+           m_restrictionReason == b.m_restrictionReason &&
            m_title == b.m_title &&
-           m_venue == b.m_venue &&
+           m_username == b.m_username &&
            m_version == b.m_version;
 }
 
@@ -167,13 +277,16 @@ bool Chat::fetch(InboundPkt *in) {
         break;
     
     case typeChat: {
+        m_flags = in->fetchInt();
         m_id = in->fetchInt();
         m_title = in->fetchQString();
         m_photo.fetch(in);
         m_participantsCount = in->fetchInt();
         m_date = in->fetchInt();
-        m_left = in->fetchBool();
         m_version = in->fetchInt();
+        if(m_flags & 1<<6) {
+            m_migratedTo.fetch(in);
+        }
         m_classType = static_cast<ChatType>(x);
         return true;
     }
@@ -182,24 +295,34 @@ bool Chat::fetch(InboundPkt *in) {
     case typeChatForbidden: {
         m_id = in->fetchInt();
         m_title = in->fetchQString();
-        m_date = in->fetchInt();
         m_classType = static_cast<ChatType>(x);
         return true;
     }
         break;
     
-    case typeGeoChat: {
+    case typeChannel: {
+        m_flags = in->fetchInt();
         m_id = in->fetchInt();
         m_accessHash = in->fetchLong();
         m_title = in->fetchQString();
-        m_address = in->fetchQString();
-        m_venue = in->fetchQString();
-        m_geo.fetch(in);
+        if(m_flags & 1<<6) {
+            m_username = in->fetchQString();
+        }
         m_photo.fetch(in);
-        m_participantsCount = in->fetchInt();
         m_date = in->fetchInt();
-        m_checkedIn = in->fetchBool();
         m_version = in->fetchInt();
+        if(m_flags & 1<<9) {
+            m_restrictionReason = in->fetchQString();
+        }
+        m_classType = static_cast<ChatType>(x);
+        return true;
+    }
+        break;
+    
+    case typeChannelForbidden: {
+        m_id = in->fetchInt();
+        m_accessHash = in->fetchLong();
+        m_title = in->fetchQString();
         m_classType = static_cast<ChatType>(x);
         return true;
     }
@@ -221,13 +344,14 @@ bool Chat::push(OutboundPkt *out) const {
         break;
     
     case typeChat: {
+        out->appendInt(m_flags);
         out->appendInt(m_id);
         out->appendQString(m_title);
         m_photo.push(out);
         out->appendInt(m_participantsCount);
         out->appendInt(m_date);
-        out->appendBool(m_left);
         out->appendInt(m_version);
+        m_migratedTo.push(out);
         return true;
     }
         break;
@@ -235,23 +359,28 @@ bool Chat::push(OutboundPkt *out) const {
     case typeChatForbidden: {
         out->appendInt(m_id);
         out->appendQString(m_title);
-        out->appendInt(m_date);
         return true;
     }
         break;
     
-    case typeGeoChat: {
+    case typeChannel: {
+        out->appendInt(m_flags);
         out->appendInt(m_id);
         out->appendLong(m_accessHash);
         out->appendQString(m_title);
-        out->appendQString(m_address);
-        out->appendQString(m_venue);
-        m_geo.push(out);
+        out->appendQString(m_username);
         m_photo.push(out);
-        out->appendInt(m_participantsCount);
         out->appendInt(m_date);
-        out->appendBool(m_checkedIn);
         out->appendInt(m_version);
+        out->appendQString(m_restrictionReason);
+        return true;
+    }
+        break;
+    
+    case typeChannelForbidden: {
+        out->appendInt(m_id);
+        out->appendLong(m_accessHash);
+        out->appendQString(m_title);
         return true;
     }
         break;

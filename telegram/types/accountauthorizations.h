@@ -6,6 +6,8 @@
 #define LQTG_TYPE_ACCOUNTAUTHORIZATIONS
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QList>
 #include "authorization.h"
 
@@ -18,6 +20,7 @@ public:
 
     AccountAuthorizations(AccountAuthorizationsType classType = typeAccountAuthorizations, InboundPkt *in = 0);
     AccountAuthorizations(InboundPkt *in);
+    AccountAuthorizations(const Null&);
     virtual ~AccountAuthorizations();
 
     void setAuthorizations(const QList<Authorization> &authorizations);
@@ -29,11 +32,16 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const AccountAuthorizations &b);
+    bool operator ==(const AccountAuthorizations &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     QList<Authorization> m_authorizations;
     AccountAuthorizationsType m_classType;
 };
+
+Q_DECLARE_METATYPE(AccountAuthorizations)
 
 #endif // LQTG_TYPE_ACCOUNTAUTHORIZATIONS

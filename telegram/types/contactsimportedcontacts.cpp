@@ -19,6 +19,12 @@ ContactsImportedContacts::ContactsImportedContacts(InboundPkt *in) :
     fetch(in);
 }
 
+ContactsImportedContacts::ContactsImportedContacts(const Null &null) :
+    TelegramTypeObject(null),
+    m_classType(typeContactsImportedContacts)
+{
+}
+
 ContactsImportedContacts::~ContactsImportedContacts() {
 }
 
@@ -46,8 +52,9 @@ QList<User> ContactsImportedContacts::users() const {
     return m_users;
 }
 
-bool ContactsImportedContacts::operator ==(const ContactsImportedContacts &b) {
-    return m_imported == b.m_imported &&
+bool ContactsImportedContacts::operator ==(const ContactsImportedContacts &b) const {
+    return m_classType == b.m_classType &&
+           m_imported == b.m_imported &&
            m_retryContacts == b.m_retryContacts &&
            m_users == b.m_users;
 }

@@ -19,6 +19,12 @@ InputChatPhoto::InputChatPhoto(InboundPkt *in) :
     fetch(in);
 }
 
+InputChatPhoto::InputChatPhoto(const Null &null) :
+    TelegramTypeObject(null),
+    m_classType(typeInputChatPhotoEmpty)
+{
+}
+
 InputChatPhoto::~InputChatPhoto() {
 }
 
@@ -46,8 +52,9 @@ InputPhoto InputChatPhoto::id() const {
     return m_id;
 }
 
-bool InputChatPhoto::operator ==(const InputChatPhoto &b) {
-    return m_crop == b.m_crop &&
+bool InputChatPhoto::operator ==(const InputChatPhoto &b) const {
+    return m_classType == b.m_classType &&
+           m_crop == b.m_crop &&
            m_file == b.m_file &&
            m_id == b.m_id;
 }

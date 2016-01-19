@@ -6,25 +6,31 @@
 #define LQTG_TYPE_USERFULL
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
+#include "botinfo.h"
 #include "contactslink.h"
 #include "peernotifysettings.h"
 #include "photo.h"
-#include <QString>
 #include "user.h"
 
 class LIBQTELEGRAMSHARED_EXPORT UserFull : public TelegramTypeObject
 {
 public:
     enum UserFullType {
-        typeUserFull = 0x771095da
+        typeUserFull = 0x5a89ac5b
     };
 
     UserFull(UserFullType classType = typeUserFull, InboundPkt *in = 0);
     UserFull(InboundPkt *in);
+    UserFull(const Null&);
     virtual ~UserFull();
 
     void setBlocked(bool blocked);
     bool blocked() const;
+
+    void setBotInfo(const BotInfo &botInfo);
+    BotInfo botInfo() const;
 
     void setLink(const ContactsLink &link);
     ContactsLink link() const;
@@ -35,12 +41,6 @@ public:
     void setProfilePhoto(const Photo &profilePhoto);
     Photo profilePhoto() const;
 
-    void setRealFirstName(const QString &realFirstName);
-    QString realFirstName() const;
-
-    void setRealLastName(const QString &realLastName);
-    QString realLastName() const;
-
     void setUser(const User &user);
     User user() const;
 
@@ -50,17 +50,21 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const UserFull &b);
+    bool operator ==(const UserFull &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     bool m_blocked;
+    BotInfo m_botInfo;
     ContactsLink m_link;
     PeerNotifySettings m_notifySettings;
     Photo m_profilePhoto;
-    QString m_realFirstName;
-    QString m_realLastName;
     User m_user;
     UserFullType m_classType;
 };
+
+Q_DECLARE_METATYPE(UserFull)
 
 #endif // LQTG_TYPE_USERFULL

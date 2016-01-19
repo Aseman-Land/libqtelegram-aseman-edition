@@ -7,7 +7,7 @@
 #include "fileoperation.h"
 #include "downloadfile.h"
 #include "core/dcprovider.h"
-#include "core/api.h"
+#include "telegram/telegramapi.h"
 #include "secret/secretstate.h"
 
 Q_DECLARE_LOGGING_CATEGORY(TG_FILE_FILEHANDLER)
@@ -18,7 +18,7 @@ class FileHandler : public QObject
 public:
     typedef QSharedPointer<FileHandler> Ptr;
 
-    explicit FileHandler(Api* api, CryptoUtils *crypto, Settings *settings, DcProvider &dcProvider, SecretState &secretState, QObject *parent = 0);
+    explicit FileHandler(TelegramCore *core, TelegramApi* api, CryptoUtils *crypto, Settings *settings, DcProvider &dcProvider, SecretState &secretState, QObject *parent = 0);
     ~FileHandler();
 
     qint64 uploadSendFile(FileOperation &op, const QString &fileName, const QByteArray &bytes, const QByteArray &thumbnailBytes = 0, const QString &thumbnailName = QString::null);
@@ -36,7 +36,8 @@ Q_SIGNALS:
     void messagesSendEncryptedFileAnswer(qint64 id, qint32 date, const EncryptedFile &encryptedFile = EncryptedFile());
 
 private:
-    Api *mApi;
+    TelegramCore *mCore;
+    TelegramApi *mApi;
     CryptoUtils *mCrypto;
     Settings *mSettings;
     DcProvider &mDcProvider;

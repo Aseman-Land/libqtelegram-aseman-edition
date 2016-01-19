@@ -6,6 +6,8 @@
 #define LQTG_TYPE_NOTIFYPEER
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include "peer.h"
 
 class LIBQTELEGRAMSHARED_EXPORT NotifyPeer : public TelegramTypeObject
@@ -20,6 +22,7 @@ public:
 
     NotifyPeer(NotifyPeerType classType = typeNotifyPeer, InboundPkt *in = 0);
     NotifyPeer(InboundPkt *in);
+    NotifyPeer(const Null&);
     virtual ~NotifyPeer();
 
     void setPeer(const Peer &peer);
@@ -31,11 +34,16 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const NotifyPeer &b);
+    bool operator ==(const NotifyPeer &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     Peer m_peer;
     NotifyPeerType m_classType;
 };
+
+Q_DECLARE_METATYPE(NotifyPeer)
 
 #endif // LQTG_TYPE_NOTIFYPEER

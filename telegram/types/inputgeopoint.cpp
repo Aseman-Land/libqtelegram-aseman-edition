@@ -23,6 +23,14 @@ InputGeoPoint::InputGeoPoint(InboundPkt *in) :
     fetch(in);
 }
 
+InputGeoPoint::InputGeoPoint(const Null &null) :
+    TelegramTypeObject(null),
+    m_lat(0),
+    m_longValue(0),
+    m_classType(typeInputGeoPointEmpty)
+{
+}
+
 InputGeoPoint::~InputGeoPoint() {
 }
 
@@ -42,8 +50,9 @@ qreal InputGeoPoint::longValue() const {
     return m_longValue;
 }
 
-bool InputGeoPoint::operator ==(const InputGeoPoint &b) {
-    return m_lat == b.m_lat &&
+bool InputGeoPoint::operator ==(const InputGeoPoint &b) const {
+    return m_classType == b.m_classType &&
+           m_lat == b.m_lat &&
            m_longValue == b.m_longValue;
 }
 

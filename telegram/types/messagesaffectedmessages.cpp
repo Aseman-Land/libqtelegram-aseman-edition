@@ -23,6 +23,14 @@ MessagesAffectedMessages::MessagesAffectedMessages(InboundPkt *in) :
     fetch(in);
 }
 
+MessagesAffectedMessages::MessagesAffectedMessages(const Null &null) :
+    TelegramTypeObject(null),
+    m_pts(0),
+    m_ptsCount(0),
+    m_classType(typeMessagesAffectedMessages)
+{
+}
+
 MessagesAffectedMessages::~MessagesAffectedMessages() {
 }
 
@@ -42,8 +50,9 @@ qint32 MessagesAffectedMessages::ptsCount() const {
     return m_ptsCount;
 }
 
-bool MessagesAffectedMessages::operator ==(const MessagesAffectedMessages &b) {
-    return m_pts == b.m_pts &&
+bool MessagesAffectedMessages::operator ==(const MessagesAffectedMessages &b) const {
+    return m_classType == b.m_classType &&
+           m_pts == b.m_pts &&
            m_ptsCount == b.m_ptsCount;
 }
 

@@ -21,6 +21,13 @@ SendMessageAction::SendMessageAction(InboundPkt *in) :
     fetch(in);
 }
 
+SendMessageAction::SendMessageAction(const Null &null) :
+    TelegramTypeObject(null),
+    m_progress(0),
+    m_classType(typeSendMessageTypingAction)
+{
+}
+
 SendMessageAction::~SendMessageAction() {
 }
 
@@ -32,8 +39,9 @@ qint32 SendMessageAction::progress() const {
     return m_progress;
 }
 
-bool SendMessageAction::operator ==(const SendMessageAction &b) {
-    return m_progress == b.m_progress;
+bool SendMessageAction::operator ==(const SendMessageAction &b) const {
+    return m_classType == b.m_classType &&
+           m_progress == b.m_progress;
 }
 
 void SendMessageAction::setClassType(SendMessageAction::SendMessageActionType classType) {

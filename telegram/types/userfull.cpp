@@ -21,6 +21,13 @@ UserFull::UserFull(InboundPkt *in) :
     fetch(in);
 }
 
+UserFull::UserFull(const Null &null) :
+    TelegramTypeObject(null),
+    m_blocked(false),
+    m_classType(typeUserFull)
+{
+}
+
 UserFull::~UserFull() {
 }
 
@@ -30,6 +37,14 @@ void UserFull::setBlocked(bool blocked) {
 
 bool UserFull::blocked() const {
     return m_blocked;
+}
+
+void UserFull::setBotInfo(const BotInfo &botInfo) {
+    m_botInfo = botInfo;
+}
+
+BotInfo UserFull::botInfo() const {
+    return m_botInfo;
 }
 
 void UserFull::setLink(const ContactsLink &link) {
@@ -56,22 +71,6 @@ Photo UserFull::profilePhoto() const {
     return m_profilePhoto;
 }
 
-void UserFull::setRealFirstName(const QString &realFirstName) {
-    m_realFirstName = realFirstName;
-}
-
-QString UserFull::realFirstName() const {
-    return m_realFirstName;
-}
-
-void UserFull::setRealLastName(const QString &realLastName) {
-    m_realLastName = realLastName;
-}
-
-QString UserFull::realLastName() const {
-    return m_realLastName;
-}
-
 void UserFull::setUser(const User &user) {
     m_user = user;
 }
@@ -80,13 +79,13 @@ User UserFull::user() const {
     return m_user;
 }
 
-bool UserFull::operator ==(const UserFull &b) {
-    return m_blocked == b.m_blocked &&
+bool UserFull::operator ==(const UserFull &b) const {
+    return m_classType == b.m_classType &&
+           m_blocked == b.m_blocked &&
+           m_botInfo == b.m_botInfo &&
            m_link == b.m_link &&
            m_notifySettings == b.m_notifySettings &&
            m_profilePhoto == b.m_profilePhoto &&
-           m_realFirstName == b.m_realFirstName &&
-           m_realLastName == b.m_realLastName &&
            m_user == b.m_user;
 }
 
@@ -108,8 +107,7 @@ bool UserFull::fetch(InboundPkt *in) {
         m_profilePhoto.fetch(in);
         m_notifySettings.fetch(in);
         m_blocked = in->fetchBool();
-        m_realFirstName = in->fetchQString();
-        m_realLastName = in->fetchQString();
+        m_botInfo.fetch(in);
         m_classType = static_cast<UserFullType>(x);
         return true;
     }
@@ -130,8 +128,7 @@ bool UserFull::push(OutboundPkt *out) const {
         m_profilePhoto.push(out);
         m_notifySettings.push(out);
         out->appendBool(m_blocked);
-        out->appendQString(m_realFirstName);
-        out->appendQString(m_realLastName);
+        m_botInfo.push(out);
         return true;
     }
         break;

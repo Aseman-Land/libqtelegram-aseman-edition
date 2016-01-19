@@ -6,6 +6,8 @@
 #define LQTG_TYPE_EXPORTEDCHATINVITE
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QString>
 
 class LIBQTELEGRAMSHARED_EXPORT ExportedChatInvite : public TelegramTypeObject
@@ -18,6 +20,7 @@ public:
 
     ExportedChatInvite(ExportedChatInviteType classType = typeChatInviteEmpty, InboundPkt *in = 0);
     ExportedChatInvite(InboundPkt *in);
+    ExportedChatInvite(const Null&);
     virtual ~ExportedChatInvite();
 
     void setLink(const QString &link);
@@ -29,11 +32,16 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const ExportedChatInvite &b);
+    bool operator ==(const ExportedChatInvite &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     QString m_link;
     ExportedChatInviteType m_classType;
 };
+
+Q_DECLARE_METATYPE(ExportedChatInvite)
 
 #endif // LQTG_TYPE_EXPORTEDCHATINVITE

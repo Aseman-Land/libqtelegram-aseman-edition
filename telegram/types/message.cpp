@@ -12,9 +12,10 @@ Message::Message(MessageType classType, InboundPkt *in) :
     m_flags(0),
     m_fromId(0),
     m_fwdDate(0),
-    m_fwdFromId(0),
     m_id(0),
     m_replyToMsgId(0),
+    m_viaBotId(0),
+    m_views(0),
     m_classType(classType)
 {
     if(in) fetch(in);
@@ -25,12 +26,27 @@ Message::Message(InboundPkt *in) :
     m_flags(0),
     m_fromId(0),
     m_fwdDate(0),
-    m_fwdFromId(0),
     m_id(0),
     m_replyToMsgId(0),
+    m_viaBotId(0),
+    m_views(0),
     m_classType(typeMessageEmpty)
 {
     fetch(in);
+}
+
+Message::Message(const Null &null) :
+    TelegramTypeObject(null),
+    m_date(0),
+    m_flags(0),
+    m_fromId(0),
+    m_fwdDate(0),
+    m_id(0),
+    m_replyToMsgId(0),
+    m_viaBotId(0),
+    m_views(0),
+    m_classType(typeMessageEmpty)
+{
 }
 
 Message::~Message() {
@@ -50,6 +66,14 @@ void Message::setDate(qint32 date) {
 
 qint32 Message::date() const {
     return m_date;
+}
+
+void Message::setEntities(const QList<MessageEntity> &entities) {
+    m_entities = entities;
+}
+
+QList<MessageEntity> Message::entities() const {
+    return m_entities;
 }
 
 void Message::setFlags(qint32 flags) {
@@ -76,11 +100,11 @@ qint32 Message::fwdDate() const {
     return m_fwdDate;
 }
 
-void Message::setFwdFromId(qint32 fwdFromId) {
+void Message::setFwdFromId(const Peer &fwdFromId) {
     m_fwdFromId = fwdFromId;
 }
 
-qint32 Message::fwdFromId() const {
+Peer Message::fwdFromId() const {
     return m_fwdFromId;
 }
 
@@ -100,12 +124,47 @@ MessageMedia Message::media() const {
     return m_media;
 }
 
+void Message::setMediaUnread(bool mediaUnread) {
+    if(mediaUnread) m_flags = (m_flags | (1<<5));
+    else m_flags = (m_flags & ~(1<<5));
+}
+
+bool Message::mediaUnread() const {
+    return (m_flags & 1<<5);
+}
+
+void Message::setMentioned(bool mentioned) {
+    if(mentioned) m_flags = (m_flags | (1<<4));
+    else m_flags = (m_flags & ~(1<<4));
+}
+
+bool Message::mentioned() const {
+    return (m_flags & 1<<4);
+}
+
 void Message::setMessage(const QString &message) {
     m_message = message;
 }
 
 QString Message::message() const {
     return m_message;
+}
+
+void Message::setOut(bool out) {
+    if(out) m_flags = (m_flags | (1<<1));
+    else m_flags = (m_flags & ~(1<<1));
+}
+
+bool Message::out() const {
+    return (m_flags & 1<<1);
+}
+
+void Message::setReplyMarkup(const ReplyMarkup &replyMarkup) {
+    m_replyMarkup = replyMarkup;
+}
+
+ReplyMarkup Message::replyMarkup() const {
+    return m_replyMarkup;
 }
 
 void Message::setReplyToMsgId(qint32 replyToMsgId) {
@@ -124,9 +183,36 @@ Peer Message::toId() const {
     return m_toId;
 }
 
-bool Message::operator ==(const Message &b) {
-    return m_action == b.m_action &&
+void Message::setUnread(bool unread) {
+    if(unread) m_flags = (m_flags | (1<<0));
+    else m_flags = (m_flags & ~(1<<0));
+}
+
+bool Message::unread() const {
+    return (m_flags & 1<<0);
+}
+
+void Message::setViaBotId(qint32 viaBotId) {
+    m_viaBotId = viaBotId;
+}
+
+qint32 Message::viaBotId() const {
+    return m_viaBotId;
+}
+
+void Message::setViews(qint32 views) {
+    m_views = views;
+}
+
+qint32 Message::views() const {
+    return m_views;
+}
+
+bool Message::operator ==(const Message &b) const {
+    return m_classType == b.m_classType &&
+           m_action == b.m_action &&
            m_date == b.m_date &&
+           m_entities == b.m_entities &&
            m_flags == b.m_flags &&
            m_fromId == b.m_fromId &&
            m_fwdDate == b.m_fwdDate &&
@@ -134,8 +220,11 @@ bool Message::operator ==(const Message &b) {
            m_id == b.m_id &&
            m_media == b.m_media &&
            m_message == b.m_message &&
+           m_replyMarkup == b.m_replyMarkup &&
            m_replyToMsgId == b.m_replyToMsgId &&
-           m_toId == b.m_toId;
+           m_toId == b.m_toId &&
+           m_viaBotId == b.m_viaBotId &&
+           m_views == b.m_views;
 }
 
 void Message::setClassType(Message::MessageType classType) {
@@ -160,20 +249,45 @@ bool Message::fetch(InboundPkt *in) {
     case typeMessage: {
         m_flags = in->fetchInt();
         m_id = in->fetchInt();
-        m_fromId = in->fetchInt();
+        if(m_flags & 1<<8) {
+            m_fromId = in->fetchInt();
+        }
         m_toId.fetch(in);
         if(m_flags & 1<<2) {
-            m_fwdFromId = in->fetchInt();
+            m_fwdFromId.fetch(in);
         }
         if(m_flags & 1<<2) {
             m_fwdDate = in->fetchInt();
+        }
+        if(m_flags & 1<<11) {
+            m_viaBotId = in->fetchInt();
         }
         if(m_flags & 1<<3) {
             m_replyToMsgId = in->fetchInt();
         }
         m_date = in->fetchInt();
         m_message = in->fetchQString();
-        m_media.fetch(in);
+        if(m_flags & 1<<9) {
+            m_media.fetch(in);
+        }
+        if(m_flags & 1<<6) {
+            m_replyMarkup.fetch(in);
+        }
+        if(m_flags & 1<<7) {
+            if(in->fetchInt() != (qint32)CoreTypes::typeVector) return false;
+            qint32 m_entities_length = in->fetchInt();
+            m_entities.clear();
+            for (qint32 i = 0; i < m_entities_length; i++) {
+                MessageEntity type;
+                if(m_flags & 1<<7) {
+                type.fetch(in);
+            }
+                m_entities.append(type);
+            }
+        }
+        if(m_flags & 1<<10) {
+            m_views = in->fetchInt();
+        }
         m_classType = static_cast<MessageType>(x);
         return true;
     }
@@ -182,7 +296,9 @@ bool Message::fetch(InboundPkt *in) {
     case typeMessageService: {
         m_flags = in->fetchInt();
         m_id = in->fetchInt();
-        m_fromId = in->fetchInt();
+        if(m_flags & 1<<8) {
+            m_fromId = in->fetchInt();
+        }
         m_toId.fetch(in);
         m_date = in->fetchInt();
         m_action.fetch(in);
@@ -211,12 +327,20 @@ bool Message::push(OutboundPkt *out) const {
         out->appendInt(m_id);
         out->appendInt(m_fromId);
         m_toId.push(out);
-        out->appendInt(m_fwdFromId);
+        m_fwdFromId.push(out);
         out->appendInt(m_fwdDate);
+        out->appendInt(m_viaBotId);
         out->appendInt(m_replyToMsgId);
         out->appendInt(m_date);
         out->appendQString(m_message);
         m_media.push(out);
+        m_replyMarkup.push(out);
+        out->appendInt(CoreTypes::typeVector);
+        out->appendInt(m_entities.count());
+        for (qint32 i = 0; i < m_entities.count(); i++) {
+            m_entities[i].push(out);
+        }
+        out->appendInt(m_views);
         return true;
     }
         break;

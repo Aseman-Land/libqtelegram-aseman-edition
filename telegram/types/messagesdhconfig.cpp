@@ -23,6 +23,14 @@ MessagesDhConfig::MessagesDhConfig(InboundPkt *in) :
     fetch(in);
 }
 
+MessagesDhConfig::MessagesDhConfig(const Null &null) :
+    TelegramTypeObject(null),
+    m_g(0),
+    m_version(0),
+    m_classType(typeMessagesDhConfigNotModified)
+{
+}
+
 MessagesDhConfig::~MessagesDhConfig() {
 }
 
@@ -58,8 +66,9 @@ qint32 MessagesDhConfig::version() const {
     return m_version;
 }
 
-bool MessagesDhConfig::operator ==(const MessagesDhConfig &b) {
-    return m_g == b.m_g &&
+bool MessagesDhConfig::operator ==(const MessagesDhConfig &b) const {
+    return m_classType == b.m_classType &&
+           m_g == b.m_g &&
            m_p == b.m_p &&
            m_random == b.m_random &&
            m_version == b.m_version;

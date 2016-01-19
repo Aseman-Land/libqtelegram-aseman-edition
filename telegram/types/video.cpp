@@ -15,7 +15,6 @@ Video::Video(VideoType classType, InboundPkt *in) :
     m_h(0),
     m_id(0),
     m_size(0),
-    m_userId(0),
     m_w(0),
     m_classType(classType)
 {
@@ -30,11 +29,24 @@ Video::Video(InboundPkt *in) :
     m_h(0),
     m_id(0),
     m_size(0),
-    m_userId(0),
     m_w(0),
     m_classType(typeVideoEmpty)
 {
     fetch(in);
+}
+
+Video::Video(const Null &null) :
+    TelegramTypeObject(null),
+    m_accessHash(0),
+    m_date(0),
+    m_dcId(0),
+    m_duration(0),
+    m_h(0),
+    m_id(0),
+    m_size(0),
+    m_w(0),
+    m_classType(typeVideoEmpty)
+{
 }
 
 Video::~Video() {
@@ -88,6 +100,14 @@ qint64 Video::id() const {
     return m_id;
 }
 
+void Video::setMimeType(const QString &mimeType) {
+    m_mimeType = mimeType;
+}
+
+QString Video::mimeType() const {
+    return m_mimeType;
+}
+
 void Video::setSize(qint32 size) {
     m_size = size;
 }
@@ -104,14 +124,6 @@ PhotoSize Video::thumb() const {
     return m_thumb;
 }
 
-void Video::setUserId(qint32 userId) {
-    m_userId = userId;
-}
-
-qint32 Video::userId() const {
-    return m_userId;
-}
-
 void Video::setW(qint32 w) {
     m_w = w;
 }
@@ -120,16 +132,17 @@ qint32 Video::w() const {
     return m_w;
 }
 
-bool Video::operator ==(const Video &b) {
-    return m_accessHash == b.m_accessHash &&
+bool Video::operator ==(const Video &b) const {
+    return m_classType == b.m_classType &&
+           m_accessHash == b.m_accessHash &&
            m_date == b.m_date &&
            m_dcId == b.m_dcId &&
            m_duration == b.m_duration &&
            m_h == b.m_h &&
            m_id == b.m_id &&
+           m_mimeType == b.m_mimeType &&
            m_size == b.m_size &&
            m_thumb == b.m_thumb &&
-           m_userId == b.m_userId &&
            m_w == b.m_w;
 }
 
@@ -155,9 +168,9 @@ bool Video::fetch(InboundPkt *in) {
     case typeVideo: {
         m_id = in->fetchLong();
         m_accessHash = in->fetchLong();
-        m_userId = in->fetchInt();
         m_date = in->fetchInt();
         m_duration = in->fetchInt();
+        m_mimeType = in->fetchQString();
         m_size = in->fetchInt();
         m_thumb.fetch(in);
         m_dcId = in->fetchInt();
@@ -186,9 +199,9 @@ bool Video::push(OutboundPkt *out) const {
     case typeVideo: {
         out->appendLong(m_id);
         out->appendLong(m_accessHash);
-        out->appendInt(m_userId);
         out->appendInt(m_date);
         out->appendInt(m_duration);
+        out->appendQString(m_mimeType);
         out->appendInt(m_size);
         m_thumb.push(out);
         out->appendInt(m_dcId);

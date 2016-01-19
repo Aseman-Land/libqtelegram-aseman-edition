@@ -19,6 +19,12 @@ ExportedChatInvite::ExportedChatInvite(InboundPkt *in) :
     fetch(in);
 }
 
+ExportedChatInvite::ExportedChatInvite(const Null &null) :
+    TelegramTypeObject(null),
+    m_classType(typeChatInviteEmpty)
+{
+}
+
 ExportedChatInvite::~ExportedChatInvite() {
 }
 
@@ -30,8 +36,9 @@ QString ExportedChatInvite::link() const {
     return m_link;
 }
 
-bool ExportedChatInvite::operator ==(const ExportedChatInvite &b) {
-    return m_link == b.m_link;
+bool ExportedChatInvite::operator ==(const ExportedChatInvite &b) const {
+    return m_classType == b.m_classType &&
+           m_link == b.m_link;
 }
 
 void ExportedChatInvite::setClassType(ExportedChatInvite::ExportedChatInviteType classType) {

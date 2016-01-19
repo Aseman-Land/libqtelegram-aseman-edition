@@ -23,6 +23,14 @@ ReceivedNotifyMessage::ReceivedNotifyMessage(InboundPkt *in) :
     fetch(in);
 }
 
+ReceivedNotifyMessage::ReceivedNotifyMessage(const Null &null) :
+    TelegramTypeObject(null),
+    m_flags(0),
+    m_id(0),
+    m_classType(typeReceivedNotifyMessage)
+{
+}
+
 ReceivedNotifyMessage::~ReceivedNotifyMessage() {
 }
 
@@ -42,8 +50,9 @@ qint32 ReceivedNotifyMessage::id() const {
     return m_id;
 }
 
-bool ReceivedNotifyMessage::operator ==(const ReceivedNotifyMessage &b) {
-    return m_flags == b.m_flags &&
+bool ReceivedNotifyMessage::operator ==(const ReceivedNotifyMessage &b) const {
+    return m_classType == b.m_classType &&
+           m_flags == b.m_flags &&
            m_id == b.m_id;
 }
 

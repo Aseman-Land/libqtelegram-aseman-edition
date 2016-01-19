@@ -9,6 +9,7 @@
 
 InputPeer::InputPeer(InputPeerType classType, InboundPkt *in) :
     m_accessHash(0),
+    m_channelId(0),
     m_chatId(0),
     m_userId(0),
     m_classType(classType)
@@ -18,11 +19,22 @@ InputPeer::InputPeer(InputPeerType classType, InboundPkt *in) :
 
 InputPeer::InputPeer(InboundPkt *in) :
     m_accessHash(0),
+    m_channelId(0),
     m_chatId(0),
     m_userId(0),
     m_classType(typeInputPeerEmpty)
 {
     fetch(in);
+}
+
+InputPeer::InputPeer(const Null &null) :
+    TelegramTypeObject(null),
+    m_accessHash(0),
+    m_channelId(0),
+    m_chatId(0),
+    m_userId(0),
+    m_classType(typeInputPeerEmpty)
+{
 }
 
 InputPeer::~InputPeer() {
@@ -34,6 +46,14 @@ void InputPeer::setAccessHash(qint64 accessHash) {
 
 qint64 InputPeer::accessHash() const {
     return m_accessHash;
+}
+
+void InputPeer::setChannelId(qint32 channelId) {
+    m_channelId = channelId;
+}
+
+qint32 InputPeer::channelId() const {
+    return m_channelId;
 }
 
 void InputPeer::setChatId(qint32 chatId) {
@@ -52,8 +72,10 @@ qint32 InputPeer::userId() const {
     return m_userId;
 }
 
-bool InputPeer::operator ==(const InputPeer &b) {
-    return m_accessHash == b.m_accessHash &&
+bool InputPeer::operator ==(const InputPeer &b) const {
+    return m_classType == b.m_classType &&
+           m_accessHash == b.m_accessHash &&
+           m_channelId == b.m_channelId &&
            m_chatId == b.m_chatId &&
            m_userId == b.m_userId;
 }
@@ -82,14 +104,14 @@ bool InputPeer::fetch(InboundPkt *in) {
     }
         break;
     
-    case typeInputPeerContact: {
-        m_userId = in->fetchInt();
+    case typeInputPeerChat: {
+        m_chatId = in->fetchInt();
         m_classType = static_cast<InputPeerType>(x);
         return true;
     }
         break;
     
-    case typeInputPeerForeign: {
+    case typeInputPeerUser: {
         m_userId = in->fetchInt();
         m_accessHash = in->fetchLong();
         m_classType = static_cast<InputPeerType>(x);
@@ -97,8 +119,9 @@ bool InputPeer::fetch(InboundPkt *in) {
     }
         break;
     
-    case typeInputPeerChat: {
-        m_chatId = in->fetchInt();
+    case typeInputPeerChannel: {
+        m_channelId = in->fetchInt();
+        m_accessHash = in->fetchLong();
         m_classType = static_cast<InputPeerType>(x);
         return true;
     }
@@ -123,21 +146,22 @@ bool InputPeer::push(OutboundPkt *out) const {
     }
         break;
     
-    case typeInputPeerContact: {
-        out->appendInt(m_userId);
+    case typeInputPeerChat: {
+        out->appendInt(m_chatId);
         return true;
     }
         break;
     
-    case typeInputPeerForeign: {
+    case typeInputPeerUser: {
         out->appendInt(m_userId);
         out->appendLong(m_accessHash);
         return true;
     }
         break;
     
-    case typeInputPeerChat: {
-        out->appendInt(m_chatId);
+    case typeInputPeerChannel: {
+        out->appendInt(m_channelId);
+        out->appendLong(m_accessHash);
         return true;
     }
         break;

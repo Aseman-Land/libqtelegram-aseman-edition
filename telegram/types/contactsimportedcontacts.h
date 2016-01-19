@@ -6,6 +6,8 @@
 #define LQTG_TYPE_CONTACTSIMPORTEDCONTACTS
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QList>
 #include "importedcontact.h"
 #include <QtGlobal>
@@ -20,6 +22,7 @@ public:
 
     ContactsImportedContacts(ContactsImportedContactsType classType = typeContactsImportedContacts, InboundPkt *in = 0);
     ContactsImportedContacts(InboundPkt *in);
+    ContactsImportedContacts(const Null&);
     virtual ~ContactsImportedContacts();
 
     void setImported(const QList<ImportedContact> &imported);
@@ -37,7 +40,10 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const ContactsImportedContacts &b);
+    bool operator ==(const ContactsImportedContacts &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     QList<ImportedContact> m_imported;
@@ -45,5 +51,7 @@ private:
     QList<User> m_users;
     ContactsImportedContactsType m_classType;
 };
+
+Q_DECLARE_METATYPE(ContactsImportedContacts)
 
 #endif // LQTG_TYPE_CONTACTSIMPORTEDCONTACTS

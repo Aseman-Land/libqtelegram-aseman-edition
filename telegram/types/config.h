@@ -6,6 +6,8 @@
 #define LQTG_TYPE_CONFIG
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QtGlobal>
 #include <QList>
 #include "dcoption.h"
@@ -15,15 +17,13 @@ class LIBQTELEGRAMSHARED_EXPORT Config : public TelegramTypeObject
 {
 public:
     enum ConfigType {
-        typeConfig = 0x4e32b894
+        typeConfig = 0x6bbc5f8
     };
 
     Config(ConfigType classType = typeConfig, InboundPkt *in = 0);
     Config(InboundPkt *in);
+    Config(const Null&);
     virtual ~Config();
-
-    void setBroadcastSizeMax(qint32 broadcastSizeMax);
-    qint32 broadcastSizeMax() const;
 
     void setChatBigSize(qint32 chatBigSize);
     qint32 chatBigSize() const;
@@ -45,6 +45,9 @@ public:
 
     void setForwardedCountMax(qint32 forwardedCountMax);
     qint32 forwardedCountMax() const;
+
+    void setMegagroupSizeMax(qint32 megagroupSizeMax);
+    qint32 megagroupSizeMax() const;
 
     void setNotifyCloudDelayMs(qint32 notifyCloudDelayMs);
     qint32 notifyCloudDelayMs() const;
@@ -70,6 +73,9 @@ public:
     void setPushChatPeriodMs(qint32 pushChatPeriodMs);
     qint32 pushChatPeriodMs() const;
 
+    void setSavedGifsLimit(qint32 savedGifsLimit);
+    qint32 savedGifsLimit() const;
+
     void setTestMode(bool testMode);
     bool testMode() const;
 
@@ -82,10 +88,12 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const Config &b);
+    bool operator ==(const Config &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
-    qint32 m_broadcastSizeMax;
     qint32 m_chatBigSize;
     qint32 m_chatSizeMax;
     qint32 m_date;
@@ -93,6 +101,7 @@ private:
     QList<DisabledFeature> m_disabledFeatures;
     qint32 m_expires;
     qint32 m_forwardedCountMax;
+    qint32 m_megagroupSizeMax;
     qint32 m_notifyCloudDelayMs;
     qint32 m_notifyDefaultDelayMs;
     qint32 m_offlineBlurTimeoutMs;
@@ -101,9 +110,12 @@ private:
     qint32 m_onlineUpdatePeriodMs;
     qint32 m_pushChatLimit;
     qint32 m_pushChatPeriodMs;
+    qint32 m_savedGifsLimit;
     bool m_testMode;
     qint32 m_thisDc;
     ConfigType m_classType;
 };
+
+Q_DECLARE_METATYPE(Config)
 
 #endif // LQTG_TYPE_CONFIG

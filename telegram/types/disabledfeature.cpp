@@ -19,6 +19,12 @@ DisabledFeature::DisabledFeature(InboundPkt *in) :
     fetch(in);
 }
 
+DisabledFeature::DisabledFeature(const Null &null) :
+    TelegramTypeObject(null),
+    m_classType(typeDisabledFeature)
+{
+}
+
 DisabledFeature::~DisabledFeature() {
 }
 
@@ -38,8 +44,9 @@ QString DisabledFeature::feature() const {
     return m_feature;
 }
 
-bool DisabledFeature::operator ==(const DisabledFeature &b) {
-    return m_description == b.m_description &&
+bool DisabledFeature::operator ==(const DisabledFeature &b) const {
+    return m_classType == b.m_classType &&
+           m_description == b.m_description &&
            m_feature == b.m_feature;
 }
 

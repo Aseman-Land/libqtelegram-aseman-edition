@@ -8,12 +8,12 @@
 #include "../coretypes.h"
 
 Config::Config(ConfigType classType, InboundPkt *in) :
-    m_broadcastSizeMax(0),
     m_chatBigSize(0),
     m_chatSizeMax(0),
     m_date(0),
     m_expires(0),
     m_forwardedCountMax(0),
+    m_megagroupSizeMax(0),
     m_notifyCloudDelayMs(0),
     m_notifyDefaultDelayMs(0),
     m_offlineBlurTimeoutMs(0),
@@ -22,6 +22,7 @@ Config::Config(ConfigType classType, InboundPkt *in) :
     m_onlineUpdatePeriodMs(0),
     m_pushChatLimit(0),
     m_pushChatPeriodMs(0),
+    m_savedGifsLimit(0),
     m_testMode(false),
     m_thisDc(0),
     m_classType(classType)
@@ -30,12 +31,12 @@ Config::Config(ConfigType classType, InboundPkt *in) :
 }
 
 Config::Config(InboundPkt *in) :
-    m_broadcastSizeMax(0),
     m_chatBigSize(0),
     m_chatSizeMax(0),
     m_date(0),
     m_expires(0),
     m_forwardedCountMax(0),
+    m_megagroupSizeMax(0),
     m_notifyCloudDelayMs(0),
     m_notifyDefaultDelayMs(0),
     m_offlineBlurTimeoutMs(0),
@@ -44,6 +45,7 @@ Config::Config(InboundPkt *in) :
     m_onlineUpdatePeriodMs(0),
     m_pushChatLimit(0),
     m_pushChatPeriodMs(0),
+    m_savedGifsLimit(0),
     m_testMode(false),
     m_thisDc(0),
     m_classType(typeConfig)
@@ -51,15 +53,30 @@ Config::Config(InboundPkt *in) :
     fetch(in);
 }
 
+Config::Config(const Null &null) :
+    TelegramTypeObject(null),
+    m_chatBigSize(0),
+    m_chatSizeMax(0),
+    m_date(0),
+    m_expires(0),
+    m_forwardedCountMax(0),
+    m_megagroupSizeMax(0),
+    m_notifyCloudDelayMs(0),
+    m_notifyDefaultDelayMs(0),
+    m_offlineBlurTimeoutMs(0),
+    m_offlineIdleTimeoutMs(0),
+    m_onlineCloudTimeoutMs(0),
+    m_onlineUpdatePeriodMs(0),
+    m_pushChatLimit(0),
+    m_pushChatPeriodMs(0),
+    m_savedGifsLimit(0),
+    m_testMode(false),
+    m_thisDc(0),
+    m_classType(typeConfig)
+{
+}
+
 Config::~Config() {
-}
-
-void Config::setBroadcastSizeMax(qint32 broadcastSizeMax) {
-    m_broadcastSizeMax = broadcastSizeMax;
-}
-
-qint32 Config::broadcastSizeMax() const {
-    return m_broadcastSizeMax;
 }
 
 void Config::setChatBigSize(qint32 chatBigSize) {
@@ -116,6 +133,14 @@ void Config::setForwardedCountMax(qint32 forwardedCountMax) {
 
 qint32 Config::forwardedCountMax() const {
     return m_forwardedCountMax;
+}
+
+void Config::setMegagroupSizeMax(qint32 megagroupSizeMax) {
+    m_megagroupSizeMax = megagroupSizeMax;
+}
+
+qint32 Config::megagroupSizeMax() const {
+    return m_megagroupSizeMax;
 }
 
 void Config::setNotifyCloudDelayMs(qint32 notifyCloudDelayMs) {
@@ -182,6 +207,14 @@ qint32 Config::pushChatPeriodMs() const {
     return m_pushChatPeriodMs;
 }
 
+void Config::setSavedGifsLimit(qint32 savedGifsLimit) {
+    m_savedGifsLimit = savedGifsLimit;
+}
+
+qint32 Config::savedGifsLimit() const {
+    return m_savedGifsLimit;
+}
+
 void Config::setTestMode(bool testMode) {
     m_testMode = testMode;
 }
@@ -198,8 +231,8 @@ qint32 Config::thisDc() const {
     return m_thisDc;
 }
 
-bool Config::operator ==(const Config &b) {
-    return m_broadcastSizeMax == b.m_broadcastSizeMax &&
+bool Config::operator ==(const Config &b) const {
+    return m_classType == b.m_classType &&
            m_chatBigSize == b.m_chatBigSize &&
            m_chatSizeMax == b.m_chatSizeMax &&
            m_date == b.m_date &&
@@ -207,6 +240,7 @@ bool Config::operator ==(const Config &b) {
            m_disabledFeatures == b.m_disabledFeatures &&
            m_expires == b.m_expires &&
            m_forwardedCountMax == b.m_forwardedCountMax &&
+           m_megagroupSizeMax == b.m_megagroupSizeMax &&
            m_notifyCloudDelayMs == b.m_notifyCloudDelayMs &&
            m_notifyDefaultDelayMs == b.m_notifyDefaultDelayMs &&
            m_offlineBlurTimeoutMs == b.m_offlineBlurTimeoutMs &&
@@ -215,6 +249,7 @@ bool Config::operator ==(const Config &b) {
            m_onlineUpdatePeriodMs == b.m_onlineUpdatePeriodMs &&
            m_pushChatLimit == b.m_pushChatLimit &&
            m_pushChatPeriodMs == b.m_pushChatPeriodMs &&
+           m_savedGifsLimit == b.m_savedGifsLimit &&
            m_testMode == b.m_testMode &&
            m_thisDc == b.m_thisDc;
 }
@@ -245,7 +280,7 @@ bool Config::fetch(InboundPkt *in) {
             m_dcOptions.append(type);
         }
         m_chatSizeMax = in->fetchInt();
-        m_broadcastSizeMax = in->fetchInt();
+        m_megagroupSizeMax = in->fetchInt();
         m_forwardedCountMax = in->fetchInt();
         m_onlineUpdatePeriodMs = in->fetchInt();
         m_offlineBlurTimeoutMs = in->fetchInt();
@@ -256,6 +291,7 @@ bool Config::fetch(InboundPkt *in) {
         m_chatBigSize = in->fetchInt();
         m_pushChatPeriodMs = in->fetchInt();
         m_pushChatLimit = in->fetchInt();
+        m_savedGifsLimit = in->fetchInt();
         if(in->fetchInt() != (qint32)CoreTypes::typeVector) return false;
         qint32 m_disabledFeatures_length = in->fetchInt();
         m_disabledFeatures.clear();
@@ -289,7 +325,7 @@ bool Config::push(OutboundPkt *out) const {
             m_dcOptions[i].push(out);
         }
         out->appendInt(m_chatSizeMax);
-        out->appendInt(m_broadcastSizeMax);
+        out->appendInt(m_megagroupSizeMax);
         out->appendInt(m_forwardedCountMax);
         out->appendInt(m_onlineUpdatePeriodMs);
         out->appendInt(m_offlineBlurTimeoutMs);
@@ -300,6 +336,7 @@ bool Config::push(OutboundPkt *out) const {
         out->appendInt(m_chatBigSize);
         out->appendInt(m_pushChatPeriodMs);
         out->appendInt(m_pushChatLimit);
+        out->appendInt(m_savedGifsLimit);
         out->appendInt(CoreTypes::typeVector);
         out->appendInt(m_disabledFeatures.count());
         for (qint32 i = 0; i < m_disabledFeatures.count(); i++) {

@@ -8,42 +8,35 @@
 #include "../coretypes.h"
 
 MessagesAllStickers::MessagesAllStickers(MessagesAllStickersType classType, InboundPkt *in) :
+    m_hash(0),
     m_classType(classType)
 {
     if(in) fetch(in);
 }
 
 MessagesAllStickers::MessagesAllStickers(InboundPkt *in) :
+    m_hash(0),
     m_classType(typeMessagesAllStickersNotModified)
 {
     fetch(in);
 }
 
+MessagesAllStickers::MessagesAllStickers(const Null &null) :
+    TelegramTypeObject(null),
+    m_hash(0),
+    m_classType(typeMessagesAllStickersNotModified)
+{
+}
+
 MessagesAllStickers::~MessagesAllStickers() {
 }
 
-void MessagesAllStickers::setDocuments(const QList<Document> &documents) {
-    m_documents = documents;
-}
-
-QList<Document> MessagesAllStickers::documents() const {
-    return m_documents;
-}
-
-void MessagesAllStickers::setHash(const QString &hash) {
+void MessagesAllStickers::setHash(qint32 hash) {
     m_hash = hash;
 }
 
-QString MessagesAllStickers::hash() const {
+qint32 MessagesAllStickers::hash() const {
     return m_hash;
-}
-
-void MessagesAllStickers::setPacks(const QList<StickerPack> &packs) {
-    m_packs = packs;
-}
-
-QList<StickerPack> MessagesAllStickers::packs() const {
-    return m_packs;
 }
 
 void MessagesAllStickers::setSets(const QList<StickerSet> &sets) {
@@ -54,10 +47,9 @@ QList<StickerSet> MessagesAllStickers::sets() const {
     return m_sets;
 }
 
-bool MessagesAllStickers::operator ==(const MessagesAllStickers &b) {
-    return m_documents == b.m_documents &&
+bool MessagesAllStickers::operator ==(const MessagesAllStickers &b) const {
+    return m_classType == b.m_classType &&
            m_hash == b.m_hash &&
-           m_packs == b.m_packs &&
            m_sets == b.m_sets;
 }
 
@@ -80,15 +72,7 @@ bool MessagesAllStickers::fetch(InboundPkt *in) {
         break;
     
     case typeMessagesAllStickers: {
-        m_hash = in->fetchQString();
-        if(in->fetchInt() != (qint32)CoreTypes::typeVector) return false;
-        qint32 m_packs_length = in->fetchInt();
-        m_packs.clear();
-        for (qint32 i = 0; i < m_packs_length; i++) {
-            StickerPack type;
-            type.fetch(in);
-            m_packs.append(type);
-        }
+        m_hash = in->fetchInt();
         if(in->fetchInt() != (qint32)CoreTypes::typeVector) return false;
         qint32 m_sets_length = in->fetchInt();
         m_sets.clear();
@@ -96,14 +80,6 @@ bool MessagesAllStickers::fetch(InboundPkt *in) {
             StickerSet type;
             type.fetch(in);
             m_sets.append(type);
-        }
-        if(in->fetchInt() != (qint32)CoreTypes::typeVector) return false;
-        qint32 m_documents_length = in->fetchInt();
-        m_documents.clear();
-        for (qint32 i = 0; i < m_documents_length; i++) {
-            Document type;
-            type.fetch(in);
-            m_documents.append(type);
         }
         m_classType = static_cast<MessagesAllStickersType>(x);
         return true;
@@ -125,21 +101,11 @@ bool MessagesAllStickers::push(OutboundPkt *out) const {
         break;
     
     case typeMessagesAllStickers: {
-        out->appendQString(m_hash);
-        out->appendInt(CoreTypes::typeVector);
-        out->appendInt(m_packs.count());
-        for (qint32 i = 0; i < m_packs.count(); i++) {
-            m_packs[i].push(out);
-        }
+        out->appendInt(m_hash);
         out->appendInt(CoreTypes::typeVector);
         out->appendInt(m_sets.count());
         for (qint32 i = 0; i < m_sets.count(); i++) {
             m_sets[i].push(out);
-        }
-        out->appendInt(CoreTypes::typeVector);
-        out->appendInt(m_documents.count());
-        for (qint32 i = 0; i < m_documents.count(); i++) {
-            m_documents[i].push(out);
         }
         return true;
     }

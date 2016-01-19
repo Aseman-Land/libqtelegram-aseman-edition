@@ -19,6 +19,12 @@ HelpSupport::HelpSupport(InboundPkt *in) :
     fetch(in);
 }
 
+HelpSupport::HelpSupport(const Null &null) :
+    TelegramTypeObject(null),
+    m_classType(typeHelpSupport)
+{
+}
+
 HelpSupport::~HelpSupport() {
 }
 
@@ -38,8 +44,9 @@ User HelpSupport::user() const {
     return m_user;
 }
 
-bool HelpSupport::operator ==(const HelpSupport &b) {
-    return m_phoneNumber == b.m_phoneNumber &&
+bool HelpSupport::operator ==(const HelpSupport &b) const {
+    return m_classType == b.m_classType &&
+           m_phoneNumber == b.m_phoneNumber &&
            m_user == b.m_user;
 }
 

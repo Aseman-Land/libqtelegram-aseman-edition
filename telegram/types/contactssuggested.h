@@ -6,6 +6,8 @@
 #define LQTG_TYPE_CONTACTSSUGGESTED
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QList>
 #include "contactsuggested.h"
 #include "user.h"
@@ -19,6 +21,7 @@ public:
 
     ContactsSuggested(ContactsSuggestedType classType = typeContactsSuggested, InboundPkt *in = 0);
     ContactsSuggested(InboundPkt *in);
+    ContactsSuggested(const Null&);
     virtual ~ContactsSuggested();
 
     void setResults(const QList<ContactSuggested> &results);
@@ -33,12 +36,17 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const ContactsSuggested &b);
+    bool operator ==(const ContactsSuggested &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     QList<ContactSuggested> m_results;
     QList<User> m_users;
     ContactsSuggestedType m_classType;
 };
+
+Q_DECLARE_METATYPE(ContactsSuggested)
 
 #endif // LQTG_TYPE_CONTACTSSUGGESTED

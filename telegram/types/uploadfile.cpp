@@ -21,6 +21,13 @@ UploadFile::UploadFile(InboundPkt *in) :
     fetch(in);
 }
 
+UploadFile::UploadFile(const Null &null) :
+    TelegramTypeObject(null),
+    m_mtime(0),
+    m_classType(typeUploadFile)
+{
+}
+
 UploadFile::~UploadFile() {
 }
 
@@ -48,8 +55,9 @@ StorageFileType UploadFile::type() const {
     return m_type;
 }
 
-bool UploadFile::operator ==(const UploadFile &b) {
-    return m_bytes == b.m_bytes &&
+bool UploadFile::operator ==(const UploadFile &b) const {
+    return m_classType == b.m_classType &&
+           m_bytes == b.m_bytes &&
            m_mtime == b.m_mtime &&
            m_type == b.m_type;
 }

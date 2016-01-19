@@ -6,6 +6,8 @@
 #define LQTG_TYPE_INPUTSTICKERSET
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QtGlobal>
 #include <QString>
 
@@ -20,6 +22,7 @@ public:
 
     InputStickerSet(InputStickerSetType classType = typeInputStickerSetEmpty, InboundPkt *in = 0);
     InputStickerSet(InboundPkt *in);
+    InputStickerSet(const Null&);
     virtual ~InputStickerSet();
 
     void setAccessHash(qint64 accessHash);
@@ -37,7 +40,10 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const InputStickerSet &b);
+    bool operator ==(const InputStickerSet &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     qint64 m_accessHash;
@@ -45,5 +51,7 @@ private:
     QString m_shortName;
     InputStickerSetType m_classType;
 };
+
+Q_DECLARE_METATYPE(InputStickerSet)
 
 #endif // LQTG_TYPE_INPUTSTICKERSET

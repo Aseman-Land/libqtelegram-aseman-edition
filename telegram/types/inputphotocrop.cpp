@@ -25,6 +25,15 @@ InputPhotoCrop::InputPhotoCrop(InboundPkt *in) :
     fetch(in);
 }
 
+InputPhotoCrop::InputPhotoCrop(const Null &null) :
+    TelegramTypeObject(null),
+    m_cropLeft(0),
+    m_cropTop(0),
+    m_cropWidth(0),
+    m_classType(typeInputPhotoCropAuto)
+{
+}
+
 InputPhotoCrop::~InputPhotoCrop() {
 }
 
@@ -52,8 +61,9 @@ qreal InputPhotoCrop::cropWidth() const {
     return m_cropWidth;
 }
 
-bool InputPhotoCrop::operator ==(const InputPhotoCrop &b) {
-    return m_cropLeft == b.m_cropLeft &&
+bool InputPhotoCrop::operator ==(const InputPhotoCrop &b) const {
+    return m_classType == b.m_classType &&
+           m_cropLeft == b.m_cropLeft &&
            m_cropTop == b.m_cropTop &&
            m_cropWidth == b.m_cropWidth;
 }

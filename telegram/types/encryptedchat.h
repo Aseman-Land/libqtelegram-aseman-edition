@@ -6,6 +6,8 @@
 #define LQTG_TYPE_ENCRYPTEDCHAT
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QtGlobal>
 #include <QByteArray>
 
@@ -22,6 +24,7 @@ public:
 
     EncryptedChat(EncryptedChatType classType = typeEncryptedChatEmpty, InboundPkt *in = 0);
     EncryptedChat(InboundPkt *in);
+    EncryptedChat(const Null&);
     virtual ~EncryptedChat();
 
     void setAccessHash(qint64 accessHash);
@@ -54,7 +57,10 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const EncryptedChat &b);
+    bool operator ==(const EncryptedChat &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     qint64 m_accessHash;
@@ -67,5 +73,7 @@ private:
     qint32 m_participantId;
     EncryptedChatType m_classType;
 };
+
+Q_DECLARE_METATYPE(EncryptedChat)
 
 #endif // LQTG_TYPE_ENCRYPTEDCHAT

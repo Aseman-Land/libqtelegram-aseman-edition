@@ -19,6 +19,12 @@ ChatPhoto::ChatPhoto(InboundPkt *in) :
     fetch(in);
 }
 
+ChatPhoto::ChatPhoto(const Null &null) :
+    TelegramTypeObject(null),
+    m_classType(typeChatPhotoEmpty)
+{
+}
+
 ChatPhoto::~ChatPhoto() {
 }
 
@@ -38,8 +44,9 @@ FileLocation ChatPhoto::photoSmall() const {
     return m_photoSmall;
 }
 
-bool ChatPhoto::operator ==(const ChatPhoto &b) {
-    return m_photoBig == b.m_photoBig &&
+bool ChatPhoto::operator ==(const ChatPhoto &b) const {
+    return m_classType == b.m_classType &&
+           m_photoBig == b.m_photoBig &&
            m_photoSmall == b.m_photoSmall;
 }
 

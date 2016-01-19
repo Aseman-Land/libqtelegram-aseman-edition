@@ -21,6 +21,13 @@ AccountPasswordInputSettings::AccountPasswordInputSettings(InboundPkt *in) :
     fetch(in);
 }
 
+AccountPasswordInputSettings::AccountPasswordInputSettings(const Null &null) :
+    TelegramTypeObject(null),
+    m_flags(0),
+    m_classType(typeAccountPasswordInputSettings)
+{
+}
+
 AccountPasswordInputSettings::~AccountPasswordInputSettings() {
 }
 
@@ -64,8 +71,9 @@ QByteArray AccountPasswordInputSettings::newSalt() const {
     return m_newSalt;
 }
 
-bool AccountPasswordInputSettings::operator ==(const AccountPasswordInputSettings &b) {
-    return m_email == b.m_email &&
+bool AccountPasswordInputSettings::operator ==(const AccountPasswordInputSettings &b) const {
+    return m_classType == b.m_classType &&
+           m_email == b.m_email &&
            m_flags == b.m_flags &&
            m_hint == b.m_hint &&
            m_newPasswordHash == b.m_newPasswordHash &&

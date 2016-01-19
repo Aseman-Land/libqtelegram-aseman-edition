@@ -6,6 +6,8 @@
 #define LQTG_TYPE_MESSAGESDHCONFIG
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QtGlobal>
 #include <QByteArray>
 
@@ -19,6 +21,7 @@ public:
 
     MessagesDhConfig(MessagesDhConfigType classType = typeMessagesDhConfigNotModified, InboundPkt *in = 0);
     MessagesDhConfig(InboundPkt *in);
+    MessagesDhConfig(const Null&);
     virtual ~MessagesDhConfig();
 
     void setG(qint32 g);
@@ -39,7 +42,10 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const MessagesDhConfig &b);
+    bool operator ==(const MessagesDhConfig &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     qint32 m_g;
@@ -48,5 +54,7 @@ private:
     qint32 m_version;
     MessagesDhConfigType m_classType;
 };
+
+Q_DECLARE_METATYPE(MessagesDhConfig)
 
 #endif // LQTG_TYPE_MESSAGESDHCONFIG

@@ -19,6 +19,12 @@ MessagesChats::MessagesChats(InboundPkt *in) :
     fetch(in);
 }
 
+MessagesChats::MessagesChats(const Null &null) :
+    TelegramTypeObject(null),
+    m_classType(typeMessagesChats)
+{
+}
+
 MessagesChats::~MessagesChats() {
 }
 
@@ -30,8 +36,9 @@ QList<Chat> MessagesChats::chats() const {
     return m_chats;
 }
 
-bool MessagesChats::operator ==(const MessagesChats &b) {
-    return m_chats == b.m_chats;
+bool MessagesChats::operator ==(const MessagesChats &b) const {
+    return m_classType == b.m_classType &&
+           m_chats == b.m_chats;
 }
 
 void MessagesChats::setClassType(MessagesChats::MessagesChatsType classType) {

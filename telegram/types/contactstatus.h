@@ -6,6 +6,8 @@
 #define LQTG_TYPE_CONTACTSTATUS
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include "userstatus.h"
 #include <QtGlobal>
 
@@ -18,6 +20,7 @@ public:
 
     ContactStatus(ContactStatusType classType = typeContactStatus, InboundPkt *in = 0);
     ContactStatus(InboundPkt *in);
+    ContactStatus(const Null&);
     virtual ~ContactStatus();
 
     void setStatus(const UserStatus &status);
@@ -32,12 +35,17 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const ContactStatus &b);
+    bool operator ==(const ContactStatus &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     UserStatus m_status;
     qint32 m_userId;
     ContactStatusType m_classType;
 };
+
+Q_DECLARE_METATYPE(ContactStatus)
 
 #endif // LQTG_TYPE_CONTACTSTATUS

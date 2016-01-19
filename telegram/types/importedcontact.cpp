@@ -23,6 +23,14 @@ ImportedContact::ImportedContact(InboundPkt *in) :
     fetch(in);
 }
 
+ImportedContact::ImportedContact(const Null &null) :
+    TelegramTypeObject(null),
+    m_clientId(0),
+    m_userId(0),
+    m_classType(typeImportedContact)
+{
+}
+
 ImportedContact::~ImportedContact() {
 }
 
@@ -42,8 +50,9 @@ qint32 ImportedContact::userId() const {
     return m_userId;
 }
 
-bool ImportedContact::operator ==(const ImportedContact &b) {
-    return m_clientId == b.m_clientId &&
+bool ImportedContact::operator ==(const ImportedContact &b) const {
+    return m_classType == b.m_classType &&
+           m_clientId == b.m_clientId &&
            m_userId == b.m_userId;
 }
 

@@ -6,9 +6,11 @@
 #define LQTG_TYPE_MESSAGEACTION
 
 #include "telegramtypeobject.h"
-#include <QString>
+
+#include <QMetaType>
 #include <QtGlobal>
 #include "photo.h"
+#include <QString>
 #include <QList>
 
 class LIBQTELEGRAMSHARED_EXPORT MessageAction : public TelegramTypeObject
@@ -20,19 +22,24 @@ public:
         typeMessageActionChatEditTitle = 0xb5a1ce5a,
         typeMessageActionChatEditPhoto = 0x7fcb13a8,
         typeMessageActionChatDeletePhoto = 0x95e3fbef,
-        typeMessageActionChatAddUser = 0x5e3cfc4b,
+        typeMessageActionChatAddUser = 0x488a7337,
         typeMessageActionChatDeleteUser = 0xb2ae9b0c,
-        typeMessageActionGeoChatCreate = 0x6f038ebc,
-        typeMessageActionGeoChatCheckin = 0xc7d53de,
-        typeMessageActionChatJoinedByLink = 0xf89cf5e8
+        typeMessageActionChatJoinedByLink = 0xf89cf5e8,
+        typeMessageActionChannelCreate = 0x95d2ac92,
+        typeMessageActionChatMigrateTo = 0x51bdb021,
+        typeMessageActionChannelMigrateFrom = 0xb055eaee
     };
 
     MessageAction(MessageActionType classType = typeMessageActionEmpty, InboundPkt *in = 0);
     MessageAction(InboundPkt *in);
+    MessageAction(const Null&);
     virtual ~MessageAction();
 
-    void setAddress(const QString &address);
-    QString address() const;
+    void setChannelId(qint32 channelId);
+    qint32 channelId() const;
+
+    void setChatId(qint32 chatId);
+    qint32 chatId() const;
 
     void setInviterId(qint32 inviterId);
     qint32 inviterId() const;
@@ -55,10 +62,14 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const MessageAction &b);
+    bool operator ==(const MessageAction &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
-    QString m_address;
+    qint32 m_channelId;
+    qint32 m_chatId;
     qint32 m_inviterId;
     Photo m_photo;
     QString m_title;
@@ -66,5 +77,7 @@ private:
     QList<qint32> m_users;
     MessageActionType m_classType;
 };
+
+Q_DECLARE_METATYPE(MessageAction)
 
 #endif // LQTG_TYPE_MESSAGEACTION

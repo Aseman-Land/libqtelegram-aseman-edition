@@ -6,6 +6,8 @@
 #define LQTG_TYPE_USERPROFILEPHOTO
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include "filelocation.h"
 #include <QtGlobal>
 
@@ -19,6 +21,7 @@ public:
 
     UserProfilePhoto(UserProfilePhotoType classType = typeUserProfilePhotoEmpty, InboundPkt *in = 0);
     UserProfilePhoto(InboundPkt *in);
+    UserProfilePhoto(const Null&);
     virtual ~UserProfilePhoto();
 
     void setPhotoBig(const FileLocation &photoBig);
@@ -36,7 +39,10 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const UserProfilePhoto &b);
+    bool operator ==(const UserProfilePhoto &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     FileLocation m_photoBig;
@@ -44,5 +50,7 @@ private:
     FileLocation m_photoSmall;
     UserProfilePhotoType m_classType;
 };
+
+Q_DECLARE_METATYPE(UserProfilePhoto)
 
 #endif // LQTG_TYPE_USERPROFILEPHOTO

@@ -19,6 +19,12 @@ PrivacyRule::PrivacyRule(InboundPkt *in) :
     fetch(in);
 }
 
+PrivacyRule::PrivacyRule(const Null &null) :
+    TelegramTypeObject(null),
+    m_classType(typePrivacyValueAllowContacts)
+{
+}
+
 PrivacyRule::~PrivacyRule() {
 }
 
@@ -30,8 +36,9 @@ QList<qint32> PrivacyRule::users() const {
     return m_users;
 }
 
-bool PrivacyRule::operator ==(const PrivacyRule &b) {
-    return m_users == b.m_users;
+bool PrivacyRule::operator ==(const PrivacyRule &b) const {
+    return m_classType == b.m_classType &&
+           m_users == b.m_users;
 }
 
 void PrivacyRule::setClassType(PrivacyRule::PrivacyRuleType classType) {

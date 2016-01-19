@@ -6,6 +6,8 @@
 #define LQTG_TYPE_MESSAGESAFFECTEDHISTORY
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QtGlobal>
 
 class LIBQTELEGRAMSHARED_EXPORT MessagesAffectedHistory : public TelegramTypeObject
@@ -17,6 +19,7 @@ public:
 
     MessagesAffectedHistory(MessagesAffectedHistoryType classType = typeMessagesAffectedHistory, InboundPkt *in = 0);
     MessagesAffectedHistory(InboundPkt *in);
+    MessagesAffectedHistory(const Null&);
     virtual ~MessagesAffectedHistory();
 
     void setOffset(qint32 offset);
@@ -34,7 +37,10 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const MessagesAffectedHistory &b);
+    bool operator ==(const MessagesAffectedHistory &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     qint32 m_offset;
@@ -42,5 +48,7 @@ private:
     qint32 m_ptsCount;
     MessagesAffectedHistoryType m_classType;
 };
+
+Q_DECLARE_METATYPE(MessagesAffectedHistory)
 
 #endif // LQTG_TYPE_MESSAGESAFFECTEDHISTORY

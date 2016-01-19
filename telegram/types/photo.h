@@ -6,8 +6,9 @@
 #define LQTG_TYPE_PHOTO
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QtGlobal>
-#include "geopoint.h"
 #include <QList>
 #include "photosize.h"
 
@@ -16,11 +17,12 @@ class LIBQTELEGRAMSHARED_EXPORT Photo : public TelegramTypeObject
 public:
     enum PhotoType {
         typePhotoEmpty = 0x2331b22d,
-        typePhoto = 0xc3838076
+        typePhoto = 0xcded42fe
     };
 
     Photo(PhotoType classType = typePhotoEmpty, InboundPkt *in = 0);
     Photo(InboundPkt *in);
+    Photo(const Null&);
     virtual ~Photo();
 
     void setAccessHash(qint64 accessHash);
@@ -29,17 +31,11 @@ public:
     void setDate(qint32 date);
     qint32 date() const;
 
-    void setGeo(const GeoPoint &geo);
-    GeoPoint geo() const;
-
     void setId(qint64 id);
     qint64 id() const;
 
     void setSizes(const QList<PhotoSize> &sizes);
     QList<PhotoSize> sizes() const;
-
-    void setUserId(qint32 userId);
-    qint32 userId() const;
 
     void setClassType(PhotoType classType);
     PhotoType classType() const;
@@ -47,16 +43,19 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const Photo &b);
+    bool operator ==(const Photo &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     qint64 m_accessHash;
     qint32 m_date;
-    GeoPoint m_geo;
     qint64 m_id;
     QList<PhotoSize> m_sizes;
-    qint32 m_userId;
     PhotoType m_classType;
 };
+
+Q_DECLARE_METATYPE(Photo)
 
 #endif // LQTG_TYPE_PHOTO

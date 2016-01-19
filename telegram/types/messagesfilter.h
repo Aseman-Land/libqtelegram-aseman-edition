@@ -7,6 +7,8 @@
 
 #include "telegramtypeobject.h"
 
+#include <QMetaType>
+
 class LIBQTELEGRAMSHARED_EXPORT MessagesFilter : public TelegramTypeObject
 {
 public:
@@ -17,11 +19,15 @@ public:
         typeInputMessagesFilterPhotoVideo = 0x56e9f0e4,
         typeInputMessagesFilterPhotoVideoDocuments = 0xd95e73bb,
         typeInputMessagesFilterDocument = 0x9eddf188,
-        typeInputMessagesFilterAudio = 0xcfc87522
+        typeInputMessagesFilterAudio = 0xcfc87522,
+        typeInputMessagesFilterAudioDocuments = 0x5afbf764,
+        typeInputMessagesFilterUrl = 0x7ef0dd87,
+        typeInputMessagesFilterGif = 0xffc86587
     };
 
     MessagesFilter(MessagesFilterType classType = typeInputMessagesFilterEmpty, InboundPkt *in = 0);
     MessagesFilter(InboundPkt *in);
+    MessagesFilter(const Null&);
     virtual ~MessagesFilter();
 
     void setClassType(MessagesFilterType classType);
@@ -30,10 +36,15 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const MessagesFilter &b);
+    bool operator ==(const MessagesFilter &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     MessagesFilterType m_classType;
 };
+
+Q_DECLARE_METATYPE(MessagesFilter)
 
 #endif // LQTG_TYPE_MESSAGESFILTER

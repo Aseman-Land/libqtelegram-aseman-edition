@@ -23,6 +23,14 @@ NearestDc::NearestDc(InboundPkt *in) :
     fetch(in);
 }
 
+NearestDc::NearestDc(const Null &null) :
+    TelegramTypeObject(null),
+    m_nearestDc(0),
+    m_thisDc(0),
+    m_classType(typeNearestDc)
+{
+}
+
 NearestDc::~NearestDc() {
 }
 
@@ -50,8 +58,9 @@ qint32 NearestDc::thisDc() const {
     return m_thisDc;
 }
 
-bool NearestDc::operator ==(const NearestDc &b) {
-    return m_country == b.m_country &&
+bool NearestDc::operator ==(const NearestDc &b) const {
+    return m_classType == b.m_classType &&
+           m_country == b.m_country &&
            m_nearestDc == b.m_nearestDc &&
            m_thisDc == b.m_thisDc;
 }

@@ -23,6 +23,14 @@ InputUser::InputUser(InboundPkt *in) :
     fetch(in);
 }
 
+InputUser::InputUser(const Null &null) :
+    TelegramTypeObject(null),
+    m_accessHash(0),
+    m_userId(0),
+    m_classType(typeInputUserEmpty)
+{
+}
+
 InputUser::~InputUser() {
 }
 
@@ -42,8 +50,9 @@ qint32 InputUser::userId() const {
     return m_userId;
 }
 
-bool InputUser::operator ==(const InputUser &b) {
-    return m_accessHash == b.m_accessHash &&
+bool InputUser::operator ==(const InputUser &b) const {
+    return m_classType == b.m_classType &&
+           m_accessHash == b.m_accessHash &&
            m_userId == b.m_userId;
 }
 
@@ -71,14 +80,7 @@ bool InputUser::fetch(InboundPkt *in) {
     }
         break;
     
-    case typeInputUserContact: {
-        m_userId = in->fetchInt();
-        m_classType = static_cast<InputUserType>(x);
-        return true;
-    }
-        break;
-    
-    case typeInputUserForeign: {
+    case typeInputUser: {
         m_userId = in->fetchInt();
         m_accessHash = in->fetchLong();
         m_classType = static_cast<InputUserType>(x);
@@ -105,13 +107,7 @@ bool InputUser::push(OutboundPkt *out) const {
     }
         break;
     
-    case typeInputUserContact: {
-        out->appendInt(m_userId);
-        return true;
-    }
-        break;
-    
-    case typeInputUserForeign: {
+    case typeInputUser: {
         out->appendInt(m_userId);
         out->appendLong(m_accessHash);
         return true;

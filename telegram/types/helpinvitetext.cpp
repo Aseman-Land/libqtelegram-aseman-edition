@@ -19,6 +19,12 @@ HelpInviteText::HelpInviteText(InboundPkt *in) :
     fetch(in);
 }
 
+HelpInviteText::HelpInviteText(const Null &null) :
+    TelegramTypeObject(null),
+    m_classType(typeHelpInviteText)
+{
+}
+
 HelpInviteText::~HelpInviteText() {
 }
 
@@ -30,8 +36,9 @@ QString HelpInviteText::message() const {
     return m_message;
 }
 
-bool HelpInviteText::operator ==(const HelpInviteText &b) {
-    return m_message == b.m_message;
+bool HelpInviteText::operator ==(const HelpInviteText &b) const {
+    return m_classType == b.m_classType &&
+           m_message == b.m_message;
 }
 
 void HelpInviteText::setClassType(HelpInviteText::HelpInviteTextType classType) {

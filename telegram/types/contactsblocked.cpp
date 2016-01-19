@@ -21,6 +21,13 @@ ContactsBlocked::ContactsBlocked(InboundPkt *in) :
     fetch(in);
 }
 
+ContactsBlocked::ContactsBlocked(const Null &null) :
+    TelegramTypeObject(null),
+    m_count(0),
+    m_classType(typeContactsBlocked)
+{
+}
+
 ContactsBlocked::~ContactsBlocked() {
 }
 
@@ -48,8 +55,9 @@ QList<User> ContactsBlocked::users() const {
     return m_users;
 }
 
-bool ContactsBlocked::operator ==(const ContactsBlocked &b) {
-    return m_blocked == b.m_blocked &&
+bool ContactsBlocked::operator ==(const ContactsBlocked &b) const {
+    return m_classType == b.m_classType &&
+           m_blocked == b.m_blocked &&
            m_count == b.m_count &&
            m_users == b.m_users;
 }

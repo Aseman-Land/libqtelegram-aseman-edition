@@ -6,6 +6,8 @@
 #define LQTG_TYPE_CONTACTSLINK
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include "contactlink.h"
 #include "user.h"
 
@@ -18,6 +20,7 @@ public:
 
     ContactsLink(ContactsLinkType classType = typeContactsLink, InboundPkt *in = 0);
     ContactsLink(InboundPkt *in);
+    ContactsLink(const Null&);
     virtual ~ContactsLink();
 
     void setForeignLink(const ContactLink &foreignLink);
@@ -35,7 +38,10 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const ContactsLink &b);
+    bool operator ==(const ContactsLink &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     ContactLink m_foreignLink;
@@ -43,5 +49,7 @@ private:
     User m_user;
     ContactsLinkType m_classType;
 };
+
+Q_DECLARE_METATYPE(ContactsLink)
 
 #endif // LQTG_TYPE_CONTACTSLINK

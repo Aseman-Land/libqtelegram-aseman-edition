@@ -4,8 +4,9 @@
 
 Q_LOGGING_CATEGORY(TG_FILE_FILEHANDLER, "tg.file.filehandler")
 
-FileHandler::FileHandler(Api *api, CryptoUtils *crypto, Settings *settings, DcProvider &dcProvider, SecretState &secretState, QObject *parent) :
+FileHandler::FileHandler(TelegramCore *core, TelegramApi *api, CryptoUtils *crypto, Settings *settings, DcProvider &dcProvider, SecretState &secretState, QObject *parent) :
     QObject(parent),
+    mCore(core),
     mApi(api),
     mCrypto(crypto),
     mSettings(settings),
@@ -195,21 +196,21 @@ void FileHandler::onUploadSaveFilePartResult(qint64, qint64 fileId, bool) {
                     InputPeer peer = op->peer();
                     qint64 randomId = op->randomId();
                     qint32 replyToMsgId = op->replyToMsgId();
-                    requestId = mApi->messagesSendMedia(peer, metadata, randomId, replyToMsgId);
+                    requestId = mCore->messagesSendMedia(op->broadcast(), peer, replyToMsgId, metadata, randomId, op->replyMarkup(), op->resultCallback<UpdatesType>());
                     break;
                 }
                 case FileOperation::editChatPhoto: {
                     InputChatPhoto metadata = op->inputChatPhoto();
                     metadata.setFile(inputFile);
                     qint32 chatId = op->chatId();
-                    requestId = mApi->messagesEditChatPhoto(chatId, metadata);
+                    requestId = mCore->messagesEditChatPhoto(chatId, metadata, op->resultCallback<UpdatesType>());
                     break;
                 }
                 case FileOperation::uploadProfilePhoto: {
                     QString caption = op->caption();
                     InputGeoPoint geoPoint = op->geoPoint();
                     InputPhotoCrop crop = op->crop();
-                    requestId = mApi->photosUploadProfilePhoto(inputFile, caption, geoPoint, crop);
+                    requestId = mCore->photosUploadProfilePhoto(inputFile, caption, geoPoint, crop, op->resultCallback<PhotosPhoto>());
                     break;
                 }
                 case FileOperation::sendEncryptedFile: {
@@ -226,11 +227,10 @@ void FileHandler::onUploadSaveFilePartResult(qint64, qint64 fileId, bool) {
                     inputEncryptedFile.setKeyFingerprint(keyFingerprint);
 
                     SecretChat *secretChat = mSecretState.chats().value(inputEncryptedChat.chatId());
-                    QList<qint64> previousMsgs = secretChat->sequence();
                     Encrypter encrypter(mSettings);
                     encrypter.setSecretChat(secretChat);
                     QByteArray data = encrypter.generateEncryptedData(decryptedMessage);
-                    requestId = mApi->messagesSendEncryptedFile(previousMsgs, inputEncryptedChat, randomId, data, inputEncryptedFile);
+                    requestId = mCore->messagesSendEncryptedFile(inputEncryptedChat, randomId, data, inputEncryptedFile, op->resultCallback<MessagesSentEncryptedMessage>());
 
                     secretChat->increaseOutSeqNo();
                     secretChat->appendToSequence(randomId);

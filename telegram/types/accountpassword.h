@@ -6,6 +6,8 @@
 #define LQTG_TYPE_ACCOUNTPASSWORD
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QByteArray>
 #include <QString>
 
@@ -19,6 +21,7 @@ public:
 
     AccountPassword(AccountPasswordType classType = typeAccountNoPassword, InboundPkt *in = 0);
     AccountPassword(InboundPkt *in);
+    AccountPassword(const Null&);
     virtual ~AccountPassword();
 
     void setCurrentSalt(const QByteArray &currentSalt);
@@ -42,7 +45,10 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const AccountPassword &b);
+    bool operator ==(const AccountPassword &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     QByteArray m_currentSalt;
@@ -52,5 +58,7 @@ private:
     QByteArray m_newSalt;
     AccountPasswordType m_classType;
 };
+
+Q_DECLARE_METATYPE(AccountPassword)
 
 #endif // LQTG_TYPE_ACCOUNTPASSWORD

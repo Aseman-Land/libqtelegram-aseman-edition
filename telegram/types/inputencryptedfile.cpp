@@ -27,6 +27,16 @@ InputEncryptedFile::InputEncryptedFile(InboundPkt *in) :
     fetch(in);
 }
 
+InputEncryptedFile::InputEncryptedFile(const Null &null) :
+    TelegramTypeObject(null),
+    m_accessHash(0),
+    m_id(0),
+    m_keyFingerprint(0),
+    m_parts(0),
+    m_classType(typeInputEncryptedFileEmpty)
+{
+}
+
 InputEncryptedFile::~InputEncryptedFile() {
 }
 
@@ -70,8 +80,9 @@ qint32 InputEncryptedFile::parts() const {
     return m_parts;
 }
 
-bool InputEncryptedFile::operator ==(const InputEncryptedFile &b) {
-    return m_accessHash == b.m_accessHash &&
+bool InputEncryptedFile::operator ==(const InputEncryptedFile &b) const {
+    return m_classType == b.m_classType &&
+           m_accessHash == b.m_accessHash &&
            m_id == b.m_id &&
            m_keyFingerprint == b.m_keyFingerprint &&
            m_md5Checksum == b.m_md5Checksum &&

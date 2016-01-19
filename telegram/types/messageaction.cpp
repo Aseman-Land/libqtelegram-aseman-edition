@@ -8,6 +8,8 @@
 #include "../coretypes.h"
 
 MessageAction::MessageAction(MessageActionType classType, InboundPkt *in) :
+    m_channelId(0),
+    m_chatId(0),
     m_inviterId(0),
     m_userId(0),
     m_classType(classType)
@@ -16,6 +18,8 @@ MessageAction::MessageAction(MessageActionType classType, InboundPkt *in) :
 }
 
 MessageAction::MessageAction(InboundPkt *in) :
+    m_channelId(0),
+    m_chatId(0),
     m_inviterId(0),
     m_userId(0),
     m_classType(typeMessageActionEmpty)
@@ -23,15 +27,33 @@ MessageAction::MessageAction(InboundPkt *in) :
     fetch(in);
 }
 
+MessageAction::MessageAction(const Null &null) :
+    TelegramTypeObject(null),
+    m_channelId(0),
+    m_chatId(0),
+    m_inviterId(0),
+    m_userId(0),
+    m_classType(typeMessageActionEmpty)
+{
+}
+
 MessageAction::~MessageAction() {
 }
 
-void MessageAction::setAddress(const QString &address) {
-    m_address = address;
+void MessageAction::setChannelId(qint32 channelId) {
+    m_channelId = channelId;
 }
 
-QString MessageAction::address() const {
-    return m_address;
+qint32 MessageAction::channelId() const {
+    return m_channelId;
+}
+
+void MessageAction::setChatId(qint32 chatId) {
+    m_chatId = chatId;
+}
+
+qint32 MessageAction::chatId() const {
+    return m_chatId;
 }
 
 void MessageAction::setInviterId(qint32 inviterId) {
@@ -74,8 +96,10 @@ QList<qint32> MessageAction::users() const {
     return m_users;
 }
 
-bool MessageAction::operator ==(const MessageAction &b) {
-    return m_address == b.m_address &&
+bool MessageAction::operator ==(const MessageAction &b) const {
+    return m_classType == b.m_classType &&
+           m_channelId == b.m_channelId &&
+           m_chatId == b.m_chatId &&
            m_inviterId == b.m_inviterId &&
            m_photo == b.m_photo &&
            m_title == b.m_title &&
@@ -137,7 +161,14 @@ bool MessageAction::fetch(InboundPkt *in) {
         break;
     
     case typeMessageActionChatAddUser: {
-        m_userId = in->fetchInt();
+        if(in->fetchInt() != (qint32)CoreTypes::typeVector) return false;
+        qint32 m_users_length = in->fetchInt();
+        m_users.clear();
+        for (qint32 i = 0; i < m_users_length; i++) {
+            qint32 type;
+            type = in->fetchInt();
+            m_users.append(type);
+        }
         m_classType = static_cast<MessageActionType>(x);
         return true;
     }
@@ -150,22 +181,30 @@ bool MessageAction::fetch(InboundPkt *in) {
     }
         break;
     
-    case typeMessageActionGeoChatCreate: {
-        m_title = in->fetchQString();
-        m_address = in->fetchQString();
-        m_classType = static_cast<MessageActionType>(x);
-        return true;
-    }
-        break;
-    
-    case typeMessageActionGeoChatCheckin: {
-        m_classType = static_cast<MessageActionType>(x);
-        return true;
-    }
-        break;
-    
     case typeMessageActionChatJoinedByLink: {
         m_inviterId = in->fetchInt();
+        m_classType = static_cast<MessageActionType>(x);
+        return true;
+    }
+        break;
+    
+    case typeMessageActionChannelCreate: {
+        m_title = in->fetchQString();
+        m_classType = static_cast<MessageActionType>(x);
+        return true;
+    }
+        break;
+    
+    case typeMessageActionChatMigrateTo: {
+        m_channelId = in->fetchInt();
+        m_classType = static_cast<MessageActionType>(x);
+        return true;
+    }
+        break;
+    
+    case typeMessageActionChannelMigrateFrom: {
+        m_title = in->fetchQString();
+        m_chatId = in->fetchInt();
         m_classType = static_cast<MessageActionType>(x);
         return true;
     }
@@ -214,7 +253,11 @@ bool MessageAction::push(OutboundPkt *out) const {
         break;
     
     case typeMessageActionChatAddUser: {
-        out->appendInt(m_userId);
+        out->appendInt(CoreTypes::typeVector);
+        out->appendInt(m_users.count());
+        for (qint32 i = 0; i < m_users.count(); i++) {
+            out->appendInt(m_users[i]);
+        }
         return true;
     }
         break;
@@ -225,20 +268,27 @@ bool MessageAction::push(OutboundPkt *out) const {
     }
         break;
     
-    case typeMessageActionGeoChatCreate: {
-        out->appendQString(m_title);
-        out->appendQString(m_address);
-        return true;
-    }
-        break;
-    
-    case typeMessageActionGeoChatCheckin: {
-        return true;
-    }
-        break;
-    
     case typeMessageActionChatJoinedByLink: {
         out->appendInt(m_inviterId);
+        return true;
+    }
+        break;
+    
+    case typeMessageActionChannelCreate: {
+        out->appendQString(m_title);
+        return true;
+    }
+        break;
+    
+    case typeMessageActionChatMigrateTo: {
+        out->appendInt(m_channelId);
+        return true;
+    }
+        break;
+    
+    case typeMessageActionChannelMigrateFrom: {
+        out->appendQString(m_title);
+        out->appendInt(m_chatId);
         return true;
     }
         break;

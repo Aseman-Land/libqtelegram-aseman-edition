@@ -6,6 +6,8 @@
 #define LQTG_TYPE_DOCUMENT
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QtGlobal>
 #include <QList>
 #include "documentattribute.h"
@@ -22,6 +24,7 @@ public:
 
     Document(DocumentType classType = typeDocumentEmpty, InboundPkt *in = 0);
     Document(InboundPkt *in);
+    Document(const Null&);
     virtual ~Document();
 
     void setAccessHash(qint64 accessHash);
@@ -54,7 +57,10 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const Document &b);
+    bool operator ==(const Document &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     qint64 m_accessHash;
@@ -67,5 +73,7 @@ private:
     PhotoSize m_thumb;
     DocumentType m_classType;
 };
+
+Q_DECLARE_METATYPE(Document)
 
 #endif // LQTG_TYPE_DOCUMENT

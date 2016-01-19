@@ -6,7 +6,8 @@
 #define LQTG_TYPE_INPUTNOTIFYPEER
 
 #include "telegramtypeobject.h"
-#include "inputgeochat.h"
+
+#include <QMetaType>
 #include "inputpeer.h"
 
 class LIBQTELEGRAMSHARED_EXPORT InputNotifyPeer : public TelegramTypeObject
@@ -16,19 +17,16 @@ public:
         typeInputNotifyPeer = 0xb8bc5b0c,
         typeInputNotifyUsers = 0x193b4417,
         typeInputNotifyChats = 0x4a95e84e,
-        typeInputNotifyAll = 0xa429b886,
-        typeInputNotifyGeoChatPeer = 0x4d8ddec8
+        typeInputNotifyAll = 0xa429b886
     };
 
     InputNotifyPeer(InputNotifyPeerType classType = typeInputNotifyPeer, InboundPkt *in = 0);
     InputNotifyPeer(InboundPkt *in);
+    InputNotifyPeer(const Null&);
     virtual ~InputNotifyPeer();
 
-    void setPeerInputGeoChat(const InputGeoChat &peerInputGeoChat);
-    InputGeoChat peerInputGeoChat() const;
-
-    void setPeerInput(const InputPeer &peerInput);
-    InputPeer peerInput() const;
+    void setPeer(const InputPeer &peer);
+    InputPeer peer() const;
 
     void setClassType(InputNotifyPeerType classType);
     InputNotifyPeerType classType() const;
@@ -36,12 +34,16 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const InputNotifyPeer &b);
+    bool operator ==(const InputNotifyPeer &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
-    InputGeoChat m_peerInputGeoChat;
-    InputPeer m_peerInput;
+    InputPeer m_peer;
     InputNotifyPeerType m_classType;
 };
+
+Q_DECLARE_METATYPE(InputNotifyPeer)
 
 #endif // LQTG_TYPE_INPUTNOTIFYPEER

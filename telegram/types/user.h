@@ -6,6 +6,8 @@
 #define LQTG_TYPE_USER
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QtGlobal>
 #include <QString>
 #include "userprofilephoto.h"
@@ -16,22 +18,43 @@ class LIBQTELEGRAMSHARED_EXPORT User : public TelegramTypeObject
 public:
     enum UserType {
         typeUserEmpty = 0x200250ba,
-        typeUserSelf = 0x1c60e608,
-        typeUserContact = 0xcab35e18,
-        typeUserRequest = 0xd9ccc4ef,
-        typeUserForeign = 0x75cf7a8,
-        typeUserDeleted = 0xd6016d7a
+        typeUser = 0xd10d979a
     };
 
     User(UserType classType = typeUserEmpty, InboundPkt *in = 0);
     User(InboundPkt *in);
+    User(const Null&);
     virtual ~User();
 
     void setAccessHash(qint64 accessHash);
     qint64 accessHash() const;
 
+    void setBot(bool bot);
+    bool bot() const;
+
+    void setBotChatHistory(bool botChatHistory);
+    bool botChatHistory() const;
+
+    void setBotInfoVersion(qint32 botInfoVersion);
+    qint32 botInfoVersion() const;
+
+    void setBotInlinePlaceholder(const QString &botInlinePlaceholder);
+    QString botInlinePlaceholder() const;
+
+    void setBotNochats(bool botNochats);
+    bool botNochats() const;
+
+    void setContact(bool contact);
+    bool contact() const;
+
+    void setDeleted(bool deleted);
+    bool deleted() const;
+
     void setFirstName(const QString &firstName);
     QString firstName() const;
+
+    void setFlags(qint32 flags);
+    qint32 flags() const;
 
     void setId(qint32 id);
     qint32 id() const;
@@ -39,11 +62,23 @@ public:
     void setLastName(const QString &lastName);
     QString lastName() const;
 
+    void setMutualContact(bool mutualContact);
+    bool mutualContact() const;
+
     void setPhone(const QString &phone);
     QString phone() const;
 
     void setPhoto(const UserProfilePhoto &photo);
     UserProfilePhoto photo() const;
+
+    void setRestricted(bool restricted);
+    bool restricted() const;
+
+    void setRestrictionReason(const QString &restrictionReason);
+    QString restrictionReason() const;
+
+    void setSelf(bool self);
+    bool self() const;
 
     void setStatus(const UserStatus &status);
     UserStatus status() const;
@@ -51,24 +86,36 @@ public:
     void setUsername(const QString &username);
     QString username() const;
 
+    void setVerified(bool verified);
+    bool verified() const;
+
     void setClassType(UserType classType);
     UserType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const User &b);
+    bool operator ==(const User &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     qint64 m_accessHash;
+    qint32 m_botInfoVersion;
+    QString m_botInlinePlaceholder;
     QString m_firstName;
+    qint32 m_flags;
     qint32 m_id;
     QString m_lastName;
     QString m_phone;
     UserProfilePhoto m_photo;
+    QString m_restrictionReason;
     UserStatus m_status;
     QString m_username;
     UserType m_classType;
 };
+
+Q_DECLARE_METATYPE(User)
 
 #endif // LQTG_TYPE_USER

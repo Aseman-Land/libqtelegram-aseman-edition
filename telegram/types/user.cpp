@@ -9,6 +9,8 @@
 
 User::User(UserType classType, InboundPkt *in) :
     m_accessHash(0),
+    m_botInfoVersion(0),
+    m_flags(0),
     m_id(0),
     m_classType(classType)
 {
@@ -17,10 +19,22 @@ User::User(UserType classType, InboundPkt *in) :
 
 User::User(InboundPkt *in) :
     m_accessHash(0),
+    m_botInfoVersion(0),
+    m_flags(0),
     m_id(0),
     m_classType(typeUserEmpty)
 {
     fetch(in);
+}
+
+User::User(const Null &null) :
+    TelegramTypeObject(null),
+    m_accessHash(0),
+    m_botInfoVersion(0),
+    m_flags(0),
+    m_id(0),
+    m_classType(typeUserEmpty)
+{
 }
 
 User::~User() {
@@ -34,12 +48,81 @@ qint64 User::accessHash() const {
     return m_accessHash;
 }
 
+void User::setBot(bool bot) {
+    if(bot) m_flags = (m_flags | (1<<14));
+    else m_flags = (m_flags & ~(1<<14));
+}
+
+bool User::bot() const {
+    return (m_flags & 1<<14);
+}
+
+void User::setBotChatHistory(bool botChatHistory) {
+    if(botChatHistory) m_flags = (m_flags | (1<<15));
+    else m_flags = (m_flags & ~(1<<15));
+}
+
+bool User::botChatHistory() const {
+    return (m_flags & 1<<15);
+}
+
+void User::setBotInfoVersion(qint32 botInfoVersion) {
+    m_botInfoVersion = botInfoVersion;
+}
+
+qint32 User::botInfoVersion() const {
+    return m_botInfoVersion;
+}
+
+void User::setBotInlinePlaceholder(const QString &botInlinePlaceholder) {
+    m_botInlinePlaceholder = botInlinePlaceholder;
+}
+
+QString User::botInlinePlaceholder() const {
+    return m_botInlinePlaceholder;
+}
+
+void User::setBotNochats(bool botNochats) {
+    if(botNochats) m_flags = (m_flags | (1<<16));
+    else m_flags = (m_flags & ~(1<<16));
+}
+
+bool User::botNochats() const {
+    return (m_flags & 1<<16);
+}
+
+void User::setContact(bool contact) {
+    if(contact) m_flags = (m_flags | (1<<11));
+    else m_flags = (m_flags & ~(1<<11));
+}
+
+bool User::contact() const {
+    return (m_flags & 1<<11);
+}
+
+void User::setDeleted(bool deleted) {
+    if(deleted) m_flags = (m_flags | (1<<13));
+    else m_flags = (m_flags & ~(1<<13));
+}
+
+bool User::deleted() const {
+    return (m_flags & 1<<13);
+}
+
 void User::setFirstName(const QString &firstName) {
     m_firstName = firstName;
 }
 
 QString User::firstName() const {
     return m_firstName;
+}
+
+void User::setFlags(qint32 flags) {
+    m_flags = flags;
+}
+
+qint32 User::flags() const {
+    return m_flags;
 }
 
 void User::setId(qint32 id) {
@@ -58,6 +141,15 @@ QString User::lastName() const {
     return m_lastName;
 }
 
+void User::setMutualContact(bool mutualContact) {
+    if(mutualContact) m_flags = (m_flags | (1<<12));
+    else m_flags = (m_flags & ~(1<<12));
+}
+
+bool User::mutualContact() const {
+    return (m_flags & 1<<12);
+}
+
 void User::setPhone(const QString &phone) {
     m_phone = phone;
 }
@@ -72,6 +164,32 @@ void User::setPhoto(const UserProfilePhoto &photo) {
 
 UserProfilePhoto User::photo() const {
     return m_photo;
+}
+
+void User::setRestricted(bool restricted) {
+    if(restricted) m_flags = (m_flags | (1<<18));
+    else m_flags = (m_flags & ~(1<<18));
+}
+
+bool User::restricted() const {
+    return (m_flags & 1<<18);
+}
+
+void User::setRestrictionReason(const QString &restrictionReason) {
+    m_restrictionReason = restrictionReason;
+}
+
+QString User::restrictionReason() const {
+    return m_restrictionReason;
+}
+
+void User::setSelf(bool self) {
+    if(self) m_flags = (m_flags | (1<<10));
+    else m_flags = (m_flags & ~(1<<10));
+}
+
+bool User::self() const {
+    return (m_flags & 1<<10);
 }
 
 void User::setStatus(const UserStatus &status) {
@@ -90,13 +208,27 @@ QString User::username() const {
     return m_username;
 }
 
-bool User::operator ==(const User &b) {
-    return m_accessHash == b.m_accessHash &&
+void User::setVerified(bool verified) {
+    if(verified) m_flags = (m_flags | (1<<17));
+    else m_flags = (m_flags & ~(1<<17));
+}
+
+bool User::verified() const {
+    return (m_flags & 1<<17);
+}
+
+bool User::operator ==(const User &b) const {
+    return m_classType == b.m_classType &&
+           m_accessHash == b.m_accessHash &&
+           m_botInfoVersion == b.m_botInfoVersion &&
+           m_botInlinePlaceholder == b.m_botInlinePlaceholder &&
            m_firstName == b.m_firstName &&
+           m_flags == b.m_flags &&
            m_id == b.m_id &&
            m_lastName == b.m_lastName &&
            m_phone == b.m_phone &&
            m_photo == b.m_photo &&
+           m_restrictionReason == b.m_restrictionReason &&
            m_status == b.m_status &&
            m_username == b.m_username;
 }
@@ -120,65 +252,39 @@ bool User::fetch(InboundPkt *in) {
     }
         break;
     
-    case typeUserSelf: {
+    case typeUser: {
+        m_flags = in->fetchInt();
         m_id = in->fetchInt();
-        m_firstName = in->fetchQString();
-        m_lastName = in->fetchQString();
-        m_username = in->fetchQString();
-        m_phone = in->fetchQString();
-        m_photo.fetch(in);
-        m_status.fetch(in);
-        m_classType = static_cast<UserType>(x);
-        return true;
-    }
-        break;
-    
-    case typeUserContact: {
-        m_id = in->fetchInt();
-        m_firstName = in->fetchQString();
-        m_lastName = in->fetchQString();
-        m_username = in->fetchQString();
-        m_accessHash = in->fetchLong();
-        m_phone = in->fetchQString();
-        m_photo.fetch(in);
-        m_status.fetch(in);
-        m_classType = static_cast<UserType>(x);
-        return true;
-    }
-        break;
-    
-    case typeUserRequest: {
-        m_id = in->fetchInt();
-        m_firstName = in->fetchQString();
-        m_lastName = in->fetchQString();
-        m_username = in->fetchQString();
-        m_accessHash = in->fetchLong();
-        m_phone = in->fetchQString();
-        m_photo.fetch(in);
-        m_status.fetch(in);
-        m_classType = static_cast<UserType>(x);
-        return true;
-    }
-        break;
-    
-    case typeUserForeign: {
-        m_id = in->fetchInt();
-        m_firstName = in->fetchQString();
-        m_lastName = in->fetchQString();
-        m_username = in->fetchQString();
-        m_accessHash = in->fetchLong();
-        m_photo.fetch(in);
-        m_status.fetch(in);
-        m_classType = static_cast<UserType>(x);
-        return true;
-    }
-        break;
-    
-    case typeUserDeleted: {
-        m_id = in->fetchInt();
-        m_firstName = in->fetchQString();
-        m_lastName = in->fetchQString();
-        m_username = in->fetchQString();
+        if(m_flags & 1<<0) {
+            m_accessHash = in->fetchLong();
+        }
+        if(m_flags & 1<<1) {
+            m_firstName = in->fetchQString();
+        }
+        if(m_flags & 1<<2) {
+            m_lastName = in->fetchQString();
+        }
+        if(m_flags & 1<<3) {
+            m_username = in->fetchQString();
+        }
+        if(m_flags & 1<<4) {
+            m_phone = in->fetchQString();
+        }
+        if(m_flags & 1<<5) {
+            m_photo.fetch(in);
+        }
+        if(m_flags & 1<<6) {
+            m_status.fetch(in);
+        }
+        if(m_flags & 1<<14) {
+            m_botInfoVersion = in->fetchInt();
+        }
+        if(m_flags & 1<<18) {
+            m_restrictionReason = in->fetchQString();
+        }
+        if(m_flags & 1<<19) {
+            m_botInlinePlaceholder = in->fetchQString();
+        }
         m_classType = static_cast<UserType>(x);
         return true;
     }
@@ -199,61 +305,19 @@ bool User::push(OutboundPkt *out) const {
     }
         break;
     
-    case typeUserSelf: {
+    case typeUser: {
+        out->appendInt(m_flags);
         out->appendInt(m_id);
+        out->appendLong(m_accessHash);
         out->appendQString(m_firstName);
         out->appendQString(m_lastName);
         out->appendQString(m_username);
         out->appendQString(m_phone);
         m_photo.push(out);
         m_status.push(out);
-        return true;
-    }
-        break;
-    
-    case typeUserContact: {
-        out->appendInt(m_id);
-        out->appendQString(m_firstName);
-        out->appendQString(m_lastName);
-        out->appendQString(m_username);
-        out->appendLong(m_accessHash);
-        out->appendQString(m_phone);
-        m_photo.push(out);
-        m_status.push(out);
-        return true;
-    }
-        break;
-    
-    case typeUserRequest: {
-        out->appendInt(m_id);
-        out->appendQString(m_firstName);
-        out->appendQString(m_lastName);
-        out->appendQString(m_username);
-        out->appendLong(m_accessHash);
-        out->appendQString(m_phone);
-        m_photo.push(out);
-        m_status.push(out);
-        return true;
-    }
-        break;
-    
-    case typeUserForeign: {
-        out->appendInt(m_id);
-        out->appendQString(m_firstName);
-        out->appendQString(m_lastName);
-        out->appendQString(m_username);
-        out->appendLong(m_accessHash);
-        m_photo.push(out);
-        m_status.push(out);
-        return true;
-    }
-        break;
-    
-    case typeUserDeleted: {
-        out->appendInt(m_id);
-        out->appendQString(m_firstName);
-        out->appendQString(m_lastName);
-        out->appendQString(m_username);
+        out->appendInt(m_botInfoVersion);
+        out->appendQString(m_restrictionReason);
+        out->appendQString(m_botInlinePlaceholder);
         return true;
     }
         break;

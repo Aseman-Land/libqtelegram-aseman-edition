@@ -23,6 +23,14 @@ InputPhoto::InputPhoto(InboundPkt *in) :
     fetch(in);
 }
 
+InputPhoto::InputPhoto(const Null &null) :
+    TelegramTypeObject(null),
+    m_accessHash(0),
+    m_id(0),
+    m_classType(typeInputPhotoEmpty)
+{
+}
+
 InputPhoto::~InputPhoto() {
 }
 
@@ -42,8 +50,9 @@ qint64 InputPhoto::id() const {
     return m_id;
 }
 
-bool InputPhoto::operator ==(const InputPhoto &b) {
-    return m_accessHash == b.m_accessHash &&
+bool InputPhoto::operator ==(const InputPhoto &b) const {
+    return m_classType == b.m_classType &&
+           m_accessHash == b.m_accessHash &&
            m_id == b.m_id;
 }
 

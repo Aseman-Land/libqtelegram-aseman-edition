@@ -6,6 +6,8 @@
 #define LQTG_TYPE_INPUTCONTACT
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QtGlobal>
 #include <QString>
 
@@ -18,6 +20,7 @@ public:
 
     InputContact(InputContactType classType = typeInputPhoneContact, InboundPkt *in = 0);
     InputContact(InboundPkt *in);
+    InputContact(const Null&);
     virtual ~InputContact();
 
     void setClientId(qint64 clientId);
@@ -38,7 +41,10 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const InputContact &b);
+    bool operator ==(const InputContact &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     qint64 m_clientId;
@@ -47,5 +53,7 @@ private:
     QString m_phone;
     InputContactType m_classType;
 };
+
+Q_DECLARE_METATYPE(InputContact)
 
 #endif // LQTG_TYPE_INPUTCONTACT

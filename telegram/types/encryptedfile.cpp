@@ -29,6 +29,17 @@ EncryptedFile::EncryptedFile(InboundPkt *in) :
     fetch(in);
 }
 
+EncryptedFile::EncryptedFile(const Null &null) :
+    TelegramTypeObject(null),
+    m_accessHash(0),
+    m_dcId(0),
+    m_id(0),
+    m_keyFingerprint(0),
+    m_size(0),
+    m_classType(typeEncryptedFileEmpty)
+{
+}
+
 EncryptedFile::~EncryptedFile() {
 }
 
@@ -72,8 +83,9 @@ qint32 EncryptedFile::size() const {
     return m_size;
 }
 
-bool EncryptedFile::operator ==(const EncryptedFile &b) {
-    return m_accessHash == b.m_accessHash &&
+bool EncryptedFile::operator ==(const EncryptedFile &b) const {
+    return m_classType == b.m_classType &&
+           m_accessHash == b.m_accessHash &&
            m_dcId == b.m_dcId &&
            m_id == b.m_id &&
            m_keyFingerprint == b.m_keyFingerprint &&

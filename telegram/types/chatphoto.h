@@ -6,6 +6,8 @@
 #define LQTG_TYPE_CHATPHOTO
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include "filelocation.h"
 
 class LIBQTELEGRAMSHARED_EXPORT ChatPhoto : public TelegramTypeObject
@@ -18,6 +20,7 @@ public:
 
     ChatPhoto(ChatPhotoType classType = typeChatPhotoEmpty, InboundPkt *in = 0);
     ChatPhoto(InboundPkt *in);
+    ChatPhoto(const Null&);
     virtual ~ChatPhoto();
 
     void setPhotoBig(const FileLocation &photoBig);
@@ -32,12 +35,17 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const ChatPhoto &b);
+    bool operator ==(const ChatPhoto &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     FileLocation m_photoBig;
     FileLocation m_photoSmall;
     ChatPhotoType m_classType;
 };
+
+Q_DECLARE_METATYPE(ChatPhoto)
 
 #endif // LQTG_TYPE_CHATPHOTO

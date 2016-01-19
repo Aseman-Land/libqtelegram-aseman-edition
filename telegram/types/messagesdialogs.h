@@ -6,6 +6,8 @@
 #define LQTG_TYPE_MESSAGESDIALOGS
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QList>
 #include "chat.h"
 #include <QtGlobal>
@@ -23,6 +25,7 @@ public:
 
     MessagesDialogs(MessagesDialogsType classType = typeMessagesDialogs, InboundPkt *in = 0);
     MessagesDialogs(InboundPkt *in);
+    MessagesDialogs(const Null&);
     virtual ~MessagesDialogs();
 
     void setChats(const QList<Chat> &chats);
@@ -46,7 +49,10 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const MessagesDialogs &b);
+    bool operator ==(const MessagesDialogs &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     QList<Chat> m_chats;
@@ -56,5 +62,7 @@ private:
     QList<User> m_users;
     MessagesDialogsType m_classType;
 };
+
+Q_DECLARE_METATYPE(MessagesDialogs)
 
 #endif // LQTG_TYPE_MESSAGESDIALOGS

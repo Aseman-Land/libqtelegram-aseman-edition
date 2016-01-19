@@ -29,6 +29,17 @@ InputFileLocation::InputFileLocation(InboundPkt *in) :
     fetch(in);
 }
 
+InputFileLocation::InputFileLocation(const Null &null) :
+    TelegramTypeObject(null),
+    m_accessHash(0),
+    m_id(0),
+    m_localId(0),
+    m_secret(0),
+    m_volumeId(0),
+    m_classType(typeInputFileLocation)
+{
+}
+
 InputFileLocation::~InputFileLocation() {
 }
 
@@ -72,8 +83,9 @@ qint64 InputFileLocation::volumeId() const {
     return m_volumeId;
 }
 
-bool InputFileLocation::operator ==(const InputFileLocation &b) {
-    return m_accessHash == b.m_accessHash &&
+bool InputFileLocation::operator ==(const InputFileLocation &b) const {
+    return m_classType == b.m_classType &&
+           m_accessHash == b.m_accessHash &&
            m_id == b.m_id &&
            m_localId == b.m_localId &&
            m_secret == b.m_secret &&

@@ -14,6 +14,8 @@
 #include "telegram/types/user.h"
 #include <QList>
 #include "telegram/types/wallpaper.h"
+#include "telegram/types/inputpeer.h"
+#include "telegram/types/reportreason.h"
 #include "telegram/types/accountprivacyrules.h"
 #include "telegram/types/inputprivacykey.h"
 #include "telegram/types/inputprivacyrule.h"
@@ -40,6 +42,7 @@ public:
         fncAccountUpdateProfile = 0xf0888d68,
         fncAccountUpdateStatus = 0x6628562c,
         fncAccountGetWallPapers = 0xc04cfac2,
+        fncAccountReportPeer = 0xae189d5f,
         fncAccountCheckUsername = 0x2714d86c,
         fncAccountUpdateUsername = 0x3e0bdd7c,
         fncAccountGetPrivacy = 0xdadbc950,
@@ -83,6 +86,9 @@ public:
 
     static bool getWallPapers(OutboundPkt *out);
     static QList<WallPaper> getWallPapersResult(InboundPkt *in);
+
+    static bool reportPeer(OutboundPkt *out, const InputPeer &peer, const ReportReason &reason);
+    static bool reportPeerResult(InboundPkt *in);
 
     static bool checkUsername(OutboundPkt *out, const QString &username);
     static bool checkUsernameResult(InboundPkt *in);

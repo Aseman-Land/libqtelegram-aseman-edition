@@ -6,9 +6,14 @@
 #define LQTG_TYPE_CHATFULL
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
+#include <QString>
+#include <QtGlobal>
+#include <QList>
+#include "botinfo.h"
 #include "photo.h"
 #include "exportedchatinvite.h"
-#include <QtGlobal>
 #include "peernotifysettings.h"
 #include "chatparticipants.h"
 
@@ -16,12 +21,26 @@ class LIBQTELEGRAMSHARED_EXPORT ChatFull : public TelegramTypeObject
 {
 public:
     enum ChatFullType {
-        typeChatFull = 0xcade0791
+        typeChatFull = 0x2e02a614,
+        typeChannelFull = 0x9e341ddf
     };
 
     ChatFull(ChatFullType classType = typeChatFull, InboundPkt *in = 0);
     ChatFull(InboundPkt *in);
+    ChatFull(const Null&);
     virtual ~ChatFull();
+
+    void setAbout(const QString &about);
+    QString about() const;
+
+    void setAdminsCount(qint32 adminsCount);
+    qint32 adminsCount() const;
+
+    void setBotInfo(const QList<BotInfo> &botInfo);
+    QList<BotInfo> botInfo() const;
+
+    void setCanViewParticipants(bool canViewParticipants);
+    bool canViewParticipants() const;
 
     void setChatPhoto(const Photo &chatPhoto);
     Photo chatPhoto() const;
@@ -29,8 +48,20 @@ public:
     void setExportedInvite(const ExportedChatInvite &exportedInvite);
     ExportedChatInvite exportedInvite() const;
 
+    void setFlags(qint32 flags);
+    qint32 flags() const;
+
     void setId(qint32 id);
     qint32 id() const;
+
+    void setKickedCount(qint32 kickedCount);
+    qint32 kickedCount() const;
+
+    void setMigratedFromChatId(qint32 migratedFromChatId);
+    qint32 migratedFromChatId() const;
+
+    void setMigratedFromMaxId(qint32 migratedFromMaxId);
+    qint32 migratedFromMaxId() const;
 
     void setNotifySettings(const PeerNotifySettings &notifySettings);
     PeerNotifySettings notifySettings() const;
@@ -38,21 +69,49 @@ public:
     void setParticipants(const ChatParticipants &participants);
     ChatParticipants participants() const;
 
+    void setParticipantsCount(qint32 participantsCount);
+    qint32 participantsCount() const;
+
+    void setReadInboxMaxId(qint32 readInboxMaxId);
+    qint32 readInboxMaxId() const;
+
+    void setUnreadCount(qint32 unreadCount);
+    qint32 unreadCount() const;
+
+    void setUnreadImportantCount(qint32 unreadImportantCount);
+    qint32 unreadImportantCount() const;
+
     void setClassType(ChatFullType classType);
     ChatFullType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const ChatFull &b);
+    bool operator ==(const ChatFull &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
+    QString m_about;
+    qint32 m_adminsCount;
+    QList<BotInfo> m_botInfo;
     Photo m_chatPhoto;
     ExportedChatInvite m_exportedInvite;
+    qint32 m_flags;
     qint32 m_id;
+    qint32 m_kickedCount;
+    qint32 m_migratedFromChatId;
+    qint32 m_migratedFromMaxId;
     PeerNotifySettings m_notifySettings;
     ChatParticipants m_participants;
+    qint32 m_participantsCount;
+    qint32 m_readInboxMaxId;
+    qint32 m_unreadCount;
+    qint32 m_unreadImportantCount;
     ChatFullType m_classType;
 };
+
+Q_DECLARE_METATYPE(ChatFull)
 
 #endif // LQTG_TYPE_CHATFULL

@@ -23,6 +23,14 @@ UserStatus::UserStatus(InboundPkt *in) :
     fetch(in);
 }
 
+UserStatus::UserStatus(const Null &null) :
+    TelegramTypeObject(null),
+    m_expires(0),
+    m_wasOnline(0),
+    m_classType(typeUserStatusEmpty)
+{
+}
+
 UserStatus::~UserStatus() {
 }
 
@@ -42,8 +50,9 @@ qint32 UserStatus::wasOnline() const {
     return m_wasOnline;
 }
 
-bool UserStatus::operator ==(const UserStatus &b) {
-    return m_expires == b.m_expires &&
+bool UserStatus::operator ==(const UserStatus &b) const {
+    return m_classType == b.m_classType &&
+           m_expires == b.m_expires &&
            m_wasOnline == b.m_wasOnline;
 }
 

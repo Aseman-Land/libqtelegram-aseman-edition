@@ -14,7 +14,6 @@ Audio::Audio(AudioType classType, InboundPkt *in) :
     m_duration(0),
     m_id(0),
     m_size(0),
-    m_userId(0),
     m_classType(classType)
 {
     if(in) fetch(in);
@@ -27,10 +26,21 @@ Audio::Audio(InboundPkt *in) :
     m_duration(0),
     m_id(0),
     m_size(0),
-    m_userId(0),
     m_classType(typeAudioEmpty)
 {
     fetch(in);
+}
+
+Audio::Audio(const Null &null) :
+    TelegramTypeObject(null),
+    m_accessHash(0),
+    m_date(0),
+    m_dcId(0),
+    m_duration(0),
+    m_id(0),
+    m_size(0),
+    m_classType(typeAudioEmpty)
+{
 }
 
 Audio::~Audio() {
@@ -92,23 +102,15 @@ qint32 Audio::size() const {
     return m_size;
 }
 
-void Audio::setUserId(qint32 userId) {
-    m_userId = userId;
-}
-
-qint32 Audio::userId() const {
-    return m_userId;
-}
-
-bool Audio::operator ==(const Audio &b) {
-    return m_accessHash == b.m_accessHash &&
+bool Audio::operator ==(const Audio &b) const {
+    return m_classType == b.m_classType &&
+           m_accessHash == b.m_accessHash &&
            m_date == b.m_date &&
            m_dcId == b.m_dcId &&
            m_duration == b.m_duration &&
            m_id == b.m_id &&
            m_mimeType == b.m_mimeType &&
-           m_size == b.m_size &&
-           m_userId == b.m_userId;
+           m_size == b.m_size;
 }
 
 void Audio::setClassType(Audio::AudioType classType) {
@@ -133,7 +135,6 @@ bool Audio::fetch(InboundPkt *in) {
     case typeAudio: {
         m_id = in->fetchLong();
         m_accessHash = in->fetchLong();
-        m_userId = in->fetchInt();
         m_date = in->fetchInt();
         m_duration = in->fetchInt();
         m_mimeType = in->fetchQString();
@@ -162,7 +163,6 @@ bool Audio::push(OutboundPkt *out) const {
     case typeAudio: {
         out->appendLong(m_id);
         out->appendLong(m_accessHash);
-        out->appendInt(m_userId);
         out->appendInt(m_date);
         out->appendInt(m_duration);
         out->appendQString(m_mimeType);

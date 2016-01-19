@@ -6,6 +6,8 @@
 #define LQTG_TYPE_RECEIVEDNOTIFYMESSAGE
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QtGlobal>
 
 class LIBQTELEGRAMSHARED_EXPORT ReceivedNotifyMessage : public TelegramTypeObject
@@ -17,6 +19,7 @@ public:
 
     ReceivedNotifyMessage(ReceivedNotifyMessageType classType = typeReceivedNotifyMessage, InboundPkt *in = 0);
     ReceivedNotifyMessage(InboundPkt *in);
+    ReceivedNotifyMessage(const Null&);
     virtual ~ReceivedNotifyMessage();
 
     void setFlags(qint32 flags);
@@ -31,12 +34,17 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const ReceivedNotifyMessage &b);
+    bool operator ==(const ReceivedNotifyMessage &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     qint32 m_flags;
     qint32 m_id;
     ReceivedNotifyMessageType m_classType;
 };
+
+Q_DECLARE_METATYPE(ReceivedNotifyMessage)
 
 #endif // LQTG_TYPE_RECEIVEDNOTIFYMESSAGE

@@ -6,6 +6,8 @@
 #define LQTG_TYPE_AUTHPASSWORDRECOVERY
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QString>
 
 class LIBQTELEGRAMSHARED_EXPORT AuthPasswordRecovery : public TelegramTypeObject
@@ -17,6 +19,7 @@ public:
 
     AuthPasswordRecovery(AuthPasswordRecoveryType classType = typeAuthPasswordRecovery, InboundPkt *in = 0);
     AuthPasswordRecovery(InboundPkt *in);
+    AuthPasswordRecovery(const Null&);
     virtual ~AuthPasswordRecovery();
 
     void setEmailPattern(const QString &emailPattern);
@@ -28,11 +31,16 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const AuthPasswordRecovery &b);
+    bool operator ==(const AuthPasswordRecovery &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     QString m_emailPattern;
     AuthPasswordRecoveryType m_classType;
 };
+
+Q_DECLARE_METATYPE(AuthPasswordRecovery)
 
 #endif // LQTG_TYPE_AUTHPASSWORDRECOVERY

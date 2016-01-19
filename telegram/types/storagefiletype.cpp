@@ -19,12 +19,17 @@ StorageFileType::StorageFileType(InboundPkt *in) :
     fetch(in);
 }
 
+StorageFileType::StorageFileType(const Null &null) :
+    TelegramTypeObject(null),
+    m_classType(typeStorageFileUnknown)
+{
+}
+
 StorageFileType::~StorageFileType() {
 }
 
-bool StorageFileType::operator ==(const StorageFileType &b) {
-    Q_UNUSED(b);
-    return true;
+bool StorageFileType::operator ==(const StorageFileType &b) const {
+    return m_classType == b.m_classType;
 }
 
 void StorageFileType::setClassType(StorageFileType::StorageFileTypeType classType) {

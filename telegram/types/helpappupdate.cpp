@@ -23,6 +23,14 @@ HelpAppUpdate::HelpAppUpdate(InboundPkt *in) :
     fetch(in);
 }
 
+HelpAppUpdate::HelpAppUpdate(const Null &null) :
+    TelegramTypeObject(null),
+    m_critical(false),
+    m_id(0),
+    m_classType(typeHelpAppUpdate)
+{
+}
+
 HelpAppUpdate::~HelpAppUpdate() {
 }
 
@@ -58,8 +66,9 @@ QString HelpAppUpdate::url() const {
     return m_url;
 }
 
-bool HelpAppUpdate::operator ==(const HelpAppUpdate &b) {
-    return m_critical == b.m_critical &&
+bool HelpAppUpdate::operator ==(const HelpAppUpdate &b) const {
+    return m_classType == b.m_classType &&
+           m_critical == b.m_critical &&
            m_id == b.m_id &&
            m_text == b.m_text &&
            m_url == b.m_url;

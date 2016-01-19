@@ -6,6 +6,8 @@
 #define LQTG_TYPE_ACCOUNTPRIVACYRULES
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QList>
 #include "privacyrule.h"
 #include "user.h"
@@ -19,6 +21,7 @@ public:
 
     AccountPrivacyRules(AccountPrivacyRulesType classType = typeAccountPrivacyRules, InboundPkt *in = 0);
     AccountPrivacyRules(InboundPkt *in);
+    AccountPrivacyRules(const Null&);
     virtual ~AccountPrivacyRules();
 
     void setRules(const QList<PrivacyRule> &rules);
@@ -33,12 +36,17 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const AccountPrivacyRules &b);
+    bool operator ==(const AccountPrivacyRules &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     QList<PrivacyRule> m_rules;
     QList<User> m_users;
     AccountPrivacyRulesType m_classType;
 };
+
+Q_DECLARE_METATYPE(AccountPrivacyRules)
 
 #endif // LQTG_TYPE_ACCOUNTPRIVACYRULES

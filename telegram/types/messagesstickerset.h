@@ -6,6 +6,8 @@
 #define LQTG_TYPE_MESSAGESSTICKERSET
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QList>
 #include "document.h"
 #include "stickerpack.h"
@@ -20,6 +22,7 @@ public:
 
     MessagesStickerSet(MessagesStickerSetType classType = typeMessagesStickerSet, InboundPkt *in = 0);
     MessagesStickerSet(InboundPkt *in);
+    MessagesStickerSet(const Null&);
     virtual ~MessagesStickerSet();
 
     void setDocuments(const QList<Document> &documents);
@@ -37,7 +40,10 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const MessagesStickerSet &b);
+    bool operator ==(const MessagesStickerSet &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     QList<Document> m_documents;
@@ -45,5 +51,7 @@ private:
     StickerSet m_set;
     MessagesStickerSetType m_classType;
 };
+
+Q_DECLARE_METATYPE(MessagesStickerSet)
 
 #endif // LQTG_TYPE_MESSAGESSTICKERSET

@@ -29,6 +29,17 @@ UpdatesState::UpdatesState(InboundPkt *in) :
     fetch(in);
 }
 
+UpdatesState::UpdatesState(const Null &null) :
+    TelegramTypeObject(null),
+    m_date(0),
+    m_pts(0),
+    m_qts(0),
+    m_seq(0),
+    m_unreadCount(0),
+    m_classType(typeUpdatesState)
+{
+}
+
 UpdatesState::~UpdatesState() {
 }
 
@@ -72,8 +83,9 @@ qint32 UpdatesState::unreadCount() const {
     return m_unreadCount;
 }
 
-bool UpdatesState::operator ==(const UpdatesState &b) {
-    return m_date == b.m_date &&
+bool UpdatesState::operator ==(const UpdatesState &b) const {
+    return m_classType == b.m_classType &&
+           m_date == b.m_date &&
            m_pts == b.m_pts &&
            m_qts == b.m_qts &&
            m_seq == b.m_seq &&

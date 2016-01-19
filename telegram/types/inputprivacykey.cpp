@@ -19,12 +19,17 @@ InputPrivacyKey::InputPrivacyKey(InboundPkt *in) :
     fetch(in);
 }
 
+InputPrivacyKey::InputPrivacyKey(const Null &null) :
+    TelegramTypeObject(null),
+    m_classType(typeInputPrivacyKeyStatusTimestamp)
+{
+}
+
 InputPrivacyKey::~InputPrivacyKey() {
 }
 
-bool InputPrivacyKey::operator ==(const InputPrivacyKey &b) {
-    Q_UNUSED(b);
-    return true;
+bool InputPrivacyKey::operator ==(const InputPrivacyKey &b) const {
+    return m_classType == b.m_classType;
 }
 
 void InputPrivacyKey::setClassType(InputPrivacyKey::InputPrivacyKeyType classType) {

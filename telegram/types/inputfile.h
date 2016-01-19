@@ -6,6 +6,8 @@
 #define LQTG_TYPE_INPUTFILE
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
 #include <QtGlobal>
 #include <QString>
 
@@ -19,6 +21,7 @@ public:
 
     InputFile(InputFileType classType = typeInputFile, InboundPkt *in = 0);
     InputFile(InboundPkt *in);
+    InputFile(const Null&);
     virtual ~InputFile();
 
     void setId(qint64 id);
@@ -39,7 +42,10 @@ public:
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const InputFile &b);
+    bool operator ==(const InputFile &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
 
 private:
     qint64 m_id;
@@ -48,5 +54,7 @@ private:
     qint32 m_parts;
     InputFileType m_classType;
 };
+
+Q_DECLARE_METATYPE(InputFile)
 
 #endif // LQTG_TYPE_INPUTFILE

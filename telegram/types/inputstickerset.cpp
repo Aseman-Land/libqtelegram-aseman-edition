@@ -23,6 +23,14 @@ InputStickerSet::InputStickerSet(InboundPkt *in) :
     fetch(in);
 }
 
+InputStickerSet::InputStickerSet(const Null &null) :
+    TelegramTypeObject(null),
+    m_accessHash(0),
+    m_id(0),
+    m_classType(typeInputStickerSetEmpty)
+{
+}
+
 InputStickerSet::~InputStickerSet() {
 }
 
@@ -50,8 +58,9 @@ QString InputStickerSet::shortName() const {
     return m_shortName;
 }
 
-bool InputStickerSet::operator ==(const InputStickerSet &b) {
-    return m_accessHash == b.m_accessHash &&
+bool InputStickerSet::operator ==(const InputStickerSet &b) const {
+    return m_classType == b.m_classType &&
+           m_accessHash == b.m_accessHash &&
            m_id == b.m_id &&
            m_shortName == b.m_shortName;
 }
