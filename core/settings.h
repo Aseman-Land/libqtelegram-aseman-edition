@@ -46,6 +46,8 @@
 #define ST_DCS_ARRAY "dcs"
 #define ST_HOST "host"
 #define ST_PORT "port"
+#define ST_IPV6 "ipv6"
+#define ST_MEDIA "mediaOnly"
 #define ST_AUTH_KEY_ID "authKeyId"
 #define ST_AUTH_KEY "authKey"
 #define ST_SERVER_SALT "serverSalt"

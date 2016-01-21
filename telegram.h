@@ -115,10 +115,10 @@ public:
     qint64 messagesSetEncryptedTyping(qint32 chatId, bool typing, Callback<bool > callBack = 0);
     qint64 messagesSetEncryptedTTL(const InputEncryptedChat &chat, qint64 randomId, qint32 ttl, Callback<MessagesSentEncryptedMessage> callBack = 0);
     qint64 messagesSendEncrypted(const InputEncryptedChat &chat, qint64 randomId, qint32 ttl, const QString &text, Callback<MessagesSentEncryptedMessage> callBack = 0);
-    qint64 messagesSendEncryptedPhoto(const InputEncryptedChat &chat, qint64 randomId, qint32 ttl, const QString &filePath);
-    qint64 messagesSendEncryptedVideo(const InputEncryptedChat &chat, qint64 randomId, qint32 ttl, const QString &filePath, qint32 duration, qint32 width, qint32 height, const QByteArray &thumbnailBytes);
-    qint64 messagesSendEncryptedDocument(const InputEncryptedChat &chat, qint64 randomId, qint32 ttl, const QString &filePath);
-    qint64 messagesSendEncryptedService(const InputEncryptedChat &chat, qint64 randomId, const DecryptedMessageAction &action);//needed?
+    qint64 messagesSendEncryptedPhoto(const InputEncryptedChat &chat, qint64 randomId, qint32 ttl, const QString &filePath, Callback<MessagesSentEncryptedMessage> callBack = 0, FileProgressCallback fileCallback = 0);
+    qint64 messagesSendEncryptedVideo(const InputEncryptedChat &chat, qint64 randomId, qint32 ttl, const QString &filePath, qint32 duration, qint32 width, qint32 height, const QByteArray &thumbnailBytes, Callback<MessagesSentEncryptedMessage> callBack = 0, FileProgressCallback fileCallback = 0);
+    qint64 messagesSendEncryptedDocument(const InputEncryptedChat &chat, qint64 randomId, qint32 ttl, const QString &filePath, Callback<MessagesSentEncryptedMessage> callBack = 0, FileProgressCallback fileCallback = 0);
+    qint64 messagesSendEncryptedService(const InputEncryptedChat &chat, qint64 randomId, const DecryptedMessageAction &action, Callback<MessagesSentEncryptedMessage> callBack = 0);//needed?
 
     // Working with files
     qint64 uploadGetFile(const InputFileLocation &file, qint32 fileSize, qint32 dc = 0, const QByteArray &key = QByteArray(), const QByteArray &iv = QByteArray());
@@ -167,6 +167,12 @@ Q_SIGNALS:
     void uploadSendFileAnswer(qint64 fileId, qint32 partId, qint32 uploaded, qint32 totalSize);
 
     void updateSecretChatMessage(const SecretChatMessage &secretChatMessage, qint32 qts);
+    void updatesTooLong();
+    void updateShortMessage(qint32 id, qint32 userId, const QString &message, qint32 pts, qint32 pts_count, qint32 date, Peer fwd_from_id, qint32 fwd_date, qint32 reply_to_msg_id, bool unread, bool out);
+    void updateShortChatMessage(qint32 id, qint32 fromId, qint32 chatId, const QString &message, qint32 pts, qint32 pts_count, qint32 date, Peer fwd_from_id, qint32 fwd_date, qint32 reply_to_msg_id, bool unread, bool out);
+    void updateShort(const Update &update, qint32 date);
+    void updatesCombined(const QList<Update> &updates, const QList<User> &users, const QList<Chat> &chats, qint32 date, qint32 seqStart, qint32 seq);
+    void updates(const QList<Update> &udts, const QList<User> &users, const QList<Chat> &chats, qint32 date, qint32 seq);
 
     // Additional signals
     void disconnected();
@@ -194,12 +200,12 @@ private:
     qint64 uploadSendFile(FileOperation &op, int mediaType, const QString &fileName, const QByteArray &bytes, const QByteArray &thumbnailBytes = 0, const QString &thumbnailName = QString::null);
     qint64 uploadSendFile(FileOperation &op, int mediaType, const QString &filePath, const QString &thumbnailPath = QString::null);
     void processSecretChatUpdate(const Update &update);
-    qint64 generateGAorB(SecretChat *secretChat);
+    qint64 generateGAorB(SecretChat *secretChat, Callback<EncryptedChat> callBack = 0);
     void createSharedKey(SecretChat * secretChat, BIGNUM *p, QByteArray gAOrB);
     SecretChatMessage toSecretChatMessage(const EncryptedMessage &encryptedMessage);
     void processDifferences(qint64 id, const QList<Message> &messages, const QList<EncryptedMessage> &newEncryptedMessages, const QList<Update> &otherUpdates, const QList<Chat> &chats, const QList<User> &users, const UpdatesState &state, bool isIntermediateState);
     void authorizeUser(qint64 id, const User &user);
-    void messagesDhConfigNotModified(qint64 msgId, const QByteArray &random);
+    void messagesDhConfigNotModified(qint64 msgId, const QByteArray &random, Callback<EncryptedChat> callBack);
 
 protected:
     void onAuthSendCodeAnswer(qint64 msgId, const AuthSentCode &result);
@@ -218,7 +224,6 @@ protected:
     void onUpdateShort(const Update &update);
     void onUpdatesCombined(const QList<Update> &updates);
     void onUpdates(const QList<Update> &udts);
-    void onSequenceNumberGap(qint32 chatId, qint32 startSeqNo, qint32 endSeqNo);
 
 private Q_SLOTS:
     void onError(qint64 id, qint32 errorCode, const QString &errorText, const QString &functionName = QString());
@@ -228,6 +233,7 @@ private Q_SLOTS:
     void onAuthCheckPhoneDcChanged();
     void onImportContactsDcChanged();
     void onHelpGetInviteTextDcChanged();
+    void onSequenceNumberGap(qint32 chatId, qint32 startSeqNo, qint32 endSeqNo);
 
 private:
     TelegramPrivate *prv;

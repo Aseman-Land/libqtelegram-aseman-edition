@@ -8,6 +8,12 @@
 TelegramCore::TelegramCore(QObject *parent) :
     QObject(parent)
 {
+}
+
+void TelegramCore::setApi(TelegramApi *api)
+{
+    mApi = api;
+
     connect(mApi, SIGNAL(accountRegisterDeviceAnswer(qint64,qint32,QString,QString,QString,QString,bool,QString)), this, SLOT(onAccountRegisterDeviceAnswer(qint64,qint32,QString,QString,QString,QString,bool,QString)));
     connect(mApi, SIGNAL(accountRegisterDeviceError(qint64,QString,QString)), this, SLOT(0nAccountRegisterDeviceError(qint64,QString,QString)));
     

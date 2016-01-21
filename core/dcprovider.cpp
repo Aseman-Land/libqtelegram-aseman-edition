@@ -245,7 +245,7 @@ void DcProvider::onApiReady(DC*) {
     disconnect(session, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(onApiError()));
 
     // get the config
-    connect(mApi, SIGNAL(config(qint64,const Config&)), this, SLOT(onConfigReceived(qint64,const Config&)), Qt::UniqueConnection );
+    connect(mApi, SIGNAL(helpGetConfigAnswer(qint64,const Config&)), this, SLOT(onConfigReceived(qint64,const Config&)), Qt::UniqueConnection );
 
     qint64 rid = mApi->helpGetConfig();
     mGetConfigRequests[rid] = session;
@@ -273,7 +273,10 @@ void DcProvider::onConfigReceived(qint64 msgId, const Config &config) {
 
     Q_FOREACH (DcOption dcOption, dcOptions) {
         qCDebug(TG_CORE_DCPROVIDER) << "dcOption | id =" << dcOption.id() << ", ipAddress =" << dcOption.ipAddress() <<
-                    ", port =" << dcOption.port() << ", hostname =" << dcOption.ipAddress();
+                    ", port =" << dcOption.port() << ", hostname =" << dcOption.ipAddress() <<
+                    ", ipv6 =" << dcOption.ipv6() << ", mediaOnly =" << dcOption.mediaOnly();
+        if(dcOption.ipv6() || dcOption.mediaOnly())
+            continue;
 
         // for every new DC or not authenticated DC, insert into m_dcs and authenticate
         DC *dc = mDcs.value(dcOption.id());
@@ -283,8 +286,10 @@ void DcProvider::onConfigReceived(qint64 msgId, const Config &config) {
         if ((!dc) || (dc->state() < DC::authKeyCreated && ((dc->host() != dcOption.ipAddress()) || (dc->port() != dcOption.port()))) ) {
             // if not exists dc or host and port different, create a new dc object for this dcId and add it to m_dcs map
             dc = new DC(dcOption.id());
+            dc->setIpv6(dcOption.ipv6());
             dc->setHost(dcOption.ipAddress());
             dc->setPort(dcOption.port());
+            dc->setMediaOnly(dcOption.mediaOnly());
             mDcs.insert(dcOption.id(), dc);
         }
 

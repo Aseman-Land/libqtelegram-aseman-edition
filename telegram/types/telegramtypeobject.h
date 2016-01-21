@@ -5,14 +5,8 @@
 #ifndef TELEGRAMTYPEOBJECT_H
 #define TELEGRAMTYPEOBJECT_H
 
-#ifdef LQTG_DISABLE_ASSERTS
 #define LQTG_FETCH_ASSERT setError(true)
 #define LQTG_PUSH_ASSERT setError(true)
-#else
-#include <QtGlobal>
-#define LQTG_FETCH_ASSERT qt_assert("x",__FILE__,__LINE__)
-#define LQTG_PUSH_ASSERT qt_assert("x",__FILE__,__LINE__)
-#endif
 
 #ifdef LQTG_DISABLE_LOG
 #define LQTG_FETCH_LOG

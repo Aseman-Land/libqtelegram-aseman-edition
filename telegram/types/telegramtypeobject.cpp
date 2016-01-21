@@ -4,6 +4,8 @@
 
 #include "telegramtypeobject.h"
 
+const TelegramTypeObject::Null TelegramTypeObject::null = TelegramTypeObject::Null();
+
 TelegramTypeObject::TelegramTypeObject() :
     mError(false),
     mNull(false)

@@ -866,6 +866,7 @@ protected Q_SLOTS:
 
 
 protected:
+    void setApi(TelegramApi *api);
     QPointer<TelegramApi> mApi;
 
     template<typename T>

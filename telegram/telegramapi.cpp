@@ -372,6 +372,7 @@ void TelegramApi::onAccountRegisterDeviceAnswer(Query *q, InboundPkt &inboundPkt
 
 void TelegramApi::onAccountRegisterDeviceError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT accountRegisterDeviceError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::accountUnregisterDevice(qint32 token_type, const QString &token) {
@@ -390,6 +391,7 @@ void TelegramApi::onAccountUnregisterDeviceAnswer(Query *q, InboundPkt &inboundP
 
 void TelegramApi::onAccountUnregisterDeviceError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT accountUnregisterDeviceError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::accountUpdateNotifySettings(const InputNotifyPeer &peer, const InputPeerNotifySettings &settings) {
@@ -408,6 +410,7 @@ void TelegramApi::onAccountUpdateNotifySettingsAnswer(Query *q, InboundPkt &inbo
 
 void TelegramApi::onAccountUpdateNotifySettingsError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT accountUpdateNotifySettingsError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::accountGetNotifySettings(const InputNotifyPeer &peer) {
@@ -429,6 +432,7 @@ void TelegramApi::onAccountGetNotifySettingsAnswer(Query *q, InboundPkt &inbound
 
 void TelegramApi::onAccountGetNotifySettingsError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT accountGetNotifySettingsError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::accountResetNotifySettings() {
@@ -447,6 +451,7 @@ void TelegramApi::onAccountResetNotifySettingsAnswer(Query *q, InboundPkt &inbou
 
 void TelegramApi::onAccountResetNotifySettingsError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT accountResetNotifySettingsError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::accountUpdateProfile(const QString &first_name, const QString &last_name) {
@@ -468,6 +473,7 @@ void TelegramApi::onAccountUpdateProfileAnswer(Query *q, InboundPkt &inboundPkt)
 
 void TelegramApi::onAccountUpdateProfileError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT accountUpdateProfileError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::accountUpdateStatus(bool offline) {
@@ -486,6 +492,7 @@ void TelegramApi::onAccountUpdateStatusAnswer(Query *q, InboundPkt &inboundPkt) 
 
 void TelegramApi::onAccountUpdateStatusError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT accountUpdateStatusError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::accountGetWallPapers() {
@@ -504,6 +511,7 @@ void TelegramApi::onAccountGetWallPapersAnswer(Query *q, InboundPkt &inboundPkt)
 
 void TelegramApi::onAccountGetWallPapersError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT accountGetWallPapersError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::accountReportPeer(const InputPeer &peer, const ReportReason &reason) {
@@ -522,6 +530,7 @@ void TelegramApi::onAccountReportPeerAnswer(Query *q, InboundPkt &inboundPkt) {
 
 void TelegramApi::onAccountReportPeerError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT accountReportPeerError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::accountCheckUsername(const QString &username) {
@@ -540,6 +549,7 @@ void TelegramApi::onAccountCheckUsernameAnswer(Query *q, InboundPkt &inboundPkt)
 
 void TelegramApi::onAccountCheckUsernameError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT accountCheckUsernameError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::accountUpdateUsername(const QString &username) {
@@ -561,6 +571,7 @@ void TelegramApi::onAccountUpdateUsernameAnswer(Query *q, InboundPkt &inboundPkt
 
 void TelegramApi::onAccountUpdateUsernameError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT accountUpdateUsernameError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::accountGetPrivacy(const InputPrivacyKey &key) {
@@ -582,6 +593,7 @@ void TelegramApi::onAccountGetPrivacyAnswer(Query *q, InboundPkt &inboundPkt) {
 
 void TelegramApi::onAccountGetPrivacyError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT accountGetPrivacyError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::accountSetPrivacy(const InputPrivacyKey &key, const QList<InputPrivacyRule> &rules) {
@@ -603,6 +615,7 @@ void TelegramApi::onAccountSetPrivacyAnswer(Query *q, InboundPkt &inboundPkt) {
 
 void TelegramApi::onAccountSetPrivacyError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT accountSetPrivacyError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::accountDeleteAccount(const QString &reason) {
@@ -621,6 +634,7 @@ void TelegramApi::onAccountDeleteAccountAnswer(Query *q, InboundPkt &inboundPkt)
 
 void TelegramApi::onAccountDeleteAccountError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT accountDeleteAccountError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::accountGetAccountTTL() {
@@ -642,6 +656,7 @@ void TelegramApi::onAccountGetAccountTTLAnswer(Query *q, InboundPkt &inboundPkt)
 
 void TelegramApi::onAccountGetAccountTTLError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT accountGetAccountTTLError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::accountSetAccountTTL(const AccountDaysTTL &ttl) {
@@ -660,6 +675,7 @@ void TelegramApi::onAccountSetAccountTTLAnswer(Query *q, InboundPkt &inboundPkt)
 
 void TelegramApi::onAccountSetAccountTTLError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT accountSetAccountTTLError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::accountSendChangePhoneCode(const QString &phone_number) {
@@ -681,6 +697,7 @@ void TelegramApi::onAccountSendChangePhoneCodeAnswer(Query *q, InboundPkt &inbou
 
 void TelegramApi::onAccountSendChangePhoneCodeError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT accountSendChangePhoneCodeError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::accountChangePhone(const QString &phone_number, const QString &phone_code_hash, const QString &phone_code) {
@@ -702,6 +719,7 @@ void TelegramApi::onAccountChangePhoneAnswer(Query *q, InboundPkt &inboundPkt) {
 
 void TelegramApi::onAccountChangePhoneError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT accountChangePhoneError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::accountUpdateDeviceLocked(qint32 period) {
@@ -720,6 +738,7 @@ void TelegramApi::onAccountUpdateDeviceLockedAnswer(Query *q, InboundPkt &inboun
 
 void TelegramApi::onAccountUpdateDeviceLockedError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT accountUpdateDeviceLockedError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::accountGetAuthorizations() {
@@ -741,6 +760,7 @@ void TelegramApi::onAccountGetAuthorizationsAnswer(Query *q, InboundPkt &inbound
 
 void TelegramApi::onAccountGetAuthorizationsError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT accountGetAuthorizationsError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::accountResetAuthorization(qint64 hash) {
@@ -759,6 +779,7 @@ void TelegramApi::onAccountResetAuthorizationAnswer(Query *q, InboundPkt &inboun
 
 void TelegramApi::onAccountResetAuthorizationError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT accountResetAuthorizationError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::accountGetPassword() {
@@ -780,6 +801,7 @@ void TelegramApi::onAccountGetPasswordAnswer(Query *q, InboundPkt &inboundPkt) {
 
 void TelegramApi::onAccountGetPasswordError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT accountGetPasswordError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::accountGetPasswordSettings(const QByteArray &current_password_hash) {
@@ -801,6 +823,7 @@ void TelegramApi::onAccountGetPasswordSettingsAnswer(Query *q, InboundPkt &inbou
 
 void TelegramApi::onAccountGetPasswordSettingsError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT accountGetPasswordSettingsError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::accountUpdatePasswordSettings(const QByteArray &current_password_hash, const AccountPasswordInputSettings &new_settings) {
@@ -819,6 +842,7 @@ void TelegramApi::onAccountUpdatePasswordSettingsAnswer(Query *q, InboundPkt &in
 
 void TelegramApi::onAccountUpdatePasswordSettingsError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT accountUpdatePasswordSettingsError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 
@@ -841,6 +865,8 @@ void TelegramApi::onAuthCheckPhoneAnswer(Query *q, InboundPkt &inboundPkt) {
 
 void TelegramApi::onAuthCheckPhoneError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT authCheckPhoneError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
+    onErrorRetry(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::authSendCode(const QString &phone_number, qint32 sms_type, qint32 api_id, const QString &api_hash, const QString &lang_code) {
@@ -862,6 +888,7 @@ void TelegramApi::onAuthSendCodeAnswer(Query *q, InboundPkt &inboundPkt) {
 
 void TelegramApi::onAuthSendCodeError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT authSendCodeError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::authSendCall(const QString &phone_number, const QString &phone_code_hash) {
@@ -880,6 +907,7 @@ void TelegramApi::onAuthSendCallAnswer(Query *q, InboundPkt &inboundPkt) {
 
 void TelegramApi::onAuthSendCallError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT authSendCallError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::authSignUp(const QString &phone_number, const QString &phone_code_hash, const QString &phone_code, const QString &first_name, const QString &last_name) {
@@ -901,6 +929,7 @@ void TelegramApi::onAuthSignUpAnswer(Query *q, InboundPkt &inboundPkt) {
 
 void TelegramApi::onAuthSignUpError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT authSignUpError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::authSignIn(const QString &phone_number, const QString &phone_code_hash, const QString &phone_code) {
@@ -922,6 +951,7 @@ void TelegramApi::onAuthSignInAnswer(Query *q, InboundPkt &inboundPkt) {
 
 void TelegramApi::onAuthSignInError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT authSignInError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::authLogOut() {
@@ -940,6 +970,7 @@ void TelegramApi::onAuthLogOutAnswer(Query *q, InboundPkt &inboundPkt) {
 
 void TelegramApi::onAuthLogOutError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT authLogOutError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::authResetAuthorizations() {
@@ -958,6 +989,7 @@ void TelegramApi::onAuthResetAuthorizationsAnswer(Query *q, InboundPkt &inboundP
 
 void TelegramApi::onAuthResetAuthorizationsError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT authResetAuthorizationsError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::authSendInvites(const QList<QString> &phone_numbers, const QString &message) {
@@ -976,6 +1008,7 @@ void TelegramApi::onAuthSendInvitesAnswer(Query *q, InboundPkt &inboundPkt) {
 
 void TelegramApi::onAuthSendInvitesError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT authSendInvitesError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::authExportAuthorization(qint32 dc_id) {
@@ -997,6 +1030,7 @@ void TelegramApi::onAuthExportAuthorizationAnswer(Query *q, InboundPkt &inboundP
 
 void TelegramApi::onAuthExportAuthorizationError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT authExportAuthorizationError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::authImportAuthorization(qint32 id, const QByteArray &bytes) {
@@ -1018,6 +1052,7 @@ void TelegramApi::onAuthImportAuthorizationAnswer(Query *q, InboundPkt &inboundP
 
 void TelegramApi::onAuthImportAuthorizationError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT authImportAuthorizationError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::authBindTempAuthKey(qint64 perm_auth_key_id, qint64 nonce, qint32 expires_at, const QByteArray &encrypted_message) {
@@ -1036,6 +1071,7 @@ void TelegramApi::onAuthBindTempAuthKeyAnswer(Query *q, InboundPkt &inboundPkt) 
 
 void TelegramApi::onAuthBindTempAuthKeyError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT authBindTempAuthKeyError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::authSendSms(const QString &phone_number, const QString &phone_code_hash) {
@@ -1054,6 +1090,7 @@ void TelegramApi::onAuthSendSmsAnswer(Query *q, InboundPkt &inboundPkt) {
 
 void TelegramApi::onAuthSendSmsError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT authSendSmsError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::authImportBotAuthorization(qint32 flags, qint32 api_id, const QString &api_hash, const QString &bot_auth_token) {
@@ -1075,6 +1112,7 @@ void TelegramApi::onAuthImportBotAuthorizationAnswer(Query *q, InboundPkt &inbou
 
 void TelegramApi::onAuthImportBotAuthorizationError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT authImportBotAuthorizationError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::authCheckPassword(const QByteArray &password_hash) {
@@ -1096,6 +1134,7 @@ void TelegramApi::onAuthCheckPasswordAnswer(Query *q, InboundPkt &inboundPkt) {
 
 void TelegramApi::onAuthCheckPasswordError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT authCheckPasswordError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::authRequestPasswordRecovery() {
@@ -1117,6 +1156,7 @@ void TelegramApi::onAuthRequestPasswordRecoveryAnswer(Query *q, InboundPkt &inbo
 
 void TelegramApi::onAuthRequestPasswordRecoveryError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT authRequestPasswordRecoveryError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::authRecoverPassword(const QString &code) {
@@ -1138,6 +1178,7 @@ void TelegramApi::onAuthRecoverPasswordAnswer(Query *q, InboundPkt &inboundPkt) 
 
 void TelegramApi::onAuthRecoverPasswordError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT authRecoverPasswordError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 
@@ -1160,6 +1201,7 @@ void TelegramApi::onChannelsGetDialogsAnswer(Query *q, InboundPkt &inboundPkt) {
 
 void TelegramApi::onChannelsGetDialogsError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT channelsGetDialogsError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::channelsGetImportantHistory(const InputChannel &channel, qint32 offset_id, qint32 add_offset, qint32 limit, qint32 max_id, qint32 min_id) {
@@ -1181,6 +1223,7 @@ void TelegramApi::onChannelsGetImportantHistoryAnswer(Query *q, InboundPkt &inbo
 
 void TelegramApi::onChannelsGetImportantHistoryError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT channelsGetImportantHistoryError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::channelsReadHistory(const InputChannel &channel, qint32 max_id) {
@@ -1199,6 +1242,7 @@ void TelegramApi::onChannelsReadHistoryAnswer(Query *q, InboundPkt &inboundPkt) 
 
 void TelegramApi::onChannelsReadHistoryError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT channelsReadHistoryError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::channelsDeleteMessages(const InputChannel &channel, const QList<qint32> &id) {
@@ -1220,6 +1264,7 @@ void TelegramApi::onChannelsDeleteMessagesAnswer(Query *q, InboundPkt &inboundPk
 
 void TelegramApi::onChannelsDeleteMessagesError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT channelsDeleteMessagesError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::channelsDeleteUserHistory(const InputChannel &channel, const InputUser &user_id) {
@@ -1241,6 +1286,7 @@ void TelegramApi::onChannelsDeleteUserHistoryAnswer(Query *q, InboundPkt &inboun
 
 void TelegramApi::onChannelsDeleteUserHistoryError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT channelsDeleteUserHistoryError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::channelsReportSpam(const InputChannel &channel, const InputUser &user_id, const QList<qint32> &id) {
@@ -1259,6 +1305,7 @@ void TelegramApi::onChannelsReportSpamAnswer(Query *q, InboundPkt &inboundPkt) {
 
 void TelegramApi::onChannelsReportSpamError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT channelsReportSpamError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::channelsGetMessages(const InputChannel &channel, const QList<qint32> &id) {
@@ -1280,6 +1327,7 @@ void TelegramApi::onChannelsGetMessagesAnswer(Query *q, InboundPkt &inboundPkt) 
 
 void TelegramApi::onChannelsGetMessagesError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT channelsGetMessagesError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::channelsGetParticipants(const InputChannel &channel, const ChannelParticipantsFilter &filter, qint32 offset, qint32 limit) {
@@ -1301,6 +1349,7 @@ void TelegramApi::onChannelsGetParticipantsAnswer(Query *q, InboundPkt &inboundP
 
 void TelegramApi::onChannelsGetParticipantsError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT channelsGetParticipantsError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::channelsGetParticipant(const InputChannel &channel, const InputUser &user_id) {
@@ -1322,6 +1371,7 @@ void TelegramApi::onChannelsGetParticipantAnswer(Query *q, InboundPkt &inboundPk
 
 void TelegramApi::onChannelsGetParticipantError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT channelsGetParticipantError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::channelsGetChannels(const QList<InputChannel> &id) {
@@ -1343,6 +1393,7 @@ void TelegramApi::onChannelsGetChannelsAnswer(Query *q, InboundPkt &inboundPkt) 
 
 void TelegramApi::onChannelsGetChannelsError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT channelsGetChannelsError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::channelsGetFullChannel(const InputChannel &channel) {
@@ -1364,6 +1415,7 @@ void TelegramApi::onChannelsGetFullChannelAnswer(Query *q, InboundPkt &inboundPk
 
 void TelegramApi::onChannelsGetFullChannelError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT channelsGetFullChannelError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::channelsCreateChannel(bool broadcast, bool megagroup, const QString &title, const QString &about) {
@@ -1385,6 +1437,7 @@ void TelegramApi::onChannelsCreateChannelAnswer(Query *q, InboundPkt &inboundPkt
 
 void TelegramApi::onChannelsCreateChannelError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT channelsCreateChannelError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::channelsEditAbout(const InputChannel &channel, const QString &about) {
@@ -1403,6 +1456,7 @@ void TelegramApi::onChannelsEditAboutAnswer(Query *q, InboundPkt &inboundPkt) {
 
 void TelegramApi::onChannelsEditAboutError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT channelsEditAboutError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::channelsEditAdmin(const InputChannel &channel, const InputUser &user_id, const ChannelParticipantRole &role) {
@@ -1424,6 +1478,7 @@ void TelegramApi::onChannelsEditAdminAnswer(Query *q, InboundPkt &inboundPkt) {
 
 void TelegramApi::onChannelsEditAdminError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT channelsEditAdminError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::channelsEditTitle(const InputChannel &channel, const QString &title) {
@@ -1445,6 +1500,7 @@ void TelegramApi::onChannelsEditTitleAnswer(Query *q, InboundPkt &inboundPkt) {
 
 void TelegramApi::onChannelsEditTitleError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT channelsEditTitleError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::channelsEditPhoto(const InputChannel &channel, const InputChatPhoto &photo) {
@@ -1466,6 +1522,7 @@ void TelegramApi::onChannelsEditPhotoAnswer(Query *q, InboundPkt &inboundPkt) {
 
 void TelegramApi::onChannelsEditPhotoError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT channelsEditPhotoError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::channelsToggleComments(const InputChannel &channel, bool enabled) {
@@ -1487,6 +1544,7 @@ void TelegramApi::onChannelsToggleCommentsAnswer(Query *q, InboundPkt &inboundPk
 
 void TelegramApi::onChannelsToggleCommentsError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT channelsToggleCommentsError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::channelsCheckUsername(const InputChannel &channel, const QString &username) {
@@ -1505,6 +1563,7 @@ void TelegramApi::onChannelsCheckUsernameAnswer(Query *q, InboundPkt &inboundPkt
 
 void TelegramApi::onChannelsCheckUsernameError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT channelsCheckUsernameError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::channelsUpdateUsername(const InputChannel &channel, const QString &username) {
@@ -1523,6 +1582,7 @@ void TelegramApi::onChannelsUpdateUsernameAnswer(Query *q, InboundPkt &inboundPk
 
 void TelegramApi::onChannelsUpdateUsernameError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT channelsUpdateUsernameError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::channelsJoinChannel(const InputChannel &channel) {
@@ -1544,6 +1604,7 @@ void TelegramApi::onChannelsJoinChannelAnswer(Query *q, InboundPkt &inboundPkt) 
 
 void TelegramApi::onChannelsJoinChannelError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT channelsJoinChannelError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::channelsLeaveChannel(const InputChannel &channel) {
@@ -1565,6 +1626,7 @@ void TelegramApi::onChannelsLeaveChannelAnswer(Query *q, InboundPkt &inboundPkt)
 
 void TelegramApi::onChannelsLeaveChannelError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT channelsLeaveChannelError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::channelsInviteToChannel(const InputChannel &channel, const QList<InputUser> &users) {
@@ -1586,6 +1648,7 @@ void TelegramApi::onChannelsInviteToChannelAnswer(Query *q, InboundPkt &inboundP
 
 void TelegramApi::onChannelsInviteToChannelError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT channelsInviteToChannelError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::channelsKickFromChannel(const InputChannel &channel, const InputUser &user_id, bool kicked) {
@@ -1607,6 +1670,7 @@ void TelegramApi::onChannelsKickFromChannelAnswer(Query *q, InboundPkt &inboundP
 
 void TelegramApi::onChannelsKickFromChannelError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT channelsKickFromChannelError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::channelsExportInvite(const InputChannel &channel) {
@@ -1628,6 +1692,7 @@ void TelegramApi::onChannelsExportInviteAnswer(Query *q, InboundPkt &inboundPkt)
 
 void TelegramApi::onChannelsExportInviteError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT channelsExportInviteError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::channelsDeleteChannel(const InputChannel &channel) {
@@ -1649,6 +1714,7 @@ void TelegramApi::onChannelsDeleteChannelAnswer(Query *q, InboundPkt &inboundPkt
 
 void TelegramApi::onChannelsDeleteChannelError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT channelsDeleteChannelError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 
@@ -1668,6 +1734,7 @@ void TelegramApi::onContactsGetStatusesAnswer(Query *q, InboundPkt &inboundPkt) 
 
 void TelegramApi::onContactsGetStatusesError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT contactsGetStatusesError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::contactsGetContacts(const QString &hash) {
@@ -1689,6 +1756,7 @@ void TelegramApi::onContactsGetContactsAnswer(Query *q, InboundPkt &inboundPkt) 
 
 void TelegramApi::onContactsGetContactsError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT contactsGetContactsError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::contactsImportContacts(const QList<InputContact> &contacts, bool replace) {
@@ -1710,6 +1778,8 @@ void TelegramApi::onContactsImportContactsAnswer(Query *q, InboundPkt &inboundPk
 
 void TelegramApi::onContactsImportContactsError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT contactsImportContactsError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
+    onErrorRetry(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::contactsGetSuggested(qint32 limit) {
@@ -1731,6 +1801,7 @@ void TelegramApi::onContactsGetSuggestedAnswer(Query *q, InboundPkt &inboundPkt)
 
 void TelegramApi::onContactsGetSuggestedError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT contactsGetSuggestedError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::contactsDeleteContact(const InputUser &id) {
@@ -1752,6 +1823,7 @@ void TelegramApi::onContactsDeleteContactAnswer(Query *q, InboundPkt &inboundPkt
 
 void TelegramApi::onContactsDeleteContactError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT contactsDeleteContactError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::contactsDeleteContacts(const QList<InputUser> &id) {
@@ -1770,6 +1842,7 @@ void TelegramApi::onContactsDeleteContactsAnswer(Query *q, InboundPkt &inboundPk
 
 void TelegramApi::onContactsDeleteContactsError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT contactsDeleteContactsError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::contactsBlock(const InputUser &id) {
@@ -1788,6 +1861,7 @@ void TelegramApi::onContactsBlockAnswer(Query *q, InboundPkt &inboundPkt) {
 
 void TelegramApi::onContactsBlockError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT contactsBlockError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::contactsUnblock(const InputUser &id) {
@@ -1806,6 +1880,7 @@ void TelegramApi::onContactsUnblockAnswer(Query *q, InboundPkt &inboundPkt) {
 
 void TelegramApi::onContactsUnblockError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT contactsUnblockError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::contactsGetBlocked(qint32 offset, qint32 limit) {
@@ -1827,6 +1902,7 @@ void TelegramApi::onContactsGetBlockedAnswer(Query *q, InboundPkt &inboundPkt) {
 
 void TelegramApi::onContactsGetBlockedError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT contactsGetBlockedError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::contactsExportCard() {
@@ -1845,6 +1921,7 @@ void TelegramApi::onContactsExportCardAnswer(Query *q, InboundPkt &inboundPkt) {
 
 void TelegramApi::onContactsExportCardError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT contactsExportCardError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::contactsImportCard(const QList<qint32> &export_card) {
@@ -1866,6 +1943,7 @@ void TelegramApi::onContactsImportCardAnswer(Query *q, InboundPkt &inboundPkt) {
 
 void TelegramApi::onContactsImportCardError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT contactsImportCardError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::contactsSearch(const QString &q, qint32 limit) {
@@ -1887,6 +1965,7 @@ void TelegramApi::onContactsSearchAnswer(Query *q, InboundPkt &inboundPkt) {
 
 void TelegramApi::onContactsSearchError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT contactsSearchError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::contactsResolveUsername(const QString &username) {
@@ -1908,6 +1987,7 @@ void TelegramApi::onContactsResolveUsernameAnswer(Query *q, InboundPkt &inboundP
 
 void TelegramApi::onContactsResolveUsernameError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT contactsResolveUsernameError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 
@@ -1930,6 +2010,7 @@ void TelegramApi::onHelpGetConfigAnswer(Query *q, InboundPkt &inboundPkt) {
 
 void TelegramApi::onHelpGetConfigError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT helpGetConfigError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::helpGetNearestDc() {
@@ -1951,6 +2032,7 @@ void TelegramApi::onHelpGetNearestDcAnswer(Query *q, InboundPkt &inboundPkt) {
 
 void TelegramApi::onHelpGetNearestDcError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT helpGetNearestDcError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::helpGetAppUpdate(const QString &device_model, const QString &system_version, const QString &app_version, const QString &lang_code) {
@@ -1972,6 +2054,7 @@ void TelegramApi::onHelpGetAppUpdateAnswer(Query *q, InboundPkt &inboundPkt) {
 
 void TelegramApi::onHelpGetAppUpdateError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT helpGetAppUpdateError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::helpSaveAppLog(const QList<InputAppEvent> &events) {
@@ -1990,6 +2073,7 @@ void TelegramApi::onHelpSaveAppLogAnswer(Query *q, InboundPkt &inboundPkt) {
 
 void TelegramApi::onHelpSaveAppLogError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT helpSaveAppLogError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::helpGetInviteText(const QString &lang_code) {
@@ -2011,6 +2095,8 @@ void TelegramApi::onHelpGetInviteTextAnswer(Query *q, InboundPkt &inboundPkt) {
 
 void TelegramApi::onHelpGetInviteTextError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT helpGetInviteTextError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
+    onErrorRetry(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::helpGetSupport() {
@@ -2032,6 +2118,7 @@ void TelegramApi::onHelpGetSupportAnswer(Query *q, InboundPkt &inboundPkt) {
 
 void TelegramApi::onHelpGetSupportError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT helpGetSupportError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::helpGetAppChangelog(const QString &device_model, const QString &system_version, const QString &app_version, const QString &lang_code) {
@@ -2053,6 +2140,7 @@ void TelegramApi::onHelpGetAppChangelogAnswer(Query *q, InboundPkt &inboundPkt) 
 
 void TelegramApi::onHelpGetAppChangelogError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT helpGetAppChangelogError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::helpGetTermsOfService(const QString &lang_code) {
@@ -2074,6 +2162,7 @@ void TelegramApi::onHelpGetTermsOfServiceAnswer(Query *q, InboundPkt &inboundPkt
 
 void TelegramApi::onHelpGetTermsOfServiceError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT helpGetTermsOfServiceError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 
@@ -2096,6 +2185,7 @@ void TelegramApi::onMessagesGetMessagesAnswer(Query *q, InboundPkt &inboundPkt) 
 
 void TelegramApi::onMessagesGetMessagesError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT messagesGetMessagesError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::messagesGetDialogs(qint32 offset_date, qint32 offset_id, const InputPeer &offset_peer, qint32 limit) {
@@ -2117,6 +2207,7 @@ void TelegramApi::onMessagesGetDialogsAnswer(Query *q, InboundPkt &inboundPkt) {
 
 void TelegramApi::onMessagesGetDialogsError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT messagesGetDialogsError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::messagesGetHistory(const InputPeer &peer, qint32 offset_id, qint32 add_offset, qint32 limit, qint32 max_id, qint32 min_id) {
@@ -2138,6 +2229,7 @@ void TelegramApi::onMessagesGetHistoryAnswer(Query *q, InboundPkt &inboundPkt) {
 
 void TelegramApi::onMessagesGetHistoryError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT messagesGetHistoryError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::messagesSearch(bool important_only, const InputPeer &peer, const QString &q, const MessagesFilter &filter, qint32 min_date, qint32 max_date, qint32 offset, qint32 max_id, qint32 limit) {
@@ -2159,6 +2251,7 @@ void TelegramApi::onMessagesSearchAnswer(Query *q, InboundPkt &inboundPkt) {
 
 void TelegramApi::onMessagesSearchError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT messagesSearchError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::messagesReadHistory(const InputPeer &peer, qint32 max_id) {
@@ -2180,6 +2273,7 @@ void TelegramApi::onMessagesReadHistoryAnswer(Query *q, InboundPkt &inboundPkt) 
 
 void TelegramApi::onMessagesReadHistoryError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT messagesReadHistoryError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::messagesDeleteHistory(const InputPeer &peer, qint32 max_id) {
@@ -2201,6 +2295,7 @@ void TelegramApi::onMessagesDeleteHistoryAnswer(Query *q, InboundPkt &inboundPkt
 
 void TelegramApi::onMessagesDeleteHistoryError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT messagesDeleteHistoryError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::messagesDeleteMessages(const QList<qint32> &id) {
@@ -2222,6 +2317,7 @@ void TelegramApi::onMessagesDeleteMessagesAnswer(Query *q, InboundPkt &inboundPk
 
 void TelegramApi::onMessagesDeleteMessagesError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT messagesDeleteMessagesError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::messagesReceivedMessages(qint32 max_id) {
@@ -2240,6 +2336,7 @@ void TelegramApi::onMessagesReceivedMessagesAnswer(Query *q, InboundPkt &inbound
 
 void TelegramApi::onMessagesReceivedMessagesError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT messagesReceivedMessagesError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::messagesSetTyping(const InputPeer &peer, const SendMessageAction &action) {
@@ -2258,6 +2355,7 @@ void TelegramApi::onMessagesSetTypingAnswer(Query *q, InboundPkt &inboundPkt) {
 
 void TelegramApi::onMessagesSetTypingError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT messagesSetTypingError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::messagesSendMessage(bool no_webpage, bool broadcast, const InputPeer &peer, qint32 reply_to_msg_id, const QString &message, qint64 random_id, const ReplyMarkup &reply_markup, const QList<MessageEntity> &entities) {
@@ -2279,6 +2377,7 @@ void TelegramApi::onMessagesSendMessageAnswer(Query *q, InboundPkt &inboundPkt) 
 
 void TelegramApi::onMessagesSendMessageError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT messagesSendMessageError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::messagesSendMedia(bool broadcast, const InputPeer &peer, qint32 reply_to_msg_id, const InputMedia &media, qint64 random_id, const ReplyMarkup &reply_markup) {
@@ -2300,6 +2399,7 @@ void TelegramApi::onMessagesSendMediaAnswer(Query *q, InboundPkt &inboundPkt) {
 
 void TelegramApi::onMessagesSendMediaError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT messagesSendMediaError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::messagesForwardMessages(bool broadcast, const InputPeer &from_peer, const QList<qint32> &id, const QList<qint64> &random_id, const InputPeer &to_peer) {
@@ -2321,6 +2421,7 @@ void TelegramApi::onMessagesForwardMessagesAnswer(Query *q, InboundPkt &inboundP
 
 void TelegramApi::onMessagesForwardMessagesError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT messagesForwardMessagesError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::messagesReportSpam(const InputPeer &peer) {
@@ -2339,6 +2440,7 @@ void TelegramApi::onMessagesReportSpamAnswer(Query *q, InboundPkt &inboundPkt) {
 
 void TelegramApi::onMessagesReportSpamError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT messagesReportSpamError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::messagesGetChats(const QList<qint32> &id) {
@@ -2360,6 +2462,7 @@ void TelegramApi::onMessagesGetChatsAnswer(Query *q, InboundPkt &inboundPkt) {
 
 void TelegramApi::onMessagesGetChatsError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT messagesGetChatsError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::messagesGetFullChat(qint32 chat_id) {
@@ -2381,6 +2484,7 @@ void TelegramApi::onMessagesGetFullChatAnswer(Query *q, InboundPkt &inboundPkt) 
 
 void TelegramApi::onMessagesGetFullChatError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT messagesGetFullChatError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::messagesEditChatTitle(qint32 chat_id, const QString &title) {
@@ -2402,6 +2506,7 @@ void TelegramApi::onMessagesEditChatTitleAnswer(Query *q, InboundPkt &inboundPkt
 
 void TelegramApi::onMessagesEditChatTitleError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT messagesEditChatTitleError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::messagesEditChatPhoto(qint32 chat_id, const InputChatPhoto &photo) {
@@ -2423,6 +2528,7 @@ void TelegramApi::onMessagesEditChatPhotoAnswer(Query *q, InboundPkt &inboundPkt
 
 void TelegramApi::onMessagesEditChatPhotoError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT messagesEditChatPhotoError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::messagesAddChatUser(qint32 chat_id, const InputUser &user_id, qint32 fwd_limit) {
@@ -2444,6 +2550,7 @@ void TelegramApi::onMessagesAddChatUserAnswer(Query *q, InboundPkt &inboundPkt) 
 
 void TelegramApi::onMessagesAddChatUserError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT messagesAddChatUserError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::messagesDeleteChatUser(qint32 chat_id, const InputUser &user_id) {
@@ -2465,6 +2572,7 @@ void TelegramApi::onMessagesDeleteChatUserAnswer(Query *q, InboundPkt &inboundPk
 
 void TelegramApi::onMessagesDeleteChatUserError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT messagesDeleteChatUserError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::messagesCreateChat(const QList<InputUser> &users, const QString &title) {
@@ -2486,6 +2594,7 @@ void TelegramApi::onMessagesCreateChatAnswer(Query *q, InboundPkt &inboundPkt) {
 
 void TelegramApi::onMessagesCreateChatError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT messagesCreateChatError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::messagesForwardMessage(const InputPeer &peer, qint32 id, qint64 random_id) {
@@ -2507,6 +2616,7 @@ void TelegramApi::onMessagesForwardMessageAnswer(Query *q, InboundPkt &inboundPk
 
 void TelegramApi::onMessagesForwardMessageError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT messagesForwardMessageError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::messagesSendBroadcast(const QList<InputUser> &contacts, const QList<qint64> &random_id, const QString &message, const InputMedia &media) {
@@ -2528,6 +2638,7 @@ void TelegramApi::onMessagesSendBroadcastAnswer(Query *q, InboundPkt &inboundPkt
 
 void TelegramApi::onMessagesSendBroadcastError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT messagesSendBroadcastError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::messagesGetDhConfig(qint32 version, qint32 random_length) {
@@ -2549,6 +2660,7 @@ void TelegramApi::onMessagesGetDhConfigAnswer(Query *q, InboundPkt &inboundPkt) 
 
 void TelegramApi::onMessagesGetDhConfigError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT messagesGetDhConfigError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::messagesRequestEncryption(const InputUser &user_id, qint32 random_id, const QByteArray &g_a) {
@@ -2570,6 +2682,7 @@ void TelegramApi::onMessagesRequestEncryptionAnswer(Query *q, InboundPkt &inboun
 
 void TelegramApi::onMessagesRequestEncryptionError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT messagesRequestEncryptionError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::messagesAcceptEncryption(const InputEncryptedChat &peer, const QByteArray &g_b, qint64 key_fingerprint) {
@@ -2591,6 +2704,7 @@ void TelegramApi::onMessagesAcceptEncryptionAnswer(Query *q, InboundPkt &inbound
 
 void TelegramApi::onMessagesAcceptEncryptionError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT messagesAcceptEncryptionError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::messagesDiscardEncryption(qint32 chat_id) {
@@ -2609,6 +2723,7 @@ void TelegramApi::onMessagesDiscardEncryptionAnswer(Query *q, InboundPkt &inboun
 
 void TelegramApi::onMessagesDiscardEncryptionError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT messagesDiscardEncryptionError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::messagesSetEncryptedTyping(const InputEncryptedChat &peer, bool typing) {
@@ -2627,6 +2742,7 @@ void TelegramApi::onMessagesSetEncryptedTypingAnswer(Query *q, InboundPkt &inbou
 
 void TelegramApi::onMessagesSetEncryptedTypingError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT messagesSetEncryptedTypingError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::messagesReadEncryptedHistory(const InputEncryptedChat &peer, qint32 max_date) {
@@ -2645,6 +2761,7 @@ void TelegramApi::onMessagesReadEncryptedHistoryAnswer(Query *q, InboundPkt &inb
 
 void TelegramApi::onMessagesReadEncryptedHistoryError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT messagesReadEncryptedHistoryError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::messagesSendEncrypted(const InputEncryptedChat &peer, qint64 random_id, const QByteArray &data) {
@@ -2666,6 +2783,7 @@ void TelegramApi::onMessagesSendEncryptedAnswer(Query *q, InboundPkt &inboundPkt
 
 void TelegramApi::onMessagesSendEncryptedError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT messagesSendEncryptedError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::messagesSendEncryptedFile(const InputEncryptedChat &peer, qint64 random_id, const QByteArray &data, const InputEncryptedFile &file) {
@@ -2687,6 +2805,7 @@ void TelegramApi::onMessagesSendEncryptedFileAnswer(Query *q, InboundPkt &inboun
 
 void TelegramApi::onMessagesSendEncryptedFileError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT messagesSendEncryptedFileError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::messagesSendEncryptedService(const InputEncryptedChat &peer, qint64 random_id, const QByteArray &data) {
@@ -2708,6 +2827,7 @@ void TelegramApi::onMessagesSendEncryptedServiceAnswer(Query *q, InboundPkt &inb
 
 void TelegramApi::onMessagesSendEncryptedServiceError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT messagesSendEncryptedServiceError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::messagesReceivedQueue(qint32 max_qts) {
@@ -2726,6 +2846,7 @@ void TelegramApi::onMessagesReceivedQueueAnswer(Query *q, InboundPkt &inboundPkt
 
 void TelegramApi::onMessagesReceivedQueueError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT messagesReceivedQueueError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::messagesReadMessageContents(const QList<qint32> &id) {
@@ -2747,6 +2868,7 @@ void TelegramApi::onMessagesReadMessageContentsAnswer(Query *q, InboundPkt &inbo
 
 void TelegramApi::onMessagesReadMessageContentsError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT messagesReadMessageContentsError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::messagesGetStickers(const QString &emoticon, const QString &hash) {
@@ -2768,6 +2890,7 @@ void TelegramApi::onMessagesGetStickersAnswer(Query *q, InboundPkt &inboundPkt) 
 
 void TelegramApi::onMessagesGetStickersError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT messagesGetStickersError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::messagesGetAllStickers(qint32 hash) {
@@ -2789,6 +2912,7 @@ void TelegramApi::onMessagesGetAllStickersAnswer(Query *q, InboundPkt &inboundPk
 
 void TelegramApi::onMessagesGetAllStickersError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT messagesGetAllStickersError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::messagesGetWebPagePreview(const QString &message) {
@@ -2810,6 +2934,7 @@ void TelegramApi::onMessagesGetWebPagePreviewAnswer(Query *q, InboundPkt &inboun
 
 void TelegramApi::onMessagesGetWebPagePreviewError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT messagesGetWebPagePreviewError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::messagesExportChatInvite(qint32 chat_id) {
@@ -2831,6 +2956,7 @@ void TelegramApi::onMessagesExportChatInviteAnswer(Query *q, InboundPkt &inbound
 
 void TelegramApi::onMessagesExportChatInviteError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT messagesExportChatInviteError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::messagesCheckChatInvite(const QString &hash) {
@@ -2852,6 +2978,7 @@ void TelegramApi::onMessagesCheckChatInviteAnswer(Query *q, InboundPkt &inboundP
 
 void TelegramApi::onMessagesCheckChatInviteError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT messagesCheckChatInviteError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::messagesImportChatInvite(const QString &hash) {
@@ -2873,6 +3000,7 @@ void TelegramApi::onMessagesImportChatInviteAnswer(Query *q, InboundPkt &inbound
 
 void TelegramApi::onMessagesImportChatInviteError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT messagesImportChatInviteError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::messagesGetStickerSet(const InputStickerSet &stickerset) {
@@ -2894,6 +3022,7 @@ void TelegramApi::onMessagesGetStickerSetAnswer(Query *q, InboundPkt &inboundPkt
 
 void TelegramApi::onMessagesGetStickerSetError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT messagesGetStickerSetError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::messagesInstallStickerSet(const InputStickerSet &stickerset, bool disabled) {
@@ -2912,6 +3041,7 @@ void TelegramApi::onMessagesInstallStickerSetAnswer(Query *q, InboundPkt &inboun
 
 void TelegramApi::onMessagesInstallStickerSetError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT messagesInstallStickerSetError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::messagesUninstallStickerSet(const InputStickerSet &stickerset) {
@@ -2930,6 +3060,7 @@ void TelegramApi::onMessagesUninstallStickerSetAnswer(Query *q, InboundPkt &inbo
 
 void TelegramApi::onMessagesUninstallStickerSetError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT messagesUninstallStickerSetError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::messagesStartBot(const InputUser &bot, const InputPeer &peer, qint64 random_id, const QString &start_param) {
@@ -2951,6 +3082,7 @@ void TelegramApi::onMessagesStartBotAnswer(Query *q, InboundPkt &inboundPkt) {
 
 void TelegramApi::onMessagesStartBotError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT messagesStartBotError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::messagesGetMessagesViews(const InputPeer &peer, const QList<qint32> &id, bool increment) {
@@ -2969,6 +3101,7 @@ void TelegramApi::onMessagesGetMessagesViewsAnswer(Query *q, InboundPkt &inbound
 
 void TelegramApi::onMessagesGetMessagesViewsError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT messagesGetMessagesViewsError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::messagesToggleChatAdmins(qint32 chat_id, bool enabled) {
@@ -2990,6 +3123,7 @@ void TelegramApi::onMessagesToggleChatAdminsAnswer(Query *q, InboundPkt &inbound
 
 void TelegramApi::onMessagesToggleChatAdminsError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT messagesToggleChatAdminsError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::messagesEditChatAdmin(qint32 chat_id, const InputUser &user_id, bool is_admin) {
@@ -3008,6 +3142,7 @@ void TelegramApi::onMessagesEditChatAdminAnswer(Query *q, InboundPkt &inboundPkt
 
 void TelegramApi::onMessagesEditChatAdminError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT messagesEditChatAdminError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::messagesMigrateChat(qint32 chat_id) {
@@ -3029,6 +3164,7 @@ void TelegramApi::onMessagesMigrateChatAnswer(Query *q, InboundPkt &inboundPkt) 
 
 void TelegramApi::onMessagesMigrateChatError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT messagesMigrateChatError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::messagesSearchGlobal(const QString &q, qint32 offset_date, const InputPeer &offset_peer, qint32 offset_id, qint32 limit) {
@@ -3050,6 +3186,7 @@ void TelegramApi::onMessagesSearchGlobalAnswer(Query *q, InboundPkt &inboundPkt)
 
 void TelegramApi::onMessagesSearchGlobalError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT messagesSearchGlobalError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::messagesReorderStickerSets(const QList<qint64> &order) {
@@ -3068,6 +3205,7 @@ void TelegramApi::onMessagesReorderStickerSetsAnswer(Query *q, InboundPkt &inbou
 
 void TelegramApi::onMessagesReorderStickerSetsError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT messagesReorderStickerSetsError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::messagesGetDocumentByHash(const QByteArray &sha256, qint32 size, const QString &mime_type) {
@@ -3089,6 +3227,7 @@ void TelegramApi::onMessagesGetDocumentByHashAnswer(Query *q, InboundPkt &inboun
 
 void TelegramApi::onMessagesGetDocumentByHashError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT messagesGetDocumentByHashError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::messagesSearchGifs(const QString &q, qint32 offset) {
@@ -3110,6 +3249,7 @@ void TelegramApi::onMessagesSearchGifsAnswer(Query *q, InboundPkt &inboundPkt) {
 
 void TelegramApi::onMessagesSearchGifsError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT messagesSearchGifsError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::messagesGetSavedGifs(qint32 hash) {
@@ -3131,6 +3271,7 @@ void TelegramApi::onMessagesGetSavedGifsAnswer(Query *q, InboundPkt &inboundPkt)
 
 void TelegramApi::onMessagesGetSavedGifsError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT messagesGetSavedGifsError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::messagesSaveGif(const InputDocument &id, bool unsave) {
@@ -3149,6 +3290,7 @@ void TelegramApi::onMessagesSaveGifAnswer(Query *q, InboundPkt &inboundPkt) {
 
 void TelegramApi::onMessagesSaveGifError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT messagesSaveGifError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::messagesGetInlineBotResults(const InputUser &bot, const QString &query, const QString &offset) {
@@ -3170,6 +3312,7 @@ void TelegramApi::onMessagesGetInlineBotResultsAnswer(Query *q, InboundPkt &inbo
 
 void TelegramApi::onMessagesGetInlineBotResultsError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT messagesGetInlineBotResultsError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::messagesSetInlineBotResults(bool gallery, bool privateValue, qint64 query_id, const QList<InputBotInlineResult> &results, qint32 cache_time, const QString &next_offset) {
@@ -3188,6 +3331,7 @@ void TelegramApi::onMessagesSetInlineBotResultsAnswer(Query *q, InboundPkt &inbo
 
 void TelegramApi::onMessagesSetInlineBotResultsError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT messagesSetInlineBotResultsError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::messagesSendInlineBotResult(bool broadcast, const InputPeer &peer, qint32 reply_to_msg_id, qint64 random_id, qint64 query_id, const QString &id) {
@@ -3209,6 +3353,7 @@ void TelegramApi::onMessagesSendInlineBotResultAnswer(Query *q, InboundPkt &inbo
 
 void TelegramApi::onMessagesSendInlineBotResultError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT messagesSendInlineBotResultError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 
@@ -3231,6 +3376,7 @@ void TelegramApi::onPhotosUpdateProfilePhotoAnswer(Query *q, InboundPkt &inbound
 
 void TelegramApi::onPhotosUpdateProfilePhotoError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT photosUpdateProfilePhotoError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::photosUploadProfilePhoto(const InputFile &file, const QString &caption, const InputGeoPoint &geo_point, const InputPhotoCrop &crop) {
@@ -3252,6 +3398,7 @@ void TelegramApi::onPhotosUploadProfilePhotoAnswer(Query *q, InboundPkt &inbound
 
 void TelegramApi::onPhotosUploadProfilePhotoError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT photosUploadProfilePhotoError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::photosDeletePhotos(const QList<InputPhoto> &id) {
@@ -3270,6 +3417,7 @@ void TelegramApi::onPhotosDeletePhotosAnswer(Query *q, InboundPkt &inboundPkt) {
 
 void TelegramApi::onPhotosDeletePhotosError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT photosDeletePhotosError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::photosGetUserPhotos(const InputUser &user_id, qint32 offset, qint64 max_id, qint32 limit) {
@@ -3291,6 +3439,7 @@ void TelegramApi::onPhotosGetUserPhotosAnswer(Query *q, InboundPkt &inboundPkt) 
 
 void TelegramApi::onPhotosGetUserPhotosError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT photosGetUserPhotosError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 
@@ -3313,6 +3462,7 @@ void TelegramApi::onUpdatesGetStateAnswer(Query *q, InboundPkt &inboundPkt) {
 
 void TelegramApi::onUpdatesGetStateError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT updatesGetStateError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::updatesGetDifference(qint32 pts, qint32 date, qint32 qts) {
@@ -3334,6 +3484,7 @@ void TelegramApi::onUpdatesGetDifferenceAnswer(Query *q, InboundPkt &inboundPkt)
 
 void TelegramApi::onUpdatesGetDifferenceError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT updatesGetDifferenceError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::updatesGetChannelDifference(const InputChannel &channel, const ChannelMessagesFilter &filter, qint32 pts, qint32 limit) {
@@ -3355,6 +3506,7 @@ void TelegramApi::onUpdatesGetChannelDifferenceAnswer(Query *q, InboundPkt &inbo
 
 void TelegramApi::onUpdatesGetChannelDifferenceError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT updatesGetChannelDifferenceError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 
@@ -3374,6 +3526,7 @@ void TelegramApi::onUploadSaveFilePartAnswer(Query *q, InboundPkt &inboundPkt) {
 
 void TelegramApi::onUploadSaveFilePartError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT uploadSaveFilePartError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::uploadGetFile(const InputFileLocation &location, qint32 offset, qint32 limit) {
@@ -3395,6 +3548,7 @@ void TelegramApi::onUploadGetFileAnswer(Query *q, InboundPkt &inboundPkt) {
 
 void TelegramApi::onUploadGetFileError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT uploadGetFileError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::uploadSaveBigFilePart(qint64 file_id, qint32 file_part, qint32 file_total_parts, const QByteArray &bytes) {
@@ -3413,6 +3567,7 @@ void TelegramApi::onUploadSaveBigFilePartAnswer(Query *q, InboundPkt &inboundPkt
 
 void TelegramApi::onUploadSaveBigFilePartError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT uploadSaveBigFilePartError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 
@@ -3432,6 +3587,7 @@ void TelegramApi::onUsersGetUsersAnswer(Query *q, InboundPkt &inboundPkt) {
 
 void TelegramApi::onUsersGetUsersError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT usersGetUsersError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
 qint64 TelegramApi::usersGetFullUser(const InputUser &id) {
@@ -3453,8 +3609,17 @@ void TelegramApi::onUsersGetFullUserAnswer(Query *q, InboundPkt &inboundPkt) {
 
 void TelegramApi::onUsersGetFullUserError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT usersGetFullUserError(q->msgId(), errorCode, errorText);
+    onError(q, errorCode, errorText);
 }
 
+
+void TelegramApi::onErrorRetry(Query *q, qint32 errorCode, const QString &errorText) {
+    Q_EMIT errorRetry(q->msgId(), errorCode, errorText);
+}
+
+void TelegramApi::onError(Query *q, qint32 errorCode, const QString &errorText) {
+    Q_EMIT error(q->msgId(), errorCode, errorText, q->name());
+}
 
 qint64 TelegramApi::uploadSaveFilePart(Session *session, qint64 fileId, qint32 filePart, const QByteArray &bytes) {
     Q_ASSERT(session);

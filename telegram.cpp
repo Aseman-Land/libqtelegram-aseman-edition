@@ -89,6 +89,7 @@ public:
     SecretState mSecretState;
     Encrypter *mEncrypter;
     Decrypter *mDecrypter;
+    QHash<qint64, TelegramCore::Callback<EncryptedChat> > secretChatCallbacks;
 
     bool mLoggedIn;
     bool mCreatedSharedKeys;
@@ -268,12 +269,12 @@ qint32 Telegram::ourId() {
 
 void Telegram::onDcProviderReady() {
     prv->mLibraryState = CreatedSharedKeys;
-    mApi = prv->mDcProvider->getApi();
+    setApi( prv->mDcProvider->getApi() );
     // api signal-signal and signal-slot connections
     // updates
     connect(mApi, SIGNAL(updatesTooLong()), this, SIGNAL(updatesTooLong()));
-    connect(mApi, SIGNAL(updateShortMessage(qint32,qint32,const QString&,qint32,qint32,qint32,qint32,qint32,qint32,bool,bool)), this, SIGNAL(updateShortMessage(qint32,qint32,const QString&,qint32,qint32,qint32,qint32,qint32,qint32,bool,bool)));
-    connect(mApi, SIGNAL(updateShortChatMessage(qint32,qint32,qint32,const QString&,qint32,qint32,qint32,qint32,qint32,qint32,bool,bool)), this, SIGNAL(updateShortChatMessage(qint32,qint32,qint32,const QString&,qint32,qint32,qint32,qint32,qint32,qint32,bool,bool)));
+    connect(mApi, SIGNAL(updateShortMessage(qint32,qint32,const QString&,qint32,qint32,qint32,Peer,qint32,qint32,bool,bool)), this, SIGNAL(updateShortMessage(qint32,qint32,const QString&,qint32,qint32,qint32,Peer,qint32,qint32,bool,bool)));
+    connect(mApi, SIGNAL(updateShortChatMessage(qint32,qint32,qint32,const QString&,qint32,qint32,qint32,Peer,qint32,qint32,bool,bool)), this, SIGNAL(updateShortChatMessage(qint32,qint32,qint32,const QString&,qint32,qint32,qint32,Peer,qint32,qint32,bool,bool)));
     connect(mApi, SIGNAL(updateShort(const Update&,qint32)), this, SIGNAL(updateShort(const Update&,qint32)));
     connect(mApi, SIGNAL(updatesCombined(const QList<Update>&,const QList<User>&,const QList<Chat>&,qint32,qint32,qint32)), this, SIGNAL(updatesCombined(const QList<Update>&,const QList<User>&,const QList<Chat>&,qint32,qint32,qint32)));
     connect(mApi, SIGNAL(updates(const QList<Update>&,const QList<User>&,const QList<Chat>&,qint32,qint32)), this, SIGNAL(updates(const QList<Update>&,const QList<User>&,const QList<Chat>&,qint32,qint32)));
@@ -339,7 +340,7 @@ qint64 Telegram::messagesCreateEncryptedChat(const InputUser &user, Callback<Enc
     // generate a new object where store all the needed secret chat data
     SecretChat *secretChat = new SecretChat(prv->mSettings);
     secretChat->setRequestedUser(user);
-    return generateGAorB(secretChat);
+    return generateGAorB(secretChat, callBack);
 }
 
 qint64 Telegram::messagesAcceptEncryptedChat(qint32 chatId, Callback<EncryptedChat> callBack) {
@@ -350,7 +351,7 @@ qint64 Telegram::messagesAcceptEncryptedChat(qint32 chatId, Callback<EncryptedCh
         qCWarning(TG_LIB_SECRET) << "Not found any chat related to" << chatId;
         return -1;
     }
-    return generateGAorB(secretChat);
+    return generateGAorB(secretChat, callBack);
 }
 
 qint64 Telegram::messagesDiscardEncryptedChat(qint32 chatId, Callback<bool> callBack) {
@@ -442,7 +443,7 @@ void Telegram::onSequenceNumberGap(qint32 chatId, qint32 startSeqNo, qint32 endS
     prv->mSecretState.save();
 }
 
-qint64 Telegram::messagesSendEncryptedPhoto(const InputEncryptedChat &chat, qint64 randomId, qint32 ttl, const QString &filePath) {
+qint64 Telegram::messagesSendEncryptedPhoto(const InputEncryptedChat &chat, qint64 randomId, qint32 ttl, const QString &filePath, Callback<MessagesSentEncryptedMessage> callBack, FileProgressCallback fileCallback) {
     SecretChat *secretChat = prv->mSecretState.chats().value(chat.chatId());
     if(!secretChat)
     {
@@ -457,6 +458,8 @@ qint64 Telegram::messagesSendEncryptedPhoto(const InputEncryptedChat &chat, qint
     op->setInputEncryptedChat(chat);
     op->setRandomId(randomId);
     op->initializeKeyAndIv();
+    op->setResultCallback<MessagesSentEncryptedMessage>(callBack);
+    op->setFileCallback(fileCallback);
     QByteArray key = op->key();
     QByteArray iv = op->iv();
 
@@ -475,7 +478,7 @@ qint64 Telegram::messagesSendEncryptedPhoto(const InputEncryptedChat &chat, qint
     return prv->mFileHandler->uploadSendFile(*op, filePath);
 }
 
-qint64 Telegram::messagesSendEncryptedVideo(const InputEncryptedChat &chat, qint64 randomId, qint32 ttl, const QString &filePath, qint32 duration, qint32 width, qint32 height, const QByteArray &thumbnailBytes) {
+qint64 Telegram::messagesSendEncryptedVideo(const InputEncryptedChat &chat, qint64 randomId, qint32 ttl, const QString &filePath, qint32 duration, qint32 width, qint32 height, const QByteArray &thumbnailBytes, Callback<MessagesSentEncryptedMessage> callBack, FileProgressCallback fileCallback) {
     SecretChat *secretChat = prv->mSecretState.chats().value(chat.chatId());
     if(!secretChat)
     {
@@ -490,6 +493,8 @@ qint64 Telegram::messagesSendEncryptedVideo(const InputEncryptedChat &chat, qint
     op->setInputEncryptedChat(chat);
     op->setRandomId(randomId);
     op->initializeKeyAndIv();
+    op->setResultCallback<MessagesSentEncryptedMessage>(callBack);
+    op->setFileCallback(fileCallback);
     QByteArray key = op->key();
     QByteArray iv = op->iv();
 
@@ -505,7 +510,7 @@ qint64 Telegram::messagesSendEncryptedVideo(const InputEncryptedChat &chat, qint
     return prv->mFileHandler->uploadSendFile(*op, filePath);
 }
 
-qint64 Telegram::messagesSendEncryptedDocument(const InputEncryptedChat &chat, qint64 randomId, qint32 ttl, const QString &filePath) {
+qint64 Telegram::messagesSendEncryptedDocument(const InputEncryptedChat &chat, qint64 randomId, qint32 ttl, const QString &filePath, Callback<MessagesSentEncryptedMessage> callBack, FileProgressCallback fileCallback) {
     SecretChat *secretChat = prv->mSecretState.chats().value(chat.chatId());
     if(!secretChat)
     {
@@ -520,6 +525,8 @@ qint64 Telegram::messagesSendEncryptedDocument(const InputEncryptedChat &chat, q
     op->setInputEncryptedChat(chat);
     op->setRandomId(randomId);
     op->initializeKeyAndIv();
+    op->setResultCallback<MessagesSentEncryptedMessage>(callBack);
+    op->setFileCallback(fileCallback);
     QByteArray key = op->key();
     QByteArray iv = op->iv();
 
@@ -535,7 +542,7 @@ qint64 Telegram::messagesSendEncryptedDocument(const InputEncryptedChat &chat, q
     return prv->mFileHandler->uploadSendFile(*op, filePath);
 }
 
-qint64 Telegram::messagesSendEncryptedService(const InputEncryptedChat &chat, qint64 randomId, const DecryptedMessageAction &action) {
+qint64 Telegram::messagesSendEncryptedService(const InputEncryptedChat &chat, qint64 randomId, const DecryptedMessageAction &action, Callback<MessagesSentEncryptedMessage> callBack) {
     SecretChat *secretChat = prv->mSecretState.chats().value(chat.chatId());
     if(!secretChat)
     {
@@ -551,15 +558,16 @@ qint64 Telegram::messagesSendEncryptedService(const InputEncryptedChat &chat, qi
     decryptedMessage.setAction(action);
 
     QByteArray data = prv->mEncrypter->generateEncryptedData(decryptedMessage);
-    return TelegramCore::messagesSendEncryptedService(chat, randomId, data);
+    return TelegramCore::messagesSendEncryptedService(chat, randomId, data, callBack);
 }
 
-qint64 Telegram::generateGAorB(SecretChat *secretChat) {
+qint64 Telegram::generateGAorB(SecretChat *secretChat, Callback<EncryptedChat> callBack) {
     qCDebug(TG_LIB_SECRET) << "requesting for DH config parameters";
     // call messages.getDhConfig to get p and g for start creating shared key
     qint64 reqId = mApi->messagesGetDhConfig(prv->mSecretState.version(), DH_CONFIG_SERVER_RANDOM_LENGTH);
     // store in secret chats map related to this request id, temporally
     prv->mSecretState.chats().insert(reqId, secretChat);
+    prv->secretChatCallbacks[reqId] = callBack;
     return reqId;
 }
 
@@ -567,6 +575,9 @@ void Telegram::onMessagesGetDhConfigAnswer(qint64 msgId, const MessagesDhConfig 
 {
     qCDebug(TG_LIB_SECRET) << "received new DH parameters g ="<< result.g() << ",p =" << result.p().toBase64()
                            << ",version =" << result.version();
+
+    Callback<EncryptedChat> callBack = prv->secretChatCallbacks.take(msgId);
+
     prv->mSecretState.setVersion(result.version());
     prv->mSecretState.setG(result.g());
     prv->mSecretState.setP(result.p());
@@ -574,14 +585,15 @@ void Telegram::onMessagesGetDhConfigAnswer(qint64 msgId, const MessagesDhConfig 
     if (prv->mCrypto->checkDHParams(prv->mSecretState.p(), result.g()) < 0 &&
         result.classType() == MessagesDhConfig::typeMessagesDhConfig) {
         qCCritical(TG_TELEGRAM) << "Diffie-Hellman config parameters are not valid";
+
     } else {
-        messagesDhConfigNotModified(msgId, result.random());
+        messagesDhConfigNotModified(msgId, result.random(), callBack);
     }
 
     TelegramCore::onMessagesGetDhConfigAnswer(msgId, result);
 }
 
-void Telegram::messagesDhConfigNotModified(qint64 msgId, const QByteArray &random) {
+void Telegram::messagesDhConfigNotModified(qint64 msgId, const QByteArray &random, Callback<EncryptedChat> callBack) {
     qCDebug(TG_LIB_SECRET) << "processing DH parameters";
     SecretChat *secretChat = prv->mSecretState.chats().take(msgId);
     ASSERT(secretChat);
@@ -611,7 +623,7 @@ void Telegram::messagesDhConfigNotModified(qint64 msgId, const QByteArray &rando
         secretChat->setChatId(randomId);
         prv->mSecretState.chats().insert(randomId, secretChat);
         qCDebug(TG_LIB_SECRET) << "Requesting encryption for chatId" << secretChat->chatId();
-        mApi->messagesRequestEncryption(secretChat->requestedUser(), randomId, gAOrB);
+        TelegramCore::messagesRequestEncryption(secretChat->requestedUser(), randomId, gAOrB, callBack);
         break;
     }
     case SecretChat::Requested: {
@@ -624,7 +636,7 @@ void Telegram::messagesDhConfigNotModified(qint64 msgId, const QByteArray &rando
         inputEncryptedChat.setChatId(secretChat->chatId());
         inputEncryptedChat.setAccessHash(secretChat->accessHash());
         qCDebug(TG_LIB_SECRET) << "Accepting encryption for chatId" << secretChat->chatId();
-        mApi->messagesAcceptEncryption(inputEncryptedChat, gAOrB, keyFingerprint);
+        TelegramCore::messagesAcceptEncryption(inputEncryptedChat, gAOrB, keyFingerprint, callBack);
         break;
     }
     default:

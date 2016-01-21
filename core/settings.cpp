@@ -230,6 +230,8 @@ void Settings::writeAuthFile() {
         map[ar + ST_DC_NUM] = m_dcsList[i]->id();
         map[ar + ST_HOST] = m_dcsList[i]->host();
         map[ar + ST_PORT] = m_dcsList[i]->port();
+        map[ar + ST_IPV6] = m_dcsList[i]->ipv6();
+        map[ar + ST_MEDIA] = m_dcsList[i]->mediaOnly();
         map[ar + ST_DC_STATE] = m_dcsList[i]->state();
 
         if (m_dcsList[i]->authKeyId()) {
@@ -272,6 +274,8 @@ void Settings::readAuthFile() {
         DC* dc = new DC(dcNum);
         dc->setHost(map.value(ar+ST_HOST).toString());
         dc->setPort(map.value(ar+ST_PORT, 0).toInt());
+        dc->setIpv6(map.value(ar+ST_IPV6).toBool());
+        dc->setMediaOnly(map.value(ar+ST_MEDIA).toBool());
         dc->setState((DC::DcState)map.value(ar+ST_DC_STATE, DC::init).toInt());
         dc->setAuthKeyId(map.value(ar+ST_AUTH_KEY_ID, 0).toLongLong());
         if (dc->state() >= DC::authKeyCreated) {
@@ -284,7 +288,7 @@ void Settings::readAuthFile() {
         qCDebug(TG_CORE_SETTINGS) << "DC | id:" << dc->id() << ", state:" << dc->state() <<
                     ", host:" << dc->host() << ", port:" << dc->port() <<
                     ", expires:" << dc->expires() << ", authKeyId:" << dc->authKeyId() <<
-                    ", serverSalt:" << dc->serverSalt();
+                    ", serverSalt:" << dc->serverSalt() << ", ipv6" << dc->ipv6();
 
         m_dcsList.insert(dcNum, dc);
     }
