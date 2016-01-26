@@ -10,7 +10,7 @@ HelpSupportObject::HelpSupportObject(const HelpSupport &core, QObject *parent) :
     m_core(core)
 {
     m_user = new UserObject(m_core.user(), this);
-    connect(m_user, SIGNAL(coreChanged()), SLOT(coreUserChanged()));
+    connect(m_user.data(), &UserObject::coreChanged, this, &HelpSupportObject::coreUserChanged);
 }
 
 HelpSupportObject::HelpSupportObject(QObject *parent) :
@@ -19,7 +19,7 @@ HelpSupportObject::HelpSupportObject(QObject *parent) :
     m_core()
 {
     m_user = new UserObject(m_core.user(), this);
-    connect(m_user, SIGNAL(coreChanged()), SLOT(coreUserChanged()));
+    connect(m_user.data(), &UserObject::coreChanged, this, &HelpSupportObject::coreUserChanged);
 }
 
 HelpSupportObject::~HelpSupportObject() {
@@ -43,7 +43,7 @@ void HelpSupportObject::setUser(UserObject* user) {
     if(m_user) {
         m_user->setParent(this);
         m_core.setUser(m_user->core());
-        connect(m_user, SIGNAL(coreChanged()), SLOT(coreUserChanged()));
+        connect(m_user.data(), &UserObject::coreChanged, this, &HelpSupportObject::coreUserChanged);
     }
     Q_EMIT userChanged();
     Q_EMIT coreChanged();

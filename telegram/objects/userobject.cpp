@@ -11,9 +11,9 @@ UserObject::UserObject(const User &core, QObject *parent) :
     m_core(core)
 {
     m_photo = new UserProfilePhotoObject(m_core.photo(), this);
-    connect(m_photo, SIGNAL(coreChanged()), SLOT(corePhotoChanged()));
+    connect(m_photo.data(), &UserProfilePhotoObject::coreChanged, this, &UserObject::corePhotoChanged);
     m_status = new UserStatusObject(m_core.status(), this);
-    connect(m_status, SIGNAL(coreChanged()), SLOT(coreStatusChanged()));
+    connect(m_status.data(), &UserStatusObject::coreChanged, this, &UserObject::coreStatusChanged);
 }
 
 UserObject::UserObject(QObject *parent) :
@@ -23,9 +23,9 @@ UserObject::UserObject(QObject *parent) :
     m_core()
 {
     m_photo = new UserProfilePhotoObject(m_core.photo(), this);
-    connect(m_photo, SIGNAL(coreChanged()), SLOT(corePhotoChanged()));
+    connect(m_photo.data(), &UserProfilePhotoObject::coreChanged, this, &UserObject::corePhotoChanged);
     m_status = new UserStatusObject(m_core.status(), this);
-    connect(m_status, SIGNAL(coreChanged()), SLOT(coreStatusChanged()));
+    connect(m_status.data(), &UserStatusObject::coreChanged, this, &UserObject::coreStatusChanged);
 }
 
 UserObject::~UserObject() {
@@ -192,7 +192,7 @@ void UserObject::setPhoto(UserProfilePhotoObject* photo) {
     if(m_photo) {
         m_photo->setParent(this);
         m_core.setPhoto(m_photo->core());
-        connect(m_photo, SIGNAL(coreChanged()), SLOT(corePhotoChanged()));
+        connect(m_photo.data(), &UserProfilePhotoObject::coreChanged, this, &UserObject::corePhotoChanged);
     }
     Q_EMIT photoChanged();
     Q_EMIT coreChanged();
@@ -242,7 +242,7 @@ void UserObject::setStatus(UserStatusObject* status) {
     if(m_status) {
         m_status->setParent(this);
         m_core.setStatus(m_status->core());
-        connect(m_status, SIGNAL(coreChanged()), SLOT(coreStatusChanged()));
+        connect(m_status.data(), &UserStatusObject::coreChanged, this, &UserObject::coreStatusChanged);
     }
     Q_EMIT statusChanged();
     Q_EMIT coreChanged();

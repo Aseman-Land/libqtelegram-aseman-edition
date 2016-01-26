@@ -10,7 +10,7 @@ NotifyPeerObject::NotifyPeerObject(const NotifyPeer &core, QObject *parent) :
     m_core(core)
 {
     m_peer = new PeerObject(m_core.peer(), this);
-    connect(m_peer, SIGNAL(coreChanged()), SLOT(corePeerChanged()));
+    connect(m_peer.data(), &PeerObject::coreChanged, this, &NotifyPeerObject::corePeerChanged);
 }
 
 NotifyPeerObject::NotifyPeerObject(QObject *parent) :
@@ -19,7 +19,7 @@ NotifyPeerObject::NotifyPeerObject(QObject *parent) :
     m_core()
 {
     m_peer = new PeerObject(m_core.peer(), this);
-    connect(m_peer, SIGNAL(coreChanged()), SLOT(corePeerChanged()));
+    connect(m_peer.data(), &PeerObject::coreChanged, this, &NotifyPeerObject::corePeerChanged);
 }
 
 NotifyPeerObject::~NotifyPeerObject() {
@@ -32,7 +32,7 @@ void NotifyPeerObject::setPeer(PeerObject* peer) {
     if(m_peer) {
         m_peer->setParent(this);
         m_core.setPeer(m_peer->core());
-        connect(m_peer, SIGNAL(coreChanged()), SLOT(corePeerChanged()));
+        connect(m_peer.data(), &PeerObject::coreChanged, this, &NotifyPeerObject::corePeerChanged);
     }
     Q_EMIT peerChanged();
     Q_EMIT coreChanged();

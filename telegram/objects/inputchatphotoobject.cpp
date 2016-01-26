@@ -12,11 +12,11 @@ InputChatPhotoObject::InputChatPhotoObject(const InputChatPhoto &core, QObject *
     m_core(core)
 {
     m_crop = new InputPhotoCropObject(m_core.crop(), this);
-    connect(m_crop, SIGNAL(coreChanged()), SLOT(coreCropChanged()));
+    connect(m_crop.data(), &InputPhotoCropObject::coreChanged, this, &InputChatPhotoObject::coreCropChanged);
     m_file = new InputFileObject(m_core.file(), this);
-    connect(m_file, SIGNAL(coreChanged()), SLOT(coreFileChanged()));
+    connect(m_file.data(), &InputFileObject::coreChanged, this, &InputChatPhotoObject::coreFileChanged);
     m_id = new InputPhotoObject(m_core.id(), this);
-    connect(m_id, SIGNAL(coreChanged()), SLOT(coreIdChanged()));
+    connect(m_id.data(), &InputPhotoObject::coreChanged, this, &InputChatPhotoObject::coreIdChanged);
 }
 
 InputChatPhotoObject::InputChatPhotoObject(QObject *parent) :
@@ -27,11 +27,11 @@ InputChatPhotoObject::InputChatPhotoObject(QObject *parent) :
     m_core()
 {
     m_crop = new InputPhotoCropObject(m_core.crop(), this);
-    connect(m_crop, SIGNAL(coreChanged()), SLOT(coreCropChanged()));
+    connect(m_crop.data(), &InputPhotoCropObject::coreChanged, this, &InputChatPhotoObject::coreCropChanged);
     m_file = new InputFileObject(m_core.file(), this);
-    connect(m_file, SIGNAL(coreChanged()), SLOT(coreFileChanged()));
+    connect(m_file.data(), &InputFileObject::coreChanged, this, &InputChatPhotoObject::coreFileChanged);
     m_id = new InputPhotoObject(m_core.id(), this);
-    connect(m_id, SIGNAL(coreChanged()), SLOT(coreIdChanged()));
+    connect(m_id.data(), &InputPhotoObject::coreChanged, this, &InputChatPhotoObject::coreIdChanged);
 }
 
 InputChatPhotoObject::~InputChatPhotoObject() {
@@ -44,7 +44,7 @@ void InputChatPhotoObject::setCrop(InputPhotoCropObject* crop) {
     if(m_crop) {
         m_crop->setParent(this);
         m_core.setCrop(m_crop->core());
-        connect(m_crop, SIGNAL(coreChanged()), SLOT(coreCropChanged()));
+        connect(m_crop.data(), &InputPhotoCropObject::coreChanged, this, &InputChatPhotoObject::coreCropChanged);
     }
     Q_EMIT cropChanged();
     Q_EMIT coreChanged();
@@ -61,7 +61,7 @@ void InputChatPhotoObject::setFile(InputFileObject* file) {
     if(m_file) {
         m_file->setParent(this);
         m_core.setFile(m_file->core());
-        connect(m_file, SIGNAL(coreChanged()), SLOT(coreFileChanged()));
+        connect(m_file.data(), &InputFileObject::coreChanged, this, &InputChatPhotoObject::coreFileChanged);
     }
     Q_EMIT fileChanged();
     Q_EMIT coreChanged();
@@ -78,7 +78,7 @@ void InputChatPhotoObject::setId(InputPhotoObject* id) {
     if(m_id) {
         m_id->setParent(this);
         m_core.setId(m_id->core());
-        connect(m_id, SIGNAL(coreChanged()), SLOT(coreIdChanged()));
+        connect(m_id.data(), &InputPhotoObject::coreChanged, this, &InputChatPhotoObject::coreIdChanged);
     }
     Q_EMIT idChanged();
     Q_EMIT coreChanged();

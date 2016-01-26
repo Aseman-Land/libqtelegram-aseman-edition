@@ -14,15 +14,15 @@ UserFullObject::UserFullObject(const UserFull &core, QObject *parent) :
     m_core(core)
 {
     m_botInfo = new BotInfoObject(m_core.botInfo(), this);
-    connect(m_botInfo, SIGNAL(coreChanged()), SLOT(coreBotInfoChanged()));
+    connect(m_botInfo.data(), &BotInfoObject::coreChanged, this, &UserFullObject::coreBotInfoChanged);
     m_link = new ContactsLinkObject(m_core.link(), this);
-    connect(m_link, SIGNAL(coreChanged()), SLOT(coreLinkChanged()));
+    connect(m_link.data(), &ContactsLinkObject::coreChanged, this, &UserFullObject::coreLinkChanged);
     m_notifySettings = new PeerNotifySettingsObject(m_core.notifySettings(), this);
-    connect(m_notifySettings, SIGNAL(coreChanged()), SLOT(coreNotifySettingsChanged()));
+    connect(m_notifySettings.data(), &PeerNotifySettingsObject::coreChanged, this, &UserFullObject::coreNotifySettingsChanged);
     m_profilePhoto = new PhotoObject(m_core.profilePhoto(), this);
-    connect(m_profilePhoto, SIGNAL(coreChanged()), SLOT(coreProfilePhotoChanged()));
+    connect(m_profilePhoto.data(), &PhotoObject::coreChanged, this, &UserFullObject::coreProfilePhotoChanged);
     m_user = new UserObject(m_core.user(), this);
-    connect(m_user, SIGNAL(coreChanged()), SLOT(coreUserChanged()));
+    connect(m_user.data(), &UserObject::coreChanged, this, &UserFullObject::coreUserChanged);
 }
 
 UserFullObject::UserFullObject(QObject *parent) :
@@ -35,15 +35,15 @@ UserFullObject::UserFullObject(QObject *parent) :
     m_core()
 {
     m_botInfo = new BotInfoObject(m_core.botInfo(), this);
-    connect(m_botInfo, SIGNAL(coreChanged()), SLOT(coreBotInfoChanged()));
+    connect(m_botInfo.data(), &BotInfoObject::coreChanged, this, &UserFullObject::coreBotInfoChanged);
     m_link = new ContactsLinkObject(m_core.link(), this);
-    connect(m_link, SIGNAL(coreChanged()), SLOT(coreLinkChanged()));
+    connect(m_link.data(), &ContactsLinkObject::coreChanged, this, &UserFullObject::coreLinkChanged);
     m_notifySettings = new PeerNotifySettingsObject(m_core.notifySettings(), this);
-    connect(m_notifySettings, SIGNAL(coreChanged()), SLOT(coreNotifySettingsChanged()));
+    connect(m_notifySettings.data(), &PeerNotifySettingsObject::coreChanged, this, &UserFullObject::coreNotifySettingsChanged);
     m_profilePhoto = new PhotoObject(m_core.profilePhoto(), this);
-    connect(m_profilePhoto, SIGNAL(coreChanged()), SLOT(coreProfilePhotoChanged()));
+    connect(m_profilePhoto.data(), &PhotoObject::coreChanged, this, &UserFullObject::coreProfilePhotoChanged);
     m_user = new UserObject(m_core.user(), this);
-    connect(m_user, SIGNAL(coreChanged()), SLOT(coreUserChanged()));
+    connect(m_user.data(), &UserObject::coreChanged, this, &UserFullObject::coreUserChanged);
 }
 
 UserFullObject::~UserFullObject() {
@@ -67,7 +67,7 @@ void UserFullObject::setBotInfo(BotInfoObject* botInfo) {
     if(m_botInfo) {
         m_botInfo->setParent(this);
         m_core.setBotInfo(m_botInfo->core());
-        connect(m_botInfo, SIGNAL(coreChanged()), SLOT(coreBotInfoChanged()));
+        connect(m_botInfo.data(), &BotInfoObject::coreChanged, this, &UserFullObject::coreBotInfoChanged);
     }
     Q_EMIT botInfoChanged();
     Q_EMIT coreChanged();
@@ -84,7 +84,7 @@ void UserFullObject::setLink(ContactsLinkObject* link) {
     if(m_link) {
         m_link->setParent(this);
         m_core.setLink(m_link->core());
-        connect(m_link, SIGNAL(coreChanged()), SLOT(coreLinkChanged()));
+        connect(m_link.data(), &ContactsLinkObject::coreChanged, this, &UserFullObject::coreLinkChanged);
     }
     Q_EMIT linkChanged();
     Q_EMIT coreChanged();
@@ -101,7 +101,7 @@ void UserFullObject::setNotifySettings(PeerNotifySettingsObject* notifySettings)
     if(m_notifySettings) {
         m_notifySettings->setParent(this);
         m_core.setNotifySettings(m_notifySettings->core());
-        connect(m_notifySettings, SIGNAL(coreChanged()), SLOT(coreNotifySettingsChanged()));
+        connect(m_notifySettings.data(), &PeerNotifySettingsObject::coreChanged, this, &UserFullObject::coreNotifySettingsChanged);
     }
     Q_EMIT notifySettingsChanged();
     Q_EMIT coreChanged();
@@ -118,7 +118,7 @@ void UserFullObject::setProfilePhoto(PhotoObject* profilePhoto) {
     if(m_profilePhoto) {
         m_profilePhoto->setParent(this);
         m_core.setProfilePhoto(m_profilePhoto->core());
-        connect(m_profilePhoto, SIGNAL(coreChanged()), SLOT(coreProfilePhotoChanged()));
+        connect(m_profilePhoto.data(), &PhotoObject::coreChanged, this, &UserFullObject::coreProfilePhotoChanged);
     }
     Q_EMIT profilePhotoChanged();
     Q_EMIT coreChanged();
@@ -135,7 +135,7 @@ void UserFullObject::setUser(UserObject* user) {
     if(m_user) {
         m_user->setParent(this);
         m_core.setUser(m_user->core());
-        connect(m_user, SIGNAL(coreChanged()), SLOT(coreUserChanged()));
+        connect(m_user.data(), &UserObject::coreChanged, this, &UserFullObject::coreUserChanged);
     }
     Q_EMIT userChanged();
     Q_EMIT coreChanged();

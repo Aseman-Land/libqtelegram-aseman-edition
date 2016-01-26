@@ -11,9 +11,9 @@ FoundGifObject::FoundGifObject(const FoundGif &core, QObject *parent) :
     m_core(core)
 {
     m_document = new DocumentObject(m_core.document(), this);
-    connect(m_document, SIGNAL(coreChanged()), SLOT(coreDocumentChanged()));
+    connect(m_document.data(), &DocumentObject::coreChanged, this, &FoundGifObject::coreDocumentChanged);
     m_photo = new PhotoObject(m_core.photo(), this);
-    connect(m_photo, SIGNAL(coreChanged()), SLOT(corePhotoChanged()));
+    connect(m_photo.data(), &PhotoObject::coreChanged, this, &FoundGifObject::corePhotoChanged);
 }
 
 FoundGifObject::FoundGifObject(QObject *parent) :
@@ -23,9 +23,9 @@ FoundGifObject::FoundGifObject(QObject *parent) :
     m_core()
 {
     m_document = new DocumentObject(m_core.document(), this);
-    connect(m_document, SIGNAL(coreChanged()), SLOT(coreDocumentChanged()));
+    connect(m_document.data(), &DocumentObject::coreChanged, this, &FoundGifObject::coreDocumentChanged);
     m_photo = new PhotoObject(m_core.photo(), this);
-    connect(m_photo, SIGNAL(coreChanged()), SLOT(corePhotoChanged()));
+    connect(m_photo.data(), &PhotoObject::coreChanged, this, &FoundGifObject::corePhotoChanged);
 }
 
 FoundGifObject::~FoundGifObject() {
@@ -60,7 +60,7 @@ void FoundGifObject::setDocument(DocumentObject* document) {
     if(m_document) {
         m_document->setParent(this);
         m_core.setDocument(m_document->core());
-        connect(m_document, SIGNAL(coreChanged()), SLOT(coreDocumentChanged()));
+        connect(m_document.data(), &DocumentObject::coreChanged, this, &FoundGifObject::coreDocumentChanged);
     }
     Q_EMIT documentChanged();
     Q_EMIT coreChanged();
@@ -88,7 +88,7 @@ void FoundGifObject::setPhoto(PhotoObject* photo) {
     if(m_photo) {
         m_photo->setParent(this);
         m_core.setPhoto(m_photo->core());
-        connect(m_photo, SIGNAL(coreChanged()), SLOT(corePhotoChanged()));
+        connect(m_photo.data(), &PhotoObject::coreChanged, this, &FoundGifObject::corePhotoChanged);
     }
     Q_EMIT photoChanged();
     Q_EMIT coreChanged();

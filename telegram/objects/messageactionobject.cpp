@@ -10,7 +10,7 @@ MessageActionObject::MessageActionObject(const MessageAction &core, QObject *par
     m_core(core)
 {
     m_photo = new PhotoObject(m_core.photo(), this);
-    connect(m_photo, SIGNAL(coreChanged()), SLOT(corePhotoChanged()));
+    connect(m_photo.data(), &PhotoObject::coreChanged, this, &MessageActionObject::corePhotoChanged);
 }
 
 MessageActionObject::MessageActionObject(QObject *parent) :
@@ -19,7 +19,7 @@ MessageActionObject::MessageActionObject(QObject *parent) :
     m_core()
 {
     m_photo = new PhotoObject(m_core.photo(), this);
-    connect(m_photo, SIGNAL(coreChanged()), SLOT(corePhotoChanged()));
+    connect(m_photo.data(), &PhotoObject::coreChanged, this, &MessageActionObject::corePhotoChanged);
 }
 
 MessageActionObject::~MessageActionObject() {
@@ -65,7 +65,7 @@ void MessageActionObject::setPhoto(PhotoObject* photo) {
     if(m_photo) {
         m_photo->setParent(this);
         m_core.setPhoto(m_photo->core());
-        connect(m_photo, SIGNAL(coreChanged()), SLOT(corePhotoChanged()));
+        connect(m_photo.data(), &PhotoObject::coreChanged, this, &MessageActionObject::corePhotoChanged);
     }
     Q_EMIT photoChanged();
     Q_EMIT coreChanged();

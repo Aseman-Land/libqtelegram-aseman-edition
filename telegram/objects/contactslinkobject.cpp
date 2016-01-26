@@ -12,11 +12,11 @@ ContactsLinkObject::ContactsLinkObject(const ContactsLink &core, QObject *parent
     m_core(core)
 {
     m_foreignLink = new ContactLinkObject(m_core.foreignLink(), this);
-    connect(m_foreignLink, SIGNAL(coreChanged()), SLOT(coreForeignLinkChanged()));
+    connect(m_foreignLink.data(), &ContactLinkObject::coreChanged, this, &ContactsLinkObject::coreForeignLinkChanged);
     m_myLink = new ContactLinkObject(m_core.myLink(), this);
-    connect(m_myLink, SIGNAL(coreChanged()), SLOT(coreMyLinkChanged()));
+    connect(m_myLink.data(), &ContactLinkObject::coreChanged, this, &ContactsLinkObject::coreMyLinkChanged);
     m_user = new UserObject(m_core.user(), this);
-    connect(m_user, SIGNAL(coreChanged()), SLOT(coreUserChanged()));
+    connect(m_user.data(), &UserObject::coreChanged, this, &ContactsLinkObject::coreUserChanged);
 }
 
 ContactsLinkObject::ContactsLinkObject(QObject *parent) :
@@ -27,11 +27,11 @@ ContactsLinkObject::ContactsLinkObject(QObject *parent) :
     m_core()
 {
     m_foreignLink = new ContactLinkObject(m_core.foreignLink(), this);
-    connect(m_foreignLink, SIGNAL(coreChanged()), SLOT(coreForeignLinkChanged()));
+    connect(m_foreignLink.data(), &ContactLinkObject::coreChanged, this, &ContactsLinkObject::coreForeignLinkChanged);
     m_myLink = new ContactLinkObject(m_core.myLink(), this);
-    connect(m_myLink, SIGNAL(coreChanged()), SLOT(coreMyLinkChanged()));
+    connect(m_myLink.data(), &ContactLinkObject::coreChanged, this, &ContactsLinkObject::coreMyLinkChanged);
     m_user = new UserObject(m_core.user(), this);
-    connect(m_user, SIGNAL(coreChanged()), SLOT(coreUserChanged()));
+    connect(m_user.data(), &UserObject::coreChanged, this, &ContactsLinkObject::coreUserChanged);
 }
 
 ContactsLinkObject::~ContactsLinkObject() {
@@ -44,7 +44,7 @@ void ContactsLinkObject::setForeignLink(ContactLinkObject* foreignLink) {
     if(m_foreignLink) {
         m_foreignLink->setParent(this);
         m_core.setForeignLink(m_foreignLink->core());
-        connect(m_foreignLink, SIGNAL(coreChanged()), SLOT(coreForeignLinkChanged()));
+        connect(m_foreignLink.data(), &ContactLinkObject::coreChanged, this, &ContactsLinkObject::coreForeignLinkChanged);
     }
     Q_EMIT foreignLinkChanged();
     Q_EMIT coreChanged();
@@ -61,7 +61,7 @@ void ContactsLinkObject::setMyLink(ContactLinkObject* myLink) {
     if(m_myLink) {
         m_myLink->setParent(this);
         m_core.setMyLink(m_myLink->core());
-        connect(m_myLink, SIGNAL(coreChanged()), SLOT(coreMyLinkChanged()));
+        connect(m_myLink.data(), &ContactLinkObject::coreChanged, this, &ContactsLinkObject::coreMyLinkChanged);
     }
     Q_EMIT myLinkChanged();
     Q_EMIT coreChanged();
@@ -78,7 +78,7 @@ void ContactsLinkObject::setUser(UserObject* user) {
     if(m_user) {
         m_user->setParent(this);
         m_core.setUser(m_user->core());
-        connect(m_user, SIGNAL(coreChanged()), SLOT(coreUserChanged()));
+        connect(m_user.data(), &UserObject::coreChanged, this, &ContactsLinkObject::coreUserChanged);
     }
     Q_EMIT userChanged();
     Q_EMIT coreChanged();

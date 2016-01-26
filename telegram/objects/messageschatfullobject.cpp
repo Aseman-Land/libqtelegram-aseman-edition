@@ -10,7 +10,7 @@ MessagesChatFullObject::MessagesChatFullObject(const MessagesChatFull &core, QOb
     m_core(core)
 {
     m_fullChat = new ChatFullObject(m_core.fullChat(), this);
-    connect(m_fullChat, SIGNAL(coreChanged()), SLOT(coreFullChatChanged()));
+    connect(m_fullChat.data(), &ChatFullObject::coreChanged, this, &MessagesChatFullObject::coreFullChatChanged);
 }
 
 MessagesChatFullObject::MessagesChatFullObject(QObject *parent) :
@@ -19,7 +19,7 @@ MessagesChatFullObject::MessagesChatFullObject(QObject *parent) :
     m_core()
 {
     m_fullChat = new ChatFullObject(m_core.fullChat(), this);
-    connect(m_fullChat, SIGNAL(coreChanged()), SLOT(coreFullChatChanged()));
+    connect(m_fullChat.data(), &ChatFullObject::coreChanged, this, &MessagesChatFullObject::coreFullChatChanged);
 }
 
 MessagesChatFullObject::~MessagesChatFullObject() {
@@ -43,7 +43,7 @@ void MessagesChatFullObject::setFullChat(ChatFullObject* fullChat) {
     if(m_fullChat) {
         m_fullChat->setParent(this);
         m_core.setFullChat(m_fullChat->core());
-        connect(m_fullChat, SIGNAL(coreChanged()), SLOT(coreFullChatChanged()));
+        connect(m_fullChat.data(), &ChatFullObject::coreChanged, this, &MessagesChatFullObject::coreFullChatChanged);
     }
     Q_EMIT fullChatChanged();
     Q_EMIT coreChanged();

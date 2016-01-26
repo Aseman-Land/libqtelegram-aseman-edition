@@ -58,7 +58,7 @@ Session::~Session() {
 
 void Session::close() {
     if (this->state() != QAbstractSocket::UnconnectedState) {
-        connect(this, SIGNAL(disconnected()), SLOT(onDisconnected()));
+        connect(this, &QAbstractSocket::disconnected, this, &Session::onDisconnected);
         this->disconnectFromHost();
     } else {
         Q_EMIT sessionClosed(m_sessionId);
@@ -514,7 +514,7 @@ qint64 Session::sendQuery(OutboundPkt &outboundPkt, QueryMethods *methods, const
     q->setName(name);
 
     if (mSettings->resendQueries()) {
-        connect(q, SIGNAL(timeout(Query*)), this, SLOT(resendQuery(Query*)), Qt::UniqueConnection);
+        connect(q, &Query::timeout, this, &Session::resendQuery, Qt::UniqueConnection);
         q->startTimer(QUERY_TIMEOUT);
     }
 
@@ -608,7 +608,7 @@ void Session::queryOnError(InboundPkt &inboundPkt, qint64 msgId) {
 
 void Session::addToPendingAcks(qint64 msgId) {
     EventTimer *t = new EventTimer(msgId, ACK_TIMEOUT, this);
-    connect(t, SIGNAL(timerTimeout(qint64)), this, SLOT(ack(qint64)));
+    connect(t, &EventTimer::timerTimeout, this, &Session::ack);
     t->start(); //timeout of 60 secs
     m_pendingAcks[msgId] = t;
     if (m_pendingAcks.size() > MAX_PENDING_ACKS) {

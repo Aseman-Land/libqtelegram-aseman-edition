@@ -14,15 +14,15 @@ MessageObject::MessageObject(const Message &core, QObject *parent) :
     m_core(core)
 {
     m_action = new MessageActionObject(m_core.action(), this);
-    connect(m_action, SIGNAL(coreChanged()), SLOT(coreActionChanged()));
+    connect(m_action.data(), &MessageActionObject::coreChanged, this, &MessageObject::coreActionChanged);
     m_fwdFromId = new PeerObject(m_core.fwdFromId(), this);
-    connect(m_fwdFromId, SIGNAL(coreChanged()), SLOT(coreFwdFromIdChanged()));
+    connect(m_fwdFromId.data(), &PeerObject::coreChanged, this, &MessageObject::coreFwdFromIdChanged);
     m_media = new MessageMediaObject(m_core.media(), this);
-    connect(m_media, SIGNAL(coreChanged()), SLOT(coreMediaChanged()));
+    connect(m_media.data(), &MessageMediaObject::coreChanged, this, &MessageObject::coreMediaChanged);
     m_replyMarkup = new ReplyMarkupObject(m_core.replyMarkup(), this);
-    connect(m_replyMarkup, SIGNAL(coreChanged()), SLOT(coreReplyMarkupChanged()));
+    connect(m_replyMarkup.data(), &ReplyMarkupObject::coreChanged, this, &MessageObject::coreReplyMarkupChanged);
     m_toId = new PeerObject(m_core.toId(), this);
-    connect(m_toId, SIGNAL(coreChanged()), SLOT(coreToIdChanged()));
+    connect(m_toId.data(), &PeerObject::coreChanged, this, &MessageObject::coreToIdChanged);
 }
 
 MessageObject::MessageObject(QObject *parent) :
@@ -35,15 +35,15 @@ MessageObject::MessageObject(QObject *parent) :
     m_core()
 {
     m_action = new MessageActionObject(m_core.action(), this);
-    connect(m_action, SIGNAL(coreChanged()), SLOT(coreActionChanged()));
+    connect(m_action.data(), &MessageActionObject::coreChanged, this, &MessageObject::coreActionChanged);
     m_fwdFromId = new PeerObject(m_core.fwdFromId(), this);
-    connect(m_fwdFromId, SIGNAL(coreChanged()), SLOT(coreFwdFromIdChanged()));
+    connect(m_fwdFromId.data(), &PeerObject::coreChanged, this, &MessageObject::coreFwdFromIdChanged);
     m_media = new MessageMediaObject(m_core.media(), this);
-    connect(m_media, SIGNAL(coreChanged()), SLOT(coreMediaChanged()));
+    connect(m_media.data(), &MessageMediaObject::coreChanged, this, &MessageObject::coreMediaChanged);
     m_replyMarkup = new ReplyMarkupObject(m_core.replyMarkup(), this);
-    connect(m_replyMarkup, SIGNAL(coreChanged()), SLOT(coreReplyMarkupChanged()));
+    connect(m_replyMarkup.data(), &ReplyMarkupObject::coreChanged, this, &MessageObject::coreReplyMarkupChanged);
     m_toId = new PeerObject(m_core.toId(), this);
-    connect(m_toId, SIGNAL(coreChanged()), SLOT(coreToIdChanged()));
+    connect(m_toId.data(), &PeerObject::coreChanged, this, &MessageObject::coreToIdChanged);
 }
 
 MessageObject::~MessageObject() {
@@ -56,7 +56,7 @@ void MessageObject::setAction(MessageActionObject* action) {
     if(m_action) {
         m_action->setParent(this);
         m_core.setAction(m_action->core());
-        connect(m_action, SIGNAL(coreChanged()), SLOT(coreActionChanged()));
+        connect(m_action.data(), &MessageActionObject::coreChanged, this, &MessageObject::coreActionChanged);
     }
     Q_EMIT actionChanged();
     Q_EMIT coreChanged();
@@ -128,7 +128,7 @@ void MessageObject::setFwdFromId(PeerObject* fwdFromId) {
     if(m_fwdFromId) {
         m_fwdFromId->setParent(this);
         m_core.setFwdFromId(m_fwdFromId->core());
-        connect(m_fwdFromId, SIGNAL(coreChanged()), SLOT(coreFwdFromIdChanged()));
+        connect(m_fwdFromId.data(), &PeerObject::coreChanged, this, &MessageObject::coreFwdFromIdChanged);
     }
     Q_EMIT fwdFromIdChanged();
     Q_EMIT coreChanged();
@@ -156,7 +156,7 @@ void MessageObject::setMedia(MessageMediaObject* media) {
     if(m_media) {
         m_media->setParent(this);
         m_core.setMedia(m_media->core());
-        connect(m_media, SIGNAL(coreChanged()), SLOT(coreMediaChanged()));
+        connect(m_media.data(), &MessageMediaObject::coreChanged, this, &MessageObject::coreMediaChanged);
     }
     Q_EMIT mediaChanged();
     Q_EMIT coreChanged();
@@ -217,7 +217,7 @@ void MessageObject::setReplyMarkup(ReplyMarkupObject* replyMarkup) {
     if(m_replyMarkup) {
         m_replyMarkup->setParent(this);
         m_core.setReplyMarkup(m_replyMarkup->core());
-        connect(m_replyMarkup, SIGNAL(coreChanged()), SLOT(coreReplyMarkupChanged()));
+        connect(m_replyMarkup.data(), &ReplyMarkupObject::coreChanged, this, &MessageObject::coreReplyMarkupChanged);
     }
     Q_EMIT replyMarkupChanged();
     Q_EMIT coreChanged();
@@ -245,7 +245,7 @@ void MessageObject::setToId(PeerObject* toId) {
     if(m_toId) {
         m_toId->setParent(this);
         m_core.setToId(m_toId->core());
-        connect(m_toId, SIGNAL(coreChanged()), SLOT(coreToIdChanged()));
+        connect(m_toId.data(), &PeerObject::coreChanged, this, &MessageObject::coreToIdChanged);
     }
     Q_EMIT toIdChanged();
     Q_EMIT coreChanged();

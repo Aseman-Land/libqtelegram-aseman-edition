@@ -10,7 +10,7 @@ AuthAuthorizationObject::AuthAuthorizationObject(const AuthAuthorization &core, 
     m_core(core)
 {
     m_user = new UserObject(m_core.user(), this);
-    connect(m_user, SIGNAL(coreChanged()), SLOT(coreUserChanged()));
+    connect(m_user.data(), &UserObject::coreChanged, this, &AuthAuthorizationObject::coreUserChanged);
 }
 
 AuthAuthorizationObject::AuthAuthorizationObject(QObject *parent) :
@@ -19,7 +19,7 @@ AuthAuthorizationObject::AuthAuthorizationObject(QObject *parent) :
     m_core()
 {
     m_user = new UserObject(m_core.user(), this);
-    connect(m_user, SIGNAL(coreChanged()), SLOT(coreUserChanged()));
+    connect(m_user.data(), &UserObject::coreChanged, this, &AuthAuthorizationObject::coreUserChanged);
 }
 
 AuthAuthorizationObject::~AuthAuthorizationObject() {
@@ -32,7 +32,7 @@ void AuthAuthorizationObject::setUser(UserObject* user) {
     if(m_user) {
         m_user->setParent(this);
         m_core.setUser(m_user->core());
-        connect(m_user, SIGNAL(coreChanged()), SLOT(coreUserChanged()));
+        connect(m_user.data(), &UserObject::coreChanged, this, &AuthAuthorizationObject::coreUserChanged);
     }
     Q_EMIT userChanged();
     Q_EMIT coreChanged();

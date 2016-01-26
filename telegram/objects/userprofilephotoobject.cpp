@@ -11,9 +11,9 @@ UserProfilePhotoObject::UserProfilePhotoObject(const UserProfilePhoto &core, QOb
     m_core(core)
 {
     m_photoBig = new FileLocationObject(m_core.photoBig(), this);
-    connect(m_photoBig, SIGNAL(coreChanged()), SLOT(corePhotoBigChanged()));
+    connect(m_photoBig.data(), &FileLocationObject::coreChanged, this, &UserProfilePhotoObject::corePhotoBigChanged);
     m_photoSmall = new FileLocationObject(m_core.photoSmall(), this);
-    connect(m_photoSmall, SIGNAL(coreChanged()), SLOT(corePhotoSmallChanged()));
+    connect(m_photoSmall.data(), &FileLocationObject::coreChanged, this, &UserProfilePhotoObject::corePhotoSmallChanged);
 }
 
 UserProfilePhotoObject::UserProfilePhotoObject(QObject *parent) :
@@ -23,9 +23,9 @@ UserProfilePhotoObject::UserProfilePhotoObject(QObject *parent) :
     m_core()
 {
     m_photoBig = new FileLocationObject(m_core.photoBig(), this);
-    connect(m_photoBig, SIGNAL(coreChanged()), SLOT(corePhotoBigChanged()));
+    connect(m_photoBig.data(), &FileLocationObject::coreChanged, this, &UserProfilePhotoObject::corePhotoBigChanged);
     m_photoSmall = new FileLocationObject(m_core.photoSmall(), this);
-    connect(m_photoSmall, SIGNAL(coreChanged()), SLOT(corePhotoSmallChanged()));
+    connect(m_photoSmall.data(), &FileLocationObject::coreChanged, this, &UserProfilePhotoObject::corePhotoSmallChanged);
 }
 
 UserProfilePhotoObject::~UserProfilePhotoObject() {
@@ -38,7 +38,7 @@ void UserProfilePhotoObject::setPhotoBig(FileLocationObject* photoBig) {
     if(m_photoBig) {
         m_photoBig->setParent(this);
         m_core.setPhotoBig(m_photoBig->core());
-        connect(m_photoBig, SIGNAL(coreChanged()), SLOT(corePhotoBigChanged()));
+        connect(m_photoBig.data(), &FileLocationObject::coreChanged, this, &UserProfilePhotoObject::corePhotoBigChanged);
     }
     Q_EMIT photoBigChanged();
     Q_EMIT coreChanged();
@@ -66,7 +66,7 @@ void UserProfilePhotoObject::setPhotoSmall(FileLocationObject* photoSmall) {
     if(m_photoSmall) {
         m_photoSmall->setParent(this);
         m_core.setPhotoSmall(m_photoSmall->core());
-        connect(m_photoSmall, SIGNAL(coreChanged()), SLOT(corePhotoSmallChanged()));
+        connect(m_photoSmall.data(), &FileLocationObject::coreChanged, this, &UserProfilePhotoObject::corePhotoSmallChanged);
     }
     Q_EMIT photoSmallChanged();
     Q_EMIT coreChanged();

@@ -10,7 +10,7 @@ PhotoSizeObject::PhotoSizeObject(const PhotoSize &core, QObject *parent) :
     m_core(core)
 {
     m_location = new FileLocationObject(m_core.location(), this);
-    connect(m_location, SIGNAL(coreChanged()), SLOT(coreLocationChanged()));
+    connect(m_location.data(), &FileLocationObject::coreChanged, this, &PhotoSizeObject::coreLocationChanged);
 }
 
 PhotoSizeObject::PhotoSizeObject(QObject *parent) :
@@ -19,7 +19,7 @@ PhotoSizeObject::PhotoSizeObject(QObject *parent) :
     m_core()
 {
     m_location = new FileLocationObject(m_core.location(), this);
-    connect(m_location, SIGNAL(coreChanged()), SLOT(coreLocationChanged()));
+    connect(m_location.data(), &FileLocationObject::coreChanged, this, &PhotoSizeObject::coreLocationChanged);
 }
 
 PhotoSizeObject::~PhotoSizeObject() {
@@ -54,7 +54,7 @@ void PhotoSizeObject::setLocation(FileLocationObject* location) {
     if(m_location) {
         m_location->setParent(this);
         m_core.setLocation(m_location->core());
-        connect(m_location, SIGNAL(coreChanged()), SLOT(coreLocationChanged()));
+        connect(m_location.data(), &FileLocationObject::coreChanged, this, &PhotoSizeObject::coreLocationChanged);
     }
     Q_EMIT locationChanged();
     Q_EMIT coreChanged();

@@ -10,7 +10,7 @@ InputBotInlineResultObject::InputBotInlineResultObject(const InputBotInlineResul
     m_core(core)
 {
     m_sendMessage = new InputBotInlineMessageObject(m_core.sendMessage(), this);
-    connect(m_sendMessage, SIGNAL(coreChanged()), SLOT(coreSendMessageChanged()));
+    connect(m_sendMessage.data(), &InputBotInlineMessageObject::coreChanged, this, &InputBotInlineResultObject::coreSendMessageChanged);
 }
 
 InputBotInlineResultObject::InputBotInlineResultObject(QObject *parent) :
@@ -19,7 +19,7 @@ InputBotInlineResultObject::InputBotInlineResultObject(QObject *parent) :
     m_core()
 {
     m_sendMessage = new InputBotInlineMessageObject(m_core.sendMessage(), this);
-    connect(m_sendMessage, SIGNAL(coreChanged()), SLOT(coreSendMessageChanged()));
+    connect(m_sendMessage.data(), &InputBotInlineMessageObject::coreChanged, this, &InputBotInlineResultObject::coreSendMessageChanged);
 }
 
 InputBotInlineResultObject::~InputBotInlineResultObject() {
@@ -109,7 +109,7 @@ void InputBotInlineResultObject::setSendMessage(InputBotInlineMessageObject* sen
     if(m_sendMessage) {
         m_sendMessage->setParent(this);
         m_core.setSendMessage(m_sendMessage->core());
-        connect(m_sendMessage, SIGNAL(coreChanged()), SLOT(coreSendMessageChanged()));
+        connect(m_sendMessage.data(), &InputBotInlineMessageObject::coreChanged, this, &InputBotInlineResultObject::coreSendMessageChanged);
     }
     Q_EMIT sendMessageChanged();
     Q_EMIT coreChanged();

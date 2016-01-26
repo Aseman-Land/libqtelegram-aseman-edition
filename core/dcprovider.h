@@ -52,7 +52,7 @@ Q_SIGNALS:
     // is ready for using any of its methods in any DC
     void authTransferCompleted();
 
-    void error(qint64 id, qint32 errorCode, const QString &errorText);
+    void error(qint64 id, qint32 errorCode, const QString &errorText, const QString &functionName);
     void fatalError();
 
 public Q_SLOTS:
@@ -95,11 +95,11 @@ private Q_SLOTS:
     void onDcReady(DC *dc);
     void onDcAuthDisconnected();
     void onApiReady(DC*);
-    void onApiError();
+    void onApiError(QAbstractSocket::SocketError error);
     void onConfigReceived(qint64 msgId, const Config &config);
     void onTransferSessionReady(DC*);
-    void onAuthExportedAuthorization(qint64, qint32 ourId, const QByteArray &bytes);
-    void onAuthImportedAuthorization(qint64, qint32 expires, const User &);
+    void onAuthExportedAuthorization(qint64, const AuthExportedAuthorization &result);
+    void onAuthImportedAuthorization(qint64, const AuthAuthorization &result);
 };
 
 #endif // DCPROVIDER_H

@@ -32,17 +32,17 @@ AbstractApi::~AbstractApi() {
 }
 
 void AbstractApi::connectUpdatesSignals(Session *session) {
-    connect(session, SIGNAL(updatesTooLong()), this, SIGNAL(updatesTooLong()));
-    connect(session, SIGNAL(updateShortMessage(qint32,qint32,QString,qint32,qint32,qint32,Peer,qint32,qint32,bool,bool)), this, SIGNAL(updateShortMessage(qint32,qint32,QString,qint32,qint32,qint32,Peer,qint32,qint32,bool,bool)));
-    connect(session, SIGNAL(updateShortChatMessage(qint32,qint32,qint32,QString,qint32,qint32,qint32,Peer,qint32,qint32,bool,bool)), this, SIGNAL(updateShortChatMessage(qint32,qint32,qint32,QString,qint32,qint32,qint32,Peer,qint32,qint32,bool,bool)));
-    connect(session, SIGNAL(updateShort(const Update&,qint32)), this, SIGNAL(updateShort(const Update&,qint32)));
-    connect(session, SIGNAL(updatesCombined(const QList<Update>&,const QList<User>&,const QList<Chat>&,qint32,qint32,qint32)), this, SIGNAL(updatesCombined(const QList<Update>&,const QList<User>&,const QList<Chat>&,qint32,qint32,qint32)));
-    connect(session, SIGNAL(updates(const QList<Update>&,const QList<User>&,const QList<Chat>&,qint32,qint32)), this, SIGNAL(updates(const QList<Update>&,const QList<User>&,const QList<Chat>&,qint32,qint32)));
+    connect(session, &Session::updatesTooLong, this, &AbstractApi::updatesTooLong);
+    connect(session, &Session::updateShortMessage, this, &AbstractApi::updateShortMessage);
+    connect(session, &Session::updateShortChatMessage, this, &AbstractApi::updateShortChatMessage);
+    connect(session, &Session::updateShort, this, &AbstractApi::updateShort);
+    connect(session, &Session::updatesCombined, this, &AbstractApi::updatesCombined);
+    connect(session, &Session::updates, this, &AbstractApi::updates);
 }
 
 void AbstractApi::connectResponsesSignals(Session *session) {
-    connect(session, SIGNAL(resultReceived(Query*,InboundPkt&)), this, SLOT(onResultReceived(Query*,InboundPkt&)));
-    connect(session, SIGNAL(errorReceived(Query*,qint32,QString)), this, SLOT(onErrorReceived(Query*,qint32,QString)));
+    connect(session, &Session::resultReceived, this, &AbstractApi::onResultReceived);
+    connect(session, &Session::errorReceived, this, &AbstractApi::onErrorReceived);
 }
 
 
@@ -57,7 +57,8 @@ void AbstractApi::onErrorReceived(Query *q, qint32 errorCode, QString errorText)
     if (q->methods() && q->methods()->onError) {
         (((TelegramApi *)this)->*(q->methods()->onError))(q, errorCode, errorText);
     } else {
-        onError(q, errorCode, errorText);
+        bool accepted = false;
+        onError(q, errorCode, errorText, q->extra(), accepted);
     }
     delete q;
 }

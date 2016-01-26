@@ -10,7 +10,7 @@ MessagesStickerSetObject::MessagesStickerSetObject(const MessagesStickerSet &cor
     m_core(core)
 {
     m_set = new StickerSetObject(m_core.set(), this);
-    connect(m_set, SIGNAL(coreChanged()), SLOT(coreSetChanged()));
+    connect(m_set.data(), &StickerSetObject::coreChanged, this, &MessagesStickerSetObject::coreSetChanged);
 }
 
 MessagesStickerSetObject::MessagesStickerSetObject(QObject *parent) :
@@ -19,7 +19,7 @@ MessagesStickerSetObject::MessagesStickerSetObject(QObject *parent) :
     m_core()
 {
     m_set = new StickerSetObject(m_core.set(), this);
-    connect(m_set, SIGNAL(coreChanged()), SLOT(coreSetChanged()));
+    connect(m_set.data(), &StickerSetObject::coreChanged, this, &MessagesStickerSetObject::coreSetChanged);
 }
 
 MessagesStickerSetObject::~MessagesStickerSetObject() {
@@ -54,7 +54,7 @@ void MessagesStickerSetObject::setSet(StickerSetObject* set) {
     if(m_set) {
         m_set->setParent(this);
         m_core.setSet(m_set->core());
-        connect(m_set, SIGNAL(coreChanged()), SLOT(coreSetChanged()));
+        connect(m_set.data(), &StickerSetObject::coreChanged, this, &MessagesStickerSetObject::coreSetChanged);
     }
     Q_EMIT setChanged();
     Q_EMIT coreChanged();

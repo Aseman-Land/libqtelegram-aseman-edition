@@ -39,7 +39,7 @@ Connection::Connection(const QString &host, qint32 port, QObject *parent) :
 
     setupSocket();
 
-    connect(&mAsserter,SIGNAL(fatalError()), SIGNAL(fatalError()));
+    connect(&mAsserter, &Asserter::fatalError, this, &Connection::fatalError);
 }
 
 Connection::~Connection() {
@@ -114,10 +114,10 @@ void Connection::connectToServer() {
     Q_ASSERT(!m_host.isEmpty());
     Q_ASSERT(m_port);
 
-    connect(this, SIGNAL(connected()), SLOT(onConnected()), Qt::UniqueConnection);
-    connect(this, SIGNAL(disconnected()), SLOT(onDisconnected()), Qt::UniqueConnection);
-    connect(this, SIGNAL(readyRead()), SLOT(onReadyRead()), Qt::UniqueConnection);
-    connect(this, SIGNAL(error(QAbstractSocket::SocketError)), SLOT(onError(QAbstractSocket::SocketError)), Qt::UniqueConnection);
+    connect(this, &QTcpSocket::connected, this, &Connection::onConnected, Qt::UniqueConnection);
+    connect(this, &QTcpSocket::disconnected, this, &Connection::onDisconnected, Qt::UniqueConnection);
+    connect(this, &QTcpSocket::readyRead, this, &Connection::onReadyRead, Qt::UniqueConnection);
+    connect(this, static_cast<void (QAbstractSocket::*)(QAbstractSocket::SocketError)>(&QAbstractSocket::error), this, &Connection::onError, Qt::UniqueConnection);
 
     connectToHost(m_host, m_port);
 }

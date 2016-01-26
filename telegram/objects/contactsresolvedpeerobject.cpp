@@ -10,7 +10,7 @@ ContactsResolvedPeerObject::ContactsResolvedPeerObject(const ContactsResolvedPee
     m_core(core)
 {
     m_peer = new PeerObject(m_core.peer(), this);
-    connect(m_peer, SIGNAL(coreChanged()), SLOT(corePeerChanged()));
+    connect(m_peer.data(), &PeerObject::coreChanged, this, &ContactsResolvedPeerObject::corePeerChanged);
 }
 
 ContactsResolvedPeerObject::ContactsResolvedPeerObject(QObject *parent) :
@@ -19,7 +19,7 @@ ContactsResolvedPeerObject::ContactsResolvedPeerObject(QObject *parent) :
     m_core()
 {
     m_peer = new PeerObject(m_core.peer(), this);
-    connect(m_peer, SIGNAL(coreChanged()), SLOT(corePeerChanged()));
+    connect(m_peer.data(), &PeerObject::coreChanged, this, &ContactsResolvedPeerObject::corePeerChanged);
 }
 
 ContactsResolvedPeerObject::~ContactsResolvedPeerObject() {
@@ -43,7 +43,7 @@ void ContactsResolvedPeerObject::setPeer(PeerObject* peer) {
     if(m_peer) {
         m_peer->setParent(this);
         m_core.setPeer(m_peer->core());
-        connect(m_peer, SIGNAL(coreChanged()), SLOT(corePeerChanged()));
+        connect(m_peer.data(), &PeerObject::coreChanged, this, &ContactsResolvedPeerObject::corePeerChanged);
     }
     Q_EMIT peerChanged();
     Q_EMIT coreChanged();

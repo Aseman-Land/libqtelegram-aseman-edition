@@ -12,11 +12,11 @@ BotInlineResultObject::BotInlineResultObject(const BotInlineResult &core, QObjec
     m_core(core)
 {
     m_document = new DocumentObject(m_core.document(), this);
-    connect(m_document, SIGNAL(coreChanged()), SLOT(coreDocumentChanged()));
+    connect(m_document.data(), &DocumentObject::coreChanged, this, &BotInlineResultObject::coreDocumentChanged);
     m_photo = new PhotoObject(m_core.photo(), this);
-    connect(m_photo, SIGNAL(coreChanged()), SLOT(corePhotoChanged()));
+    connect(m_photo.data(), &PhotoObject::coreChanged, this, &BotInlineResultObject::corePhotoChanged);
     m_sendMessage = new BotInlineMessageObject(m_core.sendMessage(), this);
-    connect(m_sendMessage, SIGNAL(coreChanged()), SLOT(coreSendMessageChanged()));
+    connect(m_sendMessage.data(), &BotInlineMessageObject::coreChanged, this, &BotInlineResultObject::coreSendMessageChanged);
 }
 
 BotInlineResultObject::BotInlineResultObject(QObject *parent) :
@@ -27,11 +27,11 @@ BotInlineResultObject::BotInlineResultObject(QObject *parent) :
     m_core()
 {
     m_document = new DocumentObject(m_core.document(), this);
-    connect(m_document, SIGNAL(coreChanged()), SLOT(coreDocumentChanged()));
+    connect(m_document.data(), &DocumentObject::coreChanged, this, &BotInlineResultObject::coreDocumentChanged);
     m_photo = new PhotoObject(m_core.photo(), this);
-    connect(m_photo, SIGNAL(coreChanged()), SLOT(corePhotoChanged()));
+    connect(m_photo.data(), &PhotoObject::coreChanged, this, &BotInlineResultObject::corePhotoChanged);
     m_sendMessage = new BotInlineMessageObject(m_core.sendMessage(), this);
-    connect(m_sendMessage, SIGNAL(coreChanged()), SLOT(coreSendMessageChanged()));
+    connect(m_sendMessage.data(), &BotInlineMessageObject::coreChanged, this, &BotInlineResultObject::coreSendMessageChanged);
 }
 
 BotInlineResultObject::~BotInlineResultObject() {
@@ -77,7 +77,7 @@ void BotInlineResultObject::setDocument(DocumentObject* document) {
     if(m_document) {
         m_document->setParent(this);
         m_core.setDocument(m_document->core());
-        connect(m_document, SIGNAL(coreChanged()), SLOT(coreDocumentChanged()));
+        connect(m_document.data(), &DocumentObject::coreChanged, this, &BotInlineResultObject::coreDocumentChanged);
     }
     Q_EMIT documentChanged();
     Q_EMIT coreChanged();
@@ -138,7 +138,7 @@ void BotInlineResultObject::setPhoto(PhotoObject* photo) {
     if(m_photo) {
         m_photo->setParent(this);
         m_core.setPhoto(m_photo->core());
-        connect(m_photo, SIGNAL(coreChanged()), SLOT(corePhotoChanged()));
+        connect(m_photo.data(), &PhotoObject::coreChanged, this, &BotInlineResultObject::corePhotoChanged);
     }
     Q_EMIT photoChanged();
     Q_EMIT coreChanged();
@@ -155,7 +155,7 @@ void BotInlineResultObject::setSendMessage(BotInlineMessageObject* sendMessage) 
     if(m_sendMessage) {
         m_sendMessage->setParent(this);
         m_core.setSendMessage(m_sendMessage->core());
-        connect(m_sendMessage, SIGNAL(coreChanged()), SLOT(coreSendMessageChanged()));
+        connect(m_sendMessage.data(), &BotInlineMessageObject::coreChanged, this, &BotInlineResultObject::coreSendMessageChanged);
     }
     Q_EMIT sendMessageChanged();
     Q_EMIT coreChanged();

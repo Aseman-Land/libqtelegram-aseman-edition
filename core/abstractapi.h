@@ -46,7 +46,7 @@ Q_SIGNALS:
 
 protected:
     // default error method. Overwritten in inherited classes
-    virtual void onError(Query *q, qint32 errorCode, const QString &errorText) = 0;
+    virtual void onError(Query *q, qint32 errorCode, const QString &errorText, const QVariant &attachedData, bool &accepted) = 0;
 
 private:
     void connectUpdatesSignals(Session *session);

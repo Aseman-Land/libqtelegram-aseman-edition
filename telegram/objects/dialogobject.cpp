@@ -11,9 +11,9 @@ DialogObject::DialogObject(const Dialog &core, QObject *parent) :
     m_core(core)
 {
     m_notifySettings = new PeerNotifySettingsObject(m_core.notifySettings(), this);
-    connect(m_notifySettings, SIGNAL(coreChanged()), SLOT(coreNotifySettingsChanged()));
+    connect(m_notifySettings.data(), &PeerNotifySettingsObject::coreChanged, this, &DialogObject::coreNotifySettingsChanged);
     m_peer = new PeerObject(m_core.peer(), this);
-    connect(m_peer, SIGNAL(coreChanged()), SLOT(corePeerChanged()));
+    connect(m_peer.data(), &PeerObject::coreChanged, this, &DialogObject::corePeerChanged);
 }
 
 DialogObject::DialogObject(QObject *parent) :
@@ -23,9 +23,9 @@ DialogObject::DialogObject(QObject *parent) :
     m_core()
 {
     m_notifySettings = new PeerNotifySettingsObject(m_core.notifySettings(), this);
-    connect(m_notifySettings, SIGNAL(coreChanged()), SLOT(coreNotifySettingsChanged()));
+    connect(m_notifySettings.data(), &PeerNotifySettingsObject::coreChanged, this, &DialogObject::coreNotifySettingsChanged);
     m_peer = new PeerObject(m_core.peer(), this);
-    connect(m_peer, SIGNAL(coreChanged()), SLOT(corePeerChanged()));
+    connect(m_peer.data(), &PeerObject::coreChanged, this, &DialogObject::corePeerChanged);
 }
 
 DialogObject::~DialogObject() {
@@ -38,7 +38,7 @@ void DialogObject::setNotifySettings(PeerNotifySettingsObject* notifySettings) {
     if(m_notifySettings) {
         m_notifySettings->setParent(this);
         m_core.setNotifySettings(m_notifySettings->core());
-        connect(m_notifySettings, SIGNAL(coreChanged()), SLOT(coreNotifySettingsChanged()));
+        connect(m_notifySettings.data(), &PeerNotifySettingsObject::coreChanged, this, &DialogObject::coreNotifySettingsChanged);
     }
     Q_EMIT notifySettingsChanged();
     Q_EMIT coreChanged();
@@ -55,7 +55,7 @@ void DialogObject::setPeer(PeerObject* peer) {
     if(m_peer) {
         m_peer->setParent(this);
         m_core.setPeer(m_peer->core());
-        connect(m_peer, SIGNAL(coreChanged()), SLOT(corePeerChanged()));
+        connect(m_peer.data(), &PeerObject::coreChanged, this, &DialogObject::corePeerChanged);
     }
     Q_EMIT peerChanged();
     Q_EMIT coreChanged();

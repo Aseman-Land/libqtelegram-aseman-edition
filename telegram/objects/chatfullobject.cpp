@@ -13,13 +13,13 @@ ChatFullObject::ChatFullObject(const ChatFull &core, QObject *parent) :
     m_core(core)
 {
     m_chatPhoto = new PhotoObject(m_core.chatPhoto(), this);
-    connect(m_chatPhoto, SIGNAL(coreChanged()), SLOT(coreChatPhotoChanged()));
+    connect(m_chatPhoto.data(), &PhotoObject::coreChanged, this, &ChatFullObject::coreChatPhotoChanged);
     m_exportedInvite = new ExportedChatInviteObject(m_core.exportedInvite(), this);
-    connect(m_exportedInvite, SIGNAL(coreChanged()), SLOT(coreExportedInviteChanged()));
+    connect(m_exportedInvite.data(), &ExportedChatInviteObject::coreChanged, this, &ChatFullObject::coreExportedInviteChanged);
     m_notifySettings = new PeerNotifySettingsObject(m_core.notifySettings(), this);
-    connect(m_notifySettings, SIGNAL(coreChanged()), SLOT(coreNotifySettingsChanged()));
+    connect(m_notifySettings.data(), &PeerNotifySettingsObject::coreChanged, this, &ChatFullObject::coreNotifySettingsChanged);
     m_participants = new ChatParticipantsObject(m_core.participants(), this);
-    connect(m_participants, SIGNAL(coreChanged()), SLOT(coreParticipantsChanged()));
+    connect(m_participants.data(), &ChatParticipantsObject::coreChanged, this, &ChatFullObject::coreParticipantsChanged);
 }
 
 ChatFullObject::ChatFullObject(QObject *parent) :
@@ -31,13 +31,13 @@ ChatFullObject::ChatFullObject(QObject *parent) :
     m_core()
 {
     m_chatPhoto = new PhotoObject(m_core.chatPhoto(), this);
-    connect(m_chatPhoto, SIGNAL(coreChanged()), SLOT(coreChatPhotoChanged()));
+    connect(m_chatPhoto.data(), &PhotoObject::coreChanged, this, &ChatFullObject::coreChatPhotoChanged);
     m_exportedInvite = new ExportedChatInviteObject(m_core.exportedInvite(), this);
-    connect(m_exportedInvite, SIGNAL(coreChanged()), SLOT(coreExportedInviteChanged()));
+    connect(m_exportedInvite.data(), &ExportedChatInviteObject::coreChanged, this, &ChatFullObject::coreExportedInviteChanged);
     m_notifySettings = new PeerNotifySettingsObject(m_core.notifySettings(), this);
-    connect(m_notifySettings, SIGNAL(coreChanged()), SLOT(coreNotifySettingsChanged()));
+    connect(m_notifySettings.data(), &PeerNotifySettingsObject::coreChanged, this, &ChatFullObject::coreNotifySettingsChanged);
     m_participants = new ChatParticipantsObject(m_core.participants(), this);
-    connect(m_participants, SIGNAL(coreChanged()), SLOT(coreParticipantsChanged()));
+    connect(m_participants.data(), &ChatParticipantsObject::coreChanged, this, &ChatFullObject::coreParticipantsChanged);
 }
 
 ChatFullObject::~ChatFullObject() {
@@ -94,7 +94,7 @@ void ChatFullObject::setChatPhoto(PhotoObject* chatPhoto) {
     if(m_chatPhoto) {
         m_chatPhoto->setParent(this);
         m_core.setChatPhoto(m_chatPhoto->core());
-        connect(m_chatPhoto, SIGNAL(coreChanged()), SLOT(coreChatPhotoChanged()));
+        connect(m_chatPhoto.data(), &PhotoObject::coreChanged, this, &ChatFullObject::coreChatPhotoChanged);
     }
     Q_EMIT chatPhotoChanged();
     Q_EMIT coreChanged();
@@ -111,7 +111,7 @@ void ChatFullObject::setExportedInvite(ExportedChatInviteObject* exportedInvite)
     if(m_exportedInvite) {
         m_exportedInvite->setParent(this);
         m_core.setExportedInvite(m_exportedInvite->core());
-        connect(m_exportedInvite, SIGNAL(coreChanged()), SLOT(coreExportedInviteChanged()));
+        connect(m_exportedInvite.data(), &ExportedChatInviteObject::coreChanged, this, &ChatFullObject::coreExportedInviteChanged);
     }
     Q_EMIT exportedInviteChanged();
     Q_EMIT coreChanged();
@@ -183,7 +183,7 @@ void ChatFullObject::setNotifySettings(PeerNotifySettingsObject* notifySettings)
     if(m_notifySettings) {
         m_notifySettings->setParent(this);
         m_core.setNotifySettings(m_notifySettings->core());
-        connect(m_notifySettings, SIGNAL(coreChanged()), SLOT(coreNotifySettingsChanged()));
+        connect(m_notifySettings.data(), &PeerNotifySettingsObject::coreChanged, this, &ChatFullObject::coreNotifySettingsChanged);
     }
     Q_EMIT notifySettingsChanged();
     Q_EMIT coreChanged();
@@ -200,7 +200,7 @@ void ChatFullObject::setParticipants(ChatParticipantsObject* participants) {
     if(m_participants) {
         m_participants->setParent(this);
         m_core.setParticipants(m_participants->core());
-        connect(m_participants, SIGNAL(coreChanged()), SLOT(coreParticipantsChanged()));
+        connect(m_participants.data(), &ChatParticipantsObject::coreChanged, this, &ChatFullObject::coreParticipantsChanged);
     }
     Q_EMIT participantsChanged();
     Q_EMIT coreChanged();

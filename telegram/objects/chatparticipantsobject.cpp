@@ -10,7 +10,7 @@ ChatParticipantsObject::ChatParticipantsObject(const ChatParticipants &core, QOb
     m_core(core)
 {
     m_selfParticipant = new ChatParticipantObject(m_core.selfParticipant(), this);
-    connect(m_selfParticipant, SIGNAL(coreChanged()), SLOT(coreSelfParticipantChanged()));
+    connect(m_selfParticipant.data(), &ChatParticipantObject::coreChanged, this, &ChatParticipantsObject::coreSelfParticipantChanged);
 }
 
 ChatParticipantsObject::ChatParticipantsObject(QObject *parent) :
@@ -19,7 +19,7 @@ ChatParticipantsObject::ChatParticipantsObject(QObject *parent) :
     m_core()
 {
     m_selfParticipant = new ChatParticipantObject(m_core.selfParticipant(), this);
-    connect(m_selfParticipant, SIGNAL(coreChanged()), SLOT(coreSelfParticipantChanged()));
+    connect(m_selfParticipant.data(), &ChatParticipantObject::coreChanged, this, &ChatParticipantsObject::coreSelfParticipantChanged);
 }
 
 ChatParticipantsObject::~ChatParticipantsObject() {
@@ -65,7 +65,7 @@ void ChatParticipantsObject::setSelfParticipant(ChatParticipantObject* selfParti
     if(m_selfParticipant) {
         m_selfParticipant->setParent(this);
         m_core.setSelfParticipant(m_selfParticipant->core());
-        connect(m_selfParticipant, SIGNAL(coreChanged()), SLOT(coreSelfParticipantChanged()));
+        connect(m_selfParticipant.data(), &ChatParticipantObject::coreChanged, this, &ChatParticipantsObject::coreSelfParticipantChanged);
     }
     Q_EMIT selfParticipantChanged();
     Q_EMIT coreChanged();

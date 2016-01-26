@@ -10,7 +10,7 @@ ContactStatusObject::ContactStatusObject(const ContactStatus &core, QObject *par
     m_core(core)
 {
     m_status = new UserStatusObject(m_core.status(), this);
-    connect(m_status, SIGNAL(coreChanged()), SLOT(coreStatusChanged()));
+    connect(m_status.data(), &UserStatusObject::coreChanged, this, &ContactStatusObject::coreStatusChanged);
 }
 
 ContactStatusObject::ContactStatusObject(QObject *parent) :
@@ -19,7 +19,7 @@ ContactStatusObject::ContactStatusObject(QObject *parent) :
     m_core()
 {
     m_status = new UserStatusObject(m_core.status(), this);
-    connect(m_status, SIGNAL(coreChanged()), SLOT(coreStatusChanged()));
+    connect(m_status.data(), &UserStatusObject::coreChanged, this, &ContactStatusObject::coreStatusChanged);
 }
 
 ContactStatusObject::~ContactStatusObject() {
@@ -32,7 +32,7 @@ void ContactStatusObject::setStatus(UserStatusObject* status) {
     if(m_status) {
         m_status->setParent(this);
         m_core.setStatus(m_status->core());
-        connect(m_status, SIGNAL(coreChanged()), SLOT(coreStatusChanged()));
+        connect(m_status.data(), &UserStatusObject::coreChanged, this, &ContactStatusObject::coreStatusChanged);
     }
     Q_EMIT statusChanged();
     Q_EMIT coreChanged();

@@ -16,19 +16,19 @@ InputMediaObject::InputMediaObject(const InputMedia &core, QObject *parent) :
     m_core(core)
 {
     m_file = new InputFileObject(m_core.file(), this);
-    connect(m_file, SIGNAL(coreChanged()), SLOT(coreFileChanged()));
+    connect(m_file.data(), &InputFileObject::coreChanged, this, &InputMediaObject::coreFileChanged);
     m_geoPoint = new InputGeoPointObject(m_core.geoPoint(), this);
-    connect(m_geoPoint, SIGNAL(coreChanged()), SLOT(coreGeoPointChanged()));
+    connect(m_geoPoint.data(), &InputGeoPointObject::coreChanged, this, &InputMediaObject::coreGeoPointChanged);
     m_idInputAudio = new InputAudioObject(m_core.idInputAudio(), this);
-    connect(m_idInputAudio, SIGNAL(coreChanged()), SLOT(coreIdInputAudioChanged()));
+    connect(m_idInputAudio.data(), &InputAudioObject::coreChanged, this, &InputMediaObject::coreIdInputAudioChanged);
     m_idInputDocument = new InputDocumentObject(m_core.idInputDocument(), this);
-    connect(m_idInputDocument, SIGNAL(coreChanged()), SLOT(coreIdInputDocumentChanged()));
+    connect(m_idInputDocument.data(), &InputDocumentObject::coreChanged, this, &InputMediaObject::coreIdInputDocumentChanged);
     m_idInputPhoto = new InputPhotoObject(m_core.idInputPhoto(), this);
-    connect(m_idInputPhoto, SIGNAL(coreChanged()), SLOT(coreIdInputPhotoChanged()));
+    connect(m_idInputPhoto.data(), &InputPhotoObject::coreChanged, this, &InputMediaObject::coreIdInputPhotoChanged);
     m_idInputVideo = new InputVideoObject(m_core.idInputVideo(), this);
-    connect(m_idInputVideo, SIGNAL(coreChanged()), SLOT(coreIdInputVideoChanged()));
+    connect(m_idInputVideo.data(), &InputVideoObject::coreChanged, this, &InputMediaObject::coreIdInputVideoChanged);
     m_thumb = new InputFileObject(m_core.thumb(), this);
-    connect(m_thumb, SIGNAL(coreChanged()), SLOT(coreThumbChanged()));
+    connect(m_thumb.data(), &InputFileObject::coreChanged, this, &InputMediaObject::coreThumbChanged);
 }
 
 InputMediaObject::InputMediaObject(QObject *parent) :
@@ -43,19 +43,19 @@ InputMediaObject::InputMediaObject(QObject *parent) :
     m_core()
 {
     m_file = new InputFileObject(m_core.file(), this);
-    connect(m_file, SIGNAL(coreChanged()), SLOT(coreFileChanged()));
+    connect(m_file.data(), &InputFileObject::coreChanged, this, &InputMediaObject::coreFileChanged);
     m_geoPoint = new InputGeoPointObject(m_core.geoPoint(), this);
-    connect(m_geoPoint, SIGNAL(coreChanged()), SLOT(coreGeoPointChanged()));
+    connect(m_geoPoint.data(), &InputGeoPointObject::coreChanged, this, &InputMediaObject::coreGeoPointChanged);
     m_idInputAudio = new InputAudioObject(m_core.idInputAudio(), this);
-    connect(m_idInputAudio, SIGNAL(coreChanged()), SLOT(coreIdInputAudioChanged()));
+    connect(m_idInputAudio.data(), &InputAudioObject::coreChanged, this, &InputMediaObject::coreIdInputAudioChanged);
     m_idInputDocument = new InputDocumentObject(m_core.idInputDocument(), this);
-    connect(m_idInputDocument, SIGNAL(coreChanged()), SLOT(coreIdInputDocumentChanged()));
+    connect(m_idInputDocument.data(), &InputDocumentObject::coreChanged, this, &InputMediaObject::coreIdInputDocumentChanged);
     m_idInputPhoto = new InputPhotoObject(m_core.idInputPhoto(), this);
-    connect(m_idInputPhoto, SIGNAL(coreChanged()), SLOT(coreIdInputPhotoChanged()));
+    connect(m_idInputPhoto.data(), &InputPhotoObject::coreChanged, this, &InputMediaObject::coreIdInputPhotoChanged);
     m_idInputVideo = new InputVideoObject(m_core.idInputVideo(), this);
-    connect(m_idInputVideo, SIGNAL(coreChanged()), SLOT(coreIdInputVideoChanged()));
+    connect(m_idInputVideo.data(), &InputVideoObject::coreChanged, this, &InputMediaObject::coreIdInputVideoChanged);
     m_thumb = new InputFileObject(m_core.thumb(), this);
-    connect(m_thumb, SIGNAL(coreChanged()), SLOT(coreThumbChanged()));
+    connect(m_thumb.data(), &InputFileObject::coreChanged, this, &InputMediaObject::coreThumbChanged);
 }
 
 InputMediaObject::~InputMediaObject() {
@@ -112,7 +112,7 @@ void InputMediaObject::setFile(InputFileObject* file) {
     if(m_file) {
         m_file->setParent(this);
         m_core.setFile(m_file->core());
-        connect(m_file, SIGNAL(coreChanged()), SLOT(coreFileChanged()));
+        connect(m_file.data(), &InputFileObject::coreChanged, this, &InputMediaObject::coreFileChanged);
     }
     Q_EMIT fileChanged();
     Q_EMIT coreChanged();
@@ -140,7 +140,7 @@ void InputMediaObject::setGeoPoint(InputGeoPointObject* geoPoint) {
     if(m_geoPoint) {
         m_geoPoint->setParent(this);
         m_core.setGeoPoint(m_geoPoint->core());
-        connect(m_geoPoint, SIGNAL(coreChanged()), SLOT(coreGeoPointChanged()));
+        connect(m_geoPoint.data(), &InputGeoPointObject::coreChanged, this, &InputMediaObject::coreGeoPointChanged);
     }
     Q_EMIT geoPointChanged();
     Q_EMIT coreChanged();
@@ -168,7 +168,7 @@ void InputMediaObject::setIdInputAudio(InputAudioObject* idInputAudio) {
     if(m_idInputAudio) {
         m_idInputAudio->setParent(this);
         m_core.setIdInputAudio(m_idInputAudio->core());
-        connect(m_idInputAudio, SIGNAL(coreChanged()), SLOT(coreIdInputAudioChanged()));
+        connect(m_idInputAudio.data(), &InputAudioObject::coreChanged, this, &InputMediaObject::coreIdInputAudioChanged);
     }
     Q_EMIT idInputAudioChanged();
     Q_EMIT coreChanged();
@@ -185,7 +185,7 @@ void InputMediaObject::setIdInputDocument(InputDocumentObject* idInputDocument) 
     if(m_idInputDocument) {
         m_idInputDocument->setParent(this);
         m_core.setIdInputDocument(m_idInputDocument->core());
-        connect(m_idInputDocument, SIGNAL(coreChanged()), SLOT(coreIdInputDocumentChanged()));
+        connect(m_idInputDocument.data(), &InputDocumentObject::coreChanged, this, &InputMediaObject::coreIdInputDocumentChanged);
     }
     Q_EMIT idInputDocumentChanged();
     Q_EMIT coreChanged();
@@ -202,7 +202,7 @@ void InputMediaObject::setIdInputPhoto(InputPhotoObject* idInputPhoto) {
     if(m_idInputPhoto) {
         m_idInputPhoto->setParent(this);
         m_core.setIdInputPhoto(m_idInputPhoto->core());
-        connect(m_idInputPhoto, SIGNAL(coreChanged()), SLOT(coreIdInputPhotoChanged()));
+        connect(m_idInputPhoto.data(), &InputPhotoObject::coreChanged, this, &InputMediaObject::coreIdInputPhotoChanged);
     }
     Q_EMIT idInputPhotoChanged();
     Q_EMIT coreChanged();
@@ -219,7 +219,7 @@ void InputMediaObject::setIdInputVideo(InputVideoObject* idInputVideo) {
     if(m_idInputVideo) {
         m_idInputVideo->setParent(this);
         m_core.setIdInputVideo(m_idInputVideo->core());
-        connect(m_idInputVideo, SIGNAL(coreChanged()), SLOT(coreIdInputVideoChanged()));
+        connect(m_idInputVideo.data(), &InputVideoObject::coreChanged, this, &InputMediaObject::coreIdInputVideoChanged);
     }
     Q_EMIT idInputVideoChanged();
     Q_EMIT coreChanged();
@@ -291,7 +291,7 @@ void InputMediaObject::setThumb(InputFileObject* thumb) {
     if(m_thumb) {
         m_thumb->setParent(this);
         m_core.setThumb(m_thumb->core());
-        connect(m_thumb, SIGNAL(coreChanged()), SLOT(coreThumbChanged()));
+        connect(m_thumb.data(), &InputFileObject::coreChanged, this, &InputMediaObject::coreThumbChanged);
     }
     Q_EMIT thumbChanged();
     Q_EMIT coreChanged();

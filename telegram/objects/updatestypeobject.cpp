@@ -12,11 +12,11 @@ UpdatesTypeObject::UpdatesTypeObject(const UpdatesType &core, QObject *parent) :
     m_core(core)
 {
     m_fwdFromId = new PeerObject(m_core.fwdFromId(), this);
-    connect(m_fwdFromId, SIGNAL(coreChanged()), SLOT(coreFwdFromIdChanged()));
+    connect(m_fwdFromId.data(), &PeerObject::coreChanged, this, &UpdatesTypeObject::coreFwdFromIdChanged);
     m_media = new MessageMediaObject(m_core.media(), this);
-    connect(m_media, SIGNAL(coreChanged()), SLOT(coreMediaChanged()));
+    connect(m_media.data(), &MessageMediaObject::coreChanged, this, &UpdatesTypeObject::coreMediaChanged);
     m_update = new UpdateObject(m_core.update(), this);
-    connect(m_update, SIGNAL(coreChanged()), SLOT(coreUpdateChanged()));
+    connect(m_update.data(), &UpdateObject::coreChanged, this, &UpdatesTypeObject::coreUpdateChanged);
 }
 
 UpdatesTypeObject::UpdatesTypeObject(QObject *parent) :
@@ -27,11 +27,11 @@ UpdatesTypeObject::UpdatesTypeObject(QObject *parent) :
     m_core()
 {
     m_fwdFromId = new PeerObject(m_core.fwdFromId(), this);
-    connect(m_fwdFromId, SIGNAL(coreChanged()), SLOT(coreFwdFromIdChanged()));
+    connect(m_fwdFromId.data(), &PeerObject::coreChanged, this, &UpdatesTypeObject::coreFwdFromIdChanged);
     m_media = new MessageMediaObject(m_core.media(), this);
-    connect(m_media, SIGNAL(coreChanged()), SLOT(coreMediaChanged()));
+    connect(m_media.data(), &MessageMediaObject::coreChanged, this, &UpdatesTypeObject::coreMediaChanged);
     m_update = new UpdateObject(m_core.update(), this);
-    connect(m_update, SIGNAL(coreChanged()), SLOT(coreUpdateChanged()));
+    connect(m_update.data(), &UpdateObject::coreChanged, this, &UpdatesTypeObject::coreUpdateChanged);
 }
 
 UpdatesTypeObject::~UpdatesTypeObject() {
@@ -121,7 +121,7 @@ void UpdatesTypeObject::setFwdFromId(PeerObject* fwdFromId) {
     if(m_fwdFromId) {
         m_fwdFromId->setParent(this);
         m_core.setFwdFromId(m_fwdFromId->core());
-        connect(m_fwdFromId, SIGNAL(coreChanged()), SLOT(coreFwdFromIdChanged()));
+        connect(m_fwdFromId.data(), &PeerObject::coreChanged, this, &UpdatesTypeObject::coreFwdFromIdChanged);
     }
     Q_EMIT fwdFromIdChanged();
     Q_EMIT coreChanged();
@@ -149,7 +149,7 @@ void UpdatesTypeObject::setMedia(MessageMediaObject* media) {
     if(m_media) {
         m_media->setParent(this);
         m_core.setMedia(m_media->core());
-        connect(m_media, SIGNAL(coreChanged()), SLOT(coreMediaChanged()));
+        connect(m_media.data(), &MessageMediaObject::coreChanged, this, &UpdatesTypeObject::coreMediaChanged);
     }
     Q_EMIT mediaChanged();
     Q_EMIT coreChanged();
@@ -276,7 +276,7 @@ void UpdatesTypeObject::setUpdate(UpdateObject* update) {
     if(m_update) {
         m_update->setParent(this);
         m_core.setUpdate(m_update->core());
-        connect(m_update, SIGNAL(coreChanged()), SLOT(coreUpdateChanged()));
+        connect(m_update.data(), &UpdateObject::coreChanged, this, &UpdatesTypeObject::coreUpdateChanged);
     }
     Q_EMIT updateChanged();
     Q_EMIT coreChanged();

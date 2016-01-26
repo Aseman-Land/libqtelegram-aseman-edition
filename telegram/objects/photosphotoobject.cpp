@@ -10,7 +10,7 @@ PhotosPhotoObject::PhotosPhotoObject(const PhotosPhoto &core, QObject *parent) :
     m_core(core)
 {
     m_photo = new PhotoObject(m_core.photo(), this);
-    connect(m_photo, SIGNAL(coreChanged()), SLOT(corePhotoChanged()));
+    connect(m_photo.data(), &PhotoObject::coreChanged, this, &PhotosPhotoObject::corePhotoChanged);
 }
 
 PhotosPhotoObject::PhotosPhotoObject(QObject *parent) :
@@ -19,7 +19,7 @@ PhotosPhotoObject::PhotosPhotoObject(QObject *parent) :
     m_core()
 {
     m_photo = new PhotoObject(m_core.photo(), this);
-    connect(m_photo, SIGNAL(coreChanged()), SLOT(corePhotoChanged()));
+    connect(m_photo.data(), &PhotoObject::coreChanged, this, &PhotosPhotoObject::corePhotoChanged);
 }
 
 PhotosPhotoObject::~PhotosPhotoObject() {
@@ -32,7 +32,7 @@ void PhotosPhotoObject::setPhoto(PhotoObject* photo) {
     if(m_photo) {
         m_photo->setParent(this);
         m_core.setPhoto(m_photo->core());
-        connect(m_photo, SIGNAL(coreChanged()), SLOT(corePhotoChanged()));
+        connect(m_photo.data(), &PhotoObject::coreChanged, this, &PhotosPhotoObject::corePhotoChanged);
     }
     Q_EMIT photoChanged();
     Q_EMIT coreChanged();

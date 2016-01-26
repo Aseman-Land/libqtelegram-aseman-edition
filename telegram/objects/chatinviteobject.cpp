@@ -10,7 +10,7 @@ ChatInviteObject::ChatInviteObject(const ChatInvite &core, QObject *parent) :
     m_core(core)
 {
     m_chat = new ChatObject(m_core.chat(), this);
-    connect(m_chat, SIGNAL(coreChanged()), SLOT(coreChatChanged()));
+    connect(m_chat.data(), &ChatObject::coreChanged, this, &ChatInviteObject::coreChatChanged);
 }
 
 ChatInviteObject::ChatInviteObject(QObject *parent) :
@@ -19,7 +19,7 @@ ChatInviteObject::ChatInviteObject(QObject *parent) :
     m_core()
 {
     m_chat = new ChatObject(m_core.chat(), this);
-    connect(m_chat, SIGNAL(coreChanged()), SLOT(coreChatChanged()));
+    connect(m_chat.data(), &ChatObject::coreChanged, this, &ChatInviteObject::coreChatChanged);
 }
 
 ChatInviteObject::~ChatInviteObject() {
@@ -54,7 +54,7 @@ void ChatInviteObject::setChat(ChatObject* chat) {
     if(m_chat) {
         m_chat->setParent(this);
         m_core.setChat(m_chat->core());
-        connect(m_chat, SIGNAL(coreChanged()), SLOT(coreChatChanged()));
+        connect(m_chat.data(), &ChatObject::coreChanged, this, &ChatInviteObject::coreChatChanged);
     }
     Q_EMIT chatChanged();
     Q_EMIT coreChanged();

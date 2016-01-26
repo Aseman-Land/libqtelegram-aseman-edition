@@ -67,8 +67,7 @@ public:
     typedef std::function<void (qint64 msgId,int value,int total,CallbackError error)> FileProgressCallback;
 
     // Registration / authorization
-    qint64 authCheckPhone(Callback<AuthCheckedPhone > callBack);
-    qint64 authCheckPhone(const QString &phoneNumber, Callback<AuthCheckedPhone > callBack = 0);
+    qint64 authCheckPhone(Callback<AuthCheckedPhone > callBack = 0);
     qint64 authSendCode(Callback<AuthSentCode > callBack = 0);
     qint64 authSendSms(Callback<bool > callBack = 0);
     qint64 authSignIn(const QString &code, Callback<AuthAuthorization > callBack = 0);
@@ -86,7 +85,6 @@ public:
 
     // Working with contacts
     qint64 contactsGetContacts(Callback<ContactsContacts > callBack = 0);
-    qint64 contactsImportContacts (const QList<InputContact> &contacts, bool replace, Callback<ContactsImportedContacts > callBack = 0);
 
     // Working with messages
     qint64 messagesSendPhoto(const InputPeer &peer, qint64 randomId, const QByteArray &bytes, const QString &fileName, qint32 replyToMsgId = 0, const ReplyMarkup &reply_markup = ReplyMarkup::null, bool broadcast = false, Callback<UpdatesType > callBack = 0, FileProgressCallback fileCallback = 0);
@@ -123,9 +121,6 @@ public:
     // Working with files
     qint64 uploadGetFile(const InputFileLocation &file, qint32 fileSize, qint32 dc = 0, const QByteArray &key = QByteArray(), const QByteArray &iv = QByteArray());
     qint64 uploadCancelFile(qint64 fileId);
-
-    // Miscellaneous
-    qint64 helpGetInviteText(const QString &langCode, Callback<HelpInviteText > callBack = 0); // Returns text of a text message with an invitation.
 
     // additional public methods
     void init();
@@ -188,13 +183,6 @@ protected:
         LoggedIn
     };
 
-    enum LastRetryType {
-        PhoneCheck,
-        GetInviteText,
-        ImportContacts,
-        NotRetry
-    };
-
 private:
     qint64 messagesForwardMedia(const InputPeer &peer, const InputMedia &media, qint64 randomId, qint32 replyToMsgId, const ReplyMarkup &reply_markup = ReplyMarkup::null, bool broadcast = false, Callback<UpdatesType > callBack = 0);
     qint64 uploadSendFile(FileOperation &op, int mediaType, const QString &fileName, const QByteArray &bytes, const QByteArray &thumbnailBytes = 0, const QString &thumbnailName = QString::null);
@@ -208,32 +196,28 @@ private:
     void messagesDhConfigNotModified(qint64 msgId, const QByteArray &random, Callback<EncryptedChat> callBack);
 
 protected:
-    void onAuthSendCodeAnswer(qint64 msgId, const AuthSentCode &result);
-    void onAuthSignUpAnswer(qint64 msgId, const AuthAuthorization &result);
-    void onAuthSignInAnswer(qint64 msgId, const AuthAuthorization &result);
-    void onAuthCheckPasswordAnswer(qint64 msgId, const AuthAuthorization &result);
-    void onAuthLogOutAnswer(qint64 id, bool ok);
-    void onContactsImportContactsAnswer(qint64 msgId, const ContactsImportedContacts &result);
-    void onContactsGetContactsAnswer(qint64 msgId, const ContactsContacts &result);
-    void onMessagesGetDhConfigAnswer(qint64 msgId, const MessagesDhConfig &result);
-    void onUpdatesGetDifferenceAnswer(qint64 msgId, const UpdatesDifference &result);
-    void onMessagesAcceptEncryptionAnswer(qint64 msgId, const EncryptedChat &result);
-    void onMessagesDiscardEncryptionAnswer(qint64 msgId, bool result);
+    void onAuthSendCodeAnswer(qint64 msgId, const AuthSentCode &result, const QVariant &attachedData);
+    void onAuthSignUpAnswer(qint64 msgId, const AuthAuthorization &result, const QVariant &attachedData);
+    void onAuthSignInAnswer(qint64 msgId, const AuthAuthorization &result, const QVariant &attachedData);
+    void onAuthCheckPasswordAnswer(qint64 msgId, const AuthAuthorization &result, const QVariant &attachedData);
+    void onAuthLogOutAnswer(qint64 id, bool ok, const QVariant &attachedData);
+    void onContactsGetContactsAnswer(qint64 msgId, const ContactsContacts &result, const QVariant &attachedData);
+    void onMessagesGetDhConfigAnswer(qint64 msgId, const MessagesDhConfig &result, const QVariant &attachedData);
+    void onUpdatesGetDifferenceAnswer(qint64 msgId, const UpdatesDifference &result, const QVariant &attachedData);
+    void onMessagesAcceptEncryptionAnswer(qint64 msgId, const EncryptedChat &result, const QVariant &attachedData);
+    void onMessagesDiscardEncryptionAnswer(qint64 msgId, bool result, const QVariant &attachedData);
+
+private Q_SLOTS:
+    void onError(qint64 id, qint32 errorCode, const QString &errorText, const QString &functionName, const QVariant &attachedData, bool &accepted);
+    void onDcProviderReady();
+    void onAuthLoggedIn();
+    void onMainDcChanged(DC *dc);
+    void onSequenceNumberGap(qint32 chatId, qint32 startSeqNo, qint32 endSeqNo);
 
     // secret chats slots
     void onUpdateShort(const Update &update);
     void onUpdatesCombined(const QList<Update> &updates);
     void onUpdates(const QList<Update> &udts);
-
-private Q_SLOTS:
-    void onError(qint64 id, qint32 errorCode, const QString &errorText, const QString &functionName = QString());
-    void onErrorRetry(qint64 id, qint32 errorCode, const QString &errorText);
-    void onDcProviderReady();
-    void onAuthLoggedIn();
-    void onAuthCheckPhoneDcChanged();
-    void onImportContactsDcChanged();
-    void onHelpGetInviteTextDcChanged();
-    void onSequenceNumberGap(qint32 chatId, qint32 startSeqNo, qint32 endSeqNo);
 
 private:
     TelegramPrivate *prv;

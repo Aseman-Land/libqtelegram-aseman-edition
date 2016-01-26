@@ -15,17 +15,17 @@ MessageMediaObject::MessageMediaObject(const MessageMedia &core, QObject *parent
     m_core(core)
 {
     m_audio = new AudioObject(m_core.audio(), this);
-    connect(m_audio, SIGNAL(coreChanged()), SLOT(coreAudioChanged()));
+    connect(m_audio.data(), &AudioObject::coreChanged, this, &MessageMediaObject::coreAudioChanged);
     m_document = new DocumentObject(m_core.document(), this);
-    connect(m_document, SIGNAL(coreChanged()), SLOT(coreDocumentChanged()));
+    connect(m_document.data(), &DocumentObject::coreChanged, this, &MessageMediaObject::coreDocumentChanged);
     m_geo = new GeoPointObject(m_core.geo(), this);
-    connect(m_geo, SIGNAL(coreChanged()), SLOT(coreGeoChanged()));
+    connect(m_geo.data(), &GeoPointObject::coreChanged, this, &MessageMediaObject::coreGeoChanged);
     m_photo = new PhotoObject(m_core.photo(), this);
-    connect(m_photo, SIGNAL(coreChanged()), SLOT(corePhotoChanged()));
+    connect(m_photo.data(), &PhotoObject::coreChanged, this, &MessageMediaObject::corePhotoChanged);
     m_video = new VideoObject(m_core.video(), this);
-    connect(m_video, SIGNAL(coreChanged()), SLOT(coreVideoChanged()));
+    connect(m_video.data(), &VideoObject::coreChanged, this, &MessageMediaObject::coreVideoChanged);
     m_webpage = new WebPageObject(m_core.webpage(), this);
-    connect(m_webpage, SIGNAL(coreChanged()), SLOT(coreWebpageChanged()));
+    connect(m_webpage.data(), &WebPageObject::coreChanged, this, &MessageMediaObject::coreWebpageChanged);
 }
 
 MessageMediaObject::MessageMediaObject(QObject *parent) :
@@ -39,17 +39,17 @@ MessageMediaObject::MessageMediaObject(QObject *parent) :
     m_core()
 {
     m_audio = new AudioObject(m_core.audio(), this);
-    connect(m_audio, SIGNAL(coreChanged()), SLOT(coreAudioChanged()));
+    connect(m_audio.data(), &AudioObject::coreChanged, this, &MessageMediaObject::coreAudioChanged);
     m_document = new DocumentObject(m_core.document(), this);
-    connect(m_document, SIGNAL(coreChanged()), SLOT(coreDocumentChanged()));
+    connect(m_document.data(), &DocumentObject::coreChanged, this, &MessageMediaObject::coreDocumentChanged);
     m_geo = new GeoPointObject(m_core.geo(), this);
-    connect(m_geo, SIGNAL(coreChanged()), SLOT(coreGeoChanged()));
+    connect(m_geo.data(), &GeoPointObject::coreChanged, this, &MessageMediaObject::coreGeoChanged);
     m_photo = new PhotoObject(m_core.photo(), this);
-    connect(m_photo, SIGNAL(coreChanged()), SLOT(corePhotoChanged()));
+    connect(m_photo.data(), &PhotoObject::coreChanged, this, &MessageMediaObject::corePhotoChanged);
     m_video = new VideoObject(m_core.video(), this);
-    connect(m_video, SIGNAL(coreChanged()), SLOT(coreVideoChanged()));
+    connect(m_video.data(), &VideoObject::coreChanged, this, &MessageMediaObject::coreVideoChanged);
     m_webpage = new WebPageObject(m_core.webpage(), this);
-    connect(m_webpage, SIGNAL(coreChanged()), SLOT(coreWebpageChanged()));
+    connect(m_webpage.data(), &WebPageObject::coreChanged, this, &MessageMediaObject::coreWebpageChanged);
 }
 
 MessageMediaObject::~MessageMediaObject() {
@@ -73,7 +73,7 @@ void MessageMediaObject::setAudio(AudioObject* audio) {
     if(m_audio) {
         m_audio->setParent(this);
         m_core.setAudio(m_audio->core());
-        connect(m_audio, SIGNAL(coreChanged()), SLOT(coreAudioChanged()));
+        connect(m_audio.data(), &AudioObject::coreChanged, this, &MessageMediaObject::coreAudioChanged);
     }
     Q_EMIT audioChanged();
     Q_EMIT coreChanged();
@@ -101,7 +101,7 @@ void MessageMediaObject::setDocument(DocumentObject* document) {
     if(m_document) {
         m_document->setParent(this);
         m_core.setDocument(m_document->core());
-        connect(m_document, SIGNAL(coreChanged()), SLOT(coreDocumentChanged()));
+        connect(m_document.data(), &DocumentObject::coreChanged, this, &MessageMediaObject::coreDocumentChanged);
     }
     Q_EMIT documentChanged();
     Q_EMIT coreChanged();
@@ -129,7 +129,7 @@ void MessageMediaObject::setGeo(GeoPointObject* geo) {
     if(m_geo) {
         m_geo->setParent(this);
         m_core.setGeo(m_geo->core());
-        connect(m_geo, SIGNAL(coreChanged()), SLOT(coreGeoChanged()));
+        connect(m_geo.data(), &GeoPointObject::coreChanged, this, &MessageMediaObject::coreGeoChanged);
     }
     Q_EMIT geoChanged();
     Q_EMIT coreChanged();
@@ -168,7 +168,7 @@ void MessageMediaObject::setPhoto(PhotoObject* photo) {
     if(m_photo) {
         m_photo->setParent(this);
         m_core.setPhoto(m_photo->core());
-        connect(m_photo, SIGNAL(coreChanged()), SLOT(corePhotoChanged()));
+        connect(m_photo.data(), &PhotoObject::coreChanged, this, &MessageMediaObject::corePhotoChanged);
     }
     Q_EMIT photoChanged();
     Q_EMIT coreChanged();
@@ -229,7 +229,7 @@ void MessageMediaObject::setVideo(VideoObject* video) {
     if(m_video) {
         m_video->setParent(this);
         m_core.setVideo(m_video->core());
-        connect(m_video, SIGNAL(coreChanged()), SLOT(coreVideoChanged()));
+        connect(m_video.data(), &VideoObject::coreChanged, this, &MessageMediaObject::coreVideoChanged);
     }
     Q_EMIT videoChanged();
     Q_EMIT coreChanged();
@@ -246,7 +246,7 @@ void MessageMediaObject::setWebpage(WebPageObject* webpage) {
     if(m_webpage) {
         m_webpage->setParent(this);
         m_core.setWebpage(m_webpage->core());
-        connect(m_webpage, SIGNAL(coreChanged()), SLOT(coreWebpageChanged()));
+        connect(m_webpage.data(), &WebPageObject::coreChanged, this, &MessageMediaObject::coreWebpageChanged);
     }
     Q_EMIT webpageChanged();
     Q_EMIT coreChanged();

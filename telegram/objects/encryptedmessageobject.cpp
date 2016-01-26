@@ -10,7 +10,7 @@ EncryptedMessageObject::EncryptedMessageObject(const EncryptedMessage &core, QOb
     m_core(core)
 {
     m_file = new EncryptedFileObject(m_core.file(), this);
-    connect(m_file, SIGNAL(coreChanged()), SLOT(coreFileChanged()));
+    connect(m_file.data(), &EncryptedFileObject::coreChanged, this, &EncryptedMessageObject::coreFileChanged);
 }
 
 EncryptedMessageObject::EncryptedMessageObject(QObject *parent) :
@@ -19,7 +19,7 @@ EncryptedMessageObject::EncryptedMessageObject(QObject *parent) :
     m_core()
 {
     m_file = new EncryptedFileObject(m_core.file(), this);
-    connect(m_file, SIGNAL(coreChanged()), SLOT(coreFileChanged()));
+    connect(m_file.data(), &EncryptedFileObject::coreChanged, this, &EncryptedMessageObject::coreFileChanged);
 }
 
 EncryptedMessageObject::~EncryptedMessageObject() {
@@ -65,7 +65,7 @@ void EncryptedMessageObject::setFile(EncryptedFileObject* file) {
     if(m_file) {
         m_file->setParent(this);
         m_core.setFile(m_file->core());
-        connect(m_file, SIGNAL(coreChanged()), SLOT(coreFileChanged()));
+        connect(m_file.data(), &EncryptedFileObject::coreChanged, this, &EncryptedMessageObject::coreFileChanged);
     }
     Q_EMIT fileChanged();
     Q_EMIT coreChanged();

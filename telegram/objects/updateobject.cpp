@@ -26,39 +26,39 @@ UpdateObject::UpdateObject(const Update &core, QObject *parent) :
     m_core(core)
 {
     m_action = new SendMessageActionObject(m_core.action(), this);
-    connect(m_action, SIGNAL(coreChanged()), SLOT(coreActionChanged()));
+    connect(m_action.data(), &SendMessageActionObject::coreChanged, this, &UpdateObject::coreActionChanged);
     m_chat = new EncryptedChatObject(m_core.chat(), this);
-    connect(m_chat, SIGNAL(coreChanged()), SLOT(coreChatChanged()));
+    connect(m_chat.data(), &EncryptedChatObject::coreChanged, this, &UpdateObject::coreChatChanged);
     m_foreignLink = new ContactLinkObject(m_core.foreignLink(), this);
-    connect(m_foreignLink, SIGNAL(coreChanged()), SLOT(coreForeignLinkChanged()));
+    connect(m_foreignLink.data(), &ContactLinkObject::coreChanged, this, &UpdateObject::coreForeignLinkChanged);
     m_group = new MessageGroupObject(m_core.group(), this);
-    connect(m_group, SIGNAL(coreChanged()), SLOT(coreGroupChanged()));
+    connect(m_group.data(), &MessageGroupObject::coreChanged, this, &UpdateObject::coreGroupChanged);
     m_key = new PrivacyKeyObject(m_core.key(), this);
-    connect(m_key, SIGNAL(coreChanged()), SLOT(coreKeyChanged()));
+    connect(m_key.data(), &PrivacyKeyObject::coreChanged, this, &UpdateObject::coreKeyChanged);
     m_media = new MessageMediaObject(m_core.media(), this);
-    connect(m_media, SIGNAL(coreChanged()), SLOT(coreMediaChanged()));
+    connect(m_media.data(), &MessageMediaObject::coreChanged, this, &UpdateObject::coreMediaChanged);
     m_messageEncrypted = new EncryptedMessageObject(m_core.messageEncrypted(), this);
-    connect(m_messageEncrypted, SIGNAL(coreChanged()), SLOT(coreMessageEncryptedChanged()));
+    connect(m_messageEncrypted.data(), &EncryptedMessageObject::coreChanged, this, &UpdateObject::coreMessageEncryptedChanged);
     m_message = new MessageObject(m_core.message(), this);
-    connect(m_message, SIGNAL(coreChanged()), SLOT(coreMessageChanged()));
+    connect(m_message.data(), &MessageObject::coreChanged, this, &UpdateObject::coreMessageChanged);
     m_myLink = new ContactLinkObject(m_core.myLink(), this);
-    connect(m_myLink, SIGNAL(coreChanged()), SLOT(coreMyLinkChanged()));
+    connect(m_myLink.data(), &ContactLinkObject::coreChanged, this, &UpdateObject::coreMyLinkChanged);
     m_notifySettings = new PeerNotifySettingsObject(m_core.notifySettings(), this);
-    connect(m_notifySettings, SIGNAL(coreChanged()), SLOT(coreNotifySettingsChanged()));
+    connect(m_notifySettings.data(), &PeerNotifySettingsObject::coreChanged, this, &UpdateObject::coreNotifySettingsChanged);
     m_participants = new ChatParticipantsObject(m_core.participants(), this);
-    connect(m_participants, SIGNAL(coreChanged()), SLOT(coreParticipantsChanged()));
+    connect(m_participants.data(), &ChatParticipantsObject::coreChanged, this, &UpdateObject::coreParticipantsChanged);
     m_peerNotify = new NotifyPeerObject(m_core.peerNotify(), this);
-    connect(m_peerNotify, SIGNAL(coreChanged()), SLOT(corePeerNotifyChanged()));
+    connect(m_peerNotify.data(), &NotifyPeerObject::coreChanged, this, &UpdateObject::corePeerNotifyChanged);
     m_peer = new PeerObject(m_core.peer(), this);
-    connect(m_peer, SIGNAL(coreChanged()), SLOT(corePeerChanged()));
+    connect(m_peer.data(), &PeerObject::coreChanged, this, &UpdateObject::corePeerChanged);
     m_photo = new UserProfilePhotoObject(m_core.photo(), this);
-    connect(m_photo, SIGNAL(coreChanged()), SLOT(corePhotoChanged()));
+    connect(m_photo.data(), &UserProfilePhotoObject::coreChanged, this, &UpdateObject::corePhotoChanged);
     m_status = new UserStatusObject(m_core.status(), this);
-    connect(m_status, SIGNAL(coreChanged()), SLOT(coreStatusChanged()));
+    connect(m_status.data(), &UserStatusObject::coreChanged, this, &UpdateObject::coreStatusChanged);
     m_stickerset = new MessagesStickerSetObject(m_core.stickerset(), this);
-    connect(m_stickerset, SIGNAL(coreChanged()), SLOT(coreStickersetChanged()));
+    connect(m_stickerset.data(), &MessagesStickerSetObject::coreChanged, this, &UpdateObject::coreStickersetChanged);
     m_webpage = new WebPageObject(m_core.webpage(), this);
-    connect(m_webpage, SIGNAL(coreChanged()), SLOT(coreWebpageChanged()));
+    connect(m_webpage.data(), &WebPageObject::coreChanged, this, &UpdateObject::coreWebpageChanged);
 }
 
 UpdateObject::UpdateObject(QObject *parent) :
@@ -83,39 +83,39 @@ UpdateObject::UpdateObject(QObject *parent) :
     m_core()
 {
     m_action = new SendMessageActionObject(m_core.action(), this);
-    connect(m_action, SIGNAL(coreChanged()), SLOT(coreActionChanged()));
+    connect(m_action.data(), &SendMessageActionObject::coreChanged, this, &UpdateObject::coreActionChanged);
     m_chat = new EncryptedChatObject(m_core.chat(), this);
-    connect(m_chat, SIGNAL(coreChanged()), SLOT(coreChatChanged()));
+    connect(m_chat.data(), &EncryptedChatObject::coreChanged, this, &UpdateObject::coreChatChanged);
     m_foreignLink = new ContactLinkObject(m_core.foreignLink(), this);
-    connect(m_foreignLink, SIGNAL(coreChanged()), SLOT(coreForeignLinkChanged()));
+    connect(m_foreignLink.data(), &ContactLinkObject::coreChanged, this, &UpdateObject::coreForeignLinkChanged);
     m_group = new MessageGroupObject(m_core.group(), this);
-    connect(m_group, SIGNAL(coreChanged()), SLOT(coreGroupChanged()));
+    connect(m_group.data(), &MessageGroupObject::coreChanged, this, &UpdateObject::coreGroupChanged);
     m_key = new PrivacyKeyObject(m_core.key(), this);
-    connect(m_key, SIGNAL(coreChanged()), SLOT(coreKeyChanged()));
+    connect(m_key.data(), &PrivacyKeyObject::coreChanged, this, &UpdateObject::coreKeyChanged);
     m_media = new MessageMediaObject(m_core.media(), this);
-    connect(m_media, SIGNAL(coreChanged()), SLOT(coreMediaChanged()));
+    connect(m_media.data(), &MessageMediaObject::coreChanged, this, &UpdateObject::coreMediaChanged);
     m_messageEncrypted = new EncryptedMessageObject(m_core.messageEncrypted(), this);
-    connect(m_messageEncrypted, SIGNAL(coreChanged()), SLOT(coreMessageEncryptedChanged()));
+    connect(m_messageEncrypted.data(), &EncryptedMessageObject::coreChanged, this, &UpdateObject::coreMessageEncryptedChanged);
     m_message = new MessageObject(m_core.message(), this);
-    connect(m_message, SIGNAL(coreChanged()), SLOT(coreMessageChanged()));
+    connect(m_message.data(), &MessageObject::coreChanged, this, &UpdateObject::coreMessageChanged);
     m_myLink = new ContactLinkObject(m_core.myLink(), this);
-    connect(m_myLink, SIGNAL(coreChanged()), SLOT(coreMyLinkChanged()));
+    connect(m_myLink.data(), &ContactLinkObject::coreChanged, this, &UpdateObject::coreMyLinkChanged);
     m_notifySettings = new PeerNotifySettingsObject(m_core.notifySettings(), this);
-    connect(m_notifySettings, SIGNAL(coreChanged()), SLOT(coreNotifySettingsChanged()));
+    connect(m_notifySettings.data(), &PeerNotifySettingsObject::coreChanged, this, &UpdateObject::coreNotifySettingsChanged);
     m_participants = new ChatParticipantsObject(m_core.participants(), this);
-    connect(m_participants, SIGNAL(coreChanged()), SLOT(coreParticipantsChanged()));
+    connect(m_participants.data(), &ChatParticipantsObject::coreChanged, this, &UpdateObject::coreParticipantsChanged);
     m_peerNotify = new NotifyPeerObject(m_core.peerNotify(), this);
-    connect(m_peerNotify, SIGNAL(coreChanged()), SLOT(corePeerNotifyChanged()));
+    connect(m_peerNotify.data(), &NotifyPeerObject::coreChanged, this, &UpdateObject::corePeerNotifyChanged);
     m_peer = new PeerObject(m_core.peer(), this);
-    connect(m_peer, SIGNAL(coreChanged()), SLOT(corePeerChanged()));
+    connect(m_peer.data(), &PeerObject::coreChanged, this, &UpdateObject::corePeerChanged);
     m_photo = new UserProfilePhotoObject(m_core.photo(), this);
-    connect(m_photo, SIGNAL(coreChanged()), SLOT(corePhotoChanged()));
+    connect(m_photo.data(), &UserProfilePhotoObject::coreChanged, this, &UpdateObject::corePhotoChanged);
     m_status = new UserStatusObject(m_core.status(), this);
-    connect(m_status, SIGNAL(coreChanged()), SLOT(coreStatusChanged()));
+    connect(m_status.data(), &UserStatusObject::coreChanged, this, &UpdateObject::coreStatusChanged);
     m_stickerset = new MessagesStickerSetObject(m_core.stickerset(), this);
-    connect(m_stickerset, SIGNAL(coreChanged()), SLOT(coreStickersetChanged()));
+    connect(m_stickerset.data(), &MessagesStickerSetObject::coreChanged, this, &UpdateObject::coreStickersetChanged);
     m_webpage = new WebPageObject(m_core.webpage(), this);
-    connect(m_webpage, SIGNAL(coreChanged()), SLOT(coreWebpageChanged()));
+    connect(m_webpage.data(), &WebPageObject::coreChanged, this, &UpdateObject::coreWebpageChanged);
 }
 
 UpdateObject::~UpdateObject() {
@@ -128,7 +128,7 @@ void UpdateObject::setAction(SendMessageActionObject* action) {
     if(m_action) {
         m_action->setParent(this);
         m_core.setAction(m_action->core());
-        connect(m_action, SIGNAL(coreChanged()), SLOT(coreActionChanged()));
+        connect(m_action.data(), &SendMessageActionObject::coreChanged, this, &UpdateObject::coreActionChanged);
     }
     Q_EMIT actionChanged();
     Q_EMIT coreChanged();
@@ -178,7 +178,7 @@ void UpdateObject::setChat(EncryptedChatObject* chat) {
     if(m_chat) {
         m_chat->setParent(this);
         m_core.setChat(m_chat->core());
-        connect(m_chat, SIGNAL(coreChanged()), SLOT(coreChatChanged()));
+        connect(m_chat.data(), &EncryptedChatObject::coreChanged, this, &UpdateObject::coreChatChanged);
     }
     Q_EMIT chatChanged();
     Q_EMIT coreChanged();
@@ -261,7 +261,7 @@ void UpdateObject::setForeignLink(ContactLinkObject* foreignLink) {
     if(m_foreignLink) {
         m_foreignLink->setParent(this);
         m_core.setForeignLink(m_foreignLink->core());
-        connect(m_foreignLink, SIGNAL(coreChanged()), SLOT(coreForeignLinkChanged()));
+        connect(m_foreignLink.data(), &ContactLinkObject::coreChanged, this, &UpdateObject::coreForeignLinkChanged);
     }
     Q_EMIT foreignLinkChanged();
     Q_EMIT coreChanged();
@@ -278,7 +278,7 @@ void UpdateObject::setGroup(MessageGroupObject* group) {
     if(m_group) {
         m_group->setParent(this);
         m_core.setGroup(m_group->core());
-        connect(m_group, SIGNAL(coreChanged()), SLOT(coreGroupChanged()));
+        connect(m_group.data(), &MessageGroupObject::coreChanged, this, &UpdateObject::coreGroupChanged);
     }
     Q_EMIT groupChanged();
     Q_EMIT coreChanged();
@@ -328,7 +328,7 @@ void UpdateObject::setKey(PrivacyKeyObject* key) {
     if(m_key) {
         m_key->setParent(this);
         m_core.setKey(m_key->core());
-        connect(m_key, SIGNAL(coreChanged()), SLOT(coreKeyChanged()));
+        connect(m_key.data(), &PrivacyKeyObject::coreChanged, this, &UpdateObject::coreKeyChanged);
     }
     Q_EMIT keyChanged();
     Q_EMIT coreChanged();
@@ -389,7 +389,7 @@ void UpdateObject::setMedia(MessageMediaObject* media) {
     if(m_media) {
         m_media->setParent(this);
         m_core.setMedia(m_media->core());
-        connect(m_media, SIGNAL(coreChanged()), SLOT(coreMediaChanged()));
+        connect(m_media.data(), &MessageMediaObject::coreChanged, this, &UpdateObject::coreMediaChanged);
     }
     Q_EMIT mediaChanged();
     Q_EMIT coreChanged();
@@ -406,7 +406,7 @@ void UpdateObject::setMessageEncrypted(EncryptedMessageObject* messageEncrypted)
     if(m_messageEncrypted) {
         m_messageEncrypted->setParent(this);
         m_core.setMessageEncrypted(m_messageEncrypted->core());
-        connect(m_messageEncrypted, SIGNAL(coreChanged()), SLOT(coreMessageEncryptedChanged()));
+        connect(m_messageEncrypted.data(), &EncryptedMessageObject::coreChanged, this, &UpdateObject::coreMessageEncryptedChanged);
     }
     Q_EMIT messageEncryptedChanged();
     Q_EMIT coreChanged();
@@ -423,7 +423,7 @@ void UpdateObject::setMessage(MessageObject* message) {
     if(m_message) {
         m_message->setParent(this);
         m_core.setMessage(m_message->core());
-        connect(m_message, SIGNAL(coreChanged()), SLOT(coreMessageChanged()));
+        connect(m_message.data(), &MessageObject::coreChanged, this, &UpdateObject::coreMessageChanged);
     }
     Q_EMIT messageChanged();
     Q_EMIT coreChanged();
@@ -462,7 +462,7 @@ void UpdateObject::setMyLink(ContactLinkObject* myLink) {
     if(m_myLink) {
         m_myLink->setParent(this);
         m_core.setMyLink(m_myLink->core());
-        connect(m_myLink, SIGNAL(coreChanged()), SLOT(coreMyLinkChanged()));
+        connect(m_myLink.data(), &ContactLinkObject::coreChanged, this, &UpdateObject::coreMyLinkChanged);
     }
     Q_EMIT myLinkChanged();
     Q_EMIT coreChanged();
@@ -479,7 +479,7 @@ void UpdateObject::setNotifySettings(PeerNotifySettingsObject* notifySettings) {
     if(m_notifySettings) {
         m_notifySettings->setParent(this);
         m_core.setNotifySettings(m_notifySettings->core());
-        connect(m_notifySettings, SIGNAL(coreChanged()), SLOT(coreNotifySettingsChanged()));
+        connect(m_notifySettings.data(), &PeerNotifySettingsObject::coreChanged, this, &UpdateObject::coreNotifySettingsChanged);
     }
     Q_EMIT notifySettingsChanged();
     Q_EMIT coreChanged();
@@ -518,7 +518,7 @@ void UpdateObject::setParticipants(ChatParticipantsObject* participants) {
     if(m_participants) {
         m_participants->setParent(this);
         m_core.setParticipants(m_participants->core());
-        connect(m_participants, SIGNAL(coreChanged()), SLOT(coreParticipantsChanged()));
+        connect(m_participants.data(), &ChatParticipantsObject::coreChanged, this, &UpdateObject::coreParticipantsChanged);
     }
     Q_EMIT participantsChanged();
     Q_EMIT coreChanged();
@@ -535,7 +535,7 @@ void UpdateObject::setPeerNotify(NotifyPeerObject* peerNotify) {
     if(m_peerNotify) {
         m_peerNotify->setParent(this);
         m_core.setPeerNotify(m_peerNotify->core());
-        connect(m_peerNotify, SIGNAL(coreChanged()), SLOT(corePeerNotifyChanged()));
+        connect(m_peerNotify.data(), &NotifyPeerObject::coreChanged, this, &UpdateObject::corePeerNotifyChanged);
     }
     Q_EMIT peerNotifyChanged();
     Q_EMIT coreChanged();
@@ -552,7 +552,7 @@ void UpdateObject::setPeer(PeerObject* peer) {
     if(m_peer) {
         m_peer->setParent(this);
         m_core.setPeer(m_peer->core());
-        connect(m_peer, SIGNAL(coreChanged()), SLOT(corePeerChanged()));
+        connect(m_peer.data(), &PeerObject::coreChanged, this, &UpdateObject::corePeerChanged);
     }
     Q_EMIT peerChanged();
     Q_EMIT coreChanged();
@@ -580,7 +580,7 @@ void UpdateObject::setPhoto(UserProfilePhotoObject* photo) {
     if(m_photo) {
         m_photo->setParent(this);
         m_core.setPhoto(m_photo->core());
-        connect(m_photo, SIGNAL(coreChanged()), SLOT(corePhotoChanged()));
+        connect(m_photo.data(), &UserProfilePhotoObject::coreChanged, this, &UpdateObject::corePhotoChanged);
     }
     Q_EMIT photoChanged();
     Q_EMIT coreChanged();
@@ -696,7 +696,7 @@ void UpdateObject::setStatus(UserStatusObject* status) {
     if(m_status) {
         m_status->setParent(this);
         m_core.setStatus(m_status->core());
-        connect(m_status, SIGNAL(coreChanged()), SLOT(coreStatusChanged()));
+        connect(m_status.data(), &UserStatusObject::coreChanged, this, &UpdateObject::coreStatusChanged);
     }
     Q_EMIT statusChanged();
     Q_EMIT coreChanged();
@@ -713,7 +713,7 @@ void UpdateObject::setStickerset(MessagesStickerSetObject* stickerset) {
     if(m_stickerset) {
         m_stickerset->setParent(this);
         m_core.setStickerset(m_stickerset->core());
-        connect(m_stickerset, SIGNAL(coreChanged()), SLOT(coreStickersetChanged()));
+        connect(m_stickerset.data(), &MessagesStickerSetObject::coreChanged, this, &UpdateObject::coreStickersetChanged);
     }
     Q_EMIT stickersetChanged();
     Q_EMIT coreChanged();
@@ -785,7 +785,7 @@ void UpdateObject::setWebpage(WebPageObject* webpage) {
     if(m_webpage) {
         m_webpage->setParent(this);
         m_core.setWebpage(m_webpage->core());
-        connect(m_webpage, SIGNAL(coreChanged()), SLOT(coreWebpageChanged()));
+        connect(m_webpage.data(), &WebPageObject::coreChanged, this, &UpdateObject::coreWebpageChanged);
     }
     Q_EMIT webpageChanged();
     Q_EMIT coreChanged();

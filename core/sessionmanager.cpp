@@ -28,8 +28,8 @@ SessionManager::SessionManager(Session *session, Settings *settings, CryptoUtils
     mCrypto(crypto),
     mMainSession(session)
 {
-    connect(mMainSession, SIGNAL(sessionReady(DC*)), this, SIGNAL(mainSessionReady()), Qt::UniqueConnection);
-    connect(mMainSession, SIGNAL(sessionClosed(qint64)), this, SIGNAL(mainSessionClosed()), Qt::UniqueConnection);
+    connect(mMainSession.data(), &Session::sessionReady, this, &SessionManager::mainSessionReady, Qt::UniqueConnection);
+    connect(mMainSession.data(), &Session::sessionClosed, this, &SessionManager::mainSessionClosed, Qt::UniqueConnection);
 }
 
 SessionManager::~SessionManager() {
@@ -70,8 +70,8 @@ Session *SessionManager::createFileSession(DC *dc) {
 
 Session *SessionManager::createSession(DC *dc) {
     Session *session = new Session(dc, mSettings, mCrypto, this);
-    connect(session, SIGNAL(sessionReleased(qint64)), SLOT(onSessionReleased(qint64)));
-    connect(session, SIGNAL(sessionClosed(qint64)), SLOT(onSessionClosed(qint64)));
+    connect(session, &Session::sessionReleased, this, &SessionManager::onSessionReleased);
+    connect(session, &Session::sessionClosed, this, &SessionManager::onSessionClosed);
     connectResponsesSignals(session);
     return session;
 }
@@ -120,9 +120,9 @@ void SessionManager::changeMainSessionToDc(DC *dc) {
     }
     // create session and connect to dc, adding the signal of dc changed
     mMainSession = createSession(dc);
-    connect(mMainSession, SIGNAL(sessionReady(DC*)), this, SIGNAL(mainSessionDcChanged(DC*)), Qt::UniqueConnection);
-    connect(mMainSession, SIGNAL(sessionReady(DC*)), this, SIGNAL(mainSessionReady()), Qt::UniqueConnection);
-    connect(mMainSession, SIGNAL(sessionClosed(qint64)), this, SIGNAL(mainSessionClosed()), Qt::UniqueConnection);
+    connect(mMainSession.data(), &Session::sessionReady, this, &SessionManager::mainSessionDcChanged, Qt::UniqueConnection);
+    connect(mMainSession.data(), &Session::sessionReady, this, &SessionManager::mainSessionReady, Qt::UniqueConnection);
+    connect(mMainSession.data(), &Session::sessionClosed, this, &SessionManager::mainSessionClosed, Qt::UniqueConnection);
     connectUpdatesSignals(mMainSession);
     mMainSession->connectToServer();
 }
@@ -130,8 +130,8 @@ void SessionManager::changeMainSessionToDc(DC *dc) {
 void SessionManager::createMainSessionToDc(DC *dc) {
     // create session and connect to dc
     mMainSession = createSession(dc);
-    connect(mMainSession, SIGNAL(sessionReady(DC*)), this, SIGNAL(mainSessionReady()), Qt::UniqueConnection);
-    connect(mMainSession, SIGNAL(sessionClosed(qint64)), this, SIGNAL(mainSessionClosed()), Qt::UniqueConnection);
+    connect(mMainSession.data(), &Session::sessionReady, this, &SessionManager::mainSessionReady, Qt::UniqueConnection);
+    connect(mMainSession.data(), &Session::sessionClosed, this, &SessionManager::mainSessionClosed, Qt::UniqueConnection);
     connectUpdatesSignals(mMainSession);
     mMainSession->connectToServer();
 }

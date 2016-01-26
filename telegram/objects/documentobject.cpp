@@ -10,7 +10,7 @@ DocumentObject::DocumentObject(const Document &core, QObject *parent) :
     m_core(core)
 {
     m_thumb = new PhotoSizeObject(m_core.thumb(), this);
-    connect(m_thumb, SIGNAL(coreChanged()), SLOT(coreThumbChanged()));
+    connect(m_thumb.data(), &PhotoSizeObject::coreChanged, this, &DocumentObject::coreThumbChanged);
 }
 
 DocumentObject::DocumentObject(QObject *parent) :
@@ -19,7 +19,7 @@ DocumentObject::DocumentObject(QObject *parent) :
     m_core()
 {
     m_thumb = new PhotoSizeObject(m_core.thumb(), this);
-    connect(m_thumb, SIGNAL(coreChanged()), SLOT(coreThumbChanged()));
+    connect(m_thumb.data(), &PhotoSizeObject::coreChanged, this, &DocumentObject::coreThumbChanged);
 }
 
 DocumentObject::~DocumentObject() {
@@ -109,7 +109,7 @@ void DocumentObject::setThumb(PhotoSizeObject* thumb) {
     if(m_thumb) {
         m_thumb->setParent(this);
         m_core.setThumb(m_thumb->core());
-        connect(m_thumb, SIGNAL(coreChanged()), SLOT(coreThumbChanged()));
+        connect(m_thumb.data(), &PhotoSizeObject::coreChanged, this, &DocumentObject::coreThumbChanged);
     }
     Q_EMIT thumbChanged();
     Q_EMIT coreChanged();

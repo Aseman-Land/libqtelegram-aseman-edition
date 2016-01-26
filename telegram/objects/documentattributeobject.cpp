@@ -10,7 +10,7 @@ DocumentAttributeObject::DocumentAttributeObject(const DocumentAttribute &core, 
     m_core(core)
 {
     m_stickerset = new InputStickerSetObject(m_core.stickerset(), this);
-    connect(m_stickerset, SIGNAL(coreChanged()), SLOT(coreStickersetChanged()));
+    connect(m_stickerset.data(), &InputStickerSetObject::coreChanged, this, &DocumentAttributeObject::coreStickersetChanged);
 }
 
 DocumentAttributeObject::DocumentAttributeObject(QObject *parent) :
@@ -19,7 +19,7 @@ DocumentAttributeObject::DocumentAttributeObject(QObject *parent) :
     m_core()
 {
     m_stickerset = new InputStickerSetObject(m_core.stickerset(), this);
-    connect(m_stickerset, SIGNAL(coreChanged()), SLOT(coreStickersetChanged()));
+    connect(m_stickerset.data(), &InputStickerSetObject::coreChanged, this, &DocumentAttributeObject::coreStickersetChanged);
 }
 
 DocumentAttributeObject::~DocumentAttributeObject() {
@@ -87,7 +87,7 @@ void DocumentAttributeObject::setStickerset(InputStickerSetObject* stickerset) {
     if(m_stickerset) {
         m_stickerset->setParent(this);
         m_core.setStickerset(m_stickerset->core());
-        connect(m_stickerset, SIGNAL(coreChanged()), SLOT(coreStickersetChanged()));
+        connect(m_stickerset.data(), &InputStickerSetObject::coreChanged, this, &DocumentAttributeObject::coreStickersetChanged);
     }
     Q_EMIT stickersetChanged();
     Q_EMIT coreChanged();

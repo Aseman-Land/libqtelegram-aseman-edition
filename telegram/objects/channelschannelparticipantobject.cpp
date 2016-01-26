@@ -10,7 +10,7 @@ ChannelsChannelParticipantObject::ChannelsChannelParticipantObject(const Channel
     m_core(core)
 {
     m_participant = new ChannelParticipantObject(m_core.participant(), this);
-    connect(m_participant, SIGNAL(coreChanged()), SLOT(coreParticipantChanged()));
+    connect(m_participant.data(), &ChannelParticipantObject::coreChanged, this, &ChannelsChannelParticipantObject::coreParticipantChanged);
 }
 
 ChannelsChannelParticipantObject::ChannelsChannelParticipantObject(QObject *parent) :
@@ -19,7 +19,7 @@ ChannelsChannelParticipantObject::ChannelsChannelParticipantObject(QObject *pare
     m_core()
 {
     m_participant = new ChannelParticipantObject(m_core.participant(), this);
-    connect(m_participant, SIGNAL(coreChanged()), SLOT(coreParticipantChanged()));
+    connect(m_participant.data(), &ChannelParticipantObject::coreChanged, this, &ChannelsChannelParticipantObject::coreParticipantChanged);
 }
 
 ChannelsChannelParticipantObject::~ChannelsChannelParticipantObject() {
@@ -32,7 +32,7 @@ void ChannelsChannelParticipantObject::setParticipant(ChannelParticipantObject* 
     if(m_participant) {
         m_participant->setParent(this);
         m_core.setParticipant(m_participant->core());
-        connect(m_participant, SIGNAL(coreChanged()), SLOT(coreParticipantChanged()));
+        connect(m_participant.data(), &ChannelParticipantObject::coreChanged, this, &ChannelsChannelParticipantObject::coreParticipantChanged);
     }
     Q_EMIT participantChanged();
     Q_EMIT coreChanged();
