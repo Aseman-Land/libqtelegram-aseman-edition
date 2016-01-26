@@ -293,8 +293,8 @@ void Telegram::onDcProviderReady() {
     connect(mApi.data(), &TelegramApi::mainSessionClosed, this, &Telegram::disconnected);
 
     prv->mFileHandler = FileHandler::Ptr(new FileHandler(this, mApi, prv->mCrypto, prv->mSettings, *prv->mDcProvider, prv->mSecretState));
-    connect(prv->mFileHandler.data(), &FileHandler::uploadSendFileAnswer, this, &Telegram::uploadSendFileAnswer);
-    connect(prv->mFileHandler.data(), &FileHandler::uploadGetFileAnswer, this, &Telegram::uploadGetFileAnswer);
+    connect(prv->mFileHandler.data(), &FileHandler::uploadSendFileAnswer, this, &Telegram::onUploadSendFileAnswer);
+    connect(prv->mFileHandler.data(), &FileHandler::uploadGetFileAnswer, this, &Telegram::onUploadGetFileAnswer);
     connect(prv->mFileHandler.data(), &FileHandler::uploadCancelFileAnswer, this, &Telegram::uploadCancelFileAnswer);
     connect(prv->mFileHandler.data(), &FileHandler::error, this, &Telegram::error);
     connect(prv->mFileHandler.data(), &FileHandler::messagesSentMedia, this, &Telegram::onMessagesSendMediaAnswer);
@@ -637,6 +637,48 @@ void Telegram::onUpdates(const QList<Update> &udts) {
     Q_FOREACH (const Update &update, udts) {
         processSecretChatUpdate(update);
     }
+}
+
+void Telegram::onUploadGetFileAnswer(qint64 fileId, const UploadGetFile &result)
+{
+    switch(static_cast<int>(result.classType()))
+    {
+    case UploadGetFile::typeUploadGetFileProgress:
+    {
+        Callback<UploadGetFile> callBack = callBackGet<UploadGetFile>(fileId);
+        if(callBack)
+            callBack(fileId, result, TelegramCore::CallbackError());
+    }
+        break;
+
+    case UploadGetFile::typeUploadGetFileFinished:
+    case UploadGetFile::typeUploadGetFileCanceled:
+        callBackCall<UploadGetFile>(fileId, result, TelegramCore::CallbackError());
+        break;
+    }
+
+    Q_EMIT uploadGetFileAnswer(fileId, result);
+}
+
+void Telegram::onUploadSendFileAnswer(qint64 fileId, const UploadSendFile &result)
+{
+    switch(static_cast<int>(result.classType()))
+    {
+    case UploadSendFile::typeUploadSendFileProgress:
+    {
+        Callback<UploadSendFile> callBack = callBackGet<UploadSendFile>(fileId);
+        if(callBack)
+            callBack(fileId, result, TelegramCore::CallbackError());
+    }
+        break;
+
+    case UploadSendFile::typeUploadSendFileFinished:
+    case UploadSendFile::typeUploadSendFileCanceled:
+        callBackCall<UploadSendFile>(fileId, result, TelegramCore::CallbackError());
+        break;
+    }
+
+    Q_EMIT uploadSendFileAnswer(fileId, result);
 }
 
 SecretChatMessage Telegram::toSecretChatMessage(const EncryptedMessage &encrypted) {
@@ -1397,9 +1439,17 @@ qint64 Telegram::messagesEditChatPhoto(qint32 chatId, qint64 photoId, qint64 acc
     return TelegramCore::messagesEditChatPhoto(chatId, inputChatPhoto, callBack);
 }
 
-qint64 Telegram::uploadGetFile(const InputFileLocation &location, qint32 fileSize, qint32 dcNum, const QByteArray &key, const QByteArray &iv) {
+qint64 Telegram::uploadGetFile(const InputFileLocation &file, qint32 fileSize, qint32 dc, Callback<UploadGetFile> callBack) {
+    return uploadGetFile(file, fileSize, dc, QByteArray(), QByteArray(), callBack);
+}
+
+qint64 Telegram::uploadGetFile(const InputFileLocation &location, qint32 fileSize, qint32 dcNum, const QByteArray &key, const QByteArray &iv, Callback<UploadGetFile> callBack) {
     if(!prv->mFileHandler) return 0;
-    return prv->mFileHandler->uploadGetFile(location, fileSize, dcNum, key, iv);
+    qint64 msgId = prv->mFileHandler->uploadGetFile(location, fileSize, dcNum, key, iv);
+    if(msgId && callBack)
+        callBackPush<UploadGetFile>(msgId, callBack);
+
+    return msgId;
 }
 
 qint64 Telegram::uploadCancelFile(qint64 fileId) {

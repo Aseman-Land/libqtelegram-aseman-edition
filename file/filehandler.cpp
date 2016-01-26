@@ -149,11 +149,17 @@ void FileHandler::onUploadSaveFilePartResult(qint64, bool, const QVariant &attac
     qint32 uploaded = uploadFile->uploadedParts() * uploadFile->partLength();
     uploaded = uploaded > length ? length : uploaded;
     qint32 partId = uploadFile->uploadedParts() - 1;
-    Q_EMIT uploadSendFileAnswer(fileId, partId, uploaded, length);
+
+    UploadSendFile result(UploadSendFile::typeUploadSendFileProgress);
+    result.setPartId(partId);
+    result.setUploaded(uploaded);
+    result.setTotalSize(length);
 
     if (uploadFile->uploadedParts() == uploadFile->nParts()) {
-        // if finished a thumbnail, send the main file. Send media metadata if finished is the main file
+        result.setClassType(UploadSendFile::typeUploadSendFileFinished);
         qCDebug(TG_FILE_FILEHANDLER) << "file upload finished for fileId" << fileId;
+
+        // if finished a thumbnail, send the main file. Send media metadata if finished is the main file
         if (uploadFile->fileType() == UploadFileEngine::Thumbnail) {
             qint64 mainFileId = uploadFile->relatedFileId();
             UploadFileEngine::Ptr main = mUploadsMap.value(mainFileId);
@@ -248,6 +254,8 @@ void FileHandler::onUploadSaveFilePartResult(qint64, bool, const QVariant &attac
             op.clear();
         }
     }
+
+    Q_EMIT uploadSendFileAnswer(fileId, result);
 }
 
 qint64 FileHandler::uploadGetFile(const InputFileLocation &location, qint32 fileSize, qint32 dcNum, const QByteArray &key, const QByteArray &iv) {
@@ -315,6 +323,7 @@ void FileHandler::onUploadGetFileAnswer(qint64 msgId, const UploadFile &result, 
         return;
 
     if (mCancelDownloadsMap.take(f->id())) {
+        Q_EMIT uploadGetFileAnswer(f->id(), UploadGetFile(UploadGetFile::typeUploadGetFileCanceled));
         Q_EMIT uploadCancelFileAnswer(f->id(), true);
         mActiveDownloadsMap.remove(f->id());
         f.clear();
@@ -345,7 +354,15 @@ void FileHandler::onUploadGetFileAnswer(qint64 msgId, const UploadFile &result, 
             qint64 newMsgId = mApi->uploadGetFile(f->fileLocation(), f->offset(), f->partLength(), QVariant(), f->session());
             mDownloadsMap.insert(newMsgId, f);
         } else {
-            Q_EMIT uploadGetFileAnswer(f->id(), type, mtime, f->bytes(), 0, f->length(), expectedSize); //emit signal of finished
+            UploadGetFile result(UploadGetFile::typeUploadGetFileFinished);
+            result.setType(type);
+            result.setMtime(mtime);
+            result.setBytes(f->bytes());
+            result.setPartId(0);
+            result.setDownloaded(f->length());
+            result.setTotal(expectedSize);
+
+            Q_EMIT uploadGetFileAnswer(f->id(), result); //emit signal of finished
             mActiveDownloadsMap.remove(f->id());
             f.clear();
         }
@@ -361,15 +378,26 @@ void FileHandler::onUploadGetFileAnswer(qint64 msgId, const UploadFile &result, 
             expectedSize = f->offset();
         }
 
-        Q_EMIT uploadGetFileAnswer(f->id(), type, mtime, bytes, thisPartId, downloaded, expectedSize);
+        qint64 fileId = f->id();
+
+        UploadGetFile result(UploadGetFile::typeUploadGetFileFinished);
+        result.setType(type);
+        result.setMtime(mtime);
+        result.setBytes(bytes);
+        result.setPartId(thisPartId);
+        result.setDownloaded(downloaded);
+        result.setTotal(expectedSize);
 
         if (expectedSize == 0 || f->offset() < expectedSize) {
+            result.setClassType(UploadGetFile::typeUploadGetFileProgress);
             qint64 newMsgId = mApi->uploadGetFile(f->fileLocation(), f->offset(), f->partLength(), QVariant(), f->session());
             mDownloadsMap.insert(newMsgId, f);
         } else {
             mActiveDownloadsMap.remove(f->id());
             f.clear();
         }
+
+        Q_EMIT uploadGetFileAnswer(fileId, result);
     }
 }
 

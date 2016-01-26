@@ -27,8 +27,8 @@ public:
     qint64 uploadCancelFile(qint64 fileId);
 
 Q_SIGNALS:
-    void uploadSendFileAnswer(qint64 fileId, qint32 partId, qint32 uploaded, qint32 totalSize);
-    void uploadGetFileAnswer(qint64 fileId, const StorageFileType &type, qint32 mtime, const QByteArray &bytes, qint32 partId, qint32 downloaded, qint32 total);
+    void uploadSendFileAnswer(qint64 fileId, const UploadSendFile &result);
+    void uploadGetFileAnswer(qint64 fileId, const UploadGetFile &result);
     void uploadCancelFileAnswer(qint64 fileId, bool cancelled);
     void error(qint64 id, qint32 errorCode, const QString &errorText, const QString &functionName);
 

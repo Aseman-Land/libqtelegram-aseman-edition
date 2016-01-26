@@ -11,9 +11,10 @@
 
 #include "telegramapi.h"
 #include "telegramcore_globals.h"
+#include "libqtelegram_global.h"
 
 class TelegramApi;
-class TelegramCore : public QObject
+class LIBQTELEGRAMSHARED_EXPORT TelegramCore : public QObject
 {
     Q_OBJECT
 public:

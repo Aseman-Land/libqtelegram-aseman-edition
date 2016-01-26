@@ -7,6 +7,8 @@ CONFIG += c++11
 
 include(functions/functions.pri)
 include(types/types.pri)
+include(customtypes/customtypes.pri)
+
 include(objects/typeobjects.pri)
 
 HEADERS += \

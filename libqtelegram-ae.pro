@@ -43,3 +43,6 @@ linux {
 
     INSTALLS += target
 }
+
+DISTFILES += \
+    schema/scheme-45.tl

@@ -19,6 +19,10 @@ public:
         typeInvokeWithoutUpdates = 0xbf9459b7,
         typeNull = 0x56730bcc,
         typeTrue = 0x3fedd339,
+        typeUploadGetFileCanceled = 0xc52fa0a,
+        typeUploadGetFileEmpty = 0xe662a8f,
+        typeUploadGetFileFinished = 0xef122d8,
+        typeUploadGetFileProgress = 0x6db838e,
         typeVector = 0x1cb5c415,
         typeLayerVersion = 45
     };

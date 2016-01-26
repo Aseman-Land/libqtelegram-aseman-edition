@@ -9,8 +9,9 @@
 #include "core/session.h"
 #include "telegram/types/types.h"
 #include "secret/secretchat.h"
+#include "libqtelegram_global.h"
 
-class TelegramApi : public AbstractApi
+class LIBQTELEGRAMSHARED_EXPORT TelegramApi : public AbstractApi
 {
     Q_OBJECT
     friend class FileHandler;

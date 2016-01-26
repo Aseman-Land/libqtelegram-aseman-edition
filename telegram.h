@@ -29,6 +29,7 @@
 
 #include "libqtelegram_global.h"
 #include "telegram/types/types.h"
+#include "telegram/customtypes/customtypes.h"
 #include "secret/secretchat.h"
 #include "secret/secretchatmessage.h"
 #include "telegram/telegramcore.h"
@@ -36,7 +37,10 @@
 Q_DECLARE_LOGGING_CATEGORY(TG_LIB_API)
 Q_DECLARE_LOGGING_CATEGORY(TG_LIB_SECRET)
 
-
+#define TG_UPLOAD_GET_FILE_CUSTOM_CALLBACK \
+    TG_CALLBACK_SIGNATURE(UploadGetFile)
+#define TG_UPLOAD_SEND_FILE_CUSTOM_CALLBACK \
+    TG_CALLBACK_SIGNATURE(UploadSendFile)
 
 class Settings;
 class CryptoUtils;
@@ -119,7 +123,8 @@ public:
     qint64 messagesSendEncryptedService(const InputEncryptedChat &chat, qint64 randomId, const DecryptedMessageAction &action, Callback<MessagesSentEncryptedMessage> callBack = 0);//needed?
 
     // Working with files
-    qint64 uploadGetFile(const InputFileLocation &file, qint32 fileSize, qint32 dc = 0, const QByteArray &key = QByteArray(), const QByteArray &iv = QByteArray());
+    qint64 uploadGetFile(const InputFileLocation &file, qint32 fileSize, qint32 dc = 0, Callback<UploadGetFile> callBack = 0);
+    qint64 uploadGetFile(const InputFileLocation &file, qint32 fileSize, qint32 dc = 0, const QByteArray &key = QByteArray(), const QByteArray &iv = QByteArray(), Callback<UploadGetFile> callBack = 0);
     qint64 uploadCancelFile(qint64 fileId);
 
     // additional public methods
@@ -157,9 +162,9 @@ Q_SIGNALS:
     void updatesGetDifferenceAnswer(qint64 id, const QList<Message> &messages, const QList<SecretChatMessage> &secretChatMessages, const QList<Update> &otherUpdates, const QList<Chat> &chats, const QList<User> &users, const UpdatesState &state, bool isIntermediateState);
 
     // Working with files
-    void uploadGetFileAnswer(qint64 fileId, const StorageFileType &type, qint32 mtime, const QByteArray &bytes, qint32 partId, qint32 downloaded, qint32 total);
+    void uploadGetFileAnswer(qint64 fileId, const UploadGetFile &result);
     void uploadCancelFileAnswer(qint64 fileId, bool cancelled);
-    void uploadSendFileAnswer(qint64 fileId, qint32 partId, qint32 uploaded, qint32 totalSize);
+    void uploadSendFileAnswer(qint64 fileId, const UploadSendFile &result);
 
     void updateSecretChatMessage(const SecretChatMessage &secretChatMessage, qint32 qts);
     void updatesTooLong();
@@ -218,6 +223,9 @@ private Q_SLOTS:
     void onUpdateShort(const Update &update);
     void onUpdatesCombined(const QList<Update> &updates);
     void onUpdates(const QList<Update> &udts);
+
+    void onUploadGetFileAnswer(qint64 fileId, const UploadGetFile &result);
+    void onUploadSendFileAnswer(qint64 fileId, const UploadSendFile &result);
 
 private:
     TelegramPrivate *prv;
