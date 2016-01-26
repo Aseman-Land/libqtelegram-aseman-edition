@@ -119,12 +119,8 @@ void SessionManager::changeMainSessionToDc(DC *dc) {
         mMainSession->close();
     }
     // create session and connect to dc, adding the signal of dc changed
-    mMainSession = createSession(dc);
+    createMainSessionToDc(dc);
     connect(mMainSession.data(), &Session::sessionReady, this, &SessionManager::mainSessionDcChanged, Qt::UniqueConnection);
-    connect(mMainSession.data(), &Session::sessionReady, this, &SessionManager::mainSessionReady, Qt::UniqueConnection);
-    connect(mMainSession.data(), &Session::sessionClosed, this, &SessionManager::mainSessionClosed, Qt::UniqueConnection);
-    connectUpdatesSignals(mMainSession);
-    mMainSession->connectToServer();
 }
 
 void SessionManager::createMainSessionToDc(DC *dc) {

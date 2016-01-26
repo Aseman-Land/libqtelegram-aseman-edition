@@ -10,9 +10,7 @@
 #include <functional>
 
 #include "telegramapi.h"
-
-#define TG_CALLBACK_SIGNATURE(RETURN_TYPE) \
-    qint64 msgId, RETURN_TYPE result, TelegramCore::CallbackError error
+#include "telegramcore_globals.h"
 
 class TelegramApi;
 class TelegramCore : public QObject

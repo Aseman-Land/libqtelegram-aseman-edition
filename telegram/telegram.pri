@@ -12,7 +12,8 @@ include(objects/typeobjects.pri)
 HEADERS += \
     $$PWD/coretypes.h \
     $$PWD/telegramapi.h \
-    $$PWD/telegramcore.h
+    $$PWD/telegramcore.h \
+    $$PWD/telegramcore_globals.h
 
 SOURCES += \
     $$PWD/telegramapi.cpp \

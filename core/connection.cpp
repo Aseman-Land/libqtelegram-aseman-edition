@@ -149,7 +149,7 @@ QAbstractSocket::TemporaryError                     22	A temporary error occurre
 QAbstractSocket::UnknownSocketError                 -1	An unidentified error occurred.
 */
 void Connection::onError(QAbstractSocket::SocketError error) {
-    qCWarning(TG_CORE_CONNECTION) << "SocketError:" << QString::number(error) << errorString();
+    qCWarning(TG_CORE_CONNECTION) << "SocketError:" << QString::number(error) << errorString() << host();
     abort();
     if (!mReconnectTimerId) {
         mReconnectTimerId = startTimer(RECONNECT_TIMEOUT);

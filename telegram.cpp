@@ -288,7 +288,7 @@ void Telegram::onDcProviderReady() {
     connect(mApi.data(), &TelegramApi::updatesCombined, this, &Telegram::onUpdatesCombined);
     connect(mApi.data(), &TelegramApi::updates, this, &Telegram::onUpdates);
     // logic additional signal slots
-    connect(mApi.data(), &TelegramApi::mainSessionDcChanged, this, &Telegram::onMainDcChanged);
+    connect(mApi.data(), &TelegramApi::mainSessionDcChanged, this, &Telegram::onMainDcChanged, Qt::QueuedConnection);
     connect(mApi.data(), &TelegramApi::mainSessionReady, this, &Telegram::connected);
     connect(mApi.data(), &TelegramApi::mainSessionClosed, this, &Telegram::disconnected);
 
@@ -883,6 +883,7 @@ void Telegram::onError(qint64 id, qint32 errorCode, const QString &errorText, co
         qint32 newDc = errorText.mid(errorText.lastIndexOf("_") + 1).toInt();
         qDebug() << "migrated to dc" << newDc;
         prv->mSettings->setWorkingDcNum(newDc);
+        prv->mSettings->writeAuthFile();
         DC *dc = prv->mDcProvider->getDc(newDc);
         mApi->changeMainSessionToDc(dc);
         accepted = true;

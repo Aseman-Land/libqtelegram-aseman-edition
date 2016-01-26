@@ -506,6 +506,7 @@ qint64 Session::sendQuery(OutboundPkt &outboundPkt, QueryMethods *methods, const
     Query *q = new Query(this);
     q->setData(data, ints);
     q->setMsgId(encryptSendMessage(data, ints, 1));
+    q->setMainMsgId(q->msgId());
     q->setSeqNo(m_seqNo - 1);
     qCDebug(TG_CORE_SESSION) << "msgId is" << QString::number(q->msgId(), 16);
     q->setMethods(methods);

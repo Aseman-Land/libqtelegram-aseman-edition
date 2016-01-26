@@ -261,7 +261,7 @@ void DcProvider::onConfigReceived(qint64 msgId, const Config &config) {
 
     Session *session = mGetConfigRequests.take(msgId);
     if(session)
-        connect(session, &Session::sessionReady, this, &DcProvider::onApiReady);
+        disconnect(session, &Session::sessionReady, this, &DcProvider::onApiReady);
 
     if(mConfigReceived)
         return;
@@ -274,13 +274,20 @@ void DcProvider::onConfigReceived(qint64 msgId, const Config &config) {
 
     mPendingDcs = 0;
     Q_FOREACH (DcOption dcOption, dcOptions) {
+        if(dcOption.ipv6() || dcOption.mediaOnly())
+            continue;
+
+        mPendingDcs++;
+    }
+    mPendingDcs += -1; //all the received options but the default one, yet used
+
+    Q_FOREACH (DcOption dcOption, dcOptions) {
         qCDebug(TG_CORE_DCPROVIDER) << "dcOption | id =" << dcOption.id() << ", ipAddress =" << dcOption.ipAddress() <<
                     ", port =" << dcOption.port() << ", hostname =" << dcOption.ipAddress() <<
                     ", ipv6 =" << dcOption.ipv6() << ", mediaOnly =" << dcOption.mediaOnly();
         if(dcOption.ipv6() || dcOption.mediaOnly())
             continue;
 
-        mPendingDcs++;
         // for every new DC or not authenticated DC, insert into m_dcs and authenticate
         DC *dc = mDcs.value(dcOption.id());
 
@@ -311,7 +318,6 @@ void DcProvider::onConfigReceived(qint64 msgId, const Config &config) {
             onDcReady(dc);
         }
     }
-    mPendingDcs += -1; //all the received options but the default one, yet used
 
     qCDebug(TG_CORE_DCPROVIDER) << "chatMaxSize =" << config.chatSizeMax();
 }
