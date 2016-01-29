@@ -150,13 +150,9 @@ void FileHandler::onUploadSaveFilePartResult(qint64, bool, const QVariant &attac
     uploaded = uploaded > length ? length : uploaded;
     qint32 partId = uploadFile->uploadedParts() - 1;
 
-    UploadSendFile result(UploadSendFile::typeUploadSendFileProgress);
-    result.setPartId(partId);
-    result.setUploaded(uploaded);
-    result.setTotalSize(length);
+    FileOperation::Ptr op = mFileOperationsMap.value(uploadFile->id());
 
     if (uploadFile->uploadedParts() == uploadFile->nParts()) {
-        result.setClassType(UploadSendFile::typeUploadSendFileFinished);
         qCDebug(TG_FILE_FILEHANDLER) << "file upload finished for fileId" << fileId;
 
         // if finished a thumbnail, send the main file. Send media metadata if finished is the main file
@@ -179,7 +175,7 @@ void FileHandler::onUploadSaveFilePartResult(qint64, bool, const QVariant &attac
 
             qint64 requestId = 0;
             // Read operation and execute internal api operation depending on file operation type
-            FileOperation::Ptr op = mFileOperationsMap.take(uploadFile->id());
+            mFileOperationsMap.remove(uploadFile->id());
             switch (op->opType()) {
                 case FileOperation::sendMedia: {
                     InputMedia metadata = op->inputMedia();
@@ -203,21 +199,39 @@ void FileHandler::onUploadSaveFilePartResult(qint64, bool, const QVariant &attac
                     InputPeer peer = op->peer();
                     qint64 randomId = op->randomId();
                     qint32 replyToMsgId = op->replyToMsgId();
-                    requestId = mCore->messagesSendMedia(op->broadcast(), peer, replyToMsgId, metadata, randomId, op->replyMarkup(), op->resultCallback<UpdatesType>());
+                    requestId = mCore->messagesSendMedia(op->broadcast(), peer, replyToMsgId, metadata, randomId, op->replyMarkup(), [=](TG_MESSAGES_SEND_MEDIA_CALLBACK){
+                        UploadSendFile usf(error.null? UploadSendFile::typeUploadSendFileFinished :
+                                                       UploadSendFile::typeUploadSendFileCanceled);
+                        usf.setUpdates(result);
+                        if(!op->resultCallbackIsNull())
+                            op->resultCallback<UploadSendFile>()(msgId, usf, error);
+                    });
                     break;
                 }
                 case FileOperation::editChatPhoto: {
                     InputChatPhoto metadata = op->inputChatPhoto();
                     metadata.setFile(inputFile);
                     qint32 chatId = op->chatId();
-                    requestId = mCore->messagesEditChatPhoto(chatId, metadata, op->resultCallback<UpdatesType>());
+                    requestId = mCore->messagesEditChatPhoto(chatId, metadata, [=](TG_MESSAGES_EDIT_CHAT_PHOTO_CALLBACK){
+                        UploadSendFile usf(error.null? UploadSendFile::typeUploadSendFileFinished :
+                                                       UploadSendFile::typeUploadSendFileCanceled);
+                        usf.setUpdates(result);
+                        if(!op->resultCallbackIsNull())
+                            op->resultCallback<UploadSendFile>()(msgId, usf, error);
+                    });
                     break;
                 }
                 case FileOperation::uploadProfilePhoto: {
                     QString caption = op->caption();
                     InputGeoPoint geoPoint = op->geoPoint();
                     InputPhotoCrop crop = op->crop();
-                    requestId = mCore->photosUploadProfilePhoto(inputFile, caption, geoPoint, crop, op->resultCallback<PhotosPhoto>());
+                    requestId = mCore->photosUploadProfilePhoto(inputFile, caption, geoPoint, crop, [=](TG_PHOTOS_UPLOAD_PROFILE_PHOTO_CALLBACK){
+                        UploadSendPhoto usp(error.null? UploadSendPhoto::typeUploadSendPhotoFinished :
+                                                        UploadSendPhoto::typeUploadSendPhotoCanceled);
+                        usp.setPhoto(result);
+                        if(!op->resultCallbackIsNull())
+                            op->resultCallback<UploadSendPhoto>()(msgId, usp, error);
+                    });
                     break;
                 }
                 case FileOperation::sendEncryptedFile: {
@@ -237,7 +251,13 @@ void FileHandler::onUploadSaveFilePartResult(qint64, bool, const QVariant &attac
                     Encrypter encrypter(mSettings);
                     encrypter.setSecretChat(secretChat);
                     QByteArray data = encrypter.generateEncryptedData(decryptedMessage);
-                    requestId = mCore->messagesSendEncryptedFile(inputEncryptedChat, randomId, data, inputEncryptedFile, op->resultCallback<MessagesSentEncryptedMessage>());
+                    requestId = mCore->messagesSendEncryptedFile(inputEncryptedChat, randomId, data, inputEncryptedFile, [=](TG_MESSAGES_SEND_ENCRYPTED_FILE_CALLBACK){
+                        UploadSendEncrypted use(error.null? UploadSendEncrypted::typeUploadSendEncryptedFinished :
+                                                            UploadSendEncrypted::typeUploadSendEncryptedCanceled);
+                        use.setMessage(result);
+                        if(!op->resultCallbackIsNull())
+                            op->resultCallback<UploadSendEncrypted>()(msgId, use, error);
+                    });
 
                     secretChat->increaseOutSeqNo();
                     secretChat->appendToSequence(randomId);
@@ -253,9 +273,42 @@ void FileHandler::onUploadSaveFilePartResult(qint64, bool, const QVariant &attac
             uploadFile.clear();
             op.clear();
         }
+    } else if(!op->resultCallbackIsNull()) {
+        UploadSendFile result(UploadSendFile::typeUploadSendFileProgress);
+        result.setPartId(partId);
+        result.setUploaded(uploaded);
+        result.setTotalSize(length);
+
+        switch (op->opType()) {
+            case FileOperation::sendMedia:
+            case FileOperation::editChatPhoto: {
+                UploadSendFile usf(UploadSendFile::typeUploadSendFileProgress);
+                usf.setPartId(partId);
+                usf.setUploaded(uploaded);
+                usf.setTotalSize(length);
+                op->resultCallback<UploadSendFile>()(fileId, usf, TelegramCore::CallbackError());
+                break;
+            }
+            case FileOperation::uploadProfilePhoto: {
+                UploadSendPhoto usp(UploadSendPhoto::typeUploadSendPhotoProgress);
+                usp.setPartId(partId);
+                usp.setUploaded(uploaded);
+                usp.setTotalSize(length);
+                op->resultCallback<UploadSendPhoto>()(fileId, usp, TelegramCore::CallbackError());
+                break;
+            }
+            case FileOperation::sendEncryptedFile: {
+                UploadSendEncrypted use(UploadSendEncrypted::typeUploadSendEncryptedProgress);
+                use.setPartId(partId);
+                use.setUploaded(uploaded);
+                use.setTotalSize(length);
+                op->resultCallback<UploadSendEncrypted>()(fileId, use, TelegramCore::CallbackError());
+                break;
+            }
+        }
     }
 
-    Q_EMIT uploadSendFileAnswer(fileId, result);
+    Q_EMIT uploadSendFileAnswer(fileId, partId, uploaded, length);
 }
 
 qint64 FileHandler::uploadGetFile(const InputFileLocation &location, qint32 fileSize, qint32 dcNum, const QByteArray &key, const QByteArray &iv) {

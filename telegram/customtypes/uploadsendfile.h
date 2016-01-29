@@ -9,6 +9,7 @@
 
 #include <QMetaType>
 #include <QtGlobal>
+#include "telegram/types/updatestype.h"
 
 class LIBQTELEGRAMSHARED_EXPORT UploadSendFile : public TelegramCustomTypeObject
 {
@@ -30,6 +31,9 @@ public:
     void setTotalSize(qint32 totalSize);
     qint32 totalSize() const;
 
+    void setUpdates(const UpdatesType &updates);
+    UpdatesType updates() const;
+
     void setUploaded(qint32 uploaded);
     qint32 uploaded() const;
 
@@ -44,6 +48,7 @@ public:
 private:
     qint32 m_partId;
     qint32 m_totalSize;
+    UpdatesType m_updates;
     qint32 m_uploaded;
     UploadSendFileType m_classType;
 };

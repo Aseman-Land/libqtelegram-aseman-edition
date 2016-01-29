@@ -7,10 +7,14 @@ HEADERS += \
     $$PWD/customtypes.h \
     $$PWD/telegramcustomtypeobject.h \
     $$PWD/uploadgetfile.h \
-    $$PWD/uploadsendfile.h
+    $$PWD/uploadsendencrypted.h \
+    $$PWD/uploadsendfile.h \
+    $$PWD/uploadsendphoto.h
 
 SOURCES += \
     $$PWD/telegramcustomtypeobject.cpp \
     $$PWD/uploadgetfile.cpp \
-    $$PWD/uploadsendfile.cpp
+    $$PWD/uploadsendencrypted.cpp \
+    $$PWD/uploadsendfile.cpp \
+    $$PWD/uploadsendphoto.cpp
 

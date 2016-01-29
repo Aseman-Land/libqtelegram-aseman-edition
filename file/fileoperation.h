@@ -48,7 +48,6 @@ public:
         mReplyToMsgId(0),
         mBroadcast(false),
         mReplyMarkup(ReplyMarkup::null),
-        mFileCallback(0),
         mResultCallback(0),
         mInputChatPhoto(InputChatPhoto::typeInputChatPhotoEmpty),
         mGeoPoint(InputGeoPoint::typeInputGeoPointEmpty),
@@ -70,8 +69,6 @@ public:
     void setBroadcast(bool broadcast) { mBroadcast = broadcast; }
     ReplyMarkup replyMarkup() const { return mReplyMarkup; }
     void setReplyMarkup(const ReplyMarkup &replyMarkup) { mReplyMarkup = replyMarkup; }
-    Telegram::FileProgressCallback fileCallback() const { return mFileCallback; }
-    void setFileCallback(const Telegram::FileProgressCallback &fileCallback) { mFileCallback = fileCallback; }
     qint32 chatId() const { return mChatId; }
     void setChatId(qint32 chatId) { mChatId = chatId; }
     InputChatPhoto inputChatPhoto() const { return mInputChatPhoto; }
@@ -96,6 +93,9 @@ public:
             mResultCallback = new Telegram::Callback<T>(resultCallback);
         else
             mResultCallback = 0;
+    }
+    bool resultCallbackIsNull() const {
+        return mResultCallback == 0;
     }
 
     void setInputEncryptedChat(const InputEncryptedChat &inputEncryptedChat) { mInputEncryptedChat = inputEncryptedChat; }
@@ -122,7 +122,6 @@ private:
     qint32 mReplyToMsgId;
     bool mBroadcast;
     ReplyMarkup mReplyMarkup;
-    Telegram::FileProgressCallback mFileCallback;
     void *mResultCallback;
     // editChatPhoto operation attributes
     qint32 mChatId;

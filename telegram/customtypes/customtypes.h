@@ -5,4 +5,6 @@
 
 #include "telegramcustomtypeobject.h"
 #include "uploadgetfile.h"
+#include "uploadsendencrypted.h"
 #include "uploadsendfile.h"
+#include "uploadsendphoto.h"

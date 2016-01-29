@@ -19,9 +19,19 @@ uploadGetFileCanceled#c52fa0a = UploadGetFile
 uploadGetFileProgress#6db838e type:StorageFileType mtime:int bytes:bytes partId:int downloaded:int total:int = UploadGetFile
 
 uploadSendFileEmpty#3b89a68 = UploadSendFile
-uploadSendFileFinished#0fb653b = UploadSendFile
+uploadSendFileFinished#0fb653b updates:UpdatesType = UploadSendFile
 uploadSendFileCanceled#63f679f = UploadSendFile
 uploadSendFileProgress#171793b partId:int uploaded:int totalSize:int = UploadSendFile
+
+uploadSendPhotoEmpty#9fd3cbf = UploadSendPhoto
+uploadSendPhotoFinished#29d89fa photo:PhotosPhoto = UploadSendPhoto
+uploadSendPhotoCanceled#ce5de24 = UploadSendPhoto
+uploadSendPhotoProgress#403636a partId:int uploaded:int totalSize:int = UploadSendPhoto
+
+uploadSendEncryptedEmpty#312c140 = UploadSendEncrypted
+uploadSendEncryptedFinished#312c140 message:MessagesSentEncryptedMessage = UploadSendEncrypted
+uploadSendEncryptedCanceled#4de1fad = UploadSendEncrypted
+uploadSendEncryptedProgress#b7bd8ce partId:int uploaded:int totalSize:int = UploadSendEncrypted
 
 ---types---
 

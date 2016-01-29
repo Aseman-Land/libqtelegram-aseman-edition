@@ -41,6 +41,14 @@ qint32 UploadSendFile::totalSize() const {
     return m_totalSize;
 }
 
+void UploadSendFile::setUpdates(const UpdatesType &updates) {
+    m_updates = updates;
+}
+
+UpdatesType UploadSendFile::updates() const {
+    return m_updates;
+}
+
 void UploadSendFile::setUploaded(qint32 uploaded) {
     m_uploaded = uploaded;
 }
@@ -53,6 +61,7 @@ bool UploadSendFile::operator ==(const UploadSendFile &b) const {
     return m_classType == b.m_classType &&
            m_partId == b.m_partId &&
            m_totalSize == b.m_totalSize &&
+           m_updates == b.m_updates &&
            m_uploaded == b.m_uploaded;
 }
 
