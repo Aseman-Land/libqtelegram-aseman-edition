@@ -205,7 +205,7 @@ void FileHandler::onUploadSaveFilePartResult(qint64, bool, const QVariant &attac
                         usf.setUpdates(result);
                         if(!op->resultCallbackIsNull())
                             op->resultCallback<UploadSendFile>()(msgId, usf, error);
-                    });
+                    }, op->timeOut());
                     break;
                 }
                 case FileOperation::editChatPhoto: {
@@ -218,7 +218,7 @@ void FileHandler::onUploadSaveFilePartResult(qint64, bool, const QVariant &attac
                         usf.setUpdates(result);
                         if(!op->resultCallbackIsNull())
                             op->resultCallback<UploadSendFile>()(msgId, usf, error);
-                    });
+                    }, op->timeOut());
                     break;
                 }
                 case FileOperation::uploadProfilePhoto: {
@@ -231,7 +231,7 @@ void FileHandler::onUploadSaveFilePartResult(qint64, bool, const QVariant &attac
                         usp.setPhoto(result);
                         if(!op->resultCallbackIsNull())
                             op->resultCallback<UploadSendPhoto>()(msgId, usp, error);
-                    });
+                    }, op->timeOut());
                     break;
                 }
                 case FileOperation::sendEncryptedFile: {
@@ -257,7 +257,7 @@ void FileHandler::onUploadSaveFilePartResult(qint64, bool, const QVariant &attac
                         use.setMessage(result);
                         if(!op->resultCallbackIsNull())
                             op->resultCallback<UploadSendEncrypted>()(msgId, use, error);
-                    });
+                    }, op->timeOut());
 
                     secretChat->increaseOutSeqNo();
                     secretChat->appendToSequence(randomId);
@@ -311,7 +311,7 @@ void FileHandler::onUploadSaveFilePartResult(qint64, bool, const QVariant &attac
     Q_EMIT uploadSendFileAnswer(fileId, partId, uploaded, length);
 }
 
-qint64 FileHandler::uploadGetFile(const InputFileLocation &location, qint32 fileSize, qint32 dcNum, const QByteArray &key, const QByteArray &iv) {
+qint64 FileHandler::uploadGetFile(const InputFileLocation &location, qint32 fileSize, qint32 dcNum, const QByteArray &key, const QByteArray &iv, qint32 timeOut) {
     // change of dc if received a dcNum
     DC *dc;
     dcNum ? dc = mDcProvider.getDc(dcNum) : dc = mDcProvider.getWorkingDc();
@@ -322,6 +322,7 @@ qint64 FileHandler::uploadGetFile(const InputFileLocation &location, qint32 file
         return 0;
 
     DownloadFile::Ptr f = DownloadFile::Ptr(new DownloadFile(session, location, fileSize, this));
+    f->setTimeOut(timeOut);
     if (location.classType() == InputFileLocation::typeInputEncryptedFileLocation) {
         f->setEncrypted(true);
         f->setKey(key);

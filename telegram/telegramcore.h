@@ -7,6 +7,7 @@
 
 #include <QObject>
 #include <QPointer>
+#include <QTimerEvent>
 #include <functional>
 
 #include "telegramapi.h"
@@ -40,173 +41,176 @@ public:
         return error;
     }
 
-    virtual qint64 accountRegisterDevice(qint32 token_type, const QString &token, const QString &device_model, const QString &system_version, const QString &app_version, bool app_sandbox, const QString &lang_code, Callback<bool > callBack = 0);
-    virtual qint64 accountUnregisterDevice(qint32 token_type, const QString &token, Callback<bool > callBack = 0);
-    virtual qint64 accountUpdateNotifySettings(const InputNotifyPeer &peer, const InputPeerNotifySettings &settings, Callback<bool > callBack = 0);
-    virtual qint64 accountGetNotifySettings(const InputNotifyPeer &peer, Callback<PeerNotifySettings > callBack = 0);
-    virtual qint64 accountResetNotifySettings(Callback<bool > callBack = 0);
-    virtual qint64 accountUpdateProfile(const QString &first_name, const QString &last_name, Callback<User > callBack = 0);
-    virtual qint64 accountUpdateStatus(bool offline, Callback<bool > callBack = 0);
-    virtual qint64 accountGetWallPapers(Callback<QList<WallPaper> > callBack = 0);
-    virtual qint64 accountReportPeer(const InputPeer &peer, const ReportReason &reason, Callback<bool > callBack = 0);
-    virtual qint64 accountCheckUsername(const QString &username, Callback<bool > callBack = 0);
-    virtual qint64 accountUpdateUsername(const QString &username, Callback<User > callBack = 0);
-    virtual qint64 accountGetPrivacy(const InputPrivacyKey &key, Callback<AccountPrivacyRules > callBack = 0);
-    virtual qint64 accountSetPrivacy(const InputPrivacyKey &key, const QList<InputPrivacyRule> &rules, Callback<AccountPrivacyRules > callBack = 0);
-    virtual qint64 accountDeleteAccount(const QString &reason, Callback<bool > callBack = 0);
-    virtual qint64 accountGetAccountTTL(Callback<AccountDaysTTL > callBack = 0);
-    virtual qint64 accountSetAccountTTL(const AccountDaysTTL &ttl, Callback<bool > callBack = 0);
-    virtual qint64 accountSendChangePhoneCode(const QString &phone_number, Callback<AccountSentChangePhoneCode > callBack = 0);
-    virtual qint64 accountChangePhone(const QString &phone_number, const QString &phone_code_hash, const QString &phone_code, Callback<User > callBack = 0);
-    virtual qint64 accountUpdateDeviceLocked(qint32 period, Callback<bool > callBack = 0);
-    virtual qint64 accountGetAuthorizations(Callback<AccountAuthorizations > callBack = 0);
-    virtual qint64 accountResetAuthorization(qint64 hash, Callback<bool > callBack = 0);
-    virtual qint64 accountGetPassword(Callback<AccountPassword > callBack = 0);
-    virtual qint64 accountGetPasswordSettings(const QByteArray &current_password_hash, Callback<AccountPasswordSettings > callBack = 0);
-    virtual qint64 accountUpdatePasswordSettings(const QByteArray &current_password_hash, const AccountPasswordInputSettings &new_settings, Callback<bool > callBack = 0);
+    static qint32 timeOut() { return mTimeOut; }
+    static void setTimeOut(const qint32 &timeOut) { mTimeOut = timeOut; }
+
+    virtual qint64 accountRegisterDevice(qint32 token_type, const QString &token, const QString &device_model, const QString &system_version, const QString &app_version, bool app_sandbox, const QString &lang_code, Callback<bool > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 accountUnregisterDevice(qint32 token_type, const QString &token, Callback<bool > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 accountUpdateNotifySettings(const InputNotifyPeer &peer, const InputPeerNotifySettings &settings, Callback<bool > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 accountGetNotifySettings(const InputNotifyPeer &peer, Callback<PeerNotifySettings > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 accountResetNotifySettings(Callback<bool > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 accountUpdateProfile(const QString &first_name, const QString &last_name, Callback<User > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 accountUpdateStatus(bool offline, Callback<bool > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 accountGetWallPapers(Callback<QList<WallPaper> > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 accountReportPeer(const InputPeer &peer, const ReportReason &reason, Callback<bool > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 accountCheckUsername(const QString &username, Callback<bool > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 accountUpdateUsername(const QString &username, Callback<User > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 accountGetPrivacy(const InputPrivacyKey &key, Callback<AccountPrivacyRules > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 accountSetPrivacy(const InputPrivacyKey &key, const QList<InputPrivacyRule> &rules, Callback<AccountPrivacyRules > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 accountDeleteAccount(const QString &reason, Callback<bool > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 accountGetAccountTTL(Callback<AccountDaysTTL > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 accountSetAccountTTL(const AccountDaysTTL &ttl, Callback<bool > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 accountSendChangePhoneCode(const QString &phone_number, Callback<AccountSentChangePhoneCode > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 accountChangePhone(const QString &phone_number, const QString &phone_code_hash, const QString &phone_code, Callback<User > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 accountUpdateDeviceLocked(qint32 period, Callback<bool > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 accountGetAuthorizations(Callback<AccountAuthorizations > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 accountResetAuthorization(qint64 hash, Callback<bool > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 accountGetPassword(Callback<AccountPassword > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 accountGetPasswordSettings(const QByteArray &current_password_hash, Callback<AccountPasswordSettings > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 accountUpdatePasswordSettings(const QByteArray &current_password_hash, const AccountPasswordInputSettings &new_settings, Callback<bool > callBack = 0, qint32 timeout = timeOut());
     
-    virtual qint64 authCheckPhone(const QString &phone_number, Callback<AuthCheckedPhone > callBack = 0);
-    virtual qint64 authSendCode(const QString &phone_number, qint32 sms_type, qint32 api_id, const QString &api_hash, const QString &lang_code, Callback<AuthSentCode > callBack = 0);
-    virtual qint64 authSendCall(const QString &phone_number, const QString &phone_code_hash, Callback<bool > callBack = 0);
-    virtual qint64 authSignUp(const QString &phone_number, const QString &phone_code_hash, const QString &phone_code, const QString &first_name, const QString &last_name, Callback<AuthAuthorization > callBack = 0);
-    virtual qint64 authSignIn(const QString &phone_number, const QString &phone_code_hash, const QString &phone_code, Callback<AuthAuthorization > callBack = 0);
-    virtual qint64 authLogOut(Callback<bool > callBack = 0);
-    virtual qint64 authResetAuthorizations(Callback<bool > callBack = 0);
-    virtual qint64 authSendInvites(const QList<QString> &phone_numbers, const QString &message, Callback<bool > callBack = 0);
-    virtual qint64 authExportAuthorization(qint32 dc_id, Callback<AuthExportedAuthorization > callBack = 0);
-    virtual qint64 authImportAuthorization(qint32 id, const QByteArray &bytes, Callback<AuthAuthorization > callBack = 0);
-    virtual qint64 authBindTempAuthKey(qint64 perm_auth_key_id, qint64 nonce, qint32 expires_at, const QByteArray &encrypted_message, Callback<bool > callBack = 0);
-    virtual qint64 authSendSms(const QString &phone_number, const QString &phone_code_hash, Callback<bool > callBack = 0);
-    virtual qint64 authImportBotAuthorization(qint32 flags, qint32 api_id, const QString &api_hash, const QString &bot_auth_token, Callback<AuthAuthorization > callBack = 0);
-    virtual qint64 authCheckPassword(const QByteArray &password_hash, Callback<AuthAuthorization > callBack = 0);
-    virtual qint64 authRequestPasswordRecovery(Callback<AuthPasswordRecovery > callBack = 0);
-    virtual qint64 authRecoverPassword(const QString &code, Callback<AuthAuthorization > callBack = 0);
+    virtual qint64 authCheckPhone(const QString &phone_number, Callback<AuthCheckedPhone > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 authSendCode(const QString &phone_number, qint32 sms_type, qint32 api_id, const QString &api_hash, const QString &lang_code, Callback<AuthSentCode > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 authSendCall(const QString &phone_number, const QString &phone_code_hash, Callback<bool > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 authSignUp(const QString &phone_number, const QString &phone_code_hash, const QString &phone_code, const QString &first_name, const QString &last_name, Callback<AuthAuthorization > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 authSignIn(const QString &phone_number, const QString &phone_code_hash, const QString &phone_code, Callback<AuthAuthorization > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 authLogOut(Callback<bool > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 authResetAuthorizations(Callback<bool > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 authSendInvites(const QList<QString> &phone_numbers, const QString &message, Callback<bool > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 authExportAuthorization(qint32 dc_id, Callback<AuthExportedAuthorization > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 authImportAuthorization(qint32 id, const QByteArray &bytes, Callback<AuthAuthorization > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 authBindTempAuthKey(qint64 perm_auth_key_id, qint64 nonce, qint32 expires_at, const QByteArray &encrypted_message, Callback<bool > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 authSendSms(const QString &phone_number, const QString &phone_code_hash, Callback<bool > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 authImportBotAuthorization(qint32 flags, qint32 api_id, const QString &api_hash, const QString &bot_auth_token, Callback<AuthAuthorization > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 authCheckPassword(const QByteArray &password_hash, Callback<AuthAuthorization > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 authRequestPasswordRecovery(Callback<AuthPasswordRecovery > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 authRecoverPassword(const QString &code, Callback<AuthAuthorization > callBack = 0, qint32 timeout = timeOut());
     
-    virtual qint64 channelsGetDialogs(qint32 offset, qint32 limit, Callback<MessagesDialogs > callBack = 0);
-    virtual qint64 channelsGetImportantHistory(const InputChannel &channel, qint32 offset_id, qint32 add_offset, qint32 limit, qint32 max_id, qint32 min_id, Callback<MessagesMessages > callBack = 0);
-    virtual qint64 channelsReadHistory(const InputChannel &channel, qint32 max_id, Callback<bool > callBack = 0);
-    virtual qint64 channelsDeleteMessages(const InputChannel &channel, const QList<qint32> &id, Callback<MessagesAffectedMessages > callBack = 0);
-    virtual qint64 channelsDeleteUserHistory(const InputChannel &channel, const InputUser &user_id, Callback<MessagesAffectedHistory > callBack = 0);
-    virtual qint64 channelsReportSpam(const InputChannel &channel, const InputUser &user_id, const QList<qint32> &id, Callback<bool > callBack = 0);
-    virtual qint64 channelsGetMessages(const InputChannel &channel, const QList<qint32> &id, Callback<MessagesMessages > callBack = 0);
-    virtual qint64 channelsGetParticipants(const InputChannel &channel, const ChannelParticipantsFilter &filter, qint32 offset, qint32 limit, Callback<ChannelsChannelParticipants > callBack = 0);
-    virtual qint64 channelsGetParticipant(const InputChannel &channel, const InputUser &user_id, Callback<ChannelsChannelParticipant > callBack = 0);
-    virtual qint64 channelsGetChannels(const QList<InputChannel> &id, Callback<MessagesChats > callBack = 0);
-    virtual qint64 channelsGetFullChannel(const InputChannel &channel, Callback<MessagesChatFull > callBack = 0);
-    virtual qint64 channelsCreateChannel(bool broadcast, bool megagroup, const QString &title, const QString &about, Callback<UpdatesType > callBack = 0);
-    virtual qint64 channelsEditAbout(const InputChannel &channel, const QString &about, Callback<bool > callBack = 0);
-    virtual qint64 channelsEditAdmin(const InputChannel &channel, const InputUser &user_id, const ChannelParticipantRole &role, Callback<UpdatesType > callBack = 0);
-    virtual qint64 channelsEditTitle(const InputChannel &channel, const QString &title, Callback<UpdatesType > callBack = 0);
-    virtual qint64 channelsEditPhoto(const InputChannel &channel, const InputChatPhoto &photo, Callback<UpdatesType > callBack = 0);
-    virtual qint64 channelsToggleComments(const InputChannel &channel, bool enabled, Callback<UpdatesType > callBack = 0);
-    virtual qint64 channelsCheckUsername(const InputChannel &channel, const QString &username, Callback<bool > callBack = 0);
-    virtual qint64 channelsUpdateUsername(const InputChannel &channel, const QString &username, Callback<bool > callBack = 0);
-    virtual qint64 channelsJoinChannel(const InputChannel &channel, Callback<UpdatesType > callBack = 0);
-    virtual qint64 channelsLeaveChannel(const InputChannel &channel, Callback<UpdatesType > callBack = 0);
-    virtual qint64 channelsInviteToChannel(const InputChannel &channel, const QList<InputUser> &users, Callback<UpdatesType > callBack = 0);
-    virtual qint64 channelsKickFromChannel(const InputChannel &channel, const InputUser &user_id, bool kicked, Callback<UpdatesType > callBack = 0);
-    virtual qint64 channelsExportInvite(const InputChannel &channel, Callback<ExportedChatInvite > callBack = 0);
-    virtual qint64 channelsDeleteChannel(const InputChannel &channel, Callback<UpdatesType > callBack = 0);
+    virtual qint64 channelsGetDialogs(qint32 offset, qint32 limit, Callback<MessagesDialogs > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 channelsGetImportantHistory(const InputChannel &channel, qint32 offset_id, qint32 add_offset, qint32 limit, qint32 max_id, qint32 min_id, Callback<MessagesMessages > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 channelsReadHistory(const InputChannel &channel, qint32 max_id, Callback<bool > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 channelsDeleteMessages(const InputChannel &channel, const QList<qint32> &id, Callback<MessagesAffectedMessages > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 channelsDeleteUserHistory(const InputChannel &channel, const InputUser &user_id, Callback<MessagesAffectedHistory > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 channelsReportSpam(const InputChannel &channel, const InputUser &user_id, const QList<qint32> &id, Callback<bool > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 channelsGetMessages(const InputChannel &channel, const QList<qint32> &id, Callback<MessagesMessages > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 channelsGetParticipants(const InputChannel &channel, const ChannelParticipantsFilter &filter, qint32 offset, qint32 limit, Callback<ChannelsChannelParticipants > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 channelsGetParticipant(const InputChannel &channel, const InputUser &user_id, Callback<ChannelsChannelParticipant > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 channelsGetChannels(const QList<InputChannel> &id, Callback<MessagesChats > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 channelsGetFullChannel(const InputChannel &channel, Callback<MessagesChatFull > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 channelsCreateChannel(bool broadcast, bool megagroup, const QString &title, const QString &about, Callback<UpdatesType > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 channelsEditAbout(const InputChannel &channel, const QString &about, Callback<bool > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 channelsEditAdmin(const InputChannel &channel, const InputUser &user_id, const ChannelParticipantRole &role, Callback<UpdatesType > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 channelsEditTitle(const InputChannel &channel, const QString &title, Callback<UpdatesType > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 channelsEditPhoto(const InputChannel &channel, const InputChatPhoto &photo, Callback<UpdatesType > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 channelsToggleComments(const InputChannel &channel, bool enabled, Callback<UpdatesType > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 channelsCheckUsername(const InputChannel &channel, const QString &username, Callback<bool > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 channelsUpdateUsername(const InputChannel &channel, const QString &username, Callback<bool > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 channelsJoinChannel(const InputChannel &channel, Callback<UpdatesType > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 channelsLeaveChannel(const InputChannel &channel, Callback<UpdatesType > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 channelsInviteToChannel(const InputChannel &channel, const QList<InputUser> &users, Callback<UpdatesType > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 channelsKickFromChannel(const InputChannel &channel, const InputUser &user_id, bool kicked, Callback<UpdatesType > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 channelsExportInvite(const InputChannel &channel, Callback<ExportedChatInvite > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 channelsDeleteChannel(const InputChannel &channel, Callback<UpdatesType > callBack = 0, qint32 timeout = timeOut());
     
-    virtual qint64 contactsGetStatuses(Callback<QList<ContactStatus> > callBack = 0);
-    virtual qint64 contactsGetContacts(const QString &hash, Callback<ContactsContacts > callBack = 0);
-    virtual qint64 contactsImportContacts(const QList<InputContact> &contacts, bool replace, Callback<ContactsImportedContacts > callBack = 0);
-    virtual qint64 contactsGetSuggested(qint32 limit, Callback<ContactsSuggested > callBack = 0);
-    virtual qint64 contactsDeleteContact(const InputUser &id, Callback<ContactsLink > callBack = 0);
-    virtual qint64 contactsDeleteContacts(const QList<InputUser> &id, Callback<bool > callBack = 0);
-    virtual qint64 contactsBlock(const InputUser &id, Callback<bool > callBack = 0);
-    virtual qint64 contactsUnblock(const InputUser &id, Callback<bool > callBack = 0);
-    virtual qint64 contactsGetBlocked(qint32 offset, qint32 limit, Callback<ContactsBlocked > callBack = 0);
-    virtual qint64 contactsExportCard(Callback<QList<qint32> > callBack = 0);
-    virtual qint64 contactsImportCard(const QList<qint32> &export_card, Callback<User > callBack = 0);
-    virtual qint64 contactsSearch(const QString &q, qint32 limit, Callback<ContactsFound > callBack = 0);
-    virtual qint64 contactsResolveUsername(const QString &username, Callback<ContactsResolvedPeer > callBack = 0);
+    virtual qint64 contactsGetStatuses(Callback<QList<ContactStatus> > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 contactsGetContacts(const QString &hash, Callback<ContactsContacts > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 contactsImportContacts(const QList<InputContact> &contacts, bool replace, Callback<ContactsImportedContacts > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 contactsGetSuggested(qint32 limit, Callback<ContactsSuggested > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 contactsDeleteContact(const InputUser &id, Callback<ContactsLink > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 contactsDeleteContacts(const QList<InputUser> &id, Callback<bool > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 contactsBlock(const InputUser &id, Callback<bool > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 contactsUnblock(const InputUser &id, Callback<bool > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 contactsGetBlocked(qint32 offset, qint32 limit, Callback<ContactsBlocked > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 contactsExportCard(Callback<QList<qint32> > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 contactsImportCard(const QList<qint32> &export_card, Callback<User > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 contactsSearch(const QString &q, qint32 limit, Callback<ContactsFound > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 contactsResolveUsername(const QString &username, Callback<ContactsResolvedPeer > callBack = 0, qint32 timeout = timeOut());
     
-    virtual qint64 helpGetConfig(Callback<Config > callBack = 0);
-    virtual qint64 helpGetNearestDc(Callback<NearestDc > callBack = 0);
-    virtual qint64 helpGetAppUpdate(const QString &device_model, const QString &system_version, const QString &app_version, const QString &lang_code, Callback<HelpAppUpdate > callBack = 0);
-    virtual qint64 helpSaveAppLog(const QList<InputAppEvent> &events, Callback<bool > callBack = 0);
-    virtual qint64 helpGetInviteText(const QString &lang_code, Callback<HelpInviteText > callBack = 0);
-    virtual qint64 helpGetSupport(Callback<HelpSupport > callBack = 0);
-    virtual qint64 helpGetAppChangelog(const QString &device_model, const QString &system_version, const QString &app_version, const QString &lang_code, Callback<HelpAppChangelog > callBack = 0);
-    virtual qint64 helpGetTermsOfService(const QString &lang_code, Callback<HelpTermsOfService > callBack = 0);
+    virtual qint64 helpGetConfig(Callback<Config > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 helpGetNearestDc(Callback<NearestDc > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 helpGetAppUpdate(const QString &device_model, const QString &system_version, const QString &app_version, const QString &lang_code, Callback<HelpAppUpdate > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 helpSaveAppLog(const QList<InputAppEvent> &events, Callback<bool > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 helpGetInviteText(const QString &lang_code, Callback<HelpInviteText > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 helpGetSupport(Callback<HelpSupport > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 helpGetAppChangelog(const QString &device_model, const QString &system_version, const QString &app_version, const QString &lang_code, Callback<HelpAppChangelog > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 helpGetTermsOfService(const QString &lang_code, Callback<HelpTermsOfService > callBack = 0, qint32 timeout = timeOut());
     
-    virtual qint64 messagesGetMessages(const QList<qint32> &id, Callback<MessagesMessages > callBack = 0);
-    virtual qint64 messagesGetDialogs(qint32 offset_date, qint32 offset_id, const InputPeer &offset_peer, qint32 limit, Callback<MessagesDialogs > callBack = 0);
-    virtual qint64 messagesGetHistory(const InputPeer &peer, qint32 offset_id, qint32 add_offset, qint32 limit, qint32 max_id, qint32 min_id, Callback<MessagesMessages > callBack = 0);
-    virtual qint64 messagesSearch(bool important_only, const InputPeer &peer, const QString &q, const MessagesFilter &filter, qint32 min_date, qint32 max_date, qint32 offset, qint32 max_id, qint32 limit, Callback<MessagesMessages > callBack = 0);
-    virtual qint64 messagesReadHistory(const InputPeer &peer, qint32 max_id, Callback<MessagesAffectedMessages > callBack = 0);
-    virtual qint64 messagesDeleteHistory(const InputPeer &peer, qint32 max_id, Callback<MessagesAffectedHistory > callBack = 0);
-    virtual qint64 messagesDeleteMessages(const QList<qint32> &id, Callback<MessagesAffectedMessages > callBack = 0);
-    virtual qint64 messagesReceivedMessages(qint32 max_id, Callback<QList<ReceivedNotifyMessage> > callBack = 0);
-    virtual qint64 messagesSetTyping(const InputPeer &peer, const SendMessageAction &action, Callback<bool > callBack = 0);
-    virtual qint64 messagesSendMessage(bool no_webpage, bool broadcast, const InputPeer &peer, qint32 reply_to_msg_id, const QString &message, qint64 random_id, const ReplyMarkup &reply_markup, const QList<MessageEntity> &entities, Callback<UpdatesType > callBack = 0);
-    virtual qint64 messagesSendMedia(bool broadcast, const InputPeer &peer, qint32 reply_to_msg_id, const InputMedia &media, qint64 random_id, const ReplyMarkup &reply_markup, Callback<UpdatesType > callBack = 0);
-    virtual qint64 messagesForwardMessages(bool broadcast, const InputPeer &from_peer, const QList<qint32> &id, const QList<qint64> &random_id, const InputPeer &to_peer, Callback<UpdatesType > callBack = 0);
-    virtual qint64 messagesReportSpam(const InputPeer &peer, Callback<bool > callBack = 0);
-    virtual qint64 messagesGetChats(const QList<qint32> &id, Callback<MessagesChats > callBack = 0);
-    virtual qint64 messagesGetFullChat(qint32 chat_id, Callback<MessagesChatFull > callBack = 0);
-    virtual qint64 messagesEditChatTitle(qint32 chat_id, const QString &title, Callback<UpdatesType > callBack = 0);
-    virtual qint64 messagesEditChatPhoto(qint32 chat_id, const InputChatPhoto &photo, Callback<UpdatesType > callBack = 0);
-    virtual qint64 messagesAddChatUser(qint32 chat_id, const InputUser &user_id, qint32 fwd_limit, Callback<UpdatesType > callBack = 0);
-    virtual qint64 messagesDeleteChatUser(qint32 chat_id, const InputUser &user_id, Callback<UpdatesType > callBack = 0);
-    virtual qint64 messagesCreateChat(const QList<InputUser> &users, const QString &title, Callback<UpdatesType > callBack = 0);
-    virtual qint64 messagesForwardMessage(const InputPeer &peer, qint32 id, qint64 random_id, Callback<UpdatesType > callBack = 0);
-    virtual qint64 messagesSendBroadcast(const QList<InputUser> &contacts, const QList<qint64> &random_id, const QString &message, const InputMedia &media, Callback<UpdatesType > callBack = 0);
-    virtual qint64 messagesGetDhConfig(qint32 version, qint32 random_length, Callback<MessagesDhConfig > callBack = 0);
-    virtual qint64 messagesRequestEncryption(const InputUser &user_id, qint32 random_id, const QByteArray &g_a, Callback<EncryptedChat > callBack = 0);
-    virtual qint64 messagesAcceptEncryption(const InputEncryptedChat &peer, const QByteArray &g_b, qint64 key_fingerprint, Callback<EncryptedChat > callBack = 0);
-    virtual qint64 messagesDiscardEncryption(qint32 chat_id, Callback<bool > callBack = 0);
-    virtual qint64 messagesSetEncryptedTyping(const InputEncryptedChat &peer, bool typing, Callback<bool > callBack = 0);
-    virtual qint64 messagesReadEncryptedHistory(const InputEncryptedChat &peer, qint32 max_date, Callback<bool > callBack = 0);
-    virtual qint64 messagesSendEncrypted(const InputEncryptedChat &peer, qint64 random_id, const QByteArray &data, Callback<MessagesSentEncryptedMessage > callBack = 0);
-    virtual qint64 messagesSendEncryptedFile(const InputEncryptedChat &peer, qint64 random_id, const QByteArray &data, const InputEncryptedFile &file, Callback<MessagesSentEncryptedMessage > callBack = 0);
-    virtual qint64 messagesSendEncryptedService(const InputEncryptedChat &peer, qint64 random_id, const QByteArray &data, Callback<MessagesSentEncryptedMessage > callBack = 0);
-    virtual qint64 messagesReceivedQueue(qint32 max_qts, Callback<QList<qint64> > callBack = 0);
-    virtual qint64 messagesReadMessageContents(const QList<qint32> &id, Callback<MessagesAffectedMessages > callBack = 0);
-    virtual qint64 messagesGetStickers(const QString &emoticon, const QString &hash, Callback<MessagesStickers > callBack = 0);
-    virtual qint64 messagesGetAllStickers(qint32 hash, Callback<MessagesAllStickers > callBack = 0);
-    virtual qint64 messagesGetWebPagePreview(const QString &message, Callback<MessageMedia > callBack = 0);
-    virtual qint64 messagesExportChatInvite(qint32 chat_id, Callback<ExportedChatInvite > callBack = 0);
-    virtual qint64 messagesCheckChatInvite(const QString &hash, Callback<ChatInvite > callBack = 0);
-    virtual qint64 messagesImportChatInvite(const QString &hash, Callback<UpdatesType > callBack = 0);
-    virtual qint64 messagesGetStickerSet(const InputStickerSet &stickerset, Callback<MessagesStickerSet > callBack = 0);
-    virtual qint64 messagesInstallStickerSet(const InputStickerSet &stickerset, bool disabled, Callback<bool > callBack = 0);
-    virtual qint64 messagesUninstallStickerSet(const InputStickerSet &stickerset, Callback<bool > callBack = 0);
-    virtual qint64 messagesStartBot(const InputUser &bot, const InputPeer &peer, qint64 random_id, const QString &start_param, Callback<UpdatesType > callBack = 0);
-    virtual qint64 messagesGetMessagesViews(const InputPeer &peer, const QList<qint32> &id, bool increment, Callback<QList<qint32> > callBack = 0);
-    virtual qint64 messagesToggleChatAdmins(qint32 chat_id, bool enabled, Callback<UpdatesType > callBack = 0);
-    virtual qint64 messagesEditChatAdmin(qint32 chat_id, const InputUser &user_id, bool is_admin, Callback<bool > callBack = 0);
-    virtual qint64 messagesMigrateChat(qint32 chat_id, Callback<UpdatesType > callBack = 0);
-    virtual qint64 messagesSearchGlobal(const QString &q, qint32 offset_date, const InputPeer &offset_peer, qint32 offset_id, qint32 limit, Callback<MessagesMessages > callBack = 0);
-    virtual qint64 messagesReorderStickerSets(const QList<qint64> &order, Callback<bool > callBack = 0);
-    virtual qint64 messagesGetDocumentByHash(const QByteArray &sha256, qint32 size, const QString &mime_type, Callback<Document > callBack = 0);
-    virtual qint64 messagesSearchGifs(const QString &q, qint32 offset, Callback<MessagesFoundGifs > callBack = 0);
-    virtual qint64 messagesGetSavedGifs(qint32 hash, Callback<MessagesSavedGifs > callBack = 0);
-    virtual qint64 messagesSaveGif(const InputDocument &id, bool unsave, Callback<bool > callBack = 0);
-    virtual qint64 messagesGetInlineBotResults(const InputUser &bot, const QString &query, const QString &offset, Callback<MessagesBotResults > callBack = 0);
-    virtual qint64 messagesSetInlineBotResults(bool gallery, bool privateValue, qint64 query_id, const QList<InputBotInlineResult> &results, qint32 cache_time, const QString &next_offset, Callback<bool > callBack = 0);
-    virtual qint64 messagesSendInlineBotResult(bool broadcast, const InputPeer &peer, qint32 reply_to_msg_id, qint64 random_id, qint64 query_id, const QString &id, Callback<UpdatesType > callBack = 0);
+    virtual qint64 messagesGetMessages(const QList<qint32> &id, Callback<MessagesMessages > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesGetDialogs(qint32 offset_date, qint32 offset_id, const InputPeer &offset_peer, qint32 limit, Callback<MessagesDialogs > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesGetHistory(const InputPeer &peer, qint32 offset_id, qint32 add_offset, qint32 limit, qint32 max_id, qint32 min_id, Callback<MessagesMessages > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesSearch(bool important_only, const InputPeer &peer, const QString &q, const MessagesFilter &filter, qint32 min_date, qint32 max_date, qint32 offset, qint32 max_id, qint32 limit, Callback<MessagesMessages > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesReadHistory(const InputPeer &peer, qint32 max_id, Callback<MessagesAffectedMessages > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesDeleteHistory(const InputPeer &peer, qint32 max_id, Callback<MessagesAffectedHistory > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesDeleteMessages(const QList<qint32> &id, Callback<MessagesAffectedMessages > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesReceivedMessages(qint32 max_id, Callback<QList<ReceivedNotifyMessage> > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesSetTyping(const InputPeer &peer, const SendMessageAction &action, Callback<bool > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesSendMessage(bool no_webpage, bool broadcast, const InputPeer &peer, qint32 reply_to_msg_id, const QString &message, qint64 random_id, const ReplyMarkup &reply_markup, const QList<MessageEntity> &entities, Callback<UpdatesType > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesSendMedia(bool broadcast, const InputPeer &peer, qint32 reply_to_msg_id, const InputMedia &media, qint64 random_id, const ReplyMarkup &reply_markup, Callback<UpdatesType > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesForwardMessages(bool broadcast, const InputPeer &from_peer, const QList<qint32> &id, const QList<qint64> &random_id, const InputPeer &to_peer, Callback<UpdatesType > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesReportSpam(const InputPeer &peer, Callback<bool > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesGetChats(const QList<qint32> &id, Callback<MessagesChats > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesGetFullChat(qint32 chat_id, Callback<MessagesChatFull > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesEditChatTitle(qint32 chat_id, const QString &title, Callback<UpdatesType > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesEditChatPhoto(qint32 chat_id, const InputChatPhoto &photo, Callback<UpdatesType > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesAddChatUser(qint32 chat_id, const InputUser &user_id, qint32 fwd_limit, Callback<UpdatesType > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesDeleteChatUser(qint32 chat_id, const InputUser &user_id, Callback<UpdatesType > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesCreateChat(const QList<InputUser> &users, const QString &title, Callback<UpdatesType > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesForwardMessage(const InputPeer &peer, qint32 id, qint64 random_id, Callback<UpdatesType > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesSendBroadcast(const QList<InputUser> &contacts, const QList<qint64> &random_id, const QString &message, const InputMedia &media, Callback<UpdatesType > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesGetDhConfig(qint32 version, qint32 random_length, Callback<MessagesDhConfig > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesRequestEncryption(const InputUser &user_id, qint32 random_id, const QByteArray &g_a, Callback<EncryptedChat > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesAcceptEncryption(const InputEncryptedChat &peer, const QByteArray &g_b, qint64 key_fingerprint, Callback<EncryptedChat > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesDiscardEncryption(qint32 chat_id, Callback<bool > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesSetEncryptedTyping(const InputEncryptedChat &peer, bool typing, Callback<bool > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesReadEncryptedHistory(const InputEncryptedChat &peer, qint32 max_date, Callback<bool > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesSendEncrypted(const InputEncryptedChat &peer, qint64 random_id, const QByteArray &data, Callback<MessagesSentEncryptedMessage > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesSendEncryptedFile(const InputEncryptedChat &peer, qint64 random_id, const QByteArray &data, const InputEncryptedFile &file, Callback<MessagesSentEncryptedMessage > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesSendEncryptedService(const InputEncryptedChat &peer, qint64 random_id, const QByteArray &data, Callback<MessagesSentEncryptedMessage > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesReceivedQueue(qint32 max_qts, Callback<QList<qint64> > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesReadMessageContents(const QList<qint32> &id, Callback<MessagesAffectedMessages > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesGetStickers(const QString &emoticon, const QString &hash, Callback<MessagesStickers > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesGetAllStickers(qint32 hash, Callback<MessagesAllStickers > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesGetWebPagePreview(const QString &message, Callback<MessageMedia > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesExportChatInvite(qint32 chat_id, Callback<ExportedChatInvite > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesCheckChatInvite(const QString &hash, Callback<ChatInvite > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesImportChatInvite(const QString &hash, Callback<UpdatesType > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesGetStickerSet(const InputStickerSet &stickerset, Callback<MessagesStickerSet > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesInstallStickerSet(const InputStickerSet &stickerset, bool disabled, Callback<bool > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesUninstallStickerSet(const InputStickerSet &stickerset, Callback<bool > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesStartBot(const InputUser &bot, const InputPeer &peer, qint64 random_id, const QString &start_param, Callback<UpdatesType > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesGetMessagesViews(const InputPeer &peer, const QList<qint32> &id, bool increment, Callback<QList<qint32> > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesToggleChatAdmins(qint32 chat_id, bool enabled, Callback<UpdatesType > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesEditChatAdmin(qint32 chat_id, const InputUser &user_id, bool is_admin, Callback<bool > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesMigrateChat(qint32 chat_id, Callback<UpdatesType > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesSearchGlobal(const QString &q, qint32 offset_date, const InputPeer &offset_peer, qint32 offset_id, qint32 limit, Callback<MessagesMessages > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesReorderStickerSets(const QList<qint64> &order, Callback<bool > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesGetDocumentByHash(const QByteArray &sha256, qint32 size, const QString &mime_type, Callback<Document > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesSearchGifs(const QString &q, qint32 offset, Callback<MessagesFoundGifs > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesGetSavedGifs(qint32 hash, Callback<MessagesSavedGifs > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesSaveGif(const InputDocument &id, bool unsave, Callback<bool > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesGetInlineBotResults(const InputUser &bot, const QString &query, const QString &offset, Callback<MessagesBotResults > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesSetInlineBotResults(bool gallery, bool privateValue, qint64 query_id, const QList<InputBotInlineResult> &results, qint32 cache_time, const QString &next_offset, Callback<bool > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesSendInlineBotResult(bool broadcast, const InputPeer &peer, qint32 reply_to_msg_id, qint64 random_id, qint64 query_id, const QString &id, Callback<UpdatesType > callBack = 0, qint32 timeout = timeOut());
     
-    virtual qint64 photosUpdateProfilePhoto(const InputPhoto &id, const InputPhotoCrop &crop, Callback<UserProfilePhoto > callBack = 0);
-    virtual qint64 photosUploadProfilePhoto(const InputFile &file, const QString &caption, const InputGeoPoint &geo_point, const InputPhotoCrop &crop, Callback<PhotosPhoto > callBack = 0);
-    virtual qint64 photosDeletePhotos(const QList<InputPhoto> &id, Callback<QList<qint64> > callBack = 0);
-    virtual qint64 photosGetUserPhotos(const InputUser &user_id, qint32 offset, qint64 max_id, qint32 limit, Callback<PhotosPhotos > callBack = 0);
+    virtual qint64 photosUpdateProfilePhoto(const InputPhoto &id, const InputPhotoCrop &crop, Callback<UserProfilePhoto > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 photosUploadProfilePhoto(const InputFile &file, const QString &caption, const InputGeoPoint &geo_point, const InputPhotoCrop &crop, Callback<PhotosPhoto > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 photosDeletePhotos(const QList<InputPhoto> &id, Callback<QList<qint64> > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 photosGetUserPhotos(const InputUser &user_id, qint32 offset, qint64 max_id, qint32 limit, Callback<PhotosPhotos > callBack = 0, qint32 timeout = timeOut());
     
-    virtual qint64 updatesGetState(Callback<UpdatesState > callBack = 0);
-    virtual qint64 updatesGetDifference(qint32 pts, qint32 date, qint32 qts, Callback<UpdatesDifference > callBack = 0);
-    virtual qint64 updatesGetChannelDifference(const InputChannel &channel, const ChannelMessagesFilter &filter, qint32 pts, qint32 limit, Callback<UpdatesChannelDifference > callBack = 0);
+    virtual qint64 updatesGetState(Callback<UpdatesState > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 updatesGetDifference(qint32 pts, qint32 date, qint32 qts, Callback<UpdatesDifference > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 updatesGetChannelDifference(const InputChannel &channel, const ChannelMessagesFilter &filter, qint32 pts, qint32 limit, Callback<UpdatesChannelDifference > callBack = 0, qint32 timeout = timeOut());
     
-    virtual qint64 uploadSaveFilePart(qint64 file_id, qint32 file_part, const QByteArray &bytes, Callback<bool > callBack = 0);
-    virtual qint64 uploadGetFile(const InputFileLocation &location, qint32 offset, qint32 limit, Callback<UploadFile > callBack = 0);
-    virtual qint64 uploadSaveBigFilePart(qint64 file_id, qint32 file_part, qint32 file_total_parts, const QByteArray &bytes, Callback<bool > callBack = 0);
+    virtual qint64 uploadSaveFilePart(qint64 file_id, qint32 file_part, const QByteArray &bytes, Callback<bool > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 uploadGetFile(const InputFileLocation &location, qint32 offset, qint32 limit, Callback<UploadFile > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 uploadSaveBigFilePart(qint64 file_id, qint32 file_part, qint32 file_total_parts, const QByteArray &bytes, Callback<bool > callBack = 0, qint32 timeout = timeOut());
     
-    virtual qint64 usersGetUsers(const QList<InputUser> &id, Callback<QList<User> > callBack = 0);
-    virtual qint64 usersGetFullUser(const InputUser &id, Callback<UserFull > callBack = 0);
+    virtual qint64 usersGetUsers(const QList<InputUser> &id, Callback<QList<User> > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 usersGetFullUser(const InputUser &id, Callback<UserFull > callBack = 0, qint32 timeout = timeOut());
 
 
 Q_SIGNALS:
-    void accountRegisterDeviceAnswer(qint64 msgId, bool result);
+        void accountRegisterDeviceAnswer(qint64 msgId, bool result);
     void accountUnregisterDeviceAnswer(qint64 msgId, bool result);
     void accountUpdateNotifySettingsAnswer(qint64 msgId, bool result);
     void accountGetNotifySettingsAnswer(qint64 msgId, const PeerNotifySettings &result);
@@ -871,9 +875,21 @@ protected Q_SLOTS:
 
 protected:
     qint64 retry(qint64 msgId);
+    void timerEvent(QTimerEvent *e);
 
     void setApi(TelegramApi *api);
     QPointer<TelegramApi> mApi;
+
+    void stopTimeOut(qint64 msgId) {
+        qint32 timer = mTimer.take(msgId);
+        if(timer) killTimer(timer);
+    }
+
+    void startTimeOut(qint64 msgId, int timeOut) {
+        stopTimeOut(msgId);
+        if(!timeOut) return;
+        mTimer[msgId] = startTimer(timeOut);
+    }
 
     template<typename T>
     void callBackPush(qint64 msgId, Callback<T> callback) {
@@ -902,6 +918,8 @@ protected:
 private:
     QHash<qint64, void*> mCallbacks;
     QHash<qint64, QVariantHash> mRecallArgs;
+    QHash<qint64, qint32> mTimer;
+    static qint32 mTimeOut;
 
     /*! === privates === !*/
 };

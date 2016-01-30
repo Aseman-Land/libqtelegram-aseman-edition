@@ -23,7 +23,7 @@ public:
 
     qint64 uploadSendFile(FileOperation &op, const QString &fileName, const QByteArray &bytes, const QByteArray &thumbnailBytes = 0, const QString &thumbnailName = QString::null);
     qint64 uploadSendFile(FileOperation &op, const QString &filePath, const QString &thumbnailPath = QString::null);
-    qint64 uploadGetFile(const InputFileLocation &file, qint32 fileSize, qint32 dc = 0, const QByteArray &key = QByteArray(), const QByteArray &iv = QByteArray());
+    qint64 uploadGetFile(const InputFileLocation &file, qint32 fileSize, qint32 dc = 0, const QByteArray &key = QByteArray(), const QByteArray &iv = QByteArray(), qint32 timeOut = TelegramCore::timeOut());
     qint64 uploadCancelFile(qint64 fileId);
 
 Q_SIGNALS:

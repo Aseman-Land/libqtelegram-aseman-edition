@@ -49,6 +49,7 @@ public:
         mBroadcast(false),
         mReplyMarkup(ReplyMarkup::null),
         mResultCallback(0),
+        mTimeOut(0),
         mInputChatPhoto(InputChatPhoto::typeInputChatPhotoEmpty),
         mGeoPoint(InputGeoPoint::typeInputGeoPointEmpty),
         mCrop(InputPhotoCrop::typeInputPhotoCropAuto),
@@ -80,6 +81,8 @@ public:
     InputPhotoCrop crop() const { return mCrop; }
     void setCrop(const InputPhotoCrop &crop) { mCrop = crop; }
     OpType opType() const { return mType; }
+    void setTimeOut(const qint32 &timeOut) { mTimeOut = timeOut; }
+    qint32 timeOut() const { return mTimeOut; }
 
     template<typename T>
     Telegram::Callback<T> resultCallback() const {
@@ -123,6 +126,7 @@ private:
     bool mBroadcast;
     ReplyMarkup mReplyMarkup;
     void *mResultCallback;
+    qint32 mTimeOut;
     // editChatPhoto operation attributes
     qint32 mChatId;
     InputChatPhoto mInputChatPhoto;

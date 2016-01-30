@@ -325,15 +325,15 @@ void Telegram::onDcProviderReady() {
     }
 }
 
-qint64 Telegram::messagesCreateEncryptedChat(const InputUser &user, Callback<EncryptedChat> callBack) {
+qint64 Telegram::messagesCreateEncryptedChat(const InputUser &user, Callback<EncryptedChat> callBack, qint32 timeout) {
     qCDebug(TG_LIB_SECRET) << "creating new encrypted chat";
     // generate a new object where store all the needed secret chat data
     SecretChat *secretChat = new SecretChat(prv->mSettings);
     secretChat->setRequestedUser(user);
-    return generateGAorB(secretChat, callBack);
+    return generateGAorB(secretChat, callBack, timeout);
 }
 
-qint64 Telegram::messagesAcceptEncryptedChat(qint32 chatId, Callback<EncryptedChat> callBack) {
+qint64 Telegram::messagesAcceptEncryptedChat(qint32 chatId, Callback<EncryptedChat> callBack, qint32 timeout) {
     qCDebug(TG_LIB_SECRET) << "accepting requested encrypted chat with id" << chatId;
     SecretChat *secretChat = prv->mSecretState.chats().value(chatId);
 
@@ -341,10 +341,10 @@ qint64 Telegram::messagesAcceptEncryptedChat(qint32 chatId, Callback<EncryptedCh
         qCWarning(TG_LIB_SECRET) << "Not found any chat related to" << chatId;
         return -1;
     }
-    return generateGAorB(secretChat, callBack);
+    return generateGAorB(secretChat, callBack, timeout);
 }
 
-qint64 Telegram::messagesDiscardEncryptedChat(qint32 chatId, Callback<bool> callBack) {
+qint64 Telegram::messagesDiscardEncryptedChat(qint32 chatId, Callback<bool> callBack, qint32 timeout) {
     qCDebug(TG_LIB_SECRET) << "discarding encrypted chat with id" << chatId;
     SecretChat *secretChat = prv->mSecretState.chats().value(chatId);
     if (!secretChat) {
@@ -353,13 +353,13 @@ qint64 Telegram::messagesDiscardEncryptedChat(qint32 chatId, Callback<bool> call
         return -1;
     }
 
-    qint64 requestId = TelegramCore::messagesDiscardEncryption(chatId, callBack);
+    qint64 requestId = TelegramCore::messagesDiscardEncryption(chatId, callBack, timeout);
     // insert another entry related to this request for deleting chat only when response is ok
     prv->mSecretState.chats().insert(requestId, secretChat);
     return requestId;
 }
 
-qint64 Telegram::messagesSetEncryptedTTL(const InputEncryptedChat &chat, qint64 randomId, qint32 ttl, Callback<UploadSendEncrypted> callBack) {
+qint64 Telegram::messagesSetEncryptedTTL(const InputEncryptedChat &chat, qint64 randomId, qint32 ttl, Callback<UploadSendEncrypted> callBack, qint32 timeout) {
     SecretChat *secretChat = prv->mSecretState.chats().value(chat.chatId());
     if(!secretChat)
     {
@@ -380,7 +380,7 @@ qint64 Telegram::messagesSetEncryptedTTL(const InputEncryptedChat &chat, qint64 
                                             UploadSendEncrypted::typeUploadSendEncryptedCanceled);
         use.setMessage(result);
         callBack(msgId, use, error);
-    });
+    }, timeout);
 
     secretChat->increaseOutSeqNo();
     secretChat->appendToSequence(randomId);
@@ -389,7 +389,7 @@ qint64 Telegram::messagesSetEncryptedTTL(const InputEncryptedChat &chat, qint64 
     return requestId;
 }
 
-qint64 Telegram::messagesSendEncrypted(const InputEncryptedChat &chat, qint64 randomId, qint32 ttl, const QString &text, Callback<UploadSendEncrypted> callBack) {
+qint64 Telegram::messagesSendEncrypted(const InputEncryptedChat &chat, qint64 randomId, qint32 ttl, const QString &text, Callback<UploadSendEncrypted> callBack, qint32 timeout) {
     SecretChat *secretChat = prv->mSecretState.chats().value(chat.chatId());
     if(!secretChat)
     {
@@ -410,7 +410,7 @@ qint64 Telegram::messagesSendEncrypted(const InputEncryptedChat &chat, qint64 ra
                                             UploadSendEncrypted::typeUploadSendEncryptedCanceled);
         use.setMessage(result);
         callBack(msgId, use, error);
-    });
+    }, timeout);
 
     secretChat->increaseOutSeqNo();
     secretChat->appendToSequence(randomId);
@@ -443,7 +443,7 @@ void Telegram::onSequenceNumberGap(qint32 chatId, qint32 startSeqNo, qint32 endS
     prv->mSecretState.save();
 }
 
-qint64 Telegram::messagesSendEncryptedPhoto(const InputEncryptedChat &chat, qint64 randomId, qint32 ttl, const QString &filePath, Callback<UploadSendEncrypted> callBack) {
+qint64 Telegram::messagesSendEncryptedPhoto(const InputEncryptedChat &chat, qint64 randomId, qint32 ttl, const QString &filePath, Callback<UploadSendEncrypted> callBack, qint32 timeout) {
     SecretChat *secretChat = prv->mSecretState.chats().value(chat.chatId());
     if(!secretChat)
     {
@@ -459,6 +459,7 @@ qint64 Telegram::messagesSendEncryptedPhoto(const InputEncryptedChat &chat, qint
     op->setRandomId(randomId);
     op->initializeKeyAndIv();
     op->setResultCallback<UploadSendEncrypted>(callBack);
+    op->setTimeOut(timeout);
     QByteArray key = op->key();
     QByteArray iv = op->iv();
 
@@ -477,7 +478,7 @@ qint64 Telegram::messagesSendEncryptedPhoto(const InputEncryptedChat &chat, qint
     return prv->mFileHandler->uploadSendFile(*op, filePath);
 }
 
-qint64 Telegram::messagesSendEncryptedVideo(const InputEncryptedChat &chat, qint64 randomId, qint32 ttl, const QString &filePath, qint32 duration, qint32 width, qint32 height, const QByteArray &thumbnailBytes, Callback<UploadSendEncrypted> callBack) {
+qint64 Telegram::messagesSendEncryptedVideo(const InputEncryptedChat &chat, qint64 randomId, qint32 ttl, const QString &filePath, qint32 duration, qint32 width, qint32 height, const QByteArray &thumbnailBytes, Callback<UploadSendEncrypted> callBack, qint32 timeout) {
     SecretChat *secretChat = prv->mSecretState.chats().value(chat.chatId());
     if(!secretChat)
     {
@@ -493,6 +494,7 @@ qint64 Telegram::messagesSendEncryptedVideo(const InputEncryptedChat &chat, qint
     op->setRandomId(randomId);
     op->initializeKeyAndIv();
     op->setResultCallback<UploadSendEncrypted>(callBack);
+    op->setTimeOut(timeout);
     QByteArray key = op->key();
     QByteArray iv = op->iv();
 
@@ -508,7 +510,7 @@ qint64 Telegram::messagesSendEncryptedVideo(const InputEncryptedChat &chat, qint
     return prv->mFileHandler->uploadSendFile(*op, filePath);
 }
 
-qint64 Telegram::messagesSendEncryptedDocument(const InputEncryptedChat &chat, qint64 randomId, qint32 ttl, const QString &filePath, Callback<UploadSendEncrypted> callBack) {
+qint64 Telegram::messagesSendEncryptedDocument(const InputEncryptedChat &chat, qint64 randomId, qint32 ttl, const QString &filePath, Callback<UploadSendEncrypted> callBack, qint32 timeout) {
     SecretChat *secretChat = prv->mSecretState.chats().value(chat.chatId());
     if(!secretChat)
     {
@@ -524,6 +526,7 @@ qint64 Telegram::messagesSendEncryptedDocument(const InputEncryptedChat &chat, q
     op->setRandomId(randomId);
     op->initializeKeyAndIv();
     op->setResultCallback<UploadSendEncrypted>(callBack);
+    op->setTimeOut(timeout);
     QByteArray key = op->key();
     QByteArray iv = op->iv();
 
@@ -539,7 +542,7 @@ qint64 Telegram::messagesSendEncryptedDocument(const InputEncryptedChat &chat, q
     return prv->mFileHandler->uploadSendFile(*op, filePath);
 }
 
-qint64 Telegram::messagesSendEncryptedService(const InputEncryptedChat &chat, qint64 randomId, const DecryptedMessageAction &action, Callback<UploadSendEncrypted> callBack) {
+qint64 Telegram::messagesSendEncryptedService(const InputEncryptedChat &chat, qint64 randomId, const DecryptedMessageAction &action, Callback<UploadSendEncrypted> callBack, qint32 timeout) {
     SecretChat *secretChat = prv->mSecretState.chats().value(chat.chatId());
     if(!secretChat)
     {
@@ -560,13 +563,13 @@ qint64 Telegram::messagesSendEncryptedService(const InputEncryptedChat &chat, qi
                                             UploadSendEncrypted::typeUploadSendEncryptedCanceled);
         use.setMessage(result);
         callBack(msgId, use, error);
-    });
+    }, timeout);
 }
 
-qint64 Telegram::generateGAorB(SecretChat *secretChat, Callback<EncryptedChat> callBack) {
+qint64 Telegram::generateGAorB(SecretChat *secretChat, Callback<EncryptedChat> callBack, qint32 timeout) {
     qCDebug(TG_LIB_SECRET) << "requesting for DH config parameters";
     // call messages.getDhConfig to get p and g for start creating shared key
-    qint64 reqId = mApi->messagesGetDhConfig(prv->mSecretState.version(), DH_CONFIG_SERVER_RANDOM_LENGTH);
+    qint64 reqId = messagesGetDhConfig(prv->mSecretState.version(), DH_CONFIG_SERVER_RANDOM_LENGTH, 0, timeout);
     // store in secret chats map related to this request id, temporally
     prv->mSecretState.chats().insert(reqId, secretChat);
     prv->secretChatCallbacks[reqId] = callBack;
@@ -1079,35 +1082,35 @@ void Telegram::processDifferences(qint64 id, const QList<Message> &messages, con
     Q_EMIT updatesGetDifferenceAnswer(id, messages, secretChatMessages, otherUpdates, chats, users, state, isIntermediateState);
 }
 
-qint64 Telegram::authCheckPhone(Callback<AuthCheckedPhone> callBack) {
-   return TelegramCore::authCheckPhone(prv->mSettings->phoneNumber(), callBack);
+qint64 Telegram::authCheckPhone(Callback<AuthCheckedPhone> callBack, qint32 timeout) {
+   return TelegramCore::authCheckPhone(prv->mSettings->phoneNumber(), callBack, timeout);
 }
 
-qint64 Telegram::authSendCode(Callback<AuthSentCode> callBack) {
-    return TelegramCore::authSendCode(prv->mSettings->phoneNumber(), 0, prv->mSettings->appId(), prv->mSettings->appHash(), LANG_CODE, callBack);
+qint64 Telegram::authSendCode(Callback<AuthSentCode> callBack, qint32 timeout) {
+    return TelegramCore::authSendCode(prv->mSettings->phoneNumber(), 0, prv->mSettings->appId(), prv->mSettings->appHash(), LANG_CODE, callBack, timeout);
 }
 
-qint64 Telegram::authSendSms(Callback<bool> callBack) {
-    return TelegramCore::authSendSms(prv->mSettings->phoneNumber(), prv->m_phoneCodeHash, callBack);
+qint64 Telegram::authSendSms(Callback<bool> callBack, qint32 timeout) {
+    return TelegramCore::authSendSms(prv->mSettings->phoneNumber(), prv->m_phoneCodeHash, callBack, timeout);
 }
 
-qint64 Telegram::authSendCall(Callback<bool> callBack) {
-    return TelegramCore::authSendCall(prv->mSettings->phoneNumber(), prv->m_phoneCodeHash, callBack);
+qint64 Telegram::authSendCall(Callback<bool> callBack, qint32 timeout) {
+    return TelegramCore::authSendCall(prv->mSettings->phoneNumber(), prv->m_phoneCodeHash, callBack, timeout);
 }
 
-qint64 Telegram::authSignIn(const QString &code, Callback<AuthAuthorization> callBack) {
-    return TelegramCore::authSignIn(prv->mSettings->phoneNumber(), prv->m_phoneCodeHash, code, callBack);
+qint64 Telegram::authSignIn(const QString &code, Callback<AuthAuthorization> callBack, qint32 timeout) {
+    return TelegramCore::authSignIn(prv->mSettings->phoneNumber(), prv->m_phoneCodeHash, code, callBack, timeout);
 }
 
-qint64 Telegram::authSignUp(const QString &code, const QString &firstName, const QString &lastName, Callback<AuthAuthorization> callBack) {
-    return TelegramCore::authSignUp(prv->mSettings->phoneNumber(), prv->m_phoneCodeHash, code, firstName, lastName, callBack);
+qint64 Telegram::authSignUp(const QString &code, const QString &firstName, const QString &lastName, Callback<AuthAuthorization> callBack, qint32 timeout) {
+    return TelegramCore::authSignUp(prv->mSettings->phoneNumber(), prv->m_phoneCodeHash, code, firstName, lastName, callBack, timeout);
 }
 
-qint64 Telegram::authCheckPassword(const QByteArray &password, Callback<AuthAuthorization> callBack) {
-    return TelegramCore::authCheckPassword( QCryptographicHash::hash(password, QCryptographicHash::Sha3_256), callBack );
+qint64 Telegram::authCheckPassword(const QByteArray &password, Callback<AuthAuthorization> callBack, qint32 timeout) {
+    return TelegramCore::authCheckPassword( QCryptographicHash::hash(password, QCryptographicHash::Sha3_256), callBack, timeout);
 }
 
-qint64 Telegram::accountRegisterDevice(const QString &token, const QString &appVersion, bool appSandbox, Callback<bool > callBack) {
+qint64 Telegram::accountRegisterDevice(const QString &token, const QString &appVersion, bool appSandbox, Callback<bool > callBack, qint32 timeout) {
     if (token.length() == 0) {
         qCCritical(TG_TELEGRAM) << "refuse to register with empty token!";
         return -1;
@@ -1117,28 +1120,30 @@ qint64 Telegram::accountRegisterDevice(const QString &token, const QString &appV
         version = Utils::getAppVersion();
     }
     qCDebug(TG_TELEGRAM) << "registering device for push - app version" << version;
-    return TelegramCore::accountRegisterDevice(UBUNTU_PHONE_TOKEN_TYPE, token, Utils::getDeviceModel(), Utils::getSystemVersion(), version, appSandbox, prv->mSettings->langCode(), callBack);
+    return TelegramCore::accountRegisterDevice(UBUNTU_PHONE_TOKEN_TYPE, token, Utils::getDeviceModel(), Utils::getSystemVersion(), version, appSandbox, prv->mSettings->langCode(), callBack, timeout);
 }
 
-qint64 Telegram::accountUnregisterDevice(const QString &token, Callback<bool> callBack) {
-    return TelegramCore::accountUnregisterDevice(UBUNTU_PHONE_TOKEN_TYPE, token, callBack);
+qint64 Telegram::accountUnregisterDevice(const QString &token, Callback<bool> callBack, qint32 timeout) {
+    return TelegramCore::accountUnregisterDevice(UBUNTU_PHONE_TOKEN_TYPE, token, callBack, timeout);
 }
 
-qint64 Telegram::photosUploadProfilePhoto(const QByteArray &bytes, const QString &fileName, const QString &caption, const InputGeoPoint &geoPoint, const InputPhotoCrop &crop, Callback<UploadSendPhoto> callBack) {
+qint64 Telegram::photosUploadProfilePhoto(const QByteArray &bytes, const QString &fileName, const QString &caption, const InputGeoPoint &geoPoint, const InputPhotoCrop &crop, Callback<UploadSendPhoto> callBack, qint32 timeout) {
     FileOperation *op = new FileOperation(FileOperation::uploadProfilePhoto);
     op->setCaption(caption);
     op->setGeoPoint(geoPoint);
     op->setCrop(crop);
     op->setResultCallback<UploadSendPhoto>(callBack);
+    op->setTimeOut(timeout);
     return prv->mFileHandler->uploadSendFile(*op, fileName, bytes);
 }
 
-qint64 Telegram::photosUploadProfilePhoto(const QString &filePath, const QString &caption, const InputGeoPoint &geoPoint, const InputPhotoCrop &crop, Callback<UploadSendPhoto> callBack) {
+qint64 Telegram::photosUploadProfilePhoto(const QString &filePath, const QString &caption, const InputGeoPoint &geoPoint, const InputPhotoCrop &crop, Callback<UploadSendPhoto> callBack, qint32 timeout) {
     FileOperation *op = new FileOperation(FileOperation::uploadProfilePhoto);
     op->setCaption(caption);
     op->setGeoPoint(geoPoint);
     op->setCrop(crop);
     op->setResultCallback<UploadSendPhoto>(callBack);
+    op->setTimeOut(timeout);
     return prv->mFileHandler->uploadSendFile(*op, filePath);
 }
 
@@ -1146,7 +1151,7 @@ bool lessThan(const Contact &c1, const Contact &c2) {
     return c1.userId() < c2.userId();
 }
 
-qint64 Telegram::contactsGetContacts(Callback<ContactsContacts> callBack) {
+qint64 Telegram::contactsGetContacts(Callback<ContactsContacts> callBack, qint32 timeout) {
     //If there already is a full contact list on the client, an md5-hash of a comma-separated list of contact IDs
     //in ascending order may be passed in this 'hash' parameter. If the contact set was not changed,
     //contactsContactsNotModified() will be returned from Api, so the cached client list is returned with the
@@ -1166,10 +1171,10 @@ qint64 Telegram::contactsGetContacts(Callback<ContactsContacts> callBack) {
         md5Generator.addData(hashBase.toStdString().c_str());
         hash = md5Generator.result().toHex();
     }
-    return TelegramCore::contactsGetContacts(hash, callBack);
+    return TelegramCore::contactsGetContacts(hash, callBack, timeout);
 }
 
-qint64 Telegram::messagesSendPhoto(const InputPeer &peer, qint64 randomId, const QByteArray &bytes, const QString &fileName, qint32 replyToMsgId, const ReplyMarkup &reply_markup, bool broadcast, Callback<UploadSendFile > callBack) {
+qint64 Telegram::messagesSendPhoto(const InputPeer &peer, qint64 randomId, const QByteArray &bytes, const QString &fileName, qint32 replyToMsgId, const ReplyMarkup &reply_markup, bool broadcast, Callback<UploadSendFile > callBack, qint32 timeout) {
     InputMedia inputMedia(InputMedia::typeInputMediaUploadedPhoto);
     FileOperation *op = new FileOperation(FileOperation::sendMedia);
     op->setInputPeer(peer);
@@ -1179,10 +1184,11 @@ qint64 Telegram::messagesSendPhoto(const InputPeer &peer, qint64 randomId, const
     op->setBroadcast(broadcast);
     op->setReplyMarkup(reply_markup);
     op->setResultCallback<UploadSendFile>(callBack);
+    op->setTimeOut(timeout);
     return uploadSendFile(*op, inputMedia.classType(), fileName, bytes);
 }
 
-qint64 Telegram::messagesSendPhoto(const InputPeer &peer, qint64 randomId, const QString &filePath, qint32 replyToMsgId, const ReplyMarkup &reply_markup, bool broadcast, Callback<UploadSendFile > callBack) {
+qint64 Telegram::messagesSendPhoto(const InputPeer &peer, qint64 randomId, const QString &filePath, qint32 replyToMsgId, const ReplyMarkup &reply_markup, bool broadcast, Callback<UploadSendFile > callBack, qint32 timeout) {
     InputMedia inputMedia(InputMedia::typeInputMediaUploadedPhoto);
     FileOperation *op = new FileOperation(FileOperation::sendMedia);
     op->setInputPeer(peer);
@@ -1192,28 +1198,29 @@ qint64 Telegram::messagesSendPhoto(const InputPeer &peer, qint64 randomId, const
     op->setBroadcast(broadcast);
     op->setReplyMarkup(reply_markup);
     op->setResultCallback<UploadSendFile>(callBack);
+    op->setTimeOut(timeout);
     return uploadSendFile(*op, inputMedia.classType(), filePath);
 }
 
-qint64 Telegram::messagesSendGeoPoint(const InputPeer &peer, qint64 randomId, const InputGeoPoint &inputGeoPoint, qint32 replyToMsgId, const ReplyMarkup &reply_markup, bool broadcast, Callback<UpdatesType> callBack) {
+qint64 Telegram::messagesSendGeoPoint(const InputPeer &peer, qint64 randomId, const InputGeoPoint &inputGeoPoint, qint32 replyToMsgId, const ReplyMarkup &reply_markup, bool broadcast, Callback<UpdatesType> callBack, qint32 timeout) {
     InputMedia inputMedia(InputMedia::typeInputMediaGeoPoint);
     inputMedia.setGeoPoint(inputGeoPoint);
-    qint64 msgId = TelegramCore::messagesSendMedia(broadcast, peer, replyToMsgId, inputMedia, randomId, reply_markup, callBack);
+    qint64 msgId = TelegramCore::messagesSendMedia(broadcast, peer, replyToMsgId, inputMedia, randomId, reply_markup, callBack, timeout);
     prv->pendingMediaSends[msgId] = inputMedia.classType();
     return msgId;
 }
 
-qint64 Telegram::messagesSendContact(const InputPeer &peer, qint64 randomId, const QString &phoneNumber, const QString &firstName, const QString &lastName, qint32 replyToMsgId, const ReplyMarkup &reply_markup, bool broadcast, Callback<UpdatesType> callBack) {
+qint64 Telegram::messagesSendContact(const InputPeer &peer, qint64 randomId, const QString &phoneNumber, const QString &firstName, const QString &lastName, qint32 replyToMsgId, const ReplyMarkup &reply_markup, bool broadcast, Callback<UpdatesType> callBack, qint32 timeout) {
     InputMedia inputMedia(InputMedia::typeInputMediaContact);
     inputMedia.setPhoneNumber(phoneNumber);
     inputMedia.setFirstName(firstName);
     inputMedia.setLastName(lastName);
-    qint64 msgId = TelegramCore::messagesSendMedia(broadcast, peer, replyToMsgId, inputMedia, randomId, reply_markup, callBack);
+    qint64 msgId = TelegramCore::messagesSendMedia(broadcast, peer, replyToMsgId, inputMedia, randomId, reply_markup, callBack, timeout);
     prv->pendingMediaSends[msgId] = inputMedia.classType();
     return msgId;
 }
 
-qint64 Telegram::messagesSendVideo(const InputPeer &peer, qint64 randomId, const QByteArray &bytes, const QString &fileName, qint32 duration, qint32 width, qint32 height, const QString &mimeType, const QByteArray &thumbnailBytes, const QString &thumbnailName, qint32 replyToMsgId, const ReplyMarkup &reply_markup, bool broadcast, Callback<UploadSendFile > callBack) {
+qint64 Telegram::messagesSendVideo(const InputPeer &peer, qint64 randomId, const QByteArray &bytes, const QString &fileName, qint32 duration, qint32 width, qint32 height, const QString &mimeType, const QByteArray &thumbnailBytes, const QString &thumbnailName, qint32 replyToMsgId, const ReplyMarkup &reply_markup, bool broadcast, Callback<UploadSendFile > callBack, qint32 timeout) {
     InputMedia inputMedia(InputMedia::typeInputMediaUploadedVideo);
     inputMedia.setDuration(duration);
     inputMedia.setW(width);
@@ -1230,10 +1237,11 @@ qint64 Telegram::messagesSendVideo(const InputPeer &peer, qint64 randomId, const
     op->setBroadcast(broadcast);
     op->setReplyMarkup(reply_markup);
     op->setResultCallback<UploadSendFile>(callBack);
+    op->setTimeOut(timeout);
     return uploadSendFile(*op, inputMedia.classType(), fileName, bytes, thumbnailBytes, thumbnailName);
 }
 
-qint64 Telegram::messagesSendVideo(const InputPeer &peer, qint64 randomId, const QString &filePath, qint32 duration, qint32 width, qint32 height, const QString &thumbnailFilePath, qint32 replyToMsgId, const ReplyMarkup &reply_markup, bool broadcast, Callback<UploadSendFile > callBack) {
+qint64 Telegram::messagesSendVideo(const InputPeer &peer, qint64 randomId, const QString &filePath, qint32 duration, qint32 width, qint32 height, const QString &thumbnailFilePath, qint32 replyToMsgId, const ReplyMarkup &reply_markup, bool broadcast, Callback<UploadSendFile > callBack, qint32 timeout) {
     InputMedia inputMedia(InputMedia::typeInputMediaUploadedVideo);
     inputMedia.setDuration(duration);
     inputMedia.setW(width);
@@ -1250,10 +1258,11 @@ qint64 Telegram::messagesSendVideo(const InputPeer &peer, qint64 randomId, const
     op->setBroadcast(broadcast);
     op->setReplyMarkup(reply_markup);
     op->setResultCallback<UploadSendFile>(callBack);
+    op->setTimeOut(timeout);
     return uploadSendFile(*op, inputMedia.classType(), filePath, thumbnailFilePath);
 }
 
-qint64 Telegram::messagesSendAudio(const InputPeer &peer, qint64 randomId, const QByteArray &bytes, const QString &fileName, qint32 duration, const QString &mimeType, qint32 replyToMsgId, const ReplyMarkup &reply_markup, bool broadcast, Callback<UploadSendFile > callBack) {
+qint64 Telegram::messagesSendAudio(const InputPeer &peer, qint64 randomId, const QByteArray &bytes, const QString &fileName, qint32 duration, const QString &mimeType, qint32 replyToMsgId, const ReplyMarkup &reply_markup, bool broadcast, Callback<UploadSendFile > callBack, qint32 timeout) {
     InputMedia inputMedia(InputMedia::typeInputMediaUploadedAudio);
     inputMedia.setDuration(duration);
     inputMedia.setMimeType(mimeType);
@@ -1265,10 +1274,11 @@ qint64 Telegram::messagesSendAudio(const InputPeer &peer, qint64 randomId, const
     op->setBroadcast(broadcast);
     op->setReplyMarkup(reply_markup);
     op->setResultCallback<UploadSendFile>(callBack);
+    op->setTimeOut(timeout);
     return uploadSendFile(*op, inputMedia.classType(), fileName, bytes);
 }
 
-qint64 Telegram::messagesSendAudio(const InputPeer &peer, qint64 randomId, const QString &filePath, qint32 duration, qint32 replyToMsgId, const ReplyMarkup &reply_markup, bool broadcast, Callback<UploadSendFile > callBack) {
+qint64 Telegram::messagesSendAudio(const InputPeer &peer, qint64 randomId, const QString &filePath, qint32 duration, qint32 replyToMsgId, const ReplyMarkup &reply_markup, bool broadcast, Callback<UploadSendFile > callBack, qint32 timeout) {
     InputMedia inputMedia(InputMedia::typeInputMediaUploadedAudio);
     inputMedia.setDuration(duration);
     inputMedia.setMimeType(QMimeDatabase().mimeTypeForFile(QFileInfo(filePath)).name());
@@ -1280,10 +1290,11 @@ qint64 Telegram::messagesSendAudio(const InputPeer &peer, qint64 randomId, const
     op->setBroadcast(broadcast);
     op->setReplyMarkup(reply_markup);
     op->setResultCallback<UploadSendFile>(callBack);
+    op->setTimeOut(timeout);
     return uploadSendFile(*op, inputMedia.classType(), filePath);
 }
 
-qint64 Telegram::messagesSendDocument(const InputPeer &peer, qint64 randomId, const QByteArray &bytes, const QString &fileName, const QString &mimeType, const QByteArray &thumbnailBytes, const QString &thumbnailName, const QList<DocumentAttribute> &extraAttributes, qint32 replyToMsgId, const ReplyMarkup &reply_markup, bool broadcast, Callback<UploadSendFile > callBack) {
+qint64 Telegram::messagesSendDocument(const InputPeer &peer, qint64 randomId, const QByteArray &bytes, const QString &fileName, const QString &mimeType, const QByteArray &thumbnailBytes, const QString &thumbnailName, const QList<DocumentAttribute> &extraAttributes, qint32 replyToMsgId, const ReplyMarkup &reply_markup, bool broadcast, Callback<UploadSendFile > callBack, qint32 timeout) {
     DocumentAttribute fileAttr(DocumentAttribute::typeDocumentAttributeFilename);
     fileAttr.setFileName(fileName);
 
@@ -1305,10 +1316,11 @@ qint64 Telegram::messagesSendDocument(const InputPeer &peer, qint64 randomId, co
     op->setBroadcast(broadcast);
     op->setReplyMarkup(reply_markup);
     op->setResultCallback<UploadSendFile>(callBack);
+    op->setTimeOut(timeout);
     return uploadSendFile(*op, inputMedia.classType(), fileName, bytes, thumbnailBytes, thumbnailName);
 }
 
-qint64 Telegram::messagesSendDocument(const InputPeer &peer, qint64 randomId, const QString &filePath, const QString &thumbnailFilePath, bool sendAsSticker, qint32 replyToMsgId, const ReplyMarkup &reply_markup, bool broadcast, Callback<UploadSendFile > callBack) {
+qint64 Telegram::messagesSendDocument(const InputPeer &peer, qint64 randomId, const QString &filePath, const QString &thumbnailFilePath, bool sendAsSticker, qint32 replyToMsgId, const ReplyMarkup &reply_markup, bool broadcast, Callback<UploadSendFile > callBack, qint32 timeout) {
     const QMimeType t = QMimeDatabase().mimeTypeForFile(QFileInfo(filePath));
     QString mimeType = t.name();
 
@@ -1343,47 +1355,48 @@ qint64 Telegram::messagesSendDocument(const InputPeer &peer, qint64 randomId, co
     op->setBroadcast(broadcast);
     op->setReplyMarkup(reply_markup);
     op->setResultCallback<UploadSendFile>(callBack);
+    op->setTimeOut(timeout);
     return uploadSendFile(*op, inputMedia.classType(), filePath, thumbnailFilePath);
 }
 
-qint64 Telegram::messagesForwardPhoto(const InputPeer &peer, qint64 randomId, qint64 photoId, qint64 accessHash, qint32 replyToMsgId, const ReplyMarkup &reply_markup, bool broadcast, Callback<UpdatesType> callBack) {
+qint64 Telegram::messagesForwardPhoto(const InputPeer &peer, qint64 randomId, qint64 photoId, qint64 accessHash, qint32 replyToMsgId, const ReplyMarkup &reply_markup, bool broadcast, Callback<UpdatesType> callBack, qint32 timeout) {
     InputPhoto inputPhoto(InputPhoto::typeInputPhoto);
     inputPhoto.setId(photoId);
     inputPhoto.setAccessHash(accessHash);
     InputMedia inputMedia(InputMedia::typeInputMediaPhoto);
     inputMedia.setIdInputPhoto(inputPhoto);
-    return messagesForwardMedia(peer, inputMedia, randomId, replyToMsgId, reply_markup, broadcast, callBack);
+    return messagesForwardMedia(peer, inputMedia, randomId, replyToMsgId, reply_markup, broadcast, callBack, timeout);
 }
 
-qint64 Telegram::messagesForwardVideo(const InputPeer &peer, qint64 randomId, qint64 videoId, qint64 accessHash, qint32 replyToMsgId, const ReplyMarkup &reply_markup, bool broadcast, Callback<UpdatesType> callBack) {
+qint64 Telegram::messagesForwardVideo(const InputPeer &peer, qint64 randomId, qint64 videoId, qint64 accessHash, qint32 replyToMsgId, const ReplyMarkup &reply_markup, bool broadcast, Callback<UpdatesType> callBack, qint32 timeout) {
     InputVideo inputVideo(InputVideo::typeInputVideo);
     inputVideo.setId(videoId);
     inputVideo.setAccessHash(accessHash);
     InputMedia inputMedia(InputMedia::typeInputMediaVideo);
     inputMedia.setIdInputVideo(inputVideo);
-    return messagesForwardMedia(peer, inputMedia, randomId, replyToMsgId, reply_markup, broadcast, callBack);
+    return messagesForwardMedia(peer, inputMedia, randomId, replyToMsgId, reply_markup, broadcast, callBack, timeout);
 }
 
-qint64 Telegram::messagesForwardAudio(const InputPeer &peer, qint64 randomId, qint64 audioId, qint64 accessHash, qint32 replyToMsgId, const ReplyMarkup &reply_markup, bool broadcast, Callback<UpdatesType> callBack) {
+qint64 Telegram::messagesForwardAudio(const InputPeer &peer, qint64 randomId, qint64 audioId, qint64 accessHash, qint32 replyToMsgId, const ReplyMarkup &reply_markup, bool broadcast, Callback<UpdatesType> callBack, qint32 timeout) {
     InputAudio inputAudio(InputAudio::typeInputAudio);
     inputAudio.setId(audioId);
     inputAudio.setAccessHash(accessHash);
     InputMedia inputMedia(InputMedia::typeInputMediaAudio);
     inputMedia.setIdInputAudio(inputAudio);
-    return messagesForwardMedia(peer, inputMedia, randomId, replyToMsgId, reply_markup, broadcast, callBack);
+    return messagesForwardMedia(peer, inputMedia, randomId, replyToMsgId, reply_markup, broadcast, callBack, timeout);
 }
 
-qint64 Telegram::messagesForwardDocument(const InputPeer &peer, qint64 randomId, qint64 documentId, qint64 accessHash, qint32 replyToMsgId, const ReplyMarkup &reply_markup, bool broadcast, Callback<UpdatesType> callBack) {
+qint64 Telegram::messagesForwardDocument(const InputPeer &peer, qint64 randomId, qint64 documentId, qint64 accessHash, qint32 replyToMsgId, const ReplyMarkup &reply_markup, bool broadcast, Callback<UpdatesType> callBack, qint32 timeout) {
     InputDocument inputDocument(InputDocument::typeInputDocument);
     inputDocument.setId(documentId);
     inputDocument.setAccessHash(accessHash);
     InputMedia inputMedia(InputMedia::typeInputMediaDocument);
     inputMedia.setIdInputDocument(inputDocument);
-    return messagesForwardMedia(peer, inputMedia, randomId, replyToMsgId, reply_markup, broadcast, callBack);
+    return messagesForwardMedia(peer, inputMedia, randomId, replyToMsgId, reply_markup, broadcast, callBack, timeout);
 }
 
-qint64 Telegram::messagesForwardMedia(const InputPeer &peer, const InputMedia &media, qint64 randomId, qint32 replyToMsgId, const ReplyMarkup &reply_markup, bool broadcast, Callback<UpdatesType> callBack) {
-    const qint64 msgId =  TelegramCore::messagesSendMedia(broadcast, peer, replyToMsgId, media, randomId, reply_markup, callBack);
+qint64 Telegram::messagesForwardMedia(const InputPeer &peer, const InputMedia &media, qint64 randomId, qint32 replyToMsgId, const ReplyMarkup &reply_markup, bool broadcast, Callback<UpdatesType> callBack, qint32 timeout) {
+    const qint64 msgId =  TelegramCore::messagesSendMedia(broadcast, peer, replyToMsgId, media, randomId, reply_markup, callBack, timeout);
     prv->pendingForwards[msgId] = media.classType();
     return msgId;
 }
@@ -1402,7 +1415,7 @@ qint64 Telegram::uploadSendFile(FileOperation &op, int mediaType, const QString 
     return fileId;
 }
 
-qint64 Telegram::messagesSetEncryptedTyping(qint32 chatId, bool typing, Callback<bool> callBack) {
+qint64 Telegram::messagesSetEncryptedTyping(qint32 chatId, bool typing, Callback<bool> callBack, qint32 timeout) {
     SecretChat *secretChat = prv->mSecretState.chats().value(chatId);
     if (!secretChat) {
         qCWarning(TG_LIB_SECRET) << "Could not read history of a not yet existant chat";
@@ -1416,36 +1429,37 @@ qint64 Telegram::messagesSetEncryptedTyping(qint32 chatId, bool typing, Callback
     InputEncryptedChat mChat;
     mChat.setChatId(chatId);
     mChat.setAccessHash(secretChat->accessHash());
-    return TelegramCore::messagesSetEncryptedTyping(mChat,typing, callBack);
+    return TelegramCore::messagesSetEncryptedTyping(mChat,typing, callBack, timeout);
 }
 
-qint64 Telegram::messagesEditChatPhoto(qint32 chatId, const QString &filePath, const InputPhotoCrop &crop, Callback<UploadSendFile > callBack) {
+qint64 Telegram::messagesEditChatPhoto(qint32 chatId, const QString &filePath, const InputPhotoCrop &crop, Callback<UploadSendFile > callBack, qint32 timeout) {
     InputChatPhoto inputChatPhoto(InputChatPhoto::typeInputChatUploadedPhoto);
     inputChatPhoto.setCrop(crop);
     FileOperation *op = new FileOperation(FileOperation::editChatPhoto);
     op->setChatId(chatId);
     op->setInputChatPhoto(inputChatPhoto);
     op->setResultCallback<UploadSendFile>(callBack);
+    op->setTimeOut(timeout);
     return prv->mFileHandler->uploadSendFile(*op, filePath);
 }
 
-qint64 Telegram::messagesEditChatPhoto(qint32 chatId, qint64 photoId, qint64 accessHash, const InputPhotoCrop &crop, Callback<UpdatesType> callBack) {
+qint64 Telegram::messagesEditChatPhoto(qint32 chatId, qint64 photoId, qint64 accessHash, const InputPhotoCrop &crop, Callback<UpdatesType> callBack, qint32 timeout) {
     InputChatPhoto inputChatPhoto(InputChatPhoto::typeInputChatPhoto);
     InputPhoto inputPhoto(InputPhoto::typeInputPhoto);
     inputPhoto.setId(photoId);
     inputPhoto.setAccessHash(accessHash);
     inputChatPhoto.setId(inputPhoto);
     inputChatPhoto.setCrop(crop);
-    return TelegramCore::messagesEditChatPhoto(chatId, inputChatPhoto, callBack);
+    return TelegramCore::messagesEditChatPhoto(chatId, inputChatPhoto, callBack, timeout);
 }
 
-qint64 Telegram::uploadGetFile(const InputFileLocation &file, qint32 fileSize, qint32 dc, Callback<UploadGetFile> callBack) {
-    return uploadGetFile(file, fileSize, dc, QByteArray(), QByteArray(), callBack);
+qint64 Telegram::uploadGetFile(const InputFileLocation &file, qint32 fileSize, qint32 dc, Callback<UploadGetFile> callBack, qint32 timeout) {
+    return uploadGetFile(file, fileSize, dc, QByteArray(), QByteArray(), callBack, timeout);
 }
 
-qint64 Telegram::uploadGetFile(const InputFileLocation &location, qint32 fileSize, qint32 dcNum, const QByteArray &key, const QByteArray &iv, Callback<UploadGetFile> callBack) {
+qint64 Telegram::uploadGetFile(const InputFileLocation &location, qint32 fileSize, qint32 dcNum, const QByteArray &key, const QByteArray &iv, Callback<UploadGetFile> callBack, qint32 timeout) {
     if(!prv->mFileHandler) return 0;
-    qint64 msgId = prv->mFileHandler->uploadGetFile(location, fileSize, dcNum, key, iv);
+    qint64 msgId = prv->mFileHandler->uploadGetFile(location, fileSize, dcNum, key, iv, timeout);
     if(msgId && callBack)
         callBackPush<UploadGetFile>(msgId, callBack);
 
