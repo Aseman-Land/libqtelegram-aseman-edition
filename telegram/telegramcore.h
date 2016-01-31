@@ -44,6 +44,8 @@ public:
     static qint32 timeOut() { return mTimeOut; }
     static void setTimeOut(const qint32 &timeOut) { mTimeOut = timeOut; }
 
+    virtual void init() = 0;
+
     virtual qint64 accountRegisterDevice(qint32 token_type, const QString &token, const QString &device_model, const QString &system_version, const QString &app_version, bool app_sandbox, const QString &lang_code, Callback<bool > callBack = 0, qint32 timeout = timeOut());
     virtual qint64 accountUnregisterDevice(qint32 token_type, const QString &token, Callback<bool > callBack = 0, qint32 timeout = timeOut());
     virtual qint64 accountUpdateNotifySettings(const InputNotifyPeer &peer, const InputPeerNotifySettings &settings, Callback<bool > callBack = 0, qint32 timeout = timeOut());
