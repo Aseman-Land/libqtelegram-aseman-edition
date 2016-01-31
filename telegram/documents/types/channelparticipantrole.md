@@ -2,9 +2,9 @@
 
 ## Types
 
-* typeChannelRoleEmpty
-* typeChannelRoleModerator
-* typeChannelRoleEditor
+* [typeChannelRoleEmpty](#channelparticipantroletypechannelroleempty)
+* [typeChannelRoleModerator](#channelparticipantroletypechannelrolemoderator)
+* [typeChannelRoleEditor](#channelparticipantroletypechannelroleeditor)
 
 ## ChannelParticipantRole::typeChannelRoleEmpty
 

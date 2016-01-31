@@ -2,7 +2,7 @@
 
 ## Types
 
-* typeChannelsChannelParticipants
+* [typeChannelsChannelParticipants](#channelschannelparticipantstypechannelschannelparticipants)
 
 ## ChannelsChannelParticipants::typeChannelsChannelParticipants
 

@@ -2,11 +2,11 @@
 
 ## Types
 
-* typeEncryptedChatEmpty
-* typeEncryptedChatWaiting
-* typeEncryptedChatRequested
-* typeEncryptedChat
-* typeEncryptedChatDiscarded
+* [typeEncryptedChatEmpty](#encryptedchattypeencryptedchatempty)
+* [typeEncryptedChatWaiting](#encryptedchattypeencryptedchatwaiting)
+* [typeEncryptedChatRequested](#encryptedchattypeencryptedchatrequested)
+* [typeEncryptedChat](#encryptedchattypeencryptedchat)
+* [typeEncryptedChatDiscarded](#encryptedchattypeencryptedchatdiscarded)
 
 ## EncryptedChat::typeEncryptedChatEmpty
 

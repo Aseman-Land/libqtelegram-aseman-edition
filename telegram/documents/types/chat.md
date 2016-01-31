@@ -2,11 +2,11 @@
 
 ## Types
 
-* typeChatEmpty
-* typeChat
-* typeChatForbidden
-* typeChannel
-* typeChannelForbidden
+* [typeChatEmpty](#chattypechatempty)
+* [typeChat](#chattypechat)
+* [typeChatForbidden](#chattypechatforbidden)
+* [typeChannel](#chattypechannel)
+* [typeChannelForbidden](#chattypechannelforbidden)
 
 ## Chat::typeChatEmpty
 

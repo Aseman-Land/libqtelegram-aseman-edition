@@ -2,17 +2,17 @@
 
 ## Types
 
-* typeMessageActionEmpty
-* typeMessageActionChatCreate
-* typeMessageActionChatEditTitle
-* typeMessageActionChatEditPhoto
-* typeMessageActionChatDeletePhoto
-* typeMessageActionChatAddUser
-* typeMessageActionChatDeleteUser
-* typeMessageActionChatJoinedByLink
-* typeMessageActionChannelCreate
-* typeMessageActionChatMigrateTo
-* typeMessageActionChannelMigrateFrom
+* [typeMessageActionEmpty](#messageactiontypemessageactionempty)
+* [typeMessageActionChatCreate](#messageactiontypemessageactionchatcreate)
+* [typeMessageActionChatEditTitle](#messageactiontypemessageactionchatedittitle)
+* [typeMessageActionChatEditPhoto](#messageactiontypemessageactionchateditphoto)
+* [typeMessageActionChatDeletePhoto](#messageactiontypemessageactionchatdeletephoto)
+* [typeMessageActionChatAddUser](#messageactiontypemessageactionchatadduser)
+* [typeMessageActionChatDeleteUser](#messageactiontypemessageactionchatdeleteuser)
+* [typeMessageActionChatJoinedByLink](#messageactiontypemessageactionchatjoinedbylink)
+* [typeMessageActionChannelCreate](#messageactiontypemessageactionchannelcreate)
+* [typeMessageActionChatMigrateTo](#messageactiontypemessageactionchatmigrateto)
+* [typeMessageActionChannelMigrateFrom](#messageactiontypemessageactionchannelmigratefrom)
 
 ## MessageAction::typeMessageActionEmpty
 

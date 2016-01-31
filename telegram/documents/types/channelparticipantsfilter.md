@@ -2,10 +2,10 @@
 
 ## Types
 
-* typeChannelParticipantsRecent
-* typeChannelParticipantsAdmins
-* typeChannelParticipantsKicked
-* typeChannelParticipantsBots
+* [typeChannelParticipantsRecent](#channelparticipantsfiltertypechannelparticipantsrecent)
+* [typeChannelParticipantsAdmins](#channelparticipantsfiltertypechannelparticipantsadmins)
+* [typeChannelParticipantsKicked](#channelparticipantsfiltertypechannelparticipantskicked)
+* [typeChannelParticipantsBots](#channelparticipantsfiltertypechannelparticipantsbots)
 
 ## ChannelParticipantsFilter::typeChannelParticipantsRecent
 

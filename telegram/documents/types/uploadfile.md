@@ -2,7 +2,7 @@
 
 ## Types
 
-* typeUploadFile
+* [typeUploadFile](#uploadfiletypeuploadfile)
 
 ## UploadFile::typeUploadFile
 

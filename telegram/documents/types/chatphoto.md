@@ -2,8 +2,8 @@
 
 ## Types
 
-* typeChatPhotoEmpty
-* typeChatPhoto
+* [typeChatPhotoEmpty](#chatphototypechatphotoempty)
+* [typeChatPhoto](#chatphototypechatphoto)
 
 ## ChatPhoto::typeChatPhotoEmpty
 

@@ -2,8 +2,8 @@
 
 ## Types
 
-* typeUserProfilePhotoEmpty
-* typeUserProfilePhoto
+* [typeUserProfilePhotoEmpty](#userprofilephototypeuserprofilephotoempty)
+* [typeUserProfilePhoto](#userprofilephototypeuserprofilephoto)
 
 ## UserProfilePhoto::typeUserProfilePhotoEmpty
 

@@ -2,7 +2,7 @@
 
 ## Types
 
-* typeHelpTermsOfService
+* [typeHelpTermsOfService](#helptermsofservicetypehelptermsofservice)
 
 ## HelpTermsOfService::typeHelpTermsOfService
 

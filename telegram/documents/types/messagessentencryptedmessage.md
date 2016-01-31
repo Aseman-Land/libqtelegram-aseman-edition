@@ -2,8 +2,8 @@
 
 ## Types
 
-* typeMessagesSentEncryptedMessage
-* typeMessagesSentEncryptedFile
+* [typeMessagesSentEncryptedMessage](#messagessentencryptedmessagetypemessagessentencryptedmessage)
+* [typeMessagesSentEncryptedFile](#messagessentencryptedmessagetypemessagessentencryptedfile)
 
 ## MessagesSentEncryptedMessage::typeMessagesSentEncryptedMessage
 

@@ -2,7 +2,7 @@
 
 ## Types
 
-* typeImportedContact
+* [typeImportedContact](#importedcontacttypeimportedcontact)
 
 ## ImportedContact::typeImportedContact
 

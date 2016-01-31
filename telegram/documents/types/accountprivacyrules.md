@@ -2,7 +2,7 @@
 
 ## Types
 
-* typeAccountPrivacyRules
+* [typeAccountPrivacyRules](#accountprivacyrulestypeaccountprivacyrules)
 
 ## AccountPrivacyRules::typeAccountPrivacyRules
 

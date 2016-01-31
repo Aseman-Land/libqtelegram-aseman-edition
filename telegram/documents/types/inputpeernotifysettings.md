@@ -2,7 +2,7 @@
 
 ## Types
 
-* typeInputPeerNotifySettings
+* [typeInputPeerNotifySettings](#inputpeernotifysettingstypeinputpeernotifysettings)
 
 ## InputPeerNotifySettings::typeInputPeerNotifySettings
 

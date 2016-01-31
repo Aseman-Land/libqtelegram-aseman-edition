@@ -2,9 +2,9 @@
 
 ## Types
 
-* typePhotoSizeEmpty
-* typePhotoSize
-* typePhotoCachedSize
+* [typePhotoSizeEmpty](#photosizetypephotosizeempty)
+* [typePhotoSize](#photosizetypephotosize)
+* [typePhotoCachedSize](#photosizetypephotocachedsize)
 
 ## PhotoSize::typePhotoSizeEmpty
 

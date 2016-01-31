@@ -2,8 +2,8 @@
 
 ## Types
 
-* typeInputFile
-* typeInputFileBig
+* [typeInputFile](#inputfiletypeinputfile)
+* [typeInputFileBig](#inputfiletypeinputfilebig)
 
 ## InputFile::typeInputFile
 

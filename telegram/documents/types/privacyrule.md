@@ -2,12 +2,12 @@
 
 ## Types
 
-* typePrivacyValueAllowContacts
-* typePrivacyValueAllowAll
-* typePrivacyValueAllowUsers
-* typePrivacyValueDisallowContacts
-* typePrivacyValueDisallowAll
-* typePrivacyValueDisallowUsers
+* [typePrivacyValueAllowContacts](#privacyruletypeprivacyvalueallowcontacts)
+* [typePrivacyValueAllowAll](#privacyruletypeprivacyvalueallowall)
+* [typePrivacyValueAllowUsers](#privacyruletypeprivacyvalueallowusers)
+* [typePrivacyValueDisallowContacts](#privacyruletypeprivacyvaluedisallowcontacts)
+* [typePrivacyValueDisallowAll](#privacyruletypeprivacyvaluedisallowall)
+* [typePrivacyValueDisallowUsers](#privacyruletypeprivacyvaluedisallowusers)
 
 ## PrivacyRule::typePrivacyValueAllowContacts
 

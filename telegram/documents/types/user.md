@@ -2,8 +2,8 @@
 
 ## Types
 
-* typeUserEmpty
-* typeUser
+* [typeUserEmpty](#usertypeuserempty)
+* [typeUser](#usertypeuser)
 
 ## User::typeUserEmpty
 

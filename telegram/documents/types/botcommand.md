@@ -2,7 +2,7 @@
 
 ## Types
 
-* typeBotCommand
+* [typeBotCommand](#botcommandtypebotcommand)
 
 ## BotCommand::typeBotCommand
 

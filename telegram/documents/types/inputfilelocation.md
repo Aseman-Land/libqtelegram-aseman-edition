@@ -2,11 +2,11 @@
 
 ## Types
 
-* typeInputFileLocation
-* typeInputVideoFileLocation
-* typeInputEncryptedFileLocation
-* typeInputAudioFileLocation
-* typeInputDocumentFileLocation
+* [typeInputFileLocation](#inputfilelocationtypeinputfilelocation)
+* [typeInputVideoFileLocation](#inputfilelocationtypeinputvideofilelocation)
+* [typeInputEncryptedFileLocation](#inputfilelocationtypeinputencryptedfilelocation)
+* [typeInputAudioFileLocation](#inputfilelocationtypeinputaudiofilelocation)
+* [typeInputDocumentFileLocation](#inputfilelocationtypeinputdocumentfilelocation)
 
 ## InputFileLocation::typeInputFileLocation
 

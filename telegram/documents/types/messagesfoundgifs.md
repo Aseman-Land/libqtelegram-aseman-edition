@@ -2,7 +2,7 @@
 
 ## Types
 
-* typeMessagesFoundGifs
+* [typeMessagesFoundGifs](#messagesfoundgifstypemessagesfoundgifs)
 
 ## MessagesFoundGifs::typeMessagesFoundGifs
 

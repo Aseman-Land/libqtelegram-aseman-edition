@@ -2,10 +2,10 @@
 
 ## Types
 
-* typeInputEncryptedFileEmpty
-* typeInputEncryptedFileUploaded
-* typeInputEncryptedFile
-* typeInputEncryptedFileBigUploaded
+* [typeInputEncryptedFileEmpty](#inputencryptedfiletypeinputencryptedfileempty)
+* [typeInputEncryptedFileUploaded](#inputencryptedfiletypeinputencryptedfileuploaded)
+* [typeInputEncryptedFile](#inputencryptedfiletypeinputencryptedfile)
+* [typeInputEncryptedFileBigUploaded](#inputencryptedfiletypeinputencryptedfilebiguploaded)
 
 ## InputEncryptedFile::typeInputEncryptedFileEmpty
 

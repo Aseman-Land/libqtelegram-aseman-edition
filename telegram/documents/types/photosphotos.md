@@ -2,8 +2,8 @@
 
 ## Types
 
-* typePhotosPhotos
-* typePhotosPhotosSlice
+* [typePhotosPhotos](#photosphotostypephotosphotos)
+* [typePhotosPhotosSlice](#photosphotostypephotosphotosslice)
 
 ## PhotosPhotos::typePhotosPhotos
 

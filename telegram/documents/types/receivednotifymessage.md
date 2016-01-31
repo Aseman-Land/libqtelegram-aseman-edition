@@ -2,7 +2,7 @@
 
 ## Types
 
-* typeReceivedNotifyMessage
+* [typeReceivedNotifyMessage](#receivednotifymessagetypereceivednotifymessage)
 
 ## ReceivedNotifyMessage::typeReceivedNotifyMessage
 

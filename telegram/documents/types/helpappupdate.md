@@ -2,8 +2,8 @@
 
 ## Types
 
-* typeHelpAppUpdate
-* typeHelpNoAppUpdate
+* [typeHelpAppUpdate](#helpappupdatetypehelpappupdate)
+* [typeHelpNoAppUpdate](#helpappupdatetypehelpnoappupdate)
 
 ## HelpAppUpdate::typeHelpAppUpdate
 

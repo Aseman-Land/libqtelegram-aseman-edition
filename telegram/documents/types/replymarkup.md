@@ -2,9 +2,9 @@
 
 ## Types
 
-* typeReplyKeyboardHide
-* typeReplyKeyboardForceReply
-* typeReplyKeyboardMarkup
+* [typeReplyKeyboardHide](#replymarkuptypereplykeyboardhide)
+* [typeReplyKeyboardForceReply](#replymarkuptypereplykeyboardforcereply)
+* [typeReplyKeyboardMarkup](#replymarkuptypereplykeyboardmarkup)
 
 ## ReplyMarkup::typeReplyKeyboardHide
 

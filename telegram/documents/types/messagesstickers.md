@@ -2,8 +2,8 @@
 
 ## Types
 
-* typeMessagesStickersNotModified
-* typeMessagesStickers
+* [typeMessagesStickersNotModified](#messagesstickerstypemessagesstickersnotmodified)
+* [typeMessagesStickers](#messagesstickerstypemessagesstickers)
 
 ## MessagesStickers::typeMessagesStickersNotModified
 

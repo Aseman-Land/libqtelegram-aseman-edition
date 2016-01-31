@@ -2,16 +2,16 @@
 
 ## Types
 
-* typeInputMessagesFilterEmpty
-* typeInputMessagesFilterPhotos
-* typeInputMessagesFilterVideo
-* typeInputMessagesFilterPhotoVideo
-* typeInputMessagesFilterPhotoVideoDocuments
-* typeInputMessagesFilterDocument
-* typeInputMessagesFilterAudio
-* typeInputMessagesFilterAudioDocuments
-* typeInputMessagesFilterUrl
-* typeInputMessagesFilterGif
+* [typeInputMessagesFilterEmpty](#messagesfiltertypeinputmessagesfilterempty)
+* [typeInputMessagesFilterPhotos](#messagesfiltertypeinputmessagesfilterphotos)
+* [typeInputMessagesFilterVideo](#messagesfiltertypeinputmessagesfiltervideo)
+* [typeInputMessagesFilterPhotoVideo](#messagesfiltertypeinputmessagesfilterphotovideo)
+* [typeInputMessagesFilterPhotoVideoDocuments](#messagesfiltertypeinputmessagesfilterphotovideodocuments)
+* [typeInputMessagesFilterDocument](#messagesfiltertypeinputmessagesfilterdocument)
+* [typeInputMessagesFilterAudio](#messagesfiltertypeinputmessagesfilteraudio)
+* [typeInputMessagesFilterAudioDocuments](#messagesfiltertypeinputmessagesfilteraudiodocuments)
+* [typeInputMessagesFilterUrl](#messagesfiltertypeinputmessagesfilterurl)
+* [typeInputMessagesFilterGif](#messagesfiltertypeinputmessagesfiltergif)
 
 ## MessagesFilter::typeInputMessagesFilterEmpty
 

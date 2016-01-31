@@ -2,7 +2,7 @@
 
 ## Types
 
-* typeInputPhoneContact
+* [typeInputPhoneContact](#inputcontacttypeinputphonecontact)
 
 ## InputContact::typeInputPhoneContact
 

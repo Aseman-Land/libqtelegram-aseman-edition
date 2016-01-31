@@ -2,7 +2,7 @@
 
 ## Types
 
-* typeMessagesChats
+* [typeMessagesChats](#messageschatstypemessageschats)
 
 ## MessagesChats::typeMessagesChats
 

@@ -2,8 +2,8 @@
 
 ## Types
 
-* typeInputDocumentEmpty
-* typeInputDocument
+* [typeInputDocumentEmpty](#inputdocumenttypeinputdocumentempty)
+* [typeInputDocument](#inputdocumenttypeinputdocument)
 
 ## InputDocument::typeInputDocumentEmpty
 

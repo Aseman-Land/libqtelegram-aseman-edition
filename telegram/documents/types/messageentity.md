@@ -2,17 +2,17 @@
 
 ## Types
 
-* typeMessageEntityUnknown
-* typeMessageEntityMention
-* typeMessageEntityHashtag
-* typeMessageEntityBotCommand
-* typeMessageEntityUrl
-* typeMessageEntityEmail
-* typeMessageEntityBold
-* typeMessageEntityItalic
-* typeMessageEntityCode
-* typeMessageEntityPre
-* typeMessageEntityTextUrl
+* [typeMessageEntityUnknown](#messageentitytypemessageentityunknown)
+* [typeMessageEntityMention](#messageentitytypemessageentitymention)
+* [typeMessageEntityHashtag](#messageentitytypemessageentityhashtag)
+* [typeMessageEntityBotCommand](#messageentitytypemessageentitybotcommand)
+* [typeMessageEntityUrl](#messageentitytypemessageentityurl)
+* [typeMessageEntityEmail](#messageentitytypemessageentityemail)
+* [typeMessageEntityBold](#messageentitytypemessageentitybold)
+* [typeMessageEntityItalic](#messageentitytypemessageentityitalic)
+* [typeMessageEntityCode](#messageentitytypemessageentitycode)
+* [typeMessageEntityPre](#messageentitytypemessageentitypre)
+* [typeMessageEntityTextUrl](#messageentitytypemessageentitytexturl)
 
 ## MessageEntity::typeMessageEntityUnknown
 

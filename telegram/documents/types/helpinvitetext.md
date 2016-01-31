@@ -2,7 +2,7 @@
 
 ## Types
 
-* typeHelpInviteText
+* [typeHelpInviteText](#helpinvitetexttypehelpinvitetext)
 
 ## HelpInviteText::typeHelpInviteText
 

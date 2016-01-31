@@ -2,8 +2,8 @@
 
 ## Types
 
-* typeChatFull
-* typeChannelFull
+* [typeChatFull](#chatfulltypechatfull)
+* [typeChannelFull](#chatfulltypechannelfull)
 
 ## ChatFull::typeChatFull
 

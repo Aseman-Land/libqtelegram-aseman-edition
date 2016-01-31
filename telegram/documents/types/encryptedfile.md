@@ -2,8 +2,8 @@
 
 ## Types
 
-* typeEncryptedFileEmpty
-* typeEncryptedFile
+* [typeEncryptedFileEmpty](#encryptedfiletypeencryptedfileempty)
+* [typeEncryptedFile](#encryptedfiletypeencryptedfile)
 
 ## EncryptedFile::typeEncryptedFileEmpty
 

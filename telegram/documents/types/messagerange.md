@@ -2,7 +2,7 @@
 
 ## Types
 
-* typeMessageRange
+* [typeMessageRange](#messagerangetypemessagerange)
 
 ## MessageRange::typeMessageRange
 

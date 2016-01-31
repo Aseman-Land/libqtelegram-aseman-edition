@@ -2,7 +2,7 @@
 
 ## Types
 
-* typePrivacyKeyStatusTimestamp
+* [typePrivacyKeyStatusTimestamp](#privacykeytypeprivacykeystatustimestamp)
 
 ## PrivacyKey::typePrivacyKeyStatusTimestamp
 

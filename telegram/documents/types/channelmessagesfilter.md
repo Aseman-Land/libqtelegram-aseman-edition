@@ -2,9 +2,9 @@
 
 ## Types
 
-* typeChannelMessagesFilterEmpty
-* typeChannelMessagesFilter
-* typeChannelMessagesFilterCollapsed
+* [typeChannelMessagesFilterEmpty](#channelmessagesfiltertypechannelmessagesfilterempty)
+* [typeChannelMessagesFilter](#channelmessagesfiltertypechannelmessagesfilter)
+* [typeChannelMessagesFilterCollapsed](#channelmessagesfiltertypechannelmessagesfiltercollapsed)
 
 ## ChannelMessagesFilter::typeChannelMessagesFilterEmpty
 

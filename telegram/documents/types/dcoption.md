@@ -2,7 +2,7 @@
 
 ## Types
 
-* typeDcOption
+* [typeDcOption](#dcoptiontypedcoption)
 
 ## DcOption::typeDcOption
 

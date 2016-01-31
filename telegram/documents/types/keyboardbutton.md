@@ -2,7 +2,7 @@
 
 ## Types
 
-* typeKeyboardButton
+* [typeKeyboardButton](#keyboardbuttontypekeyboardbutton)
 
 ## KeyboardButton::typeKeyboardButton
 

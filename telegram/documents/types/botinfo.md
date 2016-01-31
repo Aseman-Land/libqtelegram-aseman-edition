@@ -2,8 +2,8 @@
 
 ## Types
 
-* typeBotInfoEmpty
-* typeBotInfo
+* [typeBotInfoEmpty](#botinfotypebotinfoempty)
+* [typeBotInfo](#botinfotypebotinfo)
 
 ## BotInfo::typeBotInfoEmpty
 

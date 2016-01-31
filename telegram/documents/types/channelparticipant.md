@@ -2,12 +2,12 @@
 
 ## Types
 
-* typeChannelParticipant
-* typeChannelParticipantSelf
-* typeChannelParticipantModerator
-* typeChannelParticipantEditor
-* typeChannelParticipantKicked
-* typeChannelParticipantCreator
+* [typeChannelParticipant](#channelparticipanttypechannelparticipant)
+* [typeChannelParticipantSelf](#channelparticipanttypechannelparticipantself)
+* [typeChannelParticipantModerator](#channelparticipanttypechannelparticipantmoderator)
+* [typeChannelParticipantEditor](#channelparticipanttypechannelparticipanteditor)
+* [typeChannelParticipantKicked](#channelparticipanttypechannelparticipantkicked)
+* [typeChannelParticipantCreator](#channelparticipanttypechannelparticipantcreator)
 
 ## ChannelParticipant::typeChannelParticipant
 

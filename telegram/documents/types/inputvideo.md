@@ -2,8 +2,8 @@
 
 ## Types
 
-* typeInputVideoEmpty
-* typeInputVideo
+* [typeInputVideoEmpty](#inputvideotypeinputvideoempty)
+* [typeInputVideo](#inputvideotypeinputvideo)
 
 ## InputVideo::typeInputVideoEmpty
 

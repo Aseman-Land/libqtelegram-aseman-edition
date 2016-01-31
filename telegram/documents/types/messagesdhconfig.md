@@ -2,8 +2,8 @@
 
 ## Types
 
-* typeMessagesDhConfigNotModified
-* typeMessagesDhConfig
+* [typeMessagesDhConfigNotModified](#messagesdhconfigtypemessagesdhconfignotmodified)
+* [typeMessagesDhConfig](#messagesdhconfigtypemessagesdhconfig)
 
 ## MessagesDhConfig::typeMessagesDhConfigNotModified
 

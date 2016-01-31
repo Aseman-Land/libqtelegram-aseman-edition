@@ -2,12 +2,12 @@
 
 ## Types
 
-* typeUserStatusEmpty
-* typeUserStatusOnline
-* typeUserStatusOffline
-* typeUserStatusRecently
-* typeUserStatusLastWeek
-* typeUserStatusLastMonth
+* [typeUserStatusEmpty](#userstatustypeuserstatusempty)
+* [typeUserStatusOnline](#userstatustypeuserstatusonline)
+* [typeUserStatusOffline](#userstatustypeuserstatusoffline)
+* [typeUserStatusRecently](#userstatustypeuserstatusrecently)
+* [typeUserStatusLastWeek](#userstatustypeuserstatuslastweek)
+* [typeUserStatusLastMonth](#userstatustypeuserstatuslastmonth)
 
 ## UserStatus::typeUserStatusEmpty
 

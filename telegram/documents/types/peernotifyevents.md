@@ -2,8 +2,8 @@
 
 ## Types
 
-* typePeerNotifyEventsEmpty
-* typePeerNotifyEventsAll
+* [typePeerNotifyEventsEmpty](#peernotifyeventstypepeernotifyeventsempty)
+* [typePeerNotifyEventsAll](#peernotifyeventstypepeernotifyeventsall)
 
 ## PeerNotifyEvents::typePeerNotifyEventsEmpty
 

@@ -2,9 +2,9 @@
 
 ## Types
 
-* typePeerUser
-* typePeerChat
-* typePeerChannel
+* [typePeerUser](#peertypepeeruser)
+* [typePeerChat](#peertypepeerchat)
+* [typePeerChannel](#peertypepeerchannel)
 
 ## Peer::typePeerUser
 

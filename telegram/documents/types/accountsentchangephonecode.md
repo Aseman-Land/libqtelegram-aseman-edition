@@ -2,7 +2,7 @@
 
 ## Types
 
-* typeAccountSentChangePhoneCode
+* [typeAccountSentChangePhoneCode](#accountsentchangephonecodetypeaccountsentchangephonecode)
 
 ## AccountSentChangePhoneCode::typeAccountSentChangePhoneCode
 

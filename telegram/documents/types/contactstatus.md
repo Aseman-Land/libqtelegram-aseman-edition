@@ -2,7 +2,7 @@
 
 ## Types
 
-* typeContactStatus
+* [typeContactStatus](#contactstatustypecontactstatus)
 
 ## ContactStatus::typeContactStatus
 

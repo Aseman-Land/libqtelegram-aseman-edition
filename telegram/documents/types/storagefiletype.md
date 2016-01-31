@@ -2,16 +2,16 @@
 
 ## Types
 
-* typeStorageFileUnknown
-* typeStorageFileJpeg
-* typeStorageFileGif
-* typeStorageFilePng
-* typeStorageFilePdf
-* typeStorageFileMp3
-* typeStorageFileMov
-* typeStorageFilePartial
-* typeStorageFileMp4
-* typeStorageFileWebp
+* [typeStorageFileUnknown](#storagefiletypetypestoragefileunknown)
+* [typeStorageFileJpeg](#storagefiletypetypestoragefilejpeg)
+* [typeStorageFileGif](#storagefiletypetypestoragefilegif)
+* [typeStorageFilePng](#storagefiletypetypestoragefilepng)
+* [typeStorageFilePdf](#storagefiletypetypestoragefilepdf)
+* [typeStorageFileMp3](#storagefiletypetypestoragefilemp3)
+* [typeStorageFileMov](#storagefiletypetypestoragefilemov)
+* [typeStorageFilePartial](#storagefiletypetypestoragefilepartial)
+* [typeStorageFileMp4](#storagefiletypetypestoragefilemp4)
+* [typeStorageFileWebp](#storagefiletypetypestoragefilewebp)
 
 ## StorageFileType::typeStorageFileUnknown
 

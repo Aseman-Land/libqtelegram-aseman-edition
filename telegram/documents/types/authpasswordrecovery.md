@@ -2,7 +2,7 @@
 
 ## Types
 
-* typeAuthPasswordRecovery
+* [typeAuthPasswordRecovery](#authpasswordrecoverytypeauthpasswordrecovery)
 
 ## AuthPasswordRecovery::typeAuthPasswordRecovery
 

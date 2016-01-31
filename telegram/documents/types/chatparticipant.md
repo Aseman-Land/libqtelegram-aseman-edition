@@ -2,9 +2,9 @@
 
 ## Types
 
-* typeChatParticipant
-* typeChatParticipantCreator
-* typeChatParticipantAdmin
+* [typeChatParticipant](#chatparticipanttypechatparticipant)
+* [typeChatParticipantCreator](#chatparticipanttypechatparticipantcreator)
+* [typeChatParticipantAdmin](#chatparticipanttypechatparticipantadmin)
 
 ## ChatParticipant::typeChatParticipant
 

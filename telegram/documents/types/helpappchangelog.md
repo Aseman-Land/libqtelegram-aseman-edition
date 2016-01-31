@@ -2,8 +2,8 @@
 
 ## Types
 
-* typeHelpAppChangelogEmpty
-* typeHelpAppChangelog
+* [typeHelpAppChangelogEmpty](#helpappchangelogtypehelpappchangelogempty)
+* [typeHelpAppChangelog](#helpappchangelogtypehelpappchangelog)
 
 ## HelpAppChangelog::typeHelpAppChangelogEmpty
 

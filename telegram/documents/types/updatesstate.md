@@ -2,7 +2,7 @@
 
 ## Types
 
-* typeUpdatesState
+* [typeUpdatesState](#updatesstatetypeupdatesstate)
 
 ## UpdatesState::typeUpdatesState
 

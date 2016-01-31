@@ -2,8 +2,8 @@
 
 ## Types
 
-* typeMessagesSavedGifsNotModified
-* typeMessagesSavedGifs
+* [typeMessagesSavedGifsNotModified](#messagessavedgifstypemessagessavedgifsnotmodified)
+* [typeMessagesSavedGifs](#messagessavedgifstypemessagessavedgifs)
 
 ## MessagesSavedGifs::typeMessagesSavedGifsNotModified
 

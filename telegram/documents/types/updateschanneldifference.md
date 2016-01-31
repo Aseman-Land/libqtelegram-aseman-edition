@@ -2,9 +2,9 @@
 
 ## Types
 
-* typeUpdatesChannelDifferenceEmpty
-* typeUpdatesChannelDifferenceTooLong
-* typeUpdatesChannelDifference
+* [typeUpdatesChannelDifferenceEmpty](#updateschanneldifferencetypeupdateschanneldifferenceempty)
+* [typeUpdatesChannelDifferenceTooLong](#updateschanneldifferencetypeupdateschanneldifferencetoolong)
+* [typeUpdatesChannelDifference](#updateschanneldifferencetypeupdateschanneldifference)
 
 ## UpdatesChannelDifference::typeUpdatesChannelDifferenceEmpty
 

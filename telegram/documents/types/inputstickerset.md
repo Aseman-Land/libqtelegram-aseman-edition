@@ -2,9 +2,9 @@
 
 ## Types
 
-* typeInputStickerSetEmpty
-* typeInputStickerSetID
-* typeInputStickerSetShortName
+* [typeInputStickerSetEmpty](#inputstickersettypeinputstickersetempty)
+* [typeInputStickerSetID](#inputstickersettypeinputstickersetid)
+* [typeInputStickerSetShortName](#inputstickersettypeinputstickersetshortname)
 
 ## InputStickerSet::typeInputStickerSetEmpty
 

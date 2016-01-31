@@ -2,8 +2,8 @@
 
 ## Types
 
-* typeInputGeoPointEmpty
-* typeInputGeoPoint
+* [typeInputGeoPointEmpty](#inputgeopointtypeinputgeopointempty)
+* [typeInputGeoPoint](#inputgeopointtypeinputgeopoint)
 
 ## InputGeoPoint::typeInputGeoPointEmpty
 

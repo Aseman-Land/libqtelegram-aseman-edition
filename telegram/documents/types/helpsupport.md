@@ -2,7 +2,7 @@
 
 ## Types
 
-* typeHelpSupport
+* [typeHelpSupport](#helpsupporttypehelpsupport)
 
 ## HelpSupport::typeHelpSupport
 

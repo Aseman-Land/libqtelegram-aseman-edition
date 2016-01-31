@@ -2,11 +2,11 @@
 
 ## Types
 
-* typeInputPeerEmpty
-* typeInputPeerSelf
-* typeInputPeerChat
-* typeInputPeerUser
-* typeInputPeerChannel
+* [typeInputPeerEmpty](#inputpeertypeinputpeerempty)
+* [typeInputPeerSelf](#inputpeertypeinputpeerself)
+* [typeInputPeerChat](#inputpeertypeinputpeerchat)
+* [typeInputPeerUser](#inputpeertypeinputpeeruser)
+* [typeInputPeerChannel](#inputpeertypeinputpeerchannel)
 
 ## InputPeer::typeInputPeerEmpty
 

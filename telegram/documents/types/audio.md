@@ -2,8 +2,8 @@
 
 ## Types
 
-* typeAudioEmpty
-* typeAudio
+* [typeAudioEmpty](#audiotypeaudioempty)
+* [typeAudio](#audiotypeaudio)
 
 ## Audio::typeAudioEmpty
 

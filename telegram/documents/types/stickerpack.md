@@ -2,7 +2,7 @@
 
 ## Types
 
-* typeStickerPack
+* [typeStickerPack](#stickerpacktypestickerpack)
 
 ## StickerPack::typeStickerPack
 

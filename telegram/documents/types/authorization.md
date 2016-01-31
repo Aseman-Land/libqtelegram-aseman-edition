@@ -2,7 +2,7 @@
 
 ## Types
 
-* typeAuthorization
+* [typeAuthorization](#authorizationtypeauthorization)
 
 ## Authorization::typeAuthorization
 

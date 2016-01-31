@@ -2,9 +2,9 @@
 
 ## Types
 
-* typeWebPageEmpty
-* typeWebPagePending
-* typeWebPage
+* [typeWebPageEmpty](#webpagetypewebpageempty)
+* [typeWebPagePending](#webpagetypewebpagepending)
+* [typeWebPage](#webpagetypewebpage)
 
 ## WebPage::typeWebPageEmpty
 

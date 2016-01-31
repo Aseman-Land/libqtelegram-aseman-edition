@@ -2,16 +2,16 @@
 
 ## Types
 
-* typeSendMessageTypingAction
-* typeSendMessageCancelAction
-* typeSendMessageRecordVideoAction
-* typeSendMessageUploadVideoAction
-* typeSendMessageRecordAudioAction
-* typeSendMessageUploadAudioAction
-* typeSendMessageUploadPhotoAction
-* typeSendMessageUploadDocumentAction
-* typeSendMessageGeoLocationAction
-* typeSendMessageChooseContactAction
+* [typeSendMessageTypingAction](#sendmessageactiontypesendmessagetypingaction)
+* [typeSendMessageCancelAction](#sendmessageactiontypesendmessagecancelaction)
+* [typeSendMessageRecordVideoAction](#sendmessageactiontypesendmessagerecordvideoaction)
+* [typeSendMessageUploadVideoAction](#sendmessageactiontypesendmessageuploadvideoaction)
+* [typeSendMessageRecordAudioAction](#sendmessageactiontypesendmessagerecordaudioaction)
+* [typeSendMessageUploadAudioAction](#sendmessageactiontypesendmessageuploadaudioaction)
+* [typeSendMessageUploadPhotoAction](#sendmessageactiontypesendmessageuploadphotoaction)
+* [typeSendMessageUploadDocumentAction](#sendmessageactiontypesendmessageuploaddocumentaction)
+* [typeSendMessageGeoLocationAction](#sendmessageactiontypesendmessagegeolocationaction)
+* [typeSendMessageChooseContactAction](#sendmessageactiontypesendmessagechoosecontactaction)
 
 ## SendMessageAction::typeSendMessageTypingAction
 

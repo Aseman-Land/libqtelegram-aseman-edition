@@ -2,7 +2,7 @@
 
 ## Types
 
-* typeMessagesStickerSet
+* [typeMessagesStickerSet](#messagesstickersettypemessagesstickerset)
 
 ## MessagesStickerSet::typeMessagesStickerSet
 

@@ -2,7 +2,7 @@
 
 ## Types
 
-* typePhotosPhoto
+* [typePhotosPhoto](#photosphototypephotosphoto)
 
 ## PhotosPhoto::typePhotosPhoto
 

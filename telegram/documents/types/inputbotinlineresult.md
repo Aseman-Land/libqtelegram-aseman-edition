@@ -2,7 +2,7 @@
 
 ## Types
 
-* typeInputBotInlineResult
+* [typeInputBotInlineResult](#inputbotinlineresulttypeinputbotinlineresult)
 
 ## InputBotInlineResult::typeInputBotInlineResult
 

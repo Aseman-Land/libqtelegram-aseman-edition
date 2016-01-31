@@ -2,8 +2,8 @@
 
 ## Types
 
-* typeMessagesDialogs
-* typeMessagesDialogsSlice
+* [typeMessagesDialogs](#messagesdialogstypemessagesdialogs)
+* [typeMessagesDialogsSlice](#messagesdialogstypemessagesdialogsslice)
 
 ## MessagesDialogs::typeMessagesDialogs
 

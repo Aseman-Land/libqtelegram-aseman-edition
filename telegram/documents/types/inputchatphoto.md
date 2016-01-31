@@ -2,9 +2,9 @@
 
 ## Types
 
-* typeInputChatPhotoEmpty
-* typeInputChatUploadedPhoto
-* typeInputChatPhoto
+* [typeInputChatPhotoEmpty](#inputchatphototypeinputchatphotoempty)
+* [typeInputChatUploadedPhoto](#inputchatphototypeinputchatuploadedphoto)
+* [typeInputChatPhoto](#inputchatphototypeinputchatphoto)
 
 ## InputChatPhoto::typeInputChatPhotoEmpty
 

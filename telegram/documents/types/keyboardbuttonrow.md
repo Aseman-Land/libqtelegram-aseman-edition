@@ -2,7 +2,7 @@
 
 ## Types
 
-* typeKeyboardButtonRow
+* [typeKeyboardButtonRow](#keyboardbuttonrowtypekeyboardbuttonrow)
 
 ## KeyboardButtonRow::typeKeyboardButtonRow
 

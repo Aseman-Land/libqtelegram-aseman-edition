@@ -2,7 +2,7 @@
 
 ## Types
 
-* typeAuthExportedAuthorization
+* [typeAuthExportedAuthorization](#authexportedauthorizationtypeauthexportedauthorization)
 
 ## AuthExportedAuthorization::typeAuthExportedAuthorization
 

@@ -2,8 +2,8 @@
 
 ## Types
 
-* typeInputPhotoEmpty
-* typeInputPhoto
+* [typeInputPhotoEmpty](#inputphototypeinputphotoempty)
+* [typeInputPhoto](#inputphototypeinputphoto)
 
 ## InputPhoto::typeInputPhotoEmpty
 

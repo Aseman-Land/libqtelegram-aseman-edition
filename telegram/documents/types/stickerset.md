@@ -2,7 +2,7 @@
 
 ## Types
 
-* typeStickerSet
+* [typeStickerSet](#stickersettypestickerset)
 
 ## StickerSet::typeStickerSet
 

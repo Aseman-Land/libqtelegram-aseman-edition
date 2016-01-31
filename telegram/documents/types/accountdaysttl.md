@@ -2,7 +2,7 @@
 
 ## Types
 
-* typeAccountDaysTTL
+* [typeAccountDaysTTL](#accountdaysttltypeaccountdaysttl)
 
 ## AccountDaysTTL::typeAccountDaysTTL
 

@@ -2,8 +2,8 @@
 
 ## Types
 
-* typeGeoPointEmpty
-* typeGeoPoint
+* [typeGeoPointEmpty](#geopointtypegeopointempty)
+* [typeGeoPoint](#geopointtypegeopoint)
 
 ## GeoPoint::typeGeoPointEmpty
 

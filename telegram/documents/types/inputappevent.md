@@ -2,7 +2,7 @@
 
 ## Types
 
-* typeInputAppEvent
+* [typeInputAppEvent](#inputappeventtypeinputappevent)
 
 ## InputAppEvent::typeInputAppEvent
 

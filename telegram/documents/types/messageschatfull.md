@@ -2,7 +2,7 @@
 
 ## Types
 
-* typeMessagesChatFull
+* [typeMessagesChatFull](#messageschatfulltypemessageschatfull)
 
 ## MessagesChatFull::typeMessagesChatFull
 

@@ -2,10 +2,10 @@
 
 ## Types
 
-* typeContactLinkUnknown
-* typeContactLinkNone
-* typeContactLinkHasPhone
-* typeContactLinkContact
+* [typeContactLinkUnknown](#contactlinktypecontactlinkunknown)
+* [typeContactLinkNone](#contactlinktypecontactlinknone)
+* [typeContactLinkHasPhone](#contactlinktypecontactlinkhasphone)
+* [typeContactLinkContact](#contactlinktypecontactlinkcontact)
 
 ## ContactLink::typeContactLinkUnknown
 

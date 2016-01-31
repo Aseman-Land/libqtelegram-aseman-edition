@@ -2,7 +2,7 @@
 
 ## Types
 
-* typeContactSuggested
+* [typeContactSuggested](#contactsuggestedtypecontactsuggested)
 
 ## ContactSuggested::typeContactSuggested
 

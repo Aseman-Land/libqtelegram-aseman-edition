@@ -2,10 +2,10 @@
 
 ## Types
 
-* typeNotifyPeer
-* typeNotifyUsers
-* typeNotifyChats
-* typeNotifyAll
+* [typeNotifyPeer](#notifypeertypenotifypeer)
+* [typeNotifyUsers](#notifypeertypenotifyusers)
+* [typeNotifyChats](#notifypeertypenotifychats)
+* [typeNotifyAll](#notifypeertypenotifyall)
 
 ## NotifyPeer::typeNotifyPeer
 

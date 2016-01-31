@@ -2,8 +2,8 @@
 
 ## Types
 
-* typeChatInviteEmpty
-* typeChatInviteExported
+* [typeChatInviteEmpty](#exportedchatinvitetypechatinviteempty)
+* [typeChatInviteExported](#exportedchatinvitetypechatinviteexported)
 
 ## ExportedChatInvite::typeChatInviteEmpty
 

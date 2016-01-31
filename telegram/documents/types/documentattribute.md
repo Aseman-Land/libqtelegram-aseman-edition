@@ -2,12 +2,12 @@
 
 ## Types
 
-* typeDocumentAttributeImageSize
-* typeDocumentAttributeAnimated
-* typeDocumentAttributeSticker
-* typeDocumentAttributeVideo
-* typeDocumentAttributeAudio
-* typeDocumentAttributeFilename
+* [typeDocumentAttributeImageSize](#documentattributetypedocumentattributeimagesize)
+* [typeDocumentAttributeAnimated](#documentattributetypedocumentattributeanimated)
+* [typeDocumentAttributeSticker](#documentattributetypedocumentattributesticker)
+* [typeDocumentAttributeVideo](#documentattributetypedocumentattributevideo)
+* [typeDocumentAttributeAudio](#documentattributetypedocumentattributeaudio)
+* [typeDocumentAttributeFilename](#documentattributetypedocumentattributefilename)
 
 ## DocumentAttribute::typeDocumentAttributeImageSize
 

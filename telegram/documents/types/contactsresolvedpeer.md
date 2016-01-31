@@ -2,7 +2,7 @@
 
 ## Types
 
-* typeContactsResolvedPeer
+* [typeContactsResolvedPeer](#contactsresolvedpeertypecontactsresolvedpeer)
 
 ## ContactsResolvedPeer::typeContactsResolvedPeer
 

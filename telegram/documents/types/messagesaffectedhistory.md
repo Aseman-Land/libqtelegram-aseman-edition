@@ -2,7 +2,7 @@
 
 ## Types
 
-* typeMessagesAffectedHistory
+* [typeMessagesAffectedHistory](#messagesaffectedhistorytypemessagesaffectedhistory)
 
 ## MessagesAffectedHistory::typeMessagesAffectedHistory
 

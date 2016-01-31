@@ -2,9 +2,9 @@
 
 ## Types
 
-* typeUpdatesDifferenceEmpty
-* typeUpdatesDifference
-* typeUpdatesDifferenceSlice
+* [typeUpdatesDifferenceEmpty](#updatesdifferencetypeupdatesdifferenceempty)
+* [typeUpdatesDifference](#updatesdifferencetypeupdatesdifference)
+* [typeUpdatesDifferenceSlice](#updatesdifferencetypeupdatesdifferenceslice)
 
 ## UpdatesDifference::typeUpdatesDifferenceEmpty
 

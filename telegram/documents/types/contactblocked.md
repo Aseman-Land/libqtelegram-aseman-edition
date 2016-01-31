@@ -2,7 +2,7 @@
 
 ## Types
 
-* typeContactBlocked
+* [typeContactBlocked](#contactblockedtypecontactblocked)
 
 ## ContactBlocked::typeContactBlocked
 

@@ -2,8 +2,8 @@
 
 ## Types
 
-* typeWallPaper
-* typeWallPaperSolid
+* [typeWallPaper](#wallpapertypewallpaper)
+* [typeWallPaperSolid](#wallpapertypewallpapersolid)
 
 ## WallPaper::typeWallPaper
 

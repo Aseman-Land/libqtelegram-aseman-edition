@@ -2,8 +2,8 @@
 
 ## Types
 
-* typeFileLocationUnavailable
-* typeFileLocation
+* [typeFileLocationUnavailable](#filelocationtypefilelocationunavailable)
+* [typeFileLocation](#filelocationtypefilelocation)
 
 ## FileLocation::typeFileLocationUnavailable
 

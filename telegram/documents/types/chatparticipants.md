@@ -2,8 +2,8 @@
 
 ## Types
 
-* typeChatParticipantsForbidden
-* typeChatParticipants
+* [typeChatParticipantsForbidden](#chatparticipantstypechatparticipantsforbidden)
+* [typeChatParticipants](#chatparticipantstypechatparticipants)
 
 ## ChatParticipants::typeChatParticipantsForbidden
 

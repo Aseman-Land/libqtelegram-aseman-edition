@@ -2,8 +2,8 @@
 
 ## Types
 
-* typeChatInviteAlready
-* typeChatInvite
+* [typeChatInviteAlready](#chatinvitetypechatinvitealready)
+* [typeChatInvite](#chatinvitetypechatinvite)
 
 ## ChatInvite::typeChatInviteAlready
 

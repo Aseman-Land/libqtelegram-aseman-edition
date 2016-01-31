@@ -2,7 +2,7 @@
 
 ## Types
 
-* typeInputPrivacyKeyStatusTimestamp
+* [typeInputPrivacyKeyStatusTimestamp](#inputprivacykeytypeinputprivacykeystatustimestamp)
 
 ## InputPrivacyKey::typeInputPrivacyKeyStatusTimestamp
 

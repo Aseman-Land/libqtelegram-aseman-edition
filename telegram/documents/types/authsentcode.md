@@ -2,8 +2,8 @@
 
 ## Types
 
-* typeAuthSentCode
-* typeAuthSentAppCode
+* [typeAuthSentCode](#authsentcodetypeauthsentcode)
+* [typeAuthSentAppCode](#authsentcodetypeauthsentappcode)
 
 ## AuthSentCode::typeAuthSentCode
 

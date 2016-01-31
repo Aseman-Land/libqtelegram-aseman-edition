@@ -2,8 +2,8 @@
 
 ## Types
 
-* typeContactsBlocked
-* typeContactsBlockedSlice
+* [typeContactsBlocked](#contactsblockedtypecontactsblocked)
+* [typeContactsBlockedSlice](#contactsblockedtypecontactsblockedslice)
 
 ## ContactsBlocked::typeContactsBlocked
 

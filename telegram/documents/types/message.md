@@ -2,9 +2,9 @@
 
 ## Types
 
-* typeMessageEmpty
-* typeMessage
-* typeMessageService
+* [typeMessageEmpty](#messagetypemessageempty)
+* [typeMessage](#messagetypemessage)
+* [typeMessageService](#messagetypemessageservice)
 
 ## Message::typeMessageEmpty
 

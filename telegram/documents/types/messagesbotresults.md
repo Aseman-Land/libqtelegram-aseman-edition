@@ -2,7 +2,7 @@
 
 ## Types
 
-* typeMessagesBotResults
+* [typeMessagesBotResults](#messagesbotresultstypemessagesbotresults)
 
 ## MessagesBotResults::typeMessagesBotResults
 

@@ -2,8 +2,8 @@
 
 ## Types
 
-* typeAccountNoPassword
-* typeAccountPassword
+* [typeAccountNoPassword](#accountpasswordtypeaccountnopassword)
+* [typeAccountPassword](#accountpasswordtypeaccountpassword)
 
 ## AccountPassword::typeAccountNoPassword
 

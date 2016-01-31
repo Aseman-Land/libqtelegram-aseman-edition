@@ -2,7 +2,7 @@
 
 ## Types
 
-* typeConfig
+* [typeConfig](#configtypeconfig)
 
 ## Config::typeConfig
 

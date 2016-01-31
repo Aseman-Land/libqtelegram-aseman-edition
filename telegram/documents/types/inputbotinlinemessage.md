@@ -2,8 +2,8 @@
 
 ## Types
 
-* typeInputBotInlineMessageMediaAuto
-* typeInputBotInlineMessageText
+* [typeInputBotInlineMessageMediaAuto](#inputbotinlinemessagetypeinputbotinlinemessagemediaauto)
+* [typeInputBotInlineMessageText](#inputbotinlinemessagetypeinputbotinlinemessagetext)
 
 ## InputBotInlineMessage::typeInputBotInlineMessageMediaAuto
 

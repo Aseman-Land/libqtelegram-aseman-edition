@@ -2,8 +2,8 @@
 
 ## Types
 
-* typeEncryptedMessage
-* typeEncryptedMessageService
+* [typeEncryptedMessage](#encryptedmessagetypeencryptedmessage)
+* [typeEncryptedMessageService](#encryptedmessagetypeencryptedmessageservice)
 
 ## EncryptedMessage::typeEncryptedMessage
 

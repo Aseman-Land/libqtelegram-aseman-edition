@@ -2,7 +2,7 @@
 
 ## Types
 
-* typeContactsLink
+* [typeContactsLink](#contactslinktypecontactslink)
 
 ## ContactsLink::typeContactsLink
 

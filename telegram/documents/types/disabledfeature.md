@@ -2,7 +2,7 @@
 
 ## Types
 
-* typeDisabledFeature
+* [typeDisabledFeature](#disabledfeaturetypedisabledfeature)
 
 ## DisabledFeature::typeDisabledFeature
 

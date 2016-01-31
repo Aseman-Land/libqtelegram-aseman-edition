@@ -2,7 +2,7 @@
 
 ## Types
 
-* typeContact
+* [typeContact](#contacttypecontact)
 
 ## Contact::typeContact
 

@@ -2,13 +2,13 @@
 
 ## Types
 
-* typeUpdatesTooLong
-* typeUpdateShortMessage
-* typeUpdateShortChatMessage
-* typeUpdateShort
-* typeUpdatesCombined
-* typeUpdates
-* typeUpdateShortSentMessage
+* [typeUpdatesTooLong](#updatestypetypeupdatestoolong)
+* [typeUpdateShortMessage](#updatestypetypeupdateshortmessage)
+* [typeUpdateShortChatMessage](#updatestypetypeupdateshortchatmessage)
+* [typeUpdateShort](#updatestypetypeupdateshort)
+* [typeUpdatesCombined](#updatestypetypeupdatescombined)
+* [typeUpdates](#updatestypetypeupdates)
+* [typeUpdateShortSentMessage](#updatestypetypeupdateshortsentmessage)
 
 ## UpdatesType::typeUpdatesTooLong
 

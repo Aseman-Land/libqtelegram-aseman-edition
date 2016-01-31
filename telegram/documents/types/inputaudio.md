@@ -2,8 +2,8 @@
 
 ## Types
 
-* typeInputAudioEmpty
-* typeInputAudio
+* [typeInputAudioEmpty](#inputaudiotypeinputaudioempty)
+* [typeInputAudio](#inputaudiotypeinputaudio)
 
 ## InputAudio::typeInputAudioEmpty
 

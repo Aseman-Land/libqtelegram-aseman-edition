@@ -2,7 +2,7 @@
 
 ## Types
 
-* typeNearestDc
+* [typeNearestDc](#nearestdctypenearestdc)
 
 ## NearestDc::typeNearestDc
 

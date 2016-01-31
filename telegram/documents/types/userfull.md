@@ -2,7 +2,7 @@
 
 ## Types
 
-* typeUserFull
+* [typeUserFull](#userfulltypeuserfull)
 
 ## UserFull::typeUserFull
 

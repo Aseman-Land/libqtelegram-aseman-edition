@@ -2,8 +2,8 @@
 
 ## Types
 
-* typeInputPhotoCropAuto
-* typeInputPhotoCrop
+* [typeInputPhotoCropAuto](#inputphotocroptypeinputphotocropauto)
+* [typeInputPhotoCrop](#inputphotocroptypeinputphotocrop)
 
 ## InputPhotoCrop::typeInputPhotoCropAuto
 

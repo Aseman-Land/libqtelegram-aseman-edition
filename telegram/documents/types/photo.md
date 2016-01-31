@@ -2,8 +2,8 @@
 
 ## Types
 
-* typePhotoEmpty
-* typePhoto
+* [typePhotoEmpty](#phototypephotoempty)
+* [typePhoto](#phototypephoto)
 
 ## Photo::typePhotoEmpty
 

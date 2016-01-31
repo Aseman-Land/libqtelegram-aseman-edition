@@ -2,9 +2,9 @@
 
 ## Types
 
-* typeMessagesMessages
-* typeMessagesMessagesSlice
-* typeMessagesChannelMessages
+* [typeMessagesMessages](#messagesmessagestypemessagesmessages)
+* [typeMessagesMessagesSlice](#messagesmessagestypemessagesmessagesslice)
+* [typeMessagesChannelMessages](#messagesmessagestypemessageschannelmessages)
 
 ## MessagesMessages::typeMessagesMessages
 

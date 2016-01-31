@@ -2,8 +2,8 @@
 
 ## Types
 
-* typeContactsContactsNotModified
-* typeContactsContacts
+* [typeContactsContactsNotModified](#contactscontactstypecontactscontactsnotmodified)
+* [typeContactsContacts](#contactscontactstypecontactscontacts)
 
 ## ContactsContacts::typeContactsContactsNotModified
 

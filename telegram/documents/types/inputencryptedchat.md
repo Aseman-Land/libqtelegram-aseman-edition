@@ -2,7 +2,7 @@
 
 ## Types
 
-* typeInputEncryptedChat
+* [typeInputEncryptedChat](#inputencryptedchattypeinputencryptedchat)
 
 ## InputEncryptedChat::typeInputEncryptedChat
 

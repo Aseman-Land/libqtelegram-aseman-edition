@@ -2,21 +2,21 @@
 
 ## Types
 
-* typeInputMediaEmpty
-* typeInputMediaUploadedPhoto
-* typeInputMediaPhoto
-* typeInputMediaGeoPoint
-* typeInputMediaContact
-* typeInputMediaUploadedVideo
-* typeInputMediaUploadedThumbVideo
-* typeInputMediaVideo
-* typeInputMediaUploadedAudio
-* typeInputMediaAudio
-* typeInputMediaUploadedDocument
-* typeInputMediaUploadedThumbDocument
-* typeInputMediaDocument
-* typeInputMediaVenue
-* typeInputMediaGifExternal
+* [typeInputMediaEmpty](#inputmediatypeinputmediaempty)
+* [typeInputMediaUploadedPhoto](#inputmediatypeinputmediauploadedphoto)
+* [typeInputMediaPhoto](#inputmediatypeinputmediaphoto)
+* [typeInputMediaGeoPoint](#inputmediatypeinputmediageopoint)
+* [typeInputMediaContact](#inputmediatypeinputmediacontact)
+* [typeInputMediaUploadedVideo](#inputmediatypeinputmediauploadedvideo)
+* [typeInputMediaUploadedThumbVideo](#inputmediatypeinputmediauploadedthumbvideo)
+* [typeInputMediaVideo](#inputmediatypeinputmediavideo)
+* [typeInputMediaUploadedAudio](#inputmediatypeinputmediauploadedaudio)
+* [typeInputMediaAudio](#inputmediatypeinputmediaaudio)
+* [typeInputMediaUploadedDocument](#inputmediatypeinputmediauploadeddocument)
+* [typeInputMediaUploadedThumbDocument](#inputmediatypeinputmediauploadedthumbdocument)
+* [typeInputMediaDocument](#inputmediatypeinputmediadocument)
+* [typeInputMediaVenue](#inputmediatypeinputmediavenue)
+* [typeInputMediaGifExternal](#inputmediatypeinputmediagifexternal)
 
 ## InputMedia::typeInputMediaEmpty
 

@@ -2,7 +2,7 @@
 
 ## Types
 
-* typeAccountAuthorizations
+* [typeAccountAuthorizations](#accountauthorizationstypeaccountauthorizations)
 
 ## AccountAuthorizations::typeAccountAuthorizations
 

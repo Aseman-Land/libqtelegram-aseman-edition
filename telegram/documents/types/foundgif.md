@@ -2,8 +2,8 @@
 
 ## Types
 
-* typeFoundGif
-* typeFoundGifCached
+* [typeFoundGif](#foundgiftypefoundgif)
+* [typeFoundGifCached](#foundgiftypefoundgifcached)
 
 ## FoundGif::typeFoundGif
 

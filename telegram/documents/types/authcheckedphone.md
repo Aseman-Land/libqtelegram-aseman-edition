@@ -2,7 +2,7 @@
 
 ## Types
 
-* typeAuthCheckedPhone
+* [typeAuthCheckedPhone](#authcheckedphonetypeauthcheckedphone)
 
 ## AuthCheckedPhone::typeAuthCheckedPhone
 

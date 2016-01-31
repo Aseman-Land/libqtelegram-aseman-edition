@@ -2,7 +2,7 @@
 
 ## Types
 
-* typeMessageGroup
+* [typeMessageGroup](#messagegrouptypemessagegroup)
 
 ## MessageGroup::typeMessageGroup
 

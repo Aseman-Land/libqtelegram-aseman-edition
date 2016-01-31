@@ -2,16 +2,16 @@
 
 ## Types
 
-* typeMessageMediaEmpty
-* typeMessageMediaPhoto
-* typeMessageMediaVideo
-* typeMessageMediaGeo
-* typeMessageMediaContact
-* typeMessageMediaUnsupported
-* typeMessageMediaDocument
-* typeMessageMediaAudio
-* typeMessageMediaWebPage
-* typeMessageMediaVenue
+* [typeMessageMediaEmpty](#messagemediatypemessagemediaempty)
+* [typeMessageMediaPhoto](#messagemediatypemessagemediaphoto)
+* [typeMessageMediaVideo](#messagemediatypemessagemediavideo)
+* [typeMessageMediaGeo](#messagemediatypemessagemediageo)
+* [typeMessageMediaContact](#messagemediatypemessagemediacontact)
+* [typeMessageMediaUnsupported](#messagemediatypemessagemediaunsupported)
+* [typeMessageMediaDocument](#messagemediatypemessagemediadocument)
+* [typeMessageMediaAudio](#messagemediatypemessagemediaaudio)
+* [typeMessageMediaWebPage](#messagemediatypemessagemediawebpage)
+* [typeMessageMediaVenue](#messagemediatypemessagemediavenue)
 
 ## MessageMedia::typeMessageMediaEmpty
 

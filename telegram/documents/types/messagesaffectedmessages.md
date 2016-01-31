@@ -2,7 +2,7 @@
 
 ## Types
 
-* typeMessagesAffectedMessages
+* [typeMessagesAffectedMessages](#messagesaffectedmessagestypemessagesaffectedmessages)
 
 ## MessagesAffectedMessages::typeMessagesAffectedMessages
 

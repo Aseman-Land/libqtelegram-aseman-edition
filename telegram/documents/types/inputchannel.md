@@ -2,8 +2,8 @@
 
 ## Types
 
-* typeInputChannelEmpty
-* typeInputChannel
+* [typeInputChannelEmpty](#inputchanneltypeinputchannelempty)
+* [typeInputChannel](#inputchanneltypeinputchannel)
 
 ## InputChannel::typeInputChannelEmpty
 

@@ -2,10 +2,10 @@
 
 ## Types
 
-* typeInputReportReasonSpam
-* typeInputReportReasonViolence
-* typeInputReportReasonPornography
-* typeInputReportReasonOther
+* [typeInputReportReasonSpam](#reportreasontypeinputreportreasonspam)
+* [typeInputReportReasonViolence](#reportreasontypeinputreportreasonviolence)
+* [typeInputReportReasonPornography](#reportreasontypeinputreportreasonpornography)
+* [typeInputReportReasonOther](#reportreasontypeinputreportreasonother)
 
 ## ReportReason::typeInputReportReasonSpam
 

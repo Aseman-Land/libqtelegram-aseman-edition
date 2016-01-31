@@ -2,9 +2,9 @@
 
 ## Types
 
-* typeInputUserEmpty
-* typeInputUserSelf
-* typeInputUser
+* [typeInputUserEmpty](#inputusertypeinputuserempty)
+* [typeInputUserSelf](#inputusertypeinputuserself)
+* [typeInputUser](#inputusertypeinputuser)
 
 ## InputUser::typeInputUserEmpty
 

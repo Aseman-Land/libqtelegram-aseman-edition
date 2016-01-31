@@ -2,8 +2,8 @@
 
 ## Types
 
-* typeDocumentEmpty
-* typeDocument
+* [typeDocumentEmpty](#documenttypedocumentempty)
+* [typeDocument](#documenttypedocument)
 
 ## Document::typeDocumentEmpty
 

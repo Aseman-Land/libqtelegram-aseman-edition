@@ -2,9 +2,9 @@
 
 ## Types
 
-* typeBotInlineMediaResultDocument
-* typeBotInlineMediaResultPhoto
-* typeBotInlineResult
+* [typeBotInlineMediaResultDocument](#botinlineresulttypebotinlinemediaresultdocument)
+* [typeBotInlineMediaResultPhoto](#botinlineresulttypebotinlinemediaresultphoto)
+* [typeBotInlineResult](#botinlineresulttypebotinlineresult)
 
 ## BotInlineResult::typeBotInlineMediaResultDocument
 

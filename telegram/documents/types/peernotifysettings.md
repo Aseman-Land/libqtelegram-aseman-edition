@@ -2,8 +2,8 @@
 
 ## Types
 
-* typePeerNotifySettingsEmpty
-* typePeerNotifySettings
+* [typePeerNotifySettingsEmpty](#peernotifysettingstypepeernotifysettingsempty)
+* [typePeerNotifySettings](#peernotifysettingstypepeernotifysettings)
 
 ## PeerNotifySettings::typePeerNotifySettingsEmpty
 

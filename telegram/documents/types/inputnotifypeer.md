@@ -2,10 +2,10 @@
 
 ## Types
 
-* typeInputNotifyPeer
-* typeInputNotifyUsers
-* typeInputNotifyChats
-* typeInputNotifyAll
+* [typeInputNotifyPeer](#inputnotifypeertypeinputnotifypeer)
+* [typeInputNotifyUsers](#inputnotifypeertypeinputnotifyusers)
+* [typeInputNotifyChats](#inputnotifypeertypeinputnotifychats)
+* [typeInputNotifyAll](#inputnotifypeertypeinputnotifyall)
 
 ## InputNotifyPeer::typeInputNotifyPeer
 

@@ -2,7 +2,7 @@
 
 ## Types
 
-* typeAccountPasswordInputSettings
+* [typeAccountPasswordInputSettings](#accountpasswordinputsettingstypeaccountpasswordinputsettings)
 
 ## AccountPasswordInputSettings::typeAccountPasswordInputSettings
 

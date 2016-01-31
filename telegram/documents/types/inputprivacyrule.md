@@ -2,12 +2,12 @@
 
 ## Types
 
-* typeInputPrivacyValueAllowContacts
-* typeInputPrivacyValueAllowAll
-* typeInputPrivacyValueAllowUsers
-* typeInputPrivacyValueDisallowContacts
-* typeInputPrivacyValueDisallowAll
-* typeInputPrivacyValueDisallowUsers
+* [typeInputPrivacyValueAllowContacts](#inputprivacyruletypeinputprivacyvalueallowcontacts)
+* [typeInputPrivacyValueAllowAll](#inputprivacyruletypeinputprivacyvalueallowall)
+* [typeInputPrivacyValueAllowUsers](#inputprivacyruletypeinputprivacyvalueallowusers)
+* [typeInputPrivacyValueDisallowContacts](#inputprivacyruletypeinputprivacyvaluedisallowcontacts)
+* [typeInputPrivacyValueDisallowAll](#inputprivacyruletypeinputprivacyvaluedisallowall)
+* [typeInputPrivacyValueDisallowUsers](#inputprivacyruletypeinputprivacyvaluedisallowusers)
 
 ## InputPrivacyRule::typeInputPrivacyValueAllowContacts
 

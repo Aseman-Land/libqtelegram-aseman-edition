@@ -2,7 +2,7 @@
 
 ## Types
 
-* typeAccountPasswordSettings
+* [typeAccountPasswordSettings](#accountpasswordsettingstypeaccountpasswordsettings)
 
 ## AccountPasswordSettings::typeAccountPasswordSettings
 

@@ -2,7 +2,7 @@
 
 ## Types
 
-* typeContactsFound
+* [typeContactsFound](#contactsfoundtypecontactsfound)
 
 ## ContactsFound::typeContactsFound
 

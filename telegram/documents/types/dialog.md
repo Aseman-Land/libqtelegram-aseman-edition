@@ -2,8 +2,8 @@
 
 ## Types
 
-* typeDialog
-* typeDialogChannel
+* [typeDialog](#dialogtypedialog)
+* [typeDialogChannel](#dialogtypedialogchannel)
 
 ## Dialog::typeDialog
 

@@ -2,8 +2,8 @@
 
 ## Types
 
-* typeVideoEmpty
-* typeVideo
+* [typeVideoEmpty](#videotypevideoempty)
+* [typeVideo](#videotypevideo)
 
 ## Video::typeVideoEmpty
 
