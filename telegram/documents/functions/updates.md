@@ -1,14 +1,10 @@
 # Updates
 
-## Get state
+## Methods:
 
-### updatesGetState
+* **Get state** - [TelegramCore::updatesGetState](methods/getstate.md)
 
-## Get difference
+* **Get difference** - [TelegramCore::updatesGetDifference](methods/getdifference.md)
 
-### updatesGetDifference
-
-## Get channel difference
-
-### updatesGetChannelDifference
+* **Get channel difference** - [TelegramCore::updatesGetChannelDifference](methods/getchanneldifference.md)
 

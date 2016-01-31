@@ -210,7 +210,7 @@ public:
 
 
 Q_SIGNALS:
-        void accountRegisterDeviceAnswer(qint64 msgId, bool result);
+    void accountRegisterDeviceAnswer(qint64 msgId, bool result);
     void accountUnregisterDeviceAnswer(qint64 msgId, bool result);
     void accountUpdateNotifySettingsAnswer(qint64 msgId, bool result);
     void accountGetNotifySettingsAnswer(qint64 msgId, const PeerNotifySettings &result);

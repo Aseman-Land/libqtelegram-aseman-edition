@@ -1,54 +1,30 @@
 # Contacts
 
-## Get statuses
+## Methods:
 
-### contactsGetStatuses
+* **Get statuses** - [TelegramCore::contactsGetStatuses](methods/getstatuses.md)
 
-## Get contacts
+* **Get contacts** - [TelegramCore::contactsGetContacts](methods/getcontacts.md)
 
-### contactsGetContacts
+* **Import contacts** - [TelegramCore::contactsImportContacts](methods/importcontacts.md)
 
-## Import contacts
+* **Get suggested** - [TelegramCore::contactsGetSuggested](methods/getsuggested.md)
 
-### contactsImportContacts
+* **Delete contact** - [TelegramCore::contactsDeleteContact](methods/deletecontact.md)
 
-## Get suggested
+* **Delete contacts** - [TelegramCore::contactsDeleteContacts](methods/deletecontacts.md)
 
-### contactsGetSuggested
+* **Block** - [TelegramCore::contactsBlock](methods/block.md)
 
-## Delete contact
+* **Unblock** - [TelegramCore::contactsUnblock](methods/unblock.md)
 
-### contactsDeleteContact
+* **Get blocked** - [TelegramCore::contactsGetBlocked](methods/getblocked.md)
 
-## Delete contacts
+* **Export card** - [TelegramCore::contactsExportCard](methods/exportcard.md)
 
-### contactsDeleteContacts
+* **Import card** - [TelegramCore::contactsImportCard](methods/importcard.md)
 
-## Block
+* **Search** - [TelegramCore::contactsSearch](methods/search.md)
 
-### contactsBlock
-
-## Unblock
-
-### contactsUnblock
-
-## Get blocked
-
-### contactsGetBlocked
-
-## Export card
-
-### contactsExportCard
-
-## Import card
-
-### contactsImportCard
-
-## Search
-
-### contactsSearch
-
-## Resolve username
-
-### contactsResolveUsername
+* **Resolve username** - [TelegramCore::contactsResolveUsername](methods/resolveusername.md)
 

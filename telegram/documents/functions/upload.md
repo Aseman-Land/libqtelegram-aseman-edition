@@ -1,14 +1,10 @@
 # Upload
 
-## Save file part
+## Methods:
 
-### uploadSaveFilePart
+* **Save file part** - [TelegramCore::uploadSaveFilePart](methods/savefilepart.md)
 
-## Get file
+* **Get file** - [TelegramCore::uploadGetFile](methods/getfile.md)
 
-### uploadGetFile
-
-## Save big file part
-
-### uploadSaveBigFilePart
+* **Save big file part** - [TelegramCore::uploadSaveBigFilePart](methods/savebigfilepart.md)
 

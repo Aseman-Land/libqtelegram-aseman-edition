@@ -1,10 +1,8 @@
 # Users
 
-## Get users
+## Methods:
 
-### usersGetUsers
+* **Get users** - [TelegramCore::usersGetUsers](methods/getusers.md)
 
-## Get full user
-
-### usersGetFullUser
+* **Get full user** - [TelegramCore::usersGetFullUser](methods/getfulluser.md)
 

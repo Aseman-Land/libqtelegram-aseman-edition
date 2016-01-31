@@ -1,102 +1,54 @@
 # Channels
 
-## Get dialogs
+## Methods:
 
-### channelsGetDialogs
+* **Get dialogs** - [TelegramCore::channelsGetDialogs](methods/getdialogs.md)
 
-## Get important history
+* **Get important history** - [TelegramCore::channelsGetImportantHistory](methods/getimportanthistory.md)
 
-### channelsGetImportantHistory
+* **Read history** - [TelegramCore::channelsReadHistory](methods/readhistory.md)
 
-## Read history
+* **Delete messages** - [TelegramCore::channelsDeleteMessages](methods/deletemessages.md)
 
-### channelsReadHistory
+* **Delete user history** - [TelegramCore::channelsDeleteUserHistory](methods/deleteuserhistory.md)
 
-## Delete messages
+* **Report spam** - [TelegramCore::channelsReportSpam](methods/reportspam.md)
 
-### channelsDeleteMessages
+* **Get messages** - [TelegramCore::channelsGetMessages](methods/getmessages.md)
 
-## Delete user history
+* **Get participants** - [TelegramCore::channelsGetParticipants](methods/getparticipants.md)
 
-### channelsDeleteUserHistory
+* **Get participant** - [TelegramCore::channelsGetParticipant](methods/getparticipant.md)
 
-## Report spam
+* **Get channels** - [TelegramCore::channelsGetChannels](methods/getchannels.md)
 
-### channelsReportSpam
+* **Get full channel** - [TelegramCore::channelsGetFullChannel](methods/getfullchannel.md)
 
-## Get messages
+* **Create channel** - [TelegramCore::channelsCreateChannel](methods/createchannel.md)
 
-### channelsGetMessages
+* **Edit about** - [TelegramCore::channelsEditAbout](methods/editabout.md)
 
-## Get participants
+* **Edit admin** - [TelegramCore::channelsEditAdmin](methods/editadmin.md)
 
-### channelsGetParticipants
+* **Edit title** - [TelegramCore::channelsEditTitle](methods/edittitle.md)
 
-## Get participant
+* **Edit photo** - [TelegramCore::channelsEditPhoto](methods/editphoto.md)
 
-### channelsGetParticipant
+* **Toggle comments** - [TelegramCore::channelsToggleComments](methods/togglecomments.md)
 
-## Get channels
+* **Check username** - [TelegramCore::channelsCheckUsername](methods/checkusername.md)
 
-### channelsGetChannels
+* **Update username** - [TelegramCore::channelsUpdateUsername](methods/updateusername.md)
 
-## Get full channel
+* **Join channel** - [TelegramCore::channelsJoinChannel](methods/joinchannel.md)
 
-### channelsGetFullChannel
+* **Leave channel** - [TelegramCore::channelsLeaveChannel](methods/leavechannel.md)
 
-## Create channel
+* **Invite to channel** - [TelegramCore::channelsInviteToChannel](methods/invitetochannel.md)
 
-### channelsCreateChannel
+* **Kick from channel** - [TelegramCore::channelsKickFromChannel](methods/kickfromchannel.md)
 
-## Edit about
+* **Export invite** - [TelegramCore::channelsExportInvite](methods/exportinvite.md)
 
-### channelsEditAbout
-
-## Edit admin
-
-### channelsEditAdmin
-
-## Edit title
-
-### channelsEditTitle
-
-## Edit photo
-
-### channelsEditPhoto
-
-## Toggle comments
-
-### channelsToggleComments
-
-## Check username
-
-### channelsCheckUsername
-
-## Update username
-
-### channelsUpdateUsername
-
-## Join channel
-
-### channelsJoinChannel
-
-## Leave channel
-
-### channelsLeaveChannel
-
-## Invite to channel
-
-### channelsInviteToChannel
-
-## Kick from channel
-
-### channelsKickFromChannel
-
-## Export invite
-
-### channelsExportInvite
-
-## Delete channel
-
-### channelsDeleteChannel
+* **Delete channel** - [TelegramCore::channelsDeleteChannel](methods/deletechannel.md)
 

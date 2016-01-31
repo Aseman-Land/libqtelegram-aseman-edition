@@ -1,66 +1,36 @@
 # Auth
 
-## Check phone
+## Methods:
 
-### authCheckPhone
+* **Check phone** - [TelegramCore::authCheckPhone](methods/checkphone.md)
 
-## Send code
+* **Send code** - [TelegramCore::authSendCode](methods/sendcode.md)
 
-### authSendCode
+* **Send call** - [TelegramCore::authSendCall](methods/sendcall.md)
 
-## Send call
+* **Sign up** - [TelegramCore::authSignUp](methods/signup.md)
 
-### authSendCall
+* **Sign in** - [TelegramCore::authSignIn](methods/signin.md)
 
-## Sign up
+* **Log out** - [TelegramCore::authLogOut](methods/logout.md)
 
-### authSignUp
+* **Reset authorizations** - [TelegramCore::authResetAuthorizations](methods/resetauthorizations.md)
 
-## Sign in
+* **Send invites** - [TelegramCore::authSendInvites](methods/sendinvites.md)
 
-### authSignIn
+* **Export authorization** - [TelegramCore::authExportAuthorization](methods/exportauthorization.md)
 
-## Log out
+* **Import authorization** - [TelegramCore::authImportAuthorization](methods/importauthorization.md)
 
-### authLogOut
+* **Bind temp auth key** - [TelegramCore::authBindTempAuthKey](methods/bindtempauthkey.md)
 
-## Reset authorizations
+* **Send sms** - [TelegramCore::authSendSms](methods/sendsms.md)
 
-### authResetAuthorizations
+* **Import bot authorization** - [TelegramCore::authImportBotAuthorization](methods/importbotauthorization.md)
 
-## Send invites
+* **Check password** - [TelegramCore::authCheckPassword](methods/checkpassword.md)
 
-### authSendInvites
+* **Request password recovery** - [TelegramCore::authRequestPasswordRecovery](methods/requestpasswordrecovery.md)
 
-## Export authorization
-
-### authExportAuthorization
-
-## Import authorization
-
-### authImportAuthorization
-
-## Bind temp auth key
-
-### authBindTempAuthKey
-
-## Send sms
-
-### authSendSms
-
-## Import bot authorization
-
-### authImportBotAuthorization
-
-## Check password
-
-### authCheckPassword
-
-## Request password recovery
-
-### authRequestPasswordRecovery
-
-## Recover password
-
-### authRecoverPassword
+* **Recover password** - [TelegramCore::authRecoverPassword](methods/recoverpassword.md)
 

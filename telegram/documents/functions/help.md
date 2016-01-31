@@ -1,34 +1,20 @@
 # Help
 
-## Get config
+## Methods:
 
-### helpGetConfig
+* **Get config** - [TelegramCore::helpGetConfig](methods/getconfig.md)
 
-## Get nearest dc
+* **Get nearest dc** - [TelegramCore::helpGetNearestDc](methods/getnearestdc.md)
 
-### helpGetNearestDc
+* **Get app update** - [TelegramCore::helpGetAppUpdate](methods/getappupdate.md)
 
-## Get app update
+* **Save app log** - [TelegramCore::helpSaveAppLog](methods/saveapplog.md)
 
-### helpGetAppUpdate
+* **Get invite text** - [TelegramCore::helpGetInviteText](methods/getinvitetext.md)
 
-## Save app log
+* **Get support** - [TelegramCore::helpGetSupport](methods/getsupport.md)
 
-### helpSaveAppLog
+* **Get app changelog** - [TelegramCore::helpGetAppChangelog](methods/getappchangelog.md)
 
-## Get invite text
-
-### helpGetInviteText
-
-## Get support
-
-### helpGetSupport
-
-## Get app changelog
-
-### helpGetAppChangelog
-
-## Get terms of service
-
-### helpGetTermsOfService
+* **Get terms of service** - [TelegramCore::helpGetTermsOfService](methods/gettermsofservice.md)
 

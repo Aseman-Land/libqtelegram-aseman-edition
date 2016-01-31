@@ -1,18 +1,12 @@
 # Photos
 
-## Update profile photo
+## Methods:
 
-### photosUpdateProfilePhoto
+* **Update profile photo** - [TelegramCore::photosUpdateProfilePhoto](methods/updateprofilephoto.md)
 
-## Upload profile photo
+* **Upload profile photo** - [TelegramCore::photosUploadProfilePhoto](methods/uploadprofilephoto.md)
 
-### photosUploadProfilePhoto
+* **Delete photos** - [TelegramCore::photosDeletePhotos](methods/deletephotos.md)
 
-## Delete photos
-
-### photosDeletePhotos
-
-## Get user photos
-
-### photosGetUserPhotos
+* **Get user photos** - [TelegramCore::photosGetUserPhotos](methods/getuserphotos.md)
 

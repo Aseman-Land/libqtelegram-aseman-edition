@@ -1,98 +1,52 @@
 # Account
 
-## Register device
+## Methods:
 
-### accountRegisterDevice
+* **Register device** - [TelegramCore::accountRegisterDevice](methods/registerdevice.md)
 
-## Unregister device
+* **Unregister device** - [TelegramCore::accountUnregisterDevice](methods/unregisterdevice.md)
 
-### accountUnregisterDevice
+* **Update notify settings** - [TelegramCore::accountUpdateNotifySettings](methods/updatenotifysettings.md)
 
-## Update notify settings
+* **Get notify settings** - [TelegramCore::accountGetNotifySettings](methods/getnotifysettings.md)
 
-### accountUpdateNotifySettings
+* **Reset notify settings** - [TelegramCore::accountResetNotifySettings](methods/resetnotifysettings.md)
 
-## Get notify settings
+* **Update profile** - [TelegramCore::accountUpdateProfile](methods/updateprofile.md)
 
-### accountGetNotifySettings
+* **Update status** - [TelegramCore::accountUpdateStatus](methods/updatestatus.md)
 
-## Reset notify settings
+* **Get wall papers** - [TelegramCore::accountGetWallPapers](methods/getwallpapers.md)
 
-### accountResetNotifySettings
+* **Report peer** - [TelegramCore::accountReportPeer](methods/reportpeer.md)
 
-## Update profile
+* **Check username** - [TelegramCore::accountCheckUsername](methods/checkusername.md)
 
-### accountUpdateProfile
+* **Update username** - [TelegramCore::accountUpdateUsername](methods/updateusername.md)
 
-## Update status
+* **Get privacy** - [TelegramCore::accountGetPrivacy](methods/getprivacy.md)
 
-### accountUpdateStatus
+* **Set privacy** - [TelegramCore::accountSetPrivacy](methods/setprivacy.md)
 
-## Get wall papers
+* **Delete account** - [TelegramCore::accountDeleteAccount](methods/deleteaccount.md)
 
-### accountGetWallPapers
+* **Get account ttl** - [TelegramCore::accountGetAccountTTL](methods/getaccountttl.md)
 
-## Report peer
+* **Set account ttl** - [TelegramCore::accountSetAccountTTL](methods/setaccountttl.md)
 
-### accountReportPeer
+* **Send change phone code** - [TelegramCore::accountSendChangePhoneCode](methods/sendchangephonecode.md)
 
-## Check username
+* **Change phone** - [TelegramCore::accountChangePhone](methods/changephone.md)
 
-### accountCheckUsername
+* **Update device locked** - [TelegramCore::accountUpdateDeviceLocked](methods/updatedevicelocked.md)
 
-## Update username
+* **Get authorizations** - [TelegramCore::accountGetAuthorizations](methods/getauthorizations.md)
 
-### accountUpdateUsername
+* **Reset authorization** - [TelegramCore::accountResetAuthorization](methods/resetauthorization.md)
 
-## Get privacy
+* **Get password** - [TelegramCore::accountGetPassword](methods/getpassword.md)
 
-### accountGetPrivacy
+* **Get password settings** - [TelegramCore::accountGetPasswordSettings](methods/getpasswordsettings.md)
 
-## Set privacy
-
-### accountSetPrivacy
-
-## Delete account
-
-### accountDeleteAccount
-
-## Get account ttl
-
-### accountGetAccountTTL
-
-## Set account ttl
-
-### accountSetAccountTTL
-
-## Send change phone code
-
-### accountSendChangePhoneCode
-
-## Change phone
-
-### accountChangePhone
-
-## Update device locked
-
-### accountUpdateDeviceLocked
-
-## Get authorizations
-
-### accountGetAuthorizations
-
-## Reset authorization
-
-### accountResetAuthorization
-
-## Get password
-
-### accountGetPassword
-
-## Get password settings
-
-### accountGetPasswordSettings
-
-## Update password settings
-
-### accountUpdatePasswordSettings
+* **Update password settings** - [TelegramCore::accountUpdatePasswordSettings](methods/updatepasswordsettings.md)
 

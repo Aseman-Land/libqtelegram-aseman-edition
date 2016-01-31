@@ -1,226 +1,116 @@
 # Messages
 
-## Get messages
+## Methods:
 
-### messagesGetMessages
+* **Get messages** - [TelegramCore::messagesGetMessages](methods/getmessages.md)
 
-## Get dialogs
+* **Get dialogs** - [TelegramCore::messagesGetDialogs](methods/getdialogs.md)
 
-### messagesGetDialogs
+* **Get history** - [TelegramCore::messagesGetHistory](methods/gethistory.md)
 
-## Get history
+* **Search** - [TelegramCore::messagesSearch](methods/search.md)
 
-### messagesGetHistory
+* **Read history** - [TelegramCore::messagesReadHistory](methods/readhistory.md)
 
-## Search
+* **Delete history** - [TelegramCore::messagesDeleteHistory](methods/deletehistory.md)
 
-### messagesSearch
+* **Delete messages** - [TelegramCore::messagesDeleteMessages](methods/deletemessages.md)
 
-## Read history
+* **Received messages** - [TelegramCore::messagesReceivedMessages](methods/receivedmessages.md)
 
-### messagesReadHistory
+* **Set typing** - [TelegramCore::messagesSetTyping](methods/settyping.md)
 
-## Delete history
+* **Send message** - [TelegramCore::messagesSendMessage](methods/sendmessage.md)
 
-### messagesDeleteHistory
+* **Send media** - [TelegramCore::messagesSendMedia](methods/sendmedia.md)
 
-## Delete messages
+* **Forward messages** - [TelegramCore::messagesForwardMessages](methods/forwardmessages.md)
 
-### messagesDeleteMessages
+* **Report spam** - [TelegramCore::messagesReportSpam](methods/reportspam.md)
 
-## Received messages
+* **Get chats** - [TelegramCore::messagesGetChats](methods/getchats.md)
 
-### messagesReceivedMessages
+* **Get full chat** - [TelegramCore::messagesGetFullChat](methods/getfullchat.md)
 
-## Set typing
+* **Edit chat title** - [TelegramCore::messagesEditChatTitle](methods/editchattitle.md)
 
-### messagesSetTyping
+* **Edit chat photo** - [TelegramCore::messagesEditChatPhoto](methods/editchatphoto.md)
 
-## Send message
+* **Add chat user** - [TelegramCore::messagesAddChatUser](methods/addchatuser.md)
 
-### messagesSendMessage
+* **Delete chat user** - [TelegramCore::messagesDeleteChatUser](methods/deletechatuser.md)
 
-## Send media
+* **Create chat** - [TelegramCore::messagesCreateChat](methods/createchat.md)
 
-### messagesSendMedia
+* **Forward message** - [TelegramCore::messagesForwardMessage](methods/forwardmessage.md)
 
-## Forward messages
+* **Send broadcast** - [TelegramCore::messagesSendBroadcast](methods/sendbroadcast.md)
 
-### messagesForwardMessages
+* **Get dh config** - [TelegramCore::messagesGetDhConfig](methods/getdhconfig.md)
 
-## Report spam
+* **Request encryption** - [TelegramCore::messagesRequestEncryption](methods/requestencryption.md)
 
-### messagesReportSpam
+* **Accept encryption** - [TelegramCore::messagesAcceptEncryption](methods/acceptencryption.md)
 
-## Get chats
+* **Discard encryption** - [TelegramCore::messagesDiscardEncryption](methods/discardencryption.md)
 
-### messagesGetChats
+* **Set encrypted typing** - [TelegramCore::messagesSetEncryptedTyping](methods/setencryptedtyping.md)
 
-## Get full chat
+* **Read encrypted history** - [TelegramCore::messagesReadEncryptedHistory](methods/readencryptedhistory.md)
 
-### messagesGetFullChat
+* **Send encrypted** - [TelegramCore::messagesSendEncrypted](methods/sendencrypted.md)
 
-## Edit chat title
+* **Send encrypted file** - [TelegramCore::messagesSendEncryptedFile](methods/sendencryptedfile.md)
 
-### messagesEditChatTitle
+* **Send encrypted service** - [TelegramCore::messagesSendEncryptedService](methods/sendencryptedservice.md)
 
-## Edit chat photo
+* **Received queue** - [TelegramCore::messagesReceivedQueue](methods/receivedqueue.md)
 
-### messagesEditChatPhoto
+* **Read message contents** - [TelegramCore::messagesReadMessageContents](methods/readmessagecontents.md)
 
-## Add chat user
+* **Get stickers** - [TelegramCore::messagesGetStickers](methods/getstickers.md)
 
-### messagesAddChatUser
+* **Get all stickers** - [TelegramCore::messagesGetAllStickers](methods/getallstickers.md)
 
-## Delete chat user
+* **Get web page preview** - [TelegramCore::messagesGetWebPagePreview](methods/getwebpagepreview.md)
 
-### messagesDeleteChatUser
+* **Export chat invite** - [TelegramCore::messagesExportChatInvite](methods/exportchatinvite.md)
 
-## Create chat
+* **Check chat invite** - [TelegramCore::messagesCheckChatInvite](methods/checkchatinvite.md)
 
-### messagesCreateChat
+* **Import chat invite** - [TelegramCore::messagesImportChatInvite](methods/importchatinvite.md)
 
-## Forward message
+* **Get sticker set** - [TelegramCore::messagesGetStickerSet](methods/getstickerset.md)
 
-### messagesForwardMessage
+* **Install sticker set** - [TelegramCore::messagesInstallStickerSet](methods/installstickerset.md)
 
-## Send broadcast
+* **Uninstall sticker set** - [TelegramCore::messagesUninstallStickerSet](methods/uninstallstickerset.md)
 
-### messagesSendBroadcast
+* **Start bot** - [TelegramCore::messagesStartBot](methods/startbot.md)
 
-## Get dh config
+* **Get messages views** - [TelegramCore::messagesGetMessagesViews](methods/getmessagesviews.md)
 
-### messagesGetDhConfig
+* **Toggle chat admins** - [TelegramCore::messagesToggleChatAdmins](methods/togglechatadmins.md)
 
-## Request encryption
+* **Edit chat admin** - [TelegramCore::messagesEditChatAdmin](methods/editchatadmin.md)
 
-### messagesRequestEncryption
+* **Migrate chat** - [TelegramCore::messagesMigrateChat](methods/migratechat.md)
 
-## Accept encryption
+* **Search global** - [TelegramCore::messagesSearchGlobal](methods/searchglobal.md)
 
-### messagesAcceptEncryption
+* **Reorder sticker sets** - [TelegramCore::messagesReorderStickerSets](methods/reorderstickersets.md)
 
-## Discard encryption
+* **Get document by hash** - [TelegramCore::messagesGetDocumentByHash](methods/getdocumentbyhash.md)
 
-### messagesDiscardEncryption
+* **Search gifs** - [TelegramCore::messagesSearchGifs](methods/searchgifs.md)
 
-## Set encrypted typing
+* **Get saved gifs** - [TelegramCore::messagesGetSavedGifs](methods/getsavedgifs.md)
 
-### messagesSetEncryptedTyping
+* **Save gif** - [TelegramCore::messagesSaveGif](methods/savegif.md)
 
-## Read encrypted history
+* **Get inline bot results** - [TelegramCore::messagesGetInlineBotResults](methods/getinlinebotresults.md)
 
-### messagesReadEncryptedHistory
+* **Set inline bot results** - [TelegramCore::messagesSetInlineBotResults](methods/setinlinebotresults.md)
 
-## Send encrypted
-
-### messagesSendEncrypted
-
-## Send encrypted file
-
-### messagesSendEncryptedFile
-
-## Send encrypted service
-
-### messagesSendEncryptedService
-
-## Received queue
-
-### messagesReceivedQueue
-
-## Read message contents
-
-### messagesReadMessageContents
-
-## Get stickers
-
-### messagesGetStickers
-
-## Get all stickers
-
-### messagesGetAllStickers
-
-## Get web page preview
-
-### messagesGetWebPagePreview
-
-## Export chat invite
-
-### messagesExportChatInvite
-
-## Check chat invite
-
-### messagesCheckChatInvite
-
-## Import chat invite
-
-### messagesImportChatInvite
-
-## Get sticker set
-
-### messagesGetStickerSet
-
-## Install sticker set
-
-### messagesInstallStickerSet
-
-## Uninstall sticker set
-
-### messagesUninstallStickerSet
-
-## Start bot
-
-### messagesStartBot
-
-## Get messages views
-
-### messagesGetMessagesViews
-
-## Toggle chat admins
-
-### messagesToggleChatAdmins
-
-## Edit chat admin
-
-### messagesEditChatAdmin
-
-## Migrate chat
-
-### messagesMigrateChat
-
-## Search global
-
-### messagesSearchGlobal
-
-## Reorder sticker sets
-
-### messagesReorderStickerSets
-
-## Get document by hash
-
-### messagesGetDocumentByHash
-
-## Search gifs
-
-### messagesSearchGifs
-
-## Get saved gifs
-
-### messagesGetSavedGifs
-
-## Save gif
-
-### messagesSaveGif
-
-## Get inline bot results
-
-### messagesGetInlineBotResults
-
-## Set inline bot results
-
-### messagesSetInlineBotResults
-
-## Send inline bot result
-
-### messagesSendInlineBotResult
+* **Send inline bot result** - [TelegramCore::messagesSendInlineBotResult](methods/sendinlinebotresult.md)
 
