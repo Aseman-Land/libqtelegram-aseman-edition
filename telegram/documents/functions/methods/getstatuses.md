@@ -9,6 +9,8 @@ TelegramCore::contactsGetStatuses
 `contacts.getStatuses#c4a353ee = Vector<ContactStatus>;`
 ## Parameters:
 
+|Name|Type|Default|
+|----|----|-------|
 |callBack|Callback<QList<ContactStatus>\>|0|
 |timeout|qint32|TelegramCore::timeOut()|
 

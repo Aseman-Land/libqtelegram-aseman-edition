@@ -9,6 +9,8 @@ TelegramCore::helpGetConfig
 `help.getConfig#c4f9186b = Config;`
 ## Parameters:
 
+|Name|Type|Default|
+|----|----|-------|
 |callBack|Callback<Config\>|0|
 |timeout|qint32|TelegramCore::timeOut()|
 

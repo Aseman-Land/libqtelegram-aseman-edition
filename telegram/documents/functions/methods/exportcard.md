@@ -9,6 +9,8 @@ TelegramCore::contactsExportCard
 `contacts.exportCard#84e53737 = Vector<int>;`
 ## Parameters:
 
+|Name|Type|Default|
+|----|----|-------|
 |callBack|Callback<QList<qint32>\>|0|
 |timeout|qint32|TelegramCore::timeOut()|
 

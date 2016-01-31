@@ -9,6 +9,8 @@ TelegramCore::accountGetPassword
 `account.getPassword#548a30f5 = account.Password;`
 ## Parameters:
 
+|Name|Type|Default|
+|----|----|-------|
 |callBack|Callback<AccountPassword\>|0|
 |timeout|qint32|TelegramCore::timeOut()|
 

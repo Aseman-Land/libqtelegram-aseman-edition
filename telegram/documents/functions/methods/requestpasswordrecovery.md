@@ -9,6 +9,8 @@ TelegramCore::authRequestPasswordRecovery
 `auth.requestPasswordRecovery#d897bc66 = auth.PasswordRecovery;`
 ## Parameters:
 
+|Name|Type|Default|
+|----|----|-------|
 |callBack|Callback<AuthPasswordRecovery\>|0|
 |timeout|qint32|TelegramCore::timeOut()|
 

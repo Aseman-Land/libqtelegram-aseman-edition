@@ -9,6 +9,8 @@ TelegramCore::helpGetSupport
 `help.getSupport#9cdf08cd = help.Support;`
 ## Parameters:
 
+|Name|Type|Default|
+|----|----|-------|
 |callBack|Callback<HelpSupport\>|0|
 |timeout|qint32|TelegramCore::timeOut()|
 

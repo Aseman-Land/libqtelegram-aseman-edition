@@ -9,6 +9,8 @@ TelegramCore::authLogOut
 `auth.logOut#5717da40 = Bool;`
 ## Parameters:
 
+|Name|Type|Default|
+|----|----|-------|
 |callBack|Callback<bool\>|0|
 |timeout|qint32|TelegramCore::timeOut()|
 

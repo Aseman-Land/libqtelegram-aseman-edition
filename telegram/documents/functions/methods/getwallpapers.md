@@ -9,6 +9,8 @@ TelegramCore::accountGetWallPapers
 `account.getWallPapers#c04cfac2 = Vector<WallPaper>;`
 ## Parameters:
 
+|Name|Type|Default|
+|----|----|-------|
 |callBack|Callback<QList<WallPaper>\>|0|
 |timeout|qint32|TelegramCore::timeOut()|
 

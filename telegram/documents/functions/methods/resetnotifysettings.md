@@ -9,6 +9,8 @@ TelegramCore::accountResetNotifySettings
 `account.resetNotifySettings#db7e1747 = Bool;`
 ## Parameters:
 
+|Name|Type|Default|
+|----|----|-------|
 |callBack|Callback<bool\>|0|
 |timeout|qint32|TelegramCore::timeOut()|
 

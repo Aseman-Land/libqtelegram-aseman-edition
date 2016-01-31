@@ -9,6 +9,8 @@ TelegramCore::accountGetAuthorizations
 `account.getAuthorizations#e320c158 = account.Authorizations;`
 ## Parameters:
 
+|Name|Type|Default|
+|----|----|-------|
 |callBack|Callback<AccountAuthorizations\>|0|
 |timeout|qint32|TelegramCore::timeOut()|
 

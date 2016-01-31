@@ -9,6 +9,8 @@ TelegramCore::helpGetNearestDc
 `help.getNearestDc#1fb33026 = NearestDc;`
 ## Parameters:
 
+|Name|Type|Default|
+|----|----|-------|
 |callBack|Callback<NearestDc\>|0|
 |timeout|qint32|TelegramCore::timeOut()|
 

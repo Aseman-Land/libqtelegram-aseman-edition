@@ -9,6 +9,8 @@ TelegramCore::authResetAuthorizations
 `auth.resetAuthorizations#9fab0d1a = Bool;`
 ## Parameters:
 
+|Name|Type|Default|
+|----|----|-------|
 |callBack|Callback<bool\>|0|
 |timeout|qint32|TelegramCore::timeOut()|
 

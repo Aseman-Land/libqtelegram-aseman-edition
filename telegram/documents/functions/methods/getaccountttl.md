@@ -9,6 +9,8 @@ TelegramCore::accountGetAccountTTL
 `account.getAccountTTL#8fc711d = AccountDaysTTL;`
 ## Parameters:
 
+|Name|Type|Default|
+|----|----|-------|
 |callBack|Callback<AccountDaysTTL\>|0|
 |timeout|qint32|TelegramCore::timeOut()|
 

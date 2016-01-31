@@ -9,6 +9,8 @@ TelegramCore::updatesGetState
 `updates.getState#edd4882a = updates.State;`
 ## Parameters:
 
+|Name|Type|Default|
+|----|----|-------|
 |callBack|Callback<UpdatesState\>|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
