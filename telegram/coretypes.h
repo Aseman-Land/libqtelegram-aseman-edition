@@ -23,6 +23,18 @@ public:
         typeUploadGetFileEmpty = 0xe662a8f,
         typeUploadGetFileFinished = 0xef122d8,
         typeUploadGetFileProgress = 0x6db838e,
+        typeUploadSendEncryptedCanceled = 0x4de1fad,
+        typeUploadSendEncryptedEmpty = 0x312c140,
+        typeUploadSendEncryptedFinished = 0x312c140,
+        typeUploadSendEncryptedProgress = 0xb7bd8ce,
+        typeUploadSendFileCanceled = 0x63f679f,
+        typeUploadSendFileEmpty = 0x3b89a68,
+        typeUploadSendFileFinished = 0x0fb653b,
+        typeUploadSendFileProgress = 0x171793b,
+        typeUploadSendPhotoCanceled = 0xce5de24,
+        typeUploadSendPhotoEmpty = 0x9fd3cbf,
+        typeUploadSendPhotoFinished = 0x29d89fa,
+        typeUploadSendPhotoProgress = 0x403636a,
         typeVector = 0x1cb5c415,
         typeLayerVersion = 45
     };

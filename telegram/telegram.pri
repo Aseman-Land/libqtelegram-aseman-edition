@@ -9,7 +9,9 @@ include(functions/functions.pri)
 include(types/types.pri)
 include(customtypes/customtypes.pri)
 
-include(objects/typeobjects.pri)
+contains(CONFIG, typeobjects) {
+    include(objects/typeobjects.pri)
+}
 
 HEADERS += \
     $$PWD/coretypes.h \
