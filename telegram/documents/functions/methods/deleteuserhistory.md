@@ -6,33 +6,43 @@ TelegramCore::channelsDeleteUserHistory
 
 ## Schema:
 
-`channels.deleteUserHistory#d10dd71b channel:InputChannel user_id:InputUser = messages.AffectedHistory;`
+```c++
+channels.deleteUserHistory#d10dd71b channel:InputChannel user_id:InputUser = messages.AffectedHistory;
+```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
 |channel|[InputChannel](../../types/inputchannel.md)||
 |userId|[InputUser](../../types/inputuser.md)||
-|callBack|Callback<MessagesAffectedHistory\>|0|
+|callBack|Callback&lt;[MessagesAffectedHistory](../../types/messagesaffectedhistory.md)&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[MessagesAffectedHistory](../../types/messagesaffectedhistory.md)|
+|msgId|qint64|
+|result|[MessagesAffectedHistory](../../types/messagesaffectedhistory.md)|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `deleteUserHistoryAnswer(qint64 msgId, const MessagesAffectedHistory & result)`
-* `deleteUserHistoryError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+deleteUserHistoryAnswer(qint64 msgId, const MessagesAffectedHistory & result)
+```
+```c++
+deleteUserHistoryError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onDeleteUserHistoryAnswer(qint64 msgId, const MessagesAffectedHistory & result)`
-* `onDeleteUserHistoryError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onDeleteUserHistoryAnswer(qint64 msgId, const MessagesAffectedHistory & result)
+```
+```c++
+onDeleteUserHistoryError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -40,6 +50,8 @@ TelegramCore::channelsDeleteUserHistory
 
 ## Examples:
 
-`tg->deleteUserHistory(channel, user_id, [=](TG_DELETE_USER_HISTORY_CALLBACK){
+```c++
+tg->deleteUserHistory(channel, user_id, [=](TG_DELETE_USER_HISTORY_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

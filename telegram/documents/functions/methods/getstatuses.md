@@ -6,31 +6,41 @@ TelegramCore::contactsGetStatuses
 
 ## Schema:
 
-`contacts.getStatuses#c4a353ee = Vector<ContactStatus>;`
+```c++
+contacts.getStatuses#c4a353ee = Vector<ContactStatus>;
+```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
-|callBack|Callback<QList<ContactStatus>\>|0|
+|callBack|Callback&lt;QList&lt;[ContactStatus](../../types/contactstatus.md)&gt;&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[QList<ContactStatus>](../../types/qlist<contactstatus>.md)|
+|msgId|qint64|
+|result|QList&lt;[ContactStatus](../../types/contactstatus.md)&gt;|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `getStatusesAnswer(qint64 msgId, const QList<ContactStatus> & result)`
-* `getStatusesError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+getStatusesAnswer(qint64 msgId, const QList&lt;ContactStatus&gt; & result)
+```
+```c++
+getStatusesError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onGetStatusesAnswer(qint64 msgId, const QList<ContactStatus> & result)`
-* `onGetStatusesError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onGetStatusesAnswer(qint64 msgId, const QList&lt;ContactStatus&gt; & result)
+```
+```c++
+onGetStatusesError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -38,6 +48,8 @@ TelegramCore::contactsGetStatuses
 
 ## Examples:
 
-`tg->getStatuses([=](TG_GET_STATUSES_CALLBACK){
+```c++
+tg->getStatuses([=](TG_GET_STATUSES_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

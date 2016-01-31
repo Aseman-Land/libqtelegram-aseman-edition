@@ -9,7 +9,9 @@
 
 #### Schema:
 
-`encryptedFileEmpty#c21f497e = EncryptedFile;`
+```c++
+encryptedFileEmpty#c21f497e = EncryptedFile;
+```
 
 #### Parameters:
 
@@ -18,7 +20,9 @@
 
 #### Schema:
 
-`encryptedFile#4a70994c id:long access_hash:long size:int dc_id:int key_fingerprint:int = EncryptedFile;`
+```c++
+encryptedFile#4a70994c id:long access_hash:long size:int dc_id:int key_fingerprint:int = EncryptedFile;
+```
 
 #### Parameters:
 

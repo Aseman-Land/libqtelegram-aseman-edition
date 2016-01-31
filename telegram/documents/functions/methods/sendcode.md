@@ -6,7 +6,9 @@ TelegramCore::authSendCode
 
 ## Schema:
 
-`auth.sendCode#768d5f4d phone_number:string sms_type:int api_id:int api_hash:string lang_code:string = auth.SentCode;`
+```c++
+auth.sendCode#768d5f4d phone_number:string sms_type:int api_id:int api_hash:string lang_code:string = auth.SentCode;
+```
 ## Parameters:
 
 |Name|Type|Default|
@@ -16,26 +18,34 @@ TelegramCore::authSendCode
 |apiId|qint32||
 |apiHash|QString||
 |langCode|QString||
-|callBack|Callback<AuthSentCode\>|0|
+|callBack|Callback&lt;[AuthSentCode](../../types/authsentcode.md)&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[AuthSentCode](../../types/authsentcode.md)|
+|msgId|qint64|
+|result|[AuthSentCode](../../types/authsentcode.md)|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `sendCodeAnswer(qint64 msgId, const AuthSentCode & result)`
-* `sendCodeError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+sendCodeAnswer(qint64 msgId, const AuthSentCode & result)
+```
+```c++
+sendCodeError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onSendCodeAnswer(qint64 msgId, const AuthSentCode & result)`
-* `onSendCodeError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onSendCodeAnswer(qint64 msgId, const AuthSentCode & result)
+```
+```c++
+onSendCodeError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -43,6 +53,8 @@ TelegramCore::authSendCode
 
 ## Examples:
 
-`tg->sendCode(phone_number, sms_type, api_id, api_hash, lang_code, [=](TG_SEND_CODE_CALLBACK){
+```c++
+tg->sendCode(phone_number, sms_type, api_id, api_hash, lang_code, [=](TG_SEND_CODE_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

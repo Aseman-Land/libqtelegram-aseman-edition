@@ -9,7 +9,9 @@
 
 #### Schema:
 
-`inputDocumentEmpty#72f0eaae = InputDocument;`
+```c++
+inputDocumentEmpty#72f0eaae = InputDocument;
+```
 
 #### Parameters:
 
@@ -18,7 +20,9 @@
 
 #### Schema:
 
-`inputDocument#18798952 id:long access_hash:long = InputDocument;`
+```c++
+inputDocument#18798952 id:long access_hash:long = InputDocument;
+```
 
 #### Parameters:
 

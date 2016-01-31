@@ -17,7 +17,9 @@
 
 #### Schema:
 
-`sendMessageTypingAction#16bf744e = SendMessageAction;`
+```c++
+sendMessageTypingAction#16bf744e = SendMessageAction;
+```
 
 #### Parameters:
 
@@ -26,7 +28,9 @@
 
 #### Schema:
 
-`sendMessageCancelAction#fd5ec8f5 = SendMessageAction;`
+```c++
+sendMessageCancelAction#fd5ec8f5 = SendMessageAction;
+```
 
 #### Parameters:
 
@@ -35,7 +39,9 @@
 
 #### Schema:
 
-`sendMessageRecordVideoAction#a187d66f = SendMessageAction;`
+```c++
+sendMessageRecordVideoAction#a187d66f = SendMessageAction;
+```
 
 #### Parameters:
 
@@ -44,7 +50,9 @@
 
 #### Schema:
 
-`sendMessageUploadVideoAction#e9763aec progress:int = SendMessageAction;`
+```c++
+sendMessageUploadVideoAction#e9763aec progress:int = SendMessageAction;
+```
 
 #### Parameters:
 
@@ -56,7 +64,9 @@
 
 #### Schema:
 
-`sendMessageRecordAudioAction#d52f73f7 = SendMessageAction;`
+```c++
+sendMessageRecordAudioAction#d52f73f7 = SendMessageAction;
+```
 
 #### Parameters:
 
@@ -65,7 +75,9 @@
 
 #### Schema:
 
-`sendMessageUploadAudioAction#f351d7ab progress:int = SendMessageAction;`
+```c++
+sendMessageUploadAudioAction#f351d7ab progress:int = SendMessageAction;
+```
 
 #### Parameters:
 
@@ -77,7 +89,9 @@
 
 #### Schema:
 
-`sendMessageUploadPhotoAction#d1d34a26 progress:int = SendMessageAction;`
+```c++
+sendMessageUploadPhotoAction#d1d34a26 progress:int = SendMessageAction;
+```
 
 #### Parameters:
 
@@ -89,7 +103,9 @@
 
 #### Schema:
 
-`sendMessageUploadDocumentAction#aa0cd9e4 progress:int = SendMessageAction;`
+```c++
+sendMessageUploadDocumentAction#aa0cd9e4 progress:int = SendMessageAction;
+```
 
 #### Parameters:
 
@@ -101,7 +117,9 @@
 
 #### Schema:
 
-`sendMessageGeoLocationAction#176f8ba1 = SendMessageAction;`
+```c++
+sendMessageGeoLocationAction#176f8ba1 = SendMessageAction;
+```
 
 #### Parameters:
 
@@ -110,7 +128,9 @@
 
 #### Schema:
 
-`sendMessageChooseContactAction#628cbc6f = SendMessageAction;`
+```c++
+sendMessageChooseContactAction#628cbc6f = SendMessageAction;
+```
 
 #### Parameters:
 

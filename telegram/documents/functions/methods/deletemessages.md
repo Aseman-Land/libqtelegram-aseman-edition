@@ -6,32 +6,42 @@ TelegramCore::messagesDeleteMessages
 
 ## Schema:
 
-`messages.deleteMessages#a5f18925 id:Vector<int> = messages.AffectedMessages;`
+```c++
+messages.deleteMessages#a5f18925 id:Vector<int> = messages.AffectedMessages;
+```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
-|id|QList<qint32>||
-|callBack|Callback<MessagesAffectedMessages\>|0|
+|id|QList&lt;qint32&gt;||
+|callBack|Callback&lt;[MessagesAffectedMessages](../../types/messagesaffectedmessages.md)&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[MessagesAffectedMessages](../../types/messagesaffectedmessages.md)|
+|msgId|qint64|
+|result|[MessagesAffectedMessages](../../types/messagesaffectedmessages.md)|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `deleteMessagesAnswer(qint64 msgId, const MessagesAffectedMessages & result)`
-* `deleteMessagesError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+deleteMessagesAnswer(qint64 msgId, const MessagesAffectedMessages & result)
+```
+```c++
+deleteMessagesError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onDeleteMessagesAnswer(qint64 msgId, const MessagesAffectedMessages & result)`
-* `onDeleteMessagesError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onDeleteMessagesAnswer(qint64 msgId, const MessagesAffectedMessages & result)
+```
+```c++
+onDeleteMessagesError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -39,6 +49,8 @@ TelegramCore::messagesDeleteMessages
 
 ## Examples:
 
-`tg->deleteMessages(id, [=](TG_DELETE_MESSAGES_CALLBACK){
+```c++
+tg->deleteMessages(id, [=](TG_DELETE_MESSAGES_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

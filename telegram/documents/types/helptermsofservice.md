@@ -8,7 +8,9 @@
 
 #### Schema:
 
-`help.termsOfService#f1ee3e90 text:string = help.TermsOfService;`
+```c++
+help.termsOfService#f1ee3e90 text:string = help.TermsOfService;
+```
 
 #### Parameters:
 

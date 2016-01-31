@@ -9,7 +9,9 @@
 
 #### Schema:
 
-`botInfoEmpty#bb2e37ce = BotInfo;`
+```c++
+botInfoEmpty#bb2e37ce = BotInfo;
+```
 
 #### Parameters:
 
@@ -18,7 +20,9 @@
 
 #### Schema:
 
-`botInfo#9cf585d user_id:int version:int share_text:string description:string commands:Vector<BotCommand> = BotInfo;`
+```c++
+botInfo#9cf585d user_id:int version:int share_text:string description:string commands:Vector<BotCommand> = BotInfo;
+```
 
 #### Parameters:
 
@@ -28,5 +32,5 @@
 |version|qint32|
 |shareText|QString|
 |description|QString|
-|commands|QList<BotCommand>|
+|commands|QList&lt;[BotCommand](botcommand.md)&gt;|
 

@@ -6,32 +6,42 @@ TelegramCore::contactsDeleteContact
 
 ## Schema:
 
-`contacts.deleteContact#8e953744 id:InputUser = contacts.Link;`
+```c++
+contacts.deleteContact#8e953744 id:InputUser = contacts.Link;
+```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
 |id|[InputUser](../../types/inputuser.md)||
-|callBack|Callback<ContactsLink\>|0|
+|callBack|Callback&lt;[ContactsLink](../../types/contactslink.md)&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[ContactsLink](../../types/contactslink.md)|
+|msgId|qint64|
+|result|[ContactsLink](../../types/contactslink.md)|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `deleteContactAnswer(qint64 msgId, const ContactsLink & result)`
-* `deleteContactError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+deleteContactAnswer(qint64 msgId, const ContactsLink & result)
+```
+```c++
+deleteContactError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onDeleteContactAnswer(qint64 msgId, const ContactsLink & result)`
-* `onDeleteContactError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onDeleteContactAnswer(qint64 msgId, const ContactsLink & result)
+```
+```c++
+onDeleteContactError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -39,6 +49,8 @@ TelegramCore::contactsDeleteContact
 
 ## Examples:
 
-`tg->deleteContact(id, [=](TG_DELETE_CONTACT_CALLBACK){
+```c++
+tg->deleteContact(id, [=](TG_DELETE_CONTACT_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

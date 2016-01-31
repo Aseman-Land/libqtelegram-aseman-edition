@@ -9,7 +9,9 @@
 
 #### Schema:
 
-`userProfilePhotoEmpty#4f11bae1 = UserProfilePhoto;`
+```c++
+userProfilePhotoEmpty#4f11bae1 = UserProfilePhoto;
+```
 
 #### Parameters:
 
@@ -18,7 +20,9 @@
 
 #### Schema:
 
-`userProfilePhoto#d559d8c8 photo_id:long photo_small:FileLocation photo_big:FileLocation = UserProfilePhoto;`
+```c++
+userProfilePhoto#d559d8c8 photo_id:long photo_small:FileLocation photo_big:FileLocation = UserProfilePhoto;
+```
 
 #### Parameters:
 

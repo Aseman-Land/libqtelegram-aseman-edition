@@ -9,7 +9,9 @@
 
 #### Schema:
 
-`inputPeerNotifyEventsEmpty#f03064d8 = InputPeerNotifyEvents;`
+```c++
+inputPeerNotifyEventsEmpty#f03064d8 = InputPeerNotifyEvents;
+```
 
 #### Parameters:
 
@@ -18,7 +20,9 @@
 
 #### Schema:
 
-`inputPeerNotifyEventsAll#e86a2c74 = InputPeerNotifyEvents;`
+```c++
+inputPeerNotifyEventsAll#e86a2c74 = InputPeerNotifyEvents;
+```
 
 #### Parameters:
 

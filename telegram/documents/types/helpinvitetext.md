@@ -8,7 +8,9 @@
 
 #### Schema:
 
-`help.inviteText#18cb9f78 message:string = help.InviteText;`
+```c++
+help.inviteText#18cb9f78 message:string = help.InviteText;
+```
 
 #### Parameters:
 

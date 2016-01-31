@@ -6,7 +6,9 @@ TelegramCore::messagesSendEncrypted
 
 ## Schema:
 
-`messages.sendEncrypted#a9776773 peer:InputEncryptedChat random_id:long data:bytes = messages.SentEncryptedMessage;`
+```c++
+messages.sendEncrypted#a9776773 peer:InputEncryptedChat random_id:long data:bytes = messages.SentEncryptedMessage;
+```
 ## Parameters:
 
 |Name|Type|Default|
@@ -14,26 +16,34 @@ TelegramCore::messagesSendEncrypted
 |peer|[InputEncryptedChat](../../types/inputencryptedchat.md)||
 |randomId|qint64||
 |data|QByteArray||
-|callBack|Callback<MessagesSentEncryptedMessage\>|0|
+|callBack|Callback&lt;[MessagesSentEncryptedMessage](../../types/messagessentencryptedmessage.md)&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[MessagesSentEncryptedMessage](../../types/messagessentencryptedmessage.md)|
+|msgId|qint64|
+|result|[MessagesSentEncryptedMessage](../../types/messagessentencryptedmessage.md)|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `sendEncryptedAnswer(qint64 msgId, const MessagesSentEncryptedMessage & result)`
-* `sendEncryptedError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+sendEncryptedAnswer(qint64 msgId, const MessagesSentEncryptedMessage & result)
+```
+```c++
+sendEncryptedError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onSendEncryptedAnswer(qint64 msgId, const MessagesSentEncryptedMessage & result)`
-* `onSendEncryptedError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onSendEncryptedAnswer(qint64 msgId, const MessagesSentEncryptedMessage & result)
+```
+```c++
+onSendEncryptedError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -41,6 +51,8 @@ TelegramCore::messagesSendEncrypted
 
 ## Examples:
 
-`tg->sendEncrypted(peer, random_id, data, [=](TG_SEND_ENCRYPTED_CALLBACK){
+```c++
+tg->sendEncrypted(peer, random_id, data, [=](TG_SEND_ENCRYPTED_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

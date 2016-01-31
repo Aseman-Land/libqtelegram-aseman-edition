@@ -6,7 +6,9 @@ TelegramCore::uploadSaveFilePart
 
 ## Schema:
 
-`upload.saveFilePart#b304a621 file_id:long file_part:int bytes:bytes = Bool;`
+```c++
+upload.saveFilePart#b304a621 file_id:long file_part:int bytes:bytes = Bool;
+```
 ## Parameters:
 
 |Name|Type|Default|
@@ -14,26 +16,34 @@ TelegramCore::uploadSaveFilePart
 |fileId|qint64||
 |filePart|qint32||
 |bytes|QByteArray||
-|callBack|Callback<bool\>|0|
+|callBack|Callback&lt;bool&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[bool](../../types/bool.md)|
+|msgId|qint64|
+|result|bool|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `saveFilePartAnswer(qint64 msgId, bool  result)`
-* `saveFilePartError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+saveFilePartAnswer(qint64 msgId, bool  result)
+```
+```c++
+saveFilePartError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onSaveFilePartAnswer(qint64 msgId, bool  result)`
-* `onSaveFilePartError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onSaveFilePartAnswer(qint64 msgId, bool  result)
+```
+```c++
+onSaveFilePartError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -41,6 +51,8 @@ TelegramCore::uploadSaveFilePart
 
 ## Examples:
 
-`tg->saveFilePart(file_id, file_part, bytes, [=](TG_SAVE_FILE_PART_CALLBACK){
+```c++
+tg->saveFilePart(file_id, file_part, bytes, [=](TG_SAVE_FILE_PART_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

@@ -6,32 +6,42 @@ TelegramCore::helpSaveAppLog
 
 ## Schema:
 
-`help.saveAppLog#6f02f748 events:Vector<InputAppEvent> = Bool;`
+```c++
+help.saveAppLog#6f02f748 events:Vector<InputAppEvent> = Bool;
+```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
-|events|QList<InputAppEvent>||
-|callBack|Callback<bool\>|0|
+|events|QList&lt;[InputAppEvent](../../types/inputappevent.md)&gt;||
+|callBack|Callback&lt;bool&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[bool](../../types/bool.md)|
+|msgId|qint64|
+|result|bool|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `saveAppLogAnswer(qint64 msgId, bool  result)`
-* `saveAppLogError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+saveAppLogAnswer(qint64 msgId, bool  result)
+```
+```c++
+saveAppLogError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onSaveAppLogAnswer(qint64 msgId, bool  result)`
-* `onSaveAppLogError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onSaveAppLogAnswer(qint64 msgId, bool  result)
+```
+```c++
+onSaveAppLogError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -39,6 +49,8 @@ TelegramCore::helpSaveAppLog
 
 ## Examples:
 
-`tg->saveAppLog(events, [=](TG_SAVE_APP_LOG_CALLBACK){
+```c++
+tg->saveAppLog(events, [=](TG_SAVE_APP_LOG_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

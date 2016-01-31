@@ -6,32 +6,42 @@ TelegramCore::authCheckPhone
 
 ## Schema:
 
-`auth.checkPhone#6fe51dfb phone_number:string = auth.CheckedPhone;`
+```c++
+auth.checkPhone#6fe51dfb phone_number:string = auth.CheckedPhone;
+```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
 |phoneNumber|QString||
-|callBack|Callback<AuthCheckedPhone\>|0|
+|callBack|Callback&lt;[AuthCheckedPhone](../../types/authcheckedphone.md)&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[AuthCheckedPhone](../../types/authcheckedphone.md)|
+|msgId|qint64|
+|result|[AuthCheckedPhone](../../types/authcheckedphone.md)|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `checkPhoneAnswer(qint64 msgId, const AuthCheckedPhone & result)`
-* `checkPhoneError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+checkPhoneAnswer(qint64 msgId, const AuthCheckedPhone & result)
+```
+```c++
+checkPhoneError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onCheckPhoneAnswer(qint64 msgId, const AuthCheckedPhone & result)`
-* `onCheckPhoneError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onCheckPhoneAnswer(qint64 msgId, const AuthCheckedPhone & result)
+```
+```c++
+onCheckPhoneError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -39,6 +49,8 @@ TelegramCore::authCheckPhone
 
 ## Examples:
 
-`tg->checkPhone(phone_number, [=](TG_CHECK_PHONE_CALLBACK){
+```c++
+tg->checkPhone(phone_number, [=](TG_CHECK_PHONE_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

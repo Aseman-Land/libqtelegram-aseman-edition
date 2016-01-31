@@ -6,33 +6,43 @@ TelegramCore::accountUpdateNotifySettings
 
 ## Schema:
 
-`account.updateNotifySettings#84be5b93 peer:InputNotifyPeer settings:InputPeerNotifySettings = Bool;`
+```c++
+account.updateNotifySettings#84be5b93 peer:InputNotifyPeer settings:InputPeerNotifySettings = Bool;
+```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
 |peer|[InputNotifyPeer](../../types/inputnotifypeer.md)||
 |settings|[InputPeerNotifySettings](../../types/inputpeernotifysettings.md)||
-|callBack|Callback<bool\>|0|
+|callBack|Callback&lt;bool&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[bool](../../types/bool.md)|
+|msgId|qint64|
+|result|bool|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `updateNotifySettingsAnswer(qint64 msgId, bool  result)`
-* `updateNotifySettingsError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+updateNotifySettingsAnswer(qint64 msgId, bool  result)
+```
+```c++
+updateNotifySettingsError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onUpdateNotifySettingsAnswer(qint64 msgId, bool  result)`
-* `onUpdateNotifySettingsError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onUpdateNotifySettingsAnswer(qint64 msgId, bool  result)
+```
+```c++
+onUpdateNotifySettingsError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -40,6 +50,8 @@ TelegramCore::accountUpdateNotifySettings
 
 ## Examples:
 
-`tg->updateNotifySettings(peer, settings, [=](TG_UPDATE_NOTIFY_SETTINGS_CALLBACK){
+```c++
+tg->updateNotifySettings(peer, settings, [=](TG_UPDATE_NOTIFY_SETTINGS_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

@@ -6,32 +6,42 @@ TelegramCore::usersGetFullUser
 
 ## Schema:
 
-`users.getFullUser#ca30a5b1 id:InputUser = UserFull;`
+```c++
+users.getFullUser#ca30a5b1 id:InputUser = UserFull;
+```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
 |id|[InputUser](../../types/inputuser.md)||
-|callBack|Callback<UserFull\>|0|
+|callBack|Callback&lt;[UserFull](../../types/userfull.md)&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[UserFull](../../types/userfull.md)|
+|msgId|qint64|
+|result|[UserFull](../../types/userfull.md)|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `getFullUserAnswer(qint64 msgId, const UserFull & result)`
-* `getFullUserError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+getFullUserAnswer(qint64 msgId, const UserFull & result)
+```
+```c++
+getFullUserError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onGetFullUserAnswer(qint64 msgId, const UserFull & result)`
-* `onGetFullUserError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onGetFullUserAnswer(qint64 msgId, const UserFull & result)
+```
+```c++
+onGetFullUserError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -39,6 +49,8 @@ TelegramCore::usersGetFullUser
 
 ## Examples:
 
-`tg->getFullUser(id, [=](TG_GET_FULL_USER_CALLBACK){
+```c++
+tg->getFullUser(id, [=](TG_GET_FULL_USER_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

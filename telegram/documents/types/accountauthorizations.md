@@ -8,11 +8,13 @@
 
 #### Schema:
 
-`account.authorizations#1250abde authorizations:Vector<Authorization> = account.Authorizations;`
+```c++
+account.authorizations#1250abde authorizations:Vector<Authorization> = account.Authorizations;
+```
 
 #### Parameters:
 
 |Name|Type|
 |----|----|
-|authorizations|QList<Authorization>|
+|authorizations|QList&lt;[Authorization](authorization.md)&gt;|
 

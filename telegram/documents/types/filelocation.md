@@ -9,7 +9,9 @@
 
 #### Schema:
 
-`fileLocationUnavailable#7c596b46 volume_id:long local_id:int secret:long = FileLocation;`
+```c++
+fileLocationUnavailable#7c596b46 volume_id:long local_id:int secret:long = FileLocation;
+```
 
 #### Parameters:
 
@@ -23,7 +25,9 @@
 
 #### Schema:
 
-`fileLocation#53d69076 dc_id:int volume_id:long local_id:int secret:long = FileLocation;`
+```c++
+fileLocation#53d69076 dc_id:int volume_id:long local_id:int secret:long = FileLocation;
+```
 
 #### Parameters:
 

@@ -8,7 +8,9 @@
 
 #### Schema:
 
-`auth.checkedPhone#811ea28e phone_registered:Bool = auth.CheckedPhone;`
+```c++
+auth.checkedPhone#811ea28e phone_registered:Bool = auth.CheckedPhone;
+```
 
 #### Parameters:
 

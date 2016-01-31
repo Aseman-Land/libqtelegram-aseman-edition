@@ -8,7 +8,9 @@
 
 #### Schema:
 
-`contacts.link#3ace484c my_link:ContactLink foreign_link:ContactLink user:User = contacts.Link;`
+```c++
+contacts.link#3ace484c my_link:ContactLink foreign_link:ContactLink user:User = contacts.Link;
+```
 
 #### Parameters:
 

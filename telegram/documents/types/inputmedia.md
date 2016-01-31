@@ -22,7 +22,9 @@
 
 #### Schema:
 
-`inputMediaEmpty#9664f57f = InputMedia;`
+```c++
+inputMediaEmpty#9664f57f = InputMedia;
+```
 
 #### Parameters:
 
@@ -31,7 +33,9 @@
 
 #### Schema:
 
-`inputMediaUploadedPhoto#f7aff1c0 file:InputFile caption:string = InputMedia;`
+```c++
+inputMediaUploadedPhoto#f7aff1c0 file:InputFile caption:string = InputMedia;
+```
 
 #### Parameters:
 
@@ -44,7 +48,9 @@
 
 #### Schema:
 
-`inputMediaPhoto#e9bfb4f3 id:InputPhoto caption:string = InputMedia;`
+```c++
+inputMediaPhoto#e9bfb4f3 id:InputPhoto caption:string = InputMedia;
+```
 
 #### Parameters:
 
@@ -57,7 +63,9 @@
 
 #### Schema:
 
-`inputMediaGeoPoint#f9c44144 geo_point:InputGeoPoint = InputMedia;`
+```c++
+inputMediaGeoPoint#f9c44144 geo_point:InputGeoPoint = InputMedia;
+```
 
 #### Parameters:
 
@@ -69,7 +77,9 @@
 
 #### Schema:
 
-`inputMediaContact#a6e45987 phone_number:string first_name:string last_name:string = InputMedia;`
+```c++
+inputMediaContact#a6e45987 phone_number:string first_name:string last_name:string = InputMedia;
+```
 
 #### Parameters:
 
@@ -83,7 +93,9 @@
 
 #### Schema:
 
-`inputMediaUploadedVideo#82713fdf file:InputFile duration:int w:int h:int mime_type:string caption:string = InputMedia;`
+```c++
+inputMediaUploadedVideo#82713fdf file:InputFile duration:int w:int h:int mime_type:string caption:string = InputMedia;
+```
 
 #### Parameters:
 
@@ -100,7 +112,9 @@
 
 #### Schema:
 
-`inputMediaUploadedThumbVideo#7780ddf9 file:InputFile thumb:InputFile duration:int w:int h:int mime_type:string caption:string = InputMedia;`
+```c++
+inputMediaUploadedThumbVideo#7780ddf9 file:InputFile thumb:InputFile duration:int w:int h:int mime_type:string caption:string = InputMedia;
+```
 
 #### Parameters:
 
@@ -118,7 +132,9 @@
 
 #### Schema:
 
-`inputMediaVideo#936a4ebd id:InputVideo caption:string = InputMedia;`
+```c++
+inputMediaVideo#936a4ebd id:InputVideo caption:string = InputMedia;
+```
 
 #### Parameters:
 
@@ -131,7 +147,9 @@
 
 #### Schema:
 
-`inputMediaUploadedAudio#4e498cab file:InputFile duration:int mime_type:string = InputMedia;`
+```c++
+inputMediaUploadedAudio#4e498cab file:InputFile duration:int mime_type:string = InputMedia;
+```
 
 #### Parameters:
 
@@ -145,7 +163,9 @@
 
 #### Schema:
 
-`inputMediaAudio#89938781 id:InputAudio = InputMedia;`
+```c++
+inputMediaAudio#89938781 id:InputAudio = InputMedia;
+```
 
 #### Parameters:
 
@@ -157,7 +177,9 @@
 
 #### Schema:
 
-`inputMediaUploadedDocument#1d89306d file:InputFile mime_type:string attributes:Vector<DocumentAttribute> caption:string = InputMedia;`
+```c++
+inputMediaUploadedDocument#1d89306d file:InputFile mime_type:string attributes:Vector<DocumentAttribute> caption:string = InputMedia;
+```
 
 #### Parameters:
 
@@ -165,14 +187,16 @@
 |----|----|
 |file|[InputFile](inputfile.md)|
 |mimeType|QString|
-|attributes|QList<DocumentAttribute>|
+|attributes|QList&lt;[DocumentAttribute](documentattribute.md)&gt;|
 |caption|QString|
 
 ## InputMedia::typeInputMediaUploadedThumbDocument
 
 #### Schema:
 
-`inputMediaUploadedThumbDocument#ad613491 file:InputFile thumb:InputFile mime_type:string attributes:Vector<DocumentAttribute> caption:string = InputMedia;`
+```c++
+inputMediaUploadedThumbDocument#ad613491 file:InputFile thumb:InputFile mime_type:string attributes:Vector<DocumentAttribute> caption:string = InputMedia;
+```
 
 #### Parameters:
 
@@ -181,14 +205,16 @@
 |file|[InputFile](inputfile.md)|
 |thumb|[InputFile](inputfile.md)|
 |mimeType|QString|
-|attributes|QList<DocumentAttribute>|
+|attributes|QList&lt;[DocumentAttribute](documentattribute.md)&gt;|
 |caption|QString|
 
 ## InputMedia::typeInputMediaDocument
 
 #### Schema:
 
-`inputMediaDocument#1a77f29c id:InputDocument caption:string = InputMedia;`
+```c++
+inputMediaDocument#1a77f29c id:InputDocument caption:string = InputMedia;
+```
 
 #### Parameters:
 
@@ -201,7 +227,9 @@
 
 #### Schema:
 
-`inputMediaVenue#2827a81a geo_point:InputGeoPoint title:string address:string provider:string venue_id:string = InputMedia;`
+```c++
+inputMediaVenue#2827a81a geo_point:InputGeoPoint title:string address:string provider:string venue_id:string = InputMedia;
+```
 
 #### Parameters:
 
@@ -217,7 +245,9 @@
 
 #### Schema:
 
-`inputMediaGifExternal#4843b0fd url:string q:string = InputMedia;`
+```c++
+inputMediaGifExternal#4843b0fd url:string q:string = InputMedia;
+```
 
 #### Parameters:
 

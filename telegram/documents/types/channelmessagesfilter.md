@@ -10,7 +10,9 @@
 
 #### Schema:
 
-`channelMessagesFilterEmpty#94d42ee7 = ChannelMessagesFilter;`
+```c++
+channelMessagesFilterEmpty#94d42ee7 = ChannelMessagesFilter;
+```
 
 #### Parameters:
 
@@ -19,7 +21,9 @@
 
 #### Schema:
 
-`channelMessagesFilter#cd77d957 flags:# important_only:flags.0?true exclude_new_messages:flags.1?true ranges:Vector<MessageRange> = ChannelMessagesFilter;`
+```c++
+channelMessagesFilter#cd77d957 flags:# important_only:flags.0?true exclude_new_messages:flags.1?true ranges:Vector<MessageRange> = ChannelMessagesFilter;
+```
 
 #### Parameters:
 
@@ -27,13 +31,15 @@
 |----|----|
 |importantOnly|bool|
 |excludeNewMessages|bool|
-|ranges|QList<MessageRange>|
+|ranges|QList&lt;[MessageRange](messagerange.md)&gt;|
 
 ## ChannelMessagesFilter::typeChannelMessagesFilterCollapsed
 
 #### Schema:
 
-`channelMessagesFilterCollapsed#fa01232e = ChannelMessagesFilter;`
+```c++
+channelMessagesFilterCollapsed#fa01232e = ChannelMessagesFilter;
+```
 
 #### Parameters:
 

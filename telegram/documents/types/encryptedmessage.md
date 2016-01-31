@@ -9,7 +9,9 @@
 
 #### Schema:
 
-`encryptedMessage#ed18c118 random_id:long chat_id:int date:int bytes:bytes file:EncryptedFile = EncryptedMessage;`
+```c++
+encryptedMessage#ed18c118 random_id:long chat_id:int date:int bytes:bytes file:EncryptedFile = EncryptedMessage;
+```
 
 #### Parameters:
 
@@ -25,7 +27,9 @@
 
 #### Schema:
 
-`encryptedMessageService#23734b06 random_id:long chat_id:int date:int bytes:bytes = EncryptedMessage;`
+```c++
+encryptedMessageService#23734b06 random_id:long chat_id:int date:int bytes:bytes = EncryptedMessage;
+```
 
 #### Parameters:
 

@@ -17,7 +17,9 @@
 
 #### Schema:
 
-`inputMessagesFilterEmpty#57e2f66c = MessagesFilter;`
+```c++
+inputMessagesFilterEmpty#57e2f66c = MessagesFilter;
+```
 
 #### Parameters:
 
@@ -26,7 +28,9 @@
 
 #### Schema:
 
-`inputMessagesFilterPhotos#9609a51c = MessagesFilter;`
+```c++
+inputMessagesFilterPhotos#9609a51c = MessagesFilter;
+```
 
 #### Parameters:
 
@@ -35,7 +39,9 @@
 
 #### Schema:
 
-`inputMessagesFilterVideo#9fc00e65 = MessagesFilter;`
+```c++
+inputMessagesFilterVideo#9fc00e65 = MessagesFilter;
+```
 
 #### Parameters:
 
@@ -44,7 +50,9 @@
 
 #### Schema:
 
-`inputMessagesFilterPhotoVideo#56e9f0e4 = MessagesFilter;`
+```c++
+inputMessagesFilterPhotoVideo#56e9f0e4 = MessagesFilter;
+```
 
 #### Parameters:
 
@@ -53,7 +61,9 @@
 
 #### Schema:
 
-`inputMessagesFilterPhotoVideoDocuments#d95e73bb = MessagesFilter;`
+```c++
+inputMessagesFilterPhotoVideoDocuments#d95e73bb = MessagesFilter;
+```
 
 #### Parameters:
 
@@ -62,7 +72,9 @@
 
 #### Schema:
 
-`inputMessagesFilterDocument#9eddf188 = MessagesFilter;`
+```c++
+inputMessagesFilterDocument#9eddf188 = MessagesFilter;
+```
 
 #### Parameters:
 
@@ -71,7 +83,9 @@
 
 #### Schema:
 
-`inputMessagesFilterAudio#cfc87522 = MessagesFilter;`
+```c++
+inputMessagesFilterAudio#cfc87522 = MessagesFilter;
+```
 
 #### Parameters:
 
@@ -80,7 +94,9 @@
 
 #### Schema:
 
-`inputMessagesFilterAudioDocuments#5afbf764 = MessagesFilter;`
+```c++
+inputMessagesFilterAudioDocuments#5afbf764 = MessagesFilter;
+```
 
 #### Parameters:
 
@@ -89,7 +105,9 @@
 
 #### Schema:
 
-`inputMessagesFilterUrl#7ef0dd87 = MessagesFilter;`
+```c++
+inputMessagesFilterUrl#7ef0dd87 = MessagesFilter;
+```
 
 #### Parameters:
 
@@ -98,7 +116,9 @@
 
 #### Schema:
 
-`inputMessagesFilterGif#ffc86587 = MessagesFilter;`
+```c++
+inputMessagesFilterGif#ffc86587 = MessagesFilter;
+```
 
 #### Parameters:
 

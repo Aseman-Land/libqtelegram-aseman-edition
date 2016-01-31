@@ -10,7 +10,9 @@
 
 #### Schema:
 
-`replyKeyboardHide#a03e5b85 flags:# selective:flags.2?true = ReplyMarkup;`
+```c++
+replyKeyboardHide#a03e5b85 flags:# selective:flags.2?true = ReplyMarkup;
+```
 
 #### Parameters:
 
@@ -22,7 +24,9 @@
 
 #### Schema:
 
-`replyKeyboardForceReply#f4108aa0 flags:# single_use:flags.1?true selective:flags.2?true = ReplyMarkup;`
+```c++
+replyKeyboardForceReply#f4108aa0 flags:# single_use:flags.1?true selective:flags.2?true = ReplyMarkup;
+```
 
 #### Parameters:
 
@@ -35,7 +39,9 @@
 
 #### Schema:
 
-`replyKeyboardMarkup#3502758c flags:# resize:flags.0?true single_use:flags.1?true selective:flags.2?true rows:Vector<KeyboardButtonRow> = ReplyMarkup;`
+```c++
+replyKeyboardMarkup#3502758c flags:# resize:flags.0?true single_use:flags.1?true selective:flags.2?true rows:Vector<KeyboardButtonRow> = ReplyMarkup;
+```
 
 #### Parameters:
 
@@ -44,5 +50,5 @@
 |resize|bool|
 |singleUse|bool|
 |selective|bool|
-|rows|QList<KeyboardButtonRow>|
+|rows|QList&lt;[KeyboardButtonRow](keyboardbuttonrow.md)&gt;|
 

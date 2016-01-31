@@ -6,32 +6,42 @@ TelegramCore::channelsGetChannels
 
 ## Schema:
 
-`channels.getChannels#a7f6bbb id:Vector<InputChannel> = messages.Chats;`
+```c++
+channels.getChannels#a7f6bbb id:Vector<InputChannel> = messages.Chats;
+```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
-|id|QList<InputChannel>||
-|callBack|Callback<MessagesChats\>|0|
+|id|QList&lt;[InputChannel](../../types/inputchannel.md)&gt;||
+|callBack|Callback&lt;[MessagesChats](../../types/messageschats.md)&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[MessagesChats](../../types/messageschats.md)|
+|msgId|qint64|
+|result|[MessagesChats](../../types/messageschats.md)|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `getChannelsAnswer(qint64 msgId, const MessagesChats & result)`
-* `getChannelsError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+getChannelsAnswer(qint64 msgId, const MessagesChats & result)
+```
+```c++
+getChannelsError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onGetChannelsAnswer(qint64 msgId, const MessagesChats & result)`
-* `onGetChannelsError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onGetChannelsAnswer(qint64 msgId, const MessagesChats & result)
+```
+```c++
+onGetChannelsError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -39,6 +49,8 @@ TelegramCore::channelsGetChannels
 
 ## Examples:
 
-`tg->getChannels(id, [=](TG_GET_CHANNELS_CALLBACK){
+```c++
+tg->getChannels(id, [=](TG_GET_CHANNELS_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

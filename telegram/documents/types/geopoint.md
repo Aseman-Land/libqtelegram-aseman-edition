@@ -9,7 +9,9 @@
 
 #### Schema:
 
-`geoPointEmpty#1117dd5f = GeoPoint;`
+```c++
+geoPointEmpty#1117dd5f = GeoPoint;
+```
 
 #### Parameters:
 
@@ -18,7 +20,9 @@
 
 #### Schema:
 
-`geoPoint#2049d70c long:double lat:double = GeoPoint;`
+```c++
+geoPoint#2049d70c long:double lat:double = GeoPoint;
+```
 
 #### Parameters:
 

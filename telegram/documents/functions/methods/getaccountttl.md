@@ -6,31 +6,41 @@ TelegramCore::accountGetAccountTTL
 
 ## Schema:
 
-`account.getAccountTTL#8fc711d = AccountDaysTTL;`
+```c++
+account.getAccountTTL#8fc711d = AccountDaysTTL;
+```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
-|callBack|Callback<AccountDaysTTL\>|0|
+|callBack|Callback&lt;[AccountDaysTTL](../../types/accountdaysttl.md)&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[AccountDaysTTL](../../types/accountdaysttl.md)|
+|msgId|qint64|
+|result|[AccountDaysTTL](../../types/accountdaysttl.md)|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `getAccountTTLAnswer(qint64 msgId, const AccountDaysTTL & result)`
-* `getAccountTTLError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+getAccountTTLAnswer(qint64 msgId, const AccountDaysTTL & result)
+```
+```c++
+getAccountTTLError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onGetAccountTTLAnswer(qint64 msgId, const AccountDaysTTL & result)`
-* `onGetAccountTTLError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onGetAccountTTLAnswer(qint64 msgId, const AccountDaysTTL & result)
+```
+```c++
+onGetAccountTTLError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -38,6 +48,8 @@ TelegramCore::accountGetAccountTTL
 
 ## Examples:
 
-`tg->getAccountTTL([=](TG_GET_ACCOUNT_T_T_L_CALLBACK){
+```c++
+tg->getAccountTTL([=](TG_GET_ACCOUNT_T_T_L_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

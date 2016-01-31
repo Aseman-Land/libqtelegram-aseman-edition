@@ -9,7 +9,9 @@
 
 #### Schema:
 
-`inputChannelEmpty#ee8c1e86 = InputChannel;`
+```c++
+inputChannelEmpty#ee8c1e86 = InputChannel;
+```
 
 #### Parameters:
 
@@ -18,7 +20,9 @@
 
 #### Schema:
 
-`inputChannel#afeb712e channel_id:int access_hash:long = InputChannel;`
+```c++
+inputChannel#afeb712e channel_id:int access_hash:long = InputChannel;
+```
 
 #### Parameters:
 

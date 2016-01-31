@@ -6,32 +6,42 @@ TelegramCore::channelsDeleteChannel
 
 ## Schema:
 
-`channels.deleteChannel#c0111fe3 channel:InputChannel = Updates;`
+```c++
+channels.deleteChannel#c0111fe3 channel:InputChannel = Updates;
+```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
 |channel|[InputChannel](../../types/inputchannel.md)||
-|callBack|Callback<UpdatesType\>|0|
+|callBack|Callback&lt;[UpdatesType](../../types/updatestype.md)&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[UpdatesType](../../types/updatestype.md)|
+|msgId|qint64|
+|result|[UpdatesType](../../types/updatestype.md)|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `deleteChannelAnswer(qint64 msgId, const UpdatesType & result)`
-* `deleteChannelError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+deleteChannelAnswer(qint64 msgId, const UpdatesType & result)
+```
+```c++
+deleteChannelError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onDeleteChannelAnswer(qint64 msgId, const UpdatesType & result)`
-* `onDeleteChannelError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onDeleteChannelAnswer(qint64 msgId, const UpdatesType & result)
+```
+```c++
+onDeleteChannelError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -39,6 +49,8 @@ TelegramCore::channelsDeleteChannel
 
 ## Examples:
 
-`tg->deleteChannel(channel, [=](TG_DELETE_CHANNEL_CALLBACK){
+```c++
+tg->deleteChannel(channel, [=](TG_DELETE_CHANNEL_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

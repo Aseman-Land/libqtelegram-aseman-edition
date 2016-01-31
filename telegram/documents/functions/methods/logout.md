@@ -6,31 +6,41 @@ TelegramCore::authLogOut
 
 ## Schema:
 
-`auth.logOut#5717da40 = Bool;`
+```c++
+auth.logOut#5717da40 = Bool;
+```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
-|callBack|Callback<bool\>|0|
+|callBack|Callback&lt;bool&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[bool](../../types/bool.md)|
+|msgId|qint64|
+|result|bool|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `logOutAnswer(qint64 msgId, bool  result)`
-* `logOutError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+logOutAnswer(qint64 msgId, bool  result)
+```
+```c++
+logOutError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onLogOutAnswer(qint64 msgId, bool  result)`
-* `onLogOutError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onLogOutAnswer(qint64 msgId, bool  result)
+```
+```c++
+onLogOutError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -38,6 +48,8 @@ TelegramCore::authLogOut
 
 ## Examples:
 
-`tg->logOut([=](TG_LOG_OUT_CALLBACK){
+```c++
+tg->logOut([=](TG_LOG_OUT_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

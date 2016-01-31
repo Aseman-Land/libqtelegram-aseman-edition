@@ -18,7 +18,9 @@
 
 #### Schema:
 
-`messageEntityUnknown#bb92ba95 offset:int length:int = MessageEntity;`
+```c++
+messageEntityUnknown#bb92ba95 offset:int length:int = MessageEntity;
+```
 
 #### Parameters:
 
@@ -31,7 +33,9 @@
 
 #### Schema:
 
-`messageEntityMention#fa04579d offset:int length:int = MessageEntity;`
+```c++
+messageEntityMention#fa04579d offset:int length:int = MessageEntity;
+```
 
 #### Parameters:
 
@@ -44,7 +48,9 @@
 
 #### Schema:
 
-`messageEntityHashtag#6f635b0d offset:int length:int = MessageEntity;`
+```c++
+messageEntityHashtag#6f635b0d offset:int length:int = MessageEntity;
+```
 
 #### Parameters:
 
@@ -57,7 +63,9 @@
 
 #### Schema:
 
-`messageEntityBotCommand#6cef8ac7 offset:int length:int = MessageEntity;`
+```c++
+messageEntityBotCommand#6cef8ac7 offset:int length:int = MessageEntity;
+```
 
 #### Parameters:
 
@@ -70,7 +78,9 @@
 
 #### Schema:
 
-`messageEntityUrl#6ed02538 offset:int length:int = MessageEntity;`
+```c++
+messageEntityUrl#6ed02538 offset:int length:int = MessageEntity;
+```
 
 #### Parameters:
 
@@ -83,7 +93,9 @@
 
 #### Schema:
 
-`messageEntityEmail#64e475c2 offset:int length:int = MessageEntity;`
+```c++
+messageEntityEmail#64e475c2 offset:int length:int = MessageEntity;
+```
 
 #### Parameters:
 
@@ -96,7 +108,9 @@
 
 #### Schema:
 
-`messageEntityBold#bd610bc9 offset:int length:int = MessageEntity;`
+```c++
+messageEntityBold#bd610bc9 offset:int length:int = MessageEntity;
+```
 
 #### Parameters:
 
@@ -109,7 +123,9 @@
 
 #### Schema:
 
-`messageEntityItalic#826f8b60 offset:int length:int = MessageEntity;`
+```c++
+messageEntityItalic#826f8b60 offset:int length:int = MessageEntity;
+```
 
 #### Parameters:
 
@@ -122,7 +138,9 @@
 
 #### Schema:
 
-`messageEntityCode#28a20571 offset:int length:int = MessageEntity;`
+```c++
+messageEntityCode#28a20571 offset:int length:int = MessageEntity;
+```
 
 #### Parameters:
 
@@ -135,7 +153,9 @@
 
 #### Schema:
 
-`messageEntityPre#73924be0 offset:int length:int language:string = MessageEntity;`
+```c++
+messageEntityPre#73924be0 offset:int length:int language:string = MessageEntity;
+```
 
 #### Parameters:
 
@@ -149,7 +169,9 @@
 
 #### Schema:
 
-`messageEntityTextUrl#76a6d327 offset:int length:int url:string = MessageEntity;`
+```c++
+messageEntityTextUrl#76a6d327 offset:int length:int url:string = MessageEntity;
+```
 
 #### Parameters:
 

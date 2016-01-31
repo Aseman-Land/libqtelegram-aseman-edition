@@ -9,7 +9,9 @@
 
 #### Schema:
 
-`help.appChangelogEmpty#af7e0394 = help.AppChangelog;`
+```c++
+help.appChangelogEmpty#af7e0394 = help.AppChangelog;
+```
 
 #### Parameters:
 
@@ -18,7 +20,9 @@
 
 #### Schema:
 
-`help.appChangelog#4668e6bd text:string = help.AppChangelog;`
+```c++
+help.appChangelog#4668e6bd text:string = help.AppChangelog;
+```
 
 #### Parameters:
 

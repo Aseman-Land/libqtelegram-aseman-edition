@@ -6,33 +6,43 @@ TelegramCore::channelsGetParticipant
 
 ## Schema:
 
-`channels.getParticipant#546dd7a6 channel:InputChannel user_id:InputUser = channels.ChannelParticipant;`
+```c++
+channels.getParticipant#546dd7a6 channel:InputChannel user_id:InputUser = channels.ChannelParticipant;
+```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
 |channel|[InputChannel](../../types/inputchannel.md)||
 |userId|[InputUser](../../types/inputuser.md)||
-|callBack|Callback<ChannelsChannelParticipant\>|0|
+|callBack|Callback&lt;[ChannelsChannelParticipant](../../types/channelschannelparticipant.md)&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[ChannelsChannelParticipant](../../types/channelschannelparticipant.md)|
+|msgId|qint64|
+|result|[ChannelsChannelParticipant](../../types/channelschannelparticipant.md)|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `getParticipantAnswer(qint64 msgId, const ChannelsChannelParticipant & result)`
-* `getParticipantError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+getParticipantAnswer(qint64 msgId, const ChannelsChannelParticipant & result)
+```
+```c++
+getParticipantError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onGetParticipantAnswer(qint64 msgId, const ChannelsChannelParticipant & result)`
-* `onGetParticipantError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onGetParticipantAnswer(qint64 msgId, const ChannelsChannelParticipant & result)
+```
+```c++
+onGetParticipantError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -40,6 +50,8 @@ TelegramCore::channelsGetParticipant
 
 ## Examples:
 
-`tg->getParticipant(channel, user_id, [=](TG_GET_PARTICIPANT_CALLBACK){
+```c++
+tg->getParticipant(channel, user_id, [=](TG_GET_PARTICIPANT_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

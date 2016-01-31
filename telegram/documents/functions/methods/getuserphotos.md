@@ -6,7 +6,9 @@ TelegramCore::photosGetUserPhotos
 
 ## Schema:
 
-`photos.getUserPhotos#91cd32a8 user_id:InputUser offset:int max_id:long limit:int = photos.Photos;`
+```c++
+photos.getUserPhotos#91cd32a8 user_id:InputUser offset:int max_id:long limit:int = photos.Photos;
+```
 ## Parameters:
 
 |Name|Type|Default|
@@ -15,26 +17,34 @@ TelegramCore::photosGetUserPhotos
 |offset|qint32||
 |maxId|qint64||
 |limit|qint32||
-|callBack|Callback<PhotosPhotos\>|0|
+|callBack|Callback&lt;[PhotosPhotos](../../types/photosphotos.md)&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[PhotosPhotos](../../types/photosphotos.md)|
+|msgId|qint64|
+|result|[PhotosPhotos](../../types/photosphotos.md)|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `getUserPhotosAnswer(qint64 msgId, const PhotosPhotos & result)`
-* `getUserPhotosError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+getUserPhotosAnswer(qint64 msgId, const PhotosPhotos & result)
+```
+```c++
+getUserPhotosError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onGetUserPhotosAnswer(qint64 msgId, const PhotosPhotos & result)`
-* `onGetUserPhotosError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onGetUserPhotosAnswer(qint64 msgId, const PhotosPhotos & result)
+```
+```c++
+onGetUserPhotosError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -42,6 +52,8 @@ TelegramCore::photosGetUserPhotos
 
 ## Examples:
 
-`tg->getUserPhotos(user_id, offset, max_id, limit, [=](TG_GET_USER_PHOTOS_CALLBACK){
+```c++
+tg->getUserPhotos(user_id, offset, max_id, limit, [=](TG_GET_USER_PHOTOS_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

@@ -6,7 +6,9 @@ TelegramCore::photosUploadProfilePhoto
 
 ## Schema:
 
-`photos.uploadProfilePhoto#d50f9c88 file:InputFile caption:string geo_point:InputGeoPoint crop:InputPhotoCrop = photos.Photo;`
+```c++
+photos.uploadProfilePhoto#d50f9c88 file:InputFile caption:string geo_point:InputGeoPoint crop:InputPhotoCrop = photos.Photo;
+```
 ## Parameters:
 
 |Name|Type|Default|
@@ -15,26 +17,34 @@ TelegramCore::photosUploadProfilePhoto
 |caption|QString||
 |geoPoint|[InputGeoPoint](../../types/inputgeopoint.md)||
 |crop|[InputPhotoCrop](../../types/inputphotocrop.md)||
-|callBack|Callback<PhotosPhoto\>|0|
+|callBack|Callback&lt;[PhotosPhoto](../../types/photosphoto.md)&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[PhotosPhoto](../../types/photosphoto.md)|
+|msgId|qint64|
+|result|[PhotosPhoto](../../types/photosphoto.md)|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `uploadProfilePhotoAnswer(qint64 msgId, const PhotosPhoto & result)`
-* `uploadProfilePhotoError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+uploadProfilePhotoAnswer(qint64 msgId, const PhotosPhoto & result)
+```
+```c++
+uploadProfilePhotoError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onUploadProfilePhotoAnswer(qint64 msgId, const PhotosPhoto & result)`
-* `onUploadProfilePhotoError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onUploadProfilePhotoAnswer(qint64 msgId, const PhotosPhoto & result)
+```
+```c++
+onUploadProfilePhotoError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -42,6 +52,8 @@ TelegramCore::photosUploadProfilePhoto
 
 ## Examples:
 
-`tg->uploadProfilePhoto(file, caption, geo_point, crop, [=](TG_UPLOAD_PROFILE_PHOTO_CALLBACK){
+```c++
+tg->uploadProfilePhoto(file, caption, geo_point, crop, [=](TG_UPLOAD_PROFILE_PHOTO_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

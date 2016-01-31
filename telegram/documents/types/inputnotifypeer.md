@@ -11,7 +11,9 @@
 
 #### Schema:
 
-`inputNotifyPeer#b8bc5b0c peer:InputPeer = InputNotifyPeer;`
+```c++
+inputNotifyPeer#b8bc5b0c peer:InputPeer = InputNotifyPeer;
+```
 
 #### Parameters:
 
@@ -23,7 +25,9 @@
 
 #### Schema:
 
-`inputNotifyUsers#193b4417 = InputNotifyPeer;`
+```c++
+inputNotifyUsers#193b4417 = InputNotifyPeer;
+```
 
 #### Parameters:
 
@@ -32,7 +36,9 @@
 
 #### Schema:
 
-`inputNotifyChats#4a95e84e = InputNotifyPeer;`
+```c++
+inputNotifyChats#4a95e84e = InputNotifyPeer;
+```
 
 #### Parameters:
 
@@ -41,7 +47,9 @@
 
 #### Schema:
 
-`inputNotifyAll#a429b886 = InputNotifyPeer;`
+```c++
+inputNotifyAll#a429b886 = InputNotifyPeer;
+```
 
 #### Parameters:
 

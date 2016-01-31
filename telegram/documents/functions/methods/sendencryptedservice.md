@@ -6,7 +6,9 @@ TelegramCore::messagesSendEncryptedService
 
 ## Schema:
 
-`messages.sendEncryptedService#32d439a4 peer:InputEncryptedChat random_id:long data:bytes = messages.SentEncryptedMessage;`
+```c++
+messages.sendEncryptedService#32d439a4 peer:InputEncryptedChat random_id:long data:bytes = messages.SentEncryptedMessage;
+```
 ## Parameters:
 
 |Name|Type|Default|
@@ -14,26 +16,34 @@ TelegramCore::messagesSendEncryptedService
 |peer|[InputEncryptedChat](../../types/inputencryptedchat.md)||
 |randomId|qint64||
 |data|QByteArray||
-|callBack|Callback<MessagesSentEncryptedMessage\>|0|
+|callBack|Callback&lt;[MessagesSentEncryptedMessage](../../types/messagessentencryptedmessage.md)&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[MessagesSentEncryptedMessage](../../types/messagessentencryptedmessage.md)|
+|msgId|qint64|
+|result|[MessagesSentEncryptedMessage](../../types/messagessentencryptedmessage.md)|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `sendEncryptedServiceAnswer(qint64 msgId, const MessagesSentEncryptedMessage & result)`
-* `sendEncryptedServiceError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+sendEncryptedServiceAnswer(qint64 msgId, const MessagesSentEncryptedMessage & result)
+```
+```c++
+sendEncryptedServiceError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onSendEncryptedServiceAnswer(qint64 msgId, const MessagesSentEncryptedMessage & result)`
-* `onSendEncryptedServiceError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onSendEncryptedServiceAnswer(qint64 msgId, const MessagesSentEncryptedMessage & result)
+```
+```c++
+onSendEncryptedServiceError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -41,6 +51,8 @@ TelegramCore::messagesSendEncryptedService
 
 ## Examples:
 
-`tg->sendEncryptedService(peer, random_id, data, [=](TG_SEND_ENCRYPTED_SERVICE_CALLBACK){
+```c++
+tg->sendEncryptedService(peer, random_id, data, [=](TG_SEND_ENCRYPTED_SERVICE_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

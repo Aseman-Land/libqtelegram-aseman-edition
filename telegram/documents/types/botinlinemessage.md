@@ -9,7 +9,9 @@
 
 #### Schema:
 
-`botInlineMessageMediaAuto#fc56e87d caption:string = BotInlineMessage;`
+```c++
+botInlineMessageMediaAuto#fc56e87d caption:string = BotInlineMessage;
+```
 
 #### Parameters:
 
@@ -21,7 +23,9 @@
 
 #### Schema:
 
-`botInlineMessageText#a56197a9 flags:# no_webpage:flags.0?true message:string entities:flags.1?Vector<MessageEntity> = BotInlineMessage;`
+```c++
+botInlineMessageText#a56197a9 flags:# no_webpage:flags.0?true message:string entities:flags.1?Vector<MessageEntity> = BotInlineMessage;
+```
 
 #### Parameters:
 
@@ -29,5 +33,5 @@
 |----|----|
 |noWebpage|bool|
 |message|QString|
-|entities|QList<MessageEntity>|
+|entities|QList&lt;[MessageEntity](messageentity.md)&gt;|
 

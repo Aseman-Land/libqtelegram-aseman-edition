@@ -9,7 +9,9 @@
 
 #### Schema:
 
-`inputPhotoEmpty#1cd7bf0d = InputPhoto;`
+```c++
+inputPhotoEmpty#1cd7bf0d = InputPhoto;
+```
 
 #### Parameters:
 
@@ -18,7 +20,9 @@
 
 #### Schema:
 
-`inputPhoto#fb95c6c4 id:long access_hash:long = InputPhoto;`
+```c++
+inputPhoto#fb95c6c4 id:long access_hash:long = InputPhoto;
+```
 
 #### Parameters:
 

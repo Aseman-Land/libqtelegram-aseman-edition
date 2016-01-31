@@ -9,7 +9,9 @@
 
 #### Schema:
 
-`messages.savedGifsNotModified#e8025ca2 = messages.SavedGifs;`
+```c++
+messages.savedGifsNotModified#e8025ca2 = messages.SavedGifs;
+```
 
 #### Parameters:
 
@@ -18,12 +20,14 @@
 
 #### Schema:
 
-`messages.savedGifs#2e0709a5 hash:int gifs:Vector<Document> = messages.SavedGifs;`
+```c++
+messages.savedGifs#2e0709a5 hash:int gifs:Vector<Document> = messages.SavedGifs;
+```
 
 #### Parameters:
 
 |Name|Type|
 |----|----|
 |hash|qint32|
-|gifs|QList<Document>|
+|gifs|QList&lt;[Document](document.md)&gt;|
 

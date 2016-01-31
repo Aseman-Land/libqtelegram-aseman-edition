@@ -9,7 +9,9 @@
 
 #### Schema:
 
-`foundGif#162ecc1f url:string thumb_url:string content_url:string content_type:string w:int h:int = FoundGif;`
+```c++
+foundGif#162ecc1f url:string thumb_url:string content_url:string content_type:string w:int h:int = FoundGif;
+```
 
 #### Parameters:
 
@@ -26,7 +28,9 @@
 
 #### Schema:
 
-`foundGifCached#9c750409 url:string photo:Photo document:Document = FoundGif;`
+```c++
+foundGifCached#9c750409 url:string photo:Photo document:Document = FoundGif;
+```
 
 #### Parameters:
 

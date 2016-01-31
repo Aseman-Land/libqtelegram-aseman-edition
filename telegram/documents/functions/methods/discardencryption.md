@@ -6,32 +6,42 @@ TelegramCore::messagesDiscardEncryption
 
 ## Schema:
 
-`messages.discardEncryption#edd923c5 chat_id:int = Bool;`
+```c++
+messages.discardEncryption#edd923c5 chat_id:int = Bool;
+```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
 |chatId|qint32||
-|callBack|Callback<bool\>|0|
+|callBack|Callback&lt;bool&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[bool](../../types/bool.md)|
+|msgId|qint64|
+|result|bool|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `discardEncryptionAnswer(qint64 msgId, bool  result)`
-* `discardEncryptionError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+discardEncryptionAnswer(qint64 msgId, bool  result)
+```
+```c++
+discardEncryptionError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onDiscardEncryptionAnswer(qint64 msgId, bool  result)`
-* `onDiscardEncryptionError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onDiscardEncryptionAnswer(qint64 msgId, bool  result)
+```
+```c++
+onDiscardEncryptionError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -39,6 +49,8 @@ TelegramCore::messagesDiscardEncryption
 
 ## Examples:
 
-`tg->discardEncryption(chat_id, [=](TG_DISCARD_ENCRYPTION_CALLBACK){
+```c++
+tg->discardEncryption(chat_id, [=](TG_DISCARD_ENCRYPTION_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

@@ -6,32 +6,42 @@ TelegramCore::authCheckPassword
 
 ## Schema:
 
-`auth.checkPassword#a63011e password_hash:bytes = auth.Authorization;`
+```c++
+auth.checkPassword#a63011e password_hash:bytes = auth.Authorization;
+```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
 |passwordHash|QByteArray||
-|callBack|Callback<AuthAuthorization\>|0|
+|callBack|Callback&lt;[AuthAuthorization](../../types/authauthorization.md)&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[AuthAuthorization](../../types/authauthorization.md)|
+|msgId|qint64|
+|result|[AuthAuthorization](../../types/authauthorization.md)|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `checkPasswordAnswer(qint64 msgId, const AuthAuthorization & result)`
-* `checkPasswordError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+checkPasswordAnswer(qint64 msgId, const AuthAuthorization & result)
+```
+```c++
+checkPasswordError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onCheckPasswordAnswer(qint64 msgId, const AuthAuthorization & result)`
-* `onCheckPasswordError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onCheckPasswordAnswer(qint64 msgId, const AuthAuthorization & result)
+```
+```c++
+onCheckPasswordError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -39,6 +49,8 @@ TelegramCore::authCheckPassword
 
 ## Examples:
 
-`tg->checkPassword(password_hash, [=](TG_CHECK_PASSWORD_CALLBACK){
+```c++
+tg->checkPassword(password_hash, [=](TG_CHECK_PASSWORD_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

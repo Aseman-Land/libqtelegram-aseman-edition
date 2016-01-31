@@ -6,32 +6,42 @@ TelegramCore::contactsGetContacts
 
 ## Schema:
 
-`contacts.getContacts#22c6aa08 hash:string = contacts.Contacts;`
+```c++
+contacts.getContacts#22c6aa08 hash:string = contacts.Contacts;
+```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
 |hash|QString||
-|callBack|Callback<ContactsContacts\>|0|
+|callBack|Callback&lt;[ContactsContacts](../../types/contactscontacts.md)&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[ContactsContacts](../../types/contactscontacts.md)|
+|msgId|qint64|
+|result|[ContactsContacts](../../types/contactscontacts.md)|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `getContactsAnswer(qint64 msgId, const ContactsContacts & result)`
-* `getContactsError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+getContactsAnswer(qint64 msgId, const ContactsContacts & result)
+```
+```c++
+getContactsError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onGetContactsAnswer(qint64 msgId, const ContactsContacts & result)`
-* `onGetContactsError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onGetContactsAnswer(qint64 msgId, const ContactsContacts & result)
+```
+```c++
+onGetContactsError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -39,6 +49,8 @@ TelegramCore::contactsGetContacts
 
 ## Examples:
 
-`tg->getContacts(hash, [=](TG_GET_CONTACTS_CALLBACK){
+```c++
+tg->getContacts(hash, [=](TG_GET_CONTACTS_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

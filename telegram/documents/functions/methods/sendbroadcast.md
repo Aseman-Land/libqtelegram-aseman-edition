@@ -6,35 +6,45 @@ TelegramCore::messagesSendBroadcast
 
 ## Schema:
 
-`messages.sendBroadcast#bf73f4da contacts:Vector<InputUser> random_id:Vector<long> message:string media:InputMedia = Updates;`
+```c++
+messages.sendBroadcast#bf73f4da contacts:Vector<InputUser> random_id:Vector<long> message:string media:InputMedia = Updates;
+```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
-|contacts|QList<InputUser>||
-|randomId|QList<qint64>||
+|contacts|QList&lt;[InputUser](../../types/inputuser.md)&gt;||
+|randomId|QList&lt;qint64&gt;||
 |message|QString||
 |media|[InputMedia](../../types/inputmedia.md)||
-|callBack|Callback<UpdatesType\>|0|
+|callBack|Callback&lt;[UpdatesType](../../types/updatestype.md)&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[UpdatesType](../../types/updatestype.md)|
+|msgId|qint64|
+|result|[UpdatesType](../../types/updatestype.md)|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `sendBroadcastAnswer(qint64 msgId, const UpdatesType & result)`
-* `sendBroadcastError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+sendBroadcastAnswer(qint64 msgId, const UpdatesType & result)
+```
+```c++
+sendBroadcastError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onSendBroadcastAnswer(qint64 msgId, const UpdatesType & result)`
-* `onSendBroadcastError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onSendBroadcastAnswer(qint64 msgId, const UpdatesType & result)
+```
+```c++
+onSendBroadcastError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -42,6 +52,8 @@ TelegramCore::messagesSendBroadcast
 
 ## Examples:
 
-`tg->sendBroadcast(contacts, random_id, message, media, [=](TG_SEND_BROADCAST_CALLBACK){
+```c++
+tg->sendBroadcast(contacts, random_id, message, media, [=](TG_SEND_BROADCAST_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

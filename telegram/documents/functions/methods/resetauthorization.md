@@ -6,32 +6,42 @@ TelegramCore::accountResetAuthorization
 
 ## Schema:
 
-`account.resetAuthorization#df77f3bc hash:long = Bool;`
+```c++
+account.resetAuthorization#df77f3bc hash:long = Bool;
+```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
 |hash|qint64||
-|callBack|Callback<bool\>|0|
+|callBack|Callback&lt;bool&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[bool](../../types/bool.md)|
+|msgId|qint64|
+|result|bool|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `resetAuthorizationAnswer(qint64 msgId, bool  result)`
-* `resetAuthorizationError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+resetAuthorizationAnswer(qint64 msgId, bool  result)
+```
+```c++
+resetAuthorizationError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onResetAuthorizationAnswer(qint64 msgId, bool  result)`
-* `onResetAuthorizationError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onResetAuthorizationAnswer(qint64 msgId, bool  result)
+```
+```c++
+onResetAuthorizationError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -39,6 +49,8 @@ TelegramCore::accountResetAuthorization
 
 ## Examples:
 
-`tg->resetAuthorization(hash, [=](TG_RESET_AUTHORIZATION_CALLBACK){
+```c++
+tg->resetAuthorization(hash, [=](TG_RESET_AUTHORIZATION_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

@@ -10,7 +10,9 @@
 
 #### Schema:
 
-`peerUser#9db1bc6d user_id:int = Peer;`
+```c++
+peerUser#9db1bc6d user_id:int = Peer;
+```
 
 #### Parameters:
 
@@ -22,7 +24,9 @@
 
 #### Schema:
 
-`peerChat#bad0e5bb chat_id:int = Peer;`
+```c++
+peerChat#bad0e5bb chat_id:int = Peer;
+```
 
 #### Parameters:
 
@@ -34,7 +38,9 @@
 
 #### Schema:
 
-`peerChannel#bddde532 channel_id:int = Peer;`
+```c++
+peerChannel#bddde532 channel_id:int = Peer;
+```
 
 #### Parameters:
 

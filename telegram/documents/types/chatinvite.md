@@ -9,7 +9,9 @@
 
 #### Schema:
 
-`chatInviteAlready#5a686d7c chat:Chat = ChatInvite;`
+```c++
+chatInviteAlready#5a686d7c chat:Chat = ChatInvite;
+```
 
 #### Parameters:
 
@@ -21,7 +23,9 @@
 
 #### Schema:
 
-`chatInvite#93e99b60 flags:# channel:flags.0?true broadcast:flags.1?true public:flags.2?true megagroup:flags.3?true title:string = ChatInvite;`
+```c++
+chatInvite#93e99b60 flags:# channel:flags.0?true broadcast:flags.1?true public:flags.2?true megagroup:flags.3?true title:string = ChatInvite;
+```
 
 #### Parameters:
 

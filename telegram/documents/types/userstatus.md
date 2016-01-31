@@ -13,7 +13,9 @@
 
 #### Schema:
 
-`userStatusEmpty#9d05049 = UserStatus;`
+```c++
+userStatusEmpty#9d05049 = UserStatus;
+```
 
 #### Parameters:
 
@@ -22,7 +24,9 @@
 
 #### Schema:
 
-`userStatusOnline#edb93949 expires:int = UserStatus;`
+```c++
+userStatusOnline#edb93949 expires:int = UserStatus;
+```
 
 #### Parameters:
 
@@ -34,7 +38,9 @@
 
 #### Schema:
 
-`userStatusOffline#8c703f was_online:int = UserStatus;`
+```c++
+userStatusOffline#8c703f was_online:int = UserStatus;
+```
 
 #### Parameters:
 
@@ -46,7 +52,9 @@
 
 #### Schema:
 
-`userStatusRecently#e26f42f1 = UserStatus;`
+```c++
+userStatusRecently#e26f42f1 = UserStatus;
+```
 
 #### Parameters:
 
@@ -55,7 +63,9 @@
 
 #### Schema:
 
-`userStatusLastWeek#7bf09fc = UserStatus;`
+```c++
+userStatusLastWeek#7bf09fc = UserStatus;
+```
 
 #### Parameters:
 
@@ -64,7 +74,9 @@
 
 #### Schema:
 
-`userStatusLastMonth#77ebc742 = UserStatus;`
+```c++
+userStatusLastMonth#77ebc742 = UserStatus;
+```
 
 #### Parameters:
 

@@ -9,7 +9,9 @@
 
 #### Schema:
 
-`videoEmpty#c10658a8 id:long = Video;`
+```c++
+videoEmpty#c10658a8 id:long = Video;
+```
 
 #### Parameters:
 
@@ -21,7 +23,9 @@
 
 #### Schema:
 
-`video#f72887d3 id:long access_hash:long date:int duration:int mime_type:string size:int thumb:PhotoSize dc_id:int w:int h:int = Video;`
+```c++
+video#f72887d3 id:long access_hash:long date:int duration:int mime_type:string size:int thumb:PhotoSize dc_id:int w:int h:int = Video;
+```
 
 #### Parameters:
 

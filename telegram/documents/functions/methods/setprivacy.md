@@ -6,33 +6,43 @@ TelegramCore::accountSetPrivacy
 
 ## Schema:
 
-`account.setPrivacy#c9f81ce8 key:InputPrivacyKey rules:Vector<InputPrivacyRule> = account.PrivacyRules;`
+```c++
+account.setPrivacy#c9f81ce8 key:InputPrivacyKey rules:Vector<InputPrivacyRule> = account.PrivacyRules;
+```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
 |key|[InputPrivacyKey](../../types/inputprivacykey.md)||
-|rules|QList<InputPrivacyRule>||
-|callBack|Callback<AccountPrivacyRules\>|0|
+|rules|QList&lt;[InputPrivacyRule](../../types/inputprivacyrule.md)&gt;||
+|callBack|Callback&lt;[AccountPrivacyRules](../../types/accountprivacyrules.md)&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[AccountPrivacyRules](../../types/accountprivacyrules.md)|
+|msgId|qint64|
+|result|[AccountPrivacyRules](../../types/accountprivacyrules.md)|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `setPrivacyAnswer(qint64 msgId, const AccountPrivacyRules & result)`
-* `setPrivacyError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+setPrivacyAnswer(qint64 msgId, const AccountPrivacyRules & result)
+```
+```c++
+setPrivacyError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onSetPrivacyAnswer(qint64 msgId, const AccountPrivacyRules & result)`
-* `onSetPrivacyError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onSetPrivacyAnswer(qint64 msgId, const AccountPrivacyRules & result)
+```
+```c++
+onSetPrivacyError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -40,6 +50,8 @@ TelegramCore::accountSetPrivacy
 
 ## Examples:
 
-`tg->setPrivacy(key, rules, [=](TG_SET_PRIVACY_CALLBACK){
+```c++
+tg->setPrivacy(key, rules, [=](TG_SET_PRIVACY_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

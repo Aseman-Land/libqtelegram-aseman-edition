@@ -6,33 +6,43 @@ TelegramCore::channelsEditAbout
 
 ## Schema:
 
-`channels.editAbout#13e27f1e channel:InputChannel about:string = Bool;`
+```c++
+channels.editAbout#13e27f1e channel:InputChannel about:string = Bool;
+```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
 |channel|[InputChannel](../../types/inputchannel.md)||
 |about|QString||
-|callBack|Callback<bool\>|0|
+|callBack|Callback&lt;bool&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[bool](../../types/bool.md)|
+|msgId|qint64|
+|result|bool|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `editAboutAnswer(qint64 msgId, bool  result)`
-* `editAboutError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+editAboutAnswer(qint64 msgId, bool  result)
+```
+```c++
+editAboutError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onEditAboutAnswer(qint64 msgId, bool  result)`
-* `onEditAboutError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onEditAboutAnswer(qint64 msgId, bool  result)
+```
+```c++
+onEditAboutError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -40,6 +50,8 @@ TelegramCore::channelsEditAbout
 
 ## Examples:
 
-`tg->editAbout(channel, about, [=](TG_EDIT_ABOUT_CALLBACK){
+```c++
+tg->editAbout(channel, about, [=](TG_EDIT_ABOUT_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

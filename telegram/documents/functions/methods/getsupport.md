@@ -6,31 +6,41 @@ TelegramCore::helpGetSupport
 
 ## Schema:
 
-`help.getSupport#9cdf08cd = help.Support;`
+```c++
+help.getSupport#9cdf08cd = help.Support;
+```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
-|callBack|Callback<HelpSupport\>|0|
+|callBack|Callback&lt;[HelpSupport](../../types/helpsupport.md)&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[HelpSupport](../../types/helpsupport.md)|
+|msgId|qint64|
+|result|[HelpSupport](../../types/helpsupport.md)|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `getSupportAnswer(qint64 msgId, const HelpSupport & result)`
-* `getSupportError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+getSupportAnswer(qint64 msgId, const HelpSupport & result)
+```
+```c++
+getSupportError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onGetSupportAnswer(qint64 msgId, const HelpSupport & result)`
-* `onGetSupportError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onGetSupportAnswer(qint64 msgId, const HelpSupport & result)
+```
+```c++
+onGetSupportError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -38,6 +48,8 @@ TelegramCore::helpGetSupport
 
 ## Examples:
 
-`tg->getSupport([=](TG_GET_SUPPORT_CALLBACK){
+```c++
+tg->getSupport([=](TG_GET_SUPPORT_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

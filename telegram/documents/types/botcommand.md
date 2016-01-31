@@ -8,7 +8,9 @@
 
 #### Schema:
 
-`botCommand#c27ac8c7 command:string description:string = BotCommand;`
+```c++
+botCommand#c27ac8c7 command:string description:string = BotCommand;
+```
 
 #### Parameters:
 

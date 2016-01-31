@@ -6,7 +6,9 @@ TelegramCore::messagesEditChatAdmin
 
 ## Schema:
 
-`messages.editChatAdmin#a9e69f2e chat_id:int user_id:InputUser is_admin:Bool = Bool;`
+```c++
+messages.editChatAdmin#a9e69f2e chat_id:int user_id:InputUser is_admin:Bool = Bool;
+```
 ## Parameters:
 
 |Name|Type|Default|
@@ -14,26 +16,34 @@ TelegramCore::messagesEditChatAdmin
 |chatId|qint32||
 |userId|[InputUser](../../types/inputuser.md)||
 |isAdmin|bool||
-|callBack|Callback<bool\>|0|
+|callBack|Callback&lt;bool&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[bool](../../types/bool.md)|
+|msgId|qint64|
+|result|bool|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `editChatAdminAnswer(qint64 msgId, bool  result)`
-* `editChatAdminError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+editChatAdminAnswer(qint64 msgId, bool  result)
+```
+```c++
+editChatAdminError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onEditChatAdminAnswer(qint64 msgId, bool  result)`
-* `onEditChatAdminError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onEditChatAdminAnswer(qint64 msgId, bool  result)
+```
+```c++
+onEditChatAdminError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -41,6 +51,8 @@ TelegramCore::messagesEditChatAdmin
 
 ## Examples:
 
-`tg->editChatAdmin(chat_id, user_id, is_admin, [=](TG_EDIT_CHAT_ADMIN_CALLBACK){
+```c++
+tg->editChatAdmin(chat_id, user_id, is_admin, [=](TG_EDIT_CHAT_ADMIN_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

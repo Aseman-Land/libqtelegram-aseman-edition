@@ -8,12 +8,14 @@
 
 #### Schema:
 
-`photos.photo#20212ca8 photo:Photo users:Vector<User> = photos.Photo;`
+```c++
+photos.photo#20212ca8 photo:Photo users:Vector<User> = photos.Photo;
+```
 
 #### Parameters:
 
 |Name|Type|
 |----|----|
 |photo|[Photo](photo.md)|
-|users|QList<User>|
+|users|QList&lt;[User](user.md)&gt;|
 

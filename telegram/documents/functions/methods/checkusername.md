@@ -6,33 +6,43 @@ TelegramCore::channelsCheckUsername
 
 ## Schema:
 
-`channels.checkUsername#10e6bd2c channel:InputChannel username:string = Bool;`
+```c++
+channels.checkUsername#10e6bd2c channel:InputChannel username:string = Bool;
+```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
 |channel|[InputChannel](../../types/inputchannel.md)||
 |username|QString||
-|callBack|Callback<bool\>|0|
+|callBack|Callback&lt;bool&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[bool](../../types/bool.md)|
+|msgId|qint64|
+|result|bool|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `checkUsernameAnswer(qint64 msgId, bool  result)`
-* `checkUsernameError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+checkUsernameAnswer(qint64 msgId, bool  result)
+```
+```c++
+checkUsernameError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onCheckUsernameAnswer(qint64 msgId, bool  result)`
-* `onCheckUsernameError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onCheckUsernameAnswer(qint64 msgId, bool  result)
+```
+```c++
+onCheckUsernameError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -40,6 +50,8 @@ TelegramCore::channelsCheckUsername
 
 ## Examples:
 
-`tg->checkUsername(channel, username, [=](TG_CHECK_USERNAME_CALLBACK){
+```c++
+tg->checkUsername(channel, username, [=](TG_CHECK_USERNAME_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

@@ -6,32 +6,42 @@ TelegramCore::accountUpdateDeviceLocked
 
 ## Schema:
 
-`account.updateDeviceLocked#38df3532 period:int = Bool;`
+```c++
+account.updateDeviceLocked#38df3532 period:int = Bool;
+```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
 |period|qint32||
-|callBack|Callback<bool\>|0|
+|callBack|Callback&lt;bool&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[bool](../../types/bool.md)|
+|msgId|qint64|
+|result|bool|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `updateDeviceLockedAnswer(qint64 msgId, bool  result)`
-* `updateDeviceLockedError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+updateDeviceLockedAnswer(qint64 msgId, bool  result)
+```
+```c++
+updateDeviceLockedError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onUpdateDeviceLockedAnswer(qint64 msgId, bool  result)`
-* `onUpdateDeviceLockedError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onUpdateDeviceLockedAnswer(qint64 msgId, bool  result)
+```
+```c++
+onUpdateDeviceLockedError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -39,6 +49,8 @@ TelegramCore::accountUpdateDeviceLocked
 
 ## Examples:
 
-`tg->updateDeviceLocked(period, [=](TG_UPDATE_DEVICE_LOCKED_CALLBACK){
+```c++
+tg->updateDeviceLocked(period, [=](TG_UPDATE_DEVICE_LOCKED_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

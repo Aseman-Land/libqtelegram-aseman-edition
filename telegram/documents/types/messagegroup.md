@@ -8,7 +8,9 @@
 
 #### Schema:
 
-`messageGroup#e8346f53 min_id:int max_id:int count:int date:int = MessageGroup;`
+```c++
+messageGroup#e8346f53 min_id:int max_id:int count:int date:int = MessageGroup;
+```
 
 #### Parameters:
 

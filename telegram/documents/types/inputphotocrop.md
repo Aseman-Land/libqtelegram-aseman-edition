@@ -9,7 +9,9 @@
 
 #### Schema:
 
-`inputPhotoCropAuto#ade6b004 = InputPhotoCrop;`
+```c++
+inputPhotoCropAuto#ade6b004 = InputPhotoCrop;
+```
 
 #### Parameters:
 
@@ -18,7 +20,9 @@
 
 #### Schema:
 
-`inputPhotoCrop#d9915325 crop_left:double crop_top:double crop_width:double = InputPhotoCrop;`
+```c++
+inputPhotoCrop#d9915325 crop_left:double crop_top:double crop_width:double = InputPhotoCrop;
+```
 
 #### Parameters:
 

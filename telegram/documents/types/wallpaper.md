@@ -9,7 +9,9 @@
 
 #### Schema:
 
-`wallPaper#ccb03657 id:int title:string sizes:Vector<PhotoSize> color:int = WallPaper;`
+```c++
+wallPaper#ccb03657 id:int title:string sizes:Vector<PhotoSize> color:int = WallPaper;
+```
 
 #### Parameters:
 
@@ -17,14 +19,16 @@
 |----|----|
 |id|qint32|
 |title|QString|
-|sizes|QList<PhotoSize>|
+|sizes|QList&lt;[PhotoSize](photosize.md)&gt;|
 |color|qint32|
 
 ## WallPaper::typeWallPaperSolid
 
 #### Schema:
 
-`wallPaperSolid#63117f24 id:int title:string bg_color:int color:int = WallPaper;`
+```c++
+wallPaperSolid#63117f24 id:int title:string bg_color:int color:int = WallPaper;
+```
 
 #### Parameters:
 

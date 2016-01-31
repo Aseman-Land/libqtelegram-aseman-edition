@@ -9,7 +9,9 @@
 
 #### Schema:
 
-`chatPhotoEmpty#37c1011c = ChatPhoto;`
+```c++
+chatPhotoEmpty#37c1011c = ChatPhoto;
+```
 
 #### Parameters:
 
@@ -18,7 +20,9 @@
 
 #### Schema:
 
-`chatPhoto#6153276a photo_small:FileLocation photo_big:FileLocation = ChatPhoto;`
+```c++
+chatPhoto#6153276a photo_small:FileLocation photo_big:FileLocation = ChatPhoto;
+```
 
 #### Parameters:
 

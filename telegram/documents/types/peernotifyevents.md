@@ -9,7 +9,9 @@
 
 #### Schema:
 
-`peerNotifyEventsEmpty#add53cb3 = PeerNotifyEvents;`
+```c++
+peerNotifyEventsEmpty#add53cb3 = PeerNotifyEvents;
+```
 
 #### Parameters:
 
@@ -18,7 +20,9 @@
 
 #### Schema:
 
-`peerNotifyEventsAll#6d1ded88 = PeerNotifyEvents;`
+```c++
+peerNotifyEventsAll#6d1ded88 = PeerNotifyEvents;
+```
 
 #### Parameters:
 

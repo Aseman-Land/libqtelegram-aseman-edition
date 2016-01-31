@@ -6,33 +6,43 @@ TelegramCore::accountUnregisterDevice
 
 ## Schema:
 
-`account.unregisterDevice#65c55b40 token_type:int token:string = Bool;`
+```c++
+account.unregisterDevice#65c55b40 token_type:int token:string = Bool;
+```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
 |tokenType|qint32||
 |token|QString||
-|callBack|Callback<bool\>|0|
+|callBack|Callback&lt;bool&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[bool](../../types/bool.md)|
+|msgId|qint64|
+|result|bool|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `unregisterDeviceAnswer(qint64 msgId, bool  result)`
-* `unregisterDeviceError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+unregisterDeviceAnswer(qint64 msgId, bool  result)
+```
+```c++
+unregisterDeviceError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onUnregisterDeviceAnswer(qint64 msgId, bool  result)`
-* `onUnregisterDeviceError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onUnregisterDeviceAnswer(qint64 msgId, bool  result)
+```
+```c++
+onUnregisterDeviceError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -40,6 +50,8 @@ TelegramCore::accountUnregisterDevice
 
 ## Examples:
 
-`tg->unregisterDevice(token_type, token, [=](TG_UNREGISTER_DEVICE_CALLBACK){
+```c++
+tg->unregisterDevice(token_type, token, [=](TG_UNREGISTER_DEVICE_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

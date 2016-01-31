@@ -6,33 +6,43 @@ TelegramCore::channelsToggleComments
 
 ## Schema:
 
-`channels.toggleComments#aaa29e88 channel:InputChannel enabled:Bool = Updates;`
+```c++
+channels.toggleComments#aaa29e88 channel:InputChannel enabled:Bool = Updates;
+```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
 |channel|[InputChannel](../../types/inputchannel.md)||
 |enabled|bool||
-|callBack|Callback<UpdatesType\>|0|
+|callBack|Callback&lt;[UpdatesType](../../types/updatestype.md)&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[UpdatesType](../../types/updatestype.md)|
+|msgId|qint64|
+|result|[UpdatesType](../../types/updatestype.md)|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `toggleCommentsAnswer(qint64 msgId, const UpdatesType & result)`
-* `toggleCommentsError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+toggleCommentsAnswer(qint64 msgId, const UpdatesType & result)
+```
+```c++
+toggleCommentsError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onToggleCommentsAnswer(qint64 msgId, const UpdatesType & result)`
-* `onToggleCommentsError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onToggleCommentsAnswer(qint64 msgId, const UpdatesType & result)
+```
+```c++
+onToggleCommentsError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -40,6 +50,8 @@ TelegramCore::channelsToggleComments
 
 ## Examples:
 
-`tg->toggleComments(channel, enabled, [=](TG_TOGGLE_COMMENTS_CALLBACK){
+```c++
+tg->toggleComments(channel, enabled, [=](TG_TOGGLE_COMMENTS_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

@@ -10,7 +10,9 @@
 
 #### Schema:
 
-`photoSizeEmpty#e17e23c type:string = PhotoSize;`
+```c++
+photoSizeEmpty#e17e23c type:string = PhotoSize;
+```
 
 #### Parameters:
 
@@ -22,7 +24,9 @@
 
 #### Schema:
 
-`photoSize#77bfb61b type:string location:FileLocation w:int h:int size:int = PhotoSize;`
+```c++
+photoSize#77bfb61b type:string location:FileLocation w:int h:int size:int = PhotoSize;
+```
 
 #### Parameters:
 
@@ -38,7 +42,9 @@
 
 #### Schema:
 
-`photoCachedSize#e9a734fa type:string location:FileLocation w:int h:int bytes:bytes = PhotoSize;`
+```c++
+photoCachedSize#e9a734fa type:string location:FileLocation w:int h:int bytes:bytes = PhotoSize;
+```
 
 #### Parameters:
 

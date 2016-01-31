@@ -9,7 +9,9 @@
 
 #### Schema:
 
-`help.appUpdate#8987f311 id:int critical:Bool url:string text:string = help.AppUpdate;`
+```c++
+help.appUpdate#8987f311 id:int critical:Bool url:string text:string = help.AppUpdate;
+```
 
 #### Parameters:
 
@@ -24,7 +26,9 @@
 
 #### Schema:
 
-`help.noAppUpdate#c45a6536 = help.AppUpdate;`
+```c++
+help.noAppUpdate#c45a6536 = help.AppUpdate;
+```
 
 #### Parameters:
 

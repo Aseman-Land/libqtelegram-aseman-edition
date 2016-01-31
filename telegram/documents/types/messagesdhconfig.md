@@ -9,7 +9,9 @@
 
 #### Schema:
 
-`messages.dhConfigNotModified#c0e24635 random:bytes = messages.DhConfig;`
+```c++
+messages.dhConfigNotModified#c0e24635 random:bytes = messages.DhConfig;
+```
 
 #### Parameters:
 
@@ -21,7 +23,9 @@
 
 #### Schema:
 
-`messages.dhConfig#2c221edd g:int p:bytes version:int random:bytes = messages.DhConfig;`
+```c++
+messages.dhConfig#2c221edd g:int p:bytes version:int random:bytes = messages.DhConfig;
+```
 
 #### Parameters:
 

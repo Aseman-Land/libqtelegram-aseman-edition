@@ -8,7 +8,9 @@
 
 #### Schema:
 
-`privacyKeyStatusTimestamp#bc2eab30 = PrivacyKey;`
+```c++
+privacyKeyStatusTimestamp#bc2eab30 = PrivacyKey;
+```
 
 #### Parameters:
 

@@ -13,7 +13,9 @@
 
 #### Schema:
 
-`channelParticipant#15ebac1d user_id:int date:int = ChannelParticipant;`
+```c++
+channelParticipant#15ebac1d user_id:int date:int = ChannelParticipant;
+```
 
 #### Parameters:
 
@@ -26,7 +28,9 @@
 
 #### Schema:
 
-`channelParticipantSelf#a3289a6d user_id:int inviter_id:int date:int = ChannelParticipant;`
+```c++
+channelParticipantSelf#a3289a6d user_id:int inviter_id:int date:int = ChannelParticipant;
+```
 
 #### Parameters:
 
@@ -40,7 +44,9 @@
 
 #### Schema:
 
-`channelParticipantModerator#91057fef user_id:int inviter_id:int date:int = ChannelParticipant;`
+```c++
+channelParticipantModerator#91057fef user_id:int inviter_id:int date:int = ChannelParticipant;
+```
 
 #### Parameters:
 
@@ -54,7 +60,9 @@
 
 #### Schema:
 
-`channelParticipantEditor#98192d61 user_id:int inviter_id:int date:int = ChannelParticipant;`
+```c++
+channelParticipantEditor#98192d61 user_id:int inviter_id:int date:int = ChannelParticipant;
+```
 
 #### Parameters:
 
@@ -68,7 +76,9 @@
 
 #### Schema:
 
-`channelParticipantKicked#8cc5e69a user_id:int kicked_by:int date:int = ChannelParticipant;`
+```c++
+channelParticipantKicked#8cc5e69a user_id:int kicked_by:int date:int = ChannelParticipant;
+```
 
 #### Parameters:
 
@@ -82,7 +92,9 @@
 
 #### Schema:
 
-`channelParticipantCreator#e3e2e1f9 user_id:int = ChannelParticipant;`
+```c++
+channelParticipantCreator#e3e2e1f9 user_id:int = ChannelParticipant;
+```
 
 #### Parameters:
 

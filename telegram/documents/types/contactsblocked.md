@@ -9,26 +9,30 @@
 
 #### Schema:
 
-`contacts.blocked#1c138d15 blocked:Vector<ContactBlocked> users:Vector<User> = contacts.Blocked;`
+```c++
+contacts.blocked#1c138d15 blocked:Vector<ContactBlocked> users:Vector<User> = contacts.Blocked;
+```
 
 #### Parameters:
 
 |Name|Type|
 |----|----|
-|blocked|QList<ContactBlocked>|
-|users|QList<User>|
+|blocked|QList&lt;[ContactBlocked](contactblocked.md)&gt;|
+|users|QList&lt;[User](user.md)&gt;|
 
 ## ContactsBlocked::typeContactsBlockedSlice
 
 #### Schema:
 
-`contacts.blockedSlice#900802a1 count:int blocked:Vector<ContactBlocked> users:Vector<User> = contacts.Blocked;`
+```c++
+contacts.blockedSlice#900802a1 count:int blocked:Vector<ContactBlocked> users:Vector<User> = contacts.Blocked;
+```
 
 #### Parameters:
 
 |Name|Type|
 |----|----|
 |count|qint32|
-|blocked|QList<ContactBlocked>|
-|users|QList<User>|
+|blocked|QList&lt;[ContactBlocked](contactblocked.md)&gt;|
+|users|QList&lt;[User](user.md)&gt;|
 

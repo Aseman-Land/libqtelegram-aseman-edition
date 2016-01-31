@@ -8,7 +8,9 @@
 
 #### Schema:
 
-`disabledFeature#ae636f24 feature:string description:string = DisabledFeature;`
+```c++
+disabledFeature#ae636f24 feature:string description:string = DisabledFeature;
+```
 
 #### Parameters:
 

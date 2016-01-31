@@ -6,32 +6,42 @@ TelegramCore::photosDeletePhotos
 
 ## Schema:
 
-`photos.deletePhotos#87cf7f2f id:Vector<InputPhoto> = Vector<long>;`
+```c++
+photos.deletePhotos#87cf7f2f id:Vector<InputPhoto> = Vector<long>;
+```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
-|id|QList<InputPhoto>||
-|callBack|Callback<QList<qint64>\>|0|
+|id|QList&lt;[InputPhoto](../../types/inputphoto.md)&gt;||
+|callBack|Callback&lt;QList&lt;qint64&gt;&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[QList<qint64>](../../types/qlist<qint64>.md)|
+|msgId|qint64|
+|result|QList&lt;qint64&gt;|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `deletePhotosAnswer(qint64 msgId, const QList<qint64> & result)`
-* `deletePhotosError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+deletePhotosAnswer(qint64 msgId, const QList&lt;qint64&gt; & result)
+```
+```c++
+deletePhotosError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onDeletePhotosAnswer(qint64 msgId, const QList<qint64> & result)`
-* `onDeletePhotosError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onDeletePhotosAnswer(qint64 msgId, const QList&lt;qint64&gt; & result)
+```
+```c++
+onDeletePhotosError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -39,6 +49,8 @@ TelegramCore::photosDeletePhotos
 
 ## Examples:
 
-`tg->deletePhotos(id, [=](TG_DELETE_PHOTOS_CALLBACK){
+```c++
+tg->deletePhotos(id, [=](TG_DELETE_PHOTOS_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

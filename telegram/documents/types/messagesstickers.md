@@ -9,7 +9,9 @@
 
 #### Schema:
 
-`messages.stickersNotModified#f1749a22 = messages.Stickers;`
+```c++
+messages.stickersNotModified#f1749a22 = messages.Stickers;
+```
 
 #### Parameters:
 
@@ -18,12 +20,14 @@
 
 #### Schema:
 
-`messages.stickers#8a8ecd32 hash:string stickers:Vector<Document> = messages.Stickers;`
+```c++
+messages.stickers#8a8ecd32 hash:string stickers:Vector<Document> = messages.Stickers;
+```
 
 #### Parameters:
 
 |Name|Type|
 |----|----|
 |hash|QString|
-|stickers|QList<Document>|
+|stickers|QList&lt;[Document](document.md)&gt;|
 

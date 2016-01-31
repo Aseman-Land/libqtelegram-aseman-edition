@@ -6,33 +6,43 @@ TelegramCore::channelsUpdateUsername
 
 ## Schema:
 
-`channels.updateUsername#3514b3de channel:InputChannel username:string = Bool;`
+```c++
+channels.updateUsername#3514b3de channel:InputChannel username:string = Bool;
+```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
 |channel|[InputChannel](../../types/inputchannel.md)||
 |username|QString||
-|callBack|Callback<bool\>|0|
+|callBack|Callback&lt;bool&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[bool](../../types/bool.md)|
+|msgId|qint64|
+|result|bool|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `updateUsernameAnswer(qint64 msgId, bool  result)`
-* `updateUsernameError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+updateUsernameAnswer(qint64 msgId, bool  result)
+```
+```c++
+updateUsernameError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onUpdateUsernameAnswer(qint64 msgId, bool  result)`
-* `onUpdateUsernameError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onUpdateUsernameAnswer(qint64 msgId, bool  result)
+```
+```c++
+onUpdateUsernameError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -40,6 +50,8 @@ TelegramCore::channelsUpdateUsername
 
 ## Examples:
 
-`tg->updateUsername(channel, username, [=](TG_UPDATE_USERNAME_CALLBACK){
+```c++
+tg->updateUsername(channel, username, [=](TG_UPDATE_USERNAME_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

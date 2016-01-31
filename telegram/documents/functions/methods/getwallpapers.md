@@ -6,31 +6,41 @@ TelegramCore::accountGetWallPapers
 
 ## Schema:
 
-`account.getWallPapers#c04cfac2 = Vector<WallPaper>;`
+```c++
+account.getWallPapers#c04cfac2 = Vector<WallPaper>;
+```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
-|callBack|Callback<QList<WallPaper>\>|0|
+|callBack|Callback&lt;QList&lt;[WallPaper](../../types/wallpaper.md)&gt;&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[QList<WallPaper>](../../types/qlist<wallpaper>.md)|
+|msgId|qint64|
+|result|QList&lt;[WallPaper](../../types/wallpaper.md)&gt;|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `getWallPapersAnswer(qint64 msgId, const QList<WallPaper> & result)`
-* `getWallPapersError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+getWallPapersAnswer(qint64 msgId, const QList&lt;WallPaper&gt; & result)
+```
+```c++
+getWallPapersError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onGetWallPapersAnswer(qint64 msgId, const QList<WallPaper> & result)`
-* `onGetWallPapersError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onGetWallPapersAnswer(qint64 msgId, const QList&lt;WallPaper&gt; & result)
+```
+```c++
+onGetWallPapersError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -38,6 +48,8 @@ TelegramCore::accountGetWallPapers
 
 ## Examples:
 
-`tg->getWallPapers([=](TG_GET_WALL_PAPERS_CALLBACK){
+```c++
+tg->getWallPapers([=](TG_GET_WALL_PAPERS_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

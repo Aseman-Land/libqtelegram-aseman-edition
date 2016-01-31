@@ -9,7 +9,9 @@
 
 #### Schema:
 
-`account.noPassword#96dabc18 new_salt:bytes email_unconfirmed_pattern:string = account.Password;`
+```c++
+account.noPassword#96dabc18 new_salt:bytes email_unconfirmed_pattern:string = account.Password;
+```
 
 #### Parameters:
 
@@ -22,7 +24,9 @@
 
 #### Schema:
 
-`account.password#7c18141c current_salt:bytes new_salt:bytes hint:string has_recovery:Bool email_unconfirmed_pattern:string = account.Password;`
+```c++
+account.password#7c18141c current_salt:bytes new_salt:bytes hint:string has_recovery:Bool email_unconfirmed_pattern:string = account.Password;
+```
 
 #### Parameters:
 

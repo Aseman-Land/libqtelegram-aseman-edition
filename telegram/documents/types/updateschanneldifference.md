@@ -10,7 +10,9 @@
 
 #### Schema:
 
-`updates.channelDifferenceEmpty#3e11affb flags:# final:flags.0?true pts:int timeout:flags.1?int = updates.ChannelDifference;`
+```c++
+updates.channelDifferenceEmpty#3e11affb flags:# final:flags.0?true pts:int timeout:flags.1?int = updates.ChannelDifference;
+```
 
 #### Parameters:
 
@@ -24,7 +26,9 @@
 
 #### Schema:
 
-`updates.channelDifferenceTooLong#5e167646 flags:# final:flags.0?true pts:int timeout:flags.1?int top_message:int top_important_message:int read_inbox_max_id:int unread_count:int unread_important_count:int messages:Vector<Message> chats:Vector<Chat> users:Vector<User> = updates.ChannelDifference;`
+```c++
+updates.channelDifferenceTooLong#5e167646 flags:# final:flags.0?true pts:int timeout:flags.1?int top_message:int top_important_message:int read_inbox_max_id:int unread_count:int unread_important_count:int messages:Vector<Message> chats:Vector<Chat> users:Vector<User> = updates.ChannelDifference;
+```
 
 #### Parameters:
 
@@ -38,15 +42,17 @@
 |readInboxMaxId|qint32|
 |unreadCount|qint32|
 |unreadImportantCount|qint32|
-|messages|QList<Message>|
-|chats|QList<Chat>|
-|users|QList<User>|
+|messages|QList&lt;[Message](message.md)&gt;|
+|chats|QList&lt;[Chat](chat.md)&gt;|
+|users|QList&lt;[User](user.md)&gt;|
 
 ## UpdatesChannelDifference::typeUpdatesChannelDifference
 
 #### Schema:
 
-`updates.channelDifference#2064674e flags:# final:flags.0?true pts:int timeout:flags.1?int new_messages:Vector<Message> other_updates:Vector<Update> chats:Vector<Chat> users:Vector<User> = updates.ChannelDifference;`
+```c++
+updates.channelDifference#2064674e flags:# final:flags.0?true pts:int timeout:flags.1?int new_messages:Vector<Message> other_updates:Vector<Update> chats:Vector<Chat> users:Vector<User> = updates.ChannelDifference;
+```
 
 #### Parameters:
 
@@ -55,8 +61,8 @@
 |final|bool|
 |pts|qint32|
 |timeout|qint32|
-|newMessages|QList<Message>|
-|otherUpdates|QList<Update>|
-|chats|QList<Chat>|
-|users|QList<User>|
+|newMessages|QList&lt;[Message](message.md)&gt;|
+|otherUpdates|QList&lt;[Update](update.md)&gt;|
+|chats|QList&lt;[Chat](chat.md)&gt;|
+|users|QList&lt;[User](user.md)&gt;|
 

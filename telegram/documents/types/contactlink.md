@@ -11,7 +11,9 @@
 
 #### Schema:
 
-`contactLinkUnknown#5f4f9247 = ContactLink;`
+```c++
+contactLinkUnknown#5f4f9247 = ContactLink;
+```
 
 #### Parameters:
 
@@ -20,7 +22,9 @@
 
 #### Schema:
 
-`contactLinkNone#feedd3ad = ContactLink;`
+```c++
+contactLinkNone#feedd3ad = ContactLink;
+```
 
 #### Parameters:
 
@@ -29,7 +33,9 @@
 
 #### Schema:
 
-`contactLinkHasPhone#268f3f59 = ContactLink;`
+```c++
+contactLinkHasPhone#268f3f59 = ContactLink;
+```
 
 #### Parameters:
 
@@ -38,7 +44,9 @@
 
 #### Schema:
 
-`contactLinkContact#d502c2d0 = ContactLink;`
+```c++
+contactLinkContact#d502c2d0 = ContactLink;
+```
 
 #### Parameters:
 

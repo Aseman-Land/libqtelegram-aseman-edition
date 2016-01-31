@@ -8,11 +8,13 @@
 
 #### Schema:
 
-`keyboardButtonRow#77608b83 buttons:Vector<KeyboardButton> = KeyboardButtonRow;`
+```c++
+keyboardButtonRow#77608b83 buttons:Vector<KeyboardButton> = KeyboardButtonRow;
+```
 
 #### Parameters:
 
 |Name|Type|
 |----|----|
-|buttons|QList<KeyboardButton>|
+|buttons|QList&lt;[KeyboardButton](keyboardbutton.md)&gt;|
 

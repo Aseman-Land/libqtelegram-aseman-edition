@@ -8,7 +8,9 @@
 
 #### Schema:
 
-`auth.exportedAuthorization#df969c2d id:int bytes:bytes = auth.ExportedAuthorization;`
+```c++
+auth.exportedAuthorization#df969c2d id:int bytes:bytes = auth.ExportedAuthorization;
+```
 
 #### Parameters:
 

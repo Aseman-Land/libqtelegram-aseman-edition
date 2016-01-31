@@ -8,7 +8,9 @@
 
 #### Schema:
 
-`accountDaysTTL#b8d0afdf days:int = AccountDaysTTL;`
+```c++
+accountDaysTTL#b8d0afdf days:int = AccountDaysTTL;
+```
 
 #### Parameters:
 

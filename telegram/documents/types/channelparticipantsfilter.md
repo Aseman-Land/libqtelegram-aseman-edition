@@ -11,7 +11,9 @@
 
 #### Schema:
 
-`channelParticipantsRecent#de3f3c79 = ChannelParticipantsFilter;`
+```c++
+channelParticipantsRecent#de3f3c79 = ChannelParticipantsFilter;
+```
 
 #### Parameters:
 
@@ -20,7 +22,9 @@
 
 #### Schema:
 
-`channelParticipantsAdmins#b4608969 = ChannelParticipantsFilter;`
+```c++
+channelParticipantsAdmins#b4608969 = ChannelParticipantsFilter;
+```
 
 #### Parameters:
 
@@ -29,7 +33,9 @@
 
 #### Schema:
 
-`channelParticipantsKicked#3c37bb7a = ChannelParticipantsFilter;`
+```c++
+channelParticipantsKicked#3c37bb7a = ChannelParticipantsFilter;
+```
 
 #### Parameters:
 
@@ -38,7 +44,9 @@
 
 #### Schema:
 
-`channelParticipantsBots#b0d1865b = ChannelParticipantsFilter;`
+```c++
+channelParticipantsBots#b0d1865b = ChannelParticipantsFilter;
+```
 
 #### Parameters:
 

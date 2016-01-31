@@ -6,32 +6,42 @@ TelegramCore::messagesGetWebPagePreview
 
 ## Schema:
 
-`messages.getWebPagePreview#25223e24 message:string = MessageMedia;`
+```c++
+messages.getWebPagePreview#25223e24 message:string = MessageMedia;
+```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
 |message|QString||
-|callBack|Callback<MessageMedia\>|0|
+|callBack|Callback&lt;[MessageMedia](../../types/messagemedia.md)&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[MessageMedia](../../types/messagemedia.md)|
+|msgId|qint64|
+|result|[MessageMedia](../../types/messagemedia.md)|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `getWebPagePreviewAnswer(qint64 msgId, const MessageMedia & result)`
-* `getWebPagePreviewError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+getWebPagePreviewAnswer(qint64 msgId, const MessageMedia & result)
+```
+```c++
+getWebPagePreviewError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onGetWebPagePreviewAnswer(qint64 msgId, const MessageMedia & result)`
-* `onGetWebPagePreviewError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onGetWebPagePreviewAnswer(qint64 msgId, const MessageMedia & result)
+```
+```c++
+onGetWebPagePreviewError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -39,6 +49,8 @@ TelegramCore::messagesGetWebPagePreview
 
 ## Examples:
 
-`tg->getWebPagePreview(message, [=](TG_GET_WEB_PAGE_PREVIEW_CALLBACK){
+```c++
+tg->getWebPagePreview(message, [=](TG_GET_WEB_PAGE_PREVIEW_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

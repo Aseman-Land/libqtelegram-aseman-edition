@@ -6,32 +6,42 @@ TelegramCore::messagesCheckChatInvite
 
 ## Schema:
 
-`messages.checkChatInvite#3eadb1bb hash:string = ChatInvite;`
+```c++
+messages.checkChatInvite#3eadb1bb hash:string = ChatInvite;
+```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
 |hash|QString||
-|callBack|Callback<ChatInvite\>|0|
+|callBack|Callback&lt;[ChatInvite](../../types/chatinvite.md)&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[ChatInvite](../../types/chatinvite.md)|
+|msgId|qint64|
+|result|[ChatInvite](../../types/chatinvite.md)|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `checkChatInviteAnswer(qint64 msgId, const ChatInvite & result)`
-* `checkChatInviteError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+checkChatInviteAnswer(qint64 msgId, const ChatInvite & result)
+```
+```c++
+checkChatInviteError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onCheckChatInviteAnswer(qint64 msgId, const ChatInvite & result)`
-* `onCheckChatInviteError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onCheckChatInviteAnswer(qint64 msgId, const ChatInvite & result)
+```
+```c++
+onCheckChatInviteError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -39,6 +49,8 @@ TelegramCore::messagesCheckChatInvite
 
 ## Examples:
 
-`tg->checkChatInvite(hash, [=](TG_CHECK_CHAT_INVITE_CALLBACK){
+```c++
+tg->checkChatInvite(hash, [=](TG_CHECK_CHAT_INVITE_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

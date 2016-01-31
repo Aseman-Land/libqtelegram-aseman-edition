@@ -6,31 +6,41 @@ TelegramCore::helpGetNearestDc
 
 ## Schema:
 
-`help.getNearestDc#1fb33026 = NearestDc;`
+```c++
+help.getNearestDc#1fb33026 = NearestDc;
+```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
-|callBack|Callback<NearestDc\>|0|
+|callBack|Callback&lt;[NearestDc](../../types/nearestdc.md)&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[NearestDc](../../types/nearestdc.md)|
+|msgId|qint64|
+|result|[NearestDc](../../types/nearestdc.md)|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `getNearestDcAnswer(qint64 msgId, const NearestDc & result)`
-* `getNearestDcError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+getNearestDcAnswer(qint64 msgId, const NearestDc & result)
+```
+```c++
+getNearestDcError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onGetNearestDcAnswer(qint64 msgId, const NearestDc & result)`
-* `onGetNearestDcError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onGetNearestDcAnswer(qint64 msgId, const NearestDc & result)
+```
+```c++
+onGetNearestDcError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -38,6 +48,8 @@ TelegramCore::helpGetNearestDc
 
 ## Examples:
 
-`tg->getNearestDc([=](TG_GET_NEAREST_DC_CALLBACK){
+```c++
+tg->getNearestDc([=](TG_GET_NEAREST_DC_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

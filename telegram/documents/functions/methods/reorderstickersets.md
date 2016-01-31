@@ -6,32 +6,42 @@ TelegramCore::messagesReorderStickerSets
 
 ## Schema:
 
-`messages.reorderStickerSets#9fcfbc30 order:Vector<long> = Bool;`
+```c++
+messages.reorderStickerSets#9fcfbc30 order:Vector<long> = Bool;
+```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
-|order|QList<qint64>||
-|callBack|Callback<bool\>|0|
+|order|QList&lt;qint64&gt;||
+|callBack|Callback&lt;bool&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[bool](../../types/bool.md)|
+|msgId|qint64|
+|result|bool|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `reorderStickerSetsAnswer(qint64 msgId, bool  result)`
-* `reorderStickerSetsError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+reorderStickerSetsAnswer(qint64 msgId, bool  result)
+```
+```c++
+reorderStickerSetsError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onReorderStickerSetsAnswer(qint64 msgId, bool  result)`
-* `onReorderStickerSetsError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onReorderStickerSetsAnswer(qint64 msgId, bool  result)
+```
+```c++
+onReorderStickerSetsError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -39,6 +49,8 @@ TelegramCore::messagesReorderStickerSets
 
 ## Examples:
 
-`tg->reorderStickerSets(order, [=](TG_REORDER_STICKER_SETS_CALLBACK){
+```c++
+tg->reorderStickerSets(order, [=](TG_REORDER_STICKER_SETS_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

@@ -6,7 +6,9 @@ TelegramCore::channelsGetParticipants
 
 ## Schema:
 
-`channels.getParticipants#24d98f92 channel:InputChannel filter:ChannelParticipantsFilter offset:int limit:int = channels.ChannelParticipants;`
+```c++
+channels.getParticipants#24d98f92 channel:InputChannel filter:ChannelParticipantsFilter offset:int limit:int = channels.ChannelParticipants;
+```
 ## Parameters:
 
 |Name|Type|Default|
@@ -15,26 +17,34 @@ TelegramCore::channelsGetParticipants
 |filter|[ChannelParticipantsFilter](../../types/channelparticipantsfilter.md)||
 |offset|qint32||
 |limit|qint32||
-|callBack|Callback<ChannelsChannelParticipants\>|0|
+|callBack|Callback&lt;[ChannelsChannelParticipants](../../types/channelschannelparticipants.md)&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[ChannelsChannelParticipants](../../types/channelschannelparticipants.md)|
+|msgId|qint64|
+|result|[ChannelsChannelParticipants](../../types/channelschannelparticipants.md)|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `getParticipantsAnswer(qint64 msgId, const ChannelsChannelParticipants & result)`
-* `getParticipantsError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+getParticipantsAnswer(qint64 msgId, const ChannelsChannelParticipants & result)
+```
+```c++
+getParticipantsError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onGetParticipantsAnswer(qint64 msgId, const ChannelsChannelParticipants & result)`
-* `onGetParticipantsError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onGetParticipantsAnswer(qint64 msgId, const ChannelsChannelParticipants & result)
+```
+```c++
+onGetParticipantsError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -42,6 +52,8 @@ TelegramCore::channelsGetParticipants
 
 ## Examples:
 
-`tg->getParticipants(channel, filter, offset, limit, [=](TG_GET_PARTICIPANTS_CALLBACK){
+```c++
+tg->getParticipants(channel, filter, offset, limit, [=](TG_GET_PARTICIPANTS_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

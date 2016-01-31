@@ -6,7 +6,9 @@ TelegramCore::updatesGetChannelDifference
 
 ## Schema:
 
-`updates.getChannelDifference#bb32d7c0 channel:InputChannel filter:ChannelMessagesFilter pts:int limit:int = updates.ChannelDifference;`
+```c++
+updates.getChannelDifference#bb32d7c0 channel:InputChannel filter:ChannelMessagesFilter pts:int limit:int = updates.ChannelDifference;
+```
 ## Parameters:
 
 |Name|Type|Default|
@@ -15,26 +17,34 @@ TelegramCore::updatesGetChannelDifference
 |filter|[ChannelMessagesFilter](../../types/channelmessagesfilter.md)||
 |pts|qint32||
 |limit|qint32||
-|callBack|Callback<UpdatesChannelDifference\>|0|
+|callBack|Callback&lt;[UpdatesChannelDifference](../../types/updateschanneldifference.md)&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[UpdatesChannelDifference](../../types/updateschanneldifference.md)|
+|msgId|qint64|
+|result|[UpdatesChannelDifference](../../types/updateschanneldifference.md)|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `getChannelDifferenceAnswer(qint64 msgId, const UpdatesChannelDifference & result)`
-* `getChannelDifferenceError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+getChannelDifferenceAnswer(qint64 msgId, const UpdatesChannelDifference & result)
+```
+```c++
+getChannelDifferenceError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onGetChannelDifferenceAnswer(qint64 msgId, const UpdatesChannelDifference & result)`
-* `onGetChannelDifferenceError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onGetChannelDifferenceAnswer(qint64 msgId, const UpdatesChannelDifference & result)
+```
+```c++
+onGetChannelDifferenceError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -42,6 +52,8 @@ TelegramCore::updatesGetChannelDifference
 
 ## Examples:
 
-`tg->getChannelDifference(channel, filter, pts, limit, [=](TG_GET_CHANNEL_DIFFERENCE_CALLBACK){
+```c++
+tg->getChannelDifference(channel, filter, pts, limit, [=](TG_GET_CHANNEL_DIFFERENCE_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

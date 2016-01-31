@@ -11,7 +11,9 @@
 
 #### Schema:
 
-`inputEncryptedFileEmpty#1837c364 = InputEncryptedFile;`
+```c++
+inputEncryptedFileEmpty#1837c364 = InputEncryptedFile;
+```
 
 #### Parameters:
 
@@ -20,7 +22,9 @@
 
 #### Schema:
 
-`inputEncryptedFileUploaded#64bd0306 id:long parts:int md5_checksum:string key_fingerprint:int = InputEncryptedFile;`
+```c++
+inputEncryptedFileUploaded#64bd0306 id:long parts:int md5_checksum:string key_fingerprint:int = InputEncryptedFile;
+```
 
 #### Parameters:
 
@@ -35,7 +39,9 @@
 
 #### Schema:
 
-`inputEncryptedFile#5a17b5e5 id:long access_hash:long = InputEncryptedFile;`
+```c++
+inputEncryptedFile#5a17b5e5 id:long access_hash:long = InputEncryptedFile;
+```
 
 #### Parameters:
 
@@ -48,7 +54,9 @@
 
 #### Schema:
 
-`inputEncryptedFileBigUploaded#2dc173c8 id:long parts:int key_fingerprint:int = InputEncryptedFile;`
+```c++
+inputEncryptedFileBigUploaded#2dc173c8 id:long parts:int key_fingerprint:int = InputEncryptedFile;
+```
 
 #### Parameters:
 

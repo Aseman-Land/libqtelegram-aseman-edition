@@ -6,7 +6,9 @@ TelegramCore::authImportBotAuthorization
 
 ## Schema:
 
-`auth.importBotAuthorization#67a3ff2c flags:int api_id:int api_hash:string bot_auth_token:string = auth.Authorization;`
+```c++
+auth.importBotAuthorization#67a3ff2c flags:int api_id:int api_hash:string bot_auth_token:string = auth.Authorization;
+```
 ## Parameters:
 
 |Name|Type|Default|
@@ -15,26 +17,34 @@ TelegramCore::authImportBotAuthorization
 |apiId|qint32||
 |apiHash|QString||
 |botAuthToken|QString||
-|callBack|Callback<AuthAuthorization\>|0|
+|callBack|Callback&lt;[AuthAuthorization](../../types/authauthorization.md)&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[AuthAuthorization](../../types/authauthorization.md)|
+|msgId|qint64|
+|result|[AuthAuthorization](../../types/authauthorization.md)|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `importBotAuthorizationAnswer(qint64 msgId, const AuthAuthorization & result)`
-* `importBotAuthorizationError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+importBotAuthorizationAnswer(qint64 msgId, const AuthAuthorization & result)
+```
+```c++
+importBotAuthorizationError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onImportBotAuthorizationAnswer(qint64 msgId, const AuthAuthorization & result)`
-* `onImportBotAuthorizationError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onImportBotAuthorizationAnswer(qint64 msgId, const AuthAuthorization & result)
+```
+```c++
+onImportBotAuthorizationError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -42,6 +52,8 @@ TelegramCore::authImportBotAuthorization
 
 ## Examples:
 
-`tg->importBotAuthorization(flags, api_id, api_hash, bot_auth_token, [=](TG_IMPORT_BOT_AUTHORIZATION_CALLBACK){
+```c++
+tg->importBotAuthorization(flags, api_id, api_hash, bot_auth_token, [=](TG_IMPORT_BOT_AUTHORIZATION_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

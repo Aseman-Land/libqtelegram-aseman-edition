@@ -6,32 +6,42 @@ TelegramCore::messagesReadMessageContents
 
 ## Schema:
 
-`messages.readMessageContents#36a73f77 id:Vector<int> = messages.AffectedMessages;`
+```c++
+messages.readMessageContents#36a73f77 id:Vector<int> = messages.AffectedMessages;
+```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
-|id|QList<qint32>||
-|callBack|Callback<MessagesAffectedMessages\>|0|
+|id|QList&lt;qint32&gt;||
+|callBack|Callback&lt;[MessagesAffectedMessages](../../types/messagesaffectedmessages.md)&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[MessagesAffectedMessages](../../types/messagesaffectedmessages.md)|
+|msgId|qint64|
+|result|[MessagesAffectedMessages](../../types/messagesaffectedmessages.md)|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `readMessageContentsAnswer(qint64 msgId, const MessagesAffectedMessages & result)`
-* `readMessageContentsError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+readMessageContentsAnswer(qint64 msgId, const MessagesAffectedMessages & result)
+```
+```c++
+readMessageContentsError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onReadMessageContentsAnswer(qint64 msgId, const MessagesAffectedMessages & result)`
-* `onReadMessageContentsError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onReadMessageContentsAnswer(qint64 msgId, const MessagesAffectedMessages & result)
+```
+```c++
+onReadMessageContentsError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -39,6 +49,8 @@ TelegramCore::messagesReadMessageContents
 
 ## Examples:
 
-`tg->readMessageContents(id, [=](TG_READ_MESSAGE_CONTENTS_CALLBACK){
+```c++
+tg->readMessageContents(id, [=](TG_READ_MESSAGE_CONTENTS_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

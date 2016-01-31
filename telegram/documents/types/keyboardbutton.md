@@ -8,7 +8,9 @@
 
 #### Schema:
 
-`keyboardButton#a2fa4880 text:string = KeyboardButton;`
+```c++
+keyboardButton#a2fa4880 text:string = KeyboardButton;
+```
 
 #### Parameters:
 

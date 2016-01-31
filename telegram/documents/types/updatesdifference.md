@@ -10,7 +10,9 @@
 
 #### Schema:
 
-`updates.differenceEmpty#5d75a138 date:int seq:int = updates.Difference;`
+```c++
+updates.differenceEmpty#5d75a138 date:int seq:int = updates.Difference;
+```
 
 #### Parameters:
 
@@ -23,33 +25,37 @@
 
 #### Schema:
 
-`updates.difference#f49ca0 new_messages:Vector<Message> new_encrypted_messages:Vector<EncryptedMessage> other_updates:Vector<Update> chats:Vector<Chat> users:Vector<User> state:updates.State = updates.Difference;`
+```c++
+updates.difference#f49ca0 new_messages:Vector<Message> new_encrypted_messages:Vector<EncryptedMessage> other_updates:Vector<Update> chats:Vector<Chat> users:Vector<User> state:updates.State = updates.Difference;
+```
 
 #### Parameters:
 
 |Name|Type|
 |----|----|
-|newMessages|QList<Message>|
-|newEncryptedMessages|QList<EncryptedMessage>|
-|otherUpdates|QList<Update>|
-|chats|QList<Chat>|
-|users|QList<User>|
+|newMessages|QList&lt;[Message](message.md)&gt;|
+|newEncryptedMessages|QList&lt;[EncryptedMessage](encryptedmessage.md)&gt;|
+|otherUpdates|QList&lt;[Update](update.md)&gt;|
+|chats|QList&lt;[Chat](chat.md)&gt;|
+|users|QList&lt;[User](user.md)&gt;|
 |state|[UpdatesState](updatesstate.md)|
 
 ## UpdatesDifference::typeUpdatesDifferenceSlice
 
 #### Schema:
 
-`updates.differenceSlice#a8fb1981 new_messages:Vector<Message> new_encrypted_messages:Vector<EncryptedMessage> other_updates:Vector<Update> chats:Vector<Chat> users:Vector<User> intermediate_state:updates.State = updates.Difference;`
+```c++
+updates.differenceSlice#a8fb1981 new_messages:Vector<Message> new_encrypted_messages:Vector<EncryptedMessage> other_updates:Vector<Update> chats:Vector<Chat> users:Vector<User> intermediate_state:updates.State = updates.Difference;
+```
 
 #### Parameters:
 
 |Name|Type|
 |----|----|
-|newMessages|QList<Message>|
-|newEncryptedMessages|QList<EncryptedMessage>|
-|otherUpdates|QList<Update>|
-|chats|QList<Chat>|
-|users|QList<User>|
+|newMessages|QList&lt;[Message](message.md)&gt;|
+|newEncryptedMessages|QList&lt;[EncryptedMessage](encryptedmessage.md)&gt;|
+|otherUpdates|QList&lt;[Update](update.md)&gt;|
+|chats|QList&lt;[Chat](chat.md)&gt;|
+|users|QList&lt;[User](user.md)&gt;|
 |intermediateState|[UpdatesState](updatesstate.md)|
 

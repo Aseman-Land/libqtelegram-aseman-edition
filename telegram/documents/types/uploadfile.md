@@ -8,7 +8,9 @@
 
 #### Schema:
 
-`upload.file#96a18d5 type:storage.FileType mtime:int bytes:bytes = upload.File;`
+```c++
+upload.file#96a18d5 type:storage.FileType mtime:int bytes:bytes = upload.File;
+```
 
 #### Parameters:
 

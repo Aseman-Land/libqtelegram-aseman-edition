@@ -6,7 +6,9 @@ TelegramCore::authSignUp
 
 ## Schema:
 
-`auth.signUp#1b067634 phone_number:string phone_code_hash:string phone_code:string first_name:string last_name:string = auth.Authorization;`
+```c++
+auth.signUp#1b067634 phone_number:string phone_code_hash:string phone_code:string first_name:string last_name:string = auth.Authorization;
+```
 ## Parameters:
 
 |Name|Type|Default|
@@ -16,26 +18,34 @@ TelegramCore::authSignUp
 |phoneCode|QString||
 |firstName|QString||
 |lastName|QString||
-|callBack|Callback<AuthAuthorization\>|0|
+|callBack|Callback&lt;[AuthAuthorization](../../types/authauthorization.md)&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[AuthAuthorization](../../types/authauthorization.md)|
+|msgId|qint64|
+|result|[AuthAuthorization](../../types/authauthorization.md)|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `signUpAnswer(qint64 msgId, const AuthAuthorization & result)`
-* `signUpError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+signUpAnswer(qint64 msgId, const AuthAuthorization & result)
+```
+```c++
+signUpError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onSignUpAnswer(qint64 msgId, const AuthAuthorization & result)`
-* `onSignUpError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onSignUpAnswer(qint64 msgId, const AuthAuthorization & result)
+```
+```c++
+onSignUpError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -43,6 +53,8 @@ TelegramCore::authSignUp
 
 ## Examples:
 
-`tg->signUp(phone_number, phone_code_hash, phone_code, first_name, last_name, [=](TG_SIGN_UP_CALLBACK){
+```c++
+tg->signUp(phone_number, phone_code_hash, phone_code, first_name, last_name, [=](TG_SIGN_UP_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

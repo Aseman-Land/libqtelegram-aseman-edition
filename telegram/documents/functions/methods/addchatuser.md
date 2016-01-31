@@ -6,7 +6,9 @@ TelegramCore::messagesAddChatUser
 
 ## Schema:
 
-`messages.addChatUser#f9a0aa09 chat_id:int user_id:InputUser fwd_limit:int = Updates;`
+```c++
+messages.addChatUser#f9a0aa09 chat_id:int user_id:InputUser fwd_limit:int = Updates;
+```
 ## Parameters:
 
 |Name|Type|Default|
@@ -14,26 +16,34 @@ TelegramCore::messagesAddChatUser
 |chatId|qint32||
 |userId|[InputUser](../../types/inputuser.md)||
 |fwdLimit|qint32||
-|callBack|Callback<UpdatesType\>|0|
+|callBack|Callback&lt;[UpdatesType](../../types/updatestype.md)&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[UpdatesType](../../types/updatestype.md)|
+|msgId|qint64|
+|result|[UpdatesType](../../types/updatestype.md)|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `addChatUserAnswer(qint64 msgId, const UpdatesType & result)`
-* `addChatUserError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+addChatUserAnswer(qint64 msgId, const UpdatesType & result)
+```
+```c++
+addChatUserError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onAddChatUserAnswer(qint64 msgId, const UpdatesType & result)`
-* `onAddChatUserError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onAddChatUserAnswer(qint64 msgId, const UpdatesType & result)
+```
+```c++
+onAddChatUserError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -41,6 +51,8 @@ TelegramCore::messagesAddChatUser
 
 ## Examples:
 
-`tg->addChatUser(chat_id, user_id, fwd_limit, [=](TG_ADD_CHAT_USER_CALLBACK){
+```c++
+tg->addChatUser(chat_id, user_id, fwd_limit, [=](TG_ADD_CHAT_USER_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

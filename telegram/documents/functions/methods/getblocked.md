@@ -6,33 +6,43 @@ TelegramCore::contactsGetBlocked
 
 ## Schema:
 
-`contacts.getBlocked#f57c350f offset:int limit:int = contacts.Blocked;`
+```c++
+contacts.getBlocked#f57c350f offset:int limit:int = contacts.Blocked;
+```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
 |offset|qint32||
 |limit|qint32||
-|callBack|Callback<ContactsBlocked\>|0|
+|callBack|Callback&lt;[ContactsBlocked](../../types/contactsblocked.md)&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[ContactsBlocked](../../types/contactsblocked.md)|
+|msgId|qint64|
+|result|[ContactsBlocked](../../types/contactsblocked.md)|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `getBlockedAnswer(qint64 msgId, const ContactsBlocked & result)`
-* `getBlockedError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+getBlockedAnswer(qint64 msgId, const ContactsBlocked & result)
+```
+```c++
+getBlockedError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onGetBlockedAnswer(qint64 msgId, const ContactsBlocked & result)`
-* `onGetBlockedError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onGetBlockedAnswer(qint64 msgId, const ContactsBlocked & result)
+```
+```c++
+onGetBlockedError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -40,6 +50,8 @@ TelegramCore::contactsGetBlocked
 
 ## Examples:
 
-`tg->getBlocked(offset, limit, [=](TG_GET_BLOCKED_CALLBACK){
+```c++
+tg->getBlocked(offset, limit, [=](TG_GET_BLOCKED_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

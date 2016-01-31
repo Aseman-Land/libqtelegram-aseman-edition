@@ -6,32 +6,42 @@ TelegramCore::messagesReportSpam
 
 ## Schema:
 
-`messages.reportSpam#cf1592db peer:InputPeer = Bool;`
+```c++
+messages.reportSpam#cf1592db peer:InputPeer = Bool;
+```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
 |peer|[InputPeer](../../types/inputpeer.md)||
-|callBack|Callback<bool\>|0|
+|callBack|Callback&lt;bool&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[bool](../../types/bool.md)|
+|msgId|qint64|
+|result|bool|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `reportSpamAnswer(qint64 msgId, bool  result)`
-* `reportSpamError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+reportSpamAnswer(qint64 msgId, bool  result)
+```
+```c++
+reportSpamError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onReportSpamAnswer(qint64 msgId, bool  result)`
-* `onReportSpamError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onReportSpamAnswer(qint64 msgId, bool  result)
+```
+```c++
+onReportSpamError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -39,6 +49,8 @@ TelegramCore::messagesReportSpam
 
 ## Examples:
 
-`tg->reportSpam(peer, [=](TG_REPORT_SPAM_CALLBACK){
+```c++
+tg->reportSpam(peer, [=](TG_REPORT_SPAM_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

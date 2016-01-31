@@ -8,13 +8,15 @@
 
 #### Schema:
 
-`contacts.importedContacts#ad524315 imported:Vector<ImportedContact> retry_contacts:Vector<long> users:Vector<User> = contacts.ImportedContacts;`
+```c++
+contacts.importedContacts#ad524315 imported:Vector<ImportedContact> retry_contacts:Vector<long> users:Vector<User> = contacts.ImportedContacts;
+```
 
 #### Parameters:
 
 |Name|Type|
 |----|----|
-|imported|QList<ImportedContact>|
-|retryContacts|QList<qint64>|
-|users|QList<User>|
+|imported|QList&lt;[ImportedContact](importedcontact.md)&gt;|
+|retryContacts|QList&lt;qint64&gt;|
+|users|QList&lt;[User](user.md)&gt;|
 

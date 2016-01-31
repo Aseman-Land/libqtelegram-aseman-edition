@@ -8,7 +8,9 @@
 
 #### Schema:
 
-`dcOption#5d8c6cc flags:# ipv6:flags.0?true media_only:flags.1?true id:int ip_address:string port:int = DcOption;`
+```c++
+dcOption#5d8c6cc flags:# ipv6:flags.0?true media_only:flags.1?true id:int ip_address:string port:int = DcOption;
+```
 
 #### Parameters:
 

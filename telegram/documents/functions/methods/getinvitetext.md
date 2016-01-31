@@ -6,32 +6,42 @@ TelegramCore::helpGetInviteText
 
 ## Schema:
 
-`help.getInviteText#a4a95186 lang_code:string = help.InviteText;`
+```c++
+help.getInviteText#a4a95186 lang_code:string = help.InviteText;
+```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
 |langCode|QString||
-|callBack|Callback<HelpInviteText\>|0|
+|callBack|Callback&lt;[HelpInviteText](../../types/helpinvitetext.md)&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[HelpInviteText](../../types/helpinvitetext.md)|
+|msgId|qint64|
+|result|[HelpInviteText](../../types/helpinvitetext.md)|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `getInviteTextAnswer(qint64 msgId, const HelpInviteText & result)`
-* `getInviteTextError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+getInviteTextAnswer(qint64 msgId, const HelpInviteText & result)
+```
+```c++
+getInviteTextError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onGetInviteTextAnswer(qint64 msgId, const HelpInviteText & result)`
-* `onGetInviteTextError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onGetInviteTextAnswer(qint64 msgId, const HelpInviteText & result)
+```
+```c++
+onGetInviteTextError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -39,6 +49,8 @@ TelegramCore::helpGetInviteText
 
 ## Examples:
 
-`tg->getInviteText(lang_code, [=](TG_GET_INVITE_TEXT_CALLBACK){
+```c++
+tg->getInviteText(lang_code, [=](TG_GET_INVITE_TEXT_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

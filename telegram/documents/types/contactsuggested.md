@@ -8,7 +8,9 @@
 
 #### Schema:
 
-`contactSuggested#3de191a1 user_id:int mutual_contacts:int = ContactSuggested;`
+```c++
+contactSuggested#3de191a1 user_id:int mutual_contacts:int = ContactSuggested;
+```
 
 #### Parameters:
 

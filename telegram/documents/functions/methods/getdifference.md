@@ -6,7 +6,9 @@ TelegramCore::updatesGetDifference
 
 ## Schema:
 
-`updates.getDifference#a041495 pts:int date:int qts:int = updates.Difference;`
+```c++
+updates.getDifference#a041495 pts:int date:int qts:int = updates.Difference;
+```
 ## Parameters:
 
 |Name|Type|Default|
@@ -14,26 +16,34 @@ TelegramCore::updatesGetDifference
 |pts|qint32||
 |date|qint32||
 |qts|qint32||
-|callBack|Callback<UpdatesDifference\>|0|
+|callBack|Callback&lt;[UpdatesDifference](../../types/updatesdifference.md)&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[UpdatesDifference](../../types/updatesdifference.md)|
+|msgId|qint64|
+|result|[UpdatesDifference](../../types/updatesdifference.md)|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `getDifferenceAnswer(qint64 msgId, const UpdatesDifference & result)`
-* `getDifferenceError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+getDifferenceAnswer(qint64 msgId, const UpdatesDifference & result)
+```
+```c++
+getDifferenceError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onGetDifferenceAnswer(qint64 msgId, const UpdatesDifference & result)`
-* `onGetDifferenceError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onGetDifferenceAnswer(qint64 msgId, const UpdatesDifference & result)
+```
+```c++
+onGetDifferenceError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -41,6 +51,8 @@ TelegramCore::updatesGetDifference
 
 ## Examples:
 
-`tg->getDifference(pts, date, qts, [=](TG_GET_DIFFERENCE_CALLBACK){
+```c++
+tg->getDifference(pts, date, qts, [=](TG_GET_DIFFERENCE_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

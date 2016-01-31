@@ -6,33 +6,43 @@ TelegramCore::authSendInvites
 
 ## Schema:
 
-`auth.sendInvites#771c1d97 phone_numbers:Vector<string> message:string = Bool;`
+```c++
+auth.sendInvites#771c1d97 phone_numbers:Vector<string> message:string = Bool;
+```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
-|phoneNumbers|QList<QString>||
+|phoneNumbers|QList&lt;QString&gt;||
 |message|QString||
-|callBack|Callback<bool\>|0|
+|callBack|Callback&lt;bool&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[bool](../../types/bool.md)|
+|msgId|qint64|
+|result|bool|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `sendInvitesAnswer(qint64 msgId, bool  result)`
-* `sendInvitesError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+sendInvitesAnswer(qint64 msgId, bool  result)
+```
+```c++
+sendInvitesError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onSendInvitesAnswer(qint64 msgId, bool  result)`
-* `onSendInvitesError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onSendInvitesAnswer(qint64 msgId, bool  result)
+```
+```c++
+onSendInvitesError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -40,6 +50,8 @@ TelegramCore::authSendInvites
 
 ## Examples:
 
-`tg->sendInvites(phone_numbers, message, [=](TG_SEND_INVITES_CALLBACK){
+```c++
+tg->sendInvites(phone_numbers, message, [=](TG_SEND_INVITES_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

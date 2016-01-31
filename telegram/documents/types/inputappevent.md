@@ -8,7 +8,9 @@
 
 #### Schema:
 
-`inputAppEvent#770656a8 time:double type:string peer:long data:string = InputAppEvent;`
+```c++
+inputAppEvent#770656a8 time:double type:string peer:long data:string = InputAppEvent;
+```
 
 #### Parameters:
 

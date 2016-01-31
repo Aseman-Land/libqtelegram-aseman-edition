@@ -6,32 +6,42 @@ TelegramCore::accountUpdateStatus
 
 ## Schema:
 
-`account.updateStatus#6628562c offline:Bool = Bool;`
+```c++
+account.updateStatus#6628562c offline:Bool = Bool;
+```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
 |offline|bool||
-|callBack|Callback<bool\>|0|
+|callBack|Callback&lt;bool&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[bool](../../types/bool.md)|
+|msgId|qint64|
+|result|bool|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `updateStatusAnswer(qint64 msgId, bool  result)`
-* `updateStatusError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+updateStatusAnswer(qint64 msgId, bool  result)
+```
+```c++
+updateStatusError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onUpdateStatusAnswer(qint64 msgId, bool  result)`
-* `onUpdateStatusError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onUpdateStatusAnswer(qint64 msgId, bool  result)
+```
+```c++
+onUpdateStatusError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -39,6 +49,8 @@ TelegramCore::accountUpdateStatus
 
 ## Examples:
 
-`tg->updateStatus(offline, [=](TG_UPDATE_STATUS_CALLBACK){
+```c++
+tg->updateStatus(offline, [=](TG_UPDATE_STATUS_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

@@ -6,31 +6,41 @@ TelegramCore::contactsExportCard
 
 ## Schema:
 
-`contacts.exportCard#84e53737 = Vector<int>;`
+```c++
+contacts.exportCard#84e53737 = Vector<int>;
+```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
-|callBack|Callback<QList<qint32>\>|0|
+|callBack|Callback&lt;QList&lt;qint32&gt;&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[QList<qint32>](../../types/qlist<qint32>.md)|
+|msgId|qint64|
+|result|QList&lt;qint32&gt;|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `exportCardAnswer(qint64 msgId, const QList<qint32> & result)`
-* `exportCardError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+exportCardAnswer(qint64 msgId, const QList&lt;qint32&gt; & result)
+```
+```c++
+exportCardError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onExportCardAnswer(qint64 msgId, const QList<qint32> & result)`
-* `onExportCardError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onExportCardAnswer(qint64 msgId, const QList&lt;qint32&gt; & result)
+```
+```c++
+onExportCardError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -38,6 +48,8 @@ TelegramCore::contactsExportCard
 
 ## Examples:
 
-`tg->exportCard([=](TG_EXPORT_CARD_CALLBACK){
+```c++
+tg->exportCard([=](TG_EXPORT_CARD_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

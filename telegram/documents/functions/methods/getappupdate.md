@@ -6,7 +6,9 @@ TelegramCore::helpGetAppUpdate
 
 ## Schema:
 
-`help.getAppUpdate#c812ac7e device_model:string system_version:string app_version:string lang_code:string = help.AppUpdate;`
+```c++
+help.getAppUpdate#c812ac7e device_model:string system_version:string app_version:string lang_code:string = help.AppUpdate;
+```
 ## Parameters:
 
 |Name|Type|Default|
@@ -15,26 +17,34 @@ TelegramCore::helpGetAppUpdate
 |systemVersion|QString||
 |appVersion|QString||
 |langCode|QString||
-|callBack|Callback<HelpAppUpdate\>|0|
+|callBack|Callback&lt;[HelpAppUpdate](../../types/helpappupdate.md)&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[HelpAppUpdate](../../types/helpappupdate.md)|
+|msgId|qint64|
+|result|[HelpAppUpdate](../../types/helpappupdate.md)|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `getAppUpdateAnswer(qint64 msgId, const HelpAppUpdate & result)`
-* `getAppUpdateError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+getAppUpdateAnswer(qint64 msgId, const HelpAppUpdate & result)
+```
+```c++
+getAppUpdateError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onGetAppUpdateAnswer(qint64 msgId, const HelpAppUpdate & result)`
-* `onGetAppUpdateError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onGetAppUpdateAnswer(qint64 msgId, const HelpAppUpdate & result)
+```
+```c++
+onGetAppUpdateError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -42,6 +52,8 @@ TelegramCore::helpGetAppUpdate
 
 ## Examples:
 
-`tg->getAppUpdate(device_model, system_version, app_version, lang_code, [=](TG_GET_APP_UPDATE_CALLBACK){
+```c++
+tg->getAppUpdate(device_model, system_version, app_version, lang_code, [=](TG_GET_APP_UPDATE_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

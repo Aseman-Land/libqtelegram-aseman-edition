@@ -14,7 +14,9 @@
 
 #### Schema:
 
-`updatesTooLong#e317af7e = Updates;`
+```c++
+updatesTooLong#e317af7e = Updates;
+```
 
 #### Parameters:
 
@@ -23,7 +25,9 @@
 
 #### Schema:
 
-`updateShortMessage#13e4deaa flags:# unread:flags.0?true out:flags.1?true mentioned:flags.4?true media_unread:flags.5?true id:int user_id:int message:string pts:int pts_count:int date:int fwd_from_id:flags.2?Peer fwd_date:flags.2?int via_bot_id:flags.11?int reply_to_msg_id:flags.3?int entities:flags.7?Vector<MessageEntity> = Updates;`
+```c++
+updateShortMessage#13e4deaa flags:# unread:flags.0?true out:flags.1?true mentioned:flags.4?true media_unread:flags.5?true id:int user_id:int message:string pts:int pts_count:int date:int fwd_from_id:flags.2?Peer fwd_date:flags.2?int via_bot_id:flags.11?int reply_to_msg_id:flags.3?int entities:flags.7?Vector<MessageEntity> = Updates;
+```
 
 #### Parameters:
 
@@ -43,13 +47,15 @@
 |fwdDate|qint32|
 |viaBotId|qint32|
 |replyToMsgId|qint32|
-|entities|QList<MessageEntity>|
+|entities|QList&lt;[MessageEntity](messageentity.md)&gt;|
 
 ## UpdatesType::typeUpdateShortChatMessage
 
 #### Schema:
 
-`updateShortChatMessage#248afa62 flags:# unread:flags.0?true out:flags.1?true mentioned:flags.4?true media_unread:flags.5?true id:int from_id:int chat_id:int message:string pts:int pts_count:int date:int fwd_from_id:flags.2?Peer fwd_date:flags.2?int via_bot_id:flags.11?int reply_to_msg_id:flags.3?int entities:flags.7?Vector<MessageEntity> = Updates;`
+```c++
+updateShortChatMessage#248afa62 flags:# unread:flags.0?true out:flags.1?true mentioned:flags.4?true media_unread:flags.5?true id:int from_id:int chat_id:int message:string pts:int pts_count:int date:int fwd_from_id:flags.2?Peer fwd_date:flags.2?int via_bot_id:flags.11?int reply_to_msg_id:flags.3?int entities:flags.7?Vector<MessageEntity> = Updates;
+```
 
 #### Parameters:
 
@@ -70,13 +76,15 @@
 |fwdDate|qint32|
 |viaBotId|qint32|
 |replyToMsgId|qint32|
-|entities|QList<MessageEntity>|
+|entities|QList&lt;[MessageEntity](messageentity.md)&gt;|
 
 ## UpdatesType::typeUpdateShort
 
 #### Schema:
 
-`updateShort#78d4dec1 update:Update date:int = Updates;`
+```c++
+updateShort#78d4dec1 update:Update date:int = Updates;
+```
 
 #### Parameters:
 
@@ -89,15 +97,17 @@
 
 #### Schema:
 
-`updatesCombined#725b04c3 updates:Vector<Update> users:Vector<User> chats:Vector<Chat> date:int seq_start:int seq:int = Updates;`
+```c++
+updatesCombined#725b04c3 updates:Vector<Update> users:Vector<User> chats:Vector<Chat> date:int seq_start:int seq:int = Updates;
+```
 
 #### Parameters:
 
 |Name|Type|
 |----|----|
-|updates|QList<Update>|
-|users|QList<User>|
-|chats|QList<Chat>|
+|updates|QList&lt;[Update](update.md)&gt;|
+|users|QList&lt;[User](user.md)&gt;|
+|chats|QList&lt;[Chat](chat.md)&gt;|
 |date|qint32|
 |seqStart|qint32|
 |seq|qint32|
@@ -106,15 +116,17 @@
 
 #### Schema:
 
-`updates#74ae4240 updates:Vector<Update> users:Vector<User> chats:Vector<Chat> date:int seq:int = Updates;`
+```c++
+updates#74ae4240 updates:Vector<Update> users:Vector<User> chats:Vector<Chat> date:int seq:int = Updates;
+```
 
 #### Parameters:
 
 |Name|Type|
 |----|----|
-|updates|QList<Update>|
-|users|QList<User>|
-|chats|QList<Chat>|
+|updates|QList&lt;[Update](update.md)&gt;|
+|users|QList&lt;[User](user.md)&gt;|
+|chats|QList&lt;[Chat](chat.md)&gt;|
 |date|qint32|
 |seq|qint32|
 
@@ -122,7 +134,9 @@
 
 #### Schema:
 
-`updateShortSentMessage#11f1331c flags:# unread:flags.0?true out:flags.1?true id:int pts:int pts_count:int date:int media:flags.9?MessageMedia entities:flags.7?Vector<MessageEntity> = Updates;`
+```c++
+updateShortSentMessage#11f1331c flags:# unread:flags.0?true out:flags.1?true id:int pts:int pts_count:int date:int media:flags.9?MessageMedia entities:flags.7?Vector<MessageEntity> = Updates;
+```
 
 #### Parameters:
 
@@ -135,5 +149,5 @@
 |ptsCount|qint32|
 |date|qint32|
 |media|[MessageMedia](messagemedia.md)|
-|entities|QList<MessageEntity>|
+|entities|QList&lt;[MessageEntity](messageentity.md)&gt;|
 

@@ -11,7 +11,9 @@
 
 #### Schema:
 
-`inputReportReasonSpam#58dbcab8 = ReportReason;`
+```c++
+inputReportReasonSpam#58dbcab8 = ReportReason;
+```
 
 #### Parameters:
 
@@ -20,7 +22,9 @@
 
 #### Schema:
 
-`inputReportReasonViolence#1e22c78d = ReportReason;`
+```c++
+inputReportReasonViolence#1e22c78d = ReportReason;
+```
 
 #### Parameters:
 
@@ -29,7 +33,9 @@
 
 #### Schema:
 
-`inputReportReasonPornography#2e59d922 = ReportReason;`
+```c++
+inputReportReasonPornography#2e59d922 = ReportReason;
+```
 
 #### Parameters:
 
@@ -38,7 +44,9 @@
 
 #### Schema:
 
-`inputReportReasonOther#e1746d0a text:string = ReportReason;`
+```c++
+inputReportReasonOther#e1746d0a text:string = ReportReason;
+```
 
 #### Parameters:
 

@@ -10,7 +10,9 @@
 
 #### Schema:
 
-`inputChatPhotoEmpty#1ca48f57 = InputChatPhoto;`
+```c++
+inputChatPhotoEmpty#1ca48f57 = InputChatPhoto;
+```
 
 #### Parameters:
 
@@ -19,7 +21,9 @@
 
 #### Schema:
 
-`inputChatUploadedPhoto#94254732 file:InputFile crop:InputPhotoCrop = InputChatPhoto;`
+```c++
+inputChatUploadedPhoto#94254732 file:InputFile crop:InputPhotoCrop = InputChatPhoto;
+```
 
 #### Parameters:
 
@@ -32,7 +36,9 @@
 
 #### Schema:
 
-`inputChatPhoto#b2e1bf08 id:InputPhoto crop:InputPhotoCrop = InputChatPhoto;`
+```c++
+inputChatPhoto#b2e1bf08 id:InputPhoto crop:InputPhotoCrop = InputChatPhoto;
+```
 
 #### Parameters:
 

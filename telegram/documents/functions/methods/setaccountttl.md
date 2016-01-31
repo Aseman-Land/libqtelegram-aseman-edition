@@ -6,32 +6,42 @@ TelegramCore::accountSetAccountTTL
 
 ## Schema:
 
-`account.setAccountTTL#2442485e ttl:AccountDaysTTL = Bool;`
+```c++
+account.setAccountTTL#2442485e ttl:AccountDaysTTL = Bool;
+```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
 |ttl|[AccountDaysTTL](../../types/accountdaysttl.md)||
-|callBack|Callback<bool\>|0|
+|callBack|Callback&lt;bool&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[bool](../../types/bool.md)|
+|msgId|qint64|
+|result|bool|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `setAccountTTLAnswer(qint64 msgId, bool  result)`
-* `setAccountTTLError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+setAccountTTLAnswer(qint64 msgId, bool  result)
+```
+```c++
+setAccountTTLError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onSetAccountTTLAnswer(qint64 msgId, bool  result)`
-* `onSetAccountTTLError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onSetAccountTTLAnswer(qint64 msgId, bool  result)
+```
+```c++
+onSetAccountTTLError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -39,6 +49,8 @@ TelegramCore::accountSetAccountTTL
 
 ## Examples:
 
-`tg->setAccountTTL(ttl, [=](TG_SET_ACCOUNT_T_T_L_CALLBACK){
+```c++
+tg->setAccountTTL(ttl, [=](TG_SET_ACCOUNT_T_T_L_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

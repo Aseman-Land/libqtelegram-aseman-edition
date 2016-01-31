@@ -6,32 +6,42 @@ TelegramCore::channelsJoinChannel
 
 ## Schema:
 
-`channels.joinChannel#24b524c5 channel:InputChannel = Updates;`
+```c++
+channels.joinChannel#24b524c5 channel:InputChannel = Updates;
+```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
 |channel|[InputChannel](../../types/inputchannel.md)||
-|callBack|Callback<UpdatesType\>|0|
+|callBack|Callback&lt;[UpdatesType](../../types/updatestype.md)&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[UpdatesType](../../types/updatestype.md)|
+|msgId|qint64|
+|result|[UpdatesType](../../types/updatestype.md)|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `joinChannelAnswer(qint64 msgId, const UpdatesType & result)`
-* `joinChannelError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+joinChannelAnswer(qint64 msgId, const UpdatesType & result)
+```
+```c++
+joinChannelError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onJoinChannelAnswer(qint64 msgId, const UpdatesType & result)`
-* `onJoinChannelError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onJoinChannelAnswer(qint64 msgId, const UpdatesType & result)
+```
+```c++
+onJoinChannelError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -39,6 +49,8 @@ TelegramCore::channelsJoinChannel
 
 ## Examples:
 
-`tg->joinChannel(channel, [=](TG_JOIN_CHANNEL_CALLBACK){
+```c++
+tg->joinChannel(channel, [=](TG_JOIN_CHANNEL_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

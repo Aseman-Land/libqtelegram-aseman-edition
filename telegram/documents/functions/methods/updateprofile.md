@@ -6,33 +6,43 @@ TelegramCore::accountUpdateProfile
 
 ## Schema:
 
-`account.updateProfile#f0888d68 first_name:string last_name:string = User;`
+```c++
+account.updateProfile#f0888d68 first_name:string last_name:string = User;
+```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
 |firstName|QString||
 |lastName|QString||
-|callBack|Callback<User\>|0|
+|callBack|Callback&lt;[User](../../types/user.md)&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[User](../../types/user.md)|
+|msgId|qint64|
+|result|[User](../../types/user.md)|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `updateProfileAnswer(qint64 msgId, const User & result)`
-* `updateProfileError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+updateProfileAnswer(qint64 msgId, const User & result)
+```
+```c++
+updateProfileError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onUpdateProfileAnswer(qint64 msgId, const User & result)`
-* `onUpdateProfileError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onUpdateProfileAnswer(qint64 msgId, const User & result)
+```
+```c++
+onUpdateProfileError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -40,6 +50,8 @@ TelegramCore::accountUpdateProfile
 
 ## Examples:
 
-`tg->updateProfile(first_name, last_name, [=](TG_UPDATE_PROFILE_CALLBACK){
+```c++
+tg->updateProfile(first_name, last_name, [=](TG_UPDATE_PROFILE_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

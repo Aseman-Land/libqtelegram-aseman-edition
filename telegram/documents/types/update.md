@@ -49,7 +49,9 @@
 
 #### Schema:
 
-`updateNewMessage#1f2b0afd message:Message pts:int pts_count:int = Update;`
+```c++
+updateNewMessage#1f2b0afd message:Message pts:int pts_count:int = Update;
+```
 
 #### Parameters:
 
@@ -63,7 +65,9 @@
 
 #### Schema:
 
-`updateMessageID#4e90bfd6 id:int random_id:long = Update;`
+```c++
+updateMessageID#4e90bfd6 id:int random_id:long = Update;
+```
 
 #### Parameters:
 
@@ -76,13 +80,15 @@
 
 #### Schema:
 
-`updateDeleteMessages#a20db0e5 messages:Vector<int> pts:int pts_count:int = Update;`
+```c++
+updateDeleteMessages#a20db0e5 messages:Vector<int> pts:int pts_count:int = Update;
+```
 
 #### Parameters:
 
 |Name|Type|
 |----|----|
-|messages|QList<qint32>|
+|messages|QList&lt;qint32&gt;|
 |pts|qint32|
 |ptsCount|qint32|
 
@@ -90,7 +96,9 @@
 
 #### Schema:
 
-`updateUserTyping#5c486927 user_id:int action:SendMessageAction = Update;`
+```c++
+updateUserTyping#5c486927 user_id:int action:SendMessageAction = Update;
+```
 
 #### Parameters:
 
@@ -103,7 +111,9 @@
 
 #### Schema:
 
-`updateChatUserTyping#9a65ea1f chat_id:int user_id:int action:SendMessageAction = Update;`
+```c++
+updateChatUserTyping#9a65ea1f chat_id:int user_id:int action:SendMessageAction = Update;
+```
 
 #### Parameters:
 
@@ -117,7 +127,9 @@
 
 #### Schema:
 
-`updateChatParticipants#7761198 participants:ChatParticipants = Update;`
+```c++
+updateChatParticipants#7761198 participants:ChatParticipants = Update;
+```
 
 #### Parameters:
 
@@ -129,7 +141,9 @@
 
 #### Schema:
 
-`updateUserStatus#1bfbd823 user_id:int status:UserStatus = Update;`
+```c++
+updateUserStatus#1bfbd823 user_id:int status:UserStatus = Update;
+```
 
 #### Parameters:
 
@@ -142,7 +156,9 @@
 
 #### Schema:
 
-`updateUserName#a7332b73 user_id:int first_name:string last_name:string username:string = Update;`
+```c++
+updateUserName#a7332b73 user_id:int first_name:string last_name:string username:string = Update;
+```
 
 #### Parameters:
 
@@ -157,7 +173,9 @@
 
 #### Schema:
 
-`updateUserPhoto#95313b0c user_id:int date:int photo:UserProfilePhoto previous:Bool = Update;`
+```c++
+updateUserPhoto#95313b0c user_id:int date:int photo:UserProfilePhoto previous:Bool = Update;
+```
 
 #### Parameters:
 
@@ -172,7 +190,9 @@
 
 #### Schema:
 
-`updateContactRegistered#2575bbb9 user_id:int date:int = Update;`
+```c++
+updateContactRegistered#2575bbb9 user_id:int date:int = Update;
+```
 
 #### Parameters:
 
@@ -185,7 +205,9 @@
 
 #### Schema:
 
-`updateContactLink#9d2e67c5 user_id:int my_link:ContactLink foreign_link:ContactLink = Update;`
+```c++
+updateContactLink#9d2e67c5 user_id:int my_link:ContactLink foreign_link:ContactLink = Update;
+```
 
 #### Parameters:
 
@@ -199,7 +221,9 @@
 
 #### Schema:
 
-`updateNewAuthorization#8f06529a auth_key_id:long date:int device:string location:string = Update;`
+```c++
+updateNewAuthorization#8f06529a auth_key_id:long date:int device:string location:string = Update;
+```
 
 #### Parameters:
 
@@ -214,7 +238,9 @@
 
 #### Schema:
 
-`updateNewEncryptedMessage#12bcbd9a message:EncryptedMessage qts:int = Update;`
+```c++
+updateNewEncryptedMessage#12bcbd9a message:EncryptedMessage qts:int = Update;
+```
 
 #### Parameters:
 
@@ -227,7 +253,9 @@
 
 #### Schema:
 
-`updateEncryptedChatTyping#1710f156 chat_id:int = Update;`
+```c++
+updateEncryptedChatTyping#1710f156 chat_id:int = Update;
+```
 
 #### Parameters:
 
@@ -239,7 +267,9 @@
 
 #### Schema:
 
-`updateEncryption#b4a2e88d chat:EncryptedChat date:int = Update;`
+```c++
+updateEncryption#b4a2e88d chat:EncryptedChat date:int = Update;
+```
 
 #### Parameters:
 
@@ -252,7 +282,9 @@
 
 #### Schema:
 
-`updateEncryptedMessagesRead#38fe25b7 chat_id:int max_date:int date:int = Update;`
+```c++
+updateEncryptedMessagesRead#38fe25b7 chat_id:int max_date:int date:int = Update;
+```
 
 #### Parameters:
 
@@ -266,7 +298,9 @@
 
 #### Schema:
 
-`updateChatParticipantAdd#ea4b0e5c chat_id:int user_id:int inviter_id:int date:int version:int = Update;`
+```c++
+updateChatParticipantAdd#ea4b0e5c chat_id:int user_id:int inviter_id:int date:int version:int = Update;
+```
 
 #### Parameters:
 
@@ -282,7 +316,9 @@
 
 #### Schema:
 
-`updateChatParticipantDelete#6e5f8c22 chat_id:int user_id:int version:int = Update;`
+```c++
+updateChatParticipantDelete#6e5f8c22 chat_id:int user_id:int version:int = Update;
+```
 
 #### Parameters:
 
@@ -296,19 +332,23 @@
 
 #### Schema:
 
-`updateDcOptions#8e5e9873 dc_options:Vector<DcOption> = Update;`
+```c++
+updateDcOptions#8e5e9873 dc_options:Vector<DcOption> = Update;
+```
 
 #### Parameters:
 
 |Name|Type|
 |----|----|
-|dcOptions|QList<DcOption>|
+|dcOptions|QList&lt;[DcOption](dcoption.md)&gt;|
 
 ## Update::typeUpdateUserBlocked
 
 #### Schema:
 
-`updateUserBlocked#80ece81a user_id:int blocked:Bool = Update;`
+```c++
+updateUserBlocked#80ece81a user_id:int blocked:Bool = Update;
+```
 
 #### Parameters:
 
@@ -321,7 +361,9 @@
 
 #### Schema:
 
-`updateNotifySettings#bec268ef peer:NotifyPeer notify_settings:PeerNotifySettings = Update;`
+```c++
+updateNotifySettings#bec268ef peer:NotifyPeer notify_settings:PeerNotifySettings = Update;
+```
 
 #### Parameters:
 
@@ -334,7 +376,9 @@
 
 #### Schema:
 
-`updateServiceNotification#382dd3e4 type:string message:string media:MessageMedia popup:Bool = Update;`
+```c++
+updateServiceNotification#382dd3e4 type:string message:string media:MessageMedia popup:Bool = Update;
+```
 
 #### Parameters:
 
@@ -349,20 +393,24 @@
 
 #### Schema:
 
-`updatePrivacy#ee3b272a key:PrivacyKey rules:Vector<PrivacyRule> = Update;`
+```c++
+updatePrivacy#ee3b272a key:PrivacyKey rules:Vector<PrivacyRule> = Update;
+```
 
 #### Parameters:
 
 |Name|Type|
 |----|----|
 |key|[PrivacyKey](privacykey.md)|
-|rules|QList<PrivacyRule>|
+|rules|QList&lt;[PrivacyRule](privacyrule.md)&gt;|
 
 ## Update::typeUpdateUserPhone
 
 #### Schema:
 
-`updateUserPhone#12b9417b user_id:int phone:string = Update;`
+```c++
+updateUserPhone#12b9417b user_id:int phone:string = Update;
+```
 
 #### Parameters:
 
@@ -375,7 +423,9 @@
 
 #### Schema:
 
-`updateReadHistoryInbox#9961fd5c peer:Peer max_id:int pts:int pts_count:int = Update;`
+```c++
+updateReadHistoryInbox#9961fd5c peer:Peer max_id:int pts:int pts_count:int = Update;
+```
 
 #### Parameters:
 
@@ -390,7 +440,9 @@
 
 #### Schema:
 
-`updateReadHistoryOutbox#2f2f21bf peer:Peer max_id:int pts:int pts_count:int = Update;`
+```c++
+updateReadHistoryOutbox#2f2f21bf peer:Peer max_id:int pts:int pts_count:int = Update;
+```
 
 #### Parameters:
 
@@ -405,7 +457,9 @@
 
 #### Schema:
 
-`updateWebPage#7f891213 webpage:WebPage pts:int pts_count:int = Update;`
+```c++
+updateWebPage#7f891213 webpage:WebPage pts:int pts_count:int = Update;
+```
 
 #### Parameters:
 
@@ -419,13 +473,15 @@
 
 #### Schema:
 
-`updateReadMessagesContents#68c13933 messages:Vector<int> pts:int pts_count:int = Update;`
+```c++
+updateReadMessagesContents#68c13933 messages:Vector<int> pts:int pts_count:int = Update;
+```
 
 #### Parameters:
 
 |Name|Type|
 |----|----|
-|messages|QList<qint32>|
+|messages|QList&lt;qint32&gt;|
 |pts|qint32|
 |ptsCount|qint32|
 
@@ -433,7 +489,9 @@
 
 #### Schema:
 
-`updateChannelTooLong#60946422 channel_id:int = Update;`
+```c++
+updateChannelTooLong#60946422 channel_id:int = Update;
+```
 
 #### Parameters:
 
@@ -445,7 +503,9 @@
 
 #### Schema:
 
-`updateChannel#b6d45656 channel_id:int = Update;`
+```c++
+updateChannel#b6d45656 channel_id:int = Update;
+```
 
 #### Parameters:
 
@@ -457,7 +517,9 @@
 
 #### Schema:
 
-`updateChannelGroup#c36c1e3c channel_id:int group:MessageGroup = Update;`
+```c++
+updateChannelGroup#c36c1e3c channel_id:int group:MessageGroup = Update;
+```
 
 #### Parameters:
 
@@ -470,7 +532,9 @@
 
 #### Schema:
 
-`updateNewChannelMessage#62ba04d9 message:Message pts:int pts_count:int = Update;`
+```c++
+updateNewChannelMessage#62ba04d9 message:Message pts:int pts_count:int = Update;
+```
 
 #### Parameters:
 
@@ -484,7 +548,9 @@
 
 #### Schema:
 
-`updateReadChannelInbox#4214f37f channel_id:int max_id:int = Update;`
+```c++
+updateReadChannelInbox#4214f37f channel_id:int max_id:int = Update;
+```
 
 #### Parameters:
 
@@ -497,14 +563,16 @@
 
 #### Schema:
 
-`updateDeleteChannelMessages#c37521c9 channel_id:int messages:Vector<int> pts:int pts_count:int = Update;`
+```c++
+updateDeleteChannelMessages#c37521c9 channel_id:int messages:Vector<int> pts:int pts_count:int = Update;
+```
 
 #### Parameters:
 
 |Name|Type|
 |----|----|
 |channelId|qint32|
-|messages|QList<qint32>|
+|messages|QList&lt;qint32&gt;|
 |pts|qint32|
 |ptsCount|qint32|
 
@@ -512,7 +580,9 @@
 
 #### Schema:
 
-`updateChannelMessageViews#98a12b4b channel_id:int id:int views:int = Update;`
+```c++
+updateChannelMessageViews#98a12b4b channel_id:int id:int views:int = Update;
+```
 
 #### Parameters:
 
@@ -526,7 +596,9 @@
 
 #### Schema:
 
-`updateChatAdmins#6e947941 chat_id:int enabled:Bool version:int = Update;`
+```c++
+updateChatAdmins#6e947941 chat_id:int enabled:Bool version:int = Update;
+```
 
 #### Parameters:
 
@@ -540,7 +612,9 @@
 
 #### Schema:
 
-`updateChatParticipantAdmin#b6901959 chat_id:int user_id:int is_admin:Bool version:int = Update;`
+```c++
+updateChatParticipantAdmin#b6901959 chat_id:int user_id:int is_admin:Bool version:int = Update;
+```
 
 #### Parameters:
 
@@ -555,7 +629,9 @@
 
 #### Schema:
 
-`updateNewStickerSet#688a30aa stickerset:messages.StickerSet = Update;`
+```c++
+updateNewStickerSet#688a30aa stickerset:messages.StickerSet = Update;
+```
 
 #### Parameters:
 
@@ -567,19 +643,23 @@
 
 #### Schema:
 
-`updateStickerSetsOrder#f0dfb451 order:Vector<long> = Update;`
+```c++
+updateStickerSetsOrder#f0dfb451 order:Vector<long> = Update;
+```
 
 #### Parameters:
 
 |Name|Type|
 |----|----|
-|order|QList<qint64>|
+|order|QList&lt;qint64&gt;|
 
 ## Update::typeUpdateStickerSets
 
 #### Schema:
 
-`updateStickerSets#43ae3dec = Update;`
+```c++
+updateStickerSets#43ae3dec = Update;
+```
 
 #### Parameters:
 
@@ -588,7 +668,9 @@
 
 #### Schema:
 
-`updateSavedGifs#9375341e = Update;`
+```c++
+updateSavedGifs#9375341e = Update;
+```
 
 #### Parameters:
 
@@ -597,7 +679,9 @@
 
 #### Schema:
 
-`updateBotInlineQuery#c01eea08 query_id:long user_id:int query:string offset:string = Update;`
+```c++
+updateBotInlineQuery#c01eea08 query_id:long user_id:int query:string offset:string = Update;
+```
 
 #### Parameters:
 

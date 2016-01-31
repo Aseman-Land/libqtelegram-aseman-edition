@@ -8,7 +8,9 @@
 
 #### Schema:
 
-`messages.affectedHistory#b45c69d1 pts:int pts_count:int offset:int = messages.AffectedHistory;`
+```c++
+messages.affectedHistory#b45c69d1 pts:int pts_count:int offset:int = messages.AffectedHistory;
+```
 
 #### Parameters:
 

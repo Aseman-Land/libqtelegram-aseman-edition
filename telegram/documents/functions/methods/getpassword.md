@@ -6,31 +6,41 @@ TelegramCore::accountGetPassword
 
 ## Schema:
 
-`account.getPassword#548a30f5 = account.Password;`
+```c++
+account.getPassword#548a30f5 = account.Password;
+```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
-|callBack|Callback<AccountPassword\>|0|
+|callBack|Callback&lt;[AccountPassword](../../types/accountpassword.md)&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[AccountPassword](../../types/accountpassword.md)|
+|msgId|qint64|
+|result|[AccountPassword](../../types/accountpassword.md)|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `getPasswordAnswer(qint64 msgId, const AccountPassword & result)`
-* `getPasswordError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+getPasswordAnswer(qint64 msgId, const AccountPassword & result)
+```
+```c++
+getPasswordError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onGetPasswordAnswer(qint64 msgId, const AccountPassword & result)`
-* `onGetPasswordError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onGetPasswordAnswer(qint64 msgId, const AccountPassword & result)
+```
+```c++
+onGetPasswordError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -38,6 +48,8 @@ TelegramCore::accountGetPassword
 
 ## Examples:
 
-`tg->getPassword([=](TG_GET_PASSWORD_CALLBACK){
+```c++
+tg->getPassword([=](TG_GET_PASSWORD_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

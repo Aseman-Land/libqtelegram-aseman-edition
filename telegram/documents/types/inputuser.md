@@ -10,7 +10,9 @@
 
 #### Schema:
 
-`inputUserEmpty#b98886cf = InputUser;`
+```c++
+inputUserEmpty#b98886cf = InputUser;
+```
 
 #### Parameters:
 
@@ -19,7 +21,9 @@
 
 #### Schema:
 
-`inputUserSelf#f7c1b13f = InputUser;`
+```c++
+inputUserSelf#f7c1b13f = InputUser;
+```
 
 #### Parameters:
 
@@ -28,7 +32,9 @@
 
 #### Schema:
 
-`inputUser#d8292816 user_id:int access_hash:long = InputUser;`
+```c++
+inputUser#d8292816 user_id:int access_hash:long = InputUser;
+```
 
 #### Parameters:
 

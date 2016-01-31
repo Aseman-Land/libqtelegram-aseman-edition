@@ -6,31 +6,41 @@ TelegramCore::helpGetConfig
 
 ## Schema:
 
-`help.getConfig#c4f9186b = Config;`
+```c++
+help.getConfig#c4f9186b = Config;
+```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
-|callBack|Callback<Config\>|0|
+|callBack|Callback&lt;[Config](../../types/config.md)&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[Config](../../types/config.md)|
+|msgId|qint64|
+|result|[Config](../../types/config.md)|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `getConfigAnswer(qint64 msgId, const Config & result)`
-* `getConfigError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+getConfigAnswer(qint64 msgId, const Config & result)
+```
+```c++
+getConfigError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onGetConfigAnswer(qint64 msgId, const Config & result)`
-* `onGetConfigError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onGetConfigAnswer(qint64 msgId, const Config & result)
+```
+```c++
+onGetConfigError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -38,6 +48,8 @@ TelegramCore::helpGetConfig
 
 ## Examples:
 
-`tg->getConfig([=](TG_GET_CONFIG_CALLBACK){
+```c++
+tg->getConfig([=](TG_GET_CONFIG_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

@@ -12,7 +12,9 @@
 
 #### Schema:
 
-`encryptedChatEmpty#ab7ec0a0 id:int = EncryptedChat;`
+```c++
+encryptedChatEmpty#ab7ec0a0 id:int = EncryptedChat;
+```
 
 #### Parameters:
 
@@ -24,7 +26,9 @@
 
 #### Schema:
 
-`encryptedChatWaiting#3bf703dc id:int access_hash:long date:int admin_id:int participant_id:int = EncryptedChat;`
+```c++
+encryptedChatWaiting#3bf703dc id:int access_hash:long date:int admin_id:int participant_id:int = EncryptedChat;
+```
 
 #### Parameters:
 
@@ -40,7 +44,9 @@
 
 #### Schema:
 
-`encryptedChatRequested#c878527e id:int access_hash:long date:int admin_id:int participant_id:int g_a:bytes = EncryptedChat;`
+```c++
+encryptedChatRequested#c878527e id:int access_hash:long date:int admin_id:int participant_id:int g_a:bytes = EncryptedChat;
+```
 
 #### Parameters:
 
@@ -57,7 +63,9 @@
 
 #### Schema:
 
-`encryptedChat#fa56ce36 id:int access_hash:long date:int admin_id:int participant_id:int g_a_or_b:bytes key_fingerprint:long = EncryptedChat;`
+```c++
+encryptedChat#fa56ce36 id:int access_hash:long date:int admin_id:int participant_id:int g_a_or_b:bytes key_fingerprint:long = EncryptedChat;
+```
 
 #### Parameters:
 
@@ -75,7 +83,9 @@
 
 #### Schema:
 
-`encryptedChatDiscarded#13d6dd27 id:int = EncryptedChat;`
+```c++
+encryptedChatDiscarded#13d6dd27 id:int = EncryptedChat;
+```
 
 #### Parameters:
 

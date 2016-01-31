@@ -11,7 +11,9 @@
 
 #### Schema:
 
-`notifyPeer#9fd40bd8 peer:Peer = NotifyPeer;`
+```c++
+notifyPeer#9fd40bd8 peer:Peer = NotifyPeer;
+```
 
 #### Parameters:
 
@@ -23,7 +25,9 @@
 
 #### Schema:
 
-`notifyUsers#b4c83b4c = NotifyPeer;`
+```c++
+notifyUsers#b4c83b4c = NotifyPeer;
+```
 
 #### Parameters:
 
@@ -32,7 +36,9 @@
 
 #### Schema:
 
-`notifyChats#c007cec3 = NotifyPeer;`
+```c++
+notifyChats#c007cec3 = NotifyPeer;
+```
 
 #### Parameters:
 
@@ -41,7 +47,9 @@
 
 #### Schema:
 
-`notifyAll#74d07c60 = NotifyPeer;`
+```c++
+notifyAll#74d07c60 = NotifyPeer;
+```
 
 #### Parameters:
 

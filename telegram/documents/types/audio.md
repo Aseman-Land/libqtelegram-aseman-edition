@@ -9,7 +9,9 @@
 
 #### Schema:
 
-`audioEmpty#586988d8 id:long = Audio;`
+```c++
+audioEmpty#586988d8 id:long = Audio;
+```
 
 #### Parameters:
 
@@ -21,7 +23,9 @@
 
 #### Schema:
 
-`audio#f9e35055 id:long access_hash:long date:int duration:int mime_type:string size:int dc_id:int = Audio;`
+```c++
+audio#f9e35055 id:long access_hash:long date:int duration:int mime_type:string size:int dc_id:int = Audio;
+```
 
 #### Parameters:
 

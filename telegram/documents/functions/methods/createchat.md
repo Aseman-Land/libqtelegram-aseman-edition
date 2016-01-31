@@ -6,33 +6,43 @@ TelegramCore::messagesCreateChat
 
 ## Schema:
 
-`messages.createChat#9cb126e users:Vector<InputUser> title:string = Updates;`
+```c++
+messages.createChat#9cb126e users:Vector<InputUser> title:string = Updates;
+```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
-|users|QList<InputUser>||
+|users|QList&lt;[InputUser](../../types/inputuser.md)&gt;||
 |title|QString||
-|callBack|Callback<UpdatesType\>|0|
+|callBack|Callback&lt;[UpdatesType](../../types/updatestype.md)&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[UpdatesType](../../types/updatestype.md)|
+|msgId|qint64|
+|result|[UpdatesType](../../types/updatestype.md)|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `createChatAnswer(qint64 msgId, const UpdatesType & result)`
-* `createChatError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+createChatAnswer(qint64 msgId, const UpdatesType & result)
+```
+```c++
+createChatError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onCreateChatAnswer(qint64 msgId, const UpdatesType & result)`
-* `onCreateChatError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onCreateChatAnswer(qint64 msgId, const UpdatesType & result)
+```
+```c++
+onCreateChatError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -40,6 +50,8 @@ TelegramCore::messagesCreateChat
 
 ## Examples:
 
-`tg->createChat(users, title, [=](TG_CREATE_CHAT_CALLBACK){
+```c++
+tg->createChat(users, title, [=](TG_CREATE_CHAT_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

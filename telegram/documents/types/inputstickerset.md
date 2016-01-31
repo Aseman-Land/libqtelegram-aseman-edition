@@ -10,7 +10,9 @@
 
 #### Schema:
 
-`inputStickerSetEmpty#ffb62b95 = InputStickerSet;`
+```c++
+inputStickerSetEmpty#ffb62b95 = InputStickerSet;
+```
 
 #### Parameters:
 
@@ -19,7 +21,9 @@
 
 #### Schema:
 
-`inputStickerSetID#9de7a269 id:long access_hash:long = InputStickerSet;`
+```c++
+inputStickerSetID#9de7a269 id:long access_hash:long = InputStickerSet;
+```
 
 #### Parameters:
 
@@ -32,7 +36,9 @@
 
 #### Schema:
 
-`inputStickerSetShortName#861cc8a0 short_name:string = InputStickerSet;`
+```c++
+inputStickerSetShortName#861cc8a0 short_name:string = InputStickerSet;
+```
 
 #### Parameters:
 

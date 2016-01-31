@@ -8,7 +8,9 @@
 
 #### Schema:
 
-`account.passwordSettings#b7b72ab3 email:string = account.PasswordSettings;`
+```c++
+account.passwordSettings#b7b72ab3 email:string = account.PasswordSettings;
+```
 
 #### Parameters:
 

@@ -13,7 +13,9 @@
 
 #### Schema:
 
-`inputPrivacyValueAllowContacts#d09e07b = InputPrivacyRule;`
+```c++
+inputPrivacyValueAllowContacts#d09e07b = InputPrivacyRule;
+```
 
 #### Parameters:
 
@@ -22,7 +24,9 @@
 
 #### Schema:
 
-`inputPrivacyValueAllowAll#184b35ce = InputPrivacyRule;`
+```c++
+inputPrivacyValueAllowAll#184b35ce = InputPrivacyRule;
+```
 
 #### Parameters:
 
@@ -31,19 +35,23 @@
 
 #### Schema:
 
-`inputPrivacyValueAllowUsers#131cc67f users:Vector<InputUser> = InputPrivacyRule;`
+```c++
+inputPrivacyValueAllowUsers#131cc67f users:Vector<InputUser> = InputPrivacyRule;
+```
 
 #### Parameters:
 
 |Name|Type|
 |----|----|
-|users|QList<InputUser>|
+|users|QList&lt;[InputUser](inputuser.md)&gt;|
 
 ## InputPrivacyRule::typeInputPrivacyValueDisallowContacts
 
 #### Schema:
 
-`inputPrivacyValueDisallowContacts#ba52007 = InputPrivacyRule;`
+```c++
+inputPrivacyValueDisallowContacts#ba52007 = InputPrivacyRule;
+```
 
 #### Parameters:
 
@@ -52,7 +60,9 @@
 
 #### Schema:
 
-`inputPrivacyValueDisallowAll#d66b66c9 = InputPrivacyRule;`
+```c++
+inputPrivacyValueDisallowAll#d66b66c9 = InputPrivacyRule;
+```
 
 #### Parameters:
 
@@ -61,11 +71,13 @@
 
 #### Schema:
 
-`inputPrivacyValueDisallowUsers#90110467 users:Vector<InputUser> = InputPrivacyRule;`
+```c++
+inputPrivacyValueDisallowUsers#90110467 users:Vector<InputUser> = InputPrivacyRule;
+```
 
 #### Parameters:
 
 |Name|Type|
 |----|----|
-|users|QList<InputUser>|
+|users|QList&lt;[InputUser](inputuser.md)&gt;|
 

@@ -13,7 +13,9 @@
 
 #### Schema:
 
-`privacyValueAllowContacts#fffe1bac = PrivacyRule;`
+```c++
+privacyValueAllowContacts#fffe1bac = PrivacyRule;
+```
 
 #### Parameters:
 
@@ -22,7 +24,9 @@
 
 #### Schema:
 
-`privacyValueAllowAll#65427b82 = PrivacyRule;`
+```c++
+privacyValueAllowAll#65427b82 = PrivacyRule;
+```
 
 #### Parameters:
 
@@ -31,19 +35,23 @@
 
 #### Schema:
 
-`privacyValueAllowUsers#4d5bbe0c users:Vector<int> = PrivacyRule;`
+```c++
+privacyValueAllowUsers#4d5bbe0c users:Vector<int> = PrivacyRule;
+```
 
 #### Parameters:
 
 |Name|Type|
 |----|----|
-|users|QList<qint32>|
+|users|QList&lt;qint32&gt;|
 
 ## PrivacyRule::typePrivacyValueDisallowContacts
 
 #### Schema:
 
-`privacyValueDisallowContacts#f888fa1a = PrivacyRule;`
+```c++
+privacyValueDisallowContacts#f888fa1a = PrivacyRule;
+```
 
 #### Parameters:
 
@@ -52,7 +60,9 @@
 
 #### Schema:
 
-`privacyValueDisallowAll#8b73e763 = PrivacyRule;`
+```c++
+privacyValueDisallowAll#8b73e763 = PrivacyRule;
+```
 
 #### Parameters:
 
@@ -61,11 +71,13 @@
 
 #### Schema:
 
-`privacyValueDisallowUsers#c7f49b7 users:Vector<int> = PrivacyRule;`
+```c++
+privacyValueDisallowUsers#c7f49b7 users:Vector<int> = PrivacyRule;
+```
 
 #### Parameters:
 
 |Name|Type|
 |----|----|
-|users|QList<qint32>|
+|users|QList&lt;qint32&gt;|
 

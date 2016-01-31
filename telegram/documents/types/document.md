@@ -9,7 +9,9 @@
 
 #### Schema:
 
-`documentEmpty#36f8c871 id:long = Document;`
+```c++
+documentEmpty#36f8c871 id:long = Document;
+```
 
 #### Parameters:
 
@@ -21,7 +23,9 @@
 
 #### Schema:
 
-`document#f9a39f4f id:long access_hash:long date:int mime_type:string size:int thumb:PhotoSize dc_id:int attributes:Vector<DocumentAttribute> = Document;`
+```c++
+document#f9a39f4f id:long access_hash:long date:int mime_type:string size:int thumb:PhotoSize dc_id:int attributes:Vector<DocumentAttribute> = Document;
+```
 
 #### Parameters:
 
@@ -34,5 +38,5 @@
 |size|qint32|
 |thumb|[PhotoSize](photosize.md)|
 |dcId|qint32|
-|attributes|QList<DocumentAttribute>|
+|attributes|QList&lt;[DocumentAttribute](documentattribute.md)&gt;|
 

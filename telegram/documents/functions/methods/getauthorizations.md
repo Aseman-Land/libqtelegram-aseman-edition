@@ -6,31 +6,41 @@ TelegramCore::accountGetAuthorizations
 
 ## Schema:
 
-`account.getAuthorizations#e320c158 = account.Authorizations;`
+```c++
+account.getAuthorizations#e320c158 = account.Authorizations;
+```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
-|callBack|Callback<AccountAuthorizations\>|0|
+|callBack|Callback&lt;[AccountAuthorizations](../../types/accountauthorizations.md)&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[AccountAuthorizations](../../types/accountauthorizations.md)|
+|msgId|qint64|
+|result|[AccountAuthorizations](../../types/accountauthorizations.md)|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `getAuthorizationsAnswer(qint64 msgId, const AccountAuthorizations & result)`
-* `getAuthorizationsError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+getAuthorizationsAnswer(qint64 msgId, const AccountAuthorizations & result)
+```
+```c++
+getAuthorizationsError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onGetAuthorizationsAnswer(qint64 msgId, const AccountAuthorizations & result)`
-* `onGetAuthorizationsError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onGetAuthorizationsAnswer(qint64 msgId, const AccountAuthorizations & result)
+```
+```c++
+onGetAuthorizationsError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -38,6 +48,8 @@ TelegramCore::accountGetAuthorizations
 
 ## Examples:
 
-`tg->getAuthorizations([=](TG_GET_AUTHORIZATIONS_CALLBACK){
+```c++
+tg->getAuthorizations([=](TG_GET_AUTHORIZATIONS_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

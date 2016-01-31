@@ -6,32 +6,42 @@ TelegramCore::messagesReceivedMessages
 
 ## Schema:
 
-`messages.receivedMessages#5a954c0 max_id:int = Vector<ReceivedNotifyMessage>;`
+```c++
+messages.receivedMessages#5a954c0 max_id:int = Vector<ReceivedNotifyMessage>;
+```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
 |maxId|qint32||
-|callBack|Callback<QList<ReceivedNotifyMessage>\>|0|
+|callBack|Callback&lt;QList&lt;[ReceivedNotifyMessage](../../types/receivednotifymessage.md)&gt;&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[QList<ReceivedNotifyMessage>](../../types/qlist<receivednotifymessage>.md)|
+|msgId|qint64|
+|result|QList&lt;[ReceivedNotifyMessage](../../types/receivednotifymessage.md)&gt;|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `receivedMessagesAnswer(qint64 msgId, const QList<ReceivedNotifyMessage> & result)`
-* `receivedMessagesError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+receivedMessagesAnswer(qint64 msgId, const QList&lt;ReceivedNotifyMessage&gt; & result)
+```
+```c++
+receivedMessagesError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onReceivedMessagesAnswer(qint64 msgId, const QList<ReceivedNotifyMessage> & result)`
-* `onReceivedMessagesError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onReceivedMessagesAnswer(qint64 msgId, const QList&lt;ReceivedNotifyMessage&gt; & result)
+```
+```c++
+onReceivedMessagesError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -39,6 +49,8 @@ TelegramCore::messagesReceivedMessages
 
 ## Examples:
 
-`tg->receivedMessages(max_id, [=](TG_RECEIVED_MESSAGES_CALLBACK){
+```c++
+tg->receivedMessages(max_id, [=](TG_RECEIVED_MESSAGES_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

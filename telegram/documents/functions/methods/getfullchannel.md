@@ -6,32 +6,42 @@ TelegramCore::channelsGetFullChannel
 
 ## Schema:
 
-`channels.getFullChannel#8736a09 channel:InputChannel = messages.ChatFull;`
+```c++
+channels.getFullChannel#8736a09 channel:InputChannel = messages.ChatFull;
+```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
 |channel|[InputChannel](../../types/inputchannel.md)||
-|callBack|Callback<MessagesChatFull\>|0|
+|callBack|Callback&lt;[MessagesChatFull](../../types/messageschatfull.md)&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[MessagesChatFull](../../types/messageschatfull.md)|
+|msgId|qint64|
+|result|[MessagesChatFull](../../types/messageschatfull.md)|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `getFullChannelAnswer(qint64 msgId, const MessagesChatFull & result)`
-* `getFullChannelError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+getFullChannelAnswer(qint64 msgId, const MessagesChatFull & result)
+```
+```c++
+getFullChannelError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onGetFullChannelAnswer(qint64 msgId, const MessagesChatFull & result)`
-* `onGetFullChannelError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onGetFullChannelAnswer(qint64 msgId, const MessagesChatFull & result)
+```
+```c++
+onGetFullChannelError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -39,6 +49,8 @@ TelegramCore::channelsGetFullChannel
 
 ## Examples:
 
-`tg->getFullChannel(channel, [=](TG_GET_FULL_CHANNEL_CALLBACK){
+```c++
+tg->getFullChannel(channel, [=](TG_GET_FULL_CHANNEL_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

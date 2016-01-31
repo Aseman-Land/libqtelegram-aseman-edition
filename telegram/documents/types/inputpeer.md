@@ -12,7 +12,9 @@
 
 #### Schema:
 
-`inputPeerEmpty#7f3b18ea = InputPeer;`
+```c++
+inputPeerEmpty#7f3b18ea = InputPeer;
+```
 
 #### Parameters:
 
@@ -21,7 +23,9 @@
 
 #### Schema:
 
-`inputPeerSelf#7da07ec9 = InputPeer;`
+```c++
+inputPeerSelf#7da07ec9 = InputPeer;
+```
 
 #### Parameters:
 
@@ -30,7 +34,9 @@
 
 #### Schema:
 
-`inputPeerChat#179be863 chat_id:int = InputPeer;`
+```c++
+inputPeerChat#179be863 chat_id:int = InputPeer;
+```
 
 #### Parameters:
 
@@ -42,7 +48,9 @@
 
 #### Schema:
 
-`inputPeerUser#7b8e7de6 user_id:int access_hash:long = InputPeer;`
+```c++
+inputPeerUser#7b8e7de6 user_id:int access_hash:long = InputPeer;
+```
 
 #### Parameters:
 
@@ -55,7 +63,9 @@
 
 #### Schema:
 
-`inputPeerChannel#20adaef8 channel_id:int access_hash:long = InputPeer;`
+```c++
+inputPeerChannel#20adaef8 channel_id:int access_hash:long = InputPeer;
+```
 
 #### Parameters:
 

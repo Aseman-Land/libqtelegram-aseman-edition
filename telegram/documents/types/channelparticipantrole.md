@@ -10,7 +10,9 @@
 
 #### Schema:
 
-`channelRoleEmpty#b285a0c6 = ChannelParticipantRole;`
+```c++
+channelRoleEmpty#b285a0c6 = ChannelParticipantRole;
+```
 
 #### Parameters:
 
@@ -19,7 +21,9 @@
 
 #### Schema:
 
-`channelRoleModerator#9618d975 = ChannelParticipantRole;`
+```c++
+channelRoleModerator#9618d975 = ChannelParticipantRole;
+```
 
 #### Parameters:
 
@@ -28,7 +32,9 @@
 
 #### Schema:
 
-`channelRoleEditor#820bfe8c = ChannelParticipantRole;`
+```c++
+channelRoleEditor#820bfe8c = ChannelParticipantRole;
+```
 
 #### Parameters:
 

@@ -6,7 +6,9 @@ TelegramCore::messagesStartBot
 
 ## Schema:
 
-`messages.startBot#e6df7378 bot:InputUser peer:InputPeer random_id:long start_param:string = Updates;`
+```c++
+messages.startBot#e6df7378 bot:InputUser peer:InputPeer random_id:long start_param:string = Updates;
+```
 ## Parameters:
 
 |Name|Type|Default|
@@ -15,26 +17,34 @@ TelegramCore::messagesStartBot
 |peer|[InputPeer](../../types/inputpeer.md)||
 |randomId|qint64||
 |startParam|QString||
-|callBack|Callback<UpdatesType\>|0|
+|callBack|Callback&lt;[UpdatesType](../../types/updatestype.md)&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[UpdatesType](../../types/updatestype.md)|
+|msgId|qint64|
+|result|[UpdatesType](../../types/updatestype.md)|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `startBotAnswer(qint64 msgId, const UpdatesType & result)`
-* `startBotError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+startBotAnswer(qint64 msgId, const UpdatesType & result)
+```
+```c++
+startBotError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onStartBotAnswer(qint64 msgId, const UpdatesType & result)`
-* `onStartBotError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onStartBotAnswer(qint64 msgId, const UpdatesType & result)
+```
+```c++
+onStartBotError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -42,6 +52,8 @@ TelegramCore::messagesStartBot
 
 ## Examples:
 
-`tg->startBot(bot, peer, random_id, start_param, [=](TG_START_BOT_CALLBACK){
+```c++
+tg->startBot(bot, peer, random_id, start_param, [=](TG_START_BOT_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

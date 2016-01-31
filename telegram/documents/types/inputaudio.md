@@ -9,7 +9,9 @@
 
 #### Schema:
 
-`inputAudioEmpty#d95adc84 = InputAudio;`
+```c++
+inputAudioEmpty#d95adc84 = InputAudio;
+```
 
 #### Parameters:
 
@@ -18,7 +20,9 @@
 
 #### Schema:
 
-`inputAudio#77d440ff id:long access_hash:long = InputAudio;`
+```c++
+inputAudio#77d440ff id:long access_hash:long = InputAudio;
+```
 
 #### Parameters:
 

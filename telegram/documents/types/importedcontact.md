@@ -8,7 +8,9 @@
 
 #### Schema:
 
-`importedContact#d0028438 user_id:int client_id:long = ImportedContact;`
+```c++
+importedContact#d0028438 user_id:int client_id:long = ImportedContact;
+```
 
 #### Parameters:
 

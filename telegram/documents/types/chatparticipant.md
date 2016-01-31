@@ -10,7 +10,9 @@
 
 #### Schema:
 
-`chatParticipant#c8d7493e user_id:int inviter_id:int date:int = ChatParticipant;`
+```c++
+chatParticipant#c8d7493e user_id:int inviter_id:int date:int = ChatParticipant;
+```
 
 #### Parameters:
 
@@ -24,7 +26,9 @@
 
 #### Schema:
 
-`chatParticipantCreator#da13538a user_id:int = ChatParticipant;`
+```c++
+chatParticipantCreator#da13538a user_id:int = ChatParticipant;
+```
 
 #### Parameters:
 
@@ -36,7 +40,9 @@
 
 #### Schema:
 
-`chatParticipantAdmin#e2d6e436 user_id:int inviter_id:int date:int = ChatParticipant;`
+```c++
+chatParticipantAdmin#e2d6e436 user_id:int inviter_id:int date:int = ChatParticipant;
+```
 
 #### Parameters:
 

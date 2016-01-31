@@ -6,7 +6,9 @@ TelegramCore::messagesForwardMessage
 
 ## Schema:
 
-`messages.forwardMessage#33963bf9 peer:InputPeer id:int random_id:long = Updates;`
+```c++
+messages.forwardMessage#33963bf9 peer:InputPeer id:int random_id:long = Updates;
+```
 ## Parameters:
 
 |Name|Type|Default|
@@ -14,26 +16,34 @@ TelegramCore::messagesForwardMessage
 |peer|[InputPeer](../../types/inputpeer.md)||
 |id|qint32||
 |randomId|qint64||
-|callBack|Callback<UpdatesType\>|0|
+|callBack|Callback&lt;[UpdatesType](../../types/updatestype.md)&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[UpdatesType](../../types/updatestype.md)|
+|msgId|qint64|
+|result|[UpdatesType](../../types/updatestype.md)|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `forwardMessageAnswer(qint64 msgId, const UpdatesType & result)`
-* `forwardMessageError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+forwardMessageAnswer(qint64 msgId, const UpdatesType & result)
+```
+```c++
+forwardMessageError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onForwardMessageAnswer(qint64 msgId, const UpdatesType & result)`
-* `onForwardMessageError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onForwardMessageAnswer(qint64 msgId, const UpdatesType & result)
+```
+```c++
+onForwardMessageError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -41,6 +51,8 @@ TelegramCore::messagesForwardMessage
 
 ## Examples:
 
-`tg->forwardMessage(peer, id, random_id, [=](TG_FORWARD_MESSAGE_CALLBACK){
+```c++
+tg->forwardMessage(peer, id, random_id, [=](TG_FORWARD_MESSAGE_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

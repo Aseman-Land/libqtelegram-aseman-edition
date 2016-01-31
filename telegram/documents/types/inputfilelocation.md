@@ -12,7 +12,9 @@
 
 #### Schema:
 
-`inputFileLocation#14637196 volume_id:long local_id:int secret:long = InputFileLocation;`
+```c++
+inputFileLocation#14637196 volume_id:long local_id:int secret:long = InputFileLocation;
+```
 
 #### Parameters:
 
@@ -26,7 +28,9 @@
 
 #### Schema:
 
-`inputVideoFileLocation#3d0364ec id:long access_hash:long = InputFileLocation;`
+```c++
+inputVideoFileLocation#3d0364ec id:long access_hash:long = InputFileLocation;
+```
 
 #### Parameters:
 
@@ -39,7 +43,9 @@
 
 #### Schema:
 
-`inputEncryptedFileLocation#f5235d55 id:long access_hash:long = InputFileLocation;`
+```c++
+inputEncryptedFileLocation#f5235d55 id:long access_hash:long = InputFileLocation;
+```
 
 #### Parameters:
 
@@ -52,7 +58,9 @@
 
 #### Schema:
 
-`inputAudioFileLocation#74dc404d id:long access_hash:long = InputFileLocation;`
+```c++
+inputAudioFileLocation#74dc404d id:long access_hash:long = InputFileLocation;
+```
 
 #### Parameters:
 
@@ -65,7 +73,9 @@
 
 #### Schema:
 
-`inputDocumentFileLocation#4e45abe9 id:long access_hash:long = InputFileLocation;`
+```c++
+inputDocumentFileLocation#4e45abe9 id:long access_hash:long = InputFileLocation;
+```
 
 #### Parameters:
 

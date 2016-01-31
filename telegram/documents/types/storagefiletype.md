@@ -17,7 +17,9 @@
 
 #### Schema:
 
-`storage.fileUnknown#aa963b05 = storage.FileType;`
+```c++
+storage.fileUnknown#aa963b05 = storage.FileType;
+```
 
 #### Parameters:
 
@@ -26,7 +28,9 @@
 
 #### Schema:
 
-`storage.fileJpeg#7efe0e = storage.FileType;`
+```c++
+storage.fileJpeg#7efe0e = storage.FileType;
+```
 
 #### Parameters:
 
@@ -35,7 +39,9 @@
 
 #### Schema:
 
-`storage.fileGif#cae1aadf = storage.FileType;`
+```c++
+storage.fileGif#cae1aadf = storage.FileType;
+```
 
 #### Parameters:
 
@@ -44,7 +50,9 @@
 
 #### Schema:
 
-`storage.filePng#a4f63c0 = storage.FileType;`
+```c++
+storage.filePng#a4f63c0 = storage.FileType;
+```
 
 #### Parameters:
 
@@ -53,7 +61,9 @@
 
 #### Schema:
 
-`storage.filePdf#ae1e508d = storage.FileType;`
+```c++
+storage.filePdf#ae1e508d = storage.FileType;
+```
 
 #### Parameters:
 
@@ -62,7 +72,9 @@
 
 #### Schema:
 
-`storage.fileMp3#528a0677 = storage.FileType;`
+```c++
+storage.fileMp3#528a0677 = storage.FileType;
+```
 
 #### Parameters:
 
@@ -71,7 +83,9 @@
 
 #### Schema:
 
-`storage.fileMov#4b09ebbc = storage.FileType;`
+```c++
+storage.fileMov#4b09ebbc = storage.FileType;
+```
 
 #### Parameters:
 
@@ -80,7 +94,9 @@
 
 #### Schema:
 
-`storage.filePartial#40bc6f52 = storage.FileType;`
+```c++
+storage.filePartial#40bc6f52 = storage.FileType;
+```
 
 #### Parameters:
 
@@ -89,7 +105,9 @@
 
 #### Schema:
 
-`storage.fileMp4#b3cea0e4 = storage.FileType;`
+```c++
+storage.fileMp4#b3cea0e4 = storage.FileType;
+```
 
 #### Parameters:
 
@@ -98,7 +116,9 @@
 
 #### Schema:
 
-`storage.fileWebp#1081464c = storage.FileType;`
+```c++
+storage.fileWebp#1081464c = storage.FileType;
+```
 
 #### Parameters:
 

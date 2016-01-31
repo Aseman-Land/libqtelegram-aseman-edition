@@ -12,7 +12,9 @@
 
 #### Schema:
 
-`chatEmpty#9ba2d800 id:int = Chat;`
+```c++
+chatEmpty#9ba2d800 id:int = Chat;
+```
 
 #### Parameters:
 
@@ -24,7 +26,9 @@
 
 #### Schema:
 
-`chat#d91cdd54 flags:# creator:flags.0?true kicked:flags.1?true left:flags.2?true admins_enabled:flags.3?true admin:flags.4?true deactivated:flags.5?true id:int title:string photo:ChatPhoto participants_count:int date:int version:int migrated_to:flags.6?InputChannel = Chat;`
+```c++
+chat#d91cdd54 flags:# creator:flags.0?true kicked:flags.1?true left:flags.2?true admins_enabled:flags.3?true admin:flags.4?true deactivated:flags.5?true id:int title:string photo:ChatPhoto participants_count:int date:int version:int migrated_to:flags.6?InputChannel = Chat;
+```
 
 #### Parameters:
 
@@ -48,7 +52,9 @@
 
 #### Schema:
 
-`chatForbidden#7328bdb id:int title:string = Chat;`
+```c++
+chatForbidden#7328bdb id:int title:string = Chat;
+```
 
 #### Parameters:
 
@@ -61,7 +67,9 @@
 
 #### Schema:
 
-`channel#4b1b7506 flags:# creator:flags.0?true kicked:flags.1?true left:flags.2?true editor:flags.3?true moderator:flags.4?true broadcast:flags.5?true verified:flags.7?true megagroup:flags.8?true restricted:flags.9?true id:int access_hash:long title:string username:flags.6?string photo:ChatPhoto date:int version:int restriction_reason:flags.9?string = Chat;`
+```c++
+channel#4b1b7506 flags:# creator:flags.0?true kicked:flags.1?true left:flags.2?true editor:flags.3?true moderator:flags.4?true broadcast:flags.5?true verified:flags.7?true megagroup:flags.8?true restricted:flags.9?true id:int access_hash:long title:string username:flags.6?string photo:ChatPhoto date:int version:int restriction_reason:flags.9?string = Chat;
+```
 
 #### Parameters:
 
@@ -89,7 +97,9 @@
 
 #### Schema:
 
-`channelForbidden#2d85832c id:int access_hash:long title:string = Chat;`
+```c++
+channelForbidden#2d85832c id:int access_hash:long title:string = Chat;
+```
 
 #### Parameters:
 

@@ -6,32 +6,42 @@ TelegramCore::messagesExportChatInvite
 
 ## Schema:
 
-`messages.exportChatInvite#7d885289 chat_id:int = ExportedChatInvite;`
+```c++
+messages.exportChatInvite#7d885289 chat_id:int = ExportedChatInvite;
+```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
 |chatId|qint32||
-|callBack|Callback<ExportedChatInvite\>|0|
+|callBack|Callback&lt;[ExportedChatInvite](../../types/exportedchatinvite.md)&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[ExportedChatInvite](../../types/exportedchatinvite.md)|
+|msgId|qint64|
+|result|[ExportedChatInvite](../../types/exportedchatinvite.md)|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `exportChatInviteAnswer(qint64 msgId, const ExportedChatInvite & result)`
-* `exportChatInviteError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+exportChatInviteAnswer(qint64 msgId, const ExportedChatInvite & result)
+```
+```c++
+exportChatInviteError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onExportChatInviteAnswer(qint64 msgId, const ExportedChatInvite & result)`
-* `onExportChatInviteError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onExportChatInviteAnswer(qint64 msgId, const ExportedChatInvite & result)
+```
+```c++
+onExportChatInviteError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -39,6 +49,8 @@ TelegramCore::messagesExportChatInvite
 
 ## Examples:
 
-`tg->exportChatInvite(chat_id, [=](TG_EXPORT_CHAT_INVITE_CALLBACK){
+```c++
+tg->exportChatInvite(chat_id, [=](TG_EXPORT_CHAT_INVITE_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

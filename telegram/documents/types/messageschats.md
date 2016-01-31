@@ -8,11 +8,13 @@
 
 #### Schema:
 
-`messages.chats#64ff9fd5 chats:Vector<Chat> = messages.Chats;`
+```c++
+messages.chats#64ff9fd5 chats:Vector<Chat> = messages.Chats;
+```
 
 #### Parameters:
 
 |Name|Type|
 |----|----|
-|chats|QList<Chat>|
+|chats|QList&lt;[Chat](chat.md)&gt;|
 

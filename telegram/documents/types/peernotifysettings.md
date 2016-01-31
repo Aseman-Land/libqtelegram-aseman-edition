@@ -9,7 +9,9 @@
 
 #### Schema:
 
-`peerNotifySettingsEmpty#70a68512 = PeerNotifySettings;`
+```c++
+peerNotifySettingsEmpty#70a68512 = PeerNotifySettings;
+```
 
 #### Parameters:
 
@@ -18,7 +20,9 @@
 
 #### Schema:
 
-`peerNotifySettings#8d5e11ee mute_until:int sound:string show_previews:Bool events_mask:int = PeerNotifySettings;`
+```c++
+peerNotifySettings#8d5e11ee mute_until:int sound:string show_previews:Bool events_mask:int = PeerNotifySettings;
+```
 
 #### Parameters:
 

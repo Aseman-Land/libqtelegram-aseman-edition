@@ -6,7 +6,9 @@ TelegramCore::accountRegisterDevice
 
 ## Schema:
 
-`account.registerDevice#446c712c token_type:int token:string device_model:string system_version:string app_version:string app_sandbox:Bool lang_code:string = Bool;`
+```c++
+account.registerDevice#446c712c token_type:int token:string device_model:string system_version:string app_version:string app_sandbox:Bool lang_code:string = Bool;
+```
 ## Parameters:
 
 |Name|Type|Default|
@@ -18,26 +20,34 @@ TelegramCore::accountRegisterDevice
 |appVersion|QString||
 |appSandbox|bool||
 |langCode|QString||
-|callBack|Callback<bool\>|0|
+|callBack|Callback&lt;bool&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[bool](../../types/bool.md)|
+|msgId|qint64|
+|result|bool|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `registerDeviceAnswer(qint64 msgId, bool  result)`
-* `registerDeviceError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+registerDeviceAnswer(qint64 msgId, bool  result)
+```
+```c++
+registerDeviceError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onRegisterDeviceAnswer(qint64 msgId, bool  result)`
-* `onRegisterDeviceError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onRegisterDeviceAnswer(qint64 msgId, bool  result)
+```
+```c++
+onRegisterDeviceError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -45,6 +55,8 @@ TelegramCore::accountRegisterDevice
 
 ## Examples:
 
-`tg->registerDevice(token_type, token, device_model, system_version, app_version, app_sandbox, lang_code, [=](TG_REGISTER_DEVICE_CALLBACK){
+```c++
+tg->registerDevice(token_type, token, device_model, system_version, app_version, app_sandbox, lang_code, [=](TG_REGISTER_DEVICE_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

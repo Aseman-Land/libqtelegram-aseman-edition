@@ -8,7 +8,9 @@
 
 #### Schema:
 
-`contact#f911c994 user_id:int mutual:Bool = Contact;`
+```c++
+contact#f911c994 user_id:int mutual:Bool = Contact;
+```
 
 #### Parameters:
 

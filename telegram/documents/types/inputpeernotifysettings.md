@@ -8,7 +8,9 @@
 
 #### Schema:
 
-`inputPeerNotifySettings#46a2ce98 mute_until:int sound:string show_previews:Bool events_mask:int = InputPeerNotifySettings;`
+```c++
+inputPeerNotifySettings#46a2ce98 mute_until:int sound:string show_previews:Bool events_mask:int = InputPeerNotifySettings;
+```
 
 #### Parameters:
 

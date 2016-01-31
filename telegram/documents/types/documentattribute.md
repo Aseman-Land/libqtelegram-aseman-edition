@@ -13,7 +13,9 @@
 
 #### Schema:
 
-`documentAttributeImageSize#6c37c15c w:int h:int = DocumentAttribute;`
+```c++
+documentAttributeImageSize#6c37c15c w:int h:int = DocumentAttribute;
+```
 
 #### Parameters:
 
@@ -26,7 +28,9 @@
 
 #### Schema:
 
-`documentAttributeAnimated#11b58939 = DocumentAttribute;`
+```c++
+documentAttributeAnimated#11b58939 = DocumentAttribute;
+```
 
 #### Parameters:
 
@@ -35,7 +39,9 @@
 
 #### Schema:
 
-`documentAttributeSticker#3a556302 alt:string stickerset:InputStickerSet = DocumentAttribute;`
+```c++
+documentAttributeSticker#3a556302 alt:string stickerset:InputStickerSet = DocumentAttribute;
+```
 
 #### Parameters:
 
@@ -48,7 +54,9 @@
 
 #### Schema:
 
-`documentAttributeVideo#5910cccb duration:int w:int h:int = DocumentAttribute;`
+```c++
+documentAttributeVideo#5910cccb duration:int w:int h:int = DocumentAttribute;
+```
 
 #### Parameters:
 
@@ -62,7 +70,9 @@
 
 #### Schema:
 
-`documentAttributeAudio#ded218e0 duration:int title:string performer:string = DocumentAttribute;`
+```c++
+documentAttributeAudio#ded218e0 duration:int title:string performer:string = DocumentAttribute;
+```
 
 #### Parameters:
 
@@ -76,7 +86,9 @@
 
 #### Schema:
 
-`documentAttributeFilename#15590068 file_name:string = DocumentAttribute;`
+```c++
+documentAttributeFilename#15590068 file_name:string = DocumentAttribute;
+```
 
 #### Parameters:
 

@@ -6,32 +6,42 @@ TelegramCore::usersGetUsers
 
 ## Schema:
 
-`users.getUsers#d91a548 id:Vector<InputUser> = Vector<User>;`
+```c++
+users.getUsers#d91a548 id:Vector<InputUser> = Vector<User>;
+```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
-|id|QList<InputUser>||
-|callBack|Callback<QList<User>\>|0|
+|id|QList&lt;[InputUser](../../types/inputuser.md)&gt;||
+|callBack|Callback&lt;QList&lt;[User](../../types/user.md)&gt;&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
-## Result:
+## Callback Result:
 
 |Name|Type|
 |----|----|
-|return|qint64|
-|callBack|[QList<User>](../../types/qlist<user>.md)|
+|msgId|qint64|
+|result|QList&lt;[User](../../types/user.md)&gt;|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
-* `getUsersAnswer(qint64 msgId, const QList<User> & result)`
-* `getUsersError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+getUsersAnswer(qint64 msgId, const QList&lt;User&gt; & result)
+```
+```c++
+getUsersError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Events:
 
-* `onGetUsersAnswer(qint64 msgId, const QList<User> & result)`
-* `onGetUsersError(qint64 msgId, qint32 errorCode, const QString &errorText)`
+```c++
+onGetUsersAnswer(qint64 msgId, const QList&lt;User&gt; & result)
+```
+```c++
+onGetUsersError(qint64 msgId, qint32 errorCode, const QString &errorText)
+```
 
 ## Macros:
 
@@ -39,6 +49,8 @@ TelegramCore::usersGetUsers
 
 ## Examples:
 
-`tg->getUsers(id, [=](TG_GET_USERS_CALLBACK){
+```c++
+tg->getUsers(id, [=](TG_GET_USERS_CALLBACK){
     ...
-}, 30000);`
+}, 30000);
+```

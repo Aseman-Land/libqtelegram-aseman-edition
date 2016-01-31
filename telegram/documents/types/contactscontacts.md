@@ -9,7 +9,9 @@
 
 #### Schema:
 
-`contacts.contactsNotModified#b74ba9d2 = contacts.Contacts;`
+```c++
+contacts.contactsNotModified#b74ba9d2 = contacts.Contacts;
+```
 
 #### Parameters:
 
@@ -18,12 +20,14 @@
 
 #### Schema:
 
-`contacts.contacts#6f8b8cb2 contacts:Vector<Contact> users:Vector<User> = contacts.Contacts;`
+```c++
+contacts.contacts#6f8b8cb2 contacts:Vector<Contact> users:Vector<User> = contacts.Contacts;
+```
 
 #### Parameters:
 
 |Name|Type|
 |----|----|
-|contacts|QList<Contact>|
-|users|QList<User>|
+|contacts|QList&lt;[Contact](contact.md)&gt;|
+|users|QList&lt;[User](user.md)&gt;|
 

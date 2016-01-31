@@ -8,7 +8,9 @@
 
 #### Schema:
 
-`messageRange#ae30253 min_id:int max_id:int = MessageRange;`
+```c++
+messageRange#ae30253 min_id:int max_id:int = MessageRange;
+```
 
 #### Parameters:
 

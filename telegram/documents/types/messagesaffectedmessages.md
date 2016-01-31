@@ -8,7 +8,9 @@
 
 #### Schema:
 
-`messages.affectedMessages#84d19185 pts:int pts_count:int = messages.AffectedMessages;`
+```c++
+messages.affectedMessages#84d19185 pts:int pts_count:int = messages.AffectedMessages;
+```
 
 #### Parameters:
 

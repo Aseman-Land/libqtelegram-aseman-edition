@@ -18,7 +18,9 @@
 
 #### Schema:
 
-`messageActionEmpty#b6aef7b0 = MessageAction;`
+```c++
+messageActionEmpty#b6aef7b0 = MessageAction;
+```
 
 #### Parameters:
 
@@ -27,20 +29,24 @@
 
 #### Schema:
 
-`messageActionChatCreate#a6638b9a title:string users:Vector<int> = MessageAction;`
+```c++
+messageActionChatCreate#a6638b9a title:string users:Vector<int> = MessageAction;
+```
 
 #### Parameters:
 
 |Name|Type|
 |----|----|
 |title|QString|
-|users|QList<qint32>|
+|users|QList&lt;qint32&gt;|
 
 ## MessageAction::typeMessageActionChatEditTitle
 
 #### Schema:
 
-`messageActionChatEditTitle#b5a1ce5a title:string = MessageAction;`
+```c++
+messageActionChatEditTitle#b5a1ce5a title:string = MessageAction;
+```
 
 #### Parameters:
 
@@ -52,7 +58,9 @@
 
 #### Schema:
 
-`messageActionChatEditPhoto#7fcb13a8 photo:Photo = MessageAction;`
+```c++
+messageActionChatEditPhoto#7fcb13a8 photo:Photo = MessageAction;
+```
 
 #### Parameters:
 
@@ -64,7 +72,9 @@
 
 #### Schema:
 
-`messageActionChatDeletePhoto#95e3fbef = MessageAction;`
+```c++
+messageActionChatDeletePhoto#95e3fbef = MessageAction;
+```
 
 #### Parameters:
 
@@ -73,19 +83,23 @@
 
 #### Schema:
 
-`messageActionChatAddUser#488a7337 users:Vector<int> = MessageAction;`
+```c++
+messageActionChatAddUser#488a7337 users:Vector<int> = MessageAction;
+```
 
 #### Parameters:
 
 |Name|Type|
 |----|----|
-|users|QList<qint32>|
+|users|QList&lt;qint32&gt;|
 
 ## MessageAction::typeMessageActionChatDeleteUser
 
 #### Schema:
 
-`messageActionChatDeleteUser#b2ae9b0c user_id:int = MessageAction;`
+```c++
+messageActionChatDeleteUser#b2ae9b0c user_id:int = MessageAction;
+```
 
 #### Parameters:
 
@@ -97,7 +111,9 @@
 
 #### Schema:
 
-`messageActionChatJoinedByLink#f89cf5e8 inviter_id:int = MessageAction;`
+```c++
+messageActionChatJoinedByLink#f89cf5e8 inviter_id:int = MessageAction;
+```
 
 #### Parameters:
 
@@ -109,7 +125,9 @@
 
 #### Schema:
 
-`messageActionChannelCreate#95d2ac92 title:string = MessageAction;`
+```c++
+messageActionChannelCreate#95d2ac92 title:string = MessageAction;
+```
 
 #### Parameters:
 
@@ -121,7 +139,9 @@
 
 #### Schema:
 
-`messageActionChatMigrateTo#51bdb021 channel_id:int = MessageAction;`
+```c++
+messageActionChatMigrateTo#51bdb021 channel_id:int = MessageAction;
+```
 
 #### Parameters:
 
@@ -133,7 +153,9 @@
 
 #### Schema:
 
-`messageActionChannelMigrateFrom#b055eaee title:string chat_id:int = MessageAction;`
+```c++
+messageActionChannelMigrateFrom#b055eaee title:string chat_id:int = MessageAction;
+```
 
 #### Parameters:
 

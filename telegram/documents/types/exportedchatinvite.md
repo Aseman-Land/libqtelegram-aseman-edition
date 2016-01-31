@@ -9,7 +9,9 @@
 
 #### Schema:
 
-`chatInviteEmpty#69df3769 = ExportedChatInvite;`
+```c++
+chatInviteEmpty#69df3769 = ExportedChatInvite;
+```
 
 #### Parameters:
 
@@ -18,7 +20,9 @@
 
 #### Schema:
 
-`chatInviteExported#fc2e05bc link:string = ExportedChatInvite;`
+```c++
+chatInviteExported#fc2e05bc link:string = ExportedChatInvite;
+```
 
 #### Parameters:
 

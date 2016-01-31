@@ -8,7 +8,9 @@
 
 #### Schema:
 
-`inputEncryptedChat#f141b5e1 chat_id:int access_hash:long = InputEncryptedChat;`
+```c++
+inputEncryptedChat#f141b5e1 chat_id:int access_hash:long = InputEncryptedChat;
+```
 
 #### Parameters:
 

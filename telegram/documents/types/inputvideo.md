@@ -9,7 +9,9 @@
 
 #### Schema:
 
-`inputVideoEmpty#5508ec75 = InputVideo;`
+```c++
+inputVideoEmpty#5508ec75 = InputVideo;
+```
 
 #### Parameters:
 
@@ -18,7 +20,9 @@
 
 #### Schema:
 
-`inputVideo#ee579652 id:long access_hash:long = InputVideo;`
+```c++
+inputVideo#ee579652 id:long access_hash:long = InputVideo;
+```
 
 #### Parameters:
 
