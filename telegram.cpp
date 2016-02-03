@@ -48,6 +48,7 @@
 #include "file/filehandler.h"
 #include "core/dcprovider.h"
 #include "telegram/coretypes.h"
+#include <core/updatesaid.h>
 
 Q_LOGGING_CATEGORY(TG_TELEGRAM, "tg.telegram")
 Q_LOGGING_CATEGORY(TG_LIB_SECRET, "tg.lib.secret")
@@ -99,6 +100,9 @@ public:
     QString mLastPhoneChecked;
     QString mLastLangCode;
     QList<InputContact> mLastContacts;
+
+    //Control for server not answering
+    QSharedPointer<UpdatesAid> mKeepAlive;
 };
 
 Telegram::Telegram(const QString &defaultHostAddress, qint16 defaultHostPort, qint16 defaultHostDcId, qint32 appId, const QString &appHash, const QString &phoneNumber, const QString &configPath, const QString &publicKeyFile) {
@@ -413,6 +417,8 @@ void Telegram::onDcProviderReady() {
     connect(prv->mFileHandler.data(), SIGNAL(error(qint64,qint32,const QString&)), SIGNAL(error(qint64,qint32,const QString&)));
     connect(prv->mFileHandler.data(), SIGNAL(messagesSentMedia(qint64,const UpdatesType&)), SLOT(onMessagesSendMediaAnswer(qint64,const UpdatesType&)));
     connect(prv->mFileHandler.data(), SIGNAL(messagesSendEncryptedFileAnswer(qint64,qint32,const EncryptedFile&)), SIGNAL(messagesSendEncryptedFileAnswer(qint64,qint32,const EncryptedFile&)));
+
+    prv->mKeepAlive = QSharedPointer<UpdatesAid>(new UpdatesAid(prv->mApi, prv->mDcProvider));
 
     // At this point we should test the main session state and emit by hand signals of connected/disconnected
     // depending on the connection state of the session. This is so because first main session connection, if done,
@@ -1922,6 +1928,9 @@ qint64 Telegram::updatesGetState() {
 
 qint64 Telegram::updatesGetDifference(qint32 pts, qint32 date, qint32 qts) {
     CHECK_API;
+    // Start a timer to see if got a response with the updates before timeout. If timeout,
+    // main session is discarded and created a new one, requesting for updates when just re-created
+    prv->mKeepAlive->waitForResponseInTime(pts, date, qts);
     return prv->mApi->updatesGetDifference(pts, date, qts);
 }
 
