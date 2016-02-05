@@ -130,6 +130,7 @@ public:
     qint64 uploadCancelFile(qint64 fileId);
 
     // additional public methods
+    void init(qint32 timeout);
     void init();
     bool isConnected();
     bool isLoggedIn();
@@ -228,6 +229,9 @@ private Q_SLOTS:
 
     void onUploadGetFileAnswer(qint64 fileId, const UploadGetFile &result);
     void onUploadSendFileAnswer(qint64 fileId, qint32 partId, qint32 uploaded, qint32 totalSize);
+
+protected:
+    void timerEvent(QTimerEvent *e);
 
 private:
     TelegramPrivate *prv;

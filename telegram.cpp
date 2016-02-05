@@ -68,17 +68,19 @@ public:
     QList<qint64> mLastRetryMessages;
 
     bool mSlept;
+    int initTimeout;
+    int initTimerId;
 
     QString configPath;
     QString phoneNumber;
+    QString publicKeyFile;
     Settings *mSettings;
     CryptoUtils *mCrypto;
 
-    DcProvider *mDcProvider;
+    QPointer<DcProvider> mDcProvider;
     FileHandler::Ptr mFileHandler;
 
     QString m_phoneCodeHash;
-    QString mSettingsId;
 
     // cached contacts
     QList<Contact> m_cachedContacts;
@@ -94,6 +96,13 @@ public:
 
     bool mLoggedIn;
     bool mCreatedSharedKeys;
+
+    QString appHash;
+    qint32 appId;
+
+    QString defaultHostAddress;
+    qint16 defaultHostPort;
+    qint16 defaultHostDcId;
 };
 
 Telegram::Telegram(const QString &defaultHostAddress, qint16 defaultHostPort, qint16 defaultHostDcId, qint32 appId, const QString &appHash, const QString &phoneNumber, const QString &configPath, const QString &publicKeyFile) :
@@ -103,48 +112,24 @@ Telegram::Telegram(const QString &defaultHostAddress, qint16 defaultHostPort, qi
     // manual workaround instead.
     // http://blog.qt.digia.com/blog/2014/03/11/qt-weekly-1-categorized-logging/
     prv = new TelegramPrivate;
+    prv->initTimeout = 0;
+    prv->initTimerId = 0;
     prv->configPath = configPath;
     prv->phoneNumber = phoneNumber;
+    prv->publicKeyFile = publicKeyFile;
+    prv->appHash = appHash;
+    prv->appId = appId;
+    prv->defaultHostAddress = defaultHostAddress;
+    prv->defaultHostPort = defaultHostPort;
+    prv->defaultHostDcId = defaultHostDcId;
+
+    prv->mEncrypter = 0;
+    prv->mDecrypter = 0;
+    prv->mDcProvider = 0;
+    prv->mCrypto = 0;
+    prv->mSettings = 0;
 
     QLoggingCategory::setFilterRules(QString(qgetenv("QT_LOGGING_RULES")));
-
-    prv->mSettingsId = defaultHostAddress + ":" + QString::number(defaultHostPort) + ":" + configPath +
-            ":" + QString::number(defaultHostPort) + ":" + QString::number(appId) + ":" + appHash +
-            phoneNumber;
-
-    prv->mSettings = new Settings();
-    prv->mSettings->setAppHash(appHash);
-    prv->mSettings->setAppId(appId);
-    prv->mSettings->setDefaultHostAddress(defaultHostAddress);
-    prv->mSettings->setDefaultHostDcId(defaultHostDcId);
-    prv->mSettings->setDefaultHostPort(defaultHostPort);
-
-    // load settings
-    if (!prv->mSettings->loadSettings(phoneNumber, configPath, publicKeyFile)) {
-        throw std::runtime_error("loadSettings failure");
-    }
-
-    prv->mCrypto = new CryptoUtils(prv->mSettings);
-
-    prv->mDcProvider = new DcProvider(prv->mSettings, prv->mCrypto);
-    prv->mDcProvider->setParent(this);
-
-    prv->mSecretState = SecretState(prv->mSettings);
-    prv->mEncrypter = new Encrypter(prv->mSettings);
-    prv->mDecrypter = new Decrypter(prv->mSettings);
-
-    connect(prv->mDecrypter, &Decrypter::sequenceNumberGap,
-            this, &Telegram::onSequenceNumberGap);
-
-    prv->mSecretState.load();
-
-    connect(prv->mDcProvider, &DcProvider::fatalError, this, &Telegram::fatalError);
-    // activate dc provider ready signal
-    connect(prv->mDcProvider, &DcProvider::dcProviderReady, this, &Telegram::onDcProviderReady);
-    // activate rest of dc provider signal connections
-    connect(prv->mDcProvider, &DcProvider::authNeeded, this, &Telegram::authNeeded);
-    connect(prv->mDcProvider, &DcProvider::authTransferCompleted, this, &Telegram::onAuthLoggedIn);
-    connect(prv->mDcProvider, &DcProvider::error, this, &Telegram::error);
 }
 
 bool Telegram::sleep() {
@@ -161,7 +146,7 @@ bool Telegram::sleep() {
 
 bool Telegram::wake() {
     // wake only if slept and library already logged in. Returns true if wake operation completes
-    if (prv->mSlept && prv->mLibraryState >= LoggedIn) {
+    if (prv->mSlept && prv->mDcProvider && prv->mLibraryState >= LoggedIn) {
         connect(mApi.data(), &TelegramApi::mainSessionReady, this, &Telegram::woken, Qt::UniqueConnection);
         DC *dc = prv->mDcProvider->getWorkingDc();
         mApi->createMainSessionToDc(dc);
@@ -185,14 +170,66 @@ void Telegram::setPhoneNumber(const QString &phoneNumber) {
 }
 
 void Telegram::init() {
+    init(timeOut());
+}
+
+void Telegram::init(qint32 timeout) {
     // check the auth values stored in settings, check the available DCs config data if there is
     // connection to servers, and emit signals depending on user authenticated or not.
+    if(mApi)
+        return;
+
+    if(prv->mEncrypter) delete prv->mEncrypter;
+    if(prv->mDecrypter) delete prv->mDecrypter;
+    if(prv->mDcProvider) delete prv->mDcProvider;
+    if(prv->mCrypto) delete prv->mCrypto;
+    if(prv->mSettings) delete prv->mSettings;
+
+    prv->mSettings = new Settings();
+    prv->mSettings->setAppHash(prv->appHash);
+    prv->mSettings->setAppId(prv->appId);
+    prv->mSettings->setDefaultHostAddress(prv->defaultHostAddress);
+    prv->mSettings->setDefaultHostDcId(prv->defaultHostDcId);
+    prv->mSettings->setDefaultHostPort(prv->defaultHostPort);
+
+    // load settings
+    if (!prv->mSettings->loadSettings(prv->phoneNumber, prv->configPath, prv->publicKeyFile)) {
+        throw std::runtime_error("loadSettings failure");
+    }
+
+    prv->mCrypto = new CryptoUtils(prv->mSettings);
+
+    prv->mDcProvider = new DcProvider(prv->mSettings, prv->mCrypto);
+    prv->mDcProvider->setParent(this);
+
+    connect(prv->mDcProvider.data(), &DcProvider::fatalError, this, &Telegram::fatalError);
+    // activate dc provider ready signal
+    connect(prv->mDcProvider.data(), &DcProvider::dcProviderReady, this, &Telegram::onDcProviderReady);
+    // activate rest of dc provider signal connections
+    connect(prv->mDcProvider.data(), &DcProvider::authNeeded, this, &Telegram::authNeeded);
+    connect(prv->mDcProvider.data(), &DcProvider::authTransferCompleted, this, &Telegram::onAuthLoggedIn);
+    connect(prv->mDcProvider.data(), &DcProvider::error, this, &Telegram::error);
+
+    prv->mSecretState = SecretState(prv->mSettings);
+    prv->mEncrypter = new Encrypter(prv->mSettings);
+    prv->mDecrypter = new Decrypter(prv->mSettings);
+
+    connect(prv->mDecrypter, &Decrypter::sequenceNumberGap,
+            this, &Telegram::onSequenceNumberGap);
+
+    prv->mSecretState.load();
     prv->mDcProvider->initialize();
+
+    prv->initTimeout = timeout;
+    prv->initTimerId = startTimer(prv->initTimeout);
 }
 
 Telegram::~Telegram() {
-    delete prv->mDcProvider;
-    delete prv->mSettings;
+    if(prv->mEncrypter) delete prv->mEncrypter;
+    if(prv->mDecrypter) delete prv->mDecrypter;
+    if(prv->mDcProvider) delete prv->mDcProvider;
+    if(prv->mCrypto) delete prv->mCrypto;
+    if(prv->mSettings) delete prv->mSettings;
     delete prv;
 }
 
@@ -693,6 +730,20 @@ void Telegram::onUploadGetFileAnswer(qint64 fileId, const UploadGetFile &result)
 void Telegram::onUploadSendFileAnswer(qint64 fileId, qint32 partId, qint32 uploaded, qint32 totalSize)
 {
     Q_EMIT uploadSendFileAnswer(fileId, partId, uploaded, totalSize);
+}
+
+void Telegram::timerEvent(QTimerEvent *e)
+{
+    if(e->timerId() == prv->initTimerId)
+    {
+        killTimer(prv->initTimerId);
+        prv->initTimerId = 0;
+        qDebug() << "Timeout error initializing. Retrying...";
+        if(!mApi)
+            init(prv->initTimeout);
+    }
+    else
+        TelegramCore::timerEvent(e);
 }
 
 SecretChatMessage Telegram::toSecretChatMessage(const EncryptedMessage &encrypted) {
