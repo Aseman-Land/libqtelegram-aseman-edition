@@ -424,6 +424,17 @@ void Telegram::onDcProviderReady() {
     }
 }
 
+void Telegram::dumpMainSession() {
+    if (prv->mApi){
+        qDebug() << "mApi:" << prv->mApi;
+        if (prv->mApi->mainSession()){
+            qDebug() << "mainSession:" << prv->mApi->mainSession();
+            qDebug() << "state:" << prv->mApi->mainSession()->state();
+            qDebug() << "isValid:" << prv->mApi->mainSession()->isValid();
+        }
+    }
+}
+
 qint64 Telegram::messagesCreateEncryptedChat(const InputUser &user) {
     qCDebug(TG_LIB_SECRET) << "creating new encrypted chat";
     // generate a new object where store all the needed secret chat data

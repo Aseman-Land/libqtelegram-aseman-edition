@@ -1667,7 +1667,13 @@ qint64 Api::updatesGetState() {
     return mMainSession->sendQuery(p, &updatesGetStateMethods, QVariant(), __FUNCTION__ );
 }
 
+//TODO TRACE
+#include <QDebug>
 void Api::onUpdatesGetDifferenceAnswer(Query *q, InboundPkt &inboundPkt) {
+
+    //TODO TRACE
+    qDebug() << __PRETTY_FUNCTION__;
+
     const UpdatesDifference &result = Functions::Updates::getDifferenceResult(&inboundPkt);
     switch(static_cast<int>(result.classType()))
     {
@@ -1690,6 +1696,10 @@ qint64 Api::updatesGetDifference(qint32 pts, qint32 date, qint32 qts) {
     DEBUG_FUNCTION
     OutboundPkt p(mSettings);
     Functions::Updates::getDifference(&p, pts, date, qts);
+
+    //TODO TRACE
+    qDebug() << __PRETTY_FUNCTION__;
+
     return mMainSession->sendQuery(p, &updatesGetDifferenceMethods, QVariant(), __FUNCTION__ );
 }
 

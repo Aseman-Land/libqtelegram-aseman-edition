@@ -37,7 +37,11 @@ Connection::Connection(const QString &host, qint32 port, QObject *parent) :
     mOpLength(0) {
     mBuffer.clear();
 
-    setupSocket();
+    connect(this, SIGNAL(connected()), SLOT(onConnected()));
+    connect(this, SIGNAL(disconnected()), SLOT(onDisconnected()));
+    connect(this, SIGNAL(readyRead()), SLOT(onReadyRead()));
+    connect(this, SIGNAL(error(QAbstractSocket::SocketError)), SLOT(onError(QAbstractSocket::SocketError)));
+    connect(this, SIGNAL(stateChanged(QAbstractSocket::SocketState)), SLOT(onStateChanged(QAbstractSocket::SocketState)));
 
     connect(&mAsserter,SIGNAL(fatalError()), SIGNAL(fatalError()));
 }
@@ -55,7 +59,7 @@ void Connection::setupSocket() {
     int fd = socketDescriptor();
     setsockopt(fd, SOL_SOCKET, SO_KEEPALIVE, &enableKeepAlive, sizeof(enableKeepAlive));
 
-    int maxIdle = 10; // half seconds = 5 seconds
+    int maxIdle = 5; // half seconds = 5 seconds
     setsockopt(fd, IPPROTO_TCP, TCP_KEEPIDLE, &maxIdle, sizeof(maxIdle));
 
     int count = 3; // send up to 3 keepalive packets out, then disconnect if no response
@@ -113,13 +117,14 @@ QByteArray Connection::readAll() {
 void Connection::connectToServer() {
     Q_ASSERT(!m_host.isEmpty());
     Q_ASSERT(m_port);
-
-    connect(this, SIGNAL(connected()), SLOT(onConnected()), Qt::UniqueConnection);
-    connect(this, SIGNAL(disconnected()), SLOT(onDisconnected()), Qt::UniqueConnection);
-    connect(this, SIGNAL(readyRead()), SLOT(onReadyRead()), Qt::UniqueConnection);
-    connect(this, SIGNAL(error(QAbstractSocket::SocketError)), SLOT(onError(QAbstractSocket::SocketError)), Qt::UniqueConnection);
-
     connectToHost(m_host, m_port);
+}
+
+void Connection::onStateChanged(QAbstractSocket::SocketState state) {
+    //TODO TRACE
+    qDebug() << "Socket state changed to" << state;
+
+    qCDebug(TG_CORE_CONNECTION) << "Socket state changed to " << state;
 }
 
 /*
@@ -149,10 +154,17 @@ QAbstractSocket::TemporaryError                     22	A temporary error occurre
 QAbstractSocket::UnknownSocketError                 -1	An unidentified error occurred.
 */
 void Connection::onError(QAbstractSocket::SocketError error) {
+    //TODO TRACE
+    qDebug() << "SocketError:" << QString::number(error) << errorString();
     qCWarning(TG_CORE_CONNECTION) << "SocketError:" << QString::number(error) << errorString();
-    abort();
-    if (!mReconnectTimerId) {
-        mReconnectTimerId = startTimer(RECONNECT_TIMEOUT);
+    // retry if network error until connected. This way we don't depend on any external component that
+    // has to inform this socket about the connectivity. This can also be substituted by other means to
+    // know the real state of the network before retrying reconnect.
+    if (error == QAbstractSocket::NetworkError) {
+        disconnectFromHost();
+        if (!mReconnectTimerId) {
+            mReconnectTimerId = startTimer(RECONNECT_TIMEOUT);
+        }
     }
 }
 
@@ -173,7 +185,12 @@ void Connection::stopReconnecting() {
 }
 
 void Connection::onConnected() {
+
+    //TODO TRACE
+    qDebug() << "Socket connected";
+
     // stop trying reconnect if it was alive
+    setupSocket();
     stopReconnecting();
 
     // abridged version of the protocol requires sending 0xef byte at beginning
@@ -188,6 +205,9 @@ void Connection::onConnected() {
 
 void Connection::onDisconnected() {
     qCWarning(TG_CORE_CONNECTION) << "Socket disconnected";
+
+    //TODO TRACE
+    qDebug() << "Socket disconnected";
 }
 
 void Connection::onReadyRead() {

@@ -71,6 +71,7 @@ protected Q_SLOTS:
     void onDisconnected();
     void onReadyRead();
     void onError(QAbstractSocket::SocketError error);
+    void onStateChanged(QAbstractSocket::SocketState);
 };
 
 #endif // CONNECTION_H
