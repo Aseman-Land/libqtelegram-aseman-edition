@@ -22,6 +22,8 @@
 #include "connection.h"
 #include "util/constants.h"
 
+#include <QTimer>
+
 #ifdef Q_OS_LINUX
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -33,7 +35,6 @@ Q_LOGGING_CATEGORY(TG_CORE_CONNECTION, "tg.core.connection")
 Connection::Connection(const QString &host, qint32 port, QObject *parent) :
     QTcpSocket(parent),
     Endpoint(host, port),
-    mReconnectTimerId(0),
     mOpLength(0) {
     mBuffer.clear();
 
@@ -47,7 +48,6 @@ Connection::Connection(const QString &host, qint32 port, QObject *parent) :
 }
 
 Connection::~Connection() {
-    stopReconnecting();
 }
 
 void Connection::setupSocket() {
@@ -73,13 +73,7 @@ void Connection::setupSocket() {
 qint64 Connection::writeOut(const void *data, qint64 length){
     if (!length) { return 0; }
     Q_ASSERT(length > 0);
-    qint32 bytesWritten = write((const char *)data, length);
-    qCWarning(TG_CORE_CONNECTION) << "bytes written:" << bytesWritten;
-    if (bytesWritten == -1) {
-        abort();
-        connectToServer();
-    }
-    return bytesWritten;
+    return write((const char *)data, length);
 }
 
 qint32 Connection::peekIn(void *data, qint32 len) {
@@ -121,9 +115,6 @@ void Connection::connectToServer() {
 }
 
 void Connection::onStateChanged(QAbstractSocket::SocketState state) {
-    //TODO TRACE
-    qDebug() << "Socket state changed to" << state;
-
     qCDebug(TG_CORE_CONNECTION) << "Socket state changed to " << state;
 }
 
@@ -154,44 +145,21 @@ QAbstractSocket::TemporaryError                     22	A temporary error occurre
 QAbstractSocket::UnknownSocketError                 -1	An unidentified error occurred.
 */
 void Connection::onError(QAbstractSocket::SocketError error) {
-    //TODO TRACE
-    qDebug() << "SocketError:" << QString::number(error) << errorString();
     qCWarning(TG_CORE_CONNECTION) << "SocketError:" << QString::number(error) << errorString();
-    // retry if network error until connected. This way we don't depend on any external component that
-    // has to inform this socket about the connectivity. This can also be substituted by other means to
-    // know the real state of the network before retrying reconnect.
-    if (error == QAbstractSocket::NetworkError) {
-        disconnectFromHost();
-        if (!mReconnectTimerId) {
-            mReconnectTimerId = startTimer(RECONNECT_TIMEOUT);
+    if (error <= QAbstractSocket::NetworkError) {
+        if (state() == QAbstractSocket::ConnectedState || state() == QAbstractSocket::ConnectingState) {
+            disconnectFromHost();
         }
-    }
-}
-
-void Connection::timerEvent(QTimerEvent *) {
-    if (state() != QAbstractSocket::ConnectingState && state() != QAbstractSocket::ConnectedState) {
-        qCWarning(TG_CORE_CONNECTION) << "Trying to reconect to host";
-        connectToServer();
-    } else {
-        stopReconnecting();
-    }
-}
-
-void Connection::stopReconnecting() {
-    if (mReconnectTimerId) {
-        killTimer(mReconnectTimerId);
-        mReconnectTimerId = 0;
+        // From http://doc.qt.io/qt-5/qabstractsocket.html#error
+        // "When this signal is emitted, the socket may not be ready for a reconnect attempt."
+        // Let's wait a while before reconnecting to ensure socket is ready
+        QTimer::singleShot(100, this, SLOT(connectToServer()));
     }
 }
 
 void Connection::onConnected() {
-
-    //TODO TRACE
-    qDebug() << "Socket connected";
-
     // stop trying reconnect if it was alive
     setupSocket();
-    stopReconnecting();
 
     // abridged version of the protocol requires sending 0xef byte at beginning
     unsigned char byte = 0xef;
@@ -205,9 +173,7 @@ void Connection::onConnected() {
 
 void Connection::onDisconnected() {
     qCWarning(TG_CORE_CONNECTION) << "Socket disconnected";
-
-    //TODO TRACE
-    qDebug() << "Socket disconnected";
+    reset();
 }
 
 void Connection::onReadyRead() {

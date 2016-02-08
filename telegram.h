@@ -51,8 +51,6 @@ public:
              const QString &phoneNumber, const QString &configPath = QString("~/.telegram"), const QString &publicKeyFile = QString("tg.pub"));
     ~Telegram();
 
-    void dumpMainSession();
-
     QString defaultHostAddress();
     qint16 defaultHostPort();
     qint16 defaultHostDcId();

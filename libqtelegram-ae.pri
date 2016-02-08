@@ -49,7 +49,6 @@ SOURCES += \
     $$PWD/core/query.cpp \
     $$PWD/core/session.cpp \
     $$PWD/core/dcauth.cpp \
-    $$PWD/core/updatesaid.cpp \
     $$PWD/telegram.cpp \
     $$PWD/file/uploadfileengine.cpp
 
@@ -84,7 +83,6 @@ HEADERS += \
     $$PWD/core/api.h \
     $$PWD/core/inboundpkt.h \
     $$PWD/core/dcauth.h \
-    $$PWD/core/updatesaid.h \
     $$PWD/core/endpoint.h \
     $$PWD/core/eventtimer.h \
     $$PWD/core/dc.h \
