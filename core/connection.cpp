@@ -71,6 +71,7 @@ void Connection::setupSocket() {
 }
 
 qint64 Connection::writeOut(const void *data, qint64 length){
+    if (state() != QAbstractSocket::ConnectedState) { return -1; }
     if (!length) { return 0; }
     Q_ASSERT(length > 0);
     return write((const char *)data, length);
@@ -150,10 +151,18 @@ void Connection::onError(QAbstractSocket::SocketError error) {
         if (state() == QAbstractSocket::ConnectedState || state() == QAbstractSocket::ConnectingState) {
             disconnectFromHost();
         }
+
+        qint32 reconnectionDelay = 0;
+        if (errorString() == "Network unreachable") {
+            // In this case, there is no way to reach the server because the physical link
+            // is broken (disconnected all connections). Don't retry reconnecting continously
+            // and insert a delay between reconnection attempts.
+            reconnectionDelay = 5000;
+        }
         // From http://doc.qt.io/qt-5/qabstractsocket.html#error
         // "When this signal is emitted, the socket may not be ready for a reconnect attempt."
-        // Let's wait a while before reconnecting to ensure socket is ready
-        QTimer::singleShot(100, this, SLOT(connectToServer()));
+        // Let's wait for the event loop spin once
+        QTimer::singleShot(reconnectionDelay, this, SLOT(connectToServer()));
     }
 }
 
@@ -173,7 +182,6 @@ void Connection::onConnected() {
 
 void Connection::onDisconnected() {
     qCWarning(TG_CORE_CONNECTION) << "Socket disconnected";
-    reset();
 }
 
 void Connection::onReadyRead() {
