@@ -25,7 +25,7 @@ class LIBQTELEGRAMSHARED_EXPORT DialogObject : public TelegramTypeQObject
     Q_PROPERTY(qint32 unreadCount READ unreadCount WRITE setUnreadCount NOTIFY unreadCountChanged)
     Q_PROPERTY(qint32 unreadImportantCount READ unreadImportantCount WRITE setUnreadImportantCount NOTIFY unreadImportantCountChanged)
     Q_PROPERTY(Dialog core READ core WRITE setCore NOTIFY coreChanged)
-    Q_PROPERTY(int classType READ classType WRITE setClassType NOTIFY classTypeChanged)
+    Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum DialogType {
@@ -61,8 +61,8 @@ public:
     void setUnreadImportantCount(qint32 unreadImportantCount);
     qint32 unreadImportantCount() const;
 
-    void setClassType(int classType);
-    int classType() const;
+    void setClassType(quint32 classType);
+    quint32 classType() const;
 
     void setCore(const Dialog &core);
     Dialog core() const;

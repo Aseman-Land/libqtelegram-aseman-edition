@@ -106,10 +106,13 @@ bool ContactsLinkObject::operator ==(const ContactsLink &b) const {
     return m_core == b;
 }
 
-void ContactsLinkObject::setClassType(int classType) {
+void ContactsLinkObject::setClassType(quint32 classType) {
     ContactsLink::ContactsLinkType result;
     switch(classType) {
     case TypeContactsLink:
+        result = ContactsLink::typeContactsLink;
+        break;
+    default:
         result = ContactsLink::typeContactsLink;
         break;
     }
@@ -120,10 +123,13 @@ void ContactsLinkObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int ContactsLinkObject::classType() const {
+quint32 ContactsLinkObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case ContactsLink::typeContactsLink:
+        result = TypeContactsLink;
+        break;
+    default:
         result = TypeContactsLink;
         break;
     }

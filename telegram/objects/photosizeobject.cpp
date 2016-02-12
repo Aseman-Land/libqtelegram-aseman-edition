@@ -116,7 +116,7 @@ bool PhotoSizeObject::operator ==(const PhotoSize &b) const {
     return m_core == b;
 }
 
-void PhotoSizeObject::setClassType(int classType) {
+void PhotoSizeObject::setClassType(quint32 classType) {
     PhotoSize::PhotoSizeType result;
     switch(classType) {
     case TypePhotoSizeEmpty:
@@ -128,6 +128,9 @@ void PhotoSizeObject::setClassType(int classType) {
     case TypePhotoCachedSize:
         result = PhotoSize::typePhotoCachedSize;
         break;
+    default:
+        result = PhotoSize::typePhotoSizeEmpty;
+        break;
     }
 
     if(m_core.classType() == result) return;
@@ -136,7 +139,7 @@ void PhotoSizeObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int PhotoSizeObject::classType() const {
+quint32 PhotoSizeObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case PhotoSize::typePhotoSizeEmpty:
@@ -147,6 +150,9 @@ int PhotoSizeObject::classType() const {
         break;
     case PhotoSize::typePhotoCachedSize:
         result = TypePhotoCachedSize;
+        break;
+    default:
+        result = TypePhotoSizeEmpty;
         break;
     }
 

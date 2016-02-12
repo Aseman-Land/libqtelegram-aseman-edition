@@ -20,7 +20,7 @@ class LIBQTELEGRAMSHARED_EXPORT AccountPasswordInputSettingsObject : public Tele
     Q_PROPERTY(QByteArray newPasswordHash READ newPasswordHash WRITE setNewPasswordHash NOTIFY newPasswordHashChanged)
     Q_PROPERTY(QByteArray newSalt READ newSalt WRITE setNewSalt NOTIFY newSaltChanged)
     Q_PROPERTY(AccountPasswordInputSettings core READ core WRITE setCore NOTIFY coreChanged)
-    Q_PROPERTY(int classType READ classType WRITE setClassType NOTIFY classTypeChanged)
+    Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum AccountPasswordInputSettingsType {
@@ -46,8 +46,8 @@ public:
     void setNewSalt(const QByteArray &newSalt);
     QByteArray newSalt() const;
 
-    void setClassType(int classType);
-    int classType() const;
+    void setClassType(quint32 classType);
+    quint32 classType() const;
 
     void setCore(const AccountPasswordInputSettings &core);
     AccountPasswordInputSettings core() const;

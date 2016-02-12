@@ -22,7 +22,7 @@ class LIBQTELEGRAMSHARED_EXPORT AudioObject : public TelegramTypeQObject
     Q_PROPERTY(QString mimeType READ mimeType WRITE setMimeType NOTIFY mimeTypeChanged)
     Q_PROPERTY(qint32 size READ size WRITE setSize NOTIFY sizeChanged)
     Q_PROPERTY(Audio core READ core WRITE setCore NOTIFY coreChanged)
-    Q_PROPERTY(int classType READ classType WRITE setClassType NOTIFY classTypeChanged)
+    Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum AudioType {
@@ -55,8 +55,8 @@ public:
     void setSize(qint32 size);
     qint32 size() const;
 
-    void setClassType(int classType);
-    int classType() const;
+    void setClassType(quint32 classType);
+    quint32 classType() const;
 
     void setCore(const Audio &core);
     Audio core() const;

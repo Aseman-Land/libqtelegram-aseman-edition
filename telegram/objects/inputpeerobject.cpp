@@ -79,7 +79,7 @@ bool InputPeerObject::operator ==(const InputPeer &b) const {
     return m_core == b;
 }
 
-void InputPeerObject::setClassType(int classType) {
+void InputPeerObject::setClassType(quint32 classType) {
     InputPeer::InputPeerType result;
     switch(classType) {
     case TypeInputPeerEmpty:
@@ -97,6 +97,9 @@ void InputPeerObject::setClassType(int classType) {
     case TypeInputPeerChannel:
         result = InputPeer::typeInputPeerChannel;
         break;
+    default:
+        result = InputPeer::typeInputPeerEmpty;
+        break;
     }
 
     if(m_core.classType() == result) return;
@@ -105,7 +108,7 @@ void InputPeerObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int InputPeerObject::classType() const {
+quint32 InputPeerObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case InputPeer::typeInputPeerEmpty:
@@ -122,6 +125,9 @@ int InputPeerObject::classType() const {
         break;
     case InputPeer::typeInputPeerChannel:
         result = TypeInputPeerChannel;
+        break;
+    default:
+        result = TypeInputPeerEmpty;
         break;
     }
 

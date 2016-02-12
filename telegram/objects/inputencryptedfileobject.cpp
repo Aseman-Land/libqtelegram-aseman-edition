@@ -91,7 +91,7 @@ bool InputEncryptedFileObject::operator ==(const InputEncryptedFile &b) const {
     return m_core == b;
 }
 
-void InputEncryptedFileObject::setClassType(int classType) {
+void InputEncryptedFileObject::setClassType(quint32 classType) {
     InputEncryptedFile::InputEncryptedFileType result;
     switch(classType) {
     case TypeInputEncryptedFileEmpty:
@@ -106,6 +106,9 @@ void InputEncryptedFileObject::setClassType(int classType) {
     case TypeInputEncryptedFileBigUploaded:
         result = InputEncryptedFile::typeInputEncryptedFileBigUploaded;
         break;
+    default:
+        result = InputEncryptedFile::typeInputEncryptedFileEmpty;
+        break;
     }
 
     if(m_core.classType() == result) return;
@@ -114,7 +117,7 @@ void InputEncryptedFileObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int InputEncryptedFileObject::classType() const {
+quint32 InputEncryptedFileObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case InputEncryptedFile::typeInputEncryptedFileEmpty:
@@ -128,6 +131,9 @@ int InputEncryptedFileObject::classType() const {
         break;
     case InputEncryptedFile::typeInputEncryptedFileBigUploaded:
         result = TypeInputEncryptedFileBigUploaded;
+        break;
+    default:
+        result = TypeInputEncryptedFileEmpty;
         break;
     }
 

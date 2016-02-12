@@ -55,7 +55,7 @@ bool InputDocumentObject::operator ==(const InputDocument &b) const {
     return m_core == b;
 }
 
-void InputDocumentObject::setClassType(int classType) {
+void InputDocumentObject::setClassType(quint32 classType) {
     InputDocument::InputDocumentType result;
     switch(classType) {
     case TypeInputDocumentEmpty:
@@ -63,6 +63,9 @@ void InputDocumentObject::setClassType(int classType) {
         break;
     case TypeInputDocument:
         result = InputDocument::typeInputDocument;
+        break;
+    default:
+        result = InputDocument::typeInputDocumentEmpty;
         break;
     }
 
@@ -72,7 +75,7 @@ void InputDocumentObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int InputDocumentObject::classType() const {
+quint32 InputDocumentObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case InputDocument::typeInputDocumentEmpty:
@@ -80,6 +83,9 @@ int InputDocumentObject::classType() const {
         break;
     case InputDocument::typeInputDocument:
         result = TypeInputDocument;
+        break;
+    default:
+        result = TypeInputDocumentEmpty;
         break;
     }
 

@@ -91,7 +91,7 @@ bool BotInfoObject::operator ==(const BotInfo &b) const {
     return m_core == b;
 }
 
-void BotInfoObject::setClassType(int classType) {
+void BotInfoObject::setClassType(quint32 classType) {
     BotInfo::BotInfoType result;
     switch(classType) {
     case TypeBotInfoEmpty:
@@ -99,6 +99,9 @@ void BotInfoObject::setClassType(int classType) {
         break;
     case TypeBotInfo:
         result = BotInfo::typeBotInfo;
+        break;
+    default:
+        result = BotInfo::typeBotInfoEmpty;
         break;
     }
 
@@ -108,7 +111,7 @@ void BotInfoObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int BotInfoObject::classType() const {
+quint32 BotInfoObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case BotInfo::typeBotInfoEmpty:
@@ -116,6 +119,9 @@ int BotInfoObject::classType() const {
         break;
     case BotInfo::typeBotInfo:
         result = TypeBotInfo;
+        break;
+    default:
+        result = TypeBotInfoEmpty;
         break;
     }
 

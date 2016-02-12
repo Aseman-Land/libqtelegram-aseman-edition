@@ -55,10 +55,13 @@ bool BotCommandObject::operator ==(const BotCommand &b) const {
     return m_core == b;
 }
 
-void BotCommandObject::setClassType(int classType) {
+void BotCommandObject::setClassType(quint32 classType) {
     BotCommand::BotCommandType result;
     switch(classType) {
     case TypeBotCommand:
+        result = BotCommand::typeBotCommand;
+        break;
+    default:
         result = BotCommand::typeBotCommand;
         break;
     }
@@ -69,10 +72,13 @@ void BotCommandObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int BotCommandObject::classType() const {
+quint32 BotCommandObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case BotCommand::typeBotCommand:
+        result = TypeBotCommand;
+        break;
+    default:
         result = TypeBotCommand;
         break;
     }

@@ -55,10 +55,13 @@ bool StickerPackObject::operator ==(const StickerPack &b) const {
     return m_core == b;
 }
 
-void StickerPackObject::setClassType(int classType) {
+void StickerPackObject::setClassType(quint32 classType) {
     StickerPack::StickerPackType result;
     switch(classType) {
     case TypeStickerPack:
+        result = StickerPack::typeStickerPack;
+        break;
+    default:
         result = StickerPack::typeStickerPack;
         break;
     }
@@ -69,10 +72,13 @@ void StickerPackObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int StickerPackObject::classType() const {
+quint32 StickerPackObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case StickerPack::typeStickerPack:
+        result = TypeStickerPack;
+        break;
+    default:
         result = TypeStickerPack;
         break;
     }

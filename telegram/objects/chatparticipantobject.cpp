@@ -67,7 +67,7 @@ bool ChatParticipantObject::operator ==(const ChatParticipant &b) const {
     return m_core == b;
 }
 
-void ChatParticipantObject::setClassType(int classType) {
+void ChatParticipantObject::setClassType(quint32 classType) {
     ChatParticipant::ChatParticipantType result;
     switch(classType) {
     case TypeChatParticipant:
@@ -79,6 +79,9 @@ void ChatParticipantObject::setClassType(int classType) {
     case TypeChatParticipantAdmin:
         result = ChatParticipant::typeChatParticipantAdmin;
         break;
+    default:
+        result = ChatParticipant::typeChatParticipant;
+        break;
     }
 
     if(m_core.classType() == result) return;
@@ -87,7 +90,7 @@ void ChatParticipantObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int ChatParticipantObject::classType() const {
+quint32 ChatParticipantObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case ChatParticipant::typeChatParticipant:
@@ -98,6 +101,9 @@ int ChatParticipantObject::classType() const {
         break;
     case ChatParticipant::typeChatParticipantAdmin:
         result = TypeChatParticipantAdmin;
+        break;
+    default:
+        result = TypeChatParticipant;
         break;
     }
 

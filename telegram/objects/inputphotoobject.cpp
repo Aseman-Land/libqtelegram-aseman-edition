@@ -55,7 +55,7 @@ bool InputPhotoObject::operator ==(const InputPhoto &b) const {
     return m_core == b;
 }
 
-void InputPhotoObject::setClassType(int classType) {
+void InputPhotoObject::setClassType(quint32 classType) {
     InputPhoto::InputPhotoType result;
     switch(classType) {
     case TypeInputPhotoEmpty:
@@ -63,6 +63,9 @@ void InputPhotoObject::setClassType(int classType) {
         break;
     case TypeInputPhoto:
         result = InputPhoto::typeInputPhoto;
+        break;
+    default:
+        result = InputPhoto::typeInputPhotoEmpty;
         break;
     }
 
@@ -72,7 +75,7 @@ void InputPhotoObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int InputPhotoObject::classType() const {
+quint32 InputPhotoObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case InputPhoto::typeInputPhotoEmpty:
@@ -80,6 +83,9 @@ int InputPhotoObject::classType() const {
         break;
     case InputPhoto::typeInputPhoto:
         result = TypeInputPhoto;
+        break;
+    default:
+        result = TypeInputPhotoEmpty;
         break;
     }
 

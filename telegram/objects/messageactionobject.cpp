@@ -128,7 +128,7 @@ bool MessageActionObject::operator ==(const MessageAction &b) const {
     return m_core == b;
 }
 
-void MessageActionObject::setClassType(int classType) {
+void MessageActionObject::setClassType(quint32 classType) {
     MessageAction::MessageActionType result;
     switch(classType) {
     case TypeMessageActionEmpty:
@@ -164,6 +164,9 @@ void MessageActionObject::setClassType(int classType) {
     case TypeMessageActionChannelMigrateFrom:
         result = MessageAction::typeMessageActionChannelMigrateFrom;
         break;
+    default:
+        result = MessageAction::typeMessageActionEmpty;
+        break;
     }
 
     if(m_core.classType() == result) return;
@@ -172,7 +175,7 @@ void MessageActionObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int MessageActionObject::classType() const {
+quint32 MessageActionObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case MessageAction::typeMessageActionEmpty:
@@ -207,6 +210,9 @@ int MessageActionObject::classType() const {
         break;
     case MessageAction::typeMessageActionChannelMigrateFrom:
         result = TypeMessageActionChannelMigrateFrom;
+        break;
+    default:
+        result = TypeMessageActionEmpty;
         break;
     }
 

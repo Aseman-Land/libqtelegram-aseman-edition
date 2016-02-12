@@ -91,10 +91,13 @@ bool UpdatesStateObject::operator ==(const UpdatesState &b) const {
     return m_core == b;
 }
 
-void UpdatesStateObject::setClassType(int classType) {
+void UpdatesStateObject::setClassType(quint32 classType) {
     UpdatesState::UpdatesStateType result;
     switch(classType) {
     case TypeUpdatesState:
+        result = UpdatesState::typeUpdatesState;
+        break;
+    default:
         result = UpdatesState::typeUpdatesState;
         break;
     }
@@ -105,10 +108,13 @@ void UpdatesStateObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int UpdatesStateObject::classType() const {
+quint32 UpdatesStateObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case UpdatesState::typeUpdatesState:
+        result = TypeUpdatesState;
+        break;
+    default:
         result = TypeUpdatesState;
         break;
     }

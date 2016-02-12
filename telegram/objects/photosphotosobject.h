@@ -18,7 +18,7 @@ class LIBQTELEGRAMSHARED_EXPORT PhotosPhotosObject : public TelegramTypeQObject
     Q_PROPERTY(QList<Photo> photos READ photos WRITE setPhotos NOTIFY photosChanged)
     Q_PROPERTY(QList<User> users READ users WRITE setUsers NOTIFY usersChanged)
     Q_PROPERTY(PhotosPhotos core READ core WRITE setCore NOTIFY coreChanged)
-    Q_PROPERTY(int classType READ classType WRITE setClassType NOTIFY classTypeChanged)
+    Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum PhotosPhotosType {
@@ -39,8 +39,8 @@ public:
     void setUsers(const QList<User> &users);
     QList<User> users() const;
 
-    void setClassType(int classType);
-    int classType() const;
+    void setClassType(quint32 classType);
+    quint32 classType() const;
 
     void setCore(const PhotosPhotos &core);
     PhotosPhotos core() const;

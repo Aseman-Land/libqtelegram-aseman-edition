@@ -79,7 +79,7 @@ bool PeerNotifySettingsObject::operator ==(const PeerNotifySettings &b) const {
     return m_core == b;
 }
 
-void PeerNotifySettingsObject::setClassType(int classType) {
+void PeerNotifySettingsObject::setClassType(quint32 classType) {
     PeerNotifySettings::PeerNotifySettingsType result;
     switch(classType) {
     case TypePeerNotifySettingsEmpty:
@@ -87,6 +87,9 @@ void PeerNotifySettingsObject::setClassType(int classType) {
         break;
     case TypePeerNotifySettings:
         result = PeerNotifySettings::typePeerNotifySettings;
+        break;
+    default:
+        result = PeerNotifySettings::typePeerNotifySettingsEmpty;
         break;
     }
 
@@ -96,7 +99,7 @@ void PeerNotifySettingsObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int PeerNotifySettingsObject::classType() const {
+quint32 PeerNotifySettingsObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case PeerNotifySettings::typePeerNotifySettingsEmpty:
@@ -104,6 +107,9 @@ int PeerNotifySettingsObject::classType() const {
         break;
     case PeerNotifySettings::typePeerNotifySettings:
         result = TypePeerNotifySettings;
+        break;
+    default:
+        result = TypePeerNotifySettingsEmpty;
         break;
     }
 

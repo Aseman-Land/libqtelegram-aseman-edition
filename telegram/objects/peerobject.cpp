@@ -67,7 +67,7 @@ bool PeerObject::operator ==(const Peer &b) const {
     return m_core == b;
 }
 
-void PeerObject::setClassType(int classType) {
+void PeerObject::setClassType(quint32 classType) {
     Peer::PeerType result;
     switch(classType) {
     case TypePeerUser:
@@ -79,6 +79,9 @@ void PeerObject::setClassType(int classType) {
     case TypePeerChannel:
         result = Peer::typePeerChannel;
         break;
+    default:
+        result = Peer::typePeerUser;
+        break;
     }
 
     if(m_core.classType() == result) return;
@@ -87,7 +90,7 @@ void PeerObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int PeerObject::classType() const {
+quint32 PeerObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case Peer::typePeerUser:
@@ -98,6 +101,9 @@ int PeerObject::classType() const {
         break;
     case Peer::typePeerChannel:
         result = TypePeerChannel;
+        break;
+    default:
+        result = TypePeerUser;
         break;
     }
 

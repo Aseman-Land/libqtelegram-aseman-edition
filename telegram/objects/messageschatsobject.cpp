@@ -43,10 +43,13 @@ bool MessagesChatsObject::operator ==(const MessagesChats &b) const {
     return m_core == b;
 }
 
-void MessagesChatsObject::setClassType(int classType) {
+void MessagesChatsObject::setClassType(quint32 classType) {
     MessagesChats::MessagesChatsType result;
     switch(classType) {
     case TypeMessagesChats:
+        result = MessagesChats::typeMessagesChats;
+        break;
+    default:
         result = MessagesChats::typeMessagesChats;
         break;
     }
@@ -57,10 +60,13 @@ void MessagesChatsObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int MessagesChatsObject::classType() const {
+quint32 MessagesChatsObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case MessagesChats::typeMessagesChats:
+        result = TypeMessagesChats;
+        break;
+    default:
         result = TypeMessagesChats;
         break;
     }

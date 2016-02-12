@@ -67,10 +67,13 @@ bool MessagesAffectedHistoryObject::operator ==(const MessagesAffectedHistory &b
     return m_core == b;
 }
 
-void MessagesAffectedHistoryObject::setClassType(int classType) {
+void MessagesAffectedHistoryObject::setClassType(quint32 classType) {
     MessagesAffectedHistory::MessagesAffectedHistoryType result;
     switch(classType) {
     case TypeMessagesAffectedHistory:
+        result = MessagesAffectedHistory::typeMessagesAffectedHistory;
+        break;
+    default:
         result = MessagesAffectedHistory::typeMessagesAffectedHistory;
         break;
     }
@@ -81,10 +84,13 @@ void MessagesAffectedHistoryObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int MessagesAffectedHistoryObject::classType() const {
+quint32 MessagesAffectedHistoryObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case MessagesAffectedHistory::typeMessagesAffectedHistory:
+        result = TypeMessagesAffectedHistory;
+        break;
+    default:
         result = TypeMessagesAffectedHistory;
         break;
     }

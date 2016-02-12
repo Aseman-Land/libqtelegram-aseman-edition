@@ -21,7 +21,7 @@ class LIBQTELEGRAMSHARED_EXPORT InputChatPhotoObject : public TelegramTypeQObjec
     Q_PROPERTY(InputFileObject* file READ file WRITE setFile NOTIFY fileChanged)
     Q_PROPERTY(InputPhotoObject* id READ id WRITE setId NOTIFY idChanged)
     Q_PROPERTY(InputChatPhoto core READ core WRITE setCore NOTIFY coreChanged)
-    Q_PROPERTY(int classType READ classType WRITE setClassType NOTIFY classTypeChanged)
+    Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum InputChatPhotoType {
@@ -43,8 +43,8 @@ public:
     void setId(InputPhotoObject* id);
     InputPhotoObject* id() const;
 
-    void setClassType(int classType);
-    int classType() const;
+    void setClassType(quint32 classType);
+    quint32 classType() const;
 
     void setCore(const InputChatPhoto &core);
     InputChatPhoto core() const;

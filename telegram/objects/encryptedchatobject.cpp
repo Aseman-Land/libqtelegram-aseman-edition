@@ -127,7 +127,7 @@ bool EncryptedChatObject::operator ==(const EncryptedChat &b) const {
     return m_core == b;
 }
 
-void EncryptedChatObject::setClassType(int classType) {
+void EncryptedChatObject::setClassType(quint32 classType) {
     EncryptedChat::EncryptedChatType result;
     switch(classType) {
     case TypeEncryptedChatEmpty:
@@ -145,6 +145,9 @@ void EncryptedChatObject::setClassType(int classType) {
     case TypeEncryptedChatDiscarded:
         result = EncryptedChat::typeEncryptedChatDiscarded;
         break;
+    default:
+        result = EncryptedChat::typeEncryptedChatEmpty;
+        break;
     }
 
     if(m_core.classType() == result) return;
@@ -153,7 +156,7 @@ void EncryptedChatObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int EncryptedChatObject::classType() const {
+quint32 EncryptedChatObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case EncryptedChat::typeEncryptedChatEmpty:
@@ -170,6 +173,9 @@ int EncryptedChatObject::classType() const {
         break;
     case EncryptedChat::typeEncryptedChatDiscarded:
         result = TypeEncryptedChatDiscarded;
+        break;
+    default:
+        result = TypeEncryptedChatEmpty;
         break;
     }
 

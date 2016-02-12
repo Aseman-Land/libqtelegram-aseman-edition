@@ -91,7 +91,7 @@ bool ReplyMarkupObject::operator ==(const ReplyMarkup &b) const {
     return m_core == b;
 }
 
-void ReplyMarkupObject::setClassType(int classType) {
+void ReplyMarkupObject::setClassType(quint32 classType) {
     ReplyMarkup::ReplyMarkupType result;
     switch(classType) {
     case TypeReplyKeyboardHide:
@@ -103,6 +103,9 @@ void ReplyMarkupObject::setClassType(int classType) {
     case TypeReplyKeyboardMarkup:
         result = ReplyMarkup::typeReplyKeyboardMarkup;
         break;
+    default:
+        result = ReplyMarkup::typeReplyKeyboardHide;
+        break;
     }
 
     if(m_core.classType() == result) return;
@@ -111,7 +114,7 @@ void ReplyMarkupObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int ReplyMarkupObject::classType() const {
+quint32 ReplyMarkupObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case ReplyMarkup::typeReplyKeyboardHide:
@@ -122,6 +125,9 @@ int ReplyMarkupObject::classType() const {
         break;
     case ReplyMarkup::typeReplyKeyboardMarkup:
         result = TypeReplyKeyboardMarkup;
+        break;
+    default:
+        result = TypeReplyKeyboardHide;
         break;
     }
 

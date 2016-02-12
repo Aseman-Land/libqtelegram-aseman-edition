@@ -16,7 +16,7 @@ class LIBQTELEGRAMSHARED_EXPORT AccountPasswordSettingsObject : public TelegramT
     Q_ENUMS(AccountPasswordSettingsType)
     Q_PROPERTY(QString email READ email WRITE setEmail NOTIFY emailChanged)
     Q_PROPERTY(AccountPasswordSettings core READ core WRITE setCore NOTIFY coreChanged)
-    Q_PROPERTY(int classType READ classType WRITE setClassType NOTIFY classTypeChanged)
+    Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum AccountPasswordSettingsType {
@@ -30,8 +30,8 @@ public:
     void setEmail(const QString &email);
     QString email() const;
 
-    void setClassType(int classType);
-    int classType() const;
+    void setClassType(quint32 classType);
+    quint32 classType() const;
 
     void setCore(const AccountPasswordSettings &core);
     AccountPasswordSettings core() const;

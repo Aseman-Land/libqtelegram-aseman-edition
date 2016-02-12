@@ -55,10 +55,13 @@ bool MessagesFoundGifsObject::operator ==(const MessagesFoundGifs &b) const {
     return m_core == b;
 }
 
-void MessagesFoundGifsObject::setClassType(int classType) {
+void MessagesFoundGifsObject::setClassType(quint32 classType) {
     MessagesFoundGifs::MessagesFoundGifsType result;
     switch(classType) {
     case TypeMessagesFoundGifs:
+        result = MessagesFoundGifs::typeMessagesFoundGifs;
+        break;
+    default:
         result = MessagesFoundGifs::typeMessagesFoundGifs;
         break;
     }
@@ -69,10 +72,13 @@ void MessagesFoundGifsObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int MessagesFoundGifsObject::classType() const {
+quint32 MessagesFoundGifsObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case MessagesFoundGifs::typeMessagesFoundGifs:
+        result = TypeMessagesFoundGifs;
+        break;
+    default:
         result = TypeMessagesFoundGifs;
         break;
     }

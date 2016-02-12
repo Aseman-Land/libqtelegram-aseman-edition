@@ -55,10 +55,13 @@ bool InputEncryptedChatObject::operator ==(const InputEncryptedChat &b) const {
     return m_core == b;
 }
 
-void InputEncryptedChatObject::setClassType(int classType) {
+void InputEncryptedChatObject::setClassType(quint32 classType) {
     InputEncryptedChat::InputEncryptedChatType result;
     switch(classType) {
     case TypeInputEncryptedChat:
+        result = InputEncryptedChat::typeInputEncryptedChat;
+        break;
+    default:
         result = InputEncryptedChat::typeInputEncryptedChat;
         break;
     }
@@ -69,10 +72,13 @@ void InputEncryptedChatObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int InputEncryptedChatObject::classType() const {
+quint32 InputEncryptedChatObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case InputEncryptedChat::typeInputEncryptedChat:
+        result = TypeInputEncryptedChat;
+        break;
+    default:
         result = TypeInputEncryptedChat;
         break;
     }

@@ -18,7 +18,7 @@ class LIBQTELEGRAMSHARED_EXPORT NearestDcObject : public TelegramTypeQObject
     Q_PROPERTY(qint32 nearestDc READ nearestDc WRITE setNearestDc NOTIFY nearestDcChanged)
     Q_PROPERTY(qint32 thisDc READ thisDc WRITE setThisDc NOTIFY thisDcChanged)
     Q_PROPERTY(NearestDc core READ core WRITE setCore NOTIFY coreChanged)
-    Q_PROPERTY(int classType READ classType WRITE setClassType NOTIFY classTypeChanged)
+    Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum NearestDcType {
@@ -38,8 +38,8 @@ public:
     void setThisDc(qint32 thisDc);
     qint32 thisDc() const;
 
-    void setClassType(int classType);
-    int classType() const;
+    void setClassType(quint32 classType);
+    quint32 classType() const;
 
     void setCore(const NearestDc &core);
     NearestDc core() const;

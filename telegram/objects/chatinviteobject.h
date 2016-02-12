@@ -23,7 +23,7 @@ class LIBQTELEGRAMSHARED_EXPORT ChatInviteObject : public TelegramTypeQObject
     Q_PROPERTY(bool publicValue READ publicValue WRITE setPublicValue NOTIFY publicValueChanged)
     Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
     Q_PROPERTY(ChatInvite core READ core WRITE setCore NOTIFY coreChanged)
-    Q_PROPERTY(int classType READ classType WRITE setClassType NOTIFY classTypeChanged)
+    Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum ChatInviteType {
@@ -56,8 +56,8 @@ public:
     void setTitle(const QString &title);
     QString title() const;
 
-    void setClassType(int classType);
-    int classType() const;
+    void setClassType(quint32 classType);
+    quint32 classType() const;
 
     void setCore(const ChatInvite &core);
     ChatInvite core() const;

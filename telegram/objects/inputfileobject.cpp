@@ -79,7 +79,7 @@ bool InputFileObject::operator ==(const InputFile &b) const {
     return m_core == b;
 }
 
-void InputFileObject::setClassType(int classType) {
+void InputFileObject::setClassType(quint32 classType) {
     InputFile::InputFileType result;
     switch(classType) {
     case TypeInputFile:
@@ -87,6 +87,9 @@ void InputFileObject::setClassType(int classType) {
         break;
     case TypeInputFileBig:
         result = InputFile::typeInputFileBig;
+        break;
+    default:
+        result = InputFile::typeInputFile;
         break;
     }
 
@@ -96,7 +99,7 @@ void InputFileObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int InputFileObject::classType() const {
+quint32 InputFileObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case InputFile::typeInputFile:
@@ -104,6 +107,9 @@ int InputFileObject::classType() const {
         break;
     case InputFile::typeInputFileBig:
         result = TypeInputFileBig;
+        break;
+    default:
+        result = TypeInputFile;
         break;
     }
 

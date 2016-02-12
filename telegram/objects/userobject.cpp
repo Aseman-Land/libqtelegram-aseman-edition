@@ -309,7 +309,7 @@ bool UserObject::operator ==(const User &b) const {
     return m_core == b;
 }
 
-void UserObject::setClassType(int classType) {
+void UserObject::setClassType(quint32 classType) {
     User::UserType result;
     switch(classType) {
     case TypeUserEmpty:
@@ -317,6 +317,9 @@ void UserObject::setClassType(int classType) {
         break;
     case TypeUser:
         result = User::typeUser;
+        break;
+    default:
+        result = User::typeUserEmpty;
         break;
     }
 
@@ -326,7 +329,7 @@ void UserObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int UserObject::classType() const {
+quint32 UserObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case User::typeUserEmpty:
@@ -334,6 +337,9 @@ int UserObject::classType() const {
         break;
     case User::typeUser:
         result = TypeUser;
+        break;
+    default:
+        result = TypeUserEmpty;
         break;
     }
 

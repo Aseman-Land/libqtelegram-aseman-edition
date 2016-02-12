@@ -43,10 +43,13 @@ bool HelpTermsOfServiceObject::operator ==(const HelpTermsOfService &b) const {
     return m_core == b;
 }
 
-void HelpTermsOfServiceObject::setClassType(int classType) {
+void HelpTermsOfServiceObject::setClassType(quint32 classType) {
     HelpTermsOfService::HelpTermsOfServiceType result;
     switch(classType) {
     case TypeHelpTermsOfService:
+        result = HelpTermsOfService::typeHelpTermsOfService;
+        break;
+    default:
         result = HelpTermsOfService::typeHelpTermsOfService;
         break;
     }
@@ -57,10 +60,13 @@ void HelpTermsOfServiceObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int HelpTermsOfServiceObject::classType() const {
+quint32 HelpTermsOfServiceObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case HelpTermsOfService::typeHelpTermsOfService:
+        result = TypeHelpTermsOfService;
+        break;
+    default:
         result = TypeHelpTermsOfService;
         break;
     }

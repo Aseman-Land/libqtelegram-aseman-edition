@@ -15,7 +15,7 @@ class LIBQTELEGRAMSHARED_EXPORT ChannelParticipantRoleObject : public TelegramTy
     Q_OBJECT
     Q_ENUMS(ChannelParticipantRoleType)
     Q_PROPERTY(ChannelParticipantRole core READ core WRITE setCore NOTIFY coreChanged)
-    Q_PROPERTY(int classType READ classType WRITE setClassType NOTIFY classTypeChanged)
+    Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum ChannelParticipantRoleType {
@@ -28,8 +28,8 @@ public:
     ChannelParticipantRoleObject(QObject *parent = 0);
     virtual ~ChannelParticipantRoleObject();
 
-    void setClassType(int classType);
-    int classType() const;
+    void setClassType(quint32 classType);
+    quint32 classType() const;
 
     void setCore(const ChannelParticipantRole &core);
     ChannelParticipantRole core() const;

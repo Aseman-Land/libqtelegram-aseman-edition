@@ -43,10 +43,13 @@ bool AccountAuthorizationsObject::operator ==(const AccountAuthorizations &b) co
     return m_core == b;
 }
 
-void AccountAuthorizationsObject::setClassType(int classType) {
+void AccountAuthorizationsObject::setClassType(quint32 classType) {
     AccountAuthorizations::AccountAuthorizationsType result;
     switch(classType) {
     case TypeAccountAuthorizations:
+        result = AccountAuthorizations::typeAccountAuthorizations;
+        break;
+    default:
         result = AccountAuthorizations::typeAccountAuthorizations;
         break;
     }
@@ -57,10 +60,13 @@ void AccountAuthorizationsObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int AccountAuthorizationsObject::classType() const {
+quint32 AccountAuthorizationsObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case AccountAuthorizations::typeAccountAuthorizations:
+        result = TypeAccountAuthorizations;
+        break;
+    default:
         result = TypeAccountAuthorizations;
         break;
     }

@@ -43,7 +43,7 @@ bool SendMessageActionObject::operator ==(const SendMessageAction &b) const {
     return m_core == b;
 }
 
-void SendMessageActionObject::setClassType(int classType) {
+void SendMessageActionObject::setClassType(quint32 classType) {
     SendMessageAction::SendMessageActionType result;
     switch(classType) {
     case TypeSendMessageTypingAction:
@@ -76,6 +76,9 @@ void SendMessageActionObject::setClassType(int classType) {
     case TypeSendMessageChooseContactAction:
         result = SendMessageAction::typeSendMessageChooseContactAction;
         break;
+    default:
+        result = SendMessageAction::typeSendMessageTypingAction;
+        break;
     }
 
     if(m_core.classType() == result) return;
@@ -84,7 +87,7 @@ void SendMessageActionObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int SendMessageActionObject::classType() const {
+quint32 SendMessageActionObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case SendMessageAction::typeSendMessageTypingAction:
@@ -116,6 +119,9 @@ int SendMessageActionObject::classType() const {
         break;
     case SendMessageAction::typeSendMessageChooseContactAction:
         result = TypeSendMessageChooseContactAction;
+        break;
+    default:
+        result = TypeSendMessageTypingAction;
         break;
     }
 

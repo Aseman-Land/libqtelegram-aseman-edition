@@ -19,7 +19,7 @@ class LIBQTELEGRAMSHARED_EXPORT MessagesDhConfigObject : public TelegramTypeQObj
     Q_PROPERTY(QByteArray random READ random WRITE setRandom NOTIFY randomChanged)
     Q_PROPERTY(qint32 version READ version WRITE setVersion NOTIFY versionChanged)
     Q_PROPERTY(MessagesDhConfig core READ core WRITE setCore NOTIFY coreChanged)
-    Q_PROPERTY(int classType READ classType WRITE setClassType NOTIFY classTypeChanged)
+    Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum MessagesDhConfigType {
@@ -43,8 +43,8 @@ public:
     void setVersion(qint32 version);
     qint32 version() const;
 
-    void setClassType(int classType);
-    int classType() const;
+    void setClassType(quint32 classType);
+    quint32 classType() const;
 
     void setCore(const MessagesDhConfig &core);
     MessagesDhConfig core() const;

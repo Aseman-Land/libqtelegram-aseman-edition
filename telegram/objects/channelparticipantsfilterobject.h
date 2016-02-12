@@ -15,7 +15,7 @@ class LIBQTELEGRAMSHARED_EXPORT ChannelParticipantsFilterObject : public Telegra
     Q_OBJECT
     Q_ENUMS(ChannelParticipantsFilterType)
     Q_PROPERTY(ChannelParticipantsFilter core READ core WRITE setCore NOTIFY coreChanged)
-    Q_PROPERTY(int classType READ classType WRITE setClassType NOTIFY classTypeChanged)
+    Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum ChannelParticipantsFilterType {
@@ -29,8 +29,8 @@ public:
     ChannelParticipantsFilterObject(QObject *parent = 0);
     virtual ~ChannelParticipantsFilterObject();
 
-    void setClassType(int classType);
-    int classType() const;
+    void setClassType(quint32 classType);
+    quint32 classType() const;
 
     void setCore(const ChannelParticipantsFilter &core);
     ChannelParticipantsFilter core() const;

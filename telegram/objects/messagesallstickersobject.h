@@ -17,7 +17,7 @@ class LIBQTELEGRAMSHARED_EXPORT MessagesAllStickersObject : public TelegramTypeQ
     Q_PROPERTY(qint32 hash READ hash WRITE setHash NOTIFY hashChanged)
     Q_PROPERTY(QList<StickerSet> sets READ sets WRITE setSets NOTIFY setsChanged)
     Q_PROPERTY(MessagesAllStickers core READ core WRITE setCore NOTIFY coreChanged)
-    Q_PROPERTY(int classType READ classType WRITE setClassType NOTIFY classTypeChanged)
+    Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum MessagesAllStickersType {
@@ -35,8 +35,8 @@ public:
     void setSets(const QList<StickerSet> &sets);
     QList<StickerSet> sets() const;
 
-    void setClassType(int classType);
-    int classType() const;
+    void setClassType(quint32 classType);
+    quint32 classType() const;
 
     void setCore(const MessagesAllStickers &core);
     MessagesAllStickers core() const;

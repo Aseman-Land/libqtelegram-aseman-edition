@@ -31,7 +31,7 @@ bool ChannelParticipantsFilterObject::operator ==(const ChannelParticipantsFilte
     return m_core == b;
 }
 
-void ChannelParticipantsFilterObject::setClassType(int classType) {
+void ChannelParticipantsFilterObject::setClassType(quint32 classType) {
     ChannelParticipantsFilter::ChannelParticipantsFilterType result;
     switch(classType) {
     case TypeChannelParticipantsRecent:
@@ -46,6 +46,9 @@ void ChannelParticipantsFilterObject::setClassType(int classType) {
     case TypeChannelParticipantsBots:
         result = ChannelParticipantsFilter::typeChannelParticipantsBots;
         break;
+    default:
+        result = ChannelParticipantsFilter::typeChannelParticipantsRecent;
+        break;
     }
 
     if(m_core.classType() == result) return;
@@ -54,7 +57,7 @@ void ChannelParticipantsFilterObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int ChannelParticipantsFilterObject::classType() const {
+quint32 ChannelParticipantsFilterObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case ChannelParticipantsFilter::typeChannelParticipantsRecent:
@@ -68,6 +71,9 @@ int ChannelParticipantsFilterObject::classType() const {
         break;
     case ChannelParticipantsFilter::typeChannelParticipantsBots:
         result = TypeChannelParticipantsBots;
+        break;
+    default:
+        result = TypeChannelParticipantsRecent;
         break;
     }
 

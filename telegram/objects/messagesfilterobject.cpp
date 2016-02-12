@@ -31,7 +31,7 @@ bool MessagesFilterObject::operator ==(const MessagesFilter &b) const {
     return m_core == b;
 }
 
-void MessagesFilterObject::setClassType(int classType) {
+void MessagesFilterObject::setClassType(quint32 classType) {
     MessagesFilter::MessagesFilterType result;
     switch(classType) {
     case TypeInputMessagesFilterEmpty:
@@ -64,6 +64,9 @@ void MessagesFilterObject::setClassType(int classType) {
     case TypeInputMessagesFilterGif:
         result = MessagesFilter::typeInputMessagesFilterGif;
         break;
+    default:
+        result = MessagesFilter::typeInputMessagesFilterEmpty;
+        break;
     }
 
     if(m_core.classType() == result) return;
@@ -72,7 +75,7 @@ void MessagesFilterObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int MessagesFilterObject::classType() const {
+quint32 MessagesFilterObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case MessagesFilter::typeInputMessagesFilterEmpty:
@@ -104,6 +107,9 @@ int MessagesFilterObject::classType() const {
         break;
     case MessagesFilter::typeInputMessagesFilterGif:
         result = TypeInputMessagesFilterGif;
+        break;
+    default:
+        result = TypeInputMessagesFilterEmpty;
         break;
     }
 

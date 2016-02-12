@@ -55,7 +55,7 @@ bool UserStatusObject::operator ==(const UserStatus &b) const {
     return m_core == b;
 }
 
-void UserStatusObject::setClassType(int classType) {
+void UserStatusObject::setClassType(quint32 classType) {
     UserStatus::UserStatusType result;
     switch(classType) {
     case TypeUserStatusEmpty:
@@ -76,6 +76,9 @@ void UserStatusObject::setClassType(int classType) {
     case TypeUserStatusLastMonth:
         result = UserStatus::typeUserStatusLastMonth;
         break;
+    default:
+        result = UserStatus::typeUserStatusEmpty;
+        break;
     }
 
     if(m_core.classType() == result) return;
@@ -84,7 +87,7 @@ void UserStatusObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int UserStatusObject::classType() const {
+quint32 UserStatusObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case UserStatus::typeUserStatusEmpty:
@@ -104,6 +107,9 @@ int UserStatusObject::classType() const {
         break;
     case UserStatus::typeUserStatusLastMonth:
         result = TypeUserStatusLastMonth;
+        break;
+    default:
+        result = TypeUserStatusEmpty;
         break;
     }
 

@@ -43,7 +43,7 @@ bool InputPrivacyRuleObject::operator ==(const InputPrivacyRule &b) const {
     return m_core == b;
 }
 
-void InputPrivacyRuleObject::setClassType(int classType) {
+void InputPrivacyRuleObject::setClassType(quint32 classType) {
     InputPrivacyRule::InputPrivacyRuleType result;
     switch(classType) {
     case TypeInputPrivacyValueAllowContacts:
@@ -64,6 +64,9 @@ void InputPrivacyRuleObject::setClassType(int classType) {
     case TypeInputPrivacyValueDisallowUsers:
         result = InputPrivacyRule::typeInputPrivacyValueDisallowUsers;
         break;
+    default:
+        result = InputPrivacyRule::typeInputPrivacyValueAllowContacts;
+        break;
     }
 
     if(m_core.classType() == result) return;
@@ -72,7 +75,7 @@ void InputPrivacyRuleObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int InputPrivacyRuleObject::classType() const {
+quint32 InputPrivacyRuleObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case InputPrivacyRule::typeInputPrivacyValueAllowContacts:
@@ -92,6 +95,9 @@ int InputPrivacyRuleObject::classType() const {
         break;
     case InputPrivacyRule::typeInputPrivacyValueDisallowUsers:
         result = TypeInputPrivacyValueDisallowUsers;
+        break;
+    default:
+        result = TypeInputPrivacyValueAllowContacts;
         break;
     }
 

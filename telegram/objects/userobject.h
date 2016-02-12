@@ -38,7 +38,7 @@ class LIBQTELEGRAMSHARED_EXPORT UserObject : public TelegramTypeQObject
     Q_PROPERTY(QString username READ username WRITE setUsername NOTIFY usernameChanged)
     Q_PROPERTY(bool verified READ verified WRITE setVerified NOTIFY verifiedChanged)
     Q_PROPERTY(User core READ core WRITE setCore NOTIFY coreChanged)
-    Q_PROPERTY(int classType READ classType WRITE setClassType NOTIFY classTypeChanged)
+    Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum UserType {
@@ -113,8 +113,8 @@ public:
     void setVerified(bool verified);
     bool verified() const;
 
-    void setClassType(int classType);
-    int classType() const;
+    void setClassType(quint32 classType);
+    quint32 classType() const;
 
     void setCore(const User &core);
     User core() const;

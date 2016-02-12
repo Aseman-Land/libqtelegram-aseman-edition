@@ -91,7 +91,7 @@ bool WallPaperObject::operator ==(const WallPaper &b) const {
     return m_core == b;
 }
 
-void WallPaperObject::setClassType(int classType) {
+void WallPaperObject::setClassType(quint32 classType) {
     WallPaper::WallPaperType result;
     switch(classType) {
     case TypeWallPaper:
@@ -99,6 +99,9 @@ void WallPaperObject::setClassType(int classType) {
         break;
     case TypeWallPaperSolid:
         result = WallPaper::typeWallPaperSolid;
+        break;
+    default:
+        result = WallPaper::typeWallPaper;
         break;
     }
 
@@ -108,7 +111,7 @@ void WallPaperObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int WallPaperObject::classType() const {
+quint32 WallPaperObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case WallPaper::typeWallPaper:
@@ -116,6 +119,9 @@ int WallPaperObject::classType() const {
         break;
     case WallPaper::typeWallPaperSolid:
         result = TypeWallPaperSolid;
+        break;
+    default:
+        result = TypeWallPaper;
         break;
     }
 

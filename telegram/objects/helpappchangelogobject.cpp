@@ -43,7 +43,7 @@ bool HelpAppChangelogObject::operator ==(const HelpAppChangelog &b) const {
     return m_core == b;
 }
 
-void HelpAppChangelogObject::setClassType(int classType) {
+void HelpAppChangelogObject::setClassType(quint32 classType) {
     HelpAppChangelog::HelpAppChangelogType result;
     switch(classType) {
     case TypeHelpAppChangelogEmpty:
@@ -51,6 +51,9 @@ void HelpAppChangelogObject::setClassType(int classType) {
         break;
     case TypeHelpAppChangelog:
         result = HelpAppChangelog::typeHelpAppChangelog;
+        break;
+    default:
+        result = HelpAppChangelog::typeHelpAppChangelogEmpty;
         break;
     }
 
@@ -60,7 +63,7 @@ void HelpAppChangelogObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int HelpAppChangelogObject::classType() const {
+quint32 HelpAppChangelogObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case HelpAppChangelog::typeHelpAppChangelogEmpty:
@@ -68,6 +71,9 @@ int HelpAppChangelogObject::classType() const {
         break;
     case HelpAppChangelog::typeHelpAppChangelog:
         result = TypeHelpAppChangelog;
+        break;
+    default:
+        result = TypeHelpAppChangelogEmpty;
         break;
     }
 

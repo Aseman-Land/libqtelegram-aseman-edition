@@ -79,7 +79,7 @@ bool HelpAppUpdateObject::operator ==(const HelpAppUpdate &b) const {
     return m_core == b;
 }
 
-void HelpAppUpdateObject::setClassType(int classType) {
+void HelpAppUpdateObject::setClassType(quint32 classType) {
     HelpAppUpdate::HelpAppUpdateType result;
     switch(classType) {
     case TypeHelpAppUpdate:
@@ -87,6 +87,9 @@ void HelpAppUpdateObject::setClassType(int classType) {
         break;
     case TypeHelpNoAppUpdate:
         result = HelpAppUpdate::typeHelpNoAppUpdate;
+        break;
+    default:
+        result = HelpAppUpdate::typeHelpAppUpdate;
         break;
     }
 
@@ -96,7 +99,7 @@ void HelpAppUpdateObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int HelpAppUpdateObject::classType() const {
+quint32 HelpAppUpdateObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case HelpAppUpdate::typeHelpAppUpdate:
@@ -104,6 +107,9 @@ int HelpAppUpdateObject::classType() const {
         break;
     case HelpAppUpdate::typeHelpNoAppUpdate:
         result = TypeHelpNoAppUpdate;
+        break;
+    default:
+        result = TypeHelpAppUpdate;
         break;
     }
 

@@ -56,7 +56,7 @@ bool InputNotifyPeerObject::operator ==(const InputNotifyPeer &b) const {
     return m_core == b;
 }
 
-void InputNotifyPeerObject::setClassType(int classType) {
+void InputNotifyPeerObject::setClassType(quint32 classType) {
     InputNotifyPeer::InputNotifyPeerType result;
     switch(classType) {
     case TypeInputNotifyPeer:
@@ -71,6 +71,9 @@ void InputNotifyPeerObject::setClassType(int classType) {
     case TypeInputNotifyAll:
         result = InputNotifyPeer::typeInputNotifyAll;
         break;
+    default:
+        result = InputNotifyPeer::typeInputNotifyPeer;
+        break;
     }
 
     if(m_core.classType() == result) return;
@@ -79,7 +82,7 @@ void InputNotifyPeerObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int InputNotifyPeerObject::classType() const {
+quint32 InputNotifyPeerObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case InputNotifyPeer::typeInputNotifyPeer:
@@ -93,6 +96,9 @@ int InputNotifyPeerObject::classType() const {
         break;
     case InputNotifyPeer::typeInputNotifyAll:
         result = TypeInputNotifyAll;
+        break;
+    default:
+        result = TypeInputNotifyPeer;
         break;
     }
 

@@ -34,7 +34,7 @@ class LIBQTELEGRAMSHARED_EXPORT WebPageObject : public TelegramTypeQObject
     Q_PROPERTY(QString type READ type WRITE setType NOTIFY typeChanged)
     Q_PROPERTY(QString url READ url WRITE setUrl NOTIFY urlChanged)
     Q_PROPERTY(WebPage core READ core WRITE setCore NOTIFY coreChanged)
-    Q_PROPERTY(int classType READ classType WRITE setClassType NOTIFY classTypeChanged)
+    Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum WebPageType {
@@ -98,8 +98,8 @@ public:
     void setUrl(const QString &url);
     QString url() const;
 
-    void setClassType(int classType);
-    int classType() const;
+    void setClassType(quint32 classType);
+    quint32 classType() const;
 
     void setCore(const WebPage &core);
     WebPage core() const;

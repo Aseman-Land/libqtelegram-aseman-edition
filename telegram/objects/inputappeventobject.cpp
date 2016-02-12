@@ -79,10 +79,13 @@ bool InputAppEventObject::operator ==(const InputAppEvent &b) const {
     return m_core == b;
 }
 
-void InputAppEventObject::setClassType(int classType) {
+void InputAppEventObject::setClassType(quint32 classType) {
     InputAppEvent::InputAppEventType result;
     switch(classType) {
     case TypeInputAppEvent:
+        result = InputAppEvent::typeInputAppEvent;
+        break;
+    default:
         result = InputAppEvent::typeInputAppEvent;
         break;
     }
@@ -93,10 +96,13 @@ void InputAppEventObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int InputAppEventObject::classType() const {
+quint32 InputAppEventObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case InputAppEvent::typeInputAppEvent:
+        result = TypeInputAppEvent;
+        break;
+    default:
         result = TypeInputAppEvent;
         break;
     }

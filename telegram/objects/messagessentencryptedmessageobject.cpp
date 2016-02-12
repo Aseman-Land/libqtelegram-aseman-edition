@@ -68,7 +68,7 @@ bool MessagesSentEncryptedMessageObject::operator ==(const MessagesSentEncrypted
     return m_core == b;
 }
 
-void MessagesSentEncryptedMessageObject::setClassType(int classType) {
+void MessagesSentEncryptedMessageObject::setClassType(quint32 classType) {
     MessagesSentEncryptedMessage::MessagesSentEncryptedMessageType result;
     switch(classType) {
     case TypeMessagesSentEncryptedMessage:
@@ -76,6 +76,9 @@ void MessagesSentEncryptedMessageObject::setClassType(int classType) {
         break;
     case TypeMessagesSentEncryptedFile:
         result = MessagesSentEncryptedMessage::typeMessagesSentEncryptedFile;
+        break;
+    default:
+        result = MessagesSentEncryptedMessage::typeMessagesSentEncryptedMessage;
         break;
     }
 
@@ -85,7 +88,7 @@ void MessagesSentEncryptedMessageObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int MessagesSentEncryptedMessageObject::classType() const {
+quint32 MessagesSentEncryptedMessageObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case MessagesSentEncryptedMessage::typeMessagesSentEncryptedMessage:
@@ -93,6 +96,9 @@ int MessagesSentEncryptedMessageObject::classType() const {
         break;
     case MessagesSentEncryptedMessage::typeMessagesSentEncryptedFile:
         result = TypeMessagesSentEncryptedFile;
+        break;
+    default:
+        result = TypeMessagesSentEncryptedMessage;
         break;
     }
 

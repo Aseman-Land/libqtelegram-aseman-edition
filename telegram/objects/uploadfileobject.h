@@ -19,7 +19,7 @@ class LIBQTELEGRAMSHARED_EXPORT UploadFileObject : public TelegramTypeQObject
     Q_PROPERTY(qint32 mtime READ mtime WRITE setMtime NOTIFY mtimeChanged)
     Q_PROPERTY(StorageFileTypeObject* type READ type WRITE setType NOTIFY typeChanged)
     Q_PROPERTY(UploadFile core READ core WRITE setCore NOTIFY coreChanged)
-    Q_PROPERTY(int classType READ classType WRITE setClassType NOTIFY classTypeChanged)
+    Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum UploadFileType {
@@ -39,8 +39,8 @@ public:
     void setType(StorageFileTypeObject* type);
     StorageFileTypeObject* type() const;
 
-    void setClassType(int classType);
-    int classType() const;
+    void setClassType(quint32 classType);
+    quint32 classType() const;
 
     void setCore(const UploadFile &core);
     UploadFile core() const;

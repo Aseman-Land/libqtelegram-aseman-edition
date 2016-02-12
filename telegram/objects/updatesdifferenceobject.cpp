@@ -165,7 +165,7 @@ bool UpdatesDifferenceObject::operator ==(const UpdatesDifference &b) const {
     return m_core == b;
 }
 
-void UpdatesDifferenceObject::setClassType(int classType) {
+void UpdatesDifferenceObject::setClassType(quint32 classType) {
     UpdatesDifference::UpdatesDifferenceType result;
     switch(classType) {
     case TypeUpdatesDifferenceEmpty:
@@ -177,6 +177,9 @@ void UpdatesDifferenceObject::setClassType(int classType) {
     case TypeUpdatesDifferenceSlice:
         result = UpdatesDifference::typeUpdatesDifferenceSlice;
         break;
+    default:
+        result = UpdatesDifference::typeUpdatesDifferenceEmpty;
+        break;
     }
 
     if(m_core.classType() == result) return;
@@ -185,7 +188,7 @@ void UpdatesDifferenceObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int UpdatesDifferenceObject::classType() const {
+quint32 UpdatesDifferenceObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case UpdatesDifference::typeUpdatesDifferenceEmpty:
@@ -196,6 +199,9 @@ int UpdatesDifferenceObject::classType() const {
         break;
     case UpdatesDifference::typeUpdatesDifferenceSlice:
         result = TypeUpdatesDifferenceSlice;
+        break;
+    default:
+        result = TypeUpdatesDifferenceEmpty;
         break;
     }
 

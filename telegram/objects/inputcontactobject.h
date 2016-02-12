@@ -19,7 +19,7 @@ class LIBQTELEGRAMSHARED_EXPORT InputContactObject : public TelegramTypeQObject
     Q_PROPERTY(QString lastName READ lastName WRITE setLastName NOTIFY lastNameChanged)
     Q_PROPERTY(QString phone READ phone WRITE setPhone NOTIFY phoneChanged)
     Q_PROPERTY(InputContact core READ core WRITE setCore NOTIFY coreChanged)
-    Q_PROPERTY(int classType READ classType WRITE setClassType NOTIFY classTypeChanged)
+    Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum InputContactType {
@@ -42,8 +42,8 @@ public:
     void setPhone(const QString &phone);
     QString phone() const;
 
-    void setClassType(int classType);
-    int classType() const;
+    void setClassType(quint32 classType);
+    quint32 classType() const;
 
     void setCore(const InputContact &core);
     InputContact core() const;

@@ -259,10 +259,13 @@ bool ConfigObject::operator ==(const Config &b) const {
     return m_core == b;
 }
 
-void ConfigObject::setClassType(int classType) {
+void ConfigObject::setClassType(quint32 classType) {
     Config::ConfigType result;
     switch(classType) {
     case TypeConfig:
+        result = Config::typeConfig;
+        break;
+    default:
         result = Config::typeConfig;
         break;
     }
@@ -273,10 +276,13 @@ void ConfigObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int ConfigObject::classType() const {
+quint32 ConfigObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case Config::typeConfig:
+        result = TypeConfig;
+        break;
+    default:
         result = TypeConfig;
         break;
     }

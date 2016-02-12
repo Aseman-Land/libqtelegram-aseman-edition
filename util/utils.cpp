@@ -259,13 +259,16 @@ void Utils::secureZeroMemory(void *dst, int val, size_t count) {
 
 RSA *Utils::rsaLoadPublicKey(const QString &publicKeyName) {
     RSA *pubKey = NULL;
-    FILE *f = fopen (publicKeyName.toLocal8Bit().data(), "r");
-    if (f == NULL) {
+    QFile file(publicKeyName);
+    if(!file.open(QFile::ReadOnly)) {
         qCWarning(TG_UTIL_UTILS) << "Couldn't open public key file" << publicKeyName;
         return NULL;
     }
-    pubKey = PEM_read_RSAPublicKey (f, NULL, NULL, NULL);
-    fclose (f);
+
+    QByteArray fileData = file.readAll();
+    BIO *bufio = BIO_new_mem_buf((void*)fileData.data(), fileData.length());
+    pubKey = PEM_read_bio_RSAPublicKey (bufio, NULL, NULL, NULL);
+    delete bufio;
     if (pubKey == NULL) {
         qCWarning(TG_UTIL_UTILS) << "PEM_read_RSAPublicKey returns NULL";
         return NULL;

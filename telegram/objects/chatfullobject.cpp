@@ -287,7 +287,7 @@ bool ChatFullObject::operator ==(const ChatFull &b) const {
     return m_core == b;
 }
 
-void ChatFullObject::setClassType(int classType) {
+void ChatFullObject::setClassType(quint32 classType) {
     ChatFull::ChatFullType result;
     switch(classType) {
     case TypeChatFull:
@@ -295,6 +295,9 @@ void ChatFullObject::setClassType(int classType) {
         break;
     case TypeChannelFull:
         result = ChatFull::typeChannelFull;
+        break;
+    default:
+        result = ChatFull::typeChatFull;
         break;
     }
 
@@ -304,7 +307,7 @@ void ChatFullObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int ChatFullObject::classType() const {
+quint32 ChatFullObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case ChatFull::typeChatFull:
@@ -312,6 +315,9 @@ int ChatFullObject::classType() const {
         break;
     case ChatFull::typeChannelFull:
         result = TypeChannelFull;
+        break;
+    default:
+        result = TypeChatFull;
         break;
     }
 

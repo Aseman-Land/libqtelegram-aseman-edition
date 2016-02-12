@@ -36,7 +36,7 @@ class LIBQTELEGRAMSHARED_EXPORT MessageMediaObject : public TelegramTypeQObject
     Q_PROPERTY(VideoObject* video READ video WRITE setVideo NOTIFY videoChanged)
     Q_PROPERTY(WebPageObject* webpage READ webpage WRITE setWebpage NOTIFY webpageChanged)
     Q_PROPERTY(MessageMedia core READ core WRITE setCore NOTIFY coreChanged)
-    Q_PROPERTY(int classType READ classType WRITE setClassType NOTIFY classTypeChanged)
+    Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum MessageMediaType {
@@ -101,8 +101,8 @@ public:
     void setWebpage(WebPageObject* webpage);
     WebPageObject* webpage() const;
 
-    void setClassType(int classType);
-    int classType() const;
+    void setClassType(quint32 classType);
+    quint32 classType() const;
 
     void setCore(const MessageMedia &core);
     MessageMedia core() const;

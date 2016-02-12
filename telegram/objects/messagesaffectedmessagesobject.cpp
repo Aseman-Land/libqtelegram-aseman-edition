@@ -55,10 +55,13 @@ bool MessagesAffectedMessagesObject::operator ==(const MessagesAffectedMessages 
     return m_core == b;
 }
 
-void MessagesAffectedMessagesObject::setClassType(int classType) {
+void MessagesAffectedMessagesObject::setClassType(quint32 classType) {
     MessagesAffectedMessages::MessagesAffectedMessagesType result;
     switch(classType) {
     case TypeMessagesAffectedMessages:
+        result = MessagesAffectedMessages::typeMessagesAffectedMessages;
+        break;
+    default:
         result = MessagesAffectedMessages::typeMessagesAffectedMessages;
         break;
     }
@@ -69,10 +72,13 @@ void MessagesAffectedMessagesObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int MessagesAffectedMessagesObject::classType() const {
+quint32 MessagesAffectedMessagesObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case MessagesAffectedMessages::typeMessagesAffectedMessages:
+        result = TypeMessagesAffectedMessages;
+        break;
+    default:
         result = TypeMessagesAffectedMessages;
         break;
     }

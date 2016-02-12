@@ -738,9 +738,11 @@ void Telegram::timerEvent(QTimerEvent *e)
     {
         killTimer(prv->initTimerId);
         prv->initTimerId = 0;
-        qDebug() << "Timeout error initializing. Retrying...";
         if(!mApi)
+        {
+            qDebug() << "Timeout error initializing. Retrying...";
             init(prv->initTimeout);
+        }
     }
     else
         TelegramCore::timerEvent(e);

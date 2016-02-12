@@ -19,7 +19,7 @@ class LIBQTELEGRAMSHARED_EXPORT FileLocationObject : public TelegramTypeQObject
     Q_PROPERTY(qint64 secret READ secret WRITE setSecret NOTIFY secretChanged)
     Q_PROPERTY(qint64 volumeId READ volumeId WRITE setVolumeId NOTIFY volumeIdChanged)
     Q_PROPERTY(FileLocation core READ core WRITE setCore NOTIFY coreChanged)
-    Q_PROPERTY(int classType READ classType WRITE setClassType NOTIFY classTypeChanged)
+    Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum FileLocationType {
@@ -43,8 +43,8 @@ public:
     void setVolumeId(qint64 volumeId);
     qint64 volumeId() const;
 
-    void setClassType(int classType);
-    int classType() const;
+    void setClassType(quint32 classType);
+    quint32 classType() const;
 
     void setCore(const FileLocation &core);
     FileLocation core() const;

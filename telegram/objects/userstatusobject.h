@@ -17,7 +17,7 @@ class LIBQTELEGRAMSHARED_EXPORT UserStatusObject : public TelegramTypeQObject
     Q_PROPERTY(qint32 expires READ expires WRITE setExpires NOTIFY expiresChanged)
     Q_PROPERTY(qint32 wasOnline READ wasOnline WRITE setWasOnline NOTIFY wasOnlineChanged)
     Q_PROPERTY(UserStatus core READ core WRITE setCore NOTIFY coreChanged)
-    Q_PROPERTY(int classType READ classType WRITE setClassType NOTIFY classTypeChanged)
+    Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum UserStatusType {
@@ -39,8 +39,8 @@ public:
     void setWasOnline(qint32 wasOnline);
     qint32 wasOnline() const;
 
-    void setClassType(int classType);
-    int classType() const;
+    void setClassType(quint32 classType);
+    quint32 classType() const;
 
     void setCore(const UserStatus &core);
     UserStatus core() const;

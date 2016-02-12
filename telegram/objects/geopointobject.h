@@ -17,7 +17,7 @@ class LIBQTELEGRAMSHARED_EXPORT GeoPointObject : public TelegramTypeQObject
     Q_PROPERTY(qreal lat READ lat WRITE setLat NOTIFY latChanged)
     Q_PROPERTY(qreal longValue READ longValue WRITE setLongValue NOTIFY longValueChanged)
     Q_PROPERTY(GeoPoint core READ core WRITE setCore NOTIFY coreChanged)
-    Q_PROPERTY(int classType READ classType WRITE setClassType NOTIFY classTypeChanged)
+    Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum GeoPointType {
@@ -35,8 +35,8 @@ public:
     void setLongValue(qreal longValue);
     qreal longValue() const;
 
-    void setClassType(int classType);
-    int classType() const;
+    void setClassType(quint32 classType);
+    quint32 classType() const;
 
     void setCore(const GeoPoint &core);
     GeoPoint core() const;

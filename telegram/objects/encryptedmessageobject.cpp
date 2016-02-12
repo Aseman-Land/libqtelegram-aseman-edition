@@ -104,7 +104,7 @@ bool EncryptedMessageObject::operator ==(const EncryptedMessage &b) const {
     return m_core == b;
 }
 
-void EncryptedMessageObject::setClassType(int classType) {
+void EncryptedMessageObject::setClassType(quint32 classType) {
     EncryptedMessage::EncryptedMessageType result;
     switch(classType) {
     case TypeEncryptedMessage:
@@ -112,6 +112,9 @@ void EncryptedMessageObject::setClassType(int classType) {
         break;
     case TypeEncryptedMessageService:
         result = EncryptedMessage::typeEncryptedMessageService;
+        break;
+    default:
+        result = EncryptedMessage::typeEncryptedMessage;
         break;
     }
 
@@ -121,7 +124,7 @@ void EncryptedMessageObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int EncryptedMessageObject::classType() const {
+quint32 EncryptedMessageObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case EncryptedMessage::typeEncryptedMessage:
@@ -129,6 +132,9 @@ int EncryptedMessageObject::classType() const {
         break;
     case EncryptedMessage::typeEncryptedMessageService:
         result = TypeEncryptedMessageService;
+        break;
+    default:
+        result = TypeEncryptedMessage;
         break;
     }
 

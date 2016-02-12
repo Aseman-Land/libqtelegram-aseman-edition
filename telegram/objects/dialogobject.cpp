@@ -153,7 +153,7 @@ bool DialogObject::operator ==(const Dialog &b) const {
     return m_core == b;
 }
 
-void DialogObject::setClassType(int classType) {
+void DialogObject::setClassType(quint32 classType) {
     Dialog::DialogType result;
     switch(classType) {
     case TypeDialog:
@@ -161,6 +161,9 @@ void DialogObject::setClassType(int classType) {
         break;
     case TypeDialogChannel:
         result = Dialog::typeDialogChannel;
+        break;
+    default:
+        result = Dialog::typeDialog;
         break;
     }
 
@@ -170,7 +173,7 @@ void DialogObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int DialogObject::classType() const {
+quint32 DialogObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case Dialog::typeDialog:
@@ -178,6 +181,9 @@ int DialogObject::classType() const {
         break;
     case Dialog::typeDialogChannel:
         result = TypeDialogChannel;
+        break;
+    default:
+        result = TypeDialog;
         break;
     }
 

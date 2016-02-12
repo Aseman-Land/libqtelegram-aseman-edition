@@ -17,7 +17,7 @@ class LIBQTELEGRAMSHARED_EXPORT MessagesFoundGifsObject : public TelegramTypeQOb
     Q_PROPERTY(qint32 nextOffset READ nextOffset WRITE setNextOffset NOTIFY nextOffsetChanged)
     Q_PROPERTY(QList<FoundGif> results READ results WRITE setResults NOTIFY resultsChanged)
     Q_PROPERTY(MessagesFoundGifs core READ core WRITE setCore NOTIFY coreChanged)
-    Q_PROPERTY(int classType READ classType WRITE setClassType NOTIFY classTypeChanged)
+    Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum MessagesFoundGifsType {
@@ -34,8 +34,8 @@ public:
     void setResults(const QList<FoundGif> &results);
     QList<FoundGif> results() const;
 
-    void setClassType(int classType);
-    int classType() const;
+    void setClassType(quint32 classType);
+    quint32 classType() const;
 
     void setCore(const MessagesFoundGifs &core);
     MessagesFoundGifs core() const;

@@ -16,7 +16,7 @@ class LIBQTELEGRAMSHARED_EXPORT HelpInviteTextObject : public TelegramTypeQObjec
     Q_ENUMS(HelpInviteTextType)
     Q_PROPERTY(QString message READ message WRITE setMessage NOTIFY messageChanged)
     Q_PROPERTY(HelpInviteText core READ core WRITE setCore NOTIFY coreChanged)
-    Q_PROPERTY(int classType READ classType WRITE setClassType NOTIFY classTypeChanged)
+    Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum HelpInviteTextType {
@@ -30,8 +30,8 @@ public:
     void setMessage(const QString &message);
     QString message() const;
 
-    void setClassType(int classType);
-    int classType() const;
+    void setClassType(quint32 classType);
+    quint32 classType() const;
 
     void setCore(const HelpInviteText &core);
     HelpInviteText core() const;

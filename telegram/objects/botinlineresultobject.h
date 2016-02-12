@@ -33,7 +33,7 @@ class LIBQTELEGRAMSHARED_EXPORT BotInlineResultObject : public TelegramTypeQObje
     Q_PROPERTY(QString url READ url WRITE setUrl NOTIFY urlChanged)
     Q_PROPERTY(qint32 w READ w WRITE setW NOTIFY wChanged)
     Q_PROPERTY(BotInlineResult core READ core WRITE setCore NOTIFY coreChanged)
-    Q_PROPERTY(int classType READ classType WRITE setClassType NOTIFY classTypeChanged)
+    Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum BotInlineResultType {
@@ -91,8 +91,8 @@ public:
     void setW(qint32 w);
     qint32 w() const;
 
-    void setClassType(int classType);
-    int classType() const;
+    void setClassType(quint32 classType);
+    quint32 classType() const;
 
     void setCore(const BotInlineResult &core);
     BotInlineResult core() const;

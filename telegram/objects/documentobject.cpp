@@ -140,7 +140,7 @@ bool DocumentObject::operator ==(const Document &b) const {
     return m_core == b;
 }
 
-void DocumentObject::setClassType(int classType) {
+void DocumentObject::setClassType(quint32 classType) {
     Document::DocumentType result;
     switch(classType) {
     case TypeDocumentEmpty:
@@ -148,6 +148,9 @@ void DocumentObject::setClassType(int classType) {
         break;
     case TypeDocument:
         result = Document::typeDocument;
+        break;
+    default:
+        result = Document::typeDocumentEmpty;
         break;
     }
 
@@ -157,7 +160,7 @@ void DocumentObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int DocumentObject::classType() const {
+quint32 DocumentObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case Document::typeDocumentEmpty:
@@ -165,6 +168,9 @@ int DocumentObject::classType() const {
         break;
     case Document::typeDocument:
         result = TypeDocument;
+        break;
+    default:
+        result = TypeDocumentEmpty;
         break;
     }
 

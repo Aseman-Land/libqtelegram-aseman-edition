@@ -55,7 +55,7 @@ bool InputGeoPointObject::operator ==(const InputGeoPoint &b) const {
     return m_core == b;
 }
 
-void InputGeoPointObject::setClassType(int classType) {
+void InputGeoPointObject::setClassType(quint32 classType) {
     InputGeoPoint::InputGeoPointType result;
     switch(classType) {
     case TypeInputGeoPointEmpty:
@@ -63,6 +63,9 @@ void InputGeoPointObject::setClassType(int classType) {
         break;
     case TypeInputGeoPoint:
         result = InputGeoPoint::typeInputGeoPoint;
+        break;
+    default:
+        result = InputGeoPoint::typeInputGeoPointEmpty;
         break;
     }
 
@@ -72,7 +75,7 @@ void InputGeoPointObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int InputGeoPointObject::classType() const {
+quint32 InputGeoPointObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case InputGeoPoint::typeInputGeoPointEmpty:
@@ -80,6 +83,9 @@ int InputGeoPointObject::classType() const {
         break;
     case InputGeoPoint::typeInputGeoPoint:
         result = TypeInputGeoPoint;
+        break;
+    default:
+        result = TypeInputGeoPointEmpty;
         break;
     }
 

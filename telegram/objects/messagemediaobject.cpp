@@ -289,7 +289,7 @@ bool MessageMediaObject::operator ==(const MessageMedia &b) const {
     return m_core == b;
 }
 
-void MessageMediaObject::setClassType(int classType) {
+void MessageMediaObject::setClassType(quint32 classType) {
     MessageMedia::MessageMediaType result;
     switch(classType) {
     case TypeMessageMediaEmpty:
@@ -322,6 +322,9 @@ void MessageMediaObject::setClassType(int classType) {
     case TypeMessageMediaVenue:
         result = MessageMedia::typeMessageMediaVenue;
         break;
+    default:
+        result = MessageMedia::typeMessageMediaEmpty;
+        break;
     }
 
     if(m_core.classType() == result) return;
@@ -330,7 +333,7 @@ void MessageMediaObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int MessageMediaObject::classType() const {
+quint32 MessageMediaObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case MessageMedia::typeMessageMediaEmpty:
@@ -362,6 +365,9 @@ int MessageMediaObject::classType() const {
         break;
     case MessageMedia::typeMessageMediaVenue:
         result = TypeMessageMediaVenue;
+        break;
+    default:
+        result = TypeMessageMediaEmpty;
         break;
     }
 

@@ -19,7 +19,7 @@ class LIBQTELEGRAMSHARED_EXPORT ChannelMessagesFilterObject : public TelegramTyp
     Q_PROPERTY(bool importantOnly READ importantOnly WRITE setImportantOnly NOTIFY importantOnlyChanged)
     Q_PROPERTY(QList<MessageRange> ranges READ ranges WRITE setRanges NOTIFY rangesChanged)
     Q_PROPERTY(ChannelMessagesFilter core READ core WRITE setCore NOTIFY coreChanged)
-    Q_PROPERTY(int classType READ classType WRITE setClassType NOTIFY classTypeChanged)
+    Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum ChannelMessagesFilterType {
@@ -44,8 +44,8 @@ public:
     void setRanges(const QList<MessageRange> &ranges);
     QList<MessageRange> ranges() const;
 
-    void setClassType(int classType);
-    int classType() const;
+    void setClassType(quint32 classType);
+    quint32 classType() const;
 
     void setCore(const ChannelMessagesFilter &core);
     ChannelMessagesFilter core() const;

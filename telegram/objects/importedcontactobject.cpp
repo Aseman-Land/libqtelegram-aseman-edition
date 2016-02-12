@@ -55,10 +55,13 @@ bool ImportedContactObject::operator ==(const ImportedContact &b) const {
     return m_core == b;
 }
 
-void ImportedContactObject::setClassType(int classType) {
+void ImportedContactObject::setClassType(quint32 classType) {
     ImportedContact::ImportedContactType result;
     switch(classType) {
     case TypeImportedContact:
+        result = ImportedContact::typeImportedContact;
+        break;
+    default:
         result = ImportedContact::typeImportedContact;
         break;
     }
@@ -69,10 +72,13 @@ void ImportedContactObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int ImportedContactObject::classType() const {
+quint32 ImportedContactObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case ImportedContact::typeImportedContact:
+        result = TypeImportedContact;
+        break;
+    default:
         result = TypeImportedContact;
         break;
     }

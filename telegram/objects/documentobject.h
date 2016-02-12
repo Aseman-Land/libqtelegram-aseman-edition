@@ -24,7 +24,7 @@ class LIBQTELEGRAMSHARED_EXPORT DocumentObject : public TelegramTypeQObject
     Q_PROPERTY(qint32 size READ size WRITE setSize NOTIFY sizeChanged)
     Q_PROPERTY(PhotoSizeObject* thumb READ thumb WRITE setThumb NOTIFY thumbChanged)
     Q_PROPERTY(Document core READ core WRITE setCore NOTIFY coreChanged)
-    Q_PROPERTY(int classType READ classType WRITE setClassType NOTIFY classTypeChanged)
+    Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum DocumentType {
@@ -60,8 +60,8 @@ public:
     void setThumb(PhotoSizeObject* thumb);
     PhotoSizeObject* thumb() const;
 
-    void setClassType(int classType);
-    int classType() const;
+    void setClassType(quint32 classType);
+    quint32 classType() const;
 
     void setCore(const Document &core);
     Document core() const;

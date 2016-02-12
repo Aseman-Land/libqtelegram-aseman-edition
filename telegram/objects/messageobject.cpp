@@ -324,7 +324,7 @@ bool MessageObject::operator ==(const Message &b) const {
     return m_core == b;
 }
 
-void MessageObject::setClassType(int classType) {
+void MessageObject::setClassType(quint32 classType) {
     Message::MessageType result;
     switch(classType) {
     case TypeMessageEmpty:
@@ -336,6 +336,9 @@ void MessageObject::setClassType(int classType) {
     case TypeMessageService:
         result = Message::typeMessageService;
         break;
+    default:
+        result = Message::typeMessageEmpty;
+        break;
     }
 
     if(m_core.classType() == result) return;
@@ -344,7 +347,7 @@ void MessageObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int MessageObject::classType() const {
+quint32 MessageObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case Message::typeMessageEmpty:
@@ -355,6 +358,9 @@ int MessageObject::classType() const {
         break;
     case Message::typeMessageService:
         result = TypeMessageService;
+        break;
+    default:
+        result = TypeMessageEmpty;
         break;
     }
 

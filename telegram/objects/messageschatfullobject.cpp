@@ -80,10 +80,13 @@ bool MessagesChatFullObject::operator ==(const MessagesChatFull &b) const {
     return m_core == b;
 }
 
-void MessagesChatFullObject::setClassType(int classType) {
+void MessagesChatFullObject::setClassType(quint32 classType) {
     MessagesChatFull::MessagesChatFullType result;
     switch(classType) {
     case TypeMessagesChatFull:
+        result = MessagesChatFull::typeMessagesChatFull;
+        break;
+    default:
         result = MessagesChatFull::typeMessagesChatFull;
         break;
     }
@@ -94,10 +97,13 @@ void MessagesChatFullObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int MessagesChatFullObject::classType() const {
+quint32 MessagesChatFullObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case MessagesChatFull::typeMessagesChatFull:
+        result = TypeMessagesChatFull;
+        break;
+    default:
         result = TypeMessagesChatFull;
         break;
     }

@@ -79,7 +79,7 @@ bool AuthSentCodeObject::operator ==(const AuthSentCode &b) const {
     return m_core == b;
 }
 
-void AuthSentCodeObject::setClassType(int classType) {
+void AuthSentCodeObject::setClassType(quint32 classType) {
     AuthSentCode::AuthSentCodeType result;
     switch(classType) {
     case TypeAuthSentCode:
@@ -87,6 +87,9 @@ void AuthSentCodeObject::setClassType(int classType) {
         break;
     case TypeAuthSentAppCode:
         result = AuthSentCode::typeAuthSentAppCode;
+        break;
+    default:
+        result = AuthSentCode::typeAuthSentCode;
         break;
     }
 
@@ -96,7 +99,7 @@ void AuthSentCodeObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int AuthSentCodeObject::classType() const {
+quint32 AuthSentCodeObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case AuthSentCode::typeAuthSentCode:
@@ -104,6 +107,9 @@ int AuthSentCodeObject::classType() const {
         break;
     case AuthSentCode::typeAuthSentAppCode:
         result = TypeAuthSentAppCode;
+        break;
+    default:
+        result = TypeAuthSentCode;
         break;
     }
 

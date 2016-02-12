@@ -19,7 +19,7 @@ class LIBQTELEGRAMSHARED_EXPORT UserProfilePhotoObject : public TelegramTypeQObj
     Q_PROPERTY(qint64 photoId READ photoId WRITE setPhotoId NOTIFY photoIdChanged)
     Q_PROPERTY(FileLocationObject* photoSmall READ photoSmall WRITE setPhotoSmall NOTIFY photoSmallChanged)
     Q_PROPERTY(UserProfilePhoto core READ core WRITE setCore NOTIFY coreChanged)
-    Q_PROPERTY(int classType READ classType WRITE setClassType NOTIFY classTypeChanged)
+    Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum UserProfilePhotoType {
@@ -40,8 +40,8 @@ public:
     void setPhotoSmall(FileLocationObject* photoSmall);
     FileLocationObject* photoSmall() const;
 
-    void setClassType(int classType);
-    int classType() const;
+    void setClassType(quint32 classType);
+    quint32 classType() const;
 
     void setCore(const UserProfilePhoto &core);
     UserProfilePhoto core() const;

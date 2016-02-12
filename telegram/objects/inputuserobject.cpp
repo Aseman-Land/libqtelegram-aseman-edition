@@ -55,7 +55,7 @@ bool InputUserObject::operator ==(const InputUser &b) const {
     return m_core == b;
 }
 
-void InputUserObject::setClassType(int classType) {
+void InputUserObject::setClassType(quint32 classType) {
     InputUser::InputUserType result;
     switch(classType) {
     case TypeInputUserEmpty:
@@ -67,6 +67,9 @@ void InputUserObject::setClassType(int classType) {
     case TypeInputUser:
         result = InputUser::typeInputUser;
         break;
+    default:
+        result = InputUser::typeInputUserEmpty;
+        break;
     }
 
     if(m_core.classType() == result) return;
@@ -75,7 +78,7 @@ void InputUserObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int InputUserObject::classType() const {
+quint32 InputUserObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case InputUser::typeInputUserEmpty:
@@ -86,6 +89,9 @@ int InputUserObject::classType() const {
         break;
     case InputUser::typeInputUser:
         result = TypeInputUser;
+        break;
+    default:
+        result = TypeInputUserEmpty;
         break;
     }
 

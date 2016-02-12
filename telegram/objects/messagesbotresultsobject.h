@@ -20,7 +20,7 @@ class LIBQTELEGRAMSHARED_EXPORT MessagesBotResultsObject : public TelegramTypeQO
     Q_PROPERTY(qint64 queryId READ queryId WRITE setQueryId NOTIFY queryIdChanged)
     Q_PROPERTY(QList<BotInlineResult> results READ results WRITE setResults NOTIFY resultsChanged)
     Q_PROPERTY(MessagesBotResults core READ core WRITE setCore NOTIFY coreChanged)
-    Q_PROPERTY(int classType READ classType WRITE setClassType NOTIFY classTypeChanged)
+    Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum MessagesBotResultsType {
@@ -46,8 +46,8 @@ public:
     void setResults(const QList<BotInlineResult> &results);
     QList<BotInlineResult> results() const;
 
-    void setClassType(int classType);
-    int classType() const;
+    void setClassType(quint32 classType);
+    quint32 classType() const;
 
     void setCore(const MessagesBotResults &core);
     MessagesBotResults core() const;

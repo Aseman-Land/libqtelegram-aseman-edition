@@ -55,7 +55,7 @@ bool MessagesSavedGifsObject::operator ==(const MessagesSavedGifs &b) const {
     return m_core == b;
 }
 
-void MessagesSavedGifsObject::setClassType(int classType) {
+void MessagesSavedGifsObject::setClassType(quint32 classType) {
     MessagesSavedGifs::MessagesSavedGifsType result;
     switch(classType) {
     case TypeMessagesSavedGifsNotModified:
@@ -63,6 +63,9 @@ void MessagesSavedGifsObject::setClassType(int classType) {
         break;
     case TypeMessagesSavedGifs:
         result = MessagesSavedGifs::typeMessagesSavedGifs;
+        break;
+    default:
+        result = MessagesSavedGifs::typeMessagesSavedGifsNotModified;
         break;
     }
 
@@ -72,7 +75,7 @@ void MessagesSavedGifsObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int MessagesSavedGifsObject::classType() const {
+quint32 MessagesSavedGifsObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case MessagesSavedGifs::typeMessagesSavedGifsNotModified:
@@ -80,6 +83,9 @@ int MessagesSavedGifsObject::classType() const {
         break;
     case MessagesSavedGifs::typeMessagesSavedGifs:
         result = TypeMessagesSavedGifs;
+        break;
+    default:
+        result = TypeMessagesSavedGifsNotModified;
         break;
     }
 

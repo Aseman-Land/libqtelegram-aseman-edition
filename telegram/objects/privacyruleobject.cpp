@@ -43,7 +43,7 @@ bool PrivacyRuleObject::operator ==(const PrivacyRule &b) const {
     return m_core == b;
 }
 
-void PrivacyRuleObject::setClassType(int classType) {
+void PrivacyRuleObject::setClassType(quint32 classType) {
     PrivacyRule::PrivacyRuleType result;
     switch(classType) {
     case TypePrivacyValueAllowContacts:
@@ -64,6 +64,9 @@ void PrivacyRuleObject::setClassType(int classType) {
     case TypePrivacyValueDisallowUsers:
         result = PrivacyRule::typePrivacyValueDisallowUsers;
         break;
+    default:
+        result = PrivacyRule::typePrivacyValueAllowContacts;
+        break;
     }
 
     if(m_core.classType() == result) return;
@@ -72,7 +75,7 @@ void PrivacyRuleObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int PrivacyRuleObject::classType() const {
+quint32 PrivacyRuleObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case PrivacyRule::typePrivacyValueAllowContacts:
@@ -92,6 +95,9 @@ int PrivacyRuleObject::classType() const {
         break;
     case PrivacyRule::typePrivacyValueDisallowUsers:
         result = TypePrivacyValueDisallowUsers;
+        break;
+    default:
+        result = TypePrivacyValueAllowContacts;
         break;
     }
 

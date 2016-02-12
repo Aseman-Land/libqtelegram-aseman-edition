@@ -17,7 +17,7 @@ class LIBQTELEGRAMSHARED_EXPORT InputChannelObject : public TelegramTypeQObject
     Q_PROPERTY(qint64 accessHash READ accessHash WRITE setAccessHash NOTIFY accessHashChanged)
     Q_PROPERTY(qint32 channelId READ channelId WRITE setChannelId NOTIFY channelIdChanged)
     Q_PROPERTY(InputChannel core READ core WRITE setCore NOTIFY coreChanged)
-    Q_PROPERTY(int classType READ classType WRITE setClassType NOTIFY classTypeChanged)
+    Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum InputChannelType {
@@ -35,8 +35,8 @@ public:
     void setChannelId(qint32 channelId);
     qint32 channelId() const;
 
-    void setClassType(int classType);
-    int classType() const;
+    void setClassType(quint32 classType);
+    quint32 classType() const;
 
     void setCore(const InputChannel &core);
     InputChannel core() const;

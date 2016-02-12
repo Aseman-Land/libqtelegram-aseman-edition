@@ -43,7 +43,7 @@ bool ExportedChatInviteObject::operator ==(const ExportedChatInvite &b) const {
     return m_core == b;
 }
 
-void ExportedChatInviteObject::setClassType(int classType) {
+void ExportedChatInviteObject::setClassType(quint32 classType) {
     ExportedChatInvite::ExportedChatInviteType result;
     switch(classType) {
     case TypeChatInviteEmpty:
@@ -51,6 +51,9 @@ void ExportedChatInviteObject::setClassType(int classType) {
         break;
     case TypeChatInviteExported:
         result = ExportedChatInvite::typeChatInviteExported;
+        break;
+    default:
+        result = ExportedChatInvite::typeChatInviteEmpty;
         break;
     }
 
@@ -60,7 +63,7 @@ void ExportedChatInviteObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int ExportedChatInviteObject::classType() const {
+quint32 ExportedChatInviteObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case ExportedChatInvite::typeChatInviteEmpty:
@@ -68,6 +71,9 @@ int ExportedChatInviteObject::classType() const {
         break;
     case ExportedChatInvite::typeChatInviteExported:
         result = TypeChatInviteExported;
+        break;
+    default:
+        result = TypeChatInviteEmpty;
         break;
     }
 

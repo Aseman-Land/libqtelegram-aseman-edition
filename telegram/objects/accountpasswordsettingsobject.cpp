@@ -43,10 +43,13 @@ bool AccountPasswordSettingsObject::operator ==(const AccountPasswordSettings &b
     return m_core == b;
 }
 
-void AccountPasswordSettingsObject::setClassType(int classType) {
+void AccountPasswordSettingsObject::setClassType(quint32 classType) {
     AccountPasswordSettings::AccountPasswordSettingsType result;
     switch(classType) {
     case TypeAccountPasswordSettings:
+        result = AccountPasswordSettings::typeAccountPasswordSettings;
+        break;
+    default:
         result = AccountPasswordSettings::typeAccountPasswordSettings;
         break;
     }
@@ -57,10 +60,13 @@ void AccountPasswordSettingsObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int AccountPasswordSettingsObject::classType() const {
+quint32 AccountPasswordSettingsObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case AccountPasswordSettings::typeAccountPasswordSettings:
+        result = TypeAccountPasswordSettings;
+        break;
+    default:
         result = TypeAccountPasswordSettings;
         break;
     }

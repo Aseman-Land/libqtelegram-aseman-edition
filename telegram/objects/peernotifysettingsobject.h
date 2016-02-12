@@ -19,7 +19,7 @@ class LIBQTELEGRAMSHARED_EXPORT PeerNotifySettingsObject : public TelegramTypeQO
     Q_PROPERTY(bool showPreviews READ showPreviews WRITE setShowPreviews NOTIFY showPreviewsChanged)
     Q_PROPERTY(QString sound READ sound WRITE setSound NOTIFY soundChanged)
     Q_PROPERTY(PeerNotifySettings core READ core WRITE setCore NOTIFY coreChanged)
-    Q_PROPERTY(int classType READ classType WRITE setClassType NOTIFY classTypeChanged)
+    Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum PeerNotifySettingsType {
@@ -43,8 +43,8 @@ public:
     void setSound(const QString &sound);
     QString sound() const;
 
-    void setClassType(int classType);
-    int classType() const;
+    void setClassType(quint32 classType);
+    quint32 classType() const;
 
     void setCore(const PeerNotifySettings &core);
     PeerNotifySettings core() const;

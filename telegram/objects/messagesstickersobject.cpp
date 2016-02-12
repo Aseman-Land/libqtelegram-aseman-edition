@@ -55,7 +55,7 @@ bool MessagesStickersObject::operator ==(const MessagesStickers &b) const {
     return m_core == b;
 }
 
-void MessagesStickersObject::setClassType(int classType) {
+void MessagesStickersObject::setClassType(quint32 classType) {
     MessagesStickers::MessagesStickersType result;
     switch(classType) {
     case TypeMessagesStickersNotModified:
@@ -63,6 +63,9 @@ void MessagesStickersObject::setClassType(int classType) {
         break;
     case TypeMessagesStickers:
         result = MessagesStickers::typeMessagesStickers;
+        break;
+    default:
+        result = MessagesStickers::typeMessagesStickersNotModified;
         break;
     }
 
@@ -72,7 +75,7 @@ void MessagesStickersObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int MessagesStickersObject::classType() const {
+quint32 MessagesStickersObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case MessagesStickers::typeMessagesStickersNotModified:
@@ -80,6 +83,9 @@ int MessagesStickersObject::classType() const {
         break;
     case MessagesStickers::typeMessagesStickers:
         result = TypeMessagesStickers;
+        break;
+    default:
+        result = TypeMessagesStickersNotModified;
         break;
     }
 

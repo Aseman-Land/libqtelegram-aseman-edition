@@ -79,10 +79,13 @@ bool MessageGroupObject::operator ==(const MessageGroup &b) const {
     return m_core == b;
 }
 
-void MessageGroupObject::setClassType(int classType) {
+void MessageGroupObject::setClassType(quint32 classType) {
     MessageGroup::MessageGroupType result;
     switch(classType) {
     case TypeMessageGroup:
+        result = MessageGroup::typeMessageGroup;
+        break;
+    default:
         result = MessageGroup::typeMessageGroup;
         break;
     }
@@ -93,10 +96,13 @@ void MessageGroupObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int MessageGroupObject::classType() const {
+quint32 MessageGroupObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case MessageGroup::typeMessageGroup:
+        result = TypeMessageGroup;
+        break;
+    default:
         result = TypeMessageGroup;
         break;
     }

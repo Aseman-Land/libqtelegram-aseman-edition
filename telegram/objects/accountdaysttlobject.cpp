@@ -43,10 +43,13 @@ bool AccountDaysTTLObject::operator ==(const AccountDaysTTL &b) const {
     return m_core == b;
 }
 
-void AccountDaysTTLObject::setClassType(int classType) {
+void AccountDaysTTLObject::setClassType(quint32 classType) {
     AccountDaysTTL::AccountDaysTTLType result;
     switch(classType) {
     case TypeAccountDaysTTL:
+        result = AccountDaysTTL::typeAccountDaysTTL;
+        break;
+    default:
         result = AccountDaysTTL::typeAccountDaysTTL;
         break;
     }
@@ -57,10 +60,13 @@ void AccountDaysTTLObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int AccountDaysTTLObject::classType() const {
+quint32 AccountDaysTTLObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case AccountDaysTTL::typeAccountDaysTTL:
+        result = TypeAccountDaysTTL;
+        break;
+    default:
         result = TypeAccountDaysTTL;
         break;
     }

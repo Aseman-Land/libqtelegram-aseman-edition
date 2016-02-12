@@ -261,7 +261,7 @@ bool WebPageObject::operator ==(const WebPage &b) const {
     return m_core == b;
 }
 
-void WebPageObject::setClassType(int classType) {
+void WebPageObject::setClassType(quint32 classType) {
     WebPage::WebPageType result;
     switch(classType) {
     case TypeWebPageEmpty:
@@ -273,6 +273,9 @@ void WebPageObject::setClassType(int classType) {
     case TypeWebPage:
         result = WebPage::typeWebPage;
         break;
+    default:
+        result = WebPage::typeWebPageEmpty;
+        break;
     }
 
     if(m_core.classType() == result) return;
@@ -281,7 +284,7 @@ void WebPageObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int WebPageObject::classType() const {
+quint32 WebPageObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case WebPage::typeWebPageEmpty:
@@ -292,6 +295,9 @@ int WebPageObject::classType() const {
         break;
     case WebPage::typeWebPage:
         result = TypeWebPage;
+        break;
+    default:
+        result = TypeWebPageEmpty;
         break;
     }
 

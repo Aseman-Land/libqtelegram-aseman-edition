@@ -56,10 +56,13 @@ bool AuthAuthorizationObject::operator ==(const AuthAuthorization &b) const {
     return m_core == b;
 }
 
-void AuthAuthorizationObject::setClassType(int classType) {
+void AuthAuthorizationObject::setClassType(quint32 classType) {
     AuthAuthorization::AuthAuthorizationType result;
     switch(classType) {
     case TypeAuthAuthorization:
+        result = AuthAuthorization::typeAuthAuthorization;
+        break;
+    default:
         result = AuthAuthorization::typeAuthAuthorization;
         break;
     }
@@ -70,10 +73,13 @@ void AuthAuthorizationObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int AuthAuthorizationObject::classType() const {
+quint32 AuthAuthorizationObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case AuthAuthorization::typeAuthAuthorization:
+        result = TypeAuthAuthorization;
+        break;
+    default:
         result = TypeAuthAuthorization;
         break;
     }

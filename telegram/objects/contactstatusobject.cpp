@@ -68,10 +68,13 @@ bool ContactStatusObject::operator ==(const ContactStatus &b) const {
     return m_core == b;
 }
 
-void ContactStatusObject::setClassType(int classType) {
+void ContactStatusObject::setClassType(quint32 classType) {
     ContactStatus::ContactStatusType result;
     switch(classType) {
     case TypeContactStatus:
+        result = ContactStatus::typeContactStatus;
+        break;
+    default:
         result = ContactStatus::typeContactStatus;
         break;
     }
@@ -82,10 +85,13 @@ void ContactStatusObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int ContactStatusObject::classType() const {
+quint32 ContactStatusObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case ContactStatus::typeContactStatus:
+        result = TypeContactStatus;
+        break;
+    default:
         result = TypeContactStatus;
         break;
     }

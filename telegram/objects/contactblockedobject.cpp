@@ -55,10 +55,13 @@ bool ContactBlockedObject::operator ==(const ContactBlocked &b) const {
     return m_core == b;
 }
 
-void ContactBlockedObject::setClassType(int classType) {
+void ContactBlockedObject::setClassType(quint32 classType) {
     ContactBlocked::ContactBlockedType result;
     switch(classType) {
     case TypeContactBlocked:
+        result = ContactBlocked::typeContactBlocked;
+        break;
+    default:
         result = ContactBlocked::typeContactBlocked;
         break;
     }
@@ -69,10 +72,13 @@ void ContactBlockedObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int ContactBlockedObject::classType() const {
+quint32 ContactBlockedObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case ContactBlocked::typeContactBlocked:
+        result = TypeContactBlocked;
+        break;
+    default:
         result = TypeContactBlocked;
         break;
     }

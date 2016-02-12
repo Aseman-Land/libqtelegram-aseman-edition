@@ -20,7 +20,7 @@ class LIBQTELEGRAMSHARED_EXPORT ContactsLinkObject : public TelegramTypeQObject
     Q_PROPERTY(ContactLinkObject* myLink READ myLink WRITE setMyLink NOTIFY myLinkChanged)
     Q_PROPERTY(UserObject* user READ user WRITE setUser NOTIFY userChanged)
     Q_PROPERTY(ContactsLink core READ core WRITE setCore NOTIFY coreChanged)
-    Q_PROPERTY(int classType READ classType WRITE setClassType NOTIFY classTypeChanged)
+    Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum ContactsLinkType {
@@ -40,8 +40,8 @@ public:
     void setUser(UserObject* user);
     UserObject* user() const;
 
-    void setClassType(int classType);
-    int classType() const;
+    void setClassType(quint32 classType);
+    quint32 classType() const;
 
     void setCore(const ContactsLink &core);
     ContactsLink core() const;

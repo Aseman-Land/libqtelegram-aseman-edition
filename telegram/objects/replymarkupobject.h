@@ -20,7 +20,7 @@ class LIBQTELEGRAMSHARED_EXPORT ReplyMarkupObject : public TelegramTypeQObject
     Q_PROPERTY(bool selective READ selective WRITE setSelective NOTIFY selectiveChanged)
     Q_PROPERTY(bool singleUse READ singleUse WRITE setSingleUse NOTIFY singleUseChanged)
     Q_PROPERTY(ReplyMarkup core READ core WRITE setCore NOTIFY coreChanged)
-    Q_PROPERTY(int classType READ classType WRITE setClassType NOTIFY classTypeChanged)
+    Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum ReplyMarkupType {
@@ -48,8 +48,8 @@ public:
     void setSingleUse(bool singleUse);
     bool singleUse() const;
 
-    void setClassType(int classType);
-    int classType() const;
+    void setClassType(quint32 classType);
+    quint32 classType() const;
 
     void setCore(const ReplyMarkup &core);
     ReplyMarkup core() const;

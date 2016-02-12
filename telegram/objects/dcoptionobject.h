@@ -21,7 +21,7 @@ class LIBQTELEGRAMSHARED_EXPORT DcOptionObject : public TelegramTypeQObject
     Q_PROPERTY(bool mediaOnly READ mediaOnly WRITE setMediaOnly NOTIFY mediaOnlyChanged)
     Q_PROPERTY(qint32 port READ port WRITE setPort NOTIFY portChanged)
     Q_PROPERTY(DcOption core READ core WRITE setCore NOTIFY coreChanged)
-    Q_PROPERTY(int classType READ classType WRITE setClassType NOTIFY classTypeChanged)
+    Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum DcOptionType {
@@ -50,8 +50,8 @@ public:
     void setPort(qint32 port);
     qint32 port() const;
 
-    void setClassType(int classType);
-    int classType() const;
+    void setClassType(quint32 classType);
+    quint32 classType() const;
 
     void setCore(const DcOption &core);
     DcOption core() const;

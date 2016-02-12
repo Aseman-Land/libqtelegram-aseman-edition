@@ -20,7 +20,7 @@ class LIBQTELEGRAMSHARED_EXPORT BotInfoObject : public TelegramTypeQObject
     Q_PROPERTY(qint32 userId READ userId WRITE setUserId NOTIFY userIdChanged)
     Q_PROPERTY(qint32 version READ version WRITE setVersion NOTIFY versionChanged)
     Q_PROPERTY(BotInfo core READ core WRITE setCore NOTIFY coreChanged)
-    Q_PROPERTY(int classType READ classType WRITE setClassType NOTIFY classTypeChanged)
+    Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum BotInfoType {
@@ -47,8 +47,8 @@ public:
     void setVersion(qint32 version);
     qint32 version() const;
 
-    void setClassType(int classType);
-    int classType() const;
+    void setClassType(quint32 classType);
+    quint32 classType() const;
 
     void setCore(const BotInfo &core);
     BotInfo core() const;

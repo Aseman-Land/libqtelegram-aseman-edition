@@ -55,7 +55,7 @@ bool InputChannelObject::operator ==(const InputChannel &b) const {
     return m_core == b;
 }
 
-void InputChannelObject::setClassType(int classType) {
+void InputChannelObject::setClassType(quint32 classType) {
     InputChannel::InputChannelType result;
     switch(classType) {
     case TypeInputChannelEmpty:
@@ -63,6 +63,9 @@ void InputChannelObject::setClassType(int classType) {
         break;
     case TypeInputChannel:
         result = InputChannel::typeInputChannel;
+        break;
+    default:
+        result = InputChannel::typeInputChannelEmpty;
         break;
     }
 
@@ -72,7 +75,7 @@ void InputChannelObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int InputChannelObject::classType() const {
+quint32 InputChannelObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case InputChannel::typeInputChannelEmpty:
@@ -80,6 +83,9 @@ int InputChannelObject::classType() const {
         break;
     case InputChannel::typeInputChannel:
         result = TypeInputChannel;
+        break;
+    default:
+        result = TypeInputChannelEmpty;
         break;
     }
 

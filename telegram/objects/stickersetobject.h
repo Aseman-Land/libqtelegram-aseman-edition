@@ -25,7 +25,7 @@ class LIBQTELEGRAMSHARED_EXPORT StickerSetObject : public TelegramTypeQObject
     Q_PROPERTY(QString shortName READ shortName WRITE setShortName NOTIFY shortNameChanged)
     Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
     Q_PROPERTY(StickerSet core READ core WRITE setCore NOTIFY coreChanged)
-    Q_PROPERTY(int classType READ classType WRITE setClassType NOTIFY classTypeChanged)
+    Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum StickerSetType {
@@ -66,8 +66,8 @@ public:
     void setTitle(const QString &title);
     QString title() const;
 
-    void setClassType(int classType);
-    int classType() const;
+    void setClassType(quint32 classType);
+    quint32 classType() const;
 
     void setCore(const StickerSet &core);
     StickerSet core() const;

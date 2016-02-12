@@ -370,7 +370,7 @@ bool UpdatesTypeObject::operator ==(const UpdatesType &b) const {
     return m_core == b;
 }
 
-void UpdatesTypeObject::setClassType(int classType) {
+void UpdatesTypeObject::setClassType(quint32 classType) {
     UpdatesType::UpdatesTypeType result;
     switch(classType) {
     case TypeUpdatesTooLong:
@@ -394,6 +394,9 @@ void UpdatesTypeObject::setClassType(int classType) {
     case TypeUpdateShortSentMessage:
         result = UpdatesType::typeUpdateShortSentMessage;
         break;
+    default:
+        result = UpdatesType::typeUpdatesTooLong;
+        break;
     }
 
     if(m_core.classType() == result) return;
@@ -402,7 +405,7 @@ void UpdatesTypeObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int UpdatesTypeObject::classType() const {
+quint32 UpdatesTypeObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case UpdatesType::typeUpdatesTooLong:
@@ -425,6 +428,9 @@ int UpdatesTypeObject::classType() const {
         break;
     case UpdatesType::typeUpdateShortSentMessage:
         result = TypeUpdateShortSentMessage;
+        break;
+    default:
+        result = TypeUpdatesTooLong;
         break;
     }
 

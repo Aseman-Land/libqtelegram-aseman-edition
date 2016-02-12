@@ -79,7 +79,7 @@ bool FileLocationObject::operator ==(const FileLocation &b) const {
     return m_core == b;
 }
 
-void FileLocationObject::setClassType(int classType) {
+void FileLocationObject::setClassType(quint32 classType) {
     FileLocation::FileLocationType result;
     switch(classType) {
     case TypeFileLocationUnavailable:
@@ -87,6 +87,9 @@ void FileLocationObject::setClassType(int classType) {
         break;
     case TypeFileLocation:
         result = FileLocation::typeFileLocation;
+        break;
+    default:
+        result = FileLocation::typeFileLocationUnavailable;
         break;
     }
 
@@ -96,7 +99,7 @@ void FileLocationObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int FileLocationObject::classType() const {
+quint32 FileLocationObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case FileLocation::typeFileLocationUnavailable:
@@ -104,6 +107,9 @@ int FileLocationObject::classType() const {
         break;
     case FileLocation::typeFileLocation:
         result = TypeFileLocation;
+        break;
+    default:
+        result = TypeFileLocationUnavailable;
         break;
     }
 

@@ -23,7 +23,7 @@ class LIBQTELEGRAMSHARED_EXPORT MessageActionObject : public TelegramTypeQObject
     Q_PROPERTY(qint32 userId READ userId WRITE setUserId NOTIFY userIdChanged)
     Q_PROPERTY(QList<qint32> users READ users WRITE setUsers NOTIFY usersChanged)
     Q_PROPERTY(MessageAction core READ core WRITE setCore NOTIFY coreChanged)
-    Q_PROPERTY(int classType READ classType WRITE setClassType NOTIFY classTypeChanged)
+    Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum MessageActionType {
@@ -65,8 +65,8 @@ public:
     void setUsers(const QList<qint32> &users);
     QList<qint32> users() const;
 
-    void setClassType(int classType);
-    int classType() const;
+    void setClassType(quint32 classType);
+    quint32 classType() const;
 
     void setCore(const MessageAction &core);
     MessageAction core() const;

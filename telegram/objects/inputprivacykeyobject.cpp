@@ -31,10 +31,13 @@ bool InputPrivacyKeyObject::operator ==(const InputPrivacyKey &b) const {
     return m_core == b;
 }
 
-void InputPrivacyKeyObject::setClassType(int classType) {
+void InputPrivacyKeyObject::setClassType(quint32 classType) {
     InputPrivacyKey::InputPrivacyKeyType result;
     switch(classType) {
     case TypeInputPrivacyKeyStatusTimestamp:
+        result = InputPrivacyKey::typeInputPrivacyKeyStatusTimestamp;
+        break;
+    default:
         result = InputPrivacyKey::typeInputPrivacyKeyStatusTimestamp;
         break;
     }
@@ -45,10 +48,13 @@ void InputPrivacyKeyObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int InputPrivacyKeyObject::classType() const {
+quint32 InputPrivacyKeyObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case InputPrivacyKey::typeInputPrivacyKeyStatusTimestamp:
+        result = TypeInputPrivacyKeyStatusTimestamp;
+        break;
+    default:
         result = TypeInputPrivacyKeyStatusTimestamp;
         break;
     }

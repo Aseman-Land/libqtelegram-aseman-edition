@@ -19,7 +19,7 @@ class LIBQTELEGRAMSHARED_EXPORT InputFileObject : public TelegramTypeQObject
     Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
     Q_PROPERTY(qint32 parts READ parts WRITE setParts NOTIFY partsChanged)
     Q_PROPERTY(InputFile core READ core WRITE setCore NOTIFY coreChanged)
-    Q_PROPERTY(int classType READ classType WRITE setClassType NOTIFY classTypeChanged)
+    Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum InputFileType {
@@ -43,8 +43,8 @@ public:
     void setParts(qint32 parts);
     qint32 parts() const;
 
-    void setClassType(int classType);
-    int classType() const;
+    void setClassType(quint32 classType);
+    quint32 classType() const;
 
     void setCore(const InputFile &core);
     InputFile core() const;

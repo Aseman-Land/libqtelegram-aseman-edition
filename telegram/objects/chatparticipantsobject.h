@@ -21,7 +21,7 @@ class LIBQTELEGRAMSHARED_EXPORT ChatParticipantsObject : public TelegramTypeQObj
     Q_PROPERTY(ChatParticipantObject* selfParticipant READ selfParticipant WRITE setSelfParticipant NOTIFY selfParticipantChanged)
     Q_PROPERTY(qint32 version READ version WRITE setVersion NOTIFY versionChanged)
     Q_PROPERTY(ChatParticipants core READ core WRITE setCore NOTIFY coreChanged)
-    Q_PROPERTY(int classType READ classType WRITE setClassType NOTIFY classTypeChanged)
+    Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum ChatParticipantsType {
@@ -48,8 +48,8 @@ public:
     void setVersion(qint32 version);
     qint32 version() const;
 
-    void setClassType(int classType);
-    int classType() const;
+    void setClassType(quint32 classType);
+    quint32 classType() const;
 
     void setCore(const ChatParticipants &core);
     ChatParticipants core() const;

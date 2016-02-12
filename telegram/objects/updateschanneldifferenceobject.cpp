@@ -199,7 +199,7 @@ bool UpdatesChannelDifferenceObject::operator ==(const UpdatesChannelDifference 
     return m_core == b;
 }
 
-void UpdatesChannelDifferenceObject::setClassType(int classType) {
+void UpdatesChannelDifferenceObject::setClassType(quint32 classType) {
     UpdatesChannelDifference::UpdatesChannelDifferenceType result;
     switch(classType) {
     case TypeUpdatesChannelDifferenceEmpty:
@@ -211,6 +211,9 @@ void UpdatesChannelDifferenceObject::setClassType(int classType) {
     case TypeUpdatesChannelDifference:
         result = UpdatesChannelDifference::typeUpdatesChannelDifference;
         break;
+    default:
+        result = UpdatesChannelDifference::typeUpdatesChannelDifferenceEmpty;
+        break;
     }
 
     if(m_core.classType() == result) return;
@@ -219,7 +222,7 @@ void UpdatesChannelDifferenceObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int UpdatesChannelDifferenceObject::classType() const {
+quint32 UpdatesChannelDifferenceObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case UpdatesChannelDifference::typeUpdatesChannelDifferenceEmpty:
@@ -230,6 +233,9 @@ int UpdatesChannelDifferenceObject::classType() const {
         break;
     case UpdatesChannelDifference::typeUpdatesChannelDifference:
         result = TypeUpdatesChannelDifference;
+        break;
+    default:
+        result = TypeUpdatesChannelDifferenceEmpty;
         break;
     }
 

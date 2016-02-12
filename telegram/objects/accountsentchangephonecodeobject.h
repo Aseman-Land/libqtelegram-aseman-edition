@@ -17,7 +17,7 @@ class LIBQTELEGRAMSHARED_EXPORT AccountSentChangePhoneCodeObject : public Telegr
     Q_PROPERTY(QString phoneCodeHash READ phoneCodeHash WRITE setPhoneCodeHash NOTIFY phoneCodeHashChanged)
     Q_PROPERTY(qint32 sendCallTimeout READ sendCallTimeout WRITE setSendCallTimeout NOTIFY sendCallTimeoutChanged)
     Q_PROPERTY(AccountSentChangePhoneCode core READ core WRITE setCore NOTIFY coreChanged)
-    Q_PROPERTY(int classType READ classType WRITE setClassType NOTIFY classTypeChanged)
+    Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum AccountSentChangePhoneCodeType {
@@ -34,8 +34,8 @@ public:
     void setSendCallTimeout(qint32 sendCallTimeout);
     qint32 sendCallTimeout() const;
 
-    void setClassType(int classType);
-    int classType() const;
+    void setClassType(quint32 classType);
+    quint32 classType() const;
 
     void setCore(const AccountSentChangePhoneCode &core);
     AccountSentChangePhoneCode core() const;

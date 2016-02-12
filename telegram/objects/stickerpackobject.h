@@ -17,7 +17,7 @@ class LIBQTELEGRAMSHARED_EXPORT StickerPackObject : public TelegramTypeQObject
     Q_PROPERTY(QList<qint64> documents READ documents WRITE setDocuments NOTIFY documentsChanged)
     Q_PROPERTY(QString emoticon READ emoticon WRITE setEmoticon NOTIFY emoticonChanged)
     Q_PROPERTY(StickerPack core READ core WRITE setCore NOTIFY coreChanged)
-    Q_PROPERTY(int classType READ classType WRITE setClassType NOTIFY classTypeChanged)
+    Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum StickerPackType {
@@ -34,8 +34,8 @@ public:
     void setEmoticon(const QString &emoticon);
     QString emoticon() const;
 
-    void setClassType(int classType);
-    int classType() const;
+    void setClassType(quint32 classType);
+    quint32 classType() const;
 
     void setCore(const StickerPack &core);
     StickerPack core() const;

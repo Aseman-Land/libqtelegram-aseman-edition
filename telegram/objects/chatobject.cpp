@@ -333,7 +333,7 @@ bool ChatObject::operator ==(const Chat &b) const {
     return m_core == b;
 }
 
-void ChatObject::setClassType(int classType) {
+void ChatObject::setClassType(quint32 classType) {
     Chat::ChatType result;
     switch(classType) {
     case TypeChatEmpty:
@@ -351,6 +351,9 @@ void ChatObject::setClassType(int classType) {
     case TypeChannelForbidden:
         result = Chat::typeChannelForbidden;
         break;
+    default:
+        result = Chat::typeChatEmpty;
+        break;
     }
 
     if(m_core.classType() == result) return;
@@ -359,7 +362,7 @@ void ChatObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int ChatObject::classType() const {
+quint32 ChatObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case Chat::typeChatEmpty:
@@ -376,6 +379,9 @@ int ChatObject::classType() const {
         break;
     case Chat::typeChannelForbidden:
         result = TypeChannelForbidden;
+        break;
+    default:
+        result = TypeChatEmpty;
         break;
     }
 

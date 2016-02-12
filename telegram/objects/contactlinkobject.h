@@ -15,7 +15,7 @@ class LIBQTELEGRAMSHARED_EXPORT ContactLinkObject : public TelegramTypeQObject
     Q_OBJECT
     Q_ENUMS(ContactLinkType)
     Q_PROPERTY(ContactLink core READ core WRITE setCore NOTIFY coreChanged)
-    Q_PROPERTY(int classType READ classType WRITE setClassType NOTIFY classTypeChanged)
+    Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum ContactLinkType {
@@ -29,8 +29,8 @@ public:
     ContactLinkObject(QObject *parent = 0);
     virtual ~ContactLinkObject();
 
-    void setClassType(int classType);
-    int classType() const;
+    void setClassType(quint32 classType);
+    quint32 classType() const;
 
     void setCore(const ContactLink &core);
     ContactLink core() const;

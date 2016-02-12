@@ -31,10 +31,13 @@ bool PrivacyKeyObject::operator ==(const PrivacyKey &b) const {
     return m_core == b;
 }
 
-void PrivacyKeyObject::setClassType(int classType) {
+void PrivacyKeyObject::setClassType(quint32 classType) {
     PrivacyKey::PrivacyKeyType result;
     switch(classType) {
     case TypePrivacyKeyStatusTimestamp:
+        result = PrivacyKey::typePrivacyKeyStatusTimestamp;
+        break;
+    default:
         result = PrivacyKey::typePrivacyKeyStatusTimestamp;
         break;
     }
@@ -45,10 +48,13 @@ void PrivacyKeyObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int PrivacyKeyObject::classType() const {
+quint32 PrivacyKeyObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case PrivacyKey::typePrivacyKeyStatusTimestamp:
+        result = TypePrivacyKeyStatusTimestamp;
+        break;
+    default:
         result = TypePrivacyKeyStatusTimestamp;
         break;
     }

@@ -43,7 +43,7 @@ bool ReportReasonObject::operator ==(const ReportReason &b) const {
     return m_core == b;
 }
 
-void ReportReasonObject::setClassType(int classType) {
+void ReportReasonObject::setClassType(quint32 classType) {
     ReportReason::ReportReasonType result;
     switch(classType) {
     case TypeInputReportReasonSpam:
@@ -58,6 +58,9 @@ void ReportReasonObject::setClassType(int classType) {
     case TypeInputReportReasonOther:
         result = ReportReason::typeInputReportReasonOther;
         break;
+    default:
+        result = ReportReason::typeInputReportReasonSpam;
+        break;
     }
 
     if(m_core.classType() == result) return;
@@ -66,7 +69,7 @@ void ReportReasonObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int ReportReasonObject::classType() const {
+quint32 ReportReasonObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case ReportReason::typeInputReportReasonSpam:
@@ -80,6 +83,9 @@ int ReportReasonObject::classType() const {
         break;
     case ReportReason::typeInputReportReasonOther:
         result = TypeInputReportReasonOther;
+        break;
+    default:
+        result = TypeInputReportReasonSpam;
         break;
     }
 

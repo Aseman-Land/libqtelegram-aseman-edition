@@ -55,10 +55,13 @@ bool AccountPrivacyRulesObject::operator ==(const AccountPrivacyRules &b) const 
     return m_core == b;
 }
 
-void AccountPrivacyRulesObject::setClassType(int classType) {
+void AccountPrivacyRulesObject::setClassType(quint32 classType) {
     AccountPrivacyRules::AccountPrivacyRulesType result;
     switch(classType) {
     case TypeAccountPrivacyRules:
+        result = AccountPrivacyRules::typeAccountPrivacyRules;
+        break;
+    default:
         result = AccountPrivacyRules::typeAccountPrivacyRules;
         break;
     }
@@ -69,10 +72,13 @@ void AccountPrivacyRulesObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int AccountPrivacyRulesObject::classType() const {
+quint32 AccountPrivacyRulesObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case AccountPrivacyRules::typeAccountPrivacyRules:
+        result = TypeAccountPrivacyRules;
+        break;
+    default:
         result = TypeAccountPrivacyRules;
         break;
     }

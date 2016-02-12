@@ -15,7 +15,7 @@ class LIBQTELEGRAMSHARED_EXPORT StorageFileTypeObject : public TelegramTypeQObje
     Q_OBJECT
     Q_ENUMS(StorageFileTypeType)
     Q_PROPERTY(StorageFileType core READ core WRITE setCore NOTIFY coreChanged)
-    Q_PROPERTY(int classType READ classType WRITE setClassType NOTIFY classTypeChanged)
+    Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum StorageFileTypeType {
@@ -35,8 +35,8 @@ public:
     StorageFileTypeObject(QObject *parent = 0);
     virtual ~StorageFileTypeObject();
 
-    void setClassType(int classType);
-    int classType() const;
+    void setClassType(quint32 classType);
+    quint32 classType() const;
 
     void setCore(const StorageFileType &core);
     StorageFileType core() const;

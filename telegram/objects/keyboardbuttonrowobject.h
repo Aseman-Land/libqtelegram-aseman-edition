@@ -16,7 +16,7 @@ class LIBQTELEGRAMSHARED_EXPORT KeyboardButtonRowObject : public TelegramTypeQOb
     Q_ENUMS(KeyboardButtonRowType)
     Q_PROPERTY(QList<KeyboardButton> buttons READ buttons WRITE setButtons NOTIFY buttonsChanged)
     Q_PROPERTY(KeyboardButtonRow core READ core WRITE setCore NOTIFY coreChanged)
-    Q_PROPERTY(int classType READ classType WRITE setClassType NOTIFY classTypeChanged)
+    Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum KeyboardButtonRowType {
@@ -30,8 +30,8 @@ public:
     void setButtons(const QList<KeyboardButton> &buttons);
     QList<KeyboardButton> buttons() const;
 
-    void setClassType(int classType);
-    int classType() const;
+    void setClassType(quint32 classType);
+    quint32 classType() const;
 
     void setCore(const KeyboardButtonRow &core);
     KeyboardButtonRow core() const;

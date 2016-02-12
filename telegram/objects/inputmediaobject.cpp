@@ -386,7 +386,7 @@ bool InputMediaObject::operator ==(const InputMedia &b) const {
     return m_core == b;
 }
 
-void InputMediaObject::setClassType(int classType) {
+void InputMediaObject::setClassType(quint32 classType) {
     InputMedia::InputMediaType result;
     switch(classType) {
     case TypeInputMediaEmpty:
@@ -434,6 +434,9 @@ void InputMediaObject::setClassType(int classType) {
     case TypeInputMediaGifExternal:
         result = InputMedia::typeInputMediaGifExternal;
         break;
+    default:
+        result = InputMedia::typeInputMediaEmpty;
+        break;
     }
 
     if(m_core.classType() == result) return;
@@ -442,7 +445,7 @@ void InputMediaObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int InputMediaObject::classType() const {
+quint32 InputMediaObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case InputMedia::typeInputMediaEmpty:
@@ -489,6 +492,9 @@ int InputMediaObject::classType() const {
         break;
     case InputMedia::typeInputMediaGifExternal:
         result = TypeInputMediaGifExternal;
+        break;
+    default:
+        result = TypeInputMediaEmpty;
         break;
     }
 

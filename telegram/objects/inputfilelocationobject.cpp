@@ -91,7 +91,7 @@ bool InputFileLocationObject::operator ==(const InputFileLocation &b) const {
     return m_core == b;
 }
 
-void InputFileLocationObject::setClassType(int classType) {
+void InputFileLocationObject::setClassType(quint32 classType) {
     InputFileLocation::InputFileLocationType result;
     switch(classType) {
     case TypeInputFileLocation:
@@ -109,6 +109,9 @@ void InputFileLocationObject::setClassType(int classType) {
     case TypeInputDocumentFileLocation:
         result = InputFileLocation::typeInputDocumentFileLocation;
         break;
+    default:
+        result = InputFileLocation::typeInputFileLocation;
+        break;
     }
 
     if(m_core.classType() == result) return;
@@ -117,7 +120,7 @@ void InputFileLocationObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int InputFileLocationObject::classType() const {
+quint32 InputFileLocationObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case InputFileLocation::typeInputFileLocation:
@@ -134,6 +137,9 @@ int InputFileLocationObject::classType() const {
         break;
     case InputFileLocation::typeInputDocumentFileLocation:
         result = TypeInputDocumentFileLocation;
+        break;
+    default:
+        result = TypeInputFileLocation;
         break;
     }
 

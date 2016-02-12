@@ -55,10 +55,13 @@ bool ReceivedNotifyMessageObject::operator ==(const ReceivedNotifyMessage &b) co
     return m_core == b;
 }
 
-void ReceivedNotifyMessageObject::setClassType(int classType) {
+void ReceivedNotifyMessageObject::setClassType(quint32 classType) {
     ReceivedNotifyMessage::ReceivedNotifyMessageType result;
     switch(classType) {
     case TypeReceivedNotifyMessage:
+        result = ReceivedNotifyMessage::typeReceivedNotifyMessage;
+        break;
+    default:
         result = ReceivedNotifyMessage::typeReceivedNotifyMessage;
         break;
     }
@@ -69,10 +72,13 @@ void ReceivedNotifyMessageObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int ReceivedNotifyMessageObject::classType() const {
+quint32 ReceivedNotifyMessageObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case ReceivedNotifyMessage::typeReceivedNotifyMessage:
+        result = TypeReceivedNotifyMessage;
+        break;
+    default:
         result = TypeReceivedNotifyMessage;
         break;
     }

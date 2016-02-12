@@ -43,10 +43,13 @@ bool AuthPasswordRecoveryObject::operator ==(const AuthPasswordRecovery &b) cons
     return m_core == b;
 }
 
-void AuthPasswordRecoveryObject::setClassType(int classType) {
+void AuthPasswordRecoveryObject::setClassType(quint32 classType) {
     AuthPasswordRecovery::AuthPasswordRecoveryType result;
     switch(classType) {
     case TypeAuthPasswordRecovery:
+        result = AuthPasswordRecovery::typeAuthPasswordRecovery;
+        break;
+    default:
         result = AuthPasswordRecovery::typeAuthPasswordRecovery;
         break;
     }
@@ -57,10 +60,13 @@ void AuthPasswordRecoveryObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int AuthPasswordRecoveryObject::classType() const {
+quint32 AuthPasswordRecoveryObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case AuthPasswordRecovery::typeAuthPasswordRecovery:
+        result = TypeAuthPasswordRecovery;
+        break;
+    default:
         result = TypeAuthPasswordRecovery;
         break;
     }

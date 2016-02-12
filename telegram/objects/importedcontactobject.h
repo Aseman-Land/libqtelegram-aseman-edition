@@ -17,7 +17,7 @@ class LIBQTELEGRAMSHARED_EXPORT ImportedContactObject : public TelegramTypeQObje
     Q_PROPERTY(qint64 clientId READ clientId WRITE setClientId NOTIFY clientIdChanged)
     Q_PROPERTY(qint32 userId READ userId WRITE setUserId NOTIFY userIdChanged)
     Q_PROPERTY(ImportedContact core READ core WRITE setCore NOTIFY coreChanged)
-    Q_PROPERTY(int classType READ classType WRITE setClassType NOTIFY classTypeChanged)
+    Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum ImportedContactType {
@@ -34,8 +34,8 @@ public:
     void setUserId(qint32 userId);
     qint32 userId() const;
 
-    void setClassType(int classType);
-    int classType() const;
+    void setClassType(quint32 classType);
+    quint32 classType() const;
 
     void setCore(const ImportedContact &core);
     ImportedContact core() const;

@@ -20,7 +20,7 @@ class LIBQTELEGRAMSHARED_EXPORT InputEncryptedFileObject : public TelegramTypeQO
     Q_PROPERTY(QString md5Checksum READ md5Checksum WRITE setMd5Checksum NOTIFY md5ChecksumChanged)
     Q_PROPERTY(qint32 parts READ parts WRITE setParts NOTIFY partsChanged)
     Q_PROPERTY(InputEncryptedFile core READ core WRITE setCore NOTIFY coreChanged)
-    Q_PROPERTY(int classType READ classType WRITE setClassType NOTIFY classTypeChanged)
+    Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum InputEncryptedFileType {
@@ -49,8 +49,8 @@ public:
     void setParts(qint32 parts);
     qint32 parts() const;
 
-    void setClassType(int classType);
-    int classType() const;
+    void setClassType(quint32 classType);
+    quint32 classType() const;
 
     void setCore(const InputEncryptedFile &core);
     InputEncryptedFile core() const;

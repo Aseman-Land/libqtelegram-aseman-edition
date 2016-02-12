@@ -67,7 +67,7 @@ bool InputStickerSetObject::operator ==(const InputStickerSet &b) const {
     return m_core == b;
 }
 
-void InputStickerSetObject::setClassType(int classType) {
+void InputStickerSetObject::setClassType(quint32 classType) {
     InputStickerSet::InputStickerSetType result;
     switch(classType) {
     case TypeInputStickerSetEmpty:
@@ -79,6 +79,9 @@ void InputStickerSetObject::setClassType(int classType) {
     case TypeInputStickerSetShortName:
         result = InputStickerSet::typeInputStickerSetShortName;
         break;
+    default:
+        result = InputStickerSet::typeInputStickerSetEmpty;
+        break;
     }
 
     if(m_core.classType() == result) return;
@@ -87,7 +90,7 @@ void InputStickerSetObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int InputStickerSetObject::classType() const {
+quint32 InputStickerSetObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case InputStickerSet::typeInputStickerSetEmpty:
@@ -98,6 +101,9 @@ int InputStickerSetObject::classType() const {
         break;
     case InputStickerSet::typeInputStickerSetShortName:
         result = TypeInputStickerSetShortName;
+        break;
+    default:
+        result = TypeInputStickerSetEmpty;
         break;
     }
 

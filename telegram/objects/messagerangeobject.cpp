@@ -55,10 +55,13 @@ bool MessageRangeObject::operator ==(const MessageRange &b) const {
     return m_core == b;
 }
 
-void MessageRangeObject::setClassType(int classType) {
+void MessageRangeObject::setClassType(quint32 classType) {
     MessageRange::MessageRangeType result;
     switch(classType) {
     case TypeMessageRange:
+        result = MessageRange::typeMessageRange;
+        break;
+    default:
         result = MessageRange::typeMessageRange;
         break;
     }
@@ -69,10 +72,13 @@ void MessageRangeObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int MessageRangeObject::classType() const {
+quint32 MessageRangeObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case MessageRange::typeMessageRange:
+        result = TypeMessageRange;
+        break;
+    default:
         result = TypeMessageRange;
         break;
     }

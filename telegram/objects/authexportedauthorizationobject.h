@@ -17,7 +17,7 @@ class LIBQTELEGRAMSHARED_EXPORT AuthExportedAuthorizationObject : public Telegra
     Q_PROPERTY(QByteArray bytes READ bytes WRITE setBytes NOTIFY bytesChanged)
     Q_PROPERTY(qint32 id READ id WRITE setId NOTIFY idChanged)
     Q_PROPERTY(AuthExportedAuthorization core READ core WRITE setCore NOTIFY coreChanged)
-    Q_PROPERTY(int classType READ classType WRITE setClassType NOTIFY classTypeChanged)
+    Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum AuthExportedAuthorizationType {
@@ -34,8 +34,8 @@ public:
     void setId(qint32 id);
     qint32 id() const;
 
-    void setClassType(int classType);
-    int classType() const;
+    void setClassType(quint32 classType);
+    quint32 classType() const;
 
     void setCore(const AuthExportedAuthorization &core);
     AuthExportedAuthorization core() const;

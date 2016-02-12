@@ -55,7 +55,7 @@ bool ContactsContactsObject::operator ==(const ContactsContacts &b) const {
     return m_core == b;
 }
 
-void ContactsContactsObject::setClassType(int classType) {
+void ContactsContactsObject::setClassType(quint32 classType) {
     ContactsContacts::ContactsContactsType result;
     switch(classType) {
     case TypeContactsContactsNotModified:
@@ -63,6 +63,9 @@ void ContactsContactsObject::setClassType(int classType) {
         break;
     case TypeContactsContacts:
         result = ContactsContacts::typeContactsContacts;
+        break;
+    default:
+        result = ContactsContacts::typeContactsContactsNotModified;
         break;
     }
 
@@ -72,7 +75,7 @@ void ContactsContactsObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int ContactsContactsObject::classType() const {
+quint32 ContactsContactsObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case ContactsContacts::typeContactsContactsNotModified:
@@ -80,6 +83,9 @@ int ContactsContactsObject::classType() const {
         break;
     case ContactsContacts::typeContactsContacts:
         result = TypeContactsContacts;
+        break;
+    default:
+        result = TypeContactsContactsNotModified;
         break;
     }
 

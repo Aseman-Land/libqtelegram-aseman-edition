@@ -79,7 +79,7 @@ bool MessageEntityObject::operator ==(const MessageEntity &b) const {
     return m_core == b;
 }
 
-void MessageEntityObject::setClassType(int classType) {
+void MessageEntityObject::setClassType(quint32 classType) {
     MessageEntity::MessageEntityType result;
     switch(classType) {
     case TypeMessageEntityUnknown:
@@ -115,6 +115,9 @@ void MessageEntityObject::setClassType(int classType) {
     case TypeMessageEntityTextUrl:
         result = MessageEntity::typeMessageEntityTextUrl;
         break;
+    default:
+        result = MessageEntity::typeMessageEntityUnknown;
+        break;
     }
 
     if(m_core.classType() == result) return;
@@ -123,7 +126,7 @@ void MessageEntityObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int MessageEntityObject::classType() const {
+quint32 MessageEntityObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case MessageEntity::typeMessageEntityUnknown:
@@ -158,6 +161,9 @@ int MessageEntityObject::classType() const {
         break;
     case MessageEntity::typeMessageEntityTextUrl:
         result = TypeMessageEntityTextUrl;
+        break;
+    default:
+        result = TypeMessageEntityUnknown;
         break;
     }
 

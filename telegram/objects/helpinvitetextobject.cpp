@@ -43,10 +43,13 @@ bool HelpInviteTextObject::operator ==(const HelpInviteText &b) const {
     return m_core == b;
 }
 
-void HelpInviteTextObject::setClassType(int classType) {
+void HelpInviteTextObject::setClassType(quint32 classType) {
     HelpInviteText::HelpInviteTextType result;
     switch(classType) {
     case TypeHelpInviteText:
+        result = HelpInviteText::typeHelpInviteText;
+        break;
+    default:
         result = HelpInviteText::typeHelpInviteText;
         break;
     }
@@ -57,10 +60,13 @@ void HelpInviteTextObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int HelpInviteTextObject::classType() const {
+quint32 HelpInviteTextObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case HelpInviteText::typeHelpInviteText:
+        result = TypeHelpInviteText;
+        break;
+    default:
         result = TypeHelpInviteText;
         break;
     }

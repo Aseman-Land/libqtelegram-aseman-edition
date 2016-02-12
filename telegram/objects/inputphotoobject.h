@@ -17,7 +17,7 @@ class LIBQTELEGRAMSHARED_EXPORT InputPhotoObject : public TelegramTypeQObject
     Q_PROPERTY(qint64 accessHash READ accessHash WRITE setAccessHash NOTIFY accessHashChanged)
     Q_PROPERTY(qint64 id READ id WRITE setId NOTIFY idChanged)
     Q_PROPERTY(InputPhoto core READ core WRITE setCore NOTIFY coreChanged)
-    Q_PROPERTY(int classType READ classType WRITE setClassType NOTIFY classTypeChanged)
+    Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum InputPhotoType {
@@ -35,8 +35,8 @@ public:
     void setId(qint64 id);
     qint64 id() const;
 
-    void setClassType(int classType);
-    int classType() const;
+    void setClassType(quint32 classType);
+    quint32 classType() const;
 
     void setCore(const InputPhoto &core);
     InputPhoto core() const;

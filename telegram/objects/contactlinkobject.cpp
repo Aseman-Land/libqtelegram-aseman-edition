@@ -31,7 +31,7 @@ bool ContactLinkObject::operator ==(const ContactLink &b) const {
     return m_core == b;
 }
 
-void ContactLinkObject::setClassType(int classType) {
+void ContactLinkObject::setClassType(quint32 classType) {
     ContactLink::ContactLinkType result;
     switch(classType) {
     case TypeContactLinkUnknown:
@@ -46,6 +46,9 @@ void ContactLinkObject::setClassType(int classType) {
     case TypeContactLinkContact:
         result = ContactLink::typeContactLinkContact;
         break;
+    default:
+        result = ContactLink::typeContactLinkUnknown;
+        break;
     }
 
     if(m_core.classType() == result) return;
@@ -54,7 +57,7 @@ void ContactLinkObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int ContactLinkObject::classType() const {
+quint32 ContactLinkObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case ContactLink::typeContactLinkUnknown:
@@ -68,6 +71,9 @@ int ContactLinkObject::classType() const {
         break;
     case ContactLink::typeContactLinkContact:
         result = TypeContactLinkContact;
+        break;
+    default:
+        result = TypeContactLinkUnknown;
         break;
     }
 

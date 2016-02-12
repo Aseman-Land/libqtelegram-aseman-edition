@@ -43,10 +43,13 @@ bool KeyboardButtonRowObject::operator ==(const KeyboardButtonRow &b) const {
     return m_core == b;
 }
 
-void KeyboardButtonRowObject::setClassType(int classType) {
+void KeyboardButtonRowObject::setClassType(quint32 classType) {
     KeyboardButtonRow::KeyboardButtonRowType result;
     switch(classType) {
     case TypeKeyboardButtonRow:
+        result = KeyboardButtonRow::typeKeyboardButtonRow;
+        break;
+    default:
         result = KeyboardButtonRow::typeKeyboardButtonRow;
         break;
     }
@@ -57,10 +60,13 @@ void KeyboardButtonRowObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int KeyboardButtonRowObject::classType() const {
+quint32 KeyboardButtonRowObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case KeyboardButtonRow::typeKeyboardButtonRow:
+        result = TypeKeyboardButtonRow;
+        break;
+    default:
         result = TypeKeyboardButtonRow;
         break;
     }

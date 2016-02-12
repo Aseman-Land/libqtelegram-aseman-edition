@@ -67,7 +67,7 @@ bool PhotosPhotosObject::operator ==(const PhotosPhotos &b) const {
     return m_core == b;
 }
 
-void PhotosPhotosObject::setClassType(int classType) {
+void PhotosPhotosObject::setClassType(quint32 classType) {
     PhotosPhotos::PhotosPhotosType result;
     switch(classType) {
     case TypePhotosPhotos:
@@ -75,6 +75,9 @@ void PhotosPhotosObject::setClassType(int classType) {
         break;
     case TypePhotosPhotosSlice:
         result = PhotosPhotos::typePhotosPhotosSlice;
+        break;
+    default:
+        result = PhotosPhotos::typePhotosPhotos;
         break;
     }
 
@@ -84,7 +87,7 @@ void PhotosPhotosObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int PhotosPhotosObject::classType() const {
+quint32 PhotosPhotosObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case PhotosPhotos::typePhotosPhotos:
@@ -92,6 +95,9 @@ int PhotosPhotosObject::classType() const {
         break;
     case PhotosPhotos::typePhotosPhotosSlice:
         result = TypePhotosPhotosSlice;
+        break;
+    default:
+        result = TypePhotosPhotos;
         break;
     }
 

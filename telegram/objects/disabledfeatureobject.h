@@ -17,7 +17,7 @@ class LIBQTELEGRAMSHARED_EXPORT DisabledFeatureObject : public TelegramTypeQObje
     Q_PROPERTY(QString description READ description WRITE setDescription NOTIFY descriptionChanged)
     Q_PROPERTY(QString feature READ feature WRITE setFeature NOTIFY featureChanged)
     Q_PROPERTY(DisabledFeature core READ core WRITE setCore NOTIFY coreChanged)
-    Q_PROPERTY(int classType READ classType WRITE setClassType NOTIFY classTypeChanged)
+    Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum DisabledFeatureType {
@@ -34,8 +34,8 @@ public:
     void setFeature(const QString &feature);
     QString feature() const;
 
-    void setClassType(int classType);
-    int classType() const;
+    void setClassType(quint32 classType);
+    quint32 classType() const;
 
     void setCore(const DisabledFeature &core);
     DisabledFeature core() const;

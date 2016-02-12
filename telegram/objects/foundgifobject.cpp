@@ -153,7 +153,7 @@ bool FoundGifObject::operator ==(const FoundGif &b) const {
     return m_core == b;
 }
 
-void FoundGifObject::setClassType(int classType) {
+void FoundGifObject::setClassType(quint32 classType) {
     FoundGif::FoundGifType result;
     switch(classType) {
     case TypeFoundGif:
@@ -161,6 +161,9 @@ void FoundGifObject::setClassType(int classType) {
         break;
     case TypeFoundGifCached:
         result = FoundGif::typeFoundGifCached;
+        break;
+    default:
+        result = FoundGif::typeFoundGif;
         break;
     }
 
@@ -170,7 +173,7 @@ void FoundGifObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int FoundGifObject::classType() const {
+quint32 FoundGifObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case FoundGif::typeFoundGif:
@@ -178,6 +181,9 @@ int FoundGifObject::classType() const {
         break;
     case FoundGif::typeFoundGifCached:
         result = TypeFoundGifCached;
+        break;
+    default:
+        result = TypeFoundGif;
         break;
     }
 

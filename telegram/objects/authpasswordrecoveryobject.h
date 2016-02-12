@@ -16,7 +16,7 @@ class LIBQTELEGRAMSHARED_EXPORT AuthPasswordRecoveryObject : public TelegramType
     Q_ENUMS(AuthPasswordRecoveryType)
     Q_PROPERTY(QString emailPattern READ emailPattern WRITE setEmailPattern NOTIFY emailPatternChanged)
     Q_PROPERTY(AuthPasswordRecovery core READ core WRITE setCore NOTIFY coreChanged)
-    Q_PROPERTY(int classType READ classType WRITE setClassType NOTIFY classTypeChanged)
+    Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum AuthPasswordRecoveryType {
@@ -30,8 +30,8 @@ public:
     void setEmailPattern(const QString &emailPattern);
     QString emailPattern() const;
 
-    void setClassType(int classType);
-    int classType() const;
+    void setClassType(quint32 classType);
+    quint32 classType() const;
 
     void setCore(const AuthPasswordRecovery &core);
     AuthPasswordRecovery core() const;

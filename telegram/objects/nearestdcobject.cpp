@@ -67,10 +67,13 @@ bool NearestDcObject::operator ==(const NearestDc &b) const {
     return m_core == b;
 }
 
-void NearestDcObject::setClassType(int classType) {
+void NearestDcObject::setClassType(quint32 classType) {
     NearestDc::NearestDcType result;
     switch(classType) {
     case TypeNearestDc:
+        result = NearestDc::typeNearestDc;
+        break;
+    default:
         result = NearestDc::typeNearestDc;
         break;
     }
@@ -81,10 +84,13 @@ void NearestDcObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int NearestDcObject::classType() const {
+quint32 NearestDcObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case NearestDc::typeNearestDc:
+        result = TypeNearestDc;
+        break;
+    default:
         result = TypeNearestDc;
         break;
     }

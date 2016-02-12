@@ -81,7 +81,7 @@ bool ChatPhotoObject::operator ==(const ChatPhoto &b) const {
     return m_core == b;
 }
 
-void ChatPhotoObject::setClassType(int classType) {
+void ChatPhotoObject::setClassType(quint32 classType) {
     ChatPhoto::ChatPhotoType result;
     switch(classType) {
     case TypeChatPhotoEmpty:
@@ -89,6 +89,9 @@ void ChatPhotoObject::setClassType(int classType) {
         break;
     case TypeChatPhoto:
         result = ChatPhoto::typeChatPhoto;
+        break;
+    default:
+        result = ChatPhoto::typeChatPhotoEmpty;
         break;
     }
 
@@ -98,7 +101,7 @@ void ChatPhotoObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int ChatPhotoObject::classType() const {
+quint32 ChatPhotoObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case ChatPhoto::typeChatPhotoEmpty:
@@ -106,6 +109,9 @@ int ChatPhotoObject::classType() const {
         break;
     case ChatPhoto::typeChatPhoto:
         result = TypeChatPhoto;
+        break;
+    default:
+        result = TypeChatPhotoEmpty;
         break;
     }
 

@@ -20,7 +20,7 @@ class LIBQTELEGRAMSHARED_EXPORT BotInlineMessageObject : public TelegramTypeQObj
     Q_PROPERTY(QString message READ message WRITE setMessage NOTIFY messageChanged)
     Q_PROPERTY(bool noWebpage READ noWebpage WRITE setNoWebpage NOTIFY noWebpageChanged)
     Q_PROPERTY(BotInlineMessage core READ core WRITE setCore NOTIFY coreChanged)
-    Q_PROPERTY(int classType READ classType WRITE setClassType NOTIFY classTypeChanged)
+    Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum BotInlineMessageType {
@@ -47,8 +47,8 @@ public:
     void setNoWebpage(bool noWebpage);
     bool noWebpage() const;
 
-    void setClassType(int classType);
-    int classType() const;
+    void setClassType(quint32 classType);
+    quint32 classType() const;
 
     void setCore(const BotInlineMessage &core);
     BotInlineMessage core() const;

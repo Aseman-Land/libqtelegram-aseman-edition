@@ -31,7 +31,7 @@ bool PeerNotifyEventsObject::operator ==(const PeerNotifyEvents &b) const {
     return m_core == b;
 }
 
-void PeerNotifyEventsObject::setClassType(int classType) {
+void PeerNotifyEventsObject::setClassType(quint32 classType) {
     PeerNotifyEvents::PeerNotifyEventsType result;
     switch(classType) {
     case TypePeerNotifyEventsEmpty:
@@ -39,6 +39,9 @@ void PeerNotifyEventsObject::setClassType(int classType) {
         break;
     case TypePeerNotifyEventsAll:
         result = PeerNotifyEvents::typePeerNotifyEventsAll;
+        break;
+    default:
+        result = PeerNotifyEvents::typePeerNotifyEventsEmpty;
         break;
     }
 
@@ -48,7 +51,7 @@ void PeerNotifyEventsObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int PeerNotifyEventsObject::classType() const {
+quint32 PeerNotifyEventsObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case PeerNotifyEvents::typePeerNotifyEventsEmpty:
@@ -56,6 +59,9 @@ int PeerNotifyEventsObject::classType() const {
         break;
     case PeerNotifyEvents::typePeerNotifyEventsAll:
         result = TypePeerNotifyEventsAll;
+        break;
+    default:
+        result = TypePeerNotifyEventsEmpty;
         break;
     }
 

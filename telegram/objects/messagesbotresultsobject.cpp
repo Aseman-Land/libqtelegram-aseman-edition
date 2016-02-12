@@ -91,10 +91,13 @@ bool MessagesBotResultsObject::operator ==(const MessagesBotResults &b) const {
     return m_core == b;
 }
 
-void MessagesBotResultsObject::setClassType(int classType) {
+void MessagesBotResultsObject::setClassType(quint32 classType) {
     MessagesBotResults::MessagesBotResultsType result;
     switch(classType) {
     case TypeMessagesBotResults:
+        result = MessagesBotResults::typeMessagesBotResults;
+        break;
+    default:
         result = MessagesBotResults::typeMessagesBotResults;
         break;
     }
@@ -105,10 +108,13 @@ void MessagesBotResultsObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int MessagesBotResultsObject::classType() const {
+quint32 MessagesBotResultsObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case MessagesBotResults::typeMessagesBotResults:
+        result = TypeMessagesBotResults;
+        break;
+    default:
         result = TypeMessagesBotResults;
         break;
     }

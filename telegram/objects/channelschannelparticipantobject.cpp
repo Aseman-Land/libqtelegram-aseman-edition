@@ -68,10 +68,13 @@ bool ChannelsChannelParticipantObject::operator ==(const ChannelsChannelParticip
     return m_core == b;
 }
 
-void ChannelsChannelParticipantObject::setClassType(int classType) {
+void ChannelsChannelParticipantObject::setClassType(quint32 classType) {
     ChannelsChannelParticipant::ChannelsChannelParticipantType result;
     switch(classType) {
     case TypeChannelsChannelParticipant:
+        result = ChannelsChannelParticipant::typeChannelsChannelParticipant;
+        break;
+    default:
         result = ChannelsChannelParticipant::typeChannelsChannelParticipant;
         break;
     }
@@ -82,10 +85,13 @@ void ChannelsChannelParticipantObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int ChannelsChannelParticipantObject::classType() const {
+quint32 ChannelsChannelParticipantObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case ChannelsChannelParticipant::typeChannelsChannelParticipant:
+        result = TypeChannelsChannelParticipant;
+        break;
+    default:
         result = TypeChannelsChannelParticipant;
         break;
     }

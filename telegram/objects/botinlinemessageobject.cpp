@@ -91,7 +91,7 @@ bool BotInlineMessageObject::operator ==(const BotInlineMessage &b) const {
     return m_core == b;
 }
 
-void BotInlineMessageObject::setClassType(int classType) {
+void BotInlineMessageObject::setClassType(quint32 classType) {
     BotInlineMessage::BotInlineMessageType result;
     switch(classType) {
     case TypeBotInlineMessageMediaAuto:
@@ -99,6 +99,9 @@ void BotInlineMessageObject::setClassType(int classType) {
         break;
     case TypeBotInlineMessageText:
         result = BotInlineMessage::typeBotInlineMessageText;
+        break;
+    default:
+        result = BotInlineMessage::typeBotInlineMessageMediaAuto;
         break;
     }
 
@@ -108,7 +111,7 @@ void BotInlineMessageObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int BotInlineMessageObject::classType() const {
+quint32 BotInlineMessageObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case BotInlineMessage::typeBotInlineMessageMediaAuto:
@@ -116,6 +119,9 @@ int BotInlineMessageObject::classType() const {
         break;
     case BotInlineMessage::typeBotInlineMessageText:
         result = TypeBotInlineMessageText;
+        break;
+    default:
+        result = TypeBotInlineMessageMediaAuto;
         break;
     }
 

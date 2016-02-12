@@ -21,7 +21,7 @@ class LIBQTELEGRAMSHARED_EXPORT EncryptedMessageObject : public TelegramTypeQObj
     Q_PROPERTY(EncryptedFileObject* file READ file WRITE setFile NOTIFY fileChanged)
     Q_PROPERTY(qint64 randomId READ randomId WRITE setRandomId NOTIFY randomIdChanged)
     Q_PROPERTY(EncryptedMessage core READ core WRITE setCore NOTIFY coreChanged)
-    Q_PROPERTY(int classType READ classType WRITE setClassType NOTIFY classTypeChanged)
+    Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum EncryptedMessageType {
@@ -48,8 +48,8 @@ public:
     void setRandomId(qint64 randomId);
     qint64 randomId() const;
 
-    void setClassType(int classType);
-    int classType() const;
+    void setClassType(quint32 classType);
+    quint32 classType() const;
 
     void setCore(const EncryptedMessage &core);
     EncryptedMessage core() const;

@@ -15,7 +15,7 @@ class LIBQTELEGRAMSHARED_EXPORT InputPrivacyKeyObject : public TelegramTypeQObje
     Q_OBJECT
     Q_ENUMS(InputPrivacyKeyType)
     Q_PROPERTY(InputPrivacyKey core READ core WRITE setCore NOTIFY coreChanged)
-    Q_PROPERTY(int classType READ classType WRITE setClassType NOTIFY classTypeChanged)
+    Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum InputPrivacyKeyType {
@@ -26,8 +26,8 @@ public:
     InputPrivacyKeyObject(QObject *parent = 0);
     virtual ~InputPrivacyKeyObject();
 
-    void setClassType(int classType);
-    int classType() const;
+    void setClassType(quint32 classType);
+    quint32 classType() const;
 
     void setCore(const InputPrivacyKey &core);
     InputPrivacyKey core() const;

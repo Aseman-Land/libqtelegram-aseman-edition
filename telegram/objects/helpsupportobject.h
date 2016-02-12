@@ -18,7 +18,7 @@ class LIBQTELEGRAMSHARED_EXPORT HelpSupportObject : public TelegramTypeQObject
     Q_PROPERTY(QString phoneNumber READ phoneNumber WRITE setPhoneNumber NOTIFY phoneNumberChanged)
     Q_PROPERTY(UserObject* user READ user WRITE setUser NOTIFY userChanged)
     Q_PROPERTY(HelpSupport core READ core WRITE setCore NOTIFY coreChanged)
-    Q_PROPERTY(int classType READ classType WRITE setClassType NOTIFY classTypeChanged)
+    Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum HelpSupportType {
@@ -35,8 +35,8 @@ public:
     void setUser(UserObject* user);
     UserObject* user() const;
 
-    void setClassType(int classType);
-    int classType() const;
+    void setClassType(quint32 classType);
+    quint32 classType() const;
 
     void setCore(const HelpSupport &core);
     HelpSupport core() const;

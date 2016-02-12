@@ -16,7 +16,7 @@ class LIBQTELEGRAMSHARED_EXPORT ExportedChatInviteObject : public TelegramTypeQO
     Q_ENUMS(ExportedChatInviteType)
     Q_PROPERTY(QString link READ link WRITE setLink NOTIFY linkChanged)
     Q_PROPERTY(ExportedChatInvite core READ core WRITE setCore NOTIFY coreChanged)
-    Q_PROPERTY(int classType READ classType WRITE setClassType NOTIFY classTypeChanged)
+    Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum ExportedChatInviteType {
@@ -31,8 +31,8 @@ public:
     void setLink(const QString &link);
     QString link() const;
 
-    void setClassType(int classType);
-    int classType() const;
+    void setClassType(quint32 classType);
+    quint32 classType() const;
 
     void setCore(const ExportedChatInvite &core);
     ExportedChatInvite core() const;

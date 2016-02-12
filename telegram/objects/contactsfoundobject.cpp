@@ -67,10 +67,13 @@ bool ContactsFoundObject::operator ==(const ContactsFound &b) const {
     return m_core == b;
 }
 
-void ContactsFoundObject::setClassType(int classType) {
+void ContactsFoundObject::setClassType(quint32 classType) {
     ContactsFound::ContactsFoundType result;
     switch(classType) {
     case TypeContactsFound:
+        result = ContactsFound::typeContactsFound;
+        break;
+    default:
         result = ContactsFound::typeContactsFound;
         break;
     }
@@ -81,10 +84,13 @@ void ContactsFoundObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int ContactsFoundObject::classType() const {
+quint32 ContactsFoundObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case ContactsFound::typeContactsFound:
+        result = TypeContactsFound;
+        break;
+    default:
         result = TypeContactsFound;
         break;
     }

@@ -79,10 +79,13 @@ bool InputContactObject::operator ==(const InputContact &b) const {
     return m_core == b;
 }
 
-void InputContactObject::setClassType(int classType) {
+void InputContactObject::setClassType(quint32 classType) {
     InputContact::InputContactType result;
     switch(classType) {
     case TypeInputPhoneContact:
+        result = InputContact::typeInputPhoneContact;
+        break;
+    default:
         result = InputContact::typeInputPhoneContact;
         break;
     }
@@ -93,10 +96,13 @@ void InputContactObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int InputContactObject::classType() const {
+quint32 InputContactObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case InputContact::typeInputPhoneContact:
+        result = TypeInputPhoneContact;
+        break;
+    default:
         result = TypeInputPhoneContact;
         break;
     }

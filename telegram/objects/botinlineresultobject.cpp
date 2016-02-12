@@ -250,7 +250,7 @@ bool BotInlineResultObject::operator ==(const BotInlineResult &b) const {
     return m_core == b;
 }
 
-void BotInlineResultObject::setClassType(int classType) {
+void BotInlineResultObject::setClassType(quint32 classType) {
     BotInlineResult::BotInlineResultType result;
     switch(classType) {
     case TypeBotInlineMediaResultDocument:
@@ -262,6 +262,9 @@ void BotInlineResultObject::setClassType(int classType) {
     case TypeBotInlineResult:
         result = BotInlineResult::typeBotInlineResult;
         break;
+    default:
+        result = BotInlineResult::typeBotInlineMediaResultDocument;
+        break;
     }
 
     if(m_core.classType() == result) return;
@@ -270,7 +273,7 @@ void BotInlineResultObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int BotInlineResultObject::classType() const {
+quint32 BotInlineResultObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case BotInlineResult::typeBotInlineMediaResultDocument:
@@ -281,6 +284,9 @@ int BotInlineResultObject::classType() const {
         break;
     case BotInlineResult::typeBotInlineResult:
         result = TypeBotInlineResult;
+        break;
+    default:
+        result = TypeBotInlineMediaResultDocument;
         break;
     }
 

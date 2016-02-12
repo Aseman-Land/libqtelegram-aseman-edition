@@ -19,7 +19,7 @@ class LIBQTELEGRAMSHARED_EXPORT HelpAppUpdateObject : public TelegramTypeQObject
     Q_PROPERTY(QString text READ text WRITE setText NOTIFY textChanged)
     Q_PROPERTY(QString url READ url WRITE setUrl NOTIFY urlChanged)
     Q_PROPERTY(HelpAppUpdate core READ core WRITE setCore NOTIFY coreChanged)
-    Q_PROPERTY(int classType READ classType WRITE setClassType NOTIFY classTypeChanged)
+    Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum HelpAppUpdateType {
@@ -43,8 +43,8 @@ public:
     void setUrl(const QString &url);
     QString url() const;
 
-    void setClassType(int classType);
-    int classType() const;
+    void setClassType(quint32 classType);
+    quint32 classType() const;
 
     void setCore(const HelpAppUpdate &core);
     HelpAppUpdate core() const;

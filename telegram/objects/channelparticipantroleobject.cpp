@@ -31,7 +31,7 @@ bool ChannelParticipantRoleObject::operator ==(const ChannelParticipantRole &b) 
     return m_core == b;
 }
 
-void ChannelParticipantRoleObject::setClassType(int classType) {
+void ChannelParticipantRoleObject::setClassType(quint32 classType) {
     ChannelParticipantRole::ChannelParticipantRoleType result;
     switch(classType) {
     case TypeChannelRoleEmpty:
@@ -43,6 +43,9 @@ void ChannelParticipantRoleObject::setClassType(int classType) {
     case TypeChannelRoleEditor:
         result = ChannelParticipantRole::typeChannelRoleEditor;
         break;
+    default:
+        result = ChannelParticipantRole::typeChannelRoleEmpty;
+        break;
     }
 
     if(m_core.classType() == result) return;
@@ -51,7 +54,7 @@ void ChannelParticipantRoleObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int ChannelParticipantRoleObject::classType() const {
+quint32 ChannelParticipantRoleObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case ChannelParticipantRole::typeChannelRoleEmpty:
@@ -62,6 +65,9 @@ int ChannelParticipantRoleObject::classType() const {
         break;
     case ChannelParticipantRole::typeChannelRoleEditor:
         result = TypeChannelRoleEditor;
+        break;
+    default:
+        result = TypeChannelRoleEmpty;
         break;
     }
 

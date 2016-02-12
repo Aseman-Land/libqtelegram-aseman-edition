@@ -16,7 +16,7 @@ class LIBQTELEGRAMSHARED_EXPORT AuthCheckedPhoneObject : public TelegramTypeQObj
     Q_ENUMS(AuthCheckedPhoneType)
     Q_PROPERTY(bool phoneRegistered READ phoneRegistered WRITE setPhoneRegistered NOTIFY phoneRegisteredChanged)
     Q_PROPERTY(AuthCheckedPhone core READ core WRITE setCore NOTIFY coreChanged)
-    Q_PROPERTY(int classType READ classType WRITE setClassType NOTIFY classTypeChanged)
+    Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum AuthCheckedPhoneType {
@@ -30,8 +30,8 @@ public:
     void setPhoneRegistered(bool phoneRegistered);
     bool phoneRegistered() const;
 
-    void setClassType(int classType);
-    int classType() const;
+    void setClassType(quint32 classType);
+    quint32 classType() const;
 
     void setCore(const AuthCheckedPhone &core);
     AuthCheckedPhone core() const;

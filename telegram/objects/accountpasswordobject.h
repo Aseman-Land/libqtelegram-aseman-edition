@@ -20,7 +20,7 @@ class LIBQTELEGRAMSHARED_EXPORT AccountPasswordObject : public TelegramTypeQObje
     Q_PROPERTY(QString hint READ hint WRITE setHint NOTIFY hintChanged)
     Q_PROPERTY(QByteArray newSalt READ newSalt WRITE setNewSalt NOTIFY newSaltChanged)
     Q_PROPERTY(AccountPassword core READ core WRITE setCore NOTIFY coreChanged)
-    Q_PROPERTY(int classType READ classType WRITE setClassType NOTIFY classTypeChanged)
+    Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum AccountPasswordType {
@@ -47,8 +47,8 @@ public:
     void setNewSalt(const QByteArray &newSalt);
     QByteArray newSalt() const;
 
-    void setClassType(int classType);
-    int classType() const;
+    void setClassType(quint32 classType);
+    quint32 classType() const;
 
     void setCore(const AccountPassword &core);
     AccountPassword core() const;

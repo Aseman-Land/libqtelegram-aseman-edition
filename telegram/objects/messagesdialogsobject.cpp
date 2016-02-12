@@ -91,7 +91,7 @@ bool MessagesDialogsObject::operator ==(const MessagesDialogs &b) const {
     return m_core == b;
 }
 
-void MessagesDialogsObject::setClassType(int classType) {
+void MessagesDialogsObject::setClassType(quint32 classType) {
     MessagesDialogs::MessagesDialogsType result;
     switch(classType) {
     case TypeMessagesDialogs:
@@ -99,6 +99,9 @@ void MessagesDialogsObject::setClassType(int classType) {
         break;
     case TypeMessagesDialogsSlice:
         result = MessagesDialogs::typeMessagesDialogsSlice;
+        break;
+    default:
+        result = MessagesDialogs::typeMessagesDialogs;
         break;
     }
 
@@ -108,7 +111,7 @@ void MessagesDialogsObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int MessagesDialogsObject::classType() const {
+quint32 MessagesDialogsObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case MessagesDialogs::typeMessagesDialogs:
@@ -116,6 +119,9 @@ int MessagesDialogsObject::classType() const {
         break;
     case MessagesDialogs::typeMessagesDialogsSlice:
         result = TypeMessagesDialogsSlice;
+        break;
+    default:
+        result = TypeMessagesDialogs;
         break;
     }
 

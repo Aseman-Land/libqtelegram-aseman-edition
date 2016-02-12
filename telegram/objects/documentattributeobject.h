@@ -24,7 +24,7 @@ class LIBQTELEGRAMSHARED_EXPORT DocumentAttributeObject : public TelegramTypeQOb
     Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
     Q_PROPERTY(qint32 w READ w WRITE setW NOTIFY wChanged)
     Q_PROPERTY(DocumentAttribute core READ core WRITE setCore NOTIFY coreChanged)
-    Q_PROPERTY(int classType READ classType WRITE setClassType NOTIFY classTypeChanged)
+    Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum DocumentAttributeType {
@@ -64,8 +64,8 @@ public:
     void setW(qint32 w);
     qint32 w() const;
 
-    void setClassType(int classType);
-    int classType() const;
+    void setClassType(quint32 classType);
+    quint32 classType() const;
 
     void setCore(const DocumentAttribute &core);
     DocumentAttribute core() const;

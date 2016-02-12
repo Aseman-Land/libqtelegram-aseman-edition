@@ -31,7 +31,7 @@ bool StorageFileTypeObject::operator ==(const StorageFileType &b) const {
     return m_core == b;
 }
 
-void StorageFileTypeObject::setClassType(int classType) {
+void StorageFileTypeObject::setClassType(quint32 classType) {
     StorageFileType::StorageFileTypeType result;
     switch(classType) {
     case TypeStorageFileUnknown:
@@ -64,6 +64,9 @@ void StorageFileTypeObject::setClassType(int classType) {
     case TypeStorageFileWebp:
         result = StorageFileType::typeStorageFileWebp;
         break;
+    default:
+        result = StorageFileType::typeStorageFileUnknown;
+        break;
     }
 
     if(m_core.classType() == result) return;
@@ -72,7 +75,7 @@ void StorageFileTypeObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int StorageFileTypeObject::classType() const {
+quint32 StorageFileTypeObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case StorageFileType::typeStorageFileUnknown:
@@ -104,6 +107,9 @@ int StorageFileTypeObject::classType() const {
         break;
     case StorageFileType::typeStorageFileWebp:
         result = TypeStorageFileWebp;
+        break;
+    default:
+        result = TypeStorageFileUnknown;
         break;
     }
 

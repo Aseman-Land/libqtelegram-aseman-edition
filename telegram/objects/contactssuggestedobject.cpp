@@ -55,10 +55,13 @@ bool ContactsSuggestedObject::operator ==(const ContactsSuggested &b) const {
     return m_core == b;
 }
 
-void ContactsSuggestedObject::setClassType(int classType) {
+void ContactsSuggestedObject::setClassType(quint32 classType) {
     ContactsSuggested::ContactsSuggestedType result;
     switch(classType) {
     case TypeContactsSuggested:
+        result = ContactsSuggested::typeContactsSuggested;
+        break;
+    default:
         result = ContactsSuggested::typeContactsSuggested;
         break;
     }
@@ -69,10 +72,13 @@ void ContactsSuggestedObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int ContactsSuggestedObject::classType() const {
+quint32 ContactsSuggestedObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case ContactsSuggested::typeContactsSuggested:
+        result = TypeContactsSuggested;
+        break;
+    default:
         result = TypeContactsSuggested;
         break;
     }

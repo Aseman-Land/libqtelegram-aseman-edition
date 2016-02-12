@@ -55,10 +55,13 @@ bool AuthExportedAuthorizationObject::operator ==(const AuthExportedAuthorizatio
     return m_core == b;
 }
 
-void AuthExportedAuthorizationObject::setClassType(int classType) {
+void AuthExportedAuthorizationObject::setClassType(quint32 classType) {
     AuthExportedAuthorization::AuthExportedAuthorizationType result;
     switch(classType) {
     case TypeAuthExportedAuthorization:
+        result = AuthExportedAuthorization::typeAuthExportedAuthorization;
+        break;
+    default:
         result = AuthExportedAuthorization::typeAuthExportedAuthorization;
         break;
     }
@@ -69,10 +72,13 @@ void AuthExportedAuthorizationObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int AuthExportedAuthorizationObject::classType() const {
+quint32 AuthExportedAuthorizationObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case AuthExportedAuthorization::typeAuthExportedAuthorization:
+        result = TypeAuthExportedAuthorization;
+        break;
+    default:
         result = TypeAuthExportedAuthorization;
         break;
     }

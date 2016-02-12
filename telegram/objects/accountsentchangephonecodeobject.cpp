@@ -55,10 +55,13 @@ bool AccountSentChangePhoneCodeObject::operator ==(const AccountSentChangePhoneC
     return m_core == b;
 }
 
-void AccountSentChangePhoneCodeObject::setClassType(int classType) {
+void AccountSentChangePhoneCodeObject::setClassType(quint32 classType) {
     AccountSentChangePhoneCode::AccountSentChangePhoneCodeType result;
     switch(classType) {
     case TypeAccountSentChangePhoneCode:
+        result = AccountSentChangePhoneCode::typeAccountSentChangePhoneCode;
+        break;
+    default:
         result = AccountSentChangePhoneCode::typeAccountSentChangePhoneCode;
         break;
     }
@@ -69,10 +72,13 @@ void AccountSentChangePhoneCodeObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int AccountSentChangePhoneCodeObject::classType() const {
+quint32 AccountSentChangePhoneCodeObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case AccountSentChangePhoneCode::typeAccountSentChangePhoneCode:
+        result = TypeAccountSentChangePhoneCode;
+        break;
+    default:
         result = TypeAccountSentChangePhoneCode;
         break;
     }

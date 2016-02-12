@@ -28,7 +28,7 @@ class LIBQTELEGRAMSHARED_EXPORT AuthorizationObject : public TelegramTypeQObject
     Q_PROPERTY(QString region READ region WRITE setRegion NOTIFY regionChanged)
     Q_PROPERTY(QString systemVersion READ systemVersion WRITE setSystemVersion NOTIFY systemVersionChanged)
     Q_PROPERTY(Authorization core READ core WRITE setCore NOTIFY coreChanged)
-    Q_PROPERTY(int classType READ classType WRITE setClassType NOTIFY classTypeChanged)
+    Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum AuthorizationType {
@@ -78,8 +78,8 @@ public:
     void setSystemVersion(const QString &systemVersion);
     QString systemVersion() const;
 
-    void setClassType(int classType);
-    int classType() const;
+    void setClassType(quint32 classType);
+    quint32 classType() const;
 
     void setCore(const Authorization &core);
     Authorization core() const;

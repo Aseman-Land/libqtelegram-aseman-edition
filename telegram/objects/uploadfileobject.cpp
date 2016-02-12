@@ -80,10 +80,13 @@ bool UploadFileObject::operator ==(const UploadFile &b) const {
     return m_core == b;
 }
 
-void UploadFileObject::setClassType(int classType) {
+void UploadFileObject::setClassType(quint32 classType) {
     UploadFile::UploadFileType result;
     switch(classType) {
     case TypeUploadFile:
+        result = UploadFile::typeUploadFile;
+        break;
+    default:
         result = UploadFile::typeUploadFile;
         break;
     }
@@ -94,10 +97,13 @@ void UploadFileObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int UploadFileObject::classType() const {
+quint32 UploadFileObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case UploadFile::typeUploadFile:
+        result = TypeUploadFile;
+        break;
+    default:
         result = TypeUploadFile;
         break;
     }

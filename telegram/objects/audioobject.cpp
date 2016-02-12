@@ -115,7 +115,7 @@ bool AudioObject::operator ==(const Audio &b) const {
     return m_core == b;
 }
 
-void AudioObject::setClassType(int classType) {
+void AudioObject::setClassType(quint32 classType) {
     Audio::AudioType result;
     switch(classType) {
     case TypeAudioEmpty:
@@ -123,6 +123,9 @@ void AudioObject::setClassType(int classType) {
         break;
     case TypeAudio:
         result = Audio::typeAudio;
+        break;
+    default:
+        result = Audio::typeAudioEmpty;
         break;
     }
 
@@ -132,7 +135,7 @@ void AudioObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int AudioObject::classType() const {
+quint32 AudioObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case Audio::typeAudioEmpty:
@@ -140,6 +143,9 @@ int AudioObject::classType() const {
         break;
     case Audio::typeAudio:
         result = TypeAudio;
+        break;
+    default:
+        result = TypeAudioEmpty;
         break;
     }
 

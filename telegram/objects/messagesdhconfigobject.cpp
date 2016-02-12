@@ -79,7 +79,7 @@ bool MessagesDhConfigObject::operator ==(const MessagesDhConfig &b) const {
     return m_core == b;
 }
 
-void MessagesDhConfigObject::setClassType(int classType) {
+void MessagesDhConfigObject::setClassType(quint32 classType) {
     MessagesDhConfig::MessagesDhConfigType result;
     switch(classType) {
     case TypeMessagesDhConfigNotModified:
@@ -87,6 +87,9 @@ void MessagesDhConfigObject::setClassType(int classType) {
         break;
     case TypeMessagesDhConfig:
         result = MessagesDhConfig::typeMessagesDhConfig;
+        break;
+    default:
+        result = MessagesDhConfig::typeMessagesDhConfigNotModified;
         break;
     }
 
@@ -96,7 +99,7 @@ void MessagesDhConfigObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int MessagesDhConfigObject::classType() const {
+quint32 MessagesDhConfigObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case MessagesDhConfig::typeMessagesDhConfigNotModified:
@@ -104,6 +107,9 @@ int MessagesDhConfigObject::classType() const {
         break;
     case MessagesDhConfig::typeMessagesDhConfig:
         result = TypeMessagesDhConfig;
+        break;
+    default:
+        result = TypeMessagesDhConfigNotModified;
         break;
     }
 

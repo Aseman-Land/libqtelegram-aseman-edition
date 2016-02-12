@@ -68,10 +68,13 @@ bool HelpSupportObject::operator ==(const HelpSupport &b) const {
     return m_core == b;
 }
 
-void HelpSupportObject::setClassType(int classType) {
+void HelpSupportObject::setClassType(quint32 classType) {
     HelpSupport::HelpSupportType result;
     switch(classType) {
     case TypeHelpSupport:
+        result = HelpSupport::typeHelpSupport;
+        break;
+    default:
         result = HelpSupport::typeHelpSupport;
         break;
     }
@@ -82,10 +85,13 @@ void HelpSupportObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int HelpSupportObject::classType() const {
+quint32 HelpSupportObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case HelpSupport::typeHelpSupport:
+        result = TypeHelpSupport;
+        break;
+    default:
         result = TypeHelpSupport;
         break;
     }

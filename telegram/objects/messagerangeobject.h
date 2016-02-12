@@ -17,7 +17,7 @@ class LIBQTELEGRAMSHARED_EXPORT MessageRangeObject : public TelegramTypeQObject
     Q_PROPERTY(qint32 maxId READ maxId WRITE setMaxId NOTIFY maxIdChanged)
     Q_PROPERTY(qint32 minId READ minId WRITE setMinId NOTIFY minIdChanged)
     Q_PROPERTY(MessageRange core READ core WRITE setCore NOTIFY coreChanged)
-    Q_PROPERTY(int classType READ classType WRITE setClassType NOTIFY classTypeChanged)
+    Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum MessageRangeType {
@@ -34,8 +34,8 @@ public:
     void setMinId(qint32 minId);
     qint32 minId() const;
 
-    void setClassType(int classType);
-    int classType() const;
+    void setClassType(quint32 classType);
+    quint32 classType() const;
 
     void setCore(const MessageRange &core);
     MessageRange core() const;

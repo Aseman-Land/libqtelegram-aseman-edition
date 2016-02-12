@@ -19,7 +19,7 @@ class LIBQTELEGRAMSHARED_EXPORT InputAppEventObject : public TelegramTypeQObject
     Q_PROPERTY(qreal time READ time WRITE setTime NOTIFY timeChanged)
     Q_PROPERTY(QString type READ type WRITE setType NOTIFY typeChanged)
     Q_PROPERTY(InputAppEvent core READ core WRITE setCore NOTIFY coreChanged)
-    Q_PROPERTY(int classType READ classType WRITE setClassType NOTIFY classTypeChanged)
+    Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum InputAppEventType {
@@ -42,8 +42,8 @@ public:
     void setType(const QString &type);
     QString type() const;
 
-    void setClassType(int classType);
-    int classType() const;
+    void setClassType(quint32 classType);
+    quint32 classType() const;
 
     void setCore(const InputAppEvent &core);
     InputAppEvent core() const;

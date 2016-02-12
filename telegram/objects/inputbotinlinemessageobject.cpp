@@ -91,7 +91,7 @@ bool InputBotInlineMessageObject::operator ==(const InputBotInlineMessage &b) co
     return m_core == b;
 }
 
-void InputBotInlineMessageObject::setClassType(int classType) {
+void InputBotInlineMessageObject::setClassType(quint32 classType) {
     InputBotInlineMessage::InputBotInlineMessageType result;
     switch(classType) {
     case TypeInputBotInlineMessageMediaAuto:
@@ -99,6 +99,9 @@ void InputBotInlineMessageObject::setClassType(int classType) {
         break;
     case TypeInputBotInlineMessageText:
         result = InputBotInlineMessage::typeInputBotInlineMessageText;
+        break;
+    default:
+        result = InputBotInlineMessage::typeInputBotInlineMessageMediaAuto;
         break;
     }
 
@@ -108,7 +111,7 @@ void InputBotInlineMessageObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int InputBotInlineMessageObject::classType() const {
+quint32 InputBotInlineMessageObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case InputBotInlineMessage::typeInputBotInlineMessageMediaAuto:
@@ -116,6 +119,9 @@ int InputBotInlineMessageObject::classType() const {
         break;
     case InputBotInlineMessage::typeInputBotInlineMessageText:
         result = TypeInputBotInlineMessageText;
+        break;
+    default:
+        result = TypeInputBotInlineMessageMediaAuto;
         break;
     }
 

@@ -79,7 +79,7 @@ bool ChannelMessagesFilterObject::operator ==(const ChannelMessagesFilter &b) co
     return m_core == b;
 }
 
-void ChannelMessagesFilterObject::setClassType(int classType) {
+void ChannelMessagesFilterObject::setClassType(quint32 classType) {
     ChannelMessagesFilter::ChannelMessagesFilterType result;
     switch(classType) {
     case TypeChannelMessagesFilterEmpty:
@@ -91,6 +91,9 @@ void ChannelMessagesFilterObject::setClassType(int classType) {
     case TypeChannelMessagesFilterCollapsed:
         result = ChannelMessagesFilter::typeChannelMessagesFilterCollapsed;
         break;
+    default:
+        result = ChannelMessagesFilter::typeChannelMessagesFilterEmpty;
+        break;
     }
 
     if(m_core.classType() == result) return;
@@ -99,7 +102,7 @@ void ChannelMessagesFilterObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int ChannelMessagesFilterObject::classType() const {
+quint32 ChannelMessagesFilterObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case ChannelMessagesFilter::typeChannelMessagesFilterEmpty:
@@ -110,6 +113,9 @@ int ChannelMessagesFilterObject::classType() const {
         break;
     case ChannelMessagesFilter::typeChannelMessagesFilterCollapsed:
         result = TypeChannelMessagesFilterCollapsed;
+        break;
+    default:
+        result = TypeChannelMessagesFilterEmpty;
         break;
     }
 

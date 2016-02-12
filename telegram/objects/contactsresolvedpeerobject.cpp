@@ -80,10 +80,13 @@ bool ContactsResolvedPeerObject::operator ==(const ContactsResolvedPeer &b) cons
     return m_core == b;
 }
 
-void ContactsResolvedPeerObject::setClassType(int classType) {
+void ContactsResolvedPeerObject::setClassType(quint32 classType) {
     ContactsResolvedPeer::ContactsResolvedPeerType result;
     switch(classType) {
     case TypeContactsResolvedPeer:
+        result = ContactsResolvedPeer::typeContactsResolvedPeer;
+        break;
+    default:
         result = ContactsResolvedPeer::typeContactsResolvedPeer;
         break;
     }
@@ -94,10 +97,13 @@ void ContactsResolvedPeerObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int ContactsResolvedPeerObject::classType() const {
+quint32 ContactsResolvedPeerObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case ContactsResolvedPeer::typeContactsResolvedPeer:
+        result = TypeContactsResolvedPeer;
+        break;
+    default:
         result = TypeContactsResolvedPeer;
         break;
     }

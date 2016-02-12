@@ -128,7 +128,7 @@ bool ChatInviteObject::operator ==(const ChatInvite &b) const {
     return m_core == b;
 }
 
-void ChatInviteObject::setClassType(int classType) {
+void ChatInviteObject::setClassType(quint32 classType) {
     ChatInvite::ChatInviteType result;
     switch(classType) {
     case TypeChatInviteAlready:
@@ -136,6 +136,9 @@ void ChatInviteObject::setClassType(int classType) {
         break;
     case TypeChatInvite:
         result = ChatInvite::typeChatInvite;
+        break;
+    default:
+        result = ChatInvite::typeChatInviteAlready;
         break;
     }
 
@@ -145,7 +148,7 @@ void ChatInviteObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int ChatInviteObject::classType() const {
+quint32 ChatInviteObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case ChatInvite::typeChatInviteAlready:
@@ -153,6 +156,9 @@ int ChatInviteObject::classType() const {
         break;
     case ChatInvite::typeChatInvite:
         result = TypeChatInvite;
+        break;
+    default:
+        result = TypeChatInviteAlready;
         break;
     }
 

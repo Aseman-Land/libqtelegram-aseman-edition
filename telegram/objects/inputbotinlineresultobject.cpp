@@ -200,10 +200,13 @@ bool InputBotInlineResultObject::operator ==(const InputBotInlineResult &b) cons
     return m_core == b;
 }
 
-void InputBotInlineResultObject::setClassType(int classType) {
+void InputBotInlineResultObject::setClassType(quint32 classType) {
     InputBotInlineResult::InputBotInlineResultType result;
     switch(classType) {
     case TypeInputBotInlineResult:
+        result = InputBotInlineResult::typeInputBotInlineResult;
+        break;
+    default:
         result = InputBotInlineResult::typeInputBotInlineResult;
         break;
     }
@@ -214,10 +217,13 @@ void InputBotInlineResultObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int InputBotInlineResultObject::classType() const {
+quint32 InputBotInlineResultObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case InputBotInlineResult::typeInputBotInlineResult:
+        result = TypeInputBotInlineResult;
+        break;
+    default:
         result = TypeInputBotInlineResult;
         break;
     }

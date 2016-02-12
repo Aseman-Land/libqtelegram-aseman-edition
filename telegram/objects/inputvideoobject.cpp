@@ -55,7 +55,7 @@ bool InputVideoObject::operator ==(const InputVideo &b) const {
     return m_core == b;
 }
 
-void InputVideoObject::setClassType(int classType) {
+void InputVideoObject::setClassType(quint32 classType) {
     InputVideo::InputVideoType result;
     switch(classType) {
     case TypeInputVideoEmpty:
@@ -63,6 +63,9 @@ void InputVideoObject::setClassType(int classType) {
         break;
     case TypeInputVideo:
         result = InputVideo::typeInputVideo;
+        break;
+    default:
+        result = InputVideo::typeInputVideoEmpty;
         break;
     }
 
@@ -72,7 +75,7 @@ void InputVideoObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int InputVideoObject::classType() const {
+quint32 InputVideoObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case InputVideo::typeInputVideoEmpty:
@@ -80,6 +83,9 @@ int InputVideoObject::classType() const {
         break;
     case InputVideo::typeInputVideo:
         result = TypeInputVideo;
+        break;
+    default:
+        result = TypeInputVideoEmpty;
         break;
     }
 

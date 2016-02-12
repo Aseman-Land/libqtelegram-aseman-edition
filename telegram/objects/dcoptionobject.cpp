@@ -103,10 +103,13 @@ bool DcOptionObject::operator ==(const DcOption &b) const {
     return m_core == b;
 }
 
-void DcOptionObject::setClassType(int classType) {
+void DcOptionObject::setClassType(quint32 classType) {
     DcOption::DcOptionType result;
     switch(classType) {
     case TypeDcOption:
+        result = DcOption::typeDcOption;
+        break;
+    default:
         result = DcOption::typeDcOption;
         break;
     }
@@ -117,10 +120,13 @@ void DcOptionObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int DcOptionObject::classType() const {
+quint32 DcOptionObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case DcOption::typeDcOption:
+        result = TypeDcOption;
+        break;
+    default:
         result = TypeDcOption;
         break;
     }

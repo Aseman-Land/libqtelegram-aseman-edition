@@ -151,10 +151,13 @@ bool StickerSetObject::operator ==(const StickerSet &b) const {
     return m_core == b;
 }
 
-void StickerSetObject::setClassType(int classType) {
+void StickerSetObject::setClassType(quint32 classType) {
     StickerSet::StickerSetType result;
     switch(classType) {
     case TypeStickerSet:
+        result = StickerSet::typeStickerSet;
+        break;
+    default:
         result = StickerSet::typeStickerSet;
         break;
     }
@@ -165,10 +168,13 @@ void StickerSetObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int StickerSetObject::classType() const {
+quint32 StickerSetObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case StickerSet::typeStickerSet:
+        result = TypeStickerSet;
+        break;
+    default:
         result = TypeStickerSet;
         break;
     }

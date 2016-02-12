@@ -16,7 +16,7 @@ class LIBQTELEGRAMSHARED_EXPORT InputPrivacyRuleObject : public TelegramTypeQObj
     Q_ENUMS(InputPrivacyRuleType)
     Q_PROPERTY(QList<InputUser> users READ users WRITE setUsers NOTIFY usersChanged)
     Q_PROPERTY(InputPrivacyRule core READ core WRITE setCore NOTIFY coreChanged)
-    Q_PROPERTY(int classType READ classType WRITE setClassType NOTIFY classTypeChanged)
+    Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum InputPrivacyRuleType {
@@ -35,8 +35,8 @@ public:
     void setUsers(const QList<InputUser> &users);
     QList<InputUser> users() const;
 
-    void setClassType(int classType);
-    int classType() const;
+    void setClassType(quint32 classType);
+    quint32 classType() const;
 
     void setCore(const InputPrivacyRule &core);
     InputPrivacyRule core() const;

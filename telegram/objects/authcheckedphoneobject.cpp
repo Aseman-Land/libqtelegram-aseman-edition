@@ -43,10 +43,13 @@ bool AuthCheckedPhoneObject::operator ==(const AuthCheckedPhone &b) const {
     return m_core == b;
 }
 
-void AuthCheckedPhoneObject::setClassType(int classType) {
+void AuthCheckedPhoneObject::setClassType(quint32 classType) {
     AuthCheckedPhone::AuthCheckedPhoneType result;
     switch(classType) {
     case TypeAuthCheckedPhone:
+        result = AuthCheckedPhone::typeAuthCheckedPhone;
+        break;
+    default:
         result = AuthCheckedPhone::typeAuthCheckedPhone;
         break;
     }
@@ -57,10 +60,13 @@ void AuthCheckedPhoneObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int AuthCheckedPhoneObject::classType() const {
+quint32 AuthCheckedPhoneObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case AuthCheckedPhone::typeAuthCheckedPhone:
+        result = TypeAuthCheckedPhone;
+        break;
+    default:
         result = TypeAuthCheckedPhone;
         break;
     }

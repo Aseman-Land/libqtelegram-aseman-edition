@@ -876,7 +876,7 @@ bool UpdateObject::operator ==(const Update &b) const {
     return m_core == b;
 }
 
-void UpdateObject::setClassType(int classType) {
+void UpdateObject::setClassType(quint32 classType) {
     Update::UpdateType result;
     switch(classType) {
     case TypeUpdateNewMessage:
@@ -1005,6 +1005,9 @@ void UpdateObject::setClassType(int classType) {
     case TypeUpdateBotInlineQuery:
         result = Update::typeUpdateBotInlineQuery;
         break;
+    default:
+        result = Update::typeUpdateNewMessage;
+        break;
     }
 
     if(m_core.classType() == result) return;
@@ -1013,7 +1016,7 @@ void UpdateObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int UpdateObject::classType() const {
+quint32 UpdateObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case Update::typeUpdateNewMessage:
@@ -1141,6 +1144,9 @@ int UpdateObject::classType() const {
         break;
     case Update::typeUpdateBotInlineQuery:
         result = TypeUpdateBotInlineQuery;
+        break;
+    default:
+        result = TypeUpdateNewMessage;
         break;
     }
 

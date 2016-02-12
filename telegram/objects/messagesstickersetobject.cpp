@@ -80,10 +80,13 @@ bool MessagesStickerSetObject::operator ==(const MessagesStickerSet &b) const {
     return m_core == b;
 }
 
-void MessagesStickerSetObject::setClassType(int classType) {
+void MessagesStickerSetObject::setClassType(quint32 classType) {
     MessagesStickerSet::MessagesStickerSetType result;
     switch(classType) {
     case TypeMessagesStickerSet:
+        result = MessagesStickerSet::typeMessagesStickerSet;
+        break;
+    default:
         result = MessagesStickerSet::typeMessagesStickerSet;
         break;
     }
@@ -94,10 +97,13 @@ void MessagesStickerSetObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int MessagesStickerSetObject::classType() const {
+quint32 MessagesStickerSetObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case MessagesStickerSet::typeMessagesStickerSet:
+        result = TypeMessagesStickerSet;
+        break;
+    default:
         result = TypeMessagesStickerSet;
         break;
     }

@@ -91,7 +91,7 @@ bool AccountPasswordObject::operator ==(const AccountPassword &b) const {
     return m_core == b;
 }
 
-void AccountPasswordObject::setClassType(int classType) {
+void AccountPasswordObject::setClassType(quint32 classType) {
     AccountPassword::AccountPasswordType result;
     switch(classType) {
     case TypeAccountNoPassword:
@@ -99,6 +99,9 @@ void AccountPasswordObject::setClassType(int classType) {
         break;
     case TypeAccountPassword:
         result = AccountPassword::typeAccountPassword;
+        break;
+    default:
+        result = AccountPassword::typeAccountNoPassword;
         break;
     }
 
@@ -108,7 +111,7 @@ void AccountPasswordObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int AccountPasswordObject::classType() const {
+quint32 AccountPasswordObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case AccountPassword::typeAccountNoPassword:
@@ -116,6 +119,9 @@ int AccountPasswordObject::classType() const {
         break;
     case AccountPassword::typeAccountPassword:
         result = TypeAccountPassword;
+        break;
+    default:
+        result = TypeAccountNoPassword;
         break;
     }
 

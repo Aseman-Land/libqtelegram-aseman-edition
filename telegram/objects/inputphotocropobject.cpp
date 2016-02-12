@@ -67,7 +67,7 @@ bool InputPhotoCropObject::operator ==(const InputPhotoCrop &b) const {
     return m_core == b;
 }
 
-void InputPhotoCropObject::setClassType(int classType) {
+void InputPhotoCropObject::setClassType(quint32 classType) {
     InputPhotoCrop::InputPhotoCropType result;
     switch(classType) {
     case TypeInputPhotoCropAuto:
@@ -75,6 +75,9 @@ void InputPhotoCropObject::setClassType(int classType) {
         break;
     case TypeInputPhotoCrop:
         result = InputPhotoCrop::typeInputPhotoCrop;
+        break;
+    default:
+        result = InputPhotoCrop::typeInputPhotoCropAuto;
         break;
     }
 
@@ -84,7 +87,7 @@ void InputPhotoCropObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int InputPhotoCropObject::classType() const {
+quint32 InputPhotoCropObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case InputPhotoCrop::typeInputPhotoCropAuto:
@@ -92,6 +95,9 @@ int InputPhotoCropObject::classType() const {
         break;
     case InputPhotoCrop::typeInputPhotoCrop:
         result = TypeInputPhotoCrop;
+        break;
+    default:
+        result = TypeInputPhotoCropAuto;
         break;
     }
 

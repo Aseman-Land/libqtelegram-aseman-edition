@@ -106,7 +106,7 @@ bool InputChatPhotoObject::operator ==(const InputChatPhoto &b) const {
     return m_core == b;
 }
 
-void InputChatPhotoObject::setClassType(int classType) {
+void InputChatPhotoObject::setClassType(quint32 classType) {
     InputChatPhoto::InputChatPhotoType result;
     switch(classType) {
     case TypeInputChatPhotoEmpty:
@@ -118,6 +118,9 @@ void InputChatPhotoObject::setClassType(int classType) {
     case TypeInputChatPhoto:
         result = InputChatPhoto::typeInputChatPhoto;
         break;
+    default:
+        result = InputChatPhoto::typeInputChatPhotoEmpty;
+        break;
     }
 
     if(m_core.classType() == result) return;
@@ -126,7 +129,7 @@ void InputChatPhotoObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int InputChatPhotoObject::classType() const {
+quint32 InputChatPhotoObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case InputChatPhoto::typeInputChatPhotoEmpty:
@@ -137,6 +140,9 @@ int InputChatPhotoObject::classType() const {
         break;
     case InputChatPhoto::typeInputChatPhoto:
         result = TypeInputChatPhoto;
+        break;
+    default:
+        result = TypeInputChatPhotoEmpty;
         break;
     }
 

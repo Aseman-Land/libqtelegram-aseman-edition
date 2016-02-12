@@ -17,7 +17,7 @@ class LIBQTELEGRAMSHARED_EXPORT MessagesSavedGifsObject : public TelegramTypeQOb
     Q_PROPERTY(QList<Document> gifs READ gifs WRITE setGifs NOTIFY gifsChanged)
     Q_PROPERTY(qint32 hash READ hash WRITE setHash NOTIFY hashChanged)
     Q_PROPERTY(MessagesSavedGifs core READ core WRITE setCore NOTIFY coreChanged)
-    Q_PROPERTY(int classType READ classType WRITE setClassType NOTIFY classTypeChanged)
+    Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum MessagesSavedGifsType {
@@ -35,8 +35,8 @@ public:
     void setHash(qint32 hash);
     qint32 hash() const;
 
-    void setClassType(int classType);
-    int classType() const;
+    void setClassType(quint32 classType);
+    quint32 classType() const;
 
     void setCore(const MessagesSavedGifs &core);
     MessagesSavedGifs core() const;

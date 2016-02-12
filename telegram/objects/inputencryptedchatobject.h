@@ -17,7 +17,7 @@ class LIBQTELEGRAMSHARED_EXPORT InputEncryptedChatObject : public TelegramTypeQO
     Q_PROPERTY(qint64 accessHash READ accessHash WRITE setAccessHash NOTIFY accessHashChanged)
     Q_PROPERTY(qint32 chatId READ chatId WRITE setChatId NOTIFY chatIdChanged)
     Q_PROPERTY(InputEncryptedChat core READ core WRITE setCore NOTIFY coreChanged)
-    Q_PROPERTY(int classType READ classType WRITE setClassType NOTIFY classTypeChanged)
+    Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum InputEncryptedChatType {
@@ -34,8 +34,8 @@ public:
     void setChatId(qint32 chatId);
     qint32 chatId() const;
 
-    void setClassType(int classType);
-    int classType() const;
+    void setClassType(quint32 classType);
+    quint32 classType() const;
 
     void setCore(const InputEncryptedChat &core);
     InputEncryptedChat core() const;

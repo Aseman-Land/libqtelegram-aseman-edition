@@ -140,7 +140,7 @@ bool DocumentAttributeObject::operator ==(const DocumentAttribute &b) const {
     return m_core == b;
 }
 
-void DocumentAttributeObject::setClassType(int classType) {
+void DocumentAttributeObject::setClassType(quint32 classType) {
     DocumentAttribute::DocumentAttributeType result;
     switch(classType) {
     case TypeDocumentAttributeImageSize:
@@ -161,6 +161,9 @@ void DocumentAttributeObject::setClassType(int classType) {
     case TypeDocumentAttributeFilename:
         result = DocumentAttribute::typeDocumentAttributeFilename;
         break;
+    default:
+        result = DocumentAttribute::typeDocumentAttributeImageSize;
+        break;
     }
 
     if(m_core.classType() == result) return;
@@ -169,7 +172,7 @@ void DocumentAttributeObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int DocumentAttributeObject::classType() const {
+quint32 DocumentAttributeObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case DocumentAttribute::typeDocumentAttributeImageSize:
@@ -189,6 +192,9 @@ int DocumentAttributeObject::classType() const {
         break;
     case DocumentAttribute::typeDocumentAttributeFilename:
         result = TypeDocumentAttributeFilename;
+        break;
+    default:
+        result = TypeDocumentAttributeImageSize;
         break;
     }
 

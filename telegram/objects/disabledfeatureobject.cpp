@@ -55,10 +55,13 @@ bool DisabledFeatureObject::operator ==(const DisabledFeature &b) const {
     return m_core == b;
 }
 
-void DisabledFeatureObject::setClassType(int classType) {
+void DisabledFeatureObject::setClassType(quint32 classType) {
     DisabledFeature::DisabledFeatureType result;
     switch(classType) {
     case TypeDisabledFeature:
+        result = DisabledFeature::typeDisabledFeature;
+        break;
+    default:
         result = DisabledFeature::typeDisabledFeature;
         break;
     }
@@ -69,10 +72,13 @@ void DisabledFeatureObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int DisabledFeatureObject::classType() const {
+quint32 DisabledFeatureObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case DisabledFeature::typeDisabledFeature:
+        result = TypeDisabledFeature;
+        break;
+    default:
         result = TypeDisabledFeature;
         break;
     }

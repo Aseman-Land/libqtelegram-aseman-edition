@@ -91,7 +91,7 @@ bool EncryptedFileObject::operator ==(const EncryptedFile &b) const {
     return m_core == b;
 }
 
-void EncryptedFileObject::setClassType(int classType) {
+void EncryptedFileObject::setClassType(quint32 classType) {
     EncryptedFile::EncryptedFileType result;
     switch(classType) {
     case TypeEncryptedFileEmpty:
@@ -99,6 +99,9 @@ void EncryptedFileObject::setClassType(int classType) {
         break;
     case TypeEncryptedFile:
         result = EncryptedFile::typeEncryptedFile;
+        break;
+    default:
+        result = EncryptedFile::typeEncryptedFileEmpty;
         break;
     }
 
@@ -108,7 +111,7 @@ void EncryptedFileObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int EncryptedFileObject::classType() const {
+quint32 EncryptedFileObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case EncryptedFile::typeEncryptedFileEmpty:
@@ -116,6 +119,9 @@ int EncryptedFileObject::classType() const {
         break;
     case EncryptedFile::typeEncryptedFile:
         result = TypeEncryptedFile;
+        break;
+    default:
+        result = TypeEncryptedFileEmpty;
         break;
     }
 

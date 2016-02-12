@@ -15,7 +15,7 @@ class LIBQTELEGRAMSHARED_EXPORT MessagesFilterObject : public TelegramTypeQObjec
     Q_OBJECT
     Q_ENUMS(MessagesFilterType)
     Q_PROPERTY(MessagesFilter core READ core WRITE setCore NOTIFY coreChanged)
-    Q_PROPERTY(int classType READ classType WRITE setClassType NOTIFY classTypeChanged)
+    Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum MessagesFilterType {
@@ -35,8 +35,8 @@ public:
     MessagesFilterObject(QObject *parent = 0);
     virtual ~MessagesFilterObject();
 
-    void setClassType(int classType);
-    int classType() const;
+    void setClassType(quint32 classType);
+    quint32 classType() const;
 
     void setCore(const MessagesFilter &core);
     MessagesFilter core() const;

@@ -168,10 +168,13 @@ bool UserFullObject::operator ==(const UserFull &b) const {
     return m_core == b;
 }
 
-void UserFullObject::setClassType(int classType) {
+void UserFullObject::setClassType(quint32 classType) {
     UserFull::UserFullType result;
     switch(classType) {
     case TypeUserFull:
+        result = UserFull::typeUserFull;
+        break;
+    default:
         result = UserFull::typeUserFull;
         break;
     }
@@ -182,10 +185,13 @@ void UserFullObject::setClassType(int classType) {
     Q_EMIT coreChanged();
 }
 
-int UserFullObject::classType() const {
+quint32 UserFullObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
     case UserFull::typeUserFull:
+        result = TypeUserFull;
+        break;
+    default:
         result = TypeUserFull;
         break;
     }
