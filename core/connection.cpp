@@ -59,7 +59,7 @@ void Connection::setupSocket() {
     int fd = socketDescriptor();
     setsockopt(fd, SOL_SOCKET, SO_KEEPALIVE, &enableKeepAlive, sizeof(enableKeepAlive));
 
-    int maxIdle = 5; // half seconds = 5 seconds
+    int maxIdle = 5; // 5 seconds
     setsockopt(fd, IPPROTO_TCP, TCP_KEEPIDLE, &maxIdle, sizeof(maxIdle));
 
     int count = 3; // send up to 3 keepalive packets out, then disconnect if no response
