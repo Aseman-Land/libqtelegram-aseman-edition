@@ -36,7 +36,7 @@ public:
         typeUploadSendPhotoFinished = 0x29d89fa,
         typeUploadSendPhotoProgress = 0x403636a,
         typeVector = 0x1cb5c415,
-        typeLayerVersion = 45
+        typeLayerVersion = 47
     };
 };
 

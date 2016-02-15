@@ -8,10 +8,10 @@
 * [typeInputMessagesFilterPhotoVideo](#messagesfiltertypeinputmessagesfilterphotovideo)
 * [typeInputMessagesFilterPhotoVideoDocuments](#messagesfiltertypeinputmessagesfilterphotovideodocuments)
 * [typeInputMessagesFilterDocument](#messagesfiltertypeinputmessagesfilterdocument)
-* [typeInputMessagesFilterAudio](#messagesfiltertypeinputmessagesfilteraudio)
-* [typeInputMessagesFilterAudioDocuments](#messagesfiltertypeinputmessagesfilteraudiodocuments)
 * [typeInputMessagesFilterUrl](#messagesfiltertypeinputmessagesfilterurl)
 * [typeInputMessagesFilterGif](#messagesfiltertypeinputmessagesfiltergif)
+* [typeInputMessagesFilterVoice](#messagesfiltertypeinputmessagesfiltervoice)
+* [typeInputMessagesFilterMusic](#messagesfiltertypeinputmessagesfiltermusic)
 
 ## MessagesFilter::typeInputMessagesFilterEmpty
 
@@ -79,28 +79,6 @@ inputMessagesFilterDocument#9eddf188 = MessagesFilter;
 #### Parameters:
 
 
-## MessagesFilter::typeInputMessagesFilterAudio
-
-#### Schema:
-
-```c++
-inputMessagesFilterAudio#cfc87522 = MessagesFilter;
-```
-
-#### Parameters:
-
-
-## MessagesFilter::typeInputMessagesFilterAudioDocuments
-
-#### Schema:
-
-```c++
-inputMessagesFilterAudioDocuments#5afbf764 = MessagesFilter;
-```
-
-#### Parameters:
-
-
 ## MessagesFilter::typeInputMessagesFilterUrl
 
 #### Schema:
@@ -118,6 +96,28 @@ inputMessagesFilterUrl#7ef0dd87 = MessagesFilter;
 
 ```c++
 inputMessagesFilterGif#ffc86587 = MessagesFilter;
+```
+
+#### Parameters:
+
+
+## MessagesFilter::typeInputMessagesFilterVoice
+
+#### Schema:
+
+```c++
+inputMessagesFilterVoice#50f5c392 = MessagesFilter;
+```
+
+#### Parameters:
+
+
+## MessagesFilter::typeInputMessagesFilterMusic
+
+#### Schema:
+
+```c++
+inputMessagesFilterMusic#3751b49e = MessagesFilter;
 ```
 
 #### Parameters:

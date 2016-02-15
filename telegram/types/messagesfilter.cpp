@@ -80,18 +80,6 @@ bool MessagesFilter::fetch(InboundPkt *in) {
     }
         break;
     
-    case typeInputMessagesFilterAudio: {
-        m_classType = static_cast<MessagesFilterType>(x);
-        return true;
-    }
-        break;
-    
-    case typeInputMessagesFilterAudioDocuments: {
-        m_classType = static_cast<MessagesFilterType>(x);
-        return true;
-    }
-        break;
-    
     case typeInputMessagesFilterUrl: {
         m_classType = static_cast<MessagesFilterType>(x);
         return true;
@@ -99,6 +87,18 @@ bool MessagesFilter::fetch(InboundPkt *in) {
         break;
     
     case typeInputMessagesFilterGif: {
+        m_classType = static_cast<MessagesFilterType>(x);
+        return true;
+    }
+        break;
+    
+    case typeInputMessagesFilterVoice: {
+        m_classType = static_cast<MessagesFilterType>(x);
+        return true;
+    }
+        break;
+    
+    case typeInputMessagesFilterMusic: {
         m_classType = static_cast<MessagesFilterType>(x);
         return true;
     }
@@ -143,22 +143,22 @@ bool MessagesFilter::push(OutboundPkt *out) const {
     }
         break;
     
-    case typeInputMessagesFilterAudio: {
-        return true;
-    }
-        break;
-    
-    case typeInputMessagesFilterAudioDocuments: {
-        return true;
-    }
-        break;
-    
     case typeInputMessagesFilterUrl: {
         return true;
     }
         break;
     
     case typeInputMessagesFilterGif: {
+        return true;
+    }
+        break;
+    
+    case typeInputMessagesFilterVoice: {
+        return true;
+    }
+        break;
+    
+    case typeInputMessagesFilterMusic: {
         return true;
     }
         break;

@@ -62,18 +62,6 @@ ContactsImportedContacts Functions::Contacts::importContactsResult(InboundPkt *i
     return result;
 }
 
-bool Functions::Contacts::getSuggested(OutboundPkt *out, qint32 limit) {
-    out->appendInt(fncContactsGetSuggested);
-    out->appendInt(limit);
-    return true;
-}
-
-ContactsSuggested Functions::Contacts::getSuggestedResult(InboundPkt *in) {
-    ContactsSuggested result;
-    if(!result.fetch(in)) return result;
-    return result;
-}
-
 bool Functions::Contacts::deleteContact(OutboundPkt *out, const InputUser &id) {
     out->appendInt(fncContactsDeleteContact);
     if(!id.push(out)) return false;

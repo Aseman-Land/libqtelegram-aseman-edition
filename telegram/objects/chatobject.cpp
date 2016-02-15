@@ -141,6 +141,17 @@ qint32 ChatObject::id() const {
     return m_core.id();
 }
 
+void ChatObject::setInvitesEnabled(bool invitesEnabled) {
+    if(m_core.invitesEnabled() == invitesEnabled) return;
+    m_core.setInvitesEnabled(invitesEnabled);
+    Q_EMIT invitesEnabledChanged();
+    Q_EMIT coreChanged();
+}
+
+bool ChatObject::invitesEnabled() const {
+    return m_core.invitesEnabled();
+}
+
 void ChatObject::setKicked(bool kicked) {
     if(m_core.kicked() == kicked) return;
     m_core.setKicked(kicked);
@@ -312,6 +323,7 @@ ChatObject &ChatObject::operator =(const Chat &b) {
     Q_EMIT editorChanged();
     Q_EMIT flagsChanged();
     Q_EMIT idChanged();
+    Q_EMIT invitesEnabledChanged();
     Q_EMIT kickedChanged();
     Q_EMIT leftChanged();
     Q_EMIT megagroupChanged();

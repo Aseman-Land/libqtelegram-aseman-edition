@@ -165,6 +165,8 @@ TelegramApi::TelegramApi(Session *session, Settings *settings, CryptoUtils *cryp
     channelsExportInviteMethods.onError = &TelegramApi::onChannelsExportInviteError;
     channelsDeleteChannelMethods.onAnswer = &TelegramApi::onChannelsDeleteChannelAnswer;
     channelsDeleteChannelMethods.onError = &TelegramApi::onChannelsDeleteChannelError;
+    channelsToggleInvitesMethods.onAnswer = &TelegramApi::onChannelsToggleInvitesAnswer;
+    channelsToggleInvitesMethods.onError = &TelegramApi::onChannelsToggleInvitesError;
     
     contactsGetStatusesMethods.onAnswer = &TelegramApi::onContactsGetStatusesAnswer;
     contactsGetStatusesMethods.onError = &TelegramApi::onContactsGetStatusesError;
@@ -172,8 +174,6 @@ TelegramApi::TelegramApi(Session *session, Settings *settings, CryptoUtils *cryp
     contactsGetContactsMethods.onError = &TelegramApi::onContactsGetContactsError;
     contactsImportContactsMethods.onAnswer = &TelegramApi::onContactsImportContactsAnswer;
     contactsImportContactsMethods.onError = &TelegramApi::onContactsImportContactsError;
-    contactsGetSuggestedMethods.onAnswer = &TelegramApi::onContactsGetSuggestedAnswer;
-    contactsGetSuggestedMethods.onError = &TelegramApi::onContactsGetSuggestedError;
     contactsDeleteContactMethods.onAnswer = &TelegramApi::onContactsDeleteContactAnswer;
     contactsDeleteContactMethods.onError = &TelegramApi::onContactsDeleteContactError;
     contactsDeleteContactsMethods.onAnswer = &TelegramApi::onContactsDeleteContactsAnswer;
@@ -1326,13 +1326,13 @@ void TelegramApi::onChannelsGetDialogsError(Query *q, qint32 errorCode, const QS
         Q_EMIT channelsGetDialogsError(q->mainMsgId(), errorCode, errorText, q->extra());
 }
 
-qint64 TelegramApi::channelsGetImportantHistory(const InputChannel &channel, qint32 offset_id, qint32 add_offset, qint32 limit, qint32 max_id, qint32 min_id, const QVariant &attachedData, Session *session) {
+qint64 TelegramApi::channelsGetImportantHistory(const InputChannel &channel, qint32 offset_id, qint32 offset_date, qint32 add_offset, qint32 limit, qint32 max_id, qint32 min_id, const QVariant &attachedData, Session *session) {
     if(!session) session = mMainSession;
     CHECK_SESSION(session)
     DEBUG_FUNCTION
     OutboundPkt p(mSettings);
     INIT_MAIN_CONNECTION(session)
-    Functions::Channels::getImportantHistory(&p, channel, offset_id, add_offset, limit, max_id, min_id);
+    Functions::Channels::getImportantHistory(&p, channel, offset_id, offset_date, add_offset, limit, max_id, min_id);
     return session->sendQuery(p, &channelsGetImportantHistoryMethods, attachedData, "Channels->getImportantHistory" );
 }
 
@@ -1911,6 +1911,31 @@ void TelegramApi::onChannelsDeleteChannelError(Query *q, qint32 errorCode, const
         Q_EMIT channelsDeleteChannelError(q->mainMsgId(), errorCode, errorText, q->extra());
 }
 
+qint64 TelegramApi::channelsToggleInvites(const InputChannel &channel, bool enabled, const QVariant &attachedData, Session *session) {
+    if(!session) session = mMainSession;
+    CHECK_SESSION(session)
+    DEBUG_FUNCTION
+    OutboundPkt p(mSettings);
+    INIT_MAIN_CONNECTION(session)
+    Functions::Channels::toggleInvites(&p, channel, enabled);
+    return session->sendQuery(p, &channelsToggleInvitesMethods, attachedData, "Channels->toggleInvites" );
+}
+
+void TelegramApi::onChannelsToggleInvitesAnswer(Query *q, InboundPkt &inboundPkt) {
+    const UpdatesType &result = Functions::Channels::toggleInvitesResult(&inboundPkt);
+    if(result.error())
+        onChannelsToggleInvitesError(q, -1, "LIBQTELEGRAM_INTERNAL_ERROR");
+    else
+        Q_EMIT channelsToggleInvitesAnswer(q->mainMsgId(), result, q->extra());
+}
+
+void TelegramApi::onChannelsToggleInvitesError(Query *q, qint32 errorCode, const QString &errorText) {
+    bool accepted = false;
+    onError(q, errorCode, errorText, q->extra(), accepted);
+    if(!accepted)
+        Q_EMIT channelsToggleInvitesError(q->mainMsgId(), errorCode, errorText, q->extra());
+}
+
 
 qint64 TelegramApi::contactsGetStatuses(const QVariant &attachedData, Session *session) {
     if(!session) session = mMainSession;
@@ -1982,31 +2007,6 @@ void TelegramApi::onContactsImportContactsError(Query *q, qint32 errorCode, cons
     onError(q, errorCode, errorText, q->extra(), accepted);
     if(!accepted)
         Q_EMIT contactsImportContactsError(q->mainMsgId(), errorCode, errorText, q->extra());
-}
-
-qint64 TelegramApi::contactsGetSuggested(qint32 limit, const QVariant &attachedData, Session *session) {
-    if(!session) session = mMainSession;
-    CHECK_SESSION(session)
-    DEBUG_FUNCTION
-    OutboundPkt p(mSettings);
-    INIT_MAIN_CONNECTION(session)
-    Functions::Contacts::getSuggested(&p, limit);
-    return session->sendQuery(p, &contactsGetSuggestedMethods, attachedData, "Contacts->getSuggested" );
-}
-
-void TelegramApi::onContactsGetSuggestedAnswer(Query *q, InboundPkt &inboundPkt) {
-    const ContactsSuggested &result = Functions::Contacts::getSuggestedResult(&inboundPkt);
-    if(result.error())
-        onContactsGetSuggestedError(q, -1, "LIBQTELEGRAM_INTERNAL_ERROR");
-    else
-        Q_EMIT contactsGetSuggestedAnswer(q->mainMsgId(), result, q->extra());
-}
-
-void TelegramApi::onContactsGetSuggestedError(Query *q, qint32 errorCode, const QString &errorText) {
-    bool accepted = false;
-    onError(q, errorCode, errorText, q->extra(), accepted);
-    if(!accepted)
-        Q_EMIT contactsGetSuggestedError(q->mainMsgId(), errorCode, errorText, q->extra());
 }
 
 qint64 TelegramApi::contactsDeleteContact(const InputUser &id, const QVariant &attachedData, Session *session) {
@@ -2471,13 +2471,13 @@ void TelegramApi::onMessagesGetDialogsError(Query *q, qint32 errorCode, const QS
         Q_EMIT messagesGetDialogsError(q->mainMsgId(), errorCode, errorText, q->extra());
 }
 
-qint64 TelegramApi::messagesGetHistory(const InputPeer &peer, qint32 offset_id, qint32 add_offset, qint32 limit, qint32 max_id, qint32 min_id, const QVariant &attachedData, Session *session) {
+qint64 TelegramApi::messagesGetHistory(const InputPeer &peer, qint32 offset_id, qint32 offset_date, qint32 add_offset, qint32 limit, qint32 max_id, qint32 min_id, const QVariant &attachedData, Session *session) {
     if(!session) session = mMainSession;
     CHECK_SESSION(session)
     DEBUG_FUNCTION
     OutboundPkt p(mSettings);
     INIT_MAIN_CONNECTION(session)
-    Functions::Messages::getHistory(&p, peer, offset_id, add_offset, limit, max_id, min_id);
+    Functions::Messages::getHistory(&p, peer, offset_id, offset_date, add_offset, limit, max_id, min_id);
     return session->sendQuery(p, &messagesGetHistoryMethods, attachedData, "Messages->getHistory" );
 }
 

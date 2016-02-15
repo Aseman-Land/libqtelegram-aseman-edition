@@ -113,23 +113,7 @@ bool InputFileLocation::fetch(InboundPkt *in) {
     }
         break;
     
-    case typeInputVideoFileLocation: {
-        m_id = in->fetchLong();
-        m_accessHash = in->fetchLong();
-        m_classType = static_cast<InputFileLocationType>(x);
-        return true;
-    }
-        break;
-    
     case typeInputEncryptedFileLocation: {
-        m_id = in->fetchLong();
-        m_accessHash = in->fetchLong();
-        m_classType = static_cast<InputFileLocationType>(x);
-        return true;
-    }
-        break;
-    
-    case typeInputAudioFileLocation: {
         m_id = in->fetchLong();
         m_accessHash = in->fetchLong();
         m_classType = static_cast<InputFileLocationType>(x);
@@ -162,21 +146,7 @@ bool InputFileLocation::push(OutboundPkt *out) const {
     }
         break;
     
-    case typeInputVideoFileLocation: {
-        out->appendLong(m_id);
-        out->appendLong(m_accessHash);
-        return true;
-    }
-        break;
-    
     case typeInputEncryptedFileLocation: {
-        out->appendLong(m_id);
-        out->appendLong(m_accessHash);
-        return true;
-    }
-        break;
-    
-    case typeInputAudioFileLocation: {
         out->appendLong(m_id);
         out->appendLong(m_accessHash);
         return true;

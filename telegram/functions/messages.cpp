@@ -46,10 +46,11 @@ MessagesDialogs Functions::Messages::getDialogsResult(InboundPkt *in) {
     return result;
 }
 
-bool Functions::Messages::getHistory(OutboundPkt *out, const InputPeer &peer, qint32 offsetId, qint32 addOffset, qint32 limit, qint32 maxId, qint32 minId) {
+bool Functions::Messages::getHistory(OutboundPkt *out, const InputPeer &peer, qint32 offsetId, qint32 offsetDate, qint32 addOffset, qint32 limit, qint32 maxId, qint32 minId) {
     out->appendInt(fncMessagesGetHistory);
     if(!peer.push(out)) return false;
     out->appendInt(offsetId);
+    out->appendInt(offsetDate);
     out->appendInt(addOffset);
     out->appendInt(limit);
     out->appendInt(maxId);

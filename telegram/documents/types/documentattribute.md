@@ -71,16 +71,18 @@ documentAttributeVideo#5910cccb duration:int w:int h:int = DocumentAttribute;
 #### Schema:
 
 ```c++
-documentAttributeAudio#ded218e0 duration:int title:string performer:string = DocumentAttribute;
+documentAttributeAudio#9852f9c6 flags:# voice:flags.10?true duration:int title:flags.0?string performer:flags.1?string waveform:flags.2?bytes = DocumentAttribute;
 ```
 
 #### Parameters:
 
 |Name|Type|
 |----|----|
+|voice|bool|
 |duration|qint32|
 |title|QString|
 |performer|QString|
+|waveform|QByteArray|
 
 ## DocumentAttribute::typeDocumentAttributeFilename
 

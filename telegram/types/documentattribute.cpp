@@ -9,6 +9,7 @@
 
 DocumentAttribute::DocumentAttribute(DocumentAttributeType classType, InboundPkt *in) :
     m_duration(0),
+    m_flags(0),
     m_h(0),
     m_w(0),
     m_classType(classType)
@@ -18,6 +19,7 @@ DocumentAttribute::DocumentAttribute(DocumentAttributeType classType, InboundPkt
 
 DocumentAttribute::DocumentAttribute(InboundPkt *in) :
     m_duration(0),
+    m_flags(0),
     m_h(0),
     m_w(0),
     m_classType(typeDocumentAttributeImageSize)
@@ -28,6 +30,7 @@ DocumentAttribute::DocumentAttribute(InboundPkt *in) :
 DocumentAttribute::DocumentAttribute(const Null &null) :
     TelegramTypeObject(null),
     m_duration(0),
+    m_flags(0),
     m_h(0),
     m_w(0),
     m_classType(typeDocumentAttributeImageSize)
@@ -59,6 +62,14 @@ void DocumentAttribute::setFileName(const QString &fileName) {
 
 QString DocumentAttribute::fileName() const {
     return m_fileName;
+}
+
+void DocumentAttribute::setFlags(qint32 flags) {
+    m_flags = flags;
+}
+
+qint32 DocumentAttribute::flags() const {
+    return m_flags;
 }
 
 void DocumentAttribute::setH(qint32 h) {
@@ -93,6 +104,15 @@ QString DocumentAttribute::title() const {
     return m_title;
 }
 
+void DocumentAttribute::setVoice(bool voice) {
+    if(voice) m_flags = (m_flags | (1<<10));
+    else m_flags = (m_flags & ~(1<<10));
+}
+
+bool DocumentAttribute::voice() const {
+    return (m_flags & 1<<10);
+}
+
 void DocumentAttribute::setW(qint32 w) {
     m_w = w;
 }
@@ -101,16 +121,26 @@ qint32 DocumentAttribute::w() const {
     return m_w;
 }
 
+void DocumentAttribute::setWaveform(const QByteArray &waveform) {
+    m_waveform = waveform;
+}
+
+QByteArray DocumentAttribute::waveform() const {
+    return m_waveform;
+}
+
 bool DocumentAttribute::operator ==(const DocumentAttribute &b) const {
     return m_classType == b.m_classType &&
            m_alt == b.m_alt &&
            m_duration == b.m_duration &&
            m_fileName == b.m_fileName &&
+           m_flags == b.m_flags &&
            m_h == b.m_h &&
            m_performer == b.m_performer &&
            m_stickerset == b.m_stickerset &&
            m_title == b.m_title &&
-           m_w == b.m_w;
+           m_w == b.m_w &&
+           m_waveform == b.m_waveform;
 }
 
 void DocumentAttribute::setClassType(DocumentAttribute::DocumentAttributeType classType) {
@@ -157,9 +187,17 @@ bool DocumentAttribute::fetch(InboundPkt *in) {
         break;
     
     case typeDocumentAttributeAudio: {
+        m_flags = in->fetchInt();
         m_duration = in->fetchInt();
-        m_title = in->fetchQString();
-        m_performer = in->fetchQString();
+        if(m_flags & 1<<0) {
+            m_title = in->fetchQString();
+        }
+        if(m_flags & 1<<1) {
+            m_performer = in->fetchQString();
+        }
+        if(m_flags & 1<<2) {
+            m_waveform = in->fetchBytes();
+        }
         m_classType = static_cast<DocumentAttributeType>(x);
         return true;
     }
@@ -209,9 +247,11 @@ bool DocumentAttribute::push(OutboundPkt *out) const {
         break;
     
     case typeDocumentAttributeAudio: {
+        out->appendInt(m_flags);
         out->appendInt(m_duration);
         out->appendQString(m_title);
         out->appendQString(m_performer);
+        out->appendBytes(m_waveform);
         return true;
     }
         break;

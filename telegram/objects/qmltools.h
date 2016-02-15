@@ -8,7 +8,6 @@
 
 void qtelegramRegisterQmlTypes(const char *uri) {
     qmlRegisterType<AccountDaysTTLObject>(uri, 1, 0, "AccountDaysTTL");
-    qmlRegisterType<AudioObject>(uri, 1, 0, "Audio");
     qmlRegisterType<AuthorizationObject>(uri, 1, 0, "Authorization");
     qmlRegisterType<BotCommandObject>(uri, 1, 0, "BotCommand");
     qmlRegisterType<BotInfoObject>(uri, 1, 0, "BotInfo");
@@ -29,7 +28,6 @@ void qtelegramRegisterQmlTypes(const char *uri) {
     qmlRegisterType<ContactBlockedObject>(uri, 1, 0, "ContactBlocked");
     qmlRegisterType<ContactLinkObject>(uri, 1, 0, "ContactLink");
     qmlRegisterType<ContactStatusObject>(uri, 1, 0, "ContactStatus");
-    qmlRegisterType<ContactSuggestedObject>(uri, 1, 0, "ContactSuggested");
     qmlRegisterType<DcOptionObject>(uri, 1, 0, "DcOption");
     qmlRegisterType<DialogObject>(uri, 1, 0, "Dialog");
     qmlRegisterType<DisabledFeatureObject>(uri, 1, 0, "DisabledFeature");
@@ -44,7 +42,6 @@ void qtelegramRegisterQmlTypes(const char *uri) {
     qmlRegisterType<GeoPointObject>(uri, 1, 0, "GeoPoint");
     qmlRegisterType<ImportedContactObject>(uri, 1, 0, "ImportedContact");
     qmlRegisterType<InputAppEventObject>(uri, 1, 0, "InputAppEvent");
-    qmlRegisterType<InputAudioObject>(uri, 1, 0, "InputAudio");
     qmlRegisterType<InputBotInlineMessageObject>(uri, 1, 0, "InputBotInlineMessage");
     qmlRegisterType<InputBotInlineResultObject>(uri, 1, 0, "InputBotInlineResult");
     qmlRegisterType<InputChannelObject>(uri, 1, 0, "InputChannel");
@@ -67,7 +64,6 @@ void qtelegramRegisterQmlTypes(const char *uri) {
     qmlRegisterType<InputPrivacyRuleObject>(uri, 1, 0, "InputPrivacyRule");
     qmlRegisterType<InputStickerSetObject>(uri, 1, 0, "InputStickerSet");
     qmlRegisterType<InputUserObject>(uri, 1, 0, "InputUser");
-    qmlRegisterType<InputVideoObject>(uri, 1, 0, "InputVideo");
     qmlRegisterType<KeyboardButtonObject>(uri, 1, 0, "KeyboardButton");
     qmlRegisterType<KeyboardButtonRowObject>(uri, 1, 0, "KeyboardButtonRow");
     qmlRegisterType<MessageObject>(uri, 1, 0, "Message");
@@ -98,7 +94,6 @@ void qtelegramRegisterQmlTypes(const char *uri) {
     qmlRegisterType<UserFullObject>(uri, 1, 0, "UserFull");
     qmlRegisterType<UserProfilePhotoObject>(uri, 1, 0, "UserProfilePhoto");
     qmlRegisterType<UserStatusObject>(uri, 1, 0, "UserStatus");
-    qmlRegisterType<VideoObject>(uri, 1, 0, "Video");
     qmlRegisterType<WallPaperObject>(uri, 1, 0, "WallPaper");
     qmlRegisterType<WebPageObject>(uri, 1, 0, "WebPage");
     qmlRegisterType<AccountAuthorizationsObject>(uri, 1, 0, "AccountAuthorizations");
@@ -120,7 +115,6 @@ void qtelegramRegisterQmlTypes(const char *uri) {
     qmlRegisterType<ContactsImportedContactsObject>(uri, 1, 0, "ContactsImportedContacts");
     qmlRegisterType<ContactsLinkObject>(uri, 1, 0, "ContactsLink");
     qmlRegisterType<ContactsResolvedPeerObject>(uri, 1, 0, "ContactsResolvedPeer");
-    qmlRegisterType<ContactsSuggestedObject>(uri, 1, 0, "ContactsSuggested");
     qmlRegisterType<HelpAppChangelogObject>(uri, 1, 0, "HelpAppChangelog");
     qmlRegisterType<HelpAppUpdateObject>(uri, 1, 0, "HelpAppUpdate");
     qmlRegisterType<HelpInviteTextObject>(uri, 1, 0, "HelpInviteText");

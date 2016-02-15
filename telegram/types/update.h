@@ -75,7 +75,8 @@ public:
         typeUpdateStickerSetsOrder = 0xf0dfb451,
         typeUpdateStickerSets = 0x43ae3dec,
         typeUpdateSavedGifs = 0x9375341e,
-        typeUpdateBotInlineQuery = 0xc01eea08
+        typeUpdateBotInlineQuery = 0xc01eea08,
+        typeUpdateBotInlineSend = 0xf69e113
     };
 
     Update(UpdateType classType = typeUpdateNewMessage, InboundPkt *in = 0);
@@ -122,8 +123,11 @@ public:
     void setGroup(const MessageGroup &group);
     MessageGroup group() const;
 
-    void setId(qint32 id);
-    qint32 id() const;
+    void setIdString(const QString &idString);
+    QString idString() const;
+
+    void setIdInt(qint32 idInt);
+    qint32 idInt() const;
 
     void setInviterId(qint32 inviterId);
     qint32 inviterId() const;
@@ -264,7 +268,8 @@ private:
     QString m_firstName;
     ContactLink m_foreignLink;
     MessageGroup m_group;
-    qint32 m_id;
+    QString m_idString;
+    qint32 m_idInt;
     qint32 m_inviterId;
     bool m_isAdmin;
     PrivacyKey m_key;

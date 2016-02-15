@@ -8,7 +8,6 @@ HEADERS += \
     $$PWD/telegramtypeqobject.h \
     $$PWD/qmltools.h \
     $$PWD/accountdaysttlobject.h \
-    $$PWD/audioobject.h \
     $$PWD/authorizationobject.h \
     $$PWD/botcommandobject.h \
     $$PWD/botinfoobject.h \
@@ -29,7 +28,6 @@ HEADERS += \
     $$PWD/contactblockedobject.h \
     $$PWD/contactlinkobject.h \
     $$PWD/contactstatusobject.h \
-    $$PWD/contactsuggestedobject.h \
     $$PWD/dcoptionobject.h \
     $$PWD/dialogobject.h \
     $$PWD/disabledfeatureobject.h \
@@ -44,7 +42,6 @@ HEADERS += \
     $$PWD/geopointobject.h \
     $$PWD/importedcontactobject.h \
     $$PWD/inputappeventobject.h \
-    $$PWD/inputaudioobject.h \
     $$PWD/inputbotinlinemessageobject.h \
     $$PWD/inputbotinlineresultobject.h \
     $$PWD/inputchannelobject.h \
@@ -67,7 +64,6 @@ HEADERS += \
     $$PWD/inputprivacyruleobject.h \
     $$PWD/inputstickersetobject.h \
     $$PWD/inputuserobject.h \
-    $$PWD/inputvideoobject.h \
     $$PWD/keyboardbuttonobject.h \
     $$PWD/keyboardbuttonrowobject.h \
     $$PWD/messageobject.h \
@@ -98,7 +94,6 @@ HEADERS += \
     $$PWD/userfullobject.h \
     $$PWD/userprofilephotoobject.h \
     $$PWD/userstatusobject.h \
-    $$PWD/videoobject.h \
     $$PWD/wallpaperobject.h \
     $$PWD/webpageobject.h \
     $$PWD/accountauthorizationsobject.h \
@@ -120,7 +115,6 @@ HEADERS += \
     $$PWD/contactsimportedcontactsobject.h \
     $$PWD/contactslinkobject.h \
     $$PWD/contactsresolvedpeerobject.h \
-    $$PWD/contactssuggestedobject.h \
     $$PWD/helpappchangelogobject.h \
     $$PWD/helpappupdateobject.h \
     $$PWD/helpinvitetextobject.h \
@@ -151,7 +145,6 @@ HEADERS += \
 SOURCES += \
     $$PWD/telegramtypeqobject.cpp \
     $$PWD/accountdaysttlobject.cpp \
-    $$PWD/audioobject.cpp \
     $$PWD/authorizationobject.cpp \
     $$PWD/botcommandobject.cpp \
     $$PWD/botinfoobject.cpp \
@@ -172,7 +165,6 @@ SOURCES += \
     $$PWD/contactblockedobject.cpp \
     $$PWD/contactlinkobject.cpp \
     $$PWD/contactstatusobject.cpp \
-    $$PWD/contactsuggestedobject.cpp \
     $$PWD/dcoptionobject.cpp \
     $$PWD/dialogobject.cpp \
     $$PWD/disabledfeatureobject.cpp \
@@ -187,7 +179,6 @@ SOURCES += \
     $$PWD/geopointobject.cpp \
     $$PWD/importedcontactobject.cpp \
     $$PWD/inputappeventobject.cpp \
-    $$PWD/inputaudioobject.cpp \
     $$PWD/inputbotinlinemessageobject.cpp \
     $$PWD/inputbotinlineresultobject.cpp \
     $$PWD/inputchannelobject.cpp \
@@ -210,7 +201,6 @@ SOURCES += \
     $$PWD/inputprivacyruleobject.cpp \
     $$PWD/inputstickersetobject.cpp \
     $$PWD/inputuserobject.cpp \
-    $$PWD/inputvideoobject.cpp \
     $$PWD/keyboardbuttonobject.cpp \
     $$PWD/keyboardbuttonrowobject.cpp \
     $$PWD/messageobject.cpp \
@@ -241,7 +231,6 @@ SOURCES += \
     $$PWD/userfullobject.cpp \
     $$PWD/userprofilephotoobject.cpp \
     $$PWD/userstatusobject.cpp \
-    $$PWD/videoobject.cpp \
     $$PWD/wallpaperobject.cpp \
     $$PWD/webpageobject.cpp \
     $$PWD/accountauthorizationsobject.cpp \
@@ -263,7 +252,6 @@ SOURCES += \
     $$PWD/contactsimportedcontactsobject.cpp \
     $$PWD/contactslinkobject.cpp \
     $$PWD/contactsresolvedpeerobject.cpp \
-    $$PWD/contactssuggestedobject.cpp \
     $$PWD/helpappchangelogobject.cpp \
     $$PWD/helpappupdateobject.cpp \
     $$PWD/helpinvitetextobject.cpp \

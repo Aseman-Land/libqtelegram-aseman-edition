@@ -25,9 +25,7 @@ class LIBQTELEGRAMSHARED_EXPORT InputFileLocationObject : public TelegramTypeQOb
 public:
     enum InputFileLocationType {
         TypeInputFileLocation,
-        TypeInputVideoFileLocation,
         TypeInputEncryptedFileLocation,
-        TypeInputAudioFileLocation,
         TypeInputDocumentFileLocation
     };
 

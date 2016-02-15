@@ -39,14 +39,6 @@ QString MessageMedia::address() const {
     return m_address;
 }
 
-void MessageMedia::setAudio(const Audio &audio) {
-    m_audio = audio;
-}
-
-Audio MessageMedia::audio() const {
-    return m_audio;
-}
-
 void MessageMedia::setCaption(const QString &caption) {
     m_caption = caption;
 }
@@ -135,14 +127,6 @@ QString MessageMedia::venueId() const {
     return m_venueId;
 }
 
-void MessageMedia::setVideo(const Video &video) {
-    m_video = video;
-}
-
-Video MessageMedia::video() const {
-    return m_video;
-}
-
 void MessageMedia::setWebpage(const WebPage &webpage) {
     m_webpage = webpage;
 }
@@ -154,7 +138,6 @@ WebPage MessageMedia::webpage() const {
 bool MessageMedia::operator ==(const MessageMedia &b) const {
     return m_classType == b.m_classType &&
            m_address == b.m_address &&
-           m_audio == b.m_audio &&
            m_caption == b.m_caption &&
            m_document == b.m_document &&
            m_firstName == b.m_firstName &&
@@ -166,7 +149,6 @@ bool MessageMedia::operator ==(const MessageMedia &b) const {
            m_title == b.m_title &&
            m_userId == b.m_userId &&
            m_venueId == b.m_venueId &&
-           m_video == b.m_video &&
            m_webpage == b.m_webpage;
 }
 
@@ -190,14 +172,6 @@ bool MessageMedia::fetch(InboundPkt *in) {
     
     case typeMessageMediaPhoto: {
         m_photo.fetch(in);
-        m_caption = in->fetchQString();
-        m_classType = static_cast<MessageMediaType>(x);
-        return true;
-    }
-        break;
-    
-    case typeMessageMediaVideo: {
-        m_video.fetch(in);
         m_caption = in->fetchQString();
         m_classType = static_cast<MessageMediaType>(x);
         return true;
@@ -230,13 +204,6 @@ bool MessageMedia::fetch(InboundPkt *in) {
     case typeMessageMediaDocument: {
         m_document.fetch(in);
         m_caption = in->fetchQString();
-        m_classType = static_cast<MessageMediaType>(x);
-        return true;
-    }
-        break;
-    
-    case typeMessageMediaAudio: {
-        m_audio.fetch(in);
         m_classType = static_cast<MessageMediaType>(x);
         return true;
     }
@@ -281,13 +248,6 @@ bool MessageMedia::push(OutboundPkt *out) const {
     }
         break;
     
-    case typeMessageMediaVideo: {
-        m_video.push(out);
-        out->appendQString(m_caption);
-        return true;
-    }
-        break;
-    
     case typeMessageMediaGeo: {
         m_geo.push(out);
         return true;
@@ -311,12 +271,6 @@ bool MessageMedia::push(OutboundPkt *out) const {
     case typeMessageMediaDocument: {
         m_document.push(out);
         out->appendQString(m_caption);
-        return true;
-    }
-        break;
-    
-    case typeMessageMediaAudio: {
-        m_audio.push(out);
         return true;
     }
         break;

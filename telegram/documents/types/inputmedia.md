@@ -7,11 +7,6 @@
 * [typeInputMediaPhoto](#inputmediatypeinputmediaphoto)
 * [typeInputMediaGeoPoint](#inputmediatypeinputmediageopoint)
 * [typeInputMediaContact](#inputmediatypeinputmediacontact)
-* [typeInputMediaUploadedVideo](#inputmediatypeinputmediauploadedvideo)
-* [typeInputMediaUploadedThumbVideo](#inputmediatypeinputmediauploadedthumbvideo)
-* [typeInputMediaVideo](#inputmediatypeinputmediavideo)
-* [typeInputMediaUploadedAudio](#inputmediatypeinputmediauploadedaudio)
-* [typeInputMediaAudio](#inputmediatypeinputmediaaudio)
 * [typeInputMediaUploadedDocument](#inputmediatypeinputmediauploadeddocument)
 * [typeInputMediaUploadedThumbDocument](#inputmediatypeinputmediauploadedthumbdocument)
 * [typeInputMediaDocument](#inputmediatypeinputmediadocument)
@@ -88,90 +83,6 @@ inputMediaContact#a6e45987 phone_number:string first_name:string last_name:strin
 |phoneNumber|QString|
 |firstName|QString|
 |lastName|QString|
-
-## InputMedia::typeInputMediaUploadedVideo
-
-#### Schema:
-
-```c++
-inputMediaUploadedVideo#82713fdf file:InputFile duration:int w:int h:int mime_type:string caption:string = InputMedia;
-```
-
-#### Parameters:
-
-|Name|Type|
-|----|----|
-|file|[InputFile](inputfile.md)|
-|duration|qint32|
-|w|qint32|
-|h|qint32|
-|mimeType|QString|
-|caption|QString|
-
-## InputMedia::typeInputMediaUploadedThumbVideo
-
-#### Schema:
-
-```c++
-inputMediaUploadedThumbVideo#7780ddf9 file:InputFile thumb:InputFile duration:int w:int h:int mime_type:string caption:string = InputMedia;
-```
-
-#### Parameters:
-
-|Name|Type|
-|----|----|
-|file|[InputFile](inputfile.md)|
-|thumb|[InputFile](inputfile.md)|
-|duration|qint32|
-|w|qint32|
-|h|qint32|
-|mimeType|QString|
-|caption|QString|
-
-## InputMedia::typeInputMediaVideo
-
-#### Schema:
-
-```c++
-inputMediaVideo#936a4ebd id:InputVideo caption:string = InputMedia;
-```
-
-#### Parameters:
-
-|Name|Type|
-|----|----|
-|id|[InputVideo](inputvideo.md)|
-|caption|QString|
-
-## InputMedia::typeInputMediaUploadedAudio
-
-#### Schema:
-
-```c++
-inputMediaUploadedAudio#4e498cab file:InputFile duration:int mime_type:string = InputMedia;
-```
-
-#### Parameters:
-
-|Name|Type|
-|----|----|
-|file|[InputFile](inputfile.md)|
-|duration|qint32|
-|mimeType|QString|
-
-## InputMedia::typeInputMediaAudio
-
-#### Schema:
-
-```c++
-inputMediaAudio#89938781 id:InputAudio = InputMedia;
-```
-
-#### Parameters:
-
-|Name|Type|
-|----|----|
-|id|[InputAudio](inputaudio.md)|
 
 ## InputMedia::typeInputMediaUploadedDocument
 

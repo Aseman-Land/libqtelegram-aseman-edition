@@ -18,11 +18,14 @@ class LIBQTELEGRAMSHARED_EXPORT DocumentAttributeObject : public TelegramTypeQOb
     Q_PROPERTY(QString alt READ alt WRITE setAlt NOTIFY altChanged)
     Q_PROPERTY(qint32 duration READ duration WRITE setDuration NOTIFY durationChanged)
     Q_PROPERTY(QString fileName READ fileName WRITE setFileName NOTIFY fileNameChanged)
+    Q_PROPERTY(qint32 flags READ flags WRITE setFlags NOTIFY flagsChanged)
     Q_PROPERTY(qint32 h READ h WRITE setH NOTIFY hChanged)
     Q_PROPERTY(QString performer READ performer WRITE setPerformer NOTIFY performerChanged)
     Q_PROPERTY(InputStickerSetObject* stickerset READ stickerset WRITE setStickerset NOTIFY stickersetChanged)
     Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
+    Q_PROPERTY(bool voice READ voice WRITE setVoice NOTIFY voiceChanged)
     Q_PROPERTY(qint32 w READ w WRITE setW NOTIFY wChanged)
+    Q_PROPERTY(QByteArray waveform READ waveform WRITE setWaveform NOTIFY waveformChanged)
     Q_PROPERTY(DocumentAttribute core READ core WRITE setCore NOTIFY coreChanged)
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
@@ -49,6 +52,9 @@ public:
     void setFileName(const QString &fileName);
     QString fileName() const;
 
+    void setFlags(qint32 flags);
+    qint32 flags() const;
+
     void setH(qint32 h);
     qint32 h() const;
 
@@ -61,8 +67,14 @@ public:
     void setTitle(const QString &title);
     QString title() const;
 
+    void setVoice(bool voice);
+    bool voice() const;
+
     void setW(qint32 w);
     qint32 w() const;
+
+    void setWaveform(const QByteArray &waveform);
+    QByteArray waveform() const;
 
     void setClassType(quint32 classType);
     quint32 classType() const;
@@ -79,11 +91,14 @@ Q_SIGNALS:
     void altChanged();
     void durationChanged();
     void fileNameChanged();
+    void flagsChanged();
     void hChanged();
     void performerChanged();
     void stickersetChanged();
     void titleChanged();
+    void voiceChanged();
     void wChanged();
+    void waveformChanged();
 
 private Q_SLOTS:
     void coreStickersetChanged();

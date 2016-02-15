@@ -19,7 +19,8 @@ class LIBQTELEGRAMSHARED_EXPORT InputPrivacyKeyObject : public TelegramTypeQObje
 
 public:
     enum InputPrivacyKeyType {
-        TypeInputPrivacyKeyStatusTimestamp
+        TypeInputPrivacyKeyStatusTimestamp,
+        TypeInputPrivacyKeyChatInvite
     };
 
     InputPrivacyKeyObject(const InputPrivacyKey &core, QObject *parent = 0);

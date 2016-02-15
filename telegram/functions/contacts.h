@@ -12,11 +12,10 @@
 #include <QString>
 #include "telegram/types/contactsimportedcontacts.h"
 #include "telegram/types/inputcontact.h"
-#include "telegram/types/contactssuggested.h"
-#include <QtGlobal>
 #include "telegram/types/contactslink.h"
 #include "telegram/types/inputuser.h"
 #include "telegram/types/contactsblocked.h"
+#include <QtGlobal>
 #include "telegram/types/user.h"
 #include "telegram/types/contactsfound.h"
 #include "telegram/types/contactsresolvedpeer.h"
@@ -31,7 +30,6 @@ public:
         fncContactsGetStatuses = 0xc4a353ee,
         fncContactsGetContacts = 0x22c6aa08,
         fncContactsImportContacts = 0xda30b32d,
-        fncContactsGetSuggested = 0xcd773428,
         fncContactsDeleteContact = 0x8e953744,
         fncContactsDeleteContacts = 0x59ab389e,
         fncContactsBlock = 0x332b49fc,
@@ -54,9 +52,6 @@ public:
 
     static bool importContacts(OutboundPkt *out, const QList<InputContact> &contacts, bool replace);
     static ContactsImportedContacts importContactsResult(InboundPkt *in);
-
-    static bool getSuggested(OutboundPkt *out, qint32 limit);
-    static ContactsSuggested getSuggestedResult(InboundPkt *in);
 
     static bool deleteContact(OutboundPkt *out, const InputUser &id);
     static ContactsLink deleteContactResult(InboundPkt *in);

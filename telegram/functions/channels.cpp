@@ -28,10 +28,11 @@ MessagesDialogs Functions::Channels::getDialogsResult(InboundPkt *in) {
     return result;
 }
 
-bool Functions::Channels::getImportantHistory(OutboundPkt *out, const InputChannel &channel, qint32 offsetId, qint32 addOffset, qint32 limit, qint32 maxId, qint32 minId) {
+bool Functions::Channels::getImportantHistory(OutboundPkt *out, const InputChannel &channel, qint32 offsetId, qint32 offsetDate, qint32 addOffset, qint32 limit, qint32 maxId, qint32 minId) {
     out->appendInt(fncChannelsGetImportantHistory);
     if(!channel.push(out)) return false;
     out->appendInt(offsetId);
+    out->appendInt(offsetDate);
     out->appendInt(addOffset);
     out->appendInt(limit);
     out->appendInt(maxId);
@@ -364,6 +365,19 @@ bool Functions::Channels::deleteChannel(OutboundPkt *out, const InputChannel &ch
 }
 
 UpdatesType Functions::Channels::deleteChannelResult(InboundPkt *in) {
+    UpdatesType result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+bool Functions::Channels::toggleInvites(OutboundPkt *out, const InputChannel &channel, bool enabled) {
+    out->appendInt(fncChannelsToggleInvites);
+    if(!channel.push(out)) return false;
+    out->appendBool(enabled);
+    return true;
+}
+
+UpdatesType Functions::Channels::toggleInvitesResult(InboundPkt *in) {
     UpdatesType result;
     if(!result.fetch(in)) return result;
     return result;

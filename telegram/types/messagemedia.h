@@ -9,12 +9,10 @@
 
 #include <QMetaType>
 #include <QString>
-#include "audio.h"
 #include "document.h"
 #include "geopoint.h"
 #include "photo.h"
 #include <QtGlobal>
-#include "video.h"
 #include "webpage.h"
 
 class LIBQTELEGRAMSHARED_EXPORT MessageMedia : public TelegramTypeObject
@@ -23,12 +21,10 @@ public:
     enum MessageMediaType {
         typeMessageMediaEmpty = 0x3ded6320,
         typeMessageMediaPhoto = 0x3d8ce53d,
-        typeMessageMediaVideo = 0x5bcf1675,
         typeMessageMediaGeo = 0x56e0d474,
         typeMessageMediaContact = 0x5e7d2f39,
         typeMessageMediaUnsupported = 0x9f84f49e,
         typeMessageMediaDocument = 0xf3e02ea8,
-        typeMessageMediaAudio = 0xc6b68300,
         typeMessageMediaWebPage = 0xa32dd600,
         typeMessageMediaVenue = 0x7912b71f
     };
@@ -40,9 +36,6 @@ public:
 
     void setAddress(const QString &address);
     QString address() const;
-
-    void setAudio(const Audio &audio);
-    Audio audio() const;
 
     void setCaption(const QString &caption);
     QString caption() const;
@@ -77,9 +70,6 @@ public:
     void setVenueId(const QString &venueId);
     QString venueId() const;
 
-    void setVideo(const Video &video);
-    Video video() const;
-
     void setWebpage(const WebPage &webpage);
     WebPage webpage() const;
 
@@ -96,7 +86,6 @@ public:
 
 private:
     QString m_address;
-    Audio m_audio;
     QString m_caption;
     Document m_document;
     QString m_firstName;
@@ -108,7 +97,6 @@ private:
     QString m_title;
     qint32 m_userId;
     QString m_venueId;
-    Video m_video;
     WebPage m_webpage;
     MessageMediaType m_classType;
 };

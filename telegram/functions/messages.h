@@ -54,7 +54,7 @@ public:
     enum MessagesFunction {
         fncMessagesGetMessages = 0x4222fa74,
         fncMessagesGetDialogs = 0x6b47f94d,
-        fncMessagesGetHistory = 0x8a8ec2da,
+        fncMessagesGetHistory = 0xafa92846,
         fncMessagesSearch = 0xd4569248,
         fncMessagesReadHistory = 0xe306d3a,
         fncMessagesDeleteHistory = 0xb7c13bd9,
@@ -119,7 +119,7 @@ public:
     static bool getDialogs(OutboundPkt *out, qint32 offsetDate, qint32 offsetId, const InputPeer &offsetPeer, qint32 limit);
     static MessagesDialogs getDialogsResult(InboundPkt *in);
 
-    static bool getHistory(OutboundPkt *out, const InputPeer &peer, qint32 offsetId, qint32 addOffset, qint32 limit, qint32 maxId, qint32 minId);
+    static bool getHistory(OutboundPkt *out, const InputPeer &peer, qint32 offsetId, qint32 offsetDate, qint32 addOffset, qint32 limit, qint32 maxId, qint32 minId);
     static MessagesMessages getHistoryResult(InboundPkt *in);
 
     static bool search(OutboundPkt *out, bool importantOnly, const InputPeer &peer, const QString &q, const MessagesFilter &filter, qint32 minDate, qint32 maxDate, qint32 offset, qint32 maxId, qint32 limit);

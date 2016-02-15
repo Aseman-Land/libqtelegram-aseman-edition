@@ -33,7 +33,7 @@ class LIBQTELEGRAMSHARED_EXPORT Channels : public TelegramFunctionObject
 public:
     enum ChannelsFunction {
         fncChannelsGetDialogs = 0xa9d3d249,
-        fncChannelsGetImportantHistory = 0xddb929cb,
+        fncChannelsGetImportantHistory = 0x8f494bb2,
         fncChannelsReadHistory = 0xcc104937,
         fncChannelsDeleteMessages = 0x84c1fd4e,
         fncChannelsDeleteUserHistory = 0xd10dd71b,
@@ -56,7 +56,8 @@ public:
         fncChannelsInviteToChannel = 0x199f3a6c,
         fncChannelsKickFromChannel = 0xa672de14,
         fncChannelsExportInvite = 0xc7560885,
-        fncChannelsDeleteChannel = 0xc0111fe3
+        fncChannelsDeleteChannel = 0xc0111fe3,
+        fncChannelsToggleInvites = 0x49609307
     };
 
     Channels();
@@ -65,7 +66,7 @@ public:
     static bool getDialogs(OutboundPkt *out, qint32 offset, qint32 limit);
     static MessagesDialogs getDialogsResult(InboundPkt *in);
 
-    static bool getImportantHistory(OutboundPkt *out, const InputChannel &channel, qint32 offsetId, qint32 addOffset, qint32 limit, qint32 maxId, qint32 minId);
+    static bool getImportantHistory(OutboundPkt *out, const InputChannel &channel, qint32 offsetId, qint32 offsetDate, qint32 addOffset, qint32 limit, qint32 maxId, qint32 minId);
     static MessagesMessages getImportantHistoryResult(InboundPkt *in);
 
     static bool readHistory(OutboundPkt *out, const InputChannel &channel, qint32 maxId);
@@ -136,6 +137,9 @@ public:
 
     static bool deleteChannel(OutboundPkt *out, const InputChannel &channel);
     static UpdatesType deleteChannelResult(InboundPkt *in);
+
+    static bool toggleInvites(OutboundPkt *out, const InputChannel &channel, bool enabled);
+    static UpdatesType toggleInvitesResult(InboundPkt *in);
 
 };
 

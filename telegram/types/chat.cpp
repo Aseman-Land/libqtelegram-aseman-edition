@@ -132,6 +132,15 @@ qint32 Chat::id() const {
     return m_id;
 }
 
+void Chat::setInvitesEnabled(bool invitesEnabled) {
+    if(invitesEnabled) m_flags = (m_flags | (1<<10));
+    else m_flags = (m_flags & ~(1<<10));
+}
+
+bool Chat::invitesEnabled() const {
+    return (m_flags & 1<<10);
+}
+
 void Chat::setKicked(bool kicked) {
     if(kicked) m_flags = (m_flags | (1<<1));
     else m_flags = (m_flags & ~(1<<1));

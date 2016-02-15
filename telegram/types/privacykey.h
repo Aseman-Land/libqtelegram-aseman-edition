@@ -13,7 +13,8 @@ class LIBQTELEGRAMSHARED_EXPORT PrivacyKey : public TelegramTypeObject
 {
 public:
     enum PrivacyKeyType {
-        typePrivacyKeyStatusTimestamp = 0xbc2eab30
+        typePrivacyKeyStatusTimestamp = 0xbc2eab30,
+        typePrivacyKeyChatInvite = 0x500e6dfa
     };
 
     PrivacyKey(PrivacyKeyType classType = typePrivacyKeyStatusTimestamp, InboundPkt *in = 0);

@@ -19,10 +19,10 @@ public:
         typeInputMessagesFilterPhotoVideo = 0x56e9f0e4,
         typeInputMessagesFilterPhotoVideoDocuments = 0xd95e73bb,
         typeInputMessagesFilterDocument = 0x9eddf188,
-        typeInputMessagesFilterAudio = 0xcfc87522,
-        typeInputMessagesFilterAudioDocuments = 0x5afbf764,
         typeInputMessagesFilterUrl = 0x7ef0dd87,
-        typeInputMessagesFilterGif = 0xffc86587
+        typeInputMessagesFilterGif = 0xffc86587,
+        typeInputMessagesFilterVoice = 0x50f5c392,
+        typeInputMessagesFilterMusic = 0x3751b49e
     };
 
     MessagesFilter(MessagesFilterType classType = typeInputMessagesFilterEmpty, InboundPkt *in = 0);
