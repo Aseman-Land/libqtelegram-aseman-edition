@@ -163,7 +163,11 @@ void Connection::onError(QAbstractSocket::SocketError error) {
         // From http://doc.qt.io/qt-5/qabstractsocket.html#error
         // "When this signal is emitted, the socket may not be ready for a reconnect attempt."
         // Let's wait for the event loop spin once
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
+        QTimer::singleShot(reconnectionDelay, this, &Connection::connectToServer);
+#else
         QTimer::singleShot(reconnectionDelay, this, SLOT(connectToServer()));
+#endif
     }
 }
 
