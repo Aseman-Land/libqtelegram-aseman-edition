@@ -15,9 +15,7 @@ class LIBQTELEGRAMSHARED_EXPORT InputFileLocation : public TelegramTypeObject
 public:
     enum InputFileLocationType {
         typeInputFileLocation = 0x14637196,
-        typeInputVideoFileLocation = 0x3d0364ec,
         typeInputEncryptedFileLocation = 0xf5235d55,
-        typeInputAudioFileLocation = 0x74dc404d,
         typeInputDocumentFileLocation = 0x4e45abe9
     };
 

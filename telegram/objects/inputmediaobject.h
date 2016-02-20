@@ -11,10 +11,8 @@
 #include <QPointer>
 #include "inputfileobject.h"
 #include "inputgeopointobject.h"
-#include "inputaudioobject.h"
 #include "inputdocumentobject.h"
 #include "inputphotoobject.h"
-#include "inputvideoobject.h"
 
 class LIBQTELEGRAMSHARED_EXPORT InputMediaObject : public TelegramTypeQObject
 {
@@ -23,15 +21,11 @@ class LIBQTELEGRAMSHARED_EXPORT InputMediaObject : public TelegramTypeQObject
     Q_PROPERTY(QString address READ address WRITE setAddress NOTIFY addressChanged)
     Q_PROPERTY(QList<DocumentAttribute> attributes READ attributes WRITE setAttributes NOTIFY attributesChanged)
     Q_PROPERTY(QString caption READ caption WRITE setCaption NOTIFY captionChanged)
-    Q_PROPERTY(qint32 duration READ duration WRITE setDuration NOTIFY durationChanged)
     Q_PROPERTY(InputFileObject* file READ file WRITE setFile NOTIFY fileChanged)
     Q_PROPERTY(QString firstName READ firstName WRITE setFirstName NOTIFY firstNameChanged)
     Q_PROPERTY(InputGeoPointObject* geoPoint READ geoPoint WRITE setGeoPoint NOTIFY geoPointChanged)
-    Q_PROPERTY(qint32 h READ h WRITE setH NOTIFY hChanged)
-    Q_PROPERTY(InputAudioObject* idInputAudio READ idInputAudio WRITE setIdInputAudio NOTIFY idInputAudioChanged)
     Q_PROPERTY(InputDocumentObject* idInputDocument READ idInputDocument WRITE setIdInputDocument NOTIFY idInputDocumentChanged)
     Q_PROPERTY(InputPhotoObject* idInputPhoto READ idInputPhoto WRITE setIdInputPhoto NOTIFY idInputPhotoChanged)
-    Q_PROPERTY(InputVideoObject* idInputVideo READ idInputVideo WRITE setIdInputVideo NOTIFY idInputVideoChanged)
     Q_PROPERTY(QString lastName READ lastName WRITE setLastName NOTIFY lastNameChanged)
     Q_PROPERTY(QString mimeType READ mimeType WRITE setMimeType NOTIFY mimeTypeChanged)
     Q_PROPERTY(QString phoneNumber READ phoneNumber WRITE setPhoneNumber NOTIFY phoneNumberChanged)
@@ -41,7 +35,6 @@ class LIBQTELEGRAMSHARED_EXPORT InputMediaObject : public TelegramTypeQObject
     Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
     Q_PROPERTY(QString url READ url WRITE setUrl NOTIFY urlChanged)
     Q_PROPERTY(QString venueId READ venueId WRITE setVenueId NOTIFY venueIdChanged)
-    Q_PROPERTY(qint32 w READ w WRITE setW NOTIFY wChanged)
     Q_PROPERTY(InputMedia core READ core WRITE setCore NOTIFY coreChanged)
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
@@ -52,11 +45,6 @@ public:
         TypeInputMediaPhoto,
         TypeInputMediaGeoPoint,
         TypeInputMediaContact,
-        TypeInputMediaUploadedVideo,
-        TypeInputMediaUploadedThumbVideo,
-        TypeInputMediaVideo,
-        TypeInputMediaUploadedAudio,
-        TypeInputMediaAudio,
         TypeInputMediaUploadedDocument,
         TypeInputMediaUploadedThumbDocument,
         TypeInputMediaDocument,
@@ -77,9 +65,6 @@ public:
     void setCaption(const QString &caption);
     QString caption() const;
 
-    void setDuration(qint32 duration);
-    qint32 duration() const;
-
     void setFile(InputFileObject* file);
     InputFileObject* file() const;
 
@@ -89,20 +74,11 @@ public:
     void setGeoPoint(InputGeoPointObject* geoPoint);
     InputGeoPointObject* geoPoint() const;
 
-    void setH(qint32 h);
-    qint32 h() const;
-
-    void setIdInputAudio(InputAudioObject* idInputAudio);
-    InputAudioObject* idInputAudio() const;
-
     void setIdInputDocument(InputDocumentObject* idInputDocument);
     InputDocumentObject* idInputDocument() const;
 
     void setIdInputPhoto(InputPhotoObject* idInputPhoto);
     InputPhotoObject* idInputPhoto() const;
-
-    void setIdInputVideo(InputVideoObject* idInputVideo);
-    InputVideoObject* idInputVideo() const;
 
     void setLastName(const QString &lastName);
     QString lastName() const;
@@ -131,9 +107,6 @@ public:
     void setVenueId(const QString &venueId);
     QString venueId() const;
 
-    void setW(qint32 w);
-    qint32 w() const;
-
     void setClassType(quint32 classType);
     quint32 classType() const;
 
@@ -149,15 +122,11 @@ Q_SIGNALS:
     void addressChanged();
     void attributesChanged();
     void captionChanged();
-    void durationChanged();
     void fileChanged();
     void firstNameChanged();
     void geoPointChanged();
-    void hChanged();
-    void idInputAudioChanged();
     void idInputDocumentChanged();
     void idInputPhotoChanged();
-    void idInputVideoChanged();
     void lastNameChanged();
     void mimeTypeChanged();
     void phoneNumberChanged();
@@ -167,24 +136,19 @@ Q_SIGNALS:
     void titleChanged();
     void urlChanged();
     void venueIdChanged();
-    void wChanged();
 
 private Q_SLOTS:
     void coreFileChanged();
     void coreGeoPointChanged();
-    void coreIdInputAudioChanged();
     void coreIdInputDocumentChanged();
     void coreIdInputPhotoChanged();
-    void coreIdInputVideoChanged();
     void coreThumbChanged();
 
 private:
     QPointer<InputFileObject> m_file;
     QPointer<InputGeoPointObject> m_geoPoint;
-    QPointer<InputAudioObject> m_idInputAudio;
     QPointer<InputDocumentObject> m_idInputDocument;
     QPointer<InputPhotoObject> m_idInputPhoto;
-    QPointer<InputVideoObject> m_idInputVideo;
     QPointer<InputFileObject> m_thumb;
     InputMedia m_core;
 };

@@ -25,10 +25,10 @@ public:
         TypeInputMessagesFilterPhotoVideo,
         TypeInputMessagesFilterPhotoVideoDocuments,
         TypeInputMessagesFilterDocument,
-        TypeInputMessagesFilterAudio,
-        TypeInputMessagesFilterAudioDocuments,
         TypeInputMessagesFilterUrl,
-        TypeInputMessagesFilterGif
+        TypeInputMessagesFilterGif,
+        TypeInputMessagesFilterVoice,
+        TypeInputMessagesFilterMusic
     };
 
     MessagesFilterObject(const MessagesFilter &core, QObject *parent = 0);

@@ -58,6 +58,17 @@ QString DocumentAttributeObject::fileName() const {
     return m_core.fileName();
 }
 
+void DocumentAttributeObject::setFlags(qint32 flags) {
+    if(m_core.flags() == flags) return;
+    m_core.setFlags(flags);
+    Q_EMIT flagsChanged();
+    Q_EMIT coreChanged();
+}
+
+qint32 DocumentAttributeObject::flags() const {
+    return m_core.flags();
+}
+
 void DocumentAttributeObject::setH(qint32 h) {
     if(m_core.h() == h) return;
     m_core.setH(h);
@@ -108,6 +119,17 @@ QString DocumentAttributeObject::title() const {
     return m_core.title();
 }
 
+void DocumentAttributeObject::setVoice(bool voice) {
+    if(m_core.voice() == voice) return;
+    m_core.setVoice(voice);
+    Q_EMIT voiceChanged();
+    Q_EMIT coreChanged();
+}
+
+bool DocumentAttributeObject::voice() const {
+    return m_core.voice();
+}
+
 void DocumentAttributeObject::setW(qint32 w) {
     if(m_core.w() == w) return;
     m_core.setW(w);
@@ -119,6 +141,17 @@ qint32 DocumentAttributeObject::w() const {
     return m_core.w();
 }
 
+void DocumentAttributeObject::setWaveform(const QByteArray &waveform) {
+    if(m_core.waveform() == waveform) return;
+    m_core.setWaveform(waveform);
+    Q_EMIT waveformChanged();
+    Q_EMIT coreChanged();
+}
+
+QByteArray DocumentAttributeObject::waveform() const {
+    return m_core.waveform();
+}
+
 DocumentAttributeObject &DocumentAttributeObject::operator =(const DocumentAttribute &b) {
     if(m_core == b) return *this;
     m_core = b;
@@ -127,11 +160,14 @@ DocumentAttributeObject &DocumentAttributeObject::operator =(const DocumentAttri
     Q_EMIT altChanged();
     Q_EMIT durationChanged();
     Q_EMIT fileNameChanged();
+    Q_EMIT flagsChanged();
     Q_EMIT hChanged();
     Q_EMIT performerChanged();
     Q_EMIT stickersetChanged();
     Q_EMIT titleChanged();
+    Q_EMIT voiceChanged();
     Q_EMIT wChanged();
+    Q_EMIT waveformChanged();
     Q_EMIT coreChanged();
     return *this;
 }

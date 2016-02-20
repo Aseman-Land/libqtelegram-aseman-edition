@@ -1274,13 +1274,16 @@ qint64 Telegram::messagesSendContact(const InputPeer &peer, qint64 randomId, con
 }
 
 qint64 Telegram::messagesSendVideo(const InputPeer &peer, qint64 randomId, const QByteArray &bytes, const QString &fileName, qint32 duration, qint32 width, qint32 height, const QString &mimeType, const QByteArray &thumbnailBytes, const QString &thumbnailName, qint32 replyToMsgId, const ReplyMarkup &reply_markup, bool broadcast, Callback<UploadSendFile > callBack, qint32 timeout) {
-    InputMedia inputMedia(InputMedia::typeInputMediaUploadedVideo);
-    inputMedia.setDuration(duration);
-    inputMedia.setW(width);
-    inputMedia.setH(height);
+    DocumentAttribute attr(DocumentAttribute::typeDocumentAttributeVideo);
+    attr.setDuration(duration);
+    attr.setW(width);
+    attr.setH(height);
+
+    InputMedia inputMedia(InputMedia::typeInputMediaUploadedDocument);
+    inputMedia.setAttributes( inputMedia.attributes() << attr );
     inputMedia.setMimeType(mimeType);
     if (!thumbnailBytes.isEmpty()) {
-        inputMedia.setClassType(InputMedia::typeInputMediaUploadedThumbVideo);
+        inputMedia.setClassType(InputMedia::typeInputMediaUploadedThumbDocument);
     }
     FileOperation *op = new FileOperation(FileOperation::sendMedia);
     op->setInputPeer(peer);
@@ -1295,13 +1298,16 @@ qint64 Telegram::messagesSendVideo(const InputPeer &peer, qint64 randomId, const
 }
 
 qint64 Telegram::messagesSendVideo(const InputPeer &peer, qint64 randomId, const QString &filePath, qint32 duration, qint32 width, qint32 height, const QString &thumbnailFilePath, qint32 replyToMsgId, const ReplyMarkup &reply_markup, bool broadcast, Callback<UploadSendFile > callBack, qint32 timeout) {
-    InputMedia inputMedia(InputMedia::typeInputMediaUploadedVideo);
-    inputMedia.setDuration(duration);
-    inputMedia.setW(width);
-    inputMedia.setH(height);
+    DocumentAttribute attr(DocumentAttribute::typeDocumentAttributeVideo);
+    attr.setDuration(duration);
+    attr.setW(width);
+    attr.setH(height);
+
+    InputMedia inputMedia(InputMedia::typeInputMediaUploadedDocument);
+    inputMedia.setAttributes( inputMedia.attributes() << attr );
     inputMedia.setMimeType(QMimeDatabase().mimeTypeForFile(QFileInfo(filePath)).name());
     if (thumbnailFilePath.length() > 0) {
-        inputMedia.setClassType(InputMedia::typeInputMediaUploadedThumbVideo);
+        inputMedia.setClassType(InputMedia::typeInputMediaUploadedThumbDocument);
     }
     FileOperation *op = new FileOperation(FileOperation::sendMedia);
     op->setInputPeer(peer);
@@ -1316,8 +1322,11 @@ qint64 Telegram::messagesSendVideo(const InputPeer &peer, qint64 randomId, const
 }
 
 qint64 Telegram::messagesSendAudio(const InputPeer &peer, qint64 randomId, const QByteArray &bytes, const QString &fileName, qint32 duration, const QString &mimeType, qint32 replyToMsgId, const ReplyMarkup &reply_markup, bool broadcast, Callback<UploadSendFile > callBack, qint32 timeout) {
-    InputMedia inputMedia(InputMedia::typeInputMediaUploadedAudio);
-    inputMedia.setDuration(duration);
+    DocumentAttribute attr(DocumentAttribute::typeDocumentAttributeAudio);
+    attr.setDuration(duration);
+
+    InputMedia inputMedia(InputMedia::typeInputMediaUploadedDocument);
+    inputMedia.setAttributes( inputMedia.attributes() << attr );
     inputMedia.setMimeType(mimeType);
     FileOperation *op = new FileOperation(FileOperation::sendMedia);
     op->setInputPeer(peer);
@@ -1332,9 +1341,13 @@ qint64 Telegram::messagesSendAudio(const InputPeer &peer, qint64 randomId, const
 }
 
 qint64 Telegram::messagesSendAudio(const InputPeer &peer, qint64 randomId, const QString &filePath, qint32 duration, qint32 replyToMsgId, const ReplyMarkup &reply_markup, bool broadcast, Callback<UploadSendFile > callBack, qint32 timeout) {
-    InputMedia inputMedia(InputMedia::typeInputMediaUploadedAudio);
-    inputMedia.setDuration(duration);
+    DocumentAttribute attr(DocumentAttribute::typeDocumentAttributeAudio);
+    attr.setDuration(duration);
+
+    InputMedia inputMedia(InputMedia::typeInputMediaUploadedDocument);
+    inputMedia.setAttributes( inputMedia.attributes() << attr );
     inputMedia.setMimeType(QMimeDatabase().mimeTypeForFile(QFileInfo(filePath)).name());
+
     FileOperation *op = new FileOperation(FileOperation::sendMedia);
     op->setInputPeer(peer);
     op->setInputMedia(inputMedia);
@@ -1422,20 +1435,20 @@ qint64 Telegram::messagesForwardPhoto(const InputPeer &peer, qint64 randomId, qi
 }
 
 qint64 Telegram::messagesForwardVideo(const InputPeer &peer, qint64 randomId, qint64 videoId, qint64 accessHash, qint32 replyToMsgId, const ReplyMarkup &reply_markup, bool broadcast, Callback<UpdatesType> callBack, qint32 timeout) {
-    InputVideo inputVideo(InputVideo::typeInputVideo);
+    InputDocument inputVideo(InputDocument::typeInputDocument);
     inputVideo.setId(videoId);
     inputVideo.setAccessHash(accessHash);
-    InputMedia inputMedia(InputMedia::typeInputMediaVideo);
-    inputMedia.setIdInputVideo(inputVideo);
+    InputMedia inputMedia(InputMedia::typeInputMediaDocument);
+    inputMedia.setIdInputDocument(inputVideo);
     return messagesForwardMedia(peer, inputMedia, randomId, replyToMsgId, reply_markup, broadcast, callBack, timeout);
 }
 
 qint64 Telegram::messagesForwardAudio(const InputPeer &peer, qint64 randomId, qint64 audioId, qint64 accessHash, qint32 replyToMsgId, const ReplyMarkup &reply_markup, bool broadcast, Callback<UpdatesType> callBack, qint32 timeout) {
-    InputAudio inputAudio(InputAudio::typeInputAudio);
+    InputDocument inputAudio(InputDocument::typeInputDocument);
     inputAudio.setId(audioId);
     inputAudio.setAccessHash(accessHash);
-    InputMedia inputMedia(InputMedia::typeInputMediaAudio);
-    inputMedia.setIdInputAudio(inputAudio);
+    InputMedia inputMedia(InputMedia::typeInputMediaDocument);
+    inputMedia.setIdInputDocument(inputAudio);
     return messagesForwardMedia(peer, inputMedia, randomId, replyToMsgId, reply_markup, broadcast, callBack, timeout);
 }
 

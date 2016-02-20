@@ -26,6 +26,7 @@ class LIBQTELEGRAMSHARED_EXPORT ChatObject : public TelegramTypeQObject
     Q_PROPERTY(bool editor READ editor WRITE setEditor NOTIFY editorChanged)
     Q_PROPERTY(qint32 flags READ flags WRITE setFlags NOTIFY flagsChanged)
     Q_PROPERTY(qint32 id READ id WRITE setId NOTIFY idChanged)
+    Q_PROPERTY(bool invitesEnabled READ invitesEnabled WRITE setInvitesEnabled NOTIFY invitesEnabledChanged)
     Q_PROPERTY(bool kicked READ kicked WRITE setKicked NOTIFY kickedChanged)
     Q_PROPERTY(bool left READ left WRITE setLeft NOTIFY leftChanged)
     Q_PROPERTY(bool megagroup READ megagroup WRITE setMegagroup NOTIFY megagroupChanged)
@@ -84,6 +85,9 @@ public:
 
     void setId(qint32 id);
     qint32 id() const;
+
+    void setInvitesEnabled(bool invitesEnabled);
+    bool invitesEnabled() const;
 
     void setKicked(bool kicked);
     bool kicked() const;
@@ -146,6 +150,7 @@ Q_SIGNALS:
     void editorChanged();
     void flagsChanged();
     void idChanged();
+    void invitesEnabledChanged();
     void kickedChanged();
     void leftChanged();
     void megagroupChanged();

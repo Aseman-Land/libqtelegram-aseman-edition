@@ -44,6 +44,7 @@
 * [typeUpdateStickerSets](#updatetypeupdatestickersets)
 * [typeUpdateSavedGifs](#updatetypeupdatesavedgifs)
 * [typeUpdateBotInlineQuery](#updatetypeupdatebotinlinequery)
+* [typeUpdateBotInlineSend](#updatetypeupdatebotinlinesend)
 
 ## Update::typeUpdateNewMessage
 
@@ -691,4 +692,20 @@ updateBotInlineQuery#c01eea08 query_id:long user_id:int query:string offset:stri
 |userId|qint32|
 |query|QString|
 |offset|QString|
+
+## Update::typeUpdateBotInlineSend
+
+#### Schema:
+
+```c++
+updateBotInlineSend#f69e113 user_id:int query:string id:string = Update;
+```
+
+#### Parameters:
+
+|Name|Type|
+|----|----|
+|userId|qint32|
+|query|QString|
+|id|QString|
 

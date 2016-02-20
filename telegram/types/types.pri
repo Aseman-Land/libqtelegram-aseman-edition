@@ -7,7 +7,6 @@ HEADERS += \
     $$PWD/types.h \
     $$PWD/telegramtypeobject.h \
     $$PWD/accountdaysttl.h \
-    $$PWD/audio.h \
     $$PWD/authorization.h \
     $$PWD/botcommand.h \
     $$PWD/botinfo.h \
@@ -28,7 +27,6 @@ HEADERS += \
     $$PWD/contactblocked.h \
     $$PWD/contactlink.h \
     $$PWD/contactstatus.h \
-    $$PWD/contactsuggested.h \
     $$PWD/dcoption.h \
     $$PWD/dialog.h \
     $$PWD/disabledfeature.h \
@@ -43,7 +41,6 @@ HEADERS += \
     $$PWD/geopoint.h \
     $$PWD/importedcontact.h \
     $$PWD/inputappevent.h \
-    $$PWD/inputaudio.h \
     $$PWD/inputbotinlinemessage.h \
     $$PWD/inputbotinlineresult.h \
     $$PWD/inputchannel.h \
@@ -66,7 +63,6 @@ HEADERS += \
     $$PWD/inputprivacyrule.h \
     $$PWD/inputstickerset.h \
     $$PWD/inputuser.h \
-    $$PWD/inputvideo.h \
     $$PWD/keyboardbutton.h \
     $$PWD/keyboardbuttonrow.h \
     $$PWD/message.h \
@@ -97,7 +93,6 @@ HEADERS += \
     $$PWD/userfull.h \
     $$PWD/userprofilephoto.h \
     $$PWD/userstatus.h \
-    $$PWD/video.h \
     $$PWD/wallpaper.h \
     $$PWD/webpage.h \
     $$PWD/accountauthorizations.h \
@@ -119,7 +114,6 @@ HEADERS += \
     $$PWD/contactsimportedcontacts.h \
     $$PWD/contactslink.h \
     $$PWD/contactsresolvedpeer.h \
-    $$PWD/contactssuggested.h \
     $$PWD/helpappchangelog.h \
     $$PWD/helpappupdate.h \
     $$PWD/helpinvitetext.h \
@@ -150,7 +144,6 @@ HEADERS += \
 SOURCES += \
     $$PWD/telegramtypeobject.cpp \
     $$PWD/accountdaysttl.cpp \
-    $$PWD/audio.cpp \
     $$PWD/authorization.cpp \
     $$PWD/botcommand.cpp \
     $$PWD/botinfo.cpp \
@@ -171,7 +164,6 @@ SOURCES += \
     $$PWD/contactblocked.cpp \
     $$PWD/contactlink.cpp \
     $$PWD/contactstatus.cpp \
-    $$PWD/contactsuggested.cpp \
     $$PWD/dcoption.cpp \
     $$PWD/dialog.cpp \
     $$PWD/disabledfeature.cpp \
@@ -186,7 +178,6 @@ SOURCES += \
     $$PWD/geopoint.cpp \
     $$PWD/importedcontact.cpp \
     $$PWD/inputappevent.cpp \
-    $$PWD/inputaudio.cpp \
     $$PWD/inputbotinlinemessage.cpp \
     $$PWD/inputbotinlineresult.cpp \
     $$PWD/inputchannel.cpp \
@@ -209,7 +200,6 @@ SOURCES += \
     $$PWD/inputprivacyrule.cpp \
     $$PWD/inputstickerset.cpp \
     $$PWD/inputuser.cpp \
-    $$PWD/inputvideo.cpp \
     $$PWD/keyboardbutton.cpp \
     $$PWD/keyboardbuttonrow.cpp \
     $$PWD/message.cpp \
@@ -240,7 +230,6 @@ SOURCES += \
     $$PWD/userfull.cpp \
     $$PWD/userprofilephoto.cpp \
     $$PWD/userstatus.cpp \
-    $$PWD/video.cpp \
     $$PWD/wallpaper.cpp \
     $$PWD/webpage.cpp \
     $$PWD/accountauthorizations.cpp \
@@ -262,7 +251,6 @@ SOURCES += \
     $$PWD/contactsimportedcontacts.cpp \
     $$PWD/contactslink.cpp \
     $$PWD/contactsresolvedpeer.cpp \
-    $$PWD/contactssuggested.cpp \
     $$PWD/helpappchangelog.cpp \
     $$PWD/helpappupdate.cpp \
     $$PWD/helpinvitetext.cpp \

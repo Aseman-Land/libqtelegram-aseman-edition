@@ -59,6 +59,9 @@ public:
     void setId(qint32 id);
     qint32 id() const;
 
+    void setInvitesEnabled(bool invitesEnabled);
+    bool invitesEnabled() const;
+
     void setKicked(bool kicked);
     bool kicked() const;
 

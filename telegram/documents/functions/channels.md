@@ -52,3 +52,5 @@
 
 * **Delete channel** - [TelegramCore::channelsDeleteChannel](methods/deletechannel.md)
 
+* **Toggle invites** - [TelegramCore::channelsToggleInvites](methods/toggleinvites.md)
+

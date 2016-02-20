@@ -2,8 +2,6 @@
 
 * [AccountDaysTTL](accountdaysttl.md)
 
-* [Audio](audio.md)
-
 * [Authorization](authorization.md)
 
 * [BotCommand](botcommand.md)
@@ -44,8 +42,6 @@
 
 * [ContactStatus](contactstatus.md)
 
-* [ContactSuggested](contactsuggested.md)
-
 * [DcOption](dcoption.md)
 
 * [Dialog](dialog.md)
@@ -73,8 +69,6 @@
 * [ImportedContact](importedcontact.md)
 
 * [InputAppEvent](inputappevent.md)
-
-* [InputAudio](inputaudio.md)
 
 * [InputBotInlineMessage](inputbotinlinemessage.md)
 
@@ -119,8 +113,6 @@
 * [InputStickerSet](inputstickerset.md)
 
 * [InputUser](inputuser.md)
-
-* [InputVideo](inputvideo.md)
 
 * [KeyboardButton](keyboardbutton.md)
 
@@ -182,8 +174,6 @@
 
 * [UserStatus](userstatus.md)
 
-* [Video](video.md)
-
 * [WallPaper](wallpaper.md)
 
 * [WebPage](webpage.md)
@@ -225,8 +215,6 @@
 * [ContactsLink](contactslink.md)
 
 * [ContactsResolvedPeer](contactsresolvedpeer.md)
-
-* [ContactsSuggested](contactssuggested.md)
 
 * [HelpAppChangelog](helpappchangelog.md)
 

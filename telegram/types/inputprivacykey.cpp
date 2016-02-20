@@ -50,6 +50,12 @@ bool InputPrivacyKey::fetch(InboundPkt *in) {
     }
         break;
     
+    case typeInputPrivacyKeyChatInvite: {
+        m_classType = static_cast<InputPrivacyKeyType>(x);
+        return true;
+    }
+        break;
+    
     default:
         LQTG_FETCH_ASSERT;
         return false;
@@ -60,6 +66,11 @@ bool InputPrivacyKey::push(OutboundPkt *out) const {
     out->appendInt(m_classType);
     switch(m_classType) {
     case typeInputPrivacyKeyStatusTimestamp: {
+        return true;
+    }
+        break;
+    
+    case typeInputPrivacyKeyChatInvite: {
         return true;
     }
         break;

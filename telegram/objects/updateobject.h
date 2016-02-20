@@ -43,7 +43,8 @@ class LIBQTELEGRAMSHARED_EXPORT UpdateObject : public TelegramTypeQObject
     Q_PROPERTY(QString firstName READ firstName WRITE setFirstName NOTIFY firstNameChanged)
     Q_PROPERTY(ContactLinkObject* foreignLink READ foreignLink WRITE setForeignLink NOTIFY foreignLinkChanged)
     Q_PROPERTY(MessageGroupObject* group READ group WRITE setGroup NOTIFY groupChanged)
-    Q_PROPERTY(qint32 id READ id WRITE setId NOTIFY idChanged)
+    Q_PROPERTY(QString idString READ idString WRITE setIdString NOTIFY idStringChanged)
+    Q_PROPERTY(qint32 idInt READ idInt WRITE setIdInt NOTIFY idIntChanged)
     Q_PROPERTY(qint32 inviterId READ inviterId WRITE setInviterId NOTIFY inviterIdChanged)
     Q_PROPERTY(bool isAdmin READ isAdmin WRITE setIsAdmin NOTIFY isAdminChanged)
     Q_PROPERTY(PrivacyKeyObject* key READ key WRITE setKey NOTIFY keyChanged)
@@ -128,7 +129,8 @@ public:
         TypeUpdateStickerSetsOrder,
         TypeUpdateStickerSets,
         TypeUpdateSavedGifs,
-        TypeUpdateBotInlineQuery
+        TypeUpdateBotInlineQuery,
+        TypeUpdateBotInlineSend
     };
 
     UpdateObject(const Update &core, QObject *parent = 0);
@@ -174,8 +176,11 @@ public:
     void setGroup(MessageGroupObject* group);
     MessageGroupObject* group() const;
 
-    void setId(qint32 id);
-    qint32 id() const;
+    void setIdString(const QString &idString);
+    QString idString() const;
+
+    void setIdInt(qint32 idInt);
+    qint32 idInt() const;
 
     void setInviterId(qint32 inviterId);
     qint32 inviterId() const;
@@ -316,7 +321,8 @@ Q_SIGNALS:
     void firstNameChanged();
     void foreignLinkChanged();
     void groupChanged();
-    void idChanged();
+    void idStringChanged();
+    void idIntChanged();
     void inviterIdChanged();
     void isAdminChanged();
     void keyChanged();

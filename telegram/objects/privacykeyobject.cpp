@@ -37,6 +37,9 @@ void PrivacyKeyObject::setClassType(quint32 classType) {
     case TypePrivacyKeyStatusTimestamp:
         result = PrivacyKey::typePrivacyKeyStatusTimestamp;
         break;
+    case TypePrivacyKeyChatInvite:
+        result = PrivacyKey::typePrivacyKeyChatInvite;
+        break;
     default:
         result = PrivacyKey::typePrivacyKeyStatusTimestamp;
         break;
@@ -53,6 +56,9 @@ quint32 PrivacyKeyObject::classType() const {
     switch(static_cast<qint64>(m_core.classType())) {
     case PrivacyKey::typePrivacyKeyStatusTimestamp:
         result = TypePrivacyKeyStatusTimestamp;
+        break;
+    case PrivacyKey::typePrivacyKeyChatInvite:
+        result = TypePrivacyKeyChatInvite;
         break;
     default:
         result = TypePrivacyKeyStatusTimestamp;

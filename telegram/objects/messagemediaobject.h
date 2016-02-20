@@ -9,11 +9,9 @@
 #include "telegram/types/messagemedia.h"
 
 #include <QPointer>
-#include "audioobject.h"
 #include "documentobject.h"
 #include "geopointobject.h"
 #include "photoobject.h"
-#include "videoobject.h"
 #include "webpageobject.h"
 
 class LIBQTELEGRAMSHARED_EXPORT MessageMediaObject : public TelegramTypeQObject
@@ -21,7 +19,6 @@ class LIBQTELEGRAMSHARED_EXPORT MessageMediaObject : public TelegramTypeQObject
     Q_OBJECT
     Q_ENUMS(MessageMediaType)
     Q_PROPERTY(QString address READ address WRITE setAddress NOTIFY addressChanged)
-    Q_PROPERTY(AudioObject* audio READ audio WRITE setAudio NOTIFY audioChanged)
     Q_PROPERTY(QString caption READ caption WRITE setCaption NOTIFY captionChanged)
     Q_PROPERTY(DocumentObject* document READ document WRITE setDocument NOTIFY documentChanged)
     Q_PROPERTY(QString firstName READ firstName WRITE setFirstName NOTIFY firstNameChanged)
@@ -33,7 +30,6 @@ class LIBQTELEGRAMSHARED_EXPORT MessageMediaObject : public TelegramTypeQObject
     Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
     Q_PROPERTY(qint32 userId READ userId WRITE setUserId NOTIFY userIdChanged)
     Q_PROPERTY(QString venueId READ venueId WRITE setVenueId NOTIFY venueIdChanged)
-    Q_PROPERTY(VideoObject* video READ video WRITE setVideo NOTIFY videoChanged)
     Q_PROPERTY(WebPageObject* webpage READ webpage WRITE setWebpage NOTIFY webpageChanged)
     Q_PROPERTY(MessageMedia core READ core WRITE setCore NOTIFY coreChanged)
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
@@ -42,12 +38,10 @@ public:
     enum MessageMediaType {
         TypeMessageMediaEmpty,
         TypeMessageMediaPhoto,
-        TypeMessageMediaVideo,
         TypeMessageMediaGeo,
         TypeMessageMediaContact,
         TypeMessageMediaUnsupported,
         TypeMessageMediaDocument,
-        TypeMessageMediaAudio,
         TypeMessageMediaWebPage,
         TypeMessageMediaVenue
     };
@@ -58,9 +52,6 @@ public:
 
     void setAddress(const QString &address);
     QString address() const;
-
-    void setAudio(AudioObject* audio);
-    AudioObject* audio() const;
 
     void setCaption(const QString &caption);
     QString caption() const;
@@ -95,9 +86,6 @@ public:
     void setVenueId(const QString &venueId);
     QString venueId() const;
 
-    void setVideo(VideoObject* video);
-    VideoObject* video() const;
-
     void setWebpage(WebPageObject* webpage);
     WebPageObject* webpage() const;
 
@@ -114,7 +102,6 @@ Q_SIGNALS:
     void coreChanged();
     void classTypeChanged();
     void addressChanged();
-    void audioChanged();
     void captionChanged();
     void documentChanged();
     void firstNameChanged();
@@ -126,23 +113,18 @@ Q_SIGNALS:
     void titleChanged();
     void userIdChanged();
     void venueIdChanged();
-    void videoChanged();
     void webpageChanged();
 
 private Q_SLOTS:
-    void coreAudioChanged();
     void coreDocumentChanged();
     void coreGeoChanged();
     void corePhotoChanged();
-    void coreVideoChanged();
     void coreWebpageChanged();
 
 private:
-    QPointer<AudioObject> m_audio;
     QPointer<DocumentObject> m_document;
     QPointer<GeoPointObject> m_geo;
     QPointer<PhotoObject> m_photo;
-    QPointer<VideoObject> m_video;
     QPointer<WebPageObject> m_webpage;
     MessageMedia m_core;
 };

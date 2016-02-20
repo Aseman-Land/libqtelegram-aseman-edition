@@ -11,6 +11,7 @@
 #include <QString>
 #include <QtGlobal>
 #include "inputstickerset.h"
+#include <QByteArray>
 
 class LIBQTELEGRAMSHARED_EXPORT DocumentAttribute : public TelegramTypeObject
 {
@@ -20,7 +21,7 @@ public:
         typeDocumentAttributeAnimated = 0x11b58939,
         typeDocumentAttributeSticker = 0x3a556302,
         typeDocumentAttributeVideo = 0x5910cccb,
-        typeDocumentAttributeAudio = 0xded218e0,
+        typeDocumentAttributeAudio = 0x9852f9c6,
         typeDocumentAttributeFilename = 0x15590068
     };
 
@@ -38,6 +39,9 @@ public:
     void setFileName(const QString &fileName);
     QString fileName() const;
 
+    void setFlags(qint32 flags);
+    qint32 flags() const;
+
     void setH(qint32 h);
     qint32 h() const;
 
@@ -50,8 +54,14 @@ public:
     void setTitle(const QString &title);
     QString title() const;
 
+    void setVoice(bool voice);
+    bool voice() const;
+
     void setW(qint32 w);
     qint32 w() const;
+
+    void setWaveform(const QByteArray &waveform);
+    QByteArray waveform() const;
 
     void setClassType(DocumentAttributeType classType);
     DocumentAttributeType classType() const;
@@ -68,11 +78,13 @@ private:
     QString m_alt;
     qint32 m_duration;
     QString m_fileName;
+    qint32 m_flags;
     qint32 m_h;
     QString m_performer;
     InputStickerSet m_stickerset;
     QString m_title;
     qint32 m_w;
+    QByteArray m_waveform;
     DocumentAttributeType m_classType;
 };
 

@@ -16,7 +16,7 @@ class LIBQTELEGRAMSHARED_EXPORT AccountPasswordInputSettings : public TelegramTy
 {
 public:
     enum AccountPasswordInputSettingsType {
-        typeAccountPasswordInputSettings = 0xbcfc532c
+        typeAccountPasswordInputSettings = 0x86916deb
     };
 
     AccountPasswordInputSettings(AccountPasswordInputSettingsType classType = typeAccountPasswordInputSettings, InboundPkt *in = 0);

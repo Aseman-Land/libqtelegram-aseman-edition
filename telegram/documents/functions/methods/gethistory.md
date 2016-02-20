@@ -7,7 +7,7 @@ TelegramCore::messagesGetHistory
 ## Schema:
 
 ```c++
-messages.getHistory#8a8ec2da peer:InputPeer offset_id:int add_offset:int limit:int max_id:int min_id:int = messages.Messages;
+messages.getHistory#afa92846 peer:InputPeer offset_id:int offset_date:int add_offset:int limit:int max_id:int min_id:int = messages.Messages;
 ```
 ## Parameters:
 
@@ -15,6 +15,7 @@ messages.getHistory#8a8ec2da peer:InputPeer offset_id:int add_offset:int limit:i
 |----|----|-------|
 |peer|[InputPeer](../../types/inputpeer.md)||
 |offsetId|qint32||
+|offsetDate|qint32||
 |addOffset|qint32||
 |limit|qint32||
 |maxId|qint32||
@@ -55,7 +56,7 @@ onGetHistoryError(qint64 msgId, qint32 errorCode, const QString &errorText)
 ## Examples:
 
 ```c++
-tg->getHistory(peer, offset_id, add_offset, limit, max_id, min_id, [=](TG_GET_HISTORY_CALLBACK){
+tg->getHistory(peer, offset_id, offset_date, add_offset, limit, max_id, min_id, [=](TG_GET_HISTORY_CALLBACK){
     ...
 }, 30000);
 ```

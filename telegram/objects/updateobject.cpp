@@ -288,15 +288,26 @@ MessageGroupObject*  UpdateObject::group() const {
     return m_group;
 }
 
-void UpdateObject::setId(qint32 id) {
-    if(m_core.id() == id) return;
-    m_core.setId(id);
-    Q_EMIT idChanged();
+void UpdateObject::setIdString(const QString &idString) {
+    if(m_core.idString() == idString) return;
+    m_core.setIdString(idString);
+    Q_EMIT idStringChanged();
     Q_EMIT coreChanged();
 }
 
-qint32 UpdateObject::id() const {
-    return m_core.id();
+QString UpdateObject::idString() const {
+    return m_core.idString();
+}
+
+void UpdateObject::setIdInt(qint32 idInt) {
+    if(m_core.idInt() == idInt) return;
+    m_core.setIdInt(idInt);
+    Q_EMIT idIntChanged();
+    Q_EMIT coreChanged();
+}
+
+qint32 UpdateObject::idInt() const {
+    return m_core.idInt();
 }
 
 void UpdateObject::setInviterId(qint32 inviterId) {
@@ -829,7 +840,8 @@ UpdateObject &UpdateObject::operator =(const Update &b) {
     Q_EMIT firstNameChanged();
     Q_EMIT foreignLinkChanged();
     Q_EMIT groupChanged();
-    Q_EMIT idChanged();
+    Q_EMIT idStringChanged();
+    Q_EMIT idIntChanged();
     Q_EMIT inviterIdChanged();
     Q_EMIT isAdminChanged();
     Q_EMIT keyChanged();
@@ -1005,6 +1017,9 @@ void UpdateObject::setClassType(quint32 classType) {
     case TypeUpdateBotInlineQuery:
         result = Update::typeUpdateBotInlineQuery;
         break;
+    case TypeUpdateBotInlineSend:
+        result = Update::typeUpdateBotInlineSend;
+        break;
     default:
         result = Update::typeUpdateNewMessage;
         break;
@@ -1144,6 +1159,9 @@ quint32 UpdateObject::classType() const {
         break;
     case Update::typeUpdateBotInlineQuery:
         result = TypeUpdateBotInlineQuery;
+        break;
+    case Update::typeUpdateBotInlineSend:
+        result = TypeUpdateBotInlineSend;
         break;
     default:
         result = TypeUpdateNewMessage;

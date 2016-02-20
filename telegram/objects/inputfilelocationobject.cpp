@@ -97,14 +97,8 @@ void InputFileLocationObject::setClassType(quint32 classType) {
     case TypeInputFileLocation:
         result = InputFileLocation::typeInputFileLocation;
         break;
-    case TypeInputVideoFileLocation:
-        result = InputFileLocation::typeInputVideoFileLocation;
-        break;
     case TypeInputEncryptedFileLocation:
         result = InputFileLocation::typeInputEncryptedFileLocation;
-        break;
-    case TypeInputAudioFileLocation:
-        result = InputFileLocation::typeInputAudioFileLocation;
         break;
     case TypeInputDocumentFileLocation:
         result = InputFileLocation::typeInputDocumentFileLocation;
@@ -126,14 +120,8 @@ quint32 InputFileLocationObject::classType() const {
     case InputFileLocation::typeInputFileLocation:
         result = TypeInputFileLocation;
         break;
-    case InputFileLocation::typeInputVideoFileLocation:
-        result = TypeInputVideoFileLocation;
-        break;
     case InputFileLocation::typeInputEncryptedFileLocation:
         result = TypeInputEncryptedFileLocation;
-        break;
-    case InputFileLocation::typeInputAudioFileLocation:
-        result = TypeInputAudioFileLocation;
         break;
     case InputFileLocation::typeInputDocumentFileLocation:
         result = TypeInputDocumentFileLocation;

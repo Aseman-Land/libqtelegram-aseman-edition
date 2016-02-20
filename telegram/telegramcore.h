@@ -89,7 +89,7 @@ public:
     virtual qint64 authRecoverPassword(const QString &code, Callback<AuthAuthorization > callBack = 0, qint32 timeout = timeOut());
     
     virtual qint64 channelsGetDialogs(qint32 offset, qint32 limit, Callback<MessagesDialogs > callBack = 0, qint32 timeout = timeOut());
-    virtual qint64 channelsGetImportantHistory(const InputChannel &channel, qint32 offset_id, qint32 add_offset, qint32 limit, qint32 max_id, qint32 min_id, Callback<MessagesMessages > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 channelsGetImportantHistory(const InputChannel &channel, qint32 offset_id, qint32 offset_date, qint32 add_offset, qint32 limit, qint32 max_id, qint32 min_id, Callback<MessagesMessages > callBack = 0, qint32 timeout = timeOut());
     virtual qint64 channelsReadHistory(const InputChannel &channel, qint32 max_id, Callback<bool > callBack = 0, qint32 timeout = timeOut());
     virtual qint64 channelsDeleteMessages(const InputChannel &channel, const QList<qint32> &id, Callback<MessagesAffectedMessages > callBack = 0, qint32 timeout = timeOut());
     virtual qint64 channelsDeleteUserHistory(const InputChannel &channel, const InputUser &user_id, Callback<MessagesAffectedHistory > callBack = 0, qint32 timeout = timeOut());
@@ -113,11 +113,11 @@ public:
     virtual qint64 channelsKickFromChannel(const InputChannel &channel, const InputUser &user_id, bool kicked, Callback<UpdatesType > callBack = 0, qint32 timeout = timeOut());
     virtual qint64 channelsExportInvite(const InputChannel &channel, Callback<ExportedChatInvite > callBack = 0, qint32 timeout = timeOut());
     virtual qint64 channelsDeleteChannel(const InputChannel &channel, Callback<UpdatesType > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 channelsToggleInvites(const InputChannel &channel, bool enabled, Callback<UpdatesType > callBack = 0, qint32 timeout = timeOut());
     
     virtual qint64 contactsGetStatuses(Callback<QList<ContactStatus> > callBack = 0, qint32 timeout = timeOut());
     virtual qint64 contactsGetContacts(const QString &hash, Callback<ContactsContacts > callBack = 0, qint32 timeout = timeOut());
     virtual qint64 contactsImportContacts(const QList<InputContact> &contacts, bool replace, Callback<ContactsImportedContacts > callBack = 0, qint32 timeout = timeOut());
-    virtual qint64 contactsGetSuggested(qint32 limit, Callback<ContactsSuggested > callBack = 0, qint32 timeout = timeOut());
     virtual qint64 contactsDeleteContact(const InputUser &id, Callback<ContactsLink > callBack = 0, qint32 timeout = timeOut());
     virtual qint64 contactsDeleteContacts(const QList<InputUser> &id, Callback<bool > callBack = 0, qint32 timeout = timeOut());
     virtual qint64 contactsBlock(const InputUser &id, Callback<bool > callBack = 0, qint32 timeout = timeOut());
@@ -139,7 +139,7 @@ public:
     
     virtual qint64 messagesGetMessages(const QList<qint32> &id, Callback<MessagesMessages > callBack = 0, qint32 timeout = timeOut());
     virtual qint64 messagesGetDialogs(qint32 offset_date, qint32 offset_id, const InputPeer &offset_peer, qint32 limit, Callback<MessagesDialogs > callBack = 0, qint32 timeout = timeOut());
-    virtual qint64 messagesGetHistory(const InputPeer &peer, qint32 offset_id, qint32 add_offset, qint32 limit, qint32 max_id, qint32 min_id, Callback<MessagesMessages > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesGetHistory(const InputPeer &peer, qint32 offset_id, qint32 offset_date, qint32 add_offset, qint32 limit, qint32 max_id, qint32 min_id, Callback<MessagesMessages > callBack = 0, qint32 timeout = timeOut());
     virtual qint64 messagesSearch(bool important_only, const InputPeer &peer, const QString &q, const MessagesFilter &filter, qint32 min_date, qint32 max_date, qint32 offset, qint32 max_id, qint32 limit, Callback<MessagesMessages > callBack = 0, qint32 timeout = timeOut());
     virtual qint64 messagesReadHistory(const InputPeer &peer, qint32 max_id, Callback<MessagesAffectedMessages > callBack = 0, qint32 timeout = timeOut());
     virtual qint64 messagesDeleteHistory(const InputPeer &peer, qint32 max_id, Callback<MessagesAffectedHistory > callBack = 0, qint32 timeout = timeOut());
@@ -279,11 +279,11 @@ Q_SIGNALS:
     void channelsKickFromChannelAnswer(qint64 msgId, const UpdatesType &result);
     void channelsExportInviteAnswer(qint64 msgId, const ExportedChatInvite &result);
     void channelsDeleteChannelAnswer(qint64 msgId, const UpdatesType &result);
+    void channelsToggleInvitesAnswer(qint64 msgId, const UpdatesType &result);
     
     void contactsGetStatusesAnswer(qint64 msgId, const QList<ContactStatus> &result);
     void contactsGetContactsAnswer(qint64 msgId, const ContactsContacts &result);
     void contactsImportContactsAnswer(qint64 msgId, const ContactsImportedContacts &result);
-    void contactsGetSuggestedAnswer(qint64 msgId, const ContactsSuggested &result);
     void contactsDeleteContactAnswer(qint64 msgId, const ContactsLink &result);
     void contactsDeleteContactsAnswer(qint64 msgId, bool result);
     void contactsBlockAnswer(qint64 msgId, bool result);
@@ -444,11 +444,11 @@ Q_SIGNALS:
     void channelsKickFromChannelError(qint64 msgId, qint32 errorCode, const QString &errorText);
     void channelsExportInviteError(qint64 msgId, qint32 errorCode, const QString &errorText);
     void channelsDeleteChannelError(qint64 msgId, qint32 errorCode, const QString &errorText);
+    void channelsToggleInvitesError(qint64 msgId, qint32 errorCode, const QString &errorText);
     
     void contactsGetStatusesError(qint64 msgId, qint32 errorCode, const QString &errorText);
     void contactsGetContactsError(qint64 msgId, qint32 errorCode, const QString &errorText);
     void contactsImportContactsError(qint64 msgId, qint32 errorCode, const QString &errorText);
-    void contactsGetSuggestedError(qint64 msgId, qint32 errorCode, const QString &errorText);
     void contactsDeleteContactError(qint64 msgId, qint32 errorCode, const QString &errorText);
     void contactsDeleteContactsError(qint64 msgId, qint32 errorCode, const QString &errorText);
     void contactsBlockError(qint64 msgId, qint32 errorCode, const QString &errorText);
@@ -611,11 +611,11 @@ protected Q_SLOTS:
     virtual void onChannelsKickFromChannelAnswer(qint64 msgId, const UpdatesType &result, const QVariant &attachedData);
     virtual void onChannelsExportInviteAnswer(qint64 msgId, const ExportedChatInvite &result, const QVariant &attachedData);
     virtual void onChannelsDeleteChannelAnswer(qint64 msgId, const UpdatesType &result, const QVariant &attachedData);
+    virtual void onChannelsToggleInvitesAnswer(qint64 msgId, const UpdatesType &result, const QVariant &attachedData);
     
     virtual void onContactsGetStatusesAnswer(qint64 msgId, const QList<ContactStatus> &result, const QVariant &attachedData);
     virtual void onContactsGetContactsAnswer(qint64 msgId, const ContactsContacts &result, const QVariant &attachedData);
     virtual void onContactsImportContactsAnswer(qint64 msgId, const ContactsImportedContacts &result, const QVariant &attachedData);
-    virtual void onContactsGetSuggestedAnswer(qint64 msgId, const ContactsSuggested &result, const QVariant &attachedData);
     virtual void onContactsDeleteContactAnswer(qint64 msgId, const ContactsLink &result, const QVariant &attachedData);
     virtual void onContactsDeleteContactsAnswer(qint64 msgId, bool result, const QVariant &attachedData);
     virtual void onContactsBlockAnswer(qint64 msgId, bool result, const QVariant &attachedData);
@@ -776,11 +776,11 @@ protected Q_SLOTS:
     virtual void onChannelsKickFromChannelError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     virtual void onChannelsExportInviteError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     virtual void onChannelsDeleteChannelError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
+    virtual void onChannelsToggleInvitesError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     
     virtual void onContactsGetStatusesError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     virtual void onContactsGetContactsError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     virtual void onContactsImportContactsError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
-    virtual void onContactsGetSuggestedError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     virtual void onContactsDeleteContactError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     virtual void onContactsDeleteContactsError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     virtual void onContactsBlockError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);

@@ -14,7 +14,7 @@ Update::Update(UpdateType classType, InboundPkt *in) :
     m_chatId(0),
     m_date(0),
     m_enabled(false),
-    m_id(0),
+    m_idInt(0),
     m_inviterId(0),
     m_isAdmin(false),
     m_maxDate(0),
@@ -41,7 +41,7 @@ Update::Update(InboundPkt *in) :
     m_chatId(0),
     m_date(0),
     m_enabled(false),
-    m_id(0),
+    m_idInt(0),
     m_inviterId(0),
     m_isAdmin(false),
     m_maxDate(0),
@@ -69,7 +69,7 @@ Update::Update(const Null &null) :
     m_chatId(0),
     m_date(0),
     m_enabled(false),
-    m_id(0),
+    m_idInt(0),
     m_inviterId(0),
     m_isAdmin(false),
     m_maxDate(0),
@@ -195,12 +195,20 @@ MessageGroup Update::group() const {
     return m_group;
 }
 
-void Update::setId(qint32 id) {
-    m_id = id;
+void Update::setIdString(const QString &idString) {
+    m_idString = idString;
 }
 
-qint32 Update::id() const {
-    return m_id;
+QString Update::idString() const {
+    return m_idString;
+}
+
+void Update::setIdInt(qint32 idInt) {
+    m_idInt = idInt;
+}
+
+qint32 Update::idInt() const {
+    return m_idInt;
 }
 
 void Update::setInviterId(qint32 inviterId) {
@@ -522,7 +530,8 @@ bool Update::operator ==(const Update &b) const {
            m_firstName == b.m_firstName &&
            m_foreignLink == b.m_foreignLink &&
            m_group == b.m_group &&
-           m_id == b.m_id &&
+           m_idString == b.m_idString &&
+           m_idInt == b.m_idInt &&
            m_inviterId == b.m_inviterId &&
            m_isAdmin == b.m_isAdmin &&
            m_key == b.m_key &&
@@ -585,7 +594,7 @@ bool Update::fetch(InboundPkt *in) {
         break;
     
     case typeUpdateMessageID: {
-        m_id = in->fetchInt();
+        m_idInt = in->fetchInt();
         m_randomId = in->fetchLong();
         m_classType = static_cast<UpdateType>(x);
         return true;
@@ -905,7 +914,7 @@ bool Update::fetch(InboundPkt *in) {
     
     case typeUpdateChannelMessageViews: {
         m_channelId = in->fetchInt();
-        m_id = in->fetchInt();
+        m_idInt = in->fetchInt();
         m_views = in->fetchInt();
         m_classType = static_cast<UpdateType>(x);
         return true;
@@ -974,6 +983,15 @@ bool Update::fetch(InboundPkt *in) {
     }
         break;
     
+    case typeUpdateBotInlineSend: {
+        m_userId = in->fetchInt();
+        m_query = in->fetchQString();
+        m_idString = in->fetchQString();
+        m_classType = static_cast<UpdateType>(x);
+        return true;
+    }
+        break;
+    
     default:
         LQTG_FETCH_ASSERT;
         return false;
@@ -992,7 +1010,7 @@ bool Update::push(OutboundPkt *out) const {
         break;
     
     case typeUpdateMessageID: {
-        out->appendInt(m_id);
+        out->appendInt(m_idInt);
         out->appendLong(m_randomId);
         return true;
     }
@@ -1264,7 +1282,7 @@ bool Update::push(OutboundPkt *out) const {
     
     case typeUpdateChannelMessageViews: {
         out->appendInt(m_channelId);
-        out->appendInt(m_id);
+        out->appendInt(m_idInt);
         out->appendInt(m_views);
         return true;
     }
@@ -1318,6 +1336,14 @@ bool Update::push(OutboundPkt *out) const {
         out->appendInt(m_userId);
         out->appendQString(m_query);
         out->appendQString(m_offset);
+        return true;
+    }
+        break;
+    
+    case typeUpdateBotInlineSend: {
+        out->appendInt(m_userId);
+        out->appendQString(m_query);
+        out->appendQString(m_idString);
         return true;
     }
         break;

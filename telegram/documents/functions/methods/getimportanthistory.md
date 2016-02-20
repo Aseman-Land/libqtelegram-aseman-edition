@@ -7,7 +7,7 @@ TelegramCore::channelsGetImportantHistory
 ## Schema:
 
 ```c++
-channels.getImportantHistory#ddb929cb channel:InputChannel offset_id:int add_offset:int limit:int max_id:int min_id:int = messages.Messages;
+channels.getImportantHistory#8f494bb2 channel:InputChannel offset_id:int offset_date:int add_offset:int limit:int max_id:int min_id:int = messages.Messages;
 ```
 ## Parameters:
 
@@ -15,6 +15,7 @@ channels.getImportantHistory#ddb929cb channel:InputChannel offset_id:int add_off
 |----|----|-------|
 |channel|[InputChannel](../../types/inputchannel.md)||
 |offsetId|qint32||
+|offsetDate|qint32||
 |addOffset|qint32||
 |limit|qint32||
 |maxId|qint32||
@@ -55,7 +56,7 @@ onGetImportantHistoryError(qint64 msgId, qint32 errorCode, const QString &errorT
 ## Examples:
 
 ```c++
-tg->getImportantHistory(channel, offset_id, add_offset, limit, max_id, min_id, [=](TG_GET_IMPORTANT_HISTORY_CALLBACK){
+tg->getImportantHistory(channel, offset_id, offset_date, add_offset, limit, max_id, min_id, [=](TG_GET_IMPORTANT_HISTORY_CALLBACK){
     ...
 }, 30000);
 ```

@@ -8,8 +8,6 @@
 
 * **Import contacts** - [TelegramCore::contactsImportContacts](methods/importcontacts.md)
 
-* **Get suggested** - [TelegramCore::contactsGetSuggested](methods/getsuggested.md)
-
 * **Delete contact** - [TelegramCore::contactsDeleteContact](methods/deletecontact.md)
 
 * **Delete contacts** - [TelegramCore::contactsDeleteContacts](methods/deletecontacts.md)

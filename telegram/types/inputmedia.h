@@ -11,13 +11,10 @@
 #include <QString>
 #include <QList>
 #include "documentattribute.h"
-#include <QtGlobal>
 #include "inputfile.h"
 #include "inputgeopoint.h"
-#include "inputaudio.h"
 #include "inputdocument.h"
 #include "inputphoto.h"
-#include "inputvideo.h"
 
 class LIBQTELEGRAMSHARED_EXPORT InputMedia : public TelegramTypeObject
 {
@@ -28,11 +25,6 @@ public:
         typeInputMediaPhoto = 0xe9bfb4f3,
         typeInputMediaGeoPoint = 0xf9c44144,
         typeInputMediaContact = 0xa6e45987,
-        typeInputMediaUploadedVideo = 0x82713fdf,
-        typeInputMediaUploadedThumbVideo = 0x7780ddf9,
-        typeInputMediaVideo = 0x936a4ebd,
-        typeInputMediaUploadedAudio = 0x4e498cab,
-        typeInputMediaAudio = 0x89938781,
         typeInputMediaUploadedDocument = 0x1d89306d,
         typeInputMediaUploadedThumbDocument = 0xad613491,
         typeInputMediaDocument = 0x1a77f29c,
@@ -54,9 +46,6 @@ public:
     void setCaption(const QString &caption);
     QString caption() const;
 
-    void setDuration(qint32 duration);
-    qint32 duration() const;
-
     void setFile(const InputFile &file);
     InputFile file() const;
 
@@ -66,20 +55,11 @@ public:
     void setGeoPoint(const InputGeoPoint &geoPoint);
     InputGeoPoint geoPoint() const;
 
-    void setH(qint32 h);
-    qint32 h() const;
-
-    void setIdInputAudio(const InputAudio &idInputAudio);
-    InputAudio idInputAudio() const;
-
     void setIdInputDocument(const InputDocument &idInputDocument);
     InputDocument idInputDocument() const;
 
     void setIdInputPhoto(const InputPhoto &idInputPhoto);
     InputPhoto idInputPhoto() const;
-
-    void setIdInputVideo(const InputVideo &idInputVideo);
-    InputVideo idInputVideo() const;
 
     void setLastName(const QString &lastName);
     QString lastName() const;
@@ -108,9 +88,6 @@ public:
     void setVenueId(const QString &venueId);
     QString venueId() const;
 
-    void setW(qint32 w);
-    qint32 w() const;
-
     void setClassType(InputMediaType classType);
     InputMediaType classType() const;
 
@@ -126,15 +103,11 @@ private:
     QString m_address;
     QList<DocumentAttribute> m_attributes;
     QString m_caption;
-    qint32 m_duration;
     InputFile m_file;
     QString m_firstName;
     InputGeoPoint m_geoPoint;
-    qint32 m_h;
-    InputAudio m_idInputAudio;
     InputDocument m_idInputDocument;
     InputPhoto m_idInputPhoto;
-    InputVideo m_idInputVideo;
     QString m_lastName;
     QString m_mimeType;
     QString m_phoneNumber;
@@ -144,7 +117,6 @@ private:
     QString m_title;
     QString m_url;
     QString m_venueId;
-    qint32 m_w;
     InputMediaType m_classType;
 };
 

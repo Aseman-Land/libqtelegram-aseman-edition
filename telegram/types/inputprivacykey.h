@@ -13,7 +13,8 @@ class LIBQTELEGRAMSHARED_EXPORT InputPrivacyKey : public TelegramTypeObject
 {
 public:
     enum InputPrivacyKeyType {
-        typeInputPrivacyKeyStatusTimestamp = 0x4f96cb18
+        typeInputPrivacyKeyStatusTimestamp = 0x4f96cb18,
+        typeInputPrivacyKeyChatInvite = 0xbdfb0426
     };
 
     InputPrivacyKey(InputPrivacyKeyType classType = typeInputPrivacyKeyStatusTimestamp, InboundPkt *in = 0);
