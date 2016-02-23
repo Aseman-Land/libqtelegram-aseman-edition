@@ -22,6 +22,7 @@
 #include "util/utils.h"
 #include "util/constants.h"
 #include "dc.h"
+#include "telegram.h"
 
 #include <QDir>
 #include <QSettings>
@@ -31,9 +32,48 @@
 #include <unistd.h>
 #endif
 
-#include <bn.h>
+#include <openssl/bn.h>
 
 Q_LOGGING_CATEGORY(TG_CORE_SETTINGS, "tg.core.settings")
+
+QString telegram_settings_auth_path(const QString &configPath, const QString &phone)
+{
+    const QString phoneNumber = Utils::parsePhoneNumberDigits(phone);
+    const QString pathDir = configPath + "/" + phoneNumber;
+
+    QDir().mkpath(pathDir);
+    return pathDir + '/' + AUTH_KEY_FILE;
+}
+
+bool telegram_settings_read_fnc(const QString &configPath, const QString &phone, QVariantMap &map)
+{
+    const QString configFilename = telegram_settings_auth_path(configPath, phone);
+
+    QSettings settings(configFilename, QSettings::IniFormat);
+    const QStringList &keys = settings.allKeys();
+    Q_FOREACH(const QString &k, keys)
+        map[k] = settings.value(k);
+
+    return true;
+}
+
+bool telegram_settings_write_fnc(const QString &configPath, const QString &phone, const QVariantMap &map)
+{
+    const QString configFilename = telegram_settings_auth_path(configPath, phone);
+
+    QSettings settings(configFilename, QSettings::IniFormat);
+    QMapIterator<QString,QVariant> i(map);
+    while(i.hasNext())
+    {
+        i.next();
+        settings.setValue(i.key(), i.value());
+    }
+
+    return true;
+}
+
+Settings::ReadFunc _telegram_settings_read_fnc = telegram_settings_read_fnc;
+Settings::WriteFunc _telegram_settings_write_fnc = telegram_settings_write_fnc;
 
 Settings::Settings() :
     m_defaultHostPort(0),
@@ -190,28 +230,36 @@ bool Settings::loadSettings(const QString &phoneNumber, const QString &baseConfi
 void Settings::writeAuthFile() {
 // only create auth file if not using settings serialization
 #if !defined(SERIALIZED_SETTINGS)
-    QSettings settings(m_authFilename, QSettings::IniFormat);
-    testMode() ? settings.beginGroup(ST_TEST) : settings.beginGroup(ST_PRODUCTION);
-    settings.setValue(ST_WORKING_DC_NUM, m_workingDcNum);
-    settings.setValue(ST_OUR_ID, m_ourId);
-    settings.beginWriteArray(ST_DCS_ARRAY);
+    QVariantMap map;
+    QString pre = testMode() ? ST_TEST : ST_PRODUCTION;
+    pre += "/";
+
+    map[pre + ST_WORKING_DC_NUM] = m_workingDcNum;
+    map[pre + ST_OUR_ID] = m_ourId;
+
+    pre += ST_DCS_ARRAY;
+    pre += "/";
+
+    map[pre + "size"] = m_dcsList.length();
     for (qint32 i = 0; i < m_dcsList.length(); i++) {
-        //write dc
-        settings.setArrayIndex(i);
-        settings.setValue(ST_DC_NUM, m_dcsList[i]->id());
-        settings.setValue(ST_HOST, m_dcsList[i]->host());
-        settings.setValue(ST_PORT, m_dcsList[i]->port());
-        settings.setValue(ST_DC_STATE, m_dcsList[i]->state());
+        QString ar = pre + QString::number(i) + "/";
+
+        map[ar + ST_DC_NUM] = m_dcsList[i]->id();
+        map[ar + ST_HOST] = m_dcsList[i]->host();
+        map[ar + ST_PORT] = m_dcsList[i]->port();
+        map[ar + ST_DC_STATE] = m_dcsList[i]->state();
+
         if (m_dcsList[i]->authKeyId()) {
-            settings.setValue(ST_AUTH_KEY_ID, m_dcsList[i]->authKeyId());
+            map[ar + ST_AUTH_KEY_ID] = m_dcsList[i]->authKeyId();
             QByteArray baToSave(m_dcsList[i]->authKey(), SHARED_KEY_LENGTH);
-            settings.setValue(ST_AUTH_KEY, baToSave.toBase64());
+            map[ar + ST_AUTH_KEY] = baToSave.toBase64();
         }
-        settings.setValue(ST_SERVER_SALT, m_dcsList[i]->serverSalt());
-        settings.setValue(ST_EXPIRES, m_dcsList[i]->expires());
+        map[ar + ST_SERVER_SALT] = m_dcsList[i]->serverSalt();
+        map[ar + ST_EXPIRES] = m_dcsList[i]->expires();
     }
-    settings.endArray();
-    settings.endGroup();
+
+    if(!_telegram_settings_write_fnc(m_baseConfigDirectory, m_phoneNumber, map))
+        telegram_settings_write_fnc(m_baseConfigDirectory, m_phoneNumber, map);
 #endif
 }
 
@@ -241,33 +289,40 @@ QVariantMap Settings::serializeAuthSettings() {
 }
 
 void Settings::readAuthFile() {
-    QSettings settings(m_authFilename, QSettings::IniFormat);
-    testMode() ? settings.beginGroup(ST_TEST) : settings.beginGroup(ST_PRODUCTION);
-    qint32 defaultDcId = m_testMode ? TEST_DEFAULT_DC_ID : Settings::defaultHostDcId();
-    m_workingDcNum = settings.value(ST_WORKING_DC_NUM, defaultDcId).toInt();
-    m_ourId = settings.value(ST_OUR_ID).toInt();
-    m_workingDcConfigAvailabe = settings.contains(ST_WORKING_DC_NUM);
+    QVariantMap map;
+    if(!_telegram_settings_read_fnc(m_baseConfigDirectory, m_phoneNumber, map))
+        telegram_settings_read_fnc(m_baseConfigDirectory, m_phoneNumber, map);
 
+    QString pre = testMode() ? ST_TEST : ST_PRODUCTION;
+    pre += "/";
+
+    qint32 defaultDcId = m_testMode ? TEST_DEFAULT_DC_ID : Settings::defaultHostDcId();
+
+    m_workingDcNum = map.value(pre+ST_WORKING_DC_NUM, defaultDcId).toInt();
+    m_ourId = map.value(pre+ST_OUR_ID).toInt();
+    m_workingDcConfigAvailabe = map.contains(pre+ST_WORKING_DC_NUM);
     qCDebug(TG_CORE_SETTINGS) << "workingDcNum:" << m_workingDcNum;
     qCDebug(TG_CORE_SETTINGS) << "ourId:" << m_ourId;
 
-    // read all dcs
-    m_dcsList.clear();
-    qint32 n = settings.beginReadArray(ST_DCS_ARRAY);
+    pre += ST_DCS_ARRAY;
+    pre += "/";
+
+    qint32 n = map.value(pre + "size").toInt();
     for (qint32 i = 0; i < n; i++) {
-        settings.setArrayIndex(i);
-        qint32 dcNum = settings.value(ST_DC_NUM).toInt();
+        QString ar = pre + QString::number(i) + "/";
+
+        qint32 dcNum = map.value(ar+ST_DC_NUM).toInt();
         DC* dc = new DC(dcNum);
-        dc->setHost(settings.value(ST_HOST).toString());
-        dc->setPort(settings.value(ST_PORT, 0).toInt());
-        dc->setState((DC::DcState)settings.value(ST_DC_STATE, DC::init).toInt());
-        dc->setAuthKeyId(settings.value(ST_AUTH_KEY_ID, 0).toLongLong());
+        dc->setHost(map.value(ar+ST_HOST).toString());
+        dc->setPort(map.value(ar+ST_PORT, 0).toInt());
+        dc->setState((DC::DcState)map.value(ar+ST_DC_STATE, DC::init).toInt());
+        dc->setAuthKeyId(map.value(ar+ST_AUTH_KEY_ID, 0).toLongLong());
         if (dc->state() >= DC::authKeyCreated) {
-            QByteArray readedBa = QByteArray::fromBase64(settings.value(ST_AUTH_KEY).toByteArray());
+            QByteArray readedBa = QByteArray::fromBase64(map.value(ar+ST_AUTH_KEY).toByteArray());
             memcpy(dc->authKey(), readedBa.data(), SHARED_KEY_LENGTH);
         }
-        dc->setServerSalt(settings.value(ST_SERVER_SALT, 0).toLongLong());
-        dc->setExpires(settings.value(ST_EXPIRES).toInt());
+        dc->setServerSalt(map.value(ar+ST_SERVER_SALT, 0).toLongLong());
+        dc->setExpires(map.value(ar+ST_EXPIRES).toInt());
 
         qCDebug(TG_CORE_SETTINGS) << "DC | id:" << dc->id() << ", state:" << dc->state() <<
                     ", host:" << dc->host() << ", port:" << dc->port() <<
@@ -276,8 +331,6 @@ void Settings::readAuthFile() {
 
         m_dcsList.insert(dcNum, dc);
     }
-    settings.endArray();
-    settings.endGroup();
 }
 
 void Settings::deserializeAuthSettings(const QVariantMap &authSettings) {
@@ -336,6 +389,17 @@ bool Settings::removeAuthFile() {
         }
     }
     return false;
+}
+
+void Settings::setAuthConfigMethods(Settings::ReadFunc readFunc, Settings::WriteFunc writeFunc)
+{
+    _telegram_settings_read_fnc = readFunc;
+    _telegram_settings_write_fnc = writeFunc;
+}
+
+void Settings::clearAuth(const QString &configPath, const QString &phone)
+{
+    _telegram_settings_write_fnc(configPath, phone, QVariantMap());
 }
 
 void Settings::readSecretFile() {

@@ -26,8 +26,9 @@
 class Endpoint
 {
 public:
-    explicit Endpoint(const QString &host = "", qint32 port = 0) : m_host(host), m_port(port) {}
-    ~Endpoint() {}
+    Endpoint() {}
+    explicit Endpoint(const QString &host, qint32 port) : m_host(host), m_port(port) {}
+    virtual ~Endpoint() {}
 
     QString host() const { return m_host; }
     qint32 port() const { return m_port; }

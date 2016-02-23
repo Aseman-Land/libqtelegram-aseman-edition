@@ -19,11 +19,27 @@
  *
  */
 
+#define CHECK_SESSION \
+    if(!mMainSession) \
+        return 0;
+
 #include "api.h"
+#include "telegram/types/types.h"
+#include "telegram/functions/functions.h"
+#include "telegram/coretypes.h"
 
 #include "util/tlvalues.h"
 #include "dcprovider.h"
 #include "secret/encrypter.h"
+
+Q_LOGGING_CATEGORY(TG_CORE_API, "tg.core.api")
+
+#define DEBUG_FUNCTION \
+    qCDebug(TG_CORE_API) << __LINE__ << __FUNCTION__;
+
+using namespace Tg;
+
+using namespace Tg;
 
 Api::Api(Session *session, Settings *settings, CryptoUtils *crypto, QObject *parent) :
     AbstractApi(session, settings, crypto, parent),
@@ -62,6 +78,10 @@ Api::Api(Session *session, Settings *settings, CryptoUtils *crypto, QObject *par
 
     authCheckPasswordMethods.onAnswer = &Api::onAuthCheckPasswordAnswer;
 
+    authRequestPasswordRecoveryMethods.onAnswer = &Api::onAuthRequestPasswordRecoveryAnswer;
+
+    authRecoverPasswordMethods.onAnswer = &Api::onAuthRecoverPasswordAnswer;
+
     authExportAuthorizationMethods.onAnswer = &Api::onAuthExportAuthorizationAnswer;
 
     accountRegisterDeviceMethods.onAnswer = &Api::onAccountRegisterDeviceAnswer;
@@ -84,9 +104,9 @@ Api::Api(Session *session, Settings *settings, CryptoUtils *crypto, QObject *par
 
     accountUpdateUsernameMethods.onAnswer = &Api::onAccountUpdateUsernameAnswer;
 
-    accountAccountGetPrivacyMethods.onAnswer = &Api::onAccountPrivacyRules;
+    accountAccountGetPrivacyMethods.onAnswer = &Api::onAccountGetPrivacyRules;
 
-    accountAccountSetPrivacyMethods.onAnswer = &Api::onAccountPrivacyRules;
+    accountAccountSetPrivacyMethods.onAnswer = &Api::onAccountSetPrivacyRules;
 
     accountDeleteAccountMethods.onAnswer = &Api::onAccountDeleteAccountAnswer;
 
@@ -102,7 +122,13 @@ Api::Api(Session *session, Settings *settings, CryptoUtils *crypto, QObject *par
 
     accountGetPasswordMethods.onAnswer = &Api::onAccountGetPasswordAnswer;
 
-    accountSetPasswordMethods.onAnswer = &Api::onAccountSetPasswordAnswer;
+    accountGetAuthorizationsMethods.onAnswer = &Api::onAccountGetAuthorizationsAnswer;
+
+    accountResetAuthorizationMethods.onAnswer = &Api::onAccountResetAuthorizationAnswer;
+
+    accountGetPasswordSettingsMethods.onAnswer = &Api::onAccountGetPasswordSettingsAnswer;
+
+    accountUpdatePasswordSettingsMethods.onAnswer = &Api::onAccountUpdatePasswordSettingsAnswer;
 
     photosUploadProfilePhotoMethods.onAnswer = &Api::onPhotosUploadProfilePhotoAnswer;
 
@@ -139,6 +165,8 @@ Api::Api(Session *session, Settings *settings, CryptoUtils *crypto, QObject *par
 
     messagesSendMediaMethods.onAnswer = &Api::onMessagesSendMediaAnswer;
 
+    messagesForwardMediaMethods.onAnswer = &Api::onMessagesForwardMediaAnswer;
+
     messagesSetTypingMethods.onAnswer = &Api::onMessagesSetTypingAnswer;
 
     messagesGetMessagesMethods.onAnswer = &Api::onMessagesGetMessagesAnswer;
@@ -157,8 +185,6 @@ Api::Api(Session *session, Settings *settings, CryptoUtils *crypto, QObject *par
 
     messagesDeleteMessagesMethods.onAnswer = &Api::onMessagesDeleteMessagesAnswer;
 
-    messagesRestoreMessagesMethods.onAnswer = &Api::onMessagesRestoreMessagesAnswer;
-
     messagesReceivedMessagesMethods.onAnswer = &Api::onMessagesReceivedMessagesAnswer;
 
     messagesForwardMessageMethods.onAnswer = &Api::onMessagesForwardMessageAnswer;
@@ -166,6 +192,8 @@ Api::Api(Session *session, Settings *settings, CryptoUtils *crypto, QObject *par
     messagesForwardMessagesMethods.onAnswer = &Api::onMessagesForwardMessagesAnswer;
 
     messagesSendBroadcastMethods.onAnswer = &Api::onMessagesSendBroadcastAnswer;
+
+    messagesGetWebPagePreviewMethods.onAnswer = &Api::onMessagesGetWebPagePreviewAnswer;
 
     messagesGetChatsMethods.onAnswer = &Api::onMessagesGetChatsAnswer;
 
@@ -205,6 +233,18 @@ Api::Api(Session *session, Settings *settings, CryptoUtils *crypto, QObject *par
 
     messagesGetAllStickersMethods.onAnswer = &Api::onMessagesGetAllStickersAnswer;
 
+    messagesExportChatInviteMethods.onAnswer = &Api::onMessagesExportChatInviteAnswer;
+
+    messagesCheckChatInviteMethods.onAnswer = &Api::onMessagesCheckChatInviteAnswer;
+
+    messagesImportChatInviteMethods.onAnswer = &Api::onMessagesImportChatInviteAnswer;
+
+    messagesGetStickerSetMethods.onAnswer = &Api::onMessagesGetStickerSetAnswer;
+
+    messagesInstallStickerSetMethods.onAnswer = &Api::onMessagesInstallStickerSetAnswer;
+
+    messagesUninstallStickerSetMethods.onAnswer = &Api::onMessagesUninstallStickerSetAnswer;
+
     updatesGetStateMethods.onAnswer = &Api::onUpdatesGetStateAnswer;
 
     updatesGetDifferenceMethods.onAnswer = &Api::onUpdatesGetDifferenceAnswer;
@@ -224,2181 +264,1455 @@ void Api::onError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT error(q->msgId(), errorCode, errorText, q->name() );
 }
 
-//
-// REGISTRATION / AUTHORIZATION
-//
-// ### help.getConfig()
 void Api::onHelpGetConfigAnswer(Query *q, InboundPkt &inboundPkt) {
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_Config);
-    Config cfg;
-    cfg.setDate(inboundPkt.fetchInt());
-    cfg.setExpires(inboundPkt.fetchInt());
-    cfg.setTestMode(inboundPkt.fetchBool());
-    cfg.setThisDc(inboundPkt.fetchInt());
-
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    qint32 n = inboundPkt.fetchInt();
-    QList<DcOption> dcOptions;
-    for (qint32 i = 0; i < n; i++) {
-        dcOptions.append(inboundPkt.fetchDcOption());
-    }
-    cfg.setDcOptions(dcOptions);
-
-    cfg.setChatSizeMax(inboundPkt.fetchInt());
-    cfg.setBroadcastSizeMax(inboundPkt.fetchInt());
-    cfg.setOnlineUpdatePeriodMs(inboundPkt.fetchInt());
-    cfg.setOfflineBlurTimeoutMs(inboundPkt.fetchInt());
-    cfg.setOfflineIdleTimeoutMs(inboundPkt.fetchInt());
-    cfg.setOnlineCloudTimeoutMs(inboundPkt.fetchInt());
-    cfg.setNotifyCloudDelayMs(inboundPkt.fetchInt());
-    cfg.setNotifyDefaultDelayMs(inboundPkt.fetchInt());
-    cfg.setChatBigSize(inboundPkt.fetchInt());
-
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    qint32 nf = inboundPkt.fetchInt();
-    QList<DisabledFeature> disabledFeatures;
-    for (qint32 i = 0; i < nf; i++) {
-        disabledFeatures.append(inboundPkt.fetchDisabledFeature());
-    }
-    cfg.setDisabledFeatures(disabledFeatures);
-
-    Q_EMIT config(q->msgId(), cfg);
+    const Config &result = Functions::Help::getConfigResult(&inboundPkt);
+    Q_EMIT config(q->msgId(), result);
 }
 
 qint64 Api::helpGetConfig() {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    if (mMainSession->initConnectionNeeded()) {
-        p.initConnection();
-        mMainSession->setInitConnectionNeeded(false);
-    }
-    p.appendInt(TL_HelpGetConfig);
+    Functions::Help::getConfig(&p);
     return mMainSession->sendQuery(p, &helpGetConfigMethods, QVariant(), __FUNCTION__ );
 }
 
 void Api::onHelpGetInviteTextAnswer(Query *q, InboundPkt &inboundPkt) {
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_HelpInviteText);
-    QString textInvite = inboundPkt.fetchQString();
-    Q_EMIT helpGetInviteTextAnswer(q->msgId(), textInvite);
+    const HelpInviteText &result = Functions::Help::getInviteTextResult(&inboundPkt);
+    Q_EMIT helpGetInviteTextAnswer(q->msgId(), result.message());
 }
 
 qint64 Api::helpGetInviteText(const QString &langCode) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    if (mMainSession->initConnectionNeeded()) {
-        p.initConnection();
-        mMainSession->setInitConnectionNeeded(false);
-    }
-    p.appendInt(TL_HelpGetInviteText);
-    p.appendQString(langCode);
+    Functions::Help::getInviteText(&p, langCode);
     return mMainSession->sendQuery(p, &helpGetInviteTextMethods, QVariant(), __FUNCTION__ );
 }
 
-// ### auth.checkPhone()
 void Api::onErrorRetry(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT errorRetry(q->msgId(), errorCode, errorText);
 }
 
 void Api::onAuthCheckPhoneAnswer(Query *q, InboundPkt &inboundPkt) {
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_AuthCheckedPhone);
-    bool phoneRegistered = inboundPkt.fetchBool();
-    Q_EMIT authCheckedPhone(q->msgId(), phoneRegistered);
+    const AuthCheckedPhone &result = Functions::Auth::checkPhoneResult(&inboundPkt);
+    if(result.error())
+        Q_EMIT authCheckedPhoneError(q->msgId());
+    else
+        Q_EMIT authCheckedPhone(q->msgId(), result.phoneRegistered());
 }
 
 qint64 Api::authCheckPhone(const QString &phoneNumber) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    if (mMainSession->initConnectionNeeded()) {
-        p.initConnection();
-        mMainSession->setInitConnectionNeeded(false);
-    }
-    p.appendInt(TL_AuthCheckPhone);
-    p.appendQString(phoneNumber);
+    Functions::Auth::checkPhone(&p, phoneNumber);
     qint64 resultId = mMainSession->sendQuery(p, &authCheckPhoneMethods, QVariant(), __FUNCTION__ );
     Q_EMIT authCheckPhoneSent(resultId, phoneNumber);
     return resultId;
 }
 
-// ### auth.sendCode()
 void Api::onAuthSendCodeAnswer(Query *q, InboundPkt &inboundPkt) {
-    qint32 x = inboundPkt.fetchInt();
-    ASSERT(x == (qint32)TL_AuthSentCode || x == (qint32)TL_AuthSentAppCode);
-    bool phoneRegistered = inboundPkt.fetchInt();
-    QString phoneCodeHash = inboundPkt.fetchQString();
-    qint32 sendCallTimeout = inboundPkt.fetchInt();
-    bool isPassword = inboundPkt.fetchBool();
-    if (x == (qint32)TL_AuthSendCode) {
-        Q_EMIT authSentCode(q->msgId(), phoneRegistered, phoneCodeHash, sendCallTimeout, isPassword);
-    } else {
-        Q_EMIT authSentAppCode(q->msgId(), phoneRegistered, phoneCodeHash, sendCallTimeout, isPassword);
+    const AuthSentCode &result = Functions::Auth::sendCodeResult(&inboundPkt);
+    if(result.error())
+        Q_EMIT authSendCodeError(q->msgId());
+    else
+    {
+        if (result.classType() == AuthSentCode::typeAuthSentCode) {
+            Q_EMIT authSentCode(q->msgId(), result.phoneRegistered(), result.phoneCodeHash(), result.sendCallTimeout(), result.isPassword());
+        } else {
+            Q_EMIT authSentAppCode(q->msgId(), result.phoneRegistered(), result.phoneCodeHash(), result.sendCallTimeout(), result.isPassword());
+        }
     }
 }
 
 qint64 Api::authSendCode(const QString &phoneNumber, qint32 smsType, qint32 apiId, const QString &apiHash, const QString &langCode) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    if (mMainSession->initConnectionNeeded()) {
-        p.initConnection();
-        mMainSession->setInitConnectionNeeded(false);
-    }
-    p.appendInt(TL_AuthSendCode);
-    p.appendQString(phoneNumber);
-    p.appendInt(smsType);
-    p.appendInt(apiId);
-    p.appendQString(apiHash);
-    p.appendQString(langCode);
+    Functions::Auth::sendCode(&p, phoneNumber, smsType, apiId, apiHash, langCode);
     return mMainSession->sendQuery(p, &authSendCodeMethods, QVariant(), __FUNCTION__ );
 }
 
-// ### auth.sendSms()
 void Api::onAuthSendSmsAnswer(Query *q, InboundPkt &inboundPkt) {
-    Q_EMIT authSendSmsResult(q->msgId(), inboundPkt.fetchBool());
+    const bool result = Functions::Auth::sendSmsResult(&inboundPkt);
+    Q_EMIT authSendSmsResult(q->msgId(), result);
 }
 
 qint64 Api::authSendSms(const QString &phoneNumber, const QString &phoneCodeHash) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_AuthSendSms);
-    p.appendQString(phoneNumber);
-    p.appendQString(phoneCodeHash);
+    Functions::Auth::sendSms(&p, phoneNumber, phoneCodeHash);
     return mMainSession->sendQuery(p, &authSendSmsMethods, QVariant(), __FUNCTION__ );
 }
 
-// ## auth.sendCall()
 void Api::onAuthSendCallAnswer(Query *q, InboundPkt &inboundPkt) {
-    Q_EMIT authSendCallResult(q->msgId(), inboundPkt.fetchBool());
+    const bool result = Functions::Auth::sendCallResult(&inboundPkt);
+    Q_EMIT authSendCallResult(q->msgId(), result);
 }
 
 qint64 Api::authSendCall(const QString &phoneNumber, const QString &phoneCodeHash) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_AuthSendCall);
-    p.appendQString(phoneNumber);
-    p.appendQString(phoneCodeHash);
+    Functions::Auth::sendCall(&p, phoneNumber, phoneCodeHash);
     return mMainSession->sendQuery(p, &authSendCallMethods, QVariant(), __FUNCTION__ );
 }
 
-// ### auth.signIn()
 void Api::onAuthSignInError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT authSignInError(q->msgId(), errorCode, errorText);
 }
 
 void Api::onAuthSignInAnswer(Query *q, InboundPkt &inboundPkt) {
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_AuthAuthorization);
-    qint32 expires = inboundPkt.fetchInt();
-    User user = inboundPkt.fetchUser();
-    Q_EMIT authSignInAuthorization(q->msgId(), expires, user);
+    const AuthAuthorization &result = Functions::Auth::signInResult(&inboundPkt);
+    if(result.error())
+        Q_EMIT authSignInError(q->msgId(), -1, "LIBQTELEGRAM_INTERNAL_ERROR");
+    else
+        Q_EMIT authSignInAuthorization(q->msgId(), result.expires(), result.user());
 }
 
 qint64 Api::authSignIn(const QString &phoneNumber, const QString &phoneCodeHash, const QString &phoneCode) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_AuthSignIn);
-    p.appendQString(phoneNumber);
-    p.appendQString(phoneCodeHash);
-    p.appendQString(phoneCode);
+    Functions::Auth::signIn(&p, phoneNumber, phoneCodeHash, phoneCode);
     return mMainSession->sendQuery(p, &authSignInMethods, QVariant(), __FUNCTION__ );
 }
 
-// ### auth.signUp()
 void Api::onAuthSignUpError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT authSignUpError(q->msgId(), errorCode, errorText);
 }
 
 void Api::onAuthSignUpAnswer(Query *q, InboundPkt &inboundPkt) {
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_AuthAuthorization);
-    qint32 expires = inboundPkt.fetchInt();
-    User user = inboundPkt.fetchUser();
-    Q_EMIT authSignUpAuthorization(q->msgId(), expires, user);
+    const AuthAuthorization &result = Functions::Auth::signUpResult(&inboundPkt);
+    Q_EMIT authSignUpAuthorization(q->msgId(), result.expires(), result.user());
 }
 
 qint64 Api::authSignUp(const QString &phoneNumber, const QString &phoneCodeHash, const QString &phoneCode, const QString &firstName, const QString &lastName) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_AuthSignUp);
-    p.appendQString(phoneNumber);
-    p.appendQString(phoneCodeHash);
-    p.appendQString(phoneCode);
-    p.appendQString(firstName);
-    p.appendQString(lastName);
+    Functions::Auth::signUp(&p, phoneNumber, phoneCodeHash, phoneCode, firstName, lastName);
     return mMainSession->sendQuery(p, &authSignUpMethods, QVariant(), __FUNCTION__ );
 }
 
-// ### auth.logOut
 void Api::onAuthLogOutAnswer(Query *q, InboundPkt &inboundPkt) {
-    Q_EMIT authLogOutResult(q->msgId(), inboundPkt.fetchBool());
+    const bool result = Functions::Auth::logOutResult(&inboundPkt);
+    Q_EMIT authLogOutResult(q->msgId(), result);
 }
 
 qint64 Api::authLogOut() {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_AuthLogOut);
+    Functions::Auth::logOut(&p);
     return mMainSession->sendQuery(p, &authLogOutMethods, QVariant(), __FUNCTION__ );
 }
 
-// ### auth.sendInvites
 void Api::onAuthSendInvitesAnswer(Query *q, InboundPkt &inboundPkt) {
-    Q_EMIT authSendInvitesResult(q->msgId(), inboundPkt.fetchBool());
+    const bool result = Functions::Auth::sendInvitesResult(&inboundPkt);
+    Q_EMIT authSendInvitesResult(q->msgId(), result);
 }
 
 qint64 Api::authSendInvites(const QStringList &phoneNumbers, const QString &message) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_AuthSendInvites);
-    p.appendInt(TL_Vector);
-    p.appendInt(phoneNumbers.size());
-    Q_FOREACH (QString phoneNumber, phoneNumbers) {
-        p.appendQString(phoneNumber);
-    }
-    p.appendQString(message);
+    Functions::Auth::sendInvites(&p, phoneNumbers, message);
     return mMainSession->sendQuery(p, &authSendInvitesMethods, QVariant(), __FUNCTION__ );
 }
 
-// ### auth.resetAuthorization
 void Api::onAuthResetAuthorizationsAnswer(Query *q, InboundPkt &inboundPkt) {
-    Q_EMIT authResetAuthorizationsResult(q->msgId(), inboundPkt.fetchBool());
+    const bool result = Functions::Auth::resetAuthorizationsResult(&inboundPkt);
+    Q_EMIT authResetAuthorizationsResult(q->msgId(), result);
 }
 
 qint64 Api::authResetAuthorizations() {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_AuthResetAuthorizations);
+    Functions::Auth::resetAuthorizations(&p);
     return mMainSession->sendQuery(p, &authResetAuthorizationsMethods, QVariant(), __FUNCTION__ );
 }
 
-// ### auth.importAuthorization
 void Api::onAuthImportAuthorizationAnswer(Query *q, InboundPkt &inboundPkt) {
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_AuthAuthorization);
-    qint32 expires = inboundPkt.fetchInt();
-    User user = inboundPkt.fetchUser();
-    Q_EMIT authImportedAuthorization(q->msgId(), expires, user);
+    const AuthAuthorization &result = Functions::Auth::importAuthorizationResult(&inboundPkt);
+    Q_EMIT authImportedAuthorization(q->msgId(), result.expires(), result.user());
 }
 
 qint64 Api::authImportAuthorization(qint32 id, const QByteArray &bytes) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    if (mMainSession->initConnectionNeeded()) {
-        p.initConnection();
-        mMainSession->setInitConnectionNeeded(false);
-    }
-    p.appendInt(TL_AuthImportAuthorization);
-    p.appendInt(id);
-    p.appendBytes(bytes);
+    Functions::Auth::importAuthorization(&p, id, bytes);
     return mMainSession->sendQuery(p, &authImportAuthorizationMethods, QVariant(), __FUNCTION__ );
 }
 
 void Api::onAuthCheckPasswordAnswer(Query *q, InboundPkt &inboundPkt) {
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_AuthAuthorization);
-    qint32 expires = inboundPkt.fetchInt();
-    User user = inboundPkt.fetchUser();
-    Q_EMIT authCheckPasswordResult(q->msgId(), expires, user);
+    const AuthAuthorization &result = Functions::Auth::checkPasswordResult(&inboundPkt);
+    Q_EMIT authCheckPasswordResult(q->msgId(), result.expires(), result.user());
 }
 
 qint64 Api::authCheckPassword(const QByteArray &passwordHash) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_AuthCheckPassword);
-    p.appendBytes(passwordHash);
+    Functions::Auth::checkPassword(&p, passwordHash);
     return mMainSession->sendQuery(p, &authCheckPasswordMethods, QVariant(), __FUNCTION__ );
 }
 
-// ### auth.exportAuthorization
+void Api::onAuthRequestPasswordRecoveryAnswer(Query *q, InboundPkt &inboundPkt) {
+    const AuthPasswordRecovery &result = Functions::Auth::requestPasswordRecoveryResult(&inboundPkt);
+    Q_EMIT authRequestPasswordRecoveryResult(q->msgId(), result);
+}
+
+qint64 Api::authRequestPasswordRecovery() {
+    CHECK_SESSION
+    DEBUG_FUNCTION
+    OutboundPkt p(mSettings);
+    Functions::Auth::requestPasswordRecovery(&p);
+    return mMainSession->sendQuery(p, &authRequestPasswordRecoveryMethods, QVariant(), __FUNCTION__ );
+}
+
+void Api::onAuthRecoverPasswordAnswer(Query *q, InboundPkt &inboundPkt) {
+    const AuthAuthorization &result = Functions::Auth::recoverPasswordResult(&inboundPkt);
+    Q_EMIT authRecoverPasswordResult(q->msgId(), result);
+}
+
+qint64 Api::authRecoverPassword(const QString &code) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
+    OutboundPkt p(mSettings);
+    Functions::Auth::recoverPassword(&p, code);
+    return mMainSession->sendQuery(p, &authRecoverPasswordMethods, QVariant(), __FUNCTION__ );
+}
+
 void Api::onAuthExportAuthorizationAnswer(Query *q, InboundPkt &inboundPkt) {
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_AuthExportedAuthorization);
-    qint32 id = inboundPkt.fetchInt();
-    QByteArray bytes = inboundPkt.fetchBytes();
-    Q_EMIT authExportedAuthorization(q->msgId(), id, bytes);
+    const AuthExportedAuthorization &result = Functions::Auth::exportAuthorizationResult(&inboundPkt);
+    Q_EMIT authExportedAuthorization(q->msgId(), result.id(), result.bytes());
 }
 
 qint64 Api::authExportAuthorization(qint32 dcId) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_AuthExportAuthorization);
-    p.appendInt(dcId);
+    Functions::Auth::exportAuthorization(&p, dcId);
     return mMainSession->sendQuery(p, &authExportAuthorizationMethods, QVariant(), __FUNCTION__ );
 }
 
-//
-// NOTIFICATIONS / SETTINGS
-//
-// ### account.registerDevice
 void Api::onAccountRegisterDeviceAnswer(Query *q, InboundPkt &inboundPkt) {
-    Q_EMIT accountRegisterDeviceResult(q->msgId(), inboundPkt.fetchBool());
+    const bool result = Functions::Account::registerDeviceResult(&inboundPkt);
+    Q_EMIT accountRegisterDeviceResult(q->msgId(), result);
 }
 
 qint64 Api::accountRegisterDevice(qint32 tokenType, const QString &token, const QString &deviceModel, const QString &systemVersion, const QString &appVersion, bool appSandbox, const QString &langCode) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_AccountRegisterDevice);
-    p.appendInt(tokenType);
-    p.appendQString(token);
-    p.appendQString(deviceModel);
-    p.appendQString(systemVersion);
-    p.appendQString(appVersion);
-    p.appendBool(appSandbox);
-    p.appendQString(langCode);
+    Functions::Account::registerDevice(&p, tokenType, token, deviceModel, systemVersion, appVersion, appSandbox, langCode);
     return mMainSession->sendQuery(p, &accountRegisterDeviceMethods, QVariant(), __FUNCTION__ );
 }
 
-// ### account.unregisterDevice
 void Api::onAccountUnregisterDeviceAnswer(Query *q, InboundPkt &inboundPkt) {
-    Q_EMIT accountUnregisterDeviceResult(q->msgId(), inboundPkt.fetchBool());
+    const bool result = Functions::Account::unregisterDeviceResult(&inboundPkt);
+    Q_EMIT accountUnregisterDeviceResult(q->msgId(), result);
 }
 
 qint64 Api::accountUnregisterDevice(qint32 tokenType, const QString &token) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_AccountUnregisterDevice);
-    p.appendInt(tokenType);
-    p.appendQString(token);
+    Functions::Account::unregisterDevice(&p, tokenType, token);
     return mMainSession->sendQuery(p, &accountUnregisterDeviceMethods, QVariant(), __FUNCTION__ );
 }
 
-// ### account.updateNotifySettings
 void Api::onAccountUpdateNotifySettingsAnswer(Query *q, InboundPkt &inboundPkt) {
-    Q_EMIT accountUpdateNotifySettingsResult(q->msgId(), inboundPkt.fetchBool());
+    const bool result = Functions::Account::updateNotifySettingsResult(&inboundPkt);
+    Q_EMIT accountUpdateNotifySettingsResult(q->msgId(), result);
 }
 
 qint64 Api::accountUpdateNotifySettings(const InputNotifyPeer &peer, const InputPeerNotifySettings &settings) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_AccountUpdateNotifySettings);
-    p.appendInputNotifyPeer(peer);
-    p.appendInputPeerNotifySettings(settings);
+    Functions::Account::updateNotifySettings(&p, peer, settings);
     return mMainSession->sendQuery(p, &accountUpdateNotifySettingsMethods, QVariant(), __FUNCTION__ );
 }
 
-// ### account.getNotifySettings
 void Api::onAccountGetNotifySettingsAnswer(Query *q, InboundPkt &inboundPkt) {
-    Q_EMIT accountPeerNotifySettings(q->msgId(), inboundPkt.fetchPeerNotifySetting());
+    const PeerNotifySettings &result = Functions::Account::getNotifySettingsResult(&inboundPkt);
+    Q_EMIT accountPeerNotifySettings(q->msgId(), result);
 }
 
 qint64 Api::accountGetNotifySettings(const InputNotifyPeer &peer) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_AccountGetNotifySettings);
-    p.appendInputNotifyPeer(peer);
+    Functions::Account::getNotifySettings(&p, peer);
     return mMainSession->sendQuery(p, &accountGetNotifySettingsMethods, QVariant(), __FUNCTION__ );
 }
 
-// ### account.resetNotifySettings
 void Api::onAccountResetNotifySettingsAnswer(Query *q, InboundPkt &inboundPkt) {
-    Q_EMIT accountResetNotifySettingsResult(q->msgId(), inboundPkt.fetchBool());
+    const bool result = Functions::Account::resetNotifySettingsResult((&inboundPkt));
+    Q_EMIT accountResetNotifySettingsResult(q->msgId(), result);
 }
 
 qint64 Api::accountResetNotifySettings() {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_AccountResetNotifySettings);
+    Functions::Account::resetNotifySettings(&p);
     return mMainSession->sendQuery(p, &accountResetNotifySettingsMethods, QVariant(), __FUNCTION__ );
 }
 
-// ### account.updateProfile
 void Api::onAccountUpdateProfileAnswer(Query *q, InboundPkt &inboundPkt) {
-    Q_EMIT accountUser(q->msgId(), inboundPkt.fetchUser());
+    const User &result = Functions::Account::updateProfileResult(&inboundPkt);
+    Q_EMIT accountUser(q->msgId(), result);
 }
 
 qint64 Api::accountUpdateProfile(const QString &firstName, const QString &lastName) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_AccountUpdateProfile);
-    p.appendQString(firstName);
-    p.appendQString(lastName);
+    Functions::Account::updateProfile(&p, firstName, lastName);
     return mMainSession->sendQuery(p, &accountUpdateProfileMethods, QVariant(), __FUNCTION__ );
 }
 
-// ### account.updateStatus
 void Api::onAccountUpdateStatusAnswer(Query *q, InboundPkt &inboundPkt) {
-    Q_EMIT accountUpdateStatusResult(q->msgId(), inboundPkt.fetchBool());
+    const bool result = Functions::Account::updateStatusResult(&inboundPkt);
+    Q_EMIT accountUpdateStatusResult(q->msgId(), result);
 }
 
 qint64 Api::accountUpdateStatus(bool offline) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_AccountUpdateStatus);
-    p.appendBool(offline);
+    Functions::Account::updateStatus(&p, offline);
     return mMainSession->sendQuery(p, &accountUpdateStatusMethods, QVariant(), __FUNCTION__ );
 }
 
-// ### account.getWallPapers
 void Api::onAccountGetWallPapersAnswer(Query *q, InboundPkt &inboundPkt) {
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    qint32 n = inboundPkt.fetchInt();
-    QList<WallPaper> wallpapers;
-    for (qint32 i = 0; i < n; i++) {
-        wallpapers.append(inboundPkt.fetchWallPaper());
-    }
-    Q_EMIT accountGetWallPapersResult(q->msgId(), wallpapers);
+    const QList<WallPaper> &result = Functions::Account::getWallPapersResult(&inboundPkt);
+    Q_EMIT accountGetWallPapersResult(q->msgId(), result);
 }
 
 qint64 Api::accountGetWallPapers() {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_AccountGetWallPapers);
+    Functions::Account::getWallPapers(&p);
     return mMainSession->sendQuery(p, &accountGetWallPapersMethods, QVariant(), __FUNCTION__ );
 }
 
 void Api::onAccountCheckUsernameAnswer(Query *q, InboundPkt &inboundPkt) {
-    Q_EMIT accountCheckUsernameResult(q->msgId(), inboundPkt.fetchBool());
+    const bool result = Functions::Account::checkUsernameResult(&inboundPkt);
+    Q_EMIT accountCheckUsernameResult(q->msgId(), result);
 }
 
 qint64 Api::accountCheckUsername(const QString &username) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_AccountCheckUsername);
-    p.appendQString(username);
+    Functions::Account::checkUsername(&p, username);
     return mMainSession->sendQuery(p, &accountCheckUsernameMethods, QVariant(), __FUNCTION__ );
 }
 
 void Api::onAccountUpdateUsernameAnswer(Query *q, InboundPkt &inboundPkt) {
-    Q_EMIT accountUpdateUsernameResult(q->msgId(), inboundPkt.fetchUser());
+    const User &result = Functions::Account::updateUsernameResult(&inboundPkt);
+    Q_EMIT accountUpdateUsernameResult(q->msgId(), result);
 }
 
 qint64 Api::accountUpdateUsername(const QString &username) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_AccountUpdateUsername);
-    p.appendQString(username);
+    Functions::Account::updateUsername(&p, username);
     return mMainSession->sendQuery(p, &accountUpdateUsernameMethods, QVariant(), __FUNCTION__ );
 }
 
-void Api::onAccountPrivacyRules(Query *q, InboundPkt &inboundPkt) {
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_AccountPrivacyRules);
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    qint32 nr = inboundPkt.fetchInt();
-    QList<PrivacyRule> rules;
-    for (qint32 i = 0; i < nr; i++) {
-        rules.append(inboundPkt.fetchPrivacyRule());
-    }
-
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    qint32 nu = inboundPkt.fetchInt();
-    QList<User> users;
-    for (qint32 i = 0; i < nu; i++) {
-        users.append(inboundPkt.fetchUser());
-    }
-
-    Q_EMIT accountPrivacyRules(q->msgId(), rules, users);
+void Api::onAccountGetPrivacyRules(Query *q, InboundPkt &inboundPkt) {
+    const AccountPrivacyRules &result = Functions::Account::getPrivacyResult(&inboundPkt);
+    Q_EMIT accountGetPrivacyRules(q->msgId(), result.rules(), result.users());
 }
 
 qint64 Api::accountGetPrivacy(const InputPrivacyKey &key) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_AccountGetPrivacy);
-    p.appendInputPrivacyKey(key);
-
+    Functions::Account::getPrivacy(&p, key);
     return mMainSession->sendQuery(p, &accountAccountGetPrivacyMethods, QVariant(), __FUNCTION__ );
 }
 
+void Api::onAccountSetPrivacyRules(Query *q, InboundPkt &inboundPkt) {
+    const AccountPrivacyRules &result = Functions::Account::setPrivacyResult(&inboundPkt);
+    Q_EMIT accountSetPrivacyRules(q->msgId(), result.rules(), result.users());
+}
+
 qint64 Api::accountSetPrivacy(const InputPrivacyKey &key, const QList<InputPrivacyRule> &rules) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_AccountSetPrivacy);
-    p.appendInputPrivacyKey(key);
-
-    p.appendInt(static_cast<qint32>(TL_Vector));
-    p.appendInt(rules.size());
-    Q_FOREACH (InputPrivacyRule rule, rules)
-        p.appendInputPrivacyRule(rule);
-
+    Functions::Account::setPrivacy(&p, key, rules);
     return mMainSession->sendQuery(p, &accountAccountSetPrivacyMethods, QVariant(), __FUNCTION__ );
 }
 
 void Api::onAccountDeleteAccountAnswer(Query *q, InboundPkt &inboundPkt) {
-    Q_EMIT accountDeleteAccountResult(q->msgId(), inboundPkt.fetchBool());
+    const bool result = Functions::Account::deleteAccountResult(&inboundPkt);
+    Q_EMIT accountDeleteAccountResult(q->msgId(), result);
 }
 
 qint64 Api::accountDeleteAccount(const QString &reason) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_AccountDeleteAccount);
-    p.appendQString(reason);
-
+    Functions::Account::deleteAccount(&p, reason);
     return mMainSession->sendQuery(p, &accountDeleteAccountMethods, QVariant(), __FUNCTION__ );
 }
 
 void Api::onAccountGetAccountTTLAnswer(Query *q, InboundPkt &inboundPkt) {
-    Q_EMIT accountGetAccountTTLResult(q->msgId(), inboundPkt.fetchAccountDaysTTL());
+    const AccountDaysTTL &result = Functions::Account::getAccountTTLResult(&inboundPkt);
+    Q_EMIT accountGetAccountTTLResult(q->msgId(), result);
 }
 
-qint64 Api::accountGetAccountTTL()
-{
+qint64 Api::accountGetAccountTTL() {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_AccountGetAccountTTL);
-
+    Functions::Account::getAccountTTL(&p);
     return mMainSession->sendQuery(p, &accountGetAccountTTLMethods, QVariant(), __FUNCTION__ );
 }
 
 void Api::onAccountSetAccountTTLAnswer(Query *q, InboundPkt &inboundPkt) {
-    Q_EMIT accountSetAccountTTLResult(q->msgId(), inboundPkt.fetchBool());
-}
-
-void Api::onAccountChangePhoneAnswer(Query *q, InboundPkt &inboundPkt) {
-    Q_EMIT accountChangePhoneResult(q->msgId(), inboundPkt.fetchUser());
-}
-
-void Api::onAccountUpdateDeviceLockedAnswer(Query *q, InboundPkt &inboundPkt) {
-    Q_EMIT accountUpdateDeviceLockedResult(q->msgId(), inboundPkt.fetchBool());
-}
-
-void Api::onAccountSentChangePhoneCode(Query *q, InboundPkt &inboundPkt) {
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_AccountSentChangePhoneCode);
-    Q_EMIT accountSentChangePhoneCode(q->msgId(), inboundPkt.fetchQString(), inboundPkt.fetchInt());
+    const bool result = Functions::Account::setAccountTTLResult(&inboundPkt);
+    Q_EMIT accountSetAccountTTLResult(q->msgId(), result);
 }
 
 qint64 Api::accountSetAccountTTL(const AccountDaysTTL &ttl) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_AccountSetAccountTTL);
-    p.appendAccountDaysTTL(ttl);
+    Functions::Account::setAccountTTL(&p, ttl);
     return mMainSession->sendQuery(p, &accountSetAccountTTLMethods, QVariant(), __FUNCTION__ );
 }
 
-qint64 Api::accountSendChangePhoneCode(const QString &phone_number) {
-    OutboundPkt p(mSettings);
-    p.appendInt(TL_AccountSendChangePhoneCode);
-    p.appendQString(phone_number);
-    return mMainSession->sendQuery(p, &accountSendChangePhoneCodeMethods, QVariant(), __FUNCTION__ );
-
+void Api::onAccountChangePhoneAnswer(Query *q, InboundPkt &inboundPkt) {
+    const User &result = Functions::Account::changePhoneResult(&inboundPkt);
+    Q_EMIT accountChangePhoneResult(q->msgId(), result);
 }
 
 qint64 Api::accountChangePhone(const QString &phone_number, const QString &phone_code_hash, const QString &phone_code) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_AccountChangePhone);
-    p.appendQString(phone_number);
-    p.appendQString(phone_code_hash);
-    p.appendQString(phone_code);
+    Functions::Account::changePhone(&p, phone_number, phone_code_hash, phone_code);
     return mMainSession->sendQuery(p, &accountChangePhoneMethods, QVariant(), __FUNCTION__ );
 }
 
-qint64 Api::accountUpdateDeviceLocked(int period) {
-    OutboundPkt p(mSettings);
-    p.appendInt(TL_AccountUpdateDeviceLocked);
-    p.appendInt(period);
-    return mMainSession->sendQuery(p, &accountUpdateDeviceLockedMethods, QVariant(), __FUNCTION__ );
+void Api::onAccountUpdateDeviceLockedAnswer(Query *q, InboundPkt &inboundPkt) {
+    const bool result = Functions::Account::updateDeviceLockedResult(&inboundPkt);
+    Q_EMIT accountUpdateDeviceLockedResult(q->msgId(), result);
+}
 
+qint64 Api::accountUpdateDeviceLocked(int period) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
+    OutboundPkt p(mSettings);
+    Functions::Account::updateDeviceLocked(&p, period);
+    return mMainSession->sendQuery(p, &accountUpdateDeviceLockedMethods, QVariant(), __FUNCTION__ );
+}
+
+void Api::onAccountSentChangePhoneCode(Query *q, InboundPkt &inboundPkt) {
+    const AccountSentChangePhoneCode &result = Functions::Account::sendChangePhoneCodeResult(&inboundPkt);
+    Q_EMIT accountSentChangePhoneCode(q->msgId(), result.phoneCodeHash(), result.sendCallTimeout());
+}
+
+qint64 Api::accountSendChangePhoneCode(const QString &phone_number) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
+    OutboundPkt p(mSettings);
+    Functions::Account::sendChangePhoneCode(&p, phone_number);
+    return mMainSession->sendQuery(p, &accountSendChangePhoneCodeMethods, QVariant(), __FUNCTION__ );
 }
 
 void Api::onAccountGetPasswordAnswer(Query *q, InboundPkt &inboundPkt) {
-    Q_EMIT accountGetPasswordResult(q->msgId(), inboundPkt.fetchAccountPassword());
+    const AccountPassword &result = Functions::Account::getPasswordResult(&inboundPkt);
+    Q_EMIT accountGetPasswordResult(q->msgId(), result);
 }
 
 qint64 Api::accountGetPassword() {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_AccountGetPassword);
+    Functions::Account::getPassword(&p);
     return mMainSession->sendQuery(p, &accountGetPasswordMethods, QVariant(), __FUNCTION__ );
 }
 
-void Api::onAccountSetPasswordAnswer(Query *q, InboundPkt &inboundPkt) {
-    Q_EMIT accountSetPasswordResult(q->msgId(), inboundPkt.fetchBool());
+void Api::onAccountGetAuthorizationsAnswer(Query *q, InboundPkt &inboundPkt) {
+    const AccountAuthorizations &result = Functions::Account::getAuthorizationsResult(&inboundPkt);
+    Q_EMIT accountGetAuthorizationsResult(q->msgId(), result);
 }
 
-qint64 Api::accountSetPassword(const QByteArray &currentPasswordHash, const QByteArray &newSalt, const QByteArray &newPasswordHash, const QString &hint) {
+qint64 Api::accountGetAuthorizations() {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_AccountSetPassword);
-    p.appendBytes(currentPasswordHash);
-    p.appendBytes(newSalt);
-    p.appendBytes(newPasswordHash);
-    p.appendQString(hint);
-    return mMainSession->sendQuery(p, &accountSetPasswordMethods, QVariant(), __FUNCTION__ );
+    Functions::Account::getAuthorizations(&p);
+    return mMainSession->sendQuery(p, &accountGetAuthorizationsMethods, QVariant(), __FUNCTION__ );
 }
 
-// ### photos.uploadProfilePhoto
+void Api::onAccountResetAuthorizationAnswer(Query *q, InboundPkt &inboundPkt) {
+    const bool result = Functions::Account::resetAuthorizationResult(&inboundPkt);
+    Q_EMIT accountResetAuthorizationResult(q->msgId(), result);
+}
+
+qint64 Api::accountResetAuthorization(qint64 hash) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
+    OutboundPkt p(mSettings);
+    Functions::Account::resetAuthorization(&p, hash);
+    return mMainSession->sendQuery(p, &accountResetAuthorizationMethods, QVariant(), __FUNCTION__ );
+}
+
+void Api::onAccountGetPasswordSettingsAnswer(Query *q, InboundPkt &inboundPkt) {
+    const AccountPasswordSettings &result = Functions::Account::getPasswordSettingsResult(&inboundPkt);
+    Q_EMIT accountGetPasswordSettingsResult(q->msgId(), result);
+}
+
+qint64 Api::accountGetPasswordSettings(const QByteArray &currentPasswordHash) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
+    OutboundPkt p(mSettings);
+    Functions::Account::getPasswordSettings(&p, currentPasswordHash);
+    return mMainSession->sendQuery(p, &accountGetPasswordSettingsMethods, QVariant(), __FUNCTION__ );
+}
+
+void Api::onAccountUpdatePasswordSettingsAnswer(Query *q, InboundPkt &inboundPkt) {
+    const bool result = Functions::Account::updatePasswordSettingsResult(&inboundPkt);
+    Q_EMIT accountUpdatePasswordSettingsResult(q->msgId(), result);
+}
+
+qint64 Api::accountUpdatePasswordSettings(const QByteArray &currentPasswordHash, const AccountPasswordInputSettings &newSettings) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
+    OutboundPkt p(mSettings);
+    Functions::Account::updatePasswordSettings(&p, currentPasswordHash, newSettings);
+    return mMainSession->sendQuery(p, &accountUpdatePasswordSettingsMethods, QVariant(), __FUNCTION__ );
+}
+
 void Api::onPhotosUploadProfilePhotoAnswer(Query *q, InboundPkt &inboundPkt) {
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_PhotosPhoto);
-    Photo photo = inboundPkt.fetchPhoto();
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    qint32 n = inboundPkt.fetchInt();
-    QList<User> users;
-    for (qint32 i = 0; i < n; i++) {
-        users.append(inboundPkt.fetchUser());
-    }
-    Q_EMIT photosPhoto(q->msgId(), photo, users);
+    const PhotosPhoto &result = Functions::Photos::uploadProfilePhotoResult(&inboundPkt);
+    Q_EMIT photosPhoto(q->msgId(), result.photo(), result.users());
 }
 
 qint64 Api::photosUploadProfilePhoto(const InputFile &file, const QString &caption, const InputGeoPoint &geoPoint, const InputPhotoCrop &crop) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_PhotosUploadProfilePhoto);
-    p.appendInputFile(file);
-    p.appendQString(caption);
-    p.appendInputGeoPoint(geoPoint);
-    p.appendInputPhotoCrop(crop);
+    Functions::Photos::uploadProfilePhoto(&p, file, caption, geoPoint, crop);
     return mMainSession->sendQuery(p, &photosUploadProfilePhotoMethods, QVariant(), __FUNCTION__ );
 }
 
-// ### photos.updateProfilePhoto
 void Api::onPhotosUpdateProfilePhotoAnswer(Query *q, InboundPkt &inboundPkt) {
-    Q_EMIT photosUserProfilePhoto(q->msgId(), inboundPkt.fetchUserProfilePhoto());
+    const UserProfilePhoto &result = Functions::Photos::updateProfilePhotoResult(&inboundPkt);
+    Q_EMIT photosUserProfilePhoto(q->msgId(), result);
 }
 
 qint64 Api::photosUpdateProfilePhoto(const InputPhoto &id, const InputPhotoCrop &crop) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_PhotosUpdateProfilePhoto);
-    p.appendInputPhoto(id);
-    p.appendInputPhotoCrop(crop);
+    Functions::Photos::updateProfilePhoto(&p, id, crop);
     return mMainSession->sendQuery(p, &photosUpdateProfilePhotoMethods, QVariant(), __FUNCTION__ );
 }
 
-//
-// USERS
-//
-// ### users.getUsers
 void Api::onUsersGetUsersAnswer(Query *q, InboundPkt &inboundPkt) {
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    qint32 n = inboundPkt.fetchInt();
-    QList<User> users;
-    for (qint32 i = 0; i < n; i++) {
-        users.append(inboundPkt.fetchUser());
-    }
-    Q_EMIT usersGetUsersResult(q->msgId(), users);
+    const QList<User> &result = Functions::Users::getUsersResult(&inboundPkt);
+    Q_EMIT usersGetUsersResult(q->msgId(), result);
 }
 
 qint64 Api::usersGetUsers(const QList<InputUser> &users) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_UsersGetUsers);
-    p.appendInt(TL_Vector);
-    p.appendInt(users.size());
-    Q_FOREACH (InputUser user, users) {
-        p.appendInputUser(user);
-    }
+    Functions::Users::getUsers(&p, users);
     return mMainSession->sendQuery(p, &usersGetUsersMethods, QVariant(), __FUNCTION__ );
 }
 
-// ### users.getFullUser
 void Api::onUsersGetFullUserAnswer(Query *q, InboundPkt &inboundPkt) {
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_UserFull);
-    User user = inboundPkt.fetchUser();
-    ContactsLink link = inboundPkt.fetchContactsLink();
-    Photo photo = inboundPkt.fetchPhoto();
-    PeerNotifySettings notifySettings = inboundPkt.fetchPeerNotifySetting();
-    bool blocked = inboundPkt.fetchBool();
-    QString realFirstName = inboundPkt.fetchQString();
-    QString realLastName = inboundPkt.fetchQString();
-    Q_EMIT userFull(q->msgId(), user, link, photo, notifySettings, blocked, realFirstName, realLastName);
+    const UserFull &result = Functions::Users::getFullUserResult(&inboundPkt);
+    Q_EMIT userFull(q->msgId(), result.user(), result.link(), result.profilePhoto(), result.notifySettings(), result.blocked(), result.realFirstName(), result.realLastName());
 }
 
 qint64 Api::usersGetFullUser(const InputUser &user) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_UsersGetFullUser);
-    p.appendInputUser(user);
+    Functions::Users::getFullUser(&p, user);
     return mMainSession->sendQuery(p, &usersGetFullUserMethods, QVariant(), __FUNCTION__ );
 }
 
-// ### photos.getUserPhotos
 void Api::onPhotosGetUserPhotos(Query *q, InboundPkt &inboundPkt) {
-    qint32 x = inboundPkt.fetchInt();
-    ASSERT(x == (qint32)TL_PhotosPhotos || x == (qint32)TL_PhotosPhotosSlice);
-    qint32 count = -1;
-    if (x == (qint32)TL_PhotosPhotosSlice) {
-        count = inboundPkt.fetchInt();
-    }
-    //photos
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    qint32 n = inboundPkt.fetchInt();
-    QList<Photo> photos;
-    for (qint32 i = 0; i < n; i++) {
-        photos.append(inboundPkt.fetchPhoto());
-    }
-    //users
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    n = inboundPkt.fetchInt();
-    QList<User> users;
-    for (qint32 i = 0; i < n; i++) {
-        users.append(inboundPkt.fetchUser());
-    }
-    if (x == (qint32)TL_PhotosPhotosSlice) {
-        Q_EMIT photosPhotosSlice(q->msgId(), count, photos, users);
+    const PhotosPhotos &result = Functions::Photos::getUserPhotosResult(&inboundPkt);
+    if (result.classType() == PhotosPhotos::typePhotosPhotosSlice) {
+        Q_EMIT photosPhotosSlice(q->msgId(), result.count(), result.photos(), result.users());
     } else {
-        Q_EMIT photosPhotos(q->msgId(), photos, users);
+        Q_EMIT photosPhotos(q->msgId(), result.photos(), result.users());
     }
 }
 
 qint64 Api::photosGetUserPhotos(const InputUser &user, qint32 offset, qint32 maxId, qint32 limit) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_PhotosGetUserPhotos);
-    p.appendInputUser(user);
-    p.appendInt(offset);
-    p.appendInt(maxId);
-    p.appendInt(limit);
+    Functions::Photos::getUserPhotos(&p, user, offset, maxId, limit);
     return mMainSession->sendQuery(p, &photosGetUserPhotosMethods, QVariant(), __FUNCTION__ );
 }
 
-//
-// CONTACTS
-//
-// ### contacts.getStatuses
 void Api::onContactsGetStatusesAnswer(Query *q, InboundPkt &inboundPkt) {
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    qint32 n = inboundPkt.fetchInt();
-    QList<ContactStatus> statuses;
-    for (qint32 i = 0; i < n; i++) {
-        statuses.append(inboundPkt.fetchContactStatus());
-    }
-    Q_EMIT contactsGetStatusesResult(q->msgId(), statuses);
+    const QList<ContactStatus> &result = Functions::Contacts::getStatusesResult(&inboundPkt);
+    Q_EMIT contactsGetStatusesResult(q->msgId(), result);
 }
 
 qint64 Api::contactsGetStatuses() {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_ContactsGetStatuses);
+    Functions::Contacts::getStatuses(&p);
     return mMainSession->sendQuery(p, &contactsGetStatusesMethods, QVariant(), __FUNCTION__ );
 }
 
-// ### contacts.getContacts
 void Api::onContactsGetContactsAnswer(Query *q, InboundPkt &inboundPkt) {
-    qint32 x = inboundPkt.fetchInt();
-    ASSERT(x == (qint32)TL_ContactsContacts || x == (qint32)TL_ContactsContactsNotModified);
-    if (x == (qint32)TL_ContactsContacts) {
-        //contacts
-        ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-        qint32 n = inboundPkt.fetchInt();
-        QList<Contact> contacts;
-        for (qint32 i = 0; i < n; i++) {
-            contacts.append(inboundPkt.fetchContact());
-        }
-        //users
-        ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-        n = inboundPkt.fetchInt();
-        QList<User> users;
-        for (qint32 i = 0; i < n; i++) {
-            users.append(inboundPkt.fetchUser());
-        }
-        Q_EMIT contactsContacts(q->msgId(), contacts, users);
+    const ContactsContacts &result = Functions::Contacts::getContactsResult(&inboundPkt);
+    if (result.classType() == ContactsContacts::typeContactsContacts) {
+        Q_EMIT contactsContacts(q->msgId(), result.contacts(), result.users());
     } else {
         Q_EMIT contactsContactsNotModified(q->msgId());
     }
 }
 
 qint64 Api::contactsGetContacts(const QString &hash) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_ContactsGetContacts);
-    p.appendQString(hash);
+    Functions::Contacts::getContacts(&p, hash);
     return mMainSession->sendQuery(p, &contactsGetContactsMethods, QVariant(), __FUNCTION__ );
 }
 
-// ### contacts.importContacts
 void Api::onContactsImportContactsAnswer(Query *q, InboundPkt &inboundPkt) {
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_ContactsImportedContacts);
-    // imported contacts
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    qint32 n = inboundPkt.fetchInt();
-    QList<ImportedContact> imported;
-    for (qint32 i = 0; i < n; i++) {
-        imported.append(inboundPkt.fetchImportedContact());
-    }
-    // retry contacts
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    n = inboundPkt.fetchInt();
-    QList<qint64> retryContacts;
-    for (qint32 i = 0; i < n; i++) {
-        retryContacts.append(inboundPkt.fetchLong());
-    }
-    // users
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    n = inboundPkt.fetchInt();
-    QList<User> users;
-    for (qint32 i = 0; i < n; i++) {
-        users.append(inboundPkt.fetchUser());
-    }
-    Q_EMIT contactsImportedContacts(q->msgId(), imported, retryContacts, users);
+    const ContactsImportedContacts &result = Functions::Contacts::importContactsResult(&inboundPkt);
+    Q_EMIT contactsImportedContacts(q->msgId(), result.imported(), result.retryContacts(), result.users());
 }
 
 qint64 Api::contactsImportContacts(const QList<InputContact> &contacts, bool replace) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_ContactsImportContacts);
-    p.appendInt(TL_Vector);
-    p.appendInt(contacts.length());
-    Q_FOREACH (InputContact contact, contacts) {
-        p.appendInputContact(contact);
-    }
-    p.appendBool(replace);
+    Functions::Contacts::importContacts(&p, contacts, replace);
     return mMainSession->sendQuery(p, &contactsImportContactsMethods, QVariant(), __FUNCTION__ );
 }
 
-// ### contacts.deleteContact
 void Api::onContactsDeleteContactAnswer(Query *q, InboundPkt &inboundPkt) {
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_ContactsLink);
-    ContactLink myLink = inboundPkt.fetchContactLink();
-    ContactLink foreignLink = inboundPkt.fetchContactLink();
-    User user = inboundPkt.fetchUser();
-    Q_EMIT contactsDeleteContactLink(q->msgId(), myLink, foreignLink, user);
+    const ContactsLink &result = Functions::Contacts::deleteContactResult(&inboundPkt);
+    Q_EMIT contactsDeleteContactLink(q->msgId(), result.myLink(), result.foreignLink(), result.user());
 }
 
 qint64 Api::contactsDeleteContact(const InputUser &id) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_ContactsDeleteContact);
-    p.appendInputUser(id);
+    Functions::Contacts::deleteContact(&p, id);
     return mMainSession->sendQuery(p, &contactsDeleteContactMethods, QVariant(), __FUNCTION__ );
 }
 
-// ### contacts.deleteContacts
 void Api::onContactsDeleteContactsAnswer(Query *q, InboundPkt &inboundPkt) {
-    Q_EMIT contactsDeleteContactsResult(q->msgId(), inboundPkt.fetchBool());
+    const bool result = Functions::Contacts::deleteContactsResult(&inboundPkt);
+    Q_EMIT contactsDeleteContactsResult(q->msgId(), result);
 }
 
 qint64 Api::contactsDeleteContacts(const QList<InputUser> &ids) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_ContactsDeleteContacts);
-    p.appendInt(TL_Vector);
-    p.appendInt(ids.length());
-    Q_FOREACH (InputUser id, ids) {
-        p.appendInputUser(id);
-    }
+    Functions::Contacts::deleteContacts(&p, ids);
     return mMainSession->sendQuery(p, &contactsDeleteContactsMethods, QVariant(), __FUNCTION__ );
 }
 
 void Api::onContactsSearchAnswer(Query *q, InboundPkt &inboundPkt) {
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_ContactsFound);
-    // contact founds
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    qint32 n = inboundPkt.fetchInt();
-    QList<ContactFound> founds;
-    for (qint32 i = 0; i < n; i++) {
-        founds.append(inboundPkt.fetchContactFound());
-    }
-    // users
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    n = inboundPkt.fetchInt();
-    QList<User> users;
-    for (qint32 i = 0; i < n; i++) {
-        users.append(inboundPkt.fetchUser());
-    }
-    Q_EMIT contactsFound(q->msgId(), founds, users);
+    const ContactsFound &result = Functions::Contacts::searchResult(&inboundPkt);
+    Q_EMIT contactsFound(q->msgId(), result.results(), result.users());
 }
 
 qint64 Api::contactsSearch(const QString &q, qint32 limit) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_ContactsSearch);
-    p.appendQString(q);
-    p.appendInt(limit);
+    Functions::Contacts::search(&p, q, limit);
     return mMainSession->sendQuery(p, &contactsSearchMethods, QVariant(), __FUNCTION__ );
 }
 
 void Api::onContactsResolveUsernameAnswer(Query *q, InboundPkt &inboundPkt) {
-    Q_EMIT contactsResolveUsernameResult(q->msgId(), inboundPkt.fetchUser());
+    const User &result = Functions::Contacts::resolveUsernameResult(&inboundPkt);
+    Q_EMIT contactsResolveUsernameResult(q->msgId(), result);
 }
 
 qint64 Api::contactsResolveUsername(const QString &username) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_ContactsResolveUsername);
-    p.appendQString(username);
+    Functions::Contacts::resolveUsername(&p, username);
     return mMainSession->sendQuery(p, &contactsResolveUsernameMethods, QVariant(), __FUNCTION__ );
 }
 
-//
-// BLACKLIST
-//
-// ### contacts.block
 void Api::onContactsBlockAnswer(Query *q, InboundPkt &inboundPkt) {
-    Q_EMIT contactsBlockResult(q->msgId(), inboundPkt.fetchBool());
+    const bool result = Functions::Contacts::blockResult(&inboundPkt);
+    Q_EMIT contactsBlockResult(q->msgId(), result);
 }
 
 qint64 Api::contactsBlock(const InputUser &id) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_ContactsBlock);
-    p.appendInputUser(id);
+    Functions::Contacts::block(&p, id);
     return mMainSession->sendQuery(p, &contactsBlockMethods, QVariant(), __FUNCTION__ );
 }
 
-// ### contacts.unblock
 void Api::onContactsUnblockAnswer(Query *q, InboundPkt &inboundPkt) {
-    Q_EMIT contactsUnblockResult(q->msgId(), inboundPkt.fetchBool());
+    const bool result = Functions::Contacts::unblockResult(&inboundPkt);
+    Q_EMIT contactsUnblockResult(q->msgId(), result);
 }
 
 qint64 Api::contactsUnblock(const InputUser &id) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_ContactsUnblock);
-    p.appendInputUser(id);
+    Functions::Contacts::unblock(&p, id);
     return mMainSession->sendQuery(p, &contactsUnblockMethods, QVariant(), __FUNCTION__ );
 }
 
-// ### contacts.getBlocked
 void Api::onContactsGetBlockedAnswer(Query *q, InboundPkt &inboundPkt) {
-    qint32 x = inboundPkt.fetchInt();
-    ASSERT(x == (qint32)TL_ContactsBlocked || x == (qint32)TL_ContactsBlockedSlice);
-    qint32 count = -1;
-    if (x == (qint32)TL_ContactsBlockedSlice) {
-        count = inboundPkt.fetchInt();
-    }
-    // blocked
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    qint32 n = inboundPkt.fetchInt();
-    QList<ContactBlocked> blocked;
-    for (qint32 i = 0; i < n; i++) {
-        blocked.append(inboundPkt.fetchContactBlocked());
-    }
-    // users
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    n = inboundPkt.fetchInt();
-    QList<User> users;
-    for (qint32 i = 0; i < n; i++) {
-        users.append(inboundPkt.fetchUser());
-    }
-    if (x == (qint32)TL_ContactsBlockedSlice) {
-        Q_EMIT contactsBlockedSlice(q->msgId(), count, blocked, users);
+    const ContactsBlocked &result = Functions::Contacts::getBlockedResult(&inboundPkt);
+    if (result.classType() == ContactsBlocked::typeContactsBlockedSlice) {
+        Q_EMIT contactsBlockedSlice(q->msgId(), result.count(), result.blocked(), result.users());
     } else {
-        Q_EMIT contactsBlocked(q->msgId(), blocked, users);
+        Q_EMIT contactsBlocked(q->msgId(), result.blocked(), result.users());
     }
 }
 
 qint64 Api::contactsGetBlocked(qint32 offset, qint32 limit) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_ContactsGetBlocked);
-    p.appendInt(offset);
-    p.appendInt(limit);
+    Functions::Contacts::getBlocked(&p, offset, limit);
     return mMainSession->sendQuery(p, &contactsGetBlockedMethods, QVariant(), __FUNCTION__ );
 }
 
-//
-// MESSAGES
-//
-// ### messages.sendMessage
 void Api::onMessagesSendMessageAnswer(Query *q, InboundPkt &inboundPkt) {
-    qint32 x = inboundPkt.fetchInt();
-    ASSERT(x == (qint32)TL_MessagesSentMessage || x == (qint32)TL_MessagesSentMessageLink);
-    qint32 id = inboundPkt.fetchInt();
-    qint32 date = inboundPkt.fetchInt();
-    qint32 pts = inboundPkt.fetchInt();
-    qint32 pts_count = inboundPkt.fetchInt();
-    if (x == (qint32)TL_MessagesSentMessageLink) {
-        ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-        qint32 n = inboundPkt.fetchInt();
-        QList<ContactsLink> links;
-        for (qint32 i = 0; i < n; i++) {
-            links.append(inboundPkt.fetchContactsLink());
-        }
-        qint32 seq = inboundPkt.fetchInt();
-        Q_EMIT messagesSentMessageLink(q->msgId(), id, date, pts, pts_count, seq, links);
+    const MessagesSentMessage &result = Functions::Messages::sendMessageResult(&inboundPkt);
+    if (result.classType() == MessagesSentMessage::typeMessagesSentMessageLink) {
+        Q_EMIT messagesSentMessageLink(q->msgId(), result.id(), result.date(), result.media(), result.pts(), result.ptsCount(), result.seq(), result.links());
     } else {
-        Q_EMIT messagesSentMessage(q->msgId(), id, date, pts, pts_count);
+        Q_EMIT messagesSentMessage(q->msgId(), result.id(), result.date(), result.media(), result.pts(), result.ptsCount());
     }
 }
 
 qint64 Api::messagesSendMessage(const InputPeer &peer, const QString &message, qint64 randomId, qint32 replyToMsgId) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_MessagesSendMessage);
-    p.appendInputPeer(peer);
-    p.appendInt(replyToMsgId);
-    p.appendQString(message);
-    p.appendLong(randomId);
+    int flag = 0;
+    if(replyToMsgId)
+        flag = flag | (1<<0);
+
+    Functions::Messages::sendMessage(&p, flag, peer, replyToMsgId, message, randomId);
     return mMainSession->sendQuery(p, &messagesSendMessageMethods, QVariant(), __FUNCTION__ );
 }
 
-// ### messages.sendMedia
 void Api::onMessagesSendMediaAnswer(Query *q, InboundPkt &inboundPkt) {
-    qint32 x = inboundPkt.fetchInt();
-    ASSERT(x == (qint32)TL_MessagesStatedMessage || x == (qint32)TL_MessagesStatedMessageLink);
-    Message message = inboundPkt.fetchMessage();
-    //chats
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    qint32 n = inboundPkt.fetchInt();
-    QList<Chat> chats;
-    for (qint32 i = 0; i < n; i++) {
-        chats.append(inboundPkt.fetchChat());
-    }
-    //users
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    n = inboundPkt.fetchInt();
-    QList<User> users;
-    for (qint32 i = 0; i < n; i++) {
-        users.append(inboundPkt.fetchUser());
-    }
-    //links
-    qint32 pts = inboundPkt.fetchInt();
-    qint32 pts_count = inboundPkt.fetchInt();
-    if (x == (qint32)TL_MessagesStatedMessageLink) {
-        QList<ContactsLink> links;
-        ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-        n = inboundPkt.fetchInt();
-        for (qint32 i = 0; i < n; i++) {
-            links.append(inboundPkt.fetchContactsLink());
-        }
-        qint32 seq = inboundPkt.fetchInt();
-        Q_EMIT messagesSentMediaStatedMessageLink(q->msgId(), message, chats, users, links, pts, pts_count, seq);
-    } else {
-        Q_EMIT messagesSentMediaStatedMessage(q->msgId(), message, chats, users, pts, pts_count);
-    }
+    const UpdatesType &result = Functions::Messages::sendMediaResult(&inboundPkt);
+    Q_EMIT messagesSentMedia(q->msgId(), result);
 }
 
 qint64 Api::messagesSendMedia(const InputPeer &peer, const InputMedia &media, qint64 randomId, qint32 replyToMsgId) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_MessagesSendMedia);
-    p.appendInputPeer(peer);
-    p.appendInt(replyToMsgId);
-    p.appendInputMedia(media);
-    p.appendLong(randomId);
+    int flag = 0;
+    if(replyToMsgId)
+        flag = flag | (1<<0);
+
+    Functions::Messages::sendMedia(&p, flag, peer, replyToMsgId, media, randomId);
     return mMainSession->sendQuery(p, &messagesSendMediaMethods, QVariant(), __FUNCTION__ );
 }
 
-// ### messages.setTyping
+void Api::onMessagesForwardMediaAnswer(Query *q, InboundPkt &inboundPkt) {
+    const UpdatesType &result = Functions::Messages::sendMediaResult(&inboundPkt);
+    Q_EMIT messagesForwardedMedia(q->msgId(), result);
+}
+
+qint64 Api::messagesForwardMedia(const InputPeer &peer, const InputMedia &media, qint64 randomId, qint32 replyToMsgId) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
+    OutboundPkt p(mSettings);
+    int flag = 0;
+    if(replyToMsgId)
+        flag = flag | (1<<0);
+
+    Functions::Messages::sendMedia(&p, flag, peer, replyToMsgId, media, randomId);
+    return mMainSession->sendQuery(p, &messagesForwardMediaMethods, QVariant(), __FUNCTION__ );
+}
+
 void Api::onMessagesSetTypingAnswer(Query *q, InboundPkt &inboundPkt) {
-    Q_EMIT messagesSetTypingResult(q->msgId(), inboundPkt.fetchBool());
+    const bool result = Functions::Messages::setTypingResult(&inboundPkt);
+    Q_EMIT messagesSetTypingResult(q->msgId(), result);
 }
 
 qint64 Api::messagesSetTyping(const InputPeer &peer, const SendMessageAction &action) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_MessagesSetTyping);
-    p.appendInputPeer(peer);
-    p.appendSendMessageAction(action);
+    Functions::Messages::setTyping(&p, peer, action);
     return mMainSession->sendQuery(p, &messagesSetTypingMethods, QVariant(), __FUNCTION__ );
 }
 
-// ### messages.getMessages
 void Api::onMessagesGetMessagesAnswer(Query *q, InboundPkt &inboundPkt) {
-    qint32 x = inboundPkt.fetchInt();
-    ASSERT(x == (qint32)TL_MessagesMessages || x == (qint32)TL_MessagesMessagesSlice);
-    // slice count
-    qint32 count = -1;
-    if (x == (qint32)TL_MessagesMessagesSlice) {
-        count = inboundPkt.fetchInt();
-    }
-    //messages
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    qint32 n = inboundPkt.fetchInt();
-    QList<Message> messages;
-    for (qint32 i = 0; i < n; i++) {
-        messages.append(inboundPkt.fetchMessage());
-    }
-    //chats
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    n = inboundPkt.fetchInt();
-    QList<Chat> chats;
-    for (qint32 i = 0; i < n; i++) {
-        chats.append(inboundPkt.fetchChat());
-    }
-    //users
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    n = inboundPkt.fetchInt();
-    QList<User> users;
-    for (qint32 i = 0; i < n; i++) {
-        users.append(inboundPkt.fetchUser());
-    }
-    if (x == (qint32)TL_MessagesMessagesSlice) {
-        Q_EMIT messagesGetMessagesMessagesSlice(q->msgId(), count, messages, chats, users);
+    const MessagesMessages &result = Functions::Messages::getMessagesResult(&inboundPkt);
+    if (result.classType() == MessagesMessages::typeMessagesMessagesSlice) {
+        Q_EMIT messagesGetMessagesMessagesSlice(q->msgId(), result.count(), result.messages(), result.chats(), result.users());
     } else {
-        Q_EMIT messagesGetMessagesMessages(q->msgId(), messages, chats, users);
+        Q_EMIT messagesGetMessagesMessages(q->msgId(), result.messages(), result.chats(), result.users());
     }
 }
 
 qint64 Api::messagesGetMessages(const QList<qint32> &ids) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_MessagesGetMessages);
-    p.appendInt(TL_Vector);
-    p.appendInt(ids.length());
-    Q_FOREACH (qint32 id, ids) {
-        p.appendInt(id);
-    }
+    Functions::Messages::getMessages(&p, ids);
     return mMainSession->sendQuery(p, &messagesGetMessagesMethods, QVariant(), __FUNCTION__ );
 }
 
-// ### messages.getDialogs
 void Api::onMessagesGetDialogsAnswer(Query *q, InboundPkt &inboundPkt) {
-    qint32 x = inboundPkt.fetchInt();
-    ASSERT(x == (qint32)TL_MessagesDialogs || x == (qint32)TL_MessagesDialogsSlice);
-    // slice count
-    qint32 count = -1;
-    if (x == (qint32)TL_MessagesDialogsSlice) {
-        count = inboundPkt.fetchInt();
-    }
-    //dialogs
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    qint32 n = inboundPkt.fetchInt();
-    QList<Dialog> dialogs;
-    for (qint32 i = 0; i < n; i++) {
-        dialogs.append(inboundPkt.fetchDialog());
-    }
-    //messages
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    n = inboundPkt.fetchInt();
-    QList<Message> messages;
-    for (qint32 i = 0; i < n; i++) {
-        messages.append(inboundPkt.fetchMessage());
-    }
-    //chats
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    n = inboundPkt.fetchInt();
-    QList<Chat> chats;
-    for (qint32 i = 0; i < n; i++) {
-        chats.append(inboundPkt.fetchChat());
-    }
-    //users
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    n = inboundPkt.fetchInt();
-    QList<User> users;
-    for (qint32 i = 0; i < n; i++) {
-        users.append(inboundPkt.fetchUser());
-    }
-    if (x == (qint32)TL_MessagesDialogsSlice) {
-        Q_EMIT messagesDialogsSlice(q->msgId(), count, dialogs, messages, chats, users);
+    const MessagesDialogs &result = Functions::Messages::getDialogsResult(&inboundPkt);
+    if (result.classType() == MessagesDialogs::typeMessagesDialogsSlice) {
+        Q_EMIT messagesDialogsSlice(q->msgId(), result.count(), result.dialogs(), result.messages(), result.chats(), result.users());
     } else {
-        Q_EMIT messagesDialogs(q->msgId(), dialogs, messages, chats, users);
+        Q_EMIT messagesDialogs(q->msgId(), result.dialogs(), result.messages(), result.chats(), result.users());
     }
 }
 
 qint64 Api::messagesGetDialogs(qint32 offset, qint32 maxId, qint32 limit) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_MessagesGetDialogs);
-    p.appendInt(offset);
-    p.appendInt(maxId);
-    p.appendInt(limit);
+    Functions::Messages::getDialogs(&p, offset, maxId, limit);
     return mMainSession->sendQuery(p, &messagesGetDialogsMethods, QVariant(), __FUNCTION__ );
 }
 
-// ### messages.getHistory
 void Api::onMessagesGetHistoryAnswer(Query *q, InboundPkt &inboundPkt) {
-    qint32 x = inboundPkt.fetchInt();
-    ASSERT(x == (qint32)TL_MessagesMessages || x == (qint32)TL_MessagesMessagesSlice);
-    // slice count
-    qint32 count = -1;
-    if (x == (qint32)TL_MessagesMessagesSlice) {
-        count = inboundPkt.fetchInt();
-    }
-    //messages
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    qint32 n = inboundPkt.fetchInt();
-    QList<Message> messages;
-    for (qint32 i = 0; i < n; i++) {
-        messages.append(inboundPkt.fetchMessage());
-    }
-    //chats
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    n = inboundPkt.fetchInt();
-    QList<Chat> chats;
-    for (qint32 i = 0; i < n; i++) {
-        chats.append(inboundPkt.fetchChat());
-    }
-    //users
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    n = inboundPkt.fetchInt();
-    QList<User> users;
-    for (qint32 i = 0; i < n; i++) {
-        users.append(inboundPkt.fetchUser());
-    }
-    if (x == (qint32)TL_MessagesMessagesSlice) {
-        Q_EMIT messagesGetHistoryMessagesSlice(q->msgId(), count, messages, chats, users);
+    const MessagesMessages &result = Functions::Messages::getHistoryResult(&inboundPkt);
+    if (result.classType() == MessagesMessages::typeMessagesMessagesSlice) {
+        Q_EMIT messagesGetHistoryMessagesSlice(q->msgId(), result.count(), result.messages(), result.chats(), result.users());
     } else {
-        Q_EMIT messagesGetHistoryMessages(q->msgId(), messages, chats, users);
+        Q_EMIT messagesGetHistoryMessages(q->msgId(), result.messages(), result.chats(), result.users());
     }
 }
 
 qint64 Api::messagesGetHistory(const InputPeer &peer, qint32 offset, qint32 maxId, qint32 limit) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_MessagesGetHistory);
-    p.appendInputPeer(peer);
-    p.appendInt(offset);
-    p.appendInt(maxId);
-    p.appendInt(limit);
+    Functions::Messages::getHistory(&p, peer, offset, maxId, limit);
     return mMainSession->sendQuery(p, &messagesGetHistoryMethods, QVariant(), __FUNCTION__ );
 }
 
-// ### messages.search
 void Api::onMessagesSearchAnswer(Query *q, InboundPkt &inboundPkt) {
-    qint32 x = inboundPkt.fetchInt();
-    ASSERT(x == (qint32)TL_MessagesMessages || x == (qint32)TL_MessagesMessagesSlice);
-    // slice count
-    qint32 count = -1;
-    if (x == (qint32)TL_MessagesMessagesSlice) {
-        count = inboundPkt.fetchInt();
-    }
-    //messages
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    qint32 n = inboundPkt.fetchInt();
-    QList<Message> messages;
-    for (qint32 i = 0; i < n; i++) {
-        messages.append(inboundPkt.fetchMessage());
-    }
-    //chats
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    n = inboundPkt.fetchInt();
-    QList<Chat> chats;
-    for (qint32 i = 0; i < n; i++) {
-        chats.append(inboundPkt.fetchChat());
-    }
-    //users
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    n = inboundPkt.fetchInt();
-    QList<User> users;
-    for (qint32 i = 0; i < n; i++) {
-        users.append(inboundPkt.fetchUser());
-    }
-    if (x == (qint32)TL_MessagesMessagesSlice) {
-        Q_EMIT messagesSearchMessagesSlice(q->msgId(), count, messages, chats, users);
+    const MessagesMessages &result = Functions::Messages::searchResult(&inboundPkt);
+    if (result.classType() == MessagesMessages::typeMessagesMessagesSlice) {
+        Q_EMIT messagesSearchMessagesSlice(q->msgId(), result.count(), result.messages(), result.chats(), result.users());
     } else {
-        Q_EMIT messagesSearchMessages(q->msgId(), messages, chats, users);
+        Q_EMIT messagesSearchMessages(q->msgId(), result.messages(), result.chats(), result.users());
     }
 }
 
 qint64 Api::messagesSearch(const InputPeer &peer, const QString &q, const MessagesFilter &filter, qint32 minDate, qint32 maxDate, qint32 offset, qint32 maxId, qint32 limit) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_MessagesSearch);
-    p.appendInputPeer(peer);
-    p.appendQString(q);
-    p.appendMessagesFilter(filter);
-    p.appendInt(minDate);
-    p.appendInt(maxDate);
-    p.appendInt(offset);
-    p.appendInt(maxId);
-    p.appendInt(limit);
+    Functions::Messages::search(&p, peer, q, filter, minDate, maxDate, offset, maxId, limit);
     return mMainSession->sendQuery(p, &messagesSearchMethods, QVariant(), __FUNCTION__ );
 }
 
-// ### messages.readHistory
 void Api::onMessagesReadHistoryAnswer(Query *q, InboundPkt &inboundPkt) {
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_MessagesAffectedHistory);
-    qint32 pts = inboundPkt.fetchInt();
-    qint32 pts_count = inboundPkt.fetchInt();
-    qint32 offset = inboundPkt.fetchInt();
-    Q_EMIT messagesReadAffectedHistory(q->msgId(), pts, pts_count, offset);
+    const MessagesAffectedHistory &result = Functions::Messages::readHistoryResult(&inboundPkt);
+    Q_EMIT messagesReadAffectedHistory(q->msgId(), result.pts(), result.ptsCount(), result.offset());
 }
 
 qint64 Api::messagesReadHistory(const InputPeer &peer, qint32 maxId, qint32 offset) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    if (mMainSession->initConnectionNeeded()) {
-        p.initConnection();
-        mMainSession->setInitConnectionNeeded(false);
-    }
-    p.appendInt(TL_MessagesReadHistory);
-    p.appendInputPeer(peer);
-    p.appendInt(maxId);
-    p.appendInt(offset);
+    Functions::Messages::readHistory(&p, peer, maxId, offset);
     return mMainSession->sendQuery(p, &messagesReadHistoryMethods, QVariant(), __FUNCTION__ );
 }
 
-// ### messages.readMessageContents
 void Api::onMessagesReadMessageContentsAnswer(Query *q, InboundPkt &inboundPkt) {
-    Q_EMIT messagesReadMessageContentsResult(q->msgId(), inboundPkt.fetchAffectedMessages());
+    const MessagesAffectedMessages &result = Functions::Messages::readMessageContentsResult(&inboundPkt);
+    Q_EMIT messagesReadMessageContentsResult(q->msgId(), result);
 }
 
 qint64 Api::messagesReadMessageContents(const QList<qint32> &ids) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_MessagesReadMessageContents);
-    p.appendInt(TL_Vector);
-    p.appendInt(ids.length());
-    Q_FOREACH (qint32 id, ids) {
-        p.appendInt(id);
-    }
+    Functions::Messages::readMessageContents(&p, ids);
     return mMainSession->sendQuery(p, &messagesReadMessageContentsMethods, QVariant(), __FUNCTION__ );
 }
 
-
-// ### messages.deleteHistory
 void Api::onMessagesDeleteHistoryAnswer(Query *q, InboundPkt &inboundPkt) {
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_MessagesAffectedHistory);
-    qint32 pts = inboundPkt.fetchInt();
-    qint32 pts_count = inboundPkt.fetchInt();
-    qint32 offset = inboundPkt.fetchInt();
-    Q_EMIT messagesDeleteAffectedHistory(q->msgId(), pts, pts_count, offset);
+    const MessagesAffectedHistory &result = Functions::Messages::deleteHistoryResult(&inboundPkt);
+    Q_EMIT messagesDeleteAffectedHistory(q->msgId(), result.pts(), result.ptsCount(), result.offset());
 }
 
 qint64 Api::messagesDeleteHistory(const InputPeer &peer, qint32 offset) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_MessagesDeleteHistory);
-    p.appendInputPeer(peer);
-    p.appendInt(offset);
+    Functions::Messages::deleteHistory(&p, peer, offset);
     return mMainSession->sendQuery(p, &messagesDeleteHistoryMethods, QVariant(), __FUNCTION__ );
 }
 
-// ### messages.deleteMessages
 void Api::onMessagesDeleteMessagesAnswer(Query *q, InboundPkt &inboundPkt) {
-    Q_EMIT messagesDeleteMessagesResult(q->msgId(), inboundPkt.fetchAffectedMessages());
+    const MessagesAffectedMessages &result = Functions::Messages::deleteMessagesResult(&inboundPkt);
+    Q_EMIT messagesDeleteMessagesResult(q->msgId(), result);
 }
 
 qint64 Api::messagesDeleteMessages(const QList<qint32> &ids) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_MessagesDeleteMessages);
-    p.appendInt(TL_Vector);
-    p.appendInt(ids.length());
-    Q_FOREACH (qint32 id, ids) {
-        p.appendInt(id);
-    }
+    Functions::Messages::deleteMessages(&p, ids);
     return mMainSession->sendQuery(p, &messagesDeleteMessagesMethods, QVariant(), __FUNCTION__ );
 }
 
-// ### messages.restoreMessages
-void Api::onMessagesRestoreMessagesAnswer(Query *q, InboundPkt &inboundPkt) {
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    qint32 n = inboundPkt.fetchInt();
-    QList<qint32> restoredIds;
-    for (qint32 i = 0; i < n; i++) {
-        restoredIds.append(inboundPkt.fetchInt());
-    }
-    Q_EMIT messagesRestoreMessagesResult(q->msgId(), restoredIds);
-}
-
-qint64 Api::messagesRestoreMessages(const QList<qint32> &ids) {
-    OutboundPkt p(mSettings);
-    p.appendInt(TL_MessagesRestoreMessages);
-    p.appendInt(TL_Vector);
-    p.appendInt(ids.length());
-    Q_FOREACH (qint32 id, ids) {
-        p.appendInt(id);
-    }
-    return mMainSession->sendQuery(p, &messagesRestoreMessagesMethods, QVariant(), __FUNCTION__ );
-}
-
-// ### messages.receivedMessages
 void Api::onMessagesReceivedMessagesAnswer(Query *q, InboundPkt &inboundPkt) {
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    qint32 n = inboundPkt.fetchInt();
-    QList<qint32> receivedIds;
-    for (qint32 i = 0; i < n; i++) {
-        receivedIds.append(inboundPkt.fetchInt());
-    }
-    Q_EMIT messagesReceivedMessagesResult(q->msgId(), receivedIds);
+    const QList<ReceivedNotifyMessage> &result = Functions::Messages::receivedMessagesResult(&inboundPkt);
+    Q_EMIT messagesReceivedMessagesResult(q->msgId(), result);
 }
 
 qint64 Api::messagesReceivedMessages(qint32 maxId) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_MessagesReceivedMessages);
-    p.appendInt(maxId);
+    Functions::Messages::receivedMessages(&p, maxId);
     return mMainSession->sendQuery(p, &messagesReceivedMessagesMethods, QVariant(), __FUNCTION__ );
 }
 
-// ### messages.forwardMessage
 void Api::onMessagesForwardMessageAnswer(Query *q, InboundPkt &inboundPkt) {
-    qint32 x = inboundPkt.fetchInt();
-    ASSERT(x == (qint32)TL_MessagesStatedMessage || x == (qint32)TL_MessagesStatedMessageLink);
-    Message message = inboundPkt.fetchMessage();
-    //chats
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    qint32 n = inboundPkt.fetchInt();
-    QList<Chat> chats;
-    for (qint32 i = 0; i < n; i++) {
-        chats.append(inboundPkt.fetchChat());
-    }
-    //users
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    n = inboundPkt.fetchInt();
-    QList<User> users;
-    for (qint32 i = 0; i < n; i++) {
-        users.append(inboundPkt.fetchUser());
-    }
-    //links
-    qint32 pts = inboundPkt.fetchInt();
-    qint32 pts_count = inboundPkt.fetchInt();
-    if (x == (qint32)TL_MessagesStatedMessageLink) {
-        QList<ContactsLink> links;
-        ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-        n = inboundPkt.fetchInt();
-        for (qint32 i = 0; i < n; i++) {
-            links.append(inboundPkt.fetchContactsLink());
-        }
-        qint32 seq = inboundPkt.fetchInt();
-        Q_EMIT messagesForwardMsgStatedMessageLink(q->msgId(), message, chats, users, links, pts, pts_count, seq);
-    } else {
-        Q_EMIT messagesForwardMsgStatedMessage(q->msgId(), message, chats, users, pts, pts_count);
-    }
+    const UpdatesType &result = Functions::Messages::forwardMessageResult(&inboundPkt);
+    Q_EMIT messagesForwardedMessage(q->msgId(), result);
 }
 
 qint64 Api::messagesForwardMessage(const InputPeer &peer, qint32 id, qint64 randomId) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_MessagesForwardMessage);
-    p.appendInputPeer(peer);
-    p.appendInt(id);
-    p.appendLong(randomId);
+    Functions::Messages::forwardMessage(&p, peer, id, randomId);
     return mMainSession->sendQuery(p, &messagesForwardMessageMethods, QVariant(), __FUNCTION__ );
 }
 
-// ### messages.forwardMessages
 void Api::onMessagesForwardMessagesAnswer(Query *q, InboundPkt &inboundPkt) {
-    qint32 x = inboundPkt.fetchInt();
-    ASSERT(x == (qint32)TL_MessagesStatedMessages || x == (qint32)TL_MessagesStatedMessagesLinks);
-    //messages
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    qint32 n = inboundPkt.fetchInt();
-    QList<Message> messages;
-    for (qint32 i = 0; i < n; i++) {
-        messages.append(inboundPkt.fetchMessage());
-    }
-    //chats
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    n = inboundPkt.fetchInt();
-    QList<Chat> chats;
-    for (qint32 i = 0; i < n; i++) {
-        chats.append(inboundPkt.fetchChat());
-    }
-    //users
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    n = inboundPkt.fetchInt();
-    QList<User> users;
-    for (qint32 i = 0; i < n; i++) {
-        users.append(inboundPkt.fetchUser());
-    }
-    //links
-    qint32 pts = inboundPkt.fetchInt();
-    qint32 pts_count = inboundPkt.fetchInt();
-    if (x == (qint32)TL_MessagesStatedMessagesLinks) {
-        QList<ContactsLink> links;
-        ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-        n = inboundPkt.fetchInt();
-        for (qint32 i = 0; i < n; i++) {
-            links.append(inboundPkt.fetchContactsLink());
-        }
-        qint32 seq = inboundPkt.fetchInt();
-        Q_EMIT messagesForwardMsgsStatedMessagesLinks(q->msgId(), messages, chats, users, links, pts, pts_count, seq);
-    } else {
-        Q_EMIT messagesForwardMsgsStatedMessages(q->msgId(), messages, chats, users, pts, pts_count);
-    }
+    const UpdatesType &result = Functions::Messages::forwardMessagesResult(&inboundPkt);
+    Q_EMIT messagesForwardedMessages(q->msgId(), result);
 }
 
 qint64 Api::messagesForwardMessages(const InputPeer &peer, const QList<qint32> &ids, const QList<qint64> &randomIds) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_MessagesForwardMessages);
-    p.appendInputPeer(peer);
-    p.appendInt(TL_Vector);
-    p.appendInt(ids.length());
-    Q_FOREACH (qint32 id, ids) {
-        p.appendInt(id);
-    }
-    p.appendInt(TL_Vector);
-    p.appendInt(randomIds.length());
-    Q_FOREACH (qint64 id, randomIds) {
-        p.appendLong(id);
-    }
+    Functions::Messages::forwardMessages(&p, peer, ids, randomIds);
     return mMainSession->sendQuery(p, &messagesForwardMessagesMethods, QVariant(), __FUNCTION__ );
 }
 
-// ### messages.sendBroadcast
 void Api::onMessagesSendBroadcastAnswer(Query *q, InboundPkt &inboundPkt) {
-    qint32 x = inboundPkt.fetchInt();
-    ASSERT(x == (qint32)TL_MessagesStatedMessages || x == (qint32)TL_MessagesStatedMessagesLinks);
-    //messages
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    qint32 n = inboundPkt.fetchInt();
-    QList<Message> messages;
-    for (qint32 i = 0; i < n; i++) {
-        messages.append(inboundPkt.fetchMessage());
-    }
-    //chats
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    n = inboundPkt.fetchInt();
-    QList<Chat> chats;
-    for (qint32 i = 0; i < n; i++) {
-        chats.append(inboundPkt.fetchChat());
-    }
-    //users
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    n = inboundPkt.fetchInt();
-    QList<User> users;
-    for (qint32 i = 0; i < n; i++) {
-        users.append(inboundPkt.fetchUser());
-    }
-    //links
-    qint32 pts = inboundPkt.fetchInt();
-    qint32 pts_count = inboundPkt.fetchInt();
-    if (x == (qint32)TL_MessagesStatedMessagesLinks) {
-        QList<ContactsLink> links;
-        ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-        n = inboundPkt.fetchInt();
-        for (qint32 i = 0; i < n; i++) {
-            links.append(inboundPkt.fetchContactsLink());
-        }
-        qint32 seq = inboundPkt.fetchInt();
-        Q_EMIT messagesSendBroadcastStatedMessagesLinks(q->msgId(), messages, chats, users, links, pts, pts_count, seq);
-    } else {
-        Q_EMIT messagesSendBroadcastStatedMessages(q->msgId(), messages, chats, users, pts, pts_count);
-    }
+    const UpdatesType &result = Functions::Messages::sendBroadcastResult(&inboundPkt);
+    Q_EMIT messagesSentBroadcast(q->msgId(), result);
 }
 
-qint64 Api::messagesSendBroadcast(const QList<InputUser> &contacts, const QString &message, const InputMedia &media) {
+qint64 Api::messagesSendBroadcast(const QList<InputUser> &contacts, const QList<qint64> &randomIds, const QString &message, const InputMedia &media) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_MessagesSendBroadcast);
-    p.appendInt(TL_Vector);
-    p.appendInt(contacts.length());
-    Q_FOREACH (InputUser user, contacts) {
-        p.appendInputUser(user);
-    }
-    p.appendQString(message);
-    p.appendInputMedia(media);
+    Functions::Messages::sendBroadcast(&p, contacts, randomIds, message, media);
     return mMainSession->sendQuery(p, &messagesSendBroadcastMethods, QVariant(), __FUNCTION__ );
 }
 
-//
-// CHATS
-//
-// ### messages.getChats
+void Api::onMessagesGetWebPagePreviewAnswer(Query *q, InboundPkt &inboundPkt) {
+    const MessageMedia &result = Functions::Messages::getWebPagePreviewResult((&inboundPkt));
+    Q_EMIT messagesGetWebPagePreviewResult(q->msgId(), result);
+}
+
+qint64 Api::messagesGetWebPagePreview(const QString &message) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
+    OutboundPkt p(mSettings);
+    Functions::Messages::getWebPagePreview(&p, message);
+    return mMainSession->sendQuery(p, &messagesGetWebPagePreviewMethods, QVariant(), __FUNCTION__ );
+}
+
 void Api::onMessagesGetChatsAnswer(Query *q, InboundPkt &inboundPkt) {
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_MessagesChats);
-    //chats
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    qint32 n = inboundPkt.fetchInt();
-    QList<Chat> chats;
-    for (qint32 i = 0; i < n; i++) {
-        chats.append(inboundPkt.fetchChat());
-    }
-    Q_EMIT messagesChats(q->msgId(), chats);
+    const MessagesChats &result = Functions::Messages::getChatsResult(&inboundPkt);
+    Q_EMIT messagesChats(q->msgId(), result.chats());
 }
 
 qint64 Api::messagesGetChats(const QList<qint32> &chatIds) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_MessagesGetChats);
-    p.appendInt(TL_Vector);
-    p.appendInt(chatIds.length());
-    Q_FOREACH (qint32 id, chatIds) {
-        p.appendInt(id);
-    }
+    Functions::Messages::getChats(&p, chatIds);
     return mMainSession->sendQuery(p, &messagesGetChatsMethods, QVariant(), __FUNCTION__ );
 }
 
-// ### messages.getFullChat
 void Api::onMessagesGetFullChatAnswer(Query *q, InboundPkt &inboundPkt) {
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_MessagesChatFull);
-    ChatFull fullChat = inboundPkt.fetchChatFull();
-    //chats
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    qint32 n = inboundPkt.fetchInt();
-    QList<Chat> chats;
-    for (qint32 i = 0; i < n; i++) {
-        chats.append(inboundPkt.fetchChat());
-    }
-    //users
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    n = inboundPkt.fetchInt();
-    QList<User> users;
-    for (qint32 i = 0; i < n; i++) {
-        users.append(inboundPkt.fetchUser());
-    }
-    Q_EMIT messagesChatFull(q->msgId(), fullChat, chats, users);
+    const MessagesChatFull &result = Functions::Messages::getFullChatResult(&inboundPkt);
+    Q_EMIT messagesChatFull(q->msgId(), result.fullChat(), result.chats(), result.users());
 }
 
 qint64 Api::messagesGetFullChat(qint32 chatId) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_MessagesGetFullChat);
-    p.appendInt(chatId);
+    Functions::Messages::getFullChat(&p, chatId);
     return mMainSession->sendQuery(p, &messagesGetFullChatMethods, QVariant(), __FUNCTION__ );
 }
 
-// ### messages.editChatTitle
 void Api::onMessagesEditChatTitleAnswer(Query *q, InboundPkt &inboundPkt) {
-    qint32 x = inboundPkt.fetchInt();
-    ASSERT(x == (qint32)TL_MessagesStatedMessage || x == (qint32)TL_MessagesStatedMessageLink);
-    Message message = inboundPkt.fetchMessage();
-    //chats
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    qint32 n = inboundPkt.fetchInt();
-    QList<Chat> chats;
-    for (qint32 i = 0; i < n; i++) {
-        chats.append(inboundPkt.fetchChat());
-    }
-    //users
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    n = inboundPkt.fetchInt();
-    QList<User> users;
-    for (qint32 i = 0; i < n; i++) {
-        users.append(inboundPkt.fetchUser());
-    }
-    //links
-    qint32 pts = inboundPkt.fetchInt();
-    qint32 pts_count = inboundPkt.fetchInt();
-    if (x == (qint32)TL_MessagesStatedMessageLink) {
-        QList<ContactsLink> links;
-        ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-        n = inboundPkt.fetchInt();
-        for (qint32 i = 0; i < n; i++) {
-            links.append(inboundPkt.fetchContactsLink());
-        }
-        qint32 seq = inboundPkt.fetchInt();
-        Q_EMIT messagesEditChatTitleStatedMessageLink(q->msgId(), message, chats, users, links, pts, pts_count, seq);
-    } else {
-        Q_EMIT messagesEditChatTitleStatedMessage(q->msgId(), message, chats, users, pts, pts_count);
-    }
+    const UpdatesType &result = Functions::Messages::editChatTitleResult(&inboundPkt);
+    Q_EMIT messagesEditedChatTitle(q->msgId(), result);
 }
 
 qint64 Api::messagesEditChatTitle(qint32 chatId, const QString &title) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_MessagesEditChatTitle);
-    p.appendInt(chatId);
-    p.appendQString(title);
+    Functions::Messages::editChatTitle(&p, chatId, title);
     return mMainSession->sendQuery(p, &messagesEditChatTitleMethods, QVariant(), __FUNCTION__ );
 }
 
-// ### messages.editChatPhoto
 void Api::onMessagesEditChatPhotoAnswer(Query *q, InboundPkt &inboundPkt) {
-    qint32 x = inboundPkt.fetchInt();
-    ASSERT(x == (qint32)TL_MessagesStatedMessage || x == (qint32)TL_MessagesStatedMessageLink);
-    Message message = inboundPkt.fetchMessage();
-    //chats
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    qint32 n = inboundPkt.fetchInt();
-    QList<Chat> chats;
-    for (qint32 i = 0; i < n; i++) {
-        chats.append(inboundPkt.fetchChat());
-    }
-    //users
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    n = inboundPkt.fetchInt();
-    QList<User> users;
-    for (qint32 i = 0; i < n; i++) {
-        users.append(inboundPkt.fetchUser());
-    }
-    //links
-    qint32 pts = inboundPkt.fetchInt();
-    qint32 pts_count = inboundPkt.fetchInt();
-    if (x == (qint32)TL_MessagesStatedMessageLink) {
-        QList<ContactsLink> links;
-        ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-        n = inboundPkt.fetchInt();
-        for (qint32 i = 0; i < n; i++) {
-            links.append(inboundPkt.fetchContactsLink());
-        }
-        qint32 seq = inboundPkt.fetchInt();
-        Q_EMIT messagesEditChatPhotoStatedMessageLink(q->msgId(), message, chats, users, links, pts, pts_count, seq);
-    } else {
-        Q_EMIT messagesEditChatPhotoStatedMessage(q->msgId(), message, chats, users, pts, pts_count);
-    }
+    const UpdatesType &result = Functions::Messages::editChatPhotoResult(&inboundPkt);
+    Q_EMIT messagesEditedChatPhoto(q->msgId(), result);
 }
 
 qint64 Api::messagesEditChatPhoto(qint32 chatId, const InputChatPhoto &photo) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_MessagesEditChatPhoto);
-    p.appendInt(chatId);
-    p.appendInputChatPhoto(photo);
+    Functions::Messages::editChatPhoto(&p, chatId, photo);
     return mMainSession->sendQuery(p, &messagesEditChatPhotoMethods, QVariant(), __FUNCTION__ );
 }
 
-// ### messages.addChatUser
 void Api::onMessagesAddChatUserAnswer(Query *q, InboundPkt &inboundPkt) {
-    qint32 x = inboundPkt.fetchInt();
-    ASSERT(x == (qint32)TL_MessagesStatedMessage || x == (qint32)TL_MessagesStatedMessageLink);
-    Message message = inboundPkt.fetchMessage();
-    //chats
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    qint32 n = inboundPkt.fetchInt();
-    QList<Chat> chats;
-    for (qint32 i = 0; i < n; i++) {
-        chats.append(inboundPkt.fetchChat());
-    }
-    //users
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    n = inboundPkt.fetchInt();
-    QList<User> users;
-    for (qint32 i = 0; i < n; i++) {
-        users.append(inboundPkt.fetchUser());
-    }
-    //links
-    qint32 pts = inboundPkt.fetchInt();
-    qint32 pts_count = inboundPkt.fetchInt();
-    if (x == (qint32)TL_MessagesStatedMessageLink) {
-        QList<ContactsLink> links;
-        ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-        n = inboundPkt.fetchInt();
-        for (qint32 i = 0; i < n; i++) {
-            links.append(inboundPkt.fetchContactsLink());
-        }
-        qint32 seq = inboundPkt.fetchInt();
-        Q_EMIT messagesAddChatUserStatedMessageLink(q->msgId(), message, chats, users, links, pts, pts_count, seq);
-    } else {
-        Q_EMIT messagesAddChatUserStatedMessage(q->msgId(), message, chats, users, pts, pts_count);
-    }
+    const UpdatesType &result = Functions::Messages::addChatUserResult(&inboundPkt);
+    Q_EMIT messagesAddedChatUser(q->msgId(), result);
 }
 
 qint64 Api::messagesAddChatUser(qint32 chatId, const InputUser &user, qint32 fwdLimit) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_MessagesAddChatUser);
-    p.appendInt(chatId);
-    p.appendInputUser(user);
-    p.appendInt(fwdLimit);
+    Functions::Messages::addChatUser(&p, chatId, user, fwdLimit);
     return mMainSession->sendQuery(p, &messagesAddChatUserMethods, QVariant(), __FUNCTION__ );
 }
 
-// ### messages.deleteChatUser
 void Api::onMessagesDeleteChatUserAnswer(Query *q, InboundPkt &inboundPkt) {
-    qint32 x = inboundPkt.fetchInt();
-    ASSERT(x == (qint32)TL_MessagesStatedMessage || x == (qint32)TL_MessagesStatedMessageLink);
-    Message message = inboundPkt.fetchMessage();
-    //chats
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    qint32 n = inboundPkt.fetchInt();
-    QList<Chat> chats;
-    for (qint32 i = 0; i < n; i++) {
-        chats.append(inboundPkt.fetchChat());
-    }
-    //users
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    n = inboundPkt.fetchInt();
-    QList<User> users;
-    for (qint32 i = 0; i < n; i++) {
-        users.append(inboundPkt.fetchUser());
-    }
-    //links
-    qint32 pts = inboundPkt.fetchInt();
-    qint32 pts_count = inboundPkt.fetchInt();
-    if (x == (qint32)TL_MessagesStatedMessageLink) {
-        QList<ContactsLink> links;
-        ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-        n = inboundPkt.fetchInt();
-        for (qint32 i = 0; i < n; i++) {
-            links.append(inboundPkt.fetchContactsLink());
-        }
-        qint32 seq = inboundPkt.fetchInt();
-        Q_EMIT messagesDeleteChatUserStatedMessageLink(q->msgId(), message, chats, users, links, pts, pts_count, seq);
-    } else {
-        Q_EMIT messagesDeleteChatUserStatedMessage(q->msgId(), message, chats, users, pts, pts_count);
-    }
+    const UpdatesType &result = Functions::Messages::deleteChatUserResult(&inboundPkt);
+    Q_EMIT messagesDeletedChat(q->msgId(), result);
 }
 
 qint64 Api::messagesDeleteChatUser(qint32 chatId, const InputUser &user) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_MessagesDeleteChatUser);
-    p.appendInt(chatId);
-    p.appendInputUser(user);
+    Functions::Messages::deleteChatUser(&p, chatId, user);
     return mMainSession->sendQuery(p, &messagesDeleteChatUserMethods, QVariant(), __FUNCTION__ );
 }
 
-// ### messages.createChat
 void Api::onMessagesCreateChatAnswer(Query *q, InboundPkt &inboundPkt) {
-    qint32 x = inboundPkt.fetchInt();
-    ASSERT(x == (qint32)TL_MessagesStatedMessage || x == (qint32)TL_MessagesStatedMessageLink);
-    Message message = inboundPkt.fetchMessage();
-    //chats
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    qint32 n = inboundPkt.fetchInt();
-    QList<Chat> chats;
-    for (qint32 i = 0; i < n; i++) {
-        chats.append(inboundPkt.fetchChat());
-    }
-    //users
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    n = inboundPkt.fetchInt();
-    QList<User> users;
-    for (qint32 i = 0; i < n; i++) {
-        users.append(inboundPkt.fetchUser());
-    }
-    //links
-    qint32 pts = inboundPkt.fetchInt();
-    qint32 pts_count = inboundPkt.fetchInt();
-    if (x == (qint32)TL_MessagesStatedMessageLink) {
-        QList<ContactsLink> links;
-        ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-        n = inboundPkt.fetchInt();
-        for (qint32 i = 0; i < n; i++) {
-            links.append(inboundPkt.fetchContactsLink());
-        }
-        qint32 seq = inboundPkt.fetchInt();
-        Q_EMIT messagesCreateChatStatedMessageLink(q->msgId(), message, chats, users, links, pts, pts_count, seq);
-    } else {
-        Q_EMIT messagesCreateChatStatedMessage(q->msgId(), message, chats, users, pts, pts_count);
-    }
+    const UpdatesType &result = Functions::Messages::createChatResult(&inboundPkt);
+    Q_EMIT messagesCreatedChat(q->msgId(), result);
 }
 
 qint64 Api::messagesCreateChat(const QList<InputUser> &users, const QString &title) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_MessagesCreateChat);
-    p.appendInt(TL_Vector);
-    p.appendInt(users.length());
-    Q_FOREACH (InputUser user, users) {
-        p.appendInputUser(user);
-    }
-    p.appendQString(title);
+    Functions::Messages::createChat(&p, users, title);
     return mMainSession->sendQuery(p, &messagesCreateChatMethods, QVariant(), __FUNCTION__ );
 }
 
-//
-// SECRET CHATS
-//
-// ### messages.getDhConfig
 void Api::onMessagesGetDhConfigAnswer(Query *q, InboundPkt &inboundPkt) {
-    qint32 x = inboundPkt.fetchInt();
-    ASSERT(x == (qint32)TL_MessagesDhConfig || x == (qint32)TL_MessagesDhConfigNotModified);
-    if (x == (qint32)TL_MessagesDhConfig) {
-        qint32 g = inboundPkt.fetchInt();
-        QByteArray p = inboundPkt.fetchBytes();
-        qint32 version = inboundPkt.fetchInt();
-        QByteArray random = inboundPkt.fetchBytes();
-        Q_EMIT messagesDhConfig(q->msgId(), g, p, version, random);
-    } else {
-        QByteArray random = inboundPkt.fetchBytes();
-        Q_EMIT messagesDhConfigNotModified(q->msgId(), random);
-    }
+    const MessagesDhConfig &result = Functions::Messages::getDhConfigResult(&inboundPkt);
+    if (result.classType() == MessagesDhConfig::typeMessagesDhConfig)
+        Q_EMIT messagesDhConfig(q->msgId(), result.g(), result.p(), result.version(), result.random());
+    else
+        Q_EMIT messagesDhConfigNotModified(q->msgId(), result.random());
 }
 
 qint64 Api::messagesGetDhConfig(qint32 version, qint32 randomLength) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_MessagesGetDhConfig);
-    p.appendInt(version);
-    p.appendInt(randomLength);
+    Functions::Messages::getDhConfig(&p, version, randomLength);
     return mMainSession->sendQuery(p, &messagesGetDhConfigMethods, QVariant(), __FUNCTION__ );
 }
 
-// ### messages.requestEncryption
 void Api::onMessagesRequestEncryptionAnswer(Query *q, InboundPkt &inboundPkt) {
-    Q_EMIT messagesRequestEncryptionEncryptedChat(q->msgId(), inboundPkt.fetchEncryptedChat());
+    const EncryptedChat &result = Functions::Messages::requestEncryptionResult(&inboundPkt);
+    Q_EMIT messagesRequestEncryptionEncryptedChat(q->msgId(), result);
 }
 
 qint64 Api::messagesRequestEncryption(const InputUser &user, qint32 randomId, QByteArray g_a) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_MessagesRequestEncryption);
-    p.appendInputUser(user);
-    p.appendInt(randomId);
-    p.appendBytes(g_a);
+    Functions::Messages::requestEncryption(&p, user, randomId, g_a);
     return mMainSession->sendQuery(p, &messagesRequestEncryptionMethods, QVariant(), __FUNCTION__ );
 }
 
-// ### message.acceptEncryption
 void Api::onMessagesAcceptEncryptionAnswer(Query *q, InboundPkt &inboundPkt) {
-    Q_EMIT messagesAcceptEncryptionEncryptedChat(q->msgId(), inboundPkt.fetchEncryptedChat());
+    const EncryptedChat &result = Functions::Messages::acceptEncryptionResult(&inboundPkt);
+    Q_EMIT messagesAcceptEncryptionEncryptedChat(q->msgId(), result);
 }
 
 qint64 Api::messagesAcceptEncryption(const InputEncryptedChat &inputEncryptedChat, QByteArray g_b, qint64 keyFingerprint) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_MessagesAcceptEncryption);
-    p.appendInputEncryptedChat(inputEncryptedChat);
-    p.appendBytes(g_b);
-    p.appendLong(keyFingerprint);
+    Functions::Messages::acceptEncryption(&p, inputEncryptedChat, g_b, keyFingerprint);
     return mMainSession->sendQuery(p, &messagesAcceptEncryptionMethods, QVariant(), __FUNCTION__ );
 }
 
-// ### messages.discardEncryption
 void Api::onMessagesDiscardEncryptionAnswer(Query *q, InboundPkt &inboundPkt) {
-    Q_EMIT messagesDiscardEncryptionResult(q->msgId(), inboundPkt.fetchBool());
+    const bool result = Functions::Messages::discardEncryptionResult(&inboundPkt);
+    Q_EMIT messagesDiscardEncryptionResult(q->msgId(), result);
 }
 
 qint64 Api::messagesDiscardEncryption(qint32 chatId) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_MessagesDiscardEncryption);
-    p.appendInt(chatId);
+    Functions::Messages::discardEncryption(&p, chatId);
     return mMainSession->sendQuery(p, &messagesDiscardEncryptionMethods, QVariant(), __FUNCTION__ );
 }
 
-// ### messages.setEncryptedTyping
 void Api::onMessagesSetEncryptedTypingAnswer(Query *q, InboundPkt &inboundPkt) {
-    Q_EMIT messagesSetEncryptedTypingResult(q->msgId(), inboundPkt.fetchBool());
+    const bool result = Functions::Messages::setEncryptedTypingResult(&inboundPkt);
+    Q_EMIT messagesSetEncryptedTypingResult(q->msgId(), result);
 }
 
 qint64 Api::messagesSetEncryptedTyping(const InputEncryptedChat &inputEncryptedChat, bool typing) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_MessagesSetEncryptedTyping);
-    p.appendInputEncryptedChat(inputEncryptedChat);
-    p.appendBool(typing);
+    Functions::Messages::setEncryptedTyping(&p, inputEncryptedChat, typing);
     return mMainSession->sendQuery(p, &messagesSetEncryptedTypingMethods, QVariant(), __FUNCTION__ );
 }
 
-// ### messages.readEncryptedHistory
 void Api::onMessagesReadEncryptedHistoryAnswer(Query *q, InboundPkt &inboundPkt) {
-    Q_EMIT messagesReadEncryptedHistoryResult(q->msgId(), inboundPkt.fetchBool());
+    const bool result = Functions::Messages::readEncryptedHistoryResult(&inboundPkt);
+    Q_EMIT messagesReadEncryptedHistoryResult(q->msgId(), result);
 }
 
 qint64 Api::messagesReadEncryptedHistory(const InputEncryptedChat &inputEncryptedChat, qint32 maxDate){
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_MessagesReadEncryptedHistory);
-    p.appendInputEncryptedChat(inputEncryptedChat);
-    p.appendInt(maxDate);
+    Functions::Messages::readEncryptedHistory(&p, inputEncryptedChat, maxDate);
     return mMainSession->sendQuery(p, &messagesReadEncryptedHistoryMethods, QVariant(), __FUNCTION__ );
 }
 
-// ### messages.sendEncrypted
 void Api::onMessagesSendEncryptedAnswer(Query *q, InboundPkt &inboundPkt) {
-    qint32 x = inboundPkt.fetchInt();
-    ASSERT(x == (qint32)TL_MessagesSentEncryptedMessage || x == (qint32)TL_MessagesSentEncryptedFile);
-    qint32 date = inboundPkt.fetchInt();
-    if (x == (qint32)TL_MessagesSentEncryptedFile) {
-        EncryptedFile file = inboundPkt.fetchEncryptedFile();
-        Q_EMIT messagesSendEncryptedSentEncryptedFile(q->msgId(), date, file);
+    const MessagesSentEncryptedMessage &result = Functions::Messages::sendEncryptedResult(&inboundPkt);
+    if (result.classType() == MessagesSentEncryptedMessage::typeMessagesSentEncryptedFile) {
+        Q_EMIT messagesSendEncryptedSentEncryptedFile(q->msgId(), result.date(), result.file());
     } else {
-        Q_EMIT messagesSendEncryptedSentEncryptedMessage(q->msgId(), date);
+        Q_EMIT messagesSendEncryptedSentEncryptedMessage(q->msgId(), result.date());
     }
 }
 
 qint64 Api::messagesSendEncrypted(const QList<qint64> &previousMsgs, const InputEncryptedChat &inputEncryptedChat, qint64 randomId, QByteArray data) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
     // include invokeAfterMsgs with the sequence of previous messages to manage before this one
     qint32 n = previousMsgs.size();
     if (n > 0) {
-        p.appendInt(TL_InvokeAfterMsgs);
-        p.appendInt(TL_Vector);
+        p.appendInt(CoreTypes::typeInvokeAfterMsgs);
+        p.appendInt(CoreTypes::typeVector);
         p.appendInt(n);
         Q_FOREACH (qint64 msgId, previousMsgs) {
             p.appendLong(msgId);
         }
     }
     // send the message
-    p.appendInt(TL_MessagesSendEncrypted);
-    p.appendInputEncryptedChat(inputEncryptedChat);
-    p.appendLong(randomId);
-    p.appendBytes(data);
+    Functions::Messages::sendEncrypted(&p, inputEncryptedChat, randomId, data);
     return mMainSession->sendQuery(p, &messagesSendEncryptedMethods, QVariant(), __FUNCTION__ );
 }
 
-// ### messages.sendEncryptedFile
 void Api::onMessagesSendEncryptedFileAnswer(Query *q, InboundPkt &inboundPkt) {
-    qint32 x = inboundPkt.fetchInt();
-    ASSERT(x == (qint32)TL_MessagesSentEncryptedMessage || x == (qint32)TL_MessagesSentEncryptedFile);
-    qint32 date = inboundPkt.fetchInt();
-    if (x == (qint32)TL_MessagesSentEncryptedFile) {
-        EncryptedFile file = inboundPkt.fetchEncryptedFile();
-        Q_EMIT messagesSendEncryptedFileSentEncryptedFile(q->msgId(), date, file);
+    const MessagesSentEncryptedMessage &result = Functions::Messages::sendEncryptedFileResult(&inboundPkt);
+    if (result.classType() == MessagesSentEncryptedMessage::typeMessagesSentEncryptedFile) {
+        Q_EMIT messagesSendEncryptedFileSentEncryptedFile(q->msgId(), result.date(), result.file());
     } else {
-        Q_EMIT messagesSendEncryptedFileSentEncryptedMessage(q->msgId(), date);
+        Q_EMIT messagesSendEncryptedFileSentEncryptedMessage(q->msgId(), result.date());
     }
 }
 
 qint64 Api::messagesSendEncryptedFile(const QList<qint64> &previousMsgs, const InputEncryptedChat &inputEncryptedChat, qint64 randomId, QByteArray data,
                                       const InputEncryptedFile &inputEncryptedFile) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
     // include invokeAfterMsgs with the sequence of previous messages to manage before this one
     qint32 n = previousMsgs.size();
     if (n > 0) {
-        p.appendInt(TL_InvokeAfterMsgs);
-        p.appendInt(TL_Vector);
+        p.appendInt(CoreTypes::typeInvokeAfterMsgs);
+        p.appendInt(CoreTypes::typeVector);
         p.appendInt(n);
         Q_FOREACH (qint64 msgId, previousMsgs) {
             p.appendLong(msgId);
         }
     }
     // send the file message
-    p.appendInt(TL_MessagesSendEncryptedFile);
-    p.appendInputEncryptedChat(inputEncryptedChat);
-    p.appendLong(randomId);
-    p.appendBytes(data);
-    p.appendInputEncryptedFile(inputEncryptedFile);
+    Functions::Messages::sendEncryptedFile(&p, inputEncryptedChat, randomId, data, inputEncryptedFile);
     return mMainSession->sendQuery(p, &messagesSendEncryptedFileMethods, QVariant(), __FUNCTION__ );
 }
 
-// ### messages.sendEncryptedService
 void Api::onMessagesSendEncryptedServiceAnswer(Query *q, InboundPkt &inboundPkt) {
-    qint32 x = inboundPkt.fetchInt();
-    ASSERT(x == (qint32)TL_MessagesSentEncryptedMessage || x == (qint32)TL_MessagesSentEncryptedFile);
-    qint32 date = inboundPkt.fetchInt();
-    if (x == (qint32)TL_MessagesSentEncryptedFile) {
-        EncryptedFile file = inboundPkt.fetchEncryptedFile();
-        Q_EMIT messagesSendEncryptedServiceSentEncryptedFile(q->msgId(), date, file);
+    const MessagesSentEncryptedMessage &result = Functions::Messages::sendEncryptedServiceResult(&inboundPkt);
+    if (result.classType() == MessagesSentEncryptedMessage::typeMessagesSentEncryptedFile) {
+        Q_EMIT messagesSendEncryptedServiceSentEncryptedFile(q->msgId(), result.date(), result.file());
     } else {
-        Q_EMIT messagesSendEncryptedServiceSentEncryptedMessage(q->msgId(), date);
+        Q_EMIT messagesSendEncryptedServiceSentEncryptedMessage(q->msgId(), result.date());
     }
 }
 
 qint64 Api::messagesSendEncryptedService(const QList<qint64> &previousMsgs, const InputEncryptedChat &inputEncryptedChat, qint64 randomId, QByteArray data) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
     // include invokeAfterMsgs with the sequence of previous messages to manage before this one
     qint32 n = previousMsgs.size();
     if (n > 0) {
-        p.appendInt(TL_InvokeAfterMsgs);
-        p.appendInt(TL_Vector);
+        p.appendInt(CoreTypes::typeInvokeAfterMsgs);
+        p.appendInt(CoreTypes::typeVector);
         p.appendInt(n);
         Q_FOREACH (qint64 msgId, previousMsgs) {
             p.appendLong(msgId);
         }
     }
     // send the encrypted service message
-    p.appendInt(TL_MessagesSendEncryptedService);
-    p.appendInputEncryptedChat(inputEncryptedChat);
-    p.appendLong(randomId);
-    p.appendBytes(data);
+    Functions::Messages::sendEncryptedService(&p, inputEncryptedChat, randomId, data);
     return mMainSession->sendQuery(p, &messagesSendEncryptedServiceMethods, QVariant(), __FUNCTION__ );
 }
 
 // ### messages.receivedQueue
 void Api::onMessagesReceivedQueueAnswer(Query *q, InboundPkt &inboundPkt) {
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-    qint32 n = inboundPkt.fetchInt();
-    QList<qint64> randomIds;
-    for (qint32 i = 0; i < n; i++) {
-        randomIds.append(inboundPkt.fetchLong());
-    }
-    Q_EMIT messagesReceivedQueueResult(q->msgId(), randomIds);
+    const QList<qint64> &result = Functions::Messages::receivedQueueResult(&inboundPkt);
+    Q_EMIT messagesReceivedQueueResult(q->msgId(), result);
 }
 
 qint64 Api::messagesReceivedQueue(qint32 maxQts) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_MessagesReceivedQueue);
-    p.appendInt(maxQts);
+    Functions::Messages::receivedQueue(&p, maxQts);
     return mMainSession->sendQuery(p, &messagesReceivedQueueMethods, QVariant(), __FUNCTION__ );
 }
 
 void Api::onMessagesGetStickersAnswer(Query *q, InboundPkt &inboundPkt) {
-    qint64 x = inboundPkt.fetchInt();
-    ASSERT(x == (qint32)MessagesStickers::typeMessagesStickers ||
-           x == (qint32)MessagesStickers::typeMessagesStickersNotModified);
-
-    MessagesStickers stickers( static_cast<MessagesStickers::MessagesStickersType>(x) );
-    switch(x)
-    {
-    case MessagesStickers::typeMessagesStickers:
-    {
-        stickers.setHash(inboundPkt.fetchQString());
-        ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-        qint32 n = inboundPkt.fetchInt();
-        QList<Document> documents;
-        for (qint32 i = 0; i < n; i++) {
-            documents.append(inboundPkt.fetchDocument());
-        }
-        stickers.setDocuments(documents);
-    }
-        break;
-    }
-
-    Q_EMIT messagesGetStickersResult(q->msgId(), stickers);
+    const MessagesStickers &result = Functions::Messages::getStickersResult(&inboundPkt);
+    Q_EMIT messagesGetStickersResult(q->msgId(), result);
 }
 
 qint64 Api::messagesGetStickers(const QString &emoticon, const QString &hash) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_MessagesGetStickers);
-    p.appendQString(emoticon);
-    p.appendQString(hash);
+    Functions::Messages::getStickers(&p, emoticon, hash);
     return mMainSession->sendQuery(p, &messagesGetStickersMethods, QVariant(), __FUNCTION__ );
 }
 
 void Api::onMessagesGetAllStickersAnswer(Query *q, InboundPkt &inboundPkt) {
-    qint64 x = inboundPkt.fetchInt();
-    ASSERT(x == (qint32)MessagesAllStickers::typeMessagesAllStickers ||
-           x == (qint32)MessagesAllStickers::typeMessagesAllStickersNotModified);
-
-    MessagesAllStickers stickers( static_cast<MessagesAllStickers::MessagesAllStickersType>(x) );
-    switch(x)
-    {
-    case MessagesAllStickers::typeMessagesAllStickers:
-    {
-        stickers.setHash(inboundPkt.fetchQString());
-        ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-        qint32 ns = inboundPkt.fetchInt();
-        QList<StickerPack> packs;
-        for (qint32 i = 0; i < ns; i++) {
-            packs.append(inboundPkt.fetchStickerPack());
-        }
-        stickers.setPacks(packs);
-
-        ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-        qint32 nd = inboundPkt.fetchInt();
-        QList<Document> documents;
-        for (qint32 i = 0; i < nd; i++) {
-            documents.append(inboundPkt.fetchDocument());
-        }
-        stickers.setDocuments(documents);
-    }
-        break;
-    }
-
-    Q_EMIT messagesGetAllStickersResult(q->msgId(), stickers);
+    const MessagesAllStickers &result = Functions::Messages::getAllStickersResult(&inboundPkt);
+    Q_EMIT messagesGetAllStickersResult(q->msgId(), result);
 }
 
 qint64 Api::messagesGetAllStickers(const QString &hash) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_MessagesGetAllStickers);
-    p.appendQString(hash);
+    Functions::Messages::getAllStickers(&p, hash);
     return mMainSession->sendQuery(p, &messagesGetAllStickersMethods, QVariant(), __FUNCTION__ );
 }
 
-//
-// UPDATES
-//
-// ### updates.getState
+void Api::onMessagesGetStickerSetAnswer(Query *q, InboundPkt &inboundPkt) {
+    const MessagesStickerSet &result = Functions::Messages::getStickerSetResult(&inboundPkt);
+    Q_EMIT messagesGetStickerSetResult(q->msgId(), result);
+}
+
+qint64 Api::messagesGetStickerSet(const InputStickerSet &stickerset) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
+    OutboundPkt p(mSettings);
+    Functions::Messages::getStickerSet(&p, stickerset);
+    return mMainSession->sendQuery(p, &messagesGetStickerSetMethods, QVariant(), __FUNCTION__ );
+}
+
+void Api::onMessagesInstallStickerSetAnswer(Query *q, InboundPkt &inboundPkt) {
+    const bool result = Functions::Messages::installStickerSetResult(&inboundPkt);
+    Q_EMIT messagesInstallStickerSetResult(q->msgId(), result);
+}
+
+qint64 Api::messagesInstallStickerSet(const InputStickerSet &stickerset) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
+    OutboundPkt p(mSettings);
+    Functions::Messages::installStickerSet(&p, stickerset);
+    return mMainSession->sendQuery(p, &messagesInstallStickerSetMethods, QVariant(), __FUNCTION__ );
+}
+
+void Api::onMessagesUninstallStickerSetAnswer(Query *q, InboundPkt &inboundPkt) {
+    const bool result = Functions::Messages::uninstallStickerSetResult(&inboundPkt);
+    Q_EMIT messagesUninstallStickerSetResult(q->msgId(), result);
+}
+
+qint64 Api::messagesUninstallStickerSet(const InputStickerSet &stickerset) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
+    OutboundPkt p(mSettings);
+    Functions::Messages::uninstallStickerSet(&p, stickerset);
+    return mMainSession->sendQuery(p, &messagesUninstallStickerSetMethods, QVariant(), __FUNCTION__ );
+}
+
+void Api::onMessagesExportChatInviteAnswer(Query *q, InboundPkt &inboundPkt) {
+    const ExportedChatInvite &result = Functions::Messages::exportChatInviteResult(&inboundPkt);
+    Q_EMIT messagesExportChatInviteResult(q->msgId(), result);
+}
+
+qint64 Api::messagesExportChatInvite(qint32 chatId) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
+    OutboundPkt p(mSettings);
+    Functions::Messages::exportChatInvite(&p, chatId);
+    return mMainSession->sendQuery(p, &messagesExportChatInviteMethods, QVariant(), __FUNCTION__ );
+}
+
+void Api::onMessagesCheckChatInviteAnswer(Query *q, InboundPkt &inboundPkt) {
+    const ChatInvite &result = Functions::Messages::checkChatInviteResult(&inboundPkt);
+    Q_EMIT messagesCheckChatInviteResult(q->msgId(), result);
+}
+
+qint64 Api::messagesCheckChatInvite(const QString &hash) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
+    OutboundPkt p(mSettings);
+    Functions::Messages::checkChatInvite(&p, hash);
+    return mMainSession->sendQuery(p, &messagesCheckChatInviteMethods, QVariant(), __FUNCTION__ );
+}
+
+void Api::onMessagesImportChatInviteAnswer(Query *q, InboundPkt &inboundPkt) {
+    const UpdatesType &result = Functions::Messages::importChatInviteResult(&inboundPkt);
+    Q_EMIT messagesImportChatInviteResult(q->msgId(), result);
+}
+
+qint64 Api::messagesImportChatInvite(const QString &hash) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
+    OutboundPkt p(mSettings);
+    Functions::Messages::importChatInvite(&p, hash);
+    return mMainSession->sendQuery(p, &messagesImportChatInviteMethods, QVariant(), __FUNCTION__ );
+}
+
 void Api::onUpdatesGetStateAnswer(Query *q, InboundPkt &inboundPkt) {
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_UpdatesState);
-    qint32 pts = inboundPkt.fetchInt();
-    qint32 qts = inboundPkt.fetchInt();
-    qint32 date = inboundPkt.fetchInt();
-    qint32 seq = inboundPkt.fetchInt();
-    qint32 unreadCount = inboundPkt.fetchInt();
-    Q_EMIT updatesState(q->msgId(), pts, qts, date, seq, unreadCount);
+    const UpdatesState &result = Functions::Updates::getStateResult(&inboundPkt);
+    Q_EMIT updatesState(q->msgId(), result.pts(), result.qts(), result.date(), result.seq(), result.unreadCount());
 }
 
 qint64 Api::updatesGetState() {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_UpdatesGetState);
+    Functions::Updates::getState(&p);
     return mMainSession->sendQuery(p, &updatesGetStateMethods, QVariant(), __FUNCTION__ );
 }
 
-// ### updates.getDifference
 void Api::onUpdatesGetDifferenceAnswer(Query *q, InboundPkt &inboundPkt) {
-    qint32 x = inboundPkt.fetchInt();
-    ASSERT(x == (qint32)TL_UpdatesDifferenceEmpty || x == (qint32)TL_UpdatesDifferenceSlice || x == (qint32)TL_UpdatesDifference);
-    if (x == (qint32)TL_UpdatesDifferenceEmpty) {
-        qint32 date = inboundPkt.fetchInt();
-        qint32 seq = inboundPkt.fetchInt();
-        Q_EMIT updatesDifferenceEmpty(q->msgId(), date, seq);
-    } else {
-        //newMessages
-        ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-        qint32 n = inboundPkt.fetchInt();
-        QList<Message> newMessages;
-        for (qint32 i = 0; i < n; i++) {
-            newMessages.append(inboundPkt.fetchMessage());
-        }
-        //newEncryptedMessages
-        ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-        n = inboundPkt.fetchInt();
-        QList<EncryptedMessage> encMessages;
-        for (qint32 i = 0; i < n; i++) {
-            encMessages.append(inboundPkt.fetchEncryptedMessage());
-        }
-        //otherUpdates
-        ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-        n = inboundPkt.fetchInt();
-        QList<Update> otherUpdates;
-        for (qint32 i = 0; i < n; i++) {
-            otherUpdates.append(inboundPkt.fetchUpdate());
-        }
-        //chats
-        ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-        n = inboundPkt.fetchInt();
-        QList<Chat> chats;
-        for (qint32 i = 0; i < n; i++) {
-            chats.append(inboundPkt.fetchChat());
-        }
-        //users
-        ASSERT(inboundPkt.fetchInt() == (qint32)TL_Vector);
-        n = inboundPkt.fetchInt();
-        QList<User> users;
-        for (qint32 i = 0; i < n; i++) {
-            users.append(inboundPkt.fetchUser());
-        }
-        UpdatesState state = inboundPkt.fetchUpdatesState();
-        if (x == (qint32)TL_UpdatesDifferenceSlice) {
-            Q_EMIT updatesDifferenceSlice(q->msgId(), newMessages, encMessages, otherUpdates, chats, users, state);
-        } else {
-            Q_EMIT updatesDifference(q->msgId(), newMessages, encMessages, otherUpdates, chats, users, state);
-        }
+    const UpdatesDifference &result = Functions::Updates::getDifferenceResult(&inboundPkt);
+    switch(static_cast<int>(result.classType()))
+    {
+    case UpdatesDifference::typeUpdatesDifferenceEmpty:
+        Q_EMIT updatesDifferenceEmpty(q->msgId(), result.date(), result.seq());
+        break;
+
+    case UpdatesDifference::typeUpdatesDifferenceSlice:
+        Q_EMIT updatesDifferenceSlice(q->msgId(), result.newMessages(), result.newEncryptedMessages(), result.otherUpdates(), result.chats(), result.users(), result.state());
+        break;
+
+    case UpdatesDifference::typeUpdatesDifference:
+        Q_EMIT updatesDifference(q->msgId(), result.newMessages(), result.newEncryptedMessages(), result.otherUpdates(), result.chats(), result.users(), result.state());
+        break;
     }
 }
 
 qint64 Api::updatesGetDifference(qint32 pts, qint32 date, qint32 qts) {
+    CHECK_SESSION
+    DEBUG_FUNCTION
     OutboundPkt p(mSettings);
-    p.appendInt(TL_UpdatesGetDifference);
-    p.appendInt(pts);
-    p.appendInt(date);
-    p.appendInt(qts);
+    Functions::Updates::getDifference(&p, pts, date, qts);
     return mMainSession->sendQuery(p, &updatesGetDifferenceMethods, QVariant(), __FUNCTION__ );
 }
 
-//
-// FILES
-//
-// ### upload.saveFilePart
 void Api::onUploadSaveFilePartAnswer(Query *q, InboundPkt &inboundPkt) {
-    Q_EMIT uploadSaveFilePartResult(q->msgId(), q->extra().toLongLong(), inboundPkt.fetchBool());
+    const bool result = Functions::Upload::saveFilePartResult(&inboundPkt);
+    Q_EMIT uploadSaveFilePartResult(q->msgId(), q->extra().toLongLong(), result);
 }
 
 
 qint64 Api::uploadSaveFilePart(Session *session, qint64 fileId, qint32 filePart, const QByteArray &bytes) {
     Q_ASSERT(session);
     OutboundPkt p(mSettings);
-    if (session->initConnectionNeeded()) {
-        p.initConnection();
-        session->setInitConnectionNeeded(false);
-    }
-    p.appendInt(TL_UploadSaveFilePart);
-    p.appendLong(fileId);
-    p.appendInt(filePart);
-    p.appendBytes(bytes);
+    Functions::Upload::saveFilePart(&p, fileId, filePart, bytes);
     QVariant extra = fileId;
     return session->sendQuery(p, &uploadSaveFilePartMethods, extra);
 }
 
-// ### upload.saveBigFilePart
 void Api::onUploadSaveBigFilePartAnswer(Query *q, InboundPkt &inboundPkt) {
-    Q_EMIT uploadSaveBigFilePartResult(q->msgId(), q->extra().toLongLong(), inboundPkt.fetchBool());
+    const bool result = Functions::Upload::saveBigFilePartResult(&inboundPkt);
+    Q_EMIT uploadSaveBigFilePartResult(q->msgId(), q->extra().toLongLong(), result);
 }
 
 qint64 Api::uploadSaveBigFilePart(Session *session, qint64 fileId, qint32 filePart, qint32 fileTotalParts, const QByteArray &bytes) {
     Q_ASSERT(session);
     OutboundPkt p(mSettings);
-    if (session->initConnectionNeeded()) {
-        p.initConnection();
-        session->setInitConnectionNeeded(false);
-    }
-    p.appendInt(TL_UploadSaveBigFilePart);
-    p.appendLong(fileId);
-    p.appendInt(filePart);
-    p.appendInt(fileTotalParts);
-    p.appendBytes(bytes);
+    Functions::Upload::saveBigFilePart(&p, fileId, filePart, fileTotalParts, bytes);
     QVariant extra = fileId;
     return session->sendQuery(p, &uploadSaveBigFilePartMethods, extra);
 }
 
-// ### upload.getFile
 void Api::onUploadGetFileError(Query *q, qint32 errorCode, const QString &errorText) {
     Q_EMIT uploadFileError(q->msgId(), errorCode, errorText);
 }
 
 void Api::onUploadGetFileAnswer(Query *q, InboundPkt &inboundPkt) {
-    ASSERT(inboundPkt.fetchInt() == (qint32)TL_UploadFile);
-    StorageFileType storageType = inboundPkt.fetchStorageFileType();
-    qint32 mtime = inboundPkt.fetchInt();
-    QByteArray bytes = inboundPkt.fetchBytes();
-    Q_EMIT uploadFile(q->msgId(), storageType, mtime, bytes);
+    const UploadFile &result = Functions::Upload::getFileResult(&inboundPkt);
+    Q_EMIT uploadFile(q->msgId(), result.type(), result.mtime(), result.bytes());
 }
 
 qint64 Api::uploadGetFile(Session *session, const InputFileLocation &location, qint32 offset, qint32 limit) {
     Q_ASSERT(session);
     OutboundPkt p(mSettings);
-    if (session->initConnectionNeeded()) {
-        p.initConnection();
-        session->setInitConnectionNeeded(false);
-    }
-    p.appendInt(TL_UploadGetFile);
-    p.appendInputFileLocation(location);
-    p.appendInt(offset);
-    p.appendInt(limit);
+    Functions::Upload::getFile(&p, location, offset, limit);
     return session->sendQuery(p, &uploadGetFileMethods, QVariant(), __FUNCTION__ );
 }

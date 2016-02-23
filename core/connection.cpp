@@ -22,23 +22,56 @@
 #include "connection.h"
 #include "util/constants.h"
 
+#include <QTimer>
+
+#ifdef Q_OS_LINUX
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <netinet/tcp.h>
+#endif
+
 Q_LOGGING_CATEGORY(TG_CORE_CONNECTION, "tg.core.connection")
 
 Connection::Connection(const QString &host, qint32 port, QObject *parent) :
     QTcpSocket(parent),
     Endpoint(host, port),
-    mReconnectTimerId(0),
     mOpLength(0) {
     mBuffer.clear();
+
+    connect(this, SIGNAL(connected()), SLOT(onConnected()));
+    connect(this, SIGNAL(disconnected()), SLOT(onDisconnected()));
+    connect(this, SIGNAL(readyRead()), SLOT(onReadyRead()));
+    connect(this, SIGNAL(error(QAbstractSocket::SocketError)), SLOT(onError(QAbstractSocket::SocketError)));
+    connect(this, SIGNAL(stateChanged(QAbstractSocket::SocketState)), SLOT(onStateChanged(QAbstractSocket::SocketState)));
 
     connect(&mAsserter,SIGNAL(fatalError()), SIGNAL(fatalError()));
 }
 
 Connection::~Connection() {
-    stopReconnecting();
+}
+
+void Connection::setupSocket() {
+    // See: http://goo.gl/0pjCQo
+    // setSocketOption(QAbstractSocket::KeepAliveOption, 1);
+
+#ifdef Q_OS_LINUX
+    int enableKeepAlive = 1;
+    int fd = socketDescriptor();
+    setsockopt(fd, SOL_SOCKET, SO_KEEPALIVE, &enableKeepAlive, sizeof(enableKeepAlive));
+
+    int maxIdle = 5; // 5 seconds
+    setsockopt(fd, IPPROTO_TCP, TCP_KEEPIDLE, &maxIdle, sizeof(maxIdle));
+
+    int count = 3; // send up to 3 keepalive packets out, then disconnect if no response
+    setsockopt(fd, SOL_TCP, TCP_KEEPCNT, &count, sizeof(count));
+
+    int interval = 2; // send a keepalive packet out every 2 seconds (after the first idle period)
+    setsockopt(fd, SOL_TCP, TCP_KEEPINTVL, &interval, sizeof(interval));
+#endif
 }
 
 qint64 Connection::writeOut(const void *data, qint64 length){
+    if (state() != QAbstractSocket::ConnectedState) { return -1; }
     if (!length) { return 0; }
     Q_ASSERT(length > 0);
     return write((const char *)data, length);
@@ -79,12 +112,11 @@ QByteArray Connection::readAll() {
 void Connection::connectToServer() {
     Q_ASSERT(!m_host.isEmpty());
     Q_ASSERT(m_port);
-
-    connect(this, SIGNAL(connected()), SLOT(onConnected()), Qt::UniqueConnection);
-    connect(this, SIGNAL(readyRead()), SLOT(onReadyRead()), Qt::UniqueConnection);
-    connect(this, SIGNAL(error(QAbstractSocket::SocketError)), SLOT(onError(QAbstractSocket::SocketError)), Qt::UniqueConnection);
-
     connectToHost(m_host, m_port);
+}
+
+void Connection::onStateChanged(QAbstractSocket::SocketState state) {
+    qCDebug(TG_CORE_CONNECTION) << "Socket state changed to " << state;
 }
 
 /*
@@ -114,32 +146,29 @@ QAbstractSocket::TemporaryError                     22	A temporary error occurre
 QAbstractSocket::UnknownSocketError                 -1	An unidentified error occurred.
 */
 void Connection::onError(QAbstractSocket::SocketError error) {
-    qCWarning(TG_CORE_CONNECTION) << "SocketError:" << QString::number(error) << ",Description:" << errorString();
+    qCWarning(TG_CORE_CONNECTION) << "SocketError:" << QString::number(error) << errorString();
+    if (error <= QAbstractSocket::NetworkError) {
+        if (state() == QAbstractSocket::ConnectedState || state() == QAbstractSocket::ConnectingState) {
+            disconnectFromHost();
+        }
 
-    if (!mReconnectTimerId) {
-        mReconnectTimerId = startTimer(RECONNECT_TIMEOUT);
-    }
-}
-
-void Connection::timerEvent(QTimerEvent *) {
-    if (state() != QAbstractSocket::ConnectingState && state() != QAbstractSocket::ConnectedState) {
-        qCWarning(TG_CORE_CONNECTION) << "Trying to reconect to host";
-        connectToServer();
-    } else {
-        stopReconnecting();
-    }
-}
-
-void Connection::stopReconnecting() {
-    if (mReconnectTimerId) {
-        killTimer(mReconnectTimerId);
-        mReconnectTimerId = 0;
+        qint32 reconnectionDelay = 0;
+        if (errorString() == "Network unreachable") {
+            // In this case, there is no way to reach the server because the physical link
+            // is broken (disconnected all connections). Don't retry reconnecting continously
+            // and insert a delay between reconnection attempts.
+            reconnectionDelay = 5000;
+        }
+        // From http://doc.qt.io/qt-5/qabstractsocket.html#error
+        // "When this signal is emitted, the socket may not be ready for a reconnect attempt."
+        // Let's wait for the event loop spin once
+        QTimer::singleShot(reconnectionDelay, this, SLOT(connectToServer()));
     }
 }
 
 void Connection::onConnected() {
     // stop trying reconnect if it was alive
-    stopReconnecting();
+    setupSocket();
 
     // abridged version of the protocol requires sending 0xef byte at beginning
     unsigned char byte = 0xef;
@@ -151,6 +180,10 @@ void Connection::onConnected() {
     processConnected();
 }
 
+void Connection::onDisconnected() {
+    qCWarning(TG_CORE_CONNECTION) << "Socket disconnected";
+}
+
 void Connection::onReadyRead() {
 
     while (bytesAvailable()) {
@@ -160,6 +193,7 @@ void Connection::onReadyRead() {
             if (mOpLength == 0x7f) {
                 readed = readIn(&mOpLength, 3);
             }
+            Q_UNUSED(readed)
             mOpLength *= 4;
         }
 

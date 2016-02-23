@@ -1,12 +1,42 @@
-libqtelegram-ae (0.5.0-1aseman1-vividubuntu1) UNRELEASED; urgency=medium
+libqtelegram-ae (0.6.2-1ubuntu1) vivid; urgency=medium
 
   * CMake project building support
   * Serialzation/deserialization of auth settings
   * Gtest support skeletom
   * Gtest for serialization/deserialization of auth settings
 
- -- Roberto Mier Escandon <roberto.escandon@canonical.com>  Mon, 14 Sep 2015 09:19:35 +0200
+ -- Roberto Mier Escandon <roberto.escandon@canonical.com>  Tue, 23 Feb 2016 09:19:35 +0200
 
+libqtelegram-ae (0.6.1-1aseman1-wily) wily; urgency=medium
+
+  * Add auto reconnect support
+  * Add fatal error handler
+  * Many bugfix and improvements
+
+ -- Aseman Team <contact@aseman.co>  Tue, 12 Jan 2016 01:30:00 +0330
+ 
+libqtelegram-ae (0.6.1-1aseman1-trusty) trusty; urgency=medium
+
+  * Add auto reconnect support
+  * Add fatal error handler
+  * Many bugfix and improvements
+
+ -- Aseman Team <contact@aseman.co>  Tue, 12 Jan 2016 01:30:00 +0330
+ 
+libqtelegram-ae (0.6.0-6aseman1-vivid) vivid; urgency=medium
+
+  * API 29 support
+  * Many bugfix and improvements
+
+ -- Aseman Team <contact@aseman.co>  Mon, 5 Oct 2015 10:30:00 +0330
+ 
+libqtelegram-ae (0.6.0-6aseman1-trusty) trusty; urgency=medium
+
+  * API 29 support
+  * Many bugfix and improvements
+
+ -- Aseman Team <contact@aseman.co>  Mon, 5 Oct 2015 10:30:00 +0330
+ 
 libqtelegram-ae (0.5.0-1aseman1-vivid) vivid; urgency=medium
 
   * Many bugfix and improvements

@@ -20,8 +20,9 @@
 
 #include "core/inboundpkt.h"
 #include <QByteArray>
-#include "types/decryptedmessage.h"
-#include "types/encryptedmessage.h"
+#include "secret/decryptedmessage.h"
+#include "telegram/types/encryptedmessage.h"
+#include "core/settings.h"
 
 #include <QSharedPointer>
 #include <QPair>

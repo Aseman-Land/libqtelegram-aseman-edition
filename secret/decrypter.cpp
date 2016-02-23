@@ -20,10 +20,13 @@
 #include "util/tlvalues.h"
 #include "util/utils.h"
 #include "core/settings.h"
-#include <sha.h>
-#include <aes.h>
+#include "telegram/coretypes.h"
+#include <openssl/sha.h>
+#include <openssl/aes.h>
 
 Q_LOGGING_CATEGORY(TG_SECRET_DECRYPTER, "tg.secret.decrypter")
+
+
 
 template <typename T_>
 void do_delete(T_ buf[]) {
@@ -319,14 +322,14 @@ DecryptedMessageMedia Decrypter::fetchDecryptedMessageMedia() {
         media.setDate(fetchLong());
         media.setMimeType(fetchQString());
         media.setSize(fetchInt());
-        media.setThumb23(fetchPhotoSize());
+        media.setThumb23(this);
         media.setDcId(fetchInt());
 
-        ASSERT(fetchInt() == (qint32)TL_Vector);
+        ASSERT(fetchInt() == (qint32)CoreTypes::typeVector);
         qint32 n = fetchInt();
         QList<DocumentAttribute> attrs;
         for (qint32 i = 0; i < n; i++)
-            attrs.append(fetchDocumentAttribute());
+            attrs.append(this);
         media.setAttributes(attrs);
         break;
     }
@@ -429,7 +432,7 @@ DecryptedMessageAction Decrypter::fetchDecryptedMessageAction() {
     case DecryptedMessageAction::typeDecryptedMessageActionReadMessages:
     case DecryptedMessageAction::typeDecryptedMessageActionDeleteMessages:
     case DecryptedMessageAction::typeDecryptedMessageActionScreenshotMessages: {
-        ASSERT(fetchInt() == (qint32)TL_Vector);
+        ASSERT(fetchInt() == (qint32)CoreTypes::typeVector);
         qint32 n = fetchInt();
         QList<qint64> randomIds;
         for (qint32 i = 0; i < n; i++) {

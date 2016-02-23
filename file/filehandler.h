@@ -3,7 +3,7 @@
 
 #include <QObject>
 #include <QSharedPointer>
-#include "uploadfile.h"
+#include "uploadfileengine.h"
 #include "fileoperation.h"
 #include "downloadfile.h"
 #include "core/dcprovider.h"
@@ -32,7 +32,7 @@ Q_SIGNALS:
     void uploadCancelFileAnswer(qint64 fileId, bool cancelled);
     void error(qint64 id, qint32 errorCode, const QString &errorText);
 
-    void messagesSendMediaAnswer(qint64 fileId, const Message &message, const QList<Chat> &chats, const QList<User> &users, const QList<ContactsLink> &links, qint32 pts, qint32 ptsCount);
+    void messagesSentMedia(qint64 fileId, const UpdatesType &updates);
     void messagesSendEncryptedFileAnswer(qint64 id, qint32 date, const EncryptedFile &encryptedFile = EncryptedFile());
 
 private:
@@ -44,17 +44,17 @@ private:
 
     /* File Sending */
     // fileId -> physical file details (length, bytes, parts, every part details, etc..)
-    QMap<qint64, UploadFile::Ptr> mUploadsMap;
+    QMap<qint64, UploadFileEngine::Ptr> mUploadsMap;
     // mainFileId -> operation additional data to be done with the file (peer, operation type)
     QMap<qint64, FileOperation::Ptr> mFileOperationsMap;
     // sessionId -> list of files waiting for session connection to be ready for being uploaded
-    QMap<qint64, QList<UploadFile::Ptr> > mInitialUploadsMap;
+    QMap<qint64, QList<UploadFileEngine::Ptr> > mInitialUploadsMap;
     // finally, when sending media by using telegram api messagesSendMedia, we need to correlate
     // requestId -> fileId, cos fileId is what we returned in request and the identifier we need
     // to answer in final response
     QMap<qint64, qint64> mFileIdsMap;
 
-    qint64 uploadSendFileParts(UploadFile &file);
+    qint64 uploadSendFileParts(UploadFileEngine &file);
 
     /* File receiving */
     // requestId -> physical downloading file details (DownloadFile structure includes fileId)
@@ -73,9 +73,10 @@ private Q_SLOTS:
     void onUploadGetFileAnswer(qint64 msgId, const StorageFileType &type, qint32 mtime, QByteArray bytes);
     void onUploadGetFileError(qint64 id, qint32 errorCode, const QString &errorText);
 
-    void onMessagesSendMediaStatedMessage(qint64 id, const Message &message, const QList<Chat> &chats, const QList<User> &users, qint32 pts, qint32 ptsCount);
-    void onMessagesSendMediaStatedMessageLink(qint64 id, const Message &message, const QList<Chat> &chats, const QList<User> &users, const QList<ContactsLink> &links, qint32 pts, qint32 pts_count, qint32 seq = 0);
+    void onMessagesSentMedia(qint64 id, const UpdatesType &updates);
     void onMessagesSentEncryptedFile(qint64, qint32 date, const EncryptedFile &encryptedFile = EncryptedFile());
+
+    void onUpdateMessageId(qint64 oldMsgId, qint64 newMsgId);
 };
 
 #endif // FILEHANDLER_H

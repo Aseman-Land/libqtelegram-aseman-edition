@@ -25,6 +25,8 @@
 #include <QMap>
 #include <QPointer>
 #include <QLoggingCategory>
+#include <QPointer>
+
 #include "session.h"
 #include "dc.h"
 

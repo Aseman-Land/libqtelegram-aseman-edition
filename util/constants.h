@@ -32,9 +32,6 @@
 #define TEST_DEFAULT_DC_HOST "173.240.5.253"
 #define TEST_DEFAULT_DC_PORT 80
 
-#define LIBQTELEGRAM_BUILD "001"
-#define LIBQTELEGRAM_VERSION "1.0.0-SNAPSHOT"
-
 #define MAX_RESPONSE_SIZE (1L << 24)
 
 #define MAX_MESSAGE_INTS 1048576
@@ -52,7 +49,7 @@
 
 // divide file bytes into parts >= 128 kbytes. This is the minimum block size to ensurance receiving complete the users
 // profile and chat "photoBig" files.
-#define BLOCK (32 * 1024)
+#define BLOCK (128 * 1024)
 
 #define RECONNECT_TIMEOUT 5000 // in case session hasn't connection, try to reconnect every 5 seconds
 
@@ -60,7 +57,5 @@
 
 #define DH_CONFIG_SERVER_RANDOM_LENGTH 256 // length we want to be a server generated random number
 #define SHARED_KEY_LENGTH 256 // length for the secret chat generated shared keys
-
-#define LAYER 25 // this value must be consistent with the TL_InvokeWithLayerX header in OutboundPkt.initConnection().
 
 #endif // CONSTANTS_H

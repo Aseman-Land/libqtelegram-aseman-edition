@@ -27,19 +27,19 @@
 #include <QMap>
 #include <QPair>
 #include <QLoggingCategory>
-#include "types/inputuser.h"
-#include <bn.h>
-#include "types/encryptedchat.h"
-#include "types/decryptedmessage.h"
-#include "libqtelegram_global.h"
+#include <openssl/bn.h>
+
+#include "telegram/types/inputuser.h"
+#include "telegram/types/encryptedchat.h"
+#include "secret/decryptedmessage.h"
 #include "util/constants.h"
+#include "libqtelegram_global.h"
 
 Q_DECLARE_LOGGING_CATEGORY(TG_SECRET_SECRETCHAT)
 
 class Settings;
-class LIBQTELEGRAMSHARED_EXPORT SecretChat : public QObject
+class LIBQTELEGRAMSHARED_EXPORT SecretChat
 {
-    Q_OBJECT
 public:
 
     enum State {
@@ -51,7 +51,7 @@ public:
 
     typedef QMap<QPair<qint32,qint32>, qint64> Sequence;
 
-    explicit SecretChat(Settings *settings, QObject *parent = 0);
+    explicit SecretChat(Settings *settings);
     ~SecretChat();
 
     void createMyKey(const QByteArray &serverRandom);

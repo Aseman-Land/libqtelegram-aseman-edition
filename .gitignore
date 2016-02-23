@@ -32,3 +32,4 @@ build
 #QtCtreator Qml
 *.qmlproject.user
 *.qmlproject.user.*
+*.DS_Store

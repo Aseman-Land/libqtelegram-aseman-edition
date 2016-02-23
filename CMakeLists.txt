@@ -44,15 +44,14 @@ include_directories(
 
 set(LIB_NAME qtelegram-ae)
 
-#Utils class reads SO_VERSION from this cmake, so must be configured and
-#resulting file included in sources
-configure_file(util/utils.cpp.in util/utils.cpp)
-
 aux_source_directory(. TG_SRC)
 aux_source_directory(core TG_CORE_SRC)
 aux_source_directory(file TG_FILES_SRC)
 aux_source_directory(secret TG_SECRET_SRC)
 aux_source_directory(util TG_UTIL_SRC)
+aux_source_directory(telegram TG_TELEGRAM_SRC)
+aux_source_directory(telegram/functions TG_TELEGRAM_FUNCTIONS_SRC)
+aux_source_directory(telegram/types TG_TELEGRAM_TYPES_SRC)
 
 add_library(${LIB_NAME} SHARED
     ${TG_SRC}
@@ -60,7 +59,9 @@ add_library(${LIB_NAME} SHARED
     ${TG_FILES_SRC}
     ${TG_SECRET_SRC}
     ${TG_UTIL_SRC}
-    ${CMAKE_BINARY_DIR}/util/utils.cpp
+    ${TG_TELEGRAM_SRC}
+    ${TG_TELEGRAM_FUNCTIONS_SRC}
+    ${TG_TELEGRAM_TYPES_SRC}
 )
 
 set_target_properties(${LIB_NAME} PROPERTIES
@@ -85,13 +86,17 @@ file(GLOB ROOT_H_FILES ${CMAKE_CURRENT_SOURCE_DIR}/*.h)
 file(GLOB CORE_H_FILES ${CMAKE_CURRENT_SOURCE_DIR}/core/*.h)
 file(GLOB FILE_H_FILES ${CMAKE_CURRENT_SOURCE_DIR}/file/*.h)
 file(GLOB SECRET_H_FILES ${CMAKE_CURRENT_SOURCE_DIR}/secret/*.h)
-file(GLOB TYPES_H_FILES ${CMAKE_CURRENT_SOURCE_DIR}/types/*.h)
+file(GLOB TELEGRAM_H_FILES ${CMAKE_CURRENT_SOURCE_DIR}/telegram/*.h)
+file(GLOB TYPES_H_FILES ${CMAKE_CURRENT_SOURCE_DIR}/telegram/types/*.h)
+file(GLOB FUNCTIONS_H_FILES ${CMAKE_CURRENT_SOURCE_DIR}/telegram/functions/*.h)
 file(GLOB UTIL_H_FILES ${CMAKE_CURRENT_SOURCE_DIR}/util/*.h)
 install(FILES ${ROOT_H_FILES} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${LIB_NAME})
 install(FILES ${CORE_H_FILES} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${LIB_NAME}/core)
 install(FILES ${FILE_H_FILES} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${LIB_NAME}/file)
 install(FILES ${SECRET_H_FILES} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${LIB_NAME}/secret)
-install(FILES ${TYPES_H_FILES} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${LIB_NAME}/types)
+install(FILES ${TELEGRAM_H_FILES} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${LIB_NAME}/telegram)
+install(FILES ${TYPES_H_FILES} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${LIB_NAME}/telegram/types)
+install(FILES ${FUNCTIONS_H_FILES} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${LIB_NAME}/telegram/functions)
 install(FILES ${UTIL_H_FILES} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${LIB_NAME}/util)
 
 # Compose the pkg-config file needed to find the library using that tool

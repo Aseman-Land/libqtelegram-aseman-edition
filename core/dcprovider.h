@@ -34,7 +34,7 @@ class DcProvider : public QObject
     Q_OBJECT
 public:
     DcProvider(Settings *settings, CryptoUtils *crypto);
-    ~DcProvider();
+    virtual ~DcProvider();
 
     void initialize();
     DC *getDc(qint32 dcNum) const;
@@ -85,6 +85,10 @@ private:
     // main session. The one linked to working dc. Must be stored mean transferring auth to other dcs because
     // is the reference for exporting data to any dc transfer auth receipt
     Session *mWorkingDcSession;
+
+    // In order to map getConfigRequests and sessions
+    QMap<qint64, Session*> mGetConfigRequests;
+    bool mConfigReceived;
 
 
 private Q_SLOTS:
