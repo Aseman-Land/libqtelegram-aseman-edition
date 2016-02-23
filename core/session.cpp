@@ -66,10 +66,6 @@ void Session::close() {
 }
 
 void Session::onDisconnected() {
-    if(error() == QAbstractSocket::RemoteHostClosedError) {
-        return; // Trying to reconnect...
-    }
-
     Q_EMIT sessionClosed(m_sessionId);
 }
 
@@ -96,9 +92,6 @@ qint64 Session::generateNextMsgId() {
 }
 
 void Session::processConnected() {
-    // ack all pending server response messages. This happens when socket has been connected
-    // previously and after reconnection some acks are pending to be sent.
-    ackAll();
     Q_EMIT sessionReady(m_dc);
 }
 
@@ -474,8 +467,6 @@ qint64 Session::encryptSendMessage(qint32 *msg, qint32 msgInts, qint32 useful) {
 }
 
 bool Session::rpcSendMessage(void *data, qint32 len) {
-    qCDebug(TG_CORE_SESSION) << "rpcSendMessage()," << len;
-
     qint32 written;
     Q_UNUSED(written);
 
@@ -507,6 +498,16 @@ qint64 Session::sendQuery(OutboundPkt &outboundPkt, QueryMethods *methods, const
     Q_ASSERT (m_dc->authKeyId());
     qint32 *data = outboundPkt.buffer();
     qint32 ints = outboundPkt.length();
+
+    // prepend init connection header to outboundPkt if initConnectionNeeded
+    OutboundPkt wrap(mSettings);
+    if (m_initConnectionNeeded) {
+        wrap.initConnection();
+        wrap.appendOutboundPkt(outboundPkt);
+        data = wrap.buffer();
+        ints = wrap.length();
+        m_initConnectionNeeded = false;
+    }
 
     qCDebug(TG_CORE_SESSION) << "Sending query of size" << 4 * ints << "to DC" << m_dc->id() << "at" << peerName() << ":" << peerPort() << "by session" << QString::number(m_sessionId, 16);
 
@@ -634,12 +635,6 @@ void Session::ackAll() {
 }
 
 void Session::sendAcks(const QList<qint64> &msgIds) {
-    // verify that socket is connected. Don't send acks if state is other than connected.
-    // In case the socket is not connected, pending acks will be sent when socket is
-    // connected back again.
-    if (state() != QAbstractSocket::ConnectedState) {
-        return;
-    }
     OutboundPkt p(mSettings);
     p.appendInt(TL_MsgsAck);
     p.appendInt(CoreTypes::typeVector);
