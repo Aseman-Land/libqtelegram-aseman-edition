@@ -257,8 +257,8 @@ bool Telegram::isLoggedIn() {
 void Telegram::onAuthLoggedIn() {
     prv->mLibraryState = LoggedIn;
 #if defined(SERIALIZED_SETTINGS)
-    QVariantMap serializedSettings = prv->mSettings->serializeAuthSettings();
-    Q_EMIT authLoggedIn(serializedSettings);
+    QVariantMap authSettings = prv->mSettings->buildAuthMap();
+    Q_EMIT authLoggedIn(authSettings);
 #else
     Q_EMIT authLoggedIn();
 #endif

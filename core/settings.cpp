@@ -217,7 +217,7 @@ bool Settings::loadSettings(const QString &phoneNumber, const QString &baseConfi
     // populate auth settings with received auth settings param map if set SERIALIZED_SETTINGS definition.
     // Use auth file instead if not defined that flag.
 #if defined(SERIALIZED_SETTINGS)
-    deserializeAuthSettings(authSettings);
+    readAuthMap(authSettings);
 #else
     readAuthFile();
 #endif
@@ -230,6 +230,13 @@ bool Settings::loadSettings(const QString &phoneNumber, const QString &baseConfi
 void Settings::writeAuthFile() {
 // only create auth file if not using settings serialization
 #if !defined(SERIALIZED_SETTINGS)
+    QVariantMap map = buildAuthMap();
+    if(!_telegram_settings_write_fnc(m_baseConfigDirectory, m_phoneNumber, map))
+        telegram_settings_write_fnc(m_baseConfigDirectory, m_phoneNumber, map);
+#endif
+}
+
+QVariantMap Settings::buildAuthMap() {
     QVariantMap map;
     QString pre = testMode() ? ST_TEST : ST_PRODUCTION;
     pre += "/";
@@ -257,42 +264,10 @@ void Settings::writeAuthFile() {
         map[ar + ST_SERVER_SALT] = m_dcsList[i]->serverSalt();
         map[ar + ST_EXPIRES] = m_dcsList[i]->expires();
     }
-
-    if(!_telegram_settings_write_fnc(m_baseConfigDirectory, m_phoneNumber, map))
-        telegram_settings_write_fnc(m_baseConfigDirectory, m_phoneNumber, map);
-#endif
+    return map;
 }
 
-QString buildDCKey(int index, const QString& key) {
-    return QString(ST_DCS_ARRAY) + "\\" + QString::number(index) + "\\" + key;
-}
-
-QVariantMap Settings::serializeAuthSettings() {
-    QVariantMap returnMap;
-    returnMap.insert(ST_WORKING_DC_NUM, m_workingDcNum);
-    returnMap.insert(ST_OUR_ID, m_ourId);
-    for (qint32 i = 0; i < m_dcsList.length(); i++) {
-
-        returnMap.insert(buildDCKey(i, ST_DC_NUM), m_dcsList[i]->id());
-        returnMap.insert(buildDCKey(i, ST_HOST), m_dcsList[i]->host());
-        returnMap.insert(buildDCKey(i, ST_PORT), m_dcsList[i]->port());
-        returnMap.insert(buildDCKey(i, ST_DC_STATE), m_dcsList[i]->state());
-        if (m_dcsList[i]->authKeyId()) {
-            returnMap.insert(buildDCKey(i, ST_AUTH_KEY_ID), m_dcsList[i]->authKeyId());
-            QByteArray baToSave(m_dcsList[i]->authKey(), SHARED_KEY_LENGTH);
-            returnMap.insert(buildDCKey(i, ST_AUTH_KEY), baToSave.toBase64());
-        }
-        returnMap.insert(buildDCKey(i, ST_SERVER_SALT), m_dcsList[i]->serverSalt());
-        returnMap.insert(buildDCKey(i, ST_EXPIRES), m_dcsList[i]->expires());
-    }
-    return returnMap;
-}
-
-void Settings::readAuthFile() {
-    QVariantMap map;
-    if(!_telegram_settings_read_fnc(m_baseConfigDirectory, m_phoneNumber, map))
-        telegram_settings_read_fnc(m_baseConfigDirectory, m_phoneNumber, map);
-
+void Settings::readAuthMap(const QVariantMap& map) {
     QString pre = testMode() ? ST_TEST : ST_PRODUCTION;
     pre += "/";
 
@@ -333,49 +308,15 @@ void Settings::readAuthFile() {
     }
 }
 
-void Settings::deserializeAuthSettings(const QVariantMap &authSettings) {
-    qCDebug(TG_CORE_SETTINGS) << "deserializing readed auth settings...";
-    qint32 defaultDcId = m_testMode ? TEST_DEFAULT_DC_ID : Settings::defaultHostDcId();
-    m_workingDcNum = authSettings.value(ST_WORKING_DC_NUM, defaultDcId).toInt();
-    m_ourId = authSettings.value(ST_OUR_ID, 0).toInt();
+QString buildDCKey(int index, const QString& key) {
+    return QString(ST_DCS_ARRAY) + "\\" + QString::number(index) + "\\" + key;
+}
 
-    for (QVariantMap::const_iterator it = authSettings.begin(); it != authSettings.end(); it++) {
-        QString key = it.key();
-        if (key.startsWith(ST_DCS_ARRAY)) {
-            QStringList tokens = key.split("\\");
-            int pos = tokens.at(1).toInt();
-
-            DC *dc = m_dcsList.value(pos);
-            if (!dc) {
-                dc = new DC(pos);
-                // fill dcsList with empty values until reaching the position, if position is greater than dcsList size
-                // because a QList needs to have all the previous values filled before
-                for (int i = m_dcsList.size(); i < pos; i++) {
-                    m_dcsList.append(new DC(i));
-                }
-                m_dcsList.insert(pos, dc);
-            }
-
-            if (tokens.at(2) == ST_HOST) {
-                dc->setHost(authSettings.value(key).toString());
-            } else if (tokens.at(2) == ST_PORT) {
-                dc->setPort(authSettings.value(key).toInt());
-            } else if (tokens.at(2) == ST_DC_STATE) {
-                dc->setState((DC::DcState)authSettings.value(key).toInt());
-            } else if (tokens.at(2) == ST_AUTH_KEY_ID) {
-                dc->setAuthKeyId(authSettings.value(key).toLongLong());
-            } else if (tokens.at(2) == ST_AUTH_KEY) {
-                QByteArray ba;
-                ba.append(authSettings.value(key).toString());
-                QByteArray readedBa = QByteArray::fromBase64(ba);
-                memcpy(dc->authKey(), readedBa.data(), SHARED_KEY_LENGTH);
-            } else if (tokens.at(2) == ST_SERVER_SALT) {
-                dc->setServerSalt(authSettings.value(key).toLongLong());
-            } else if (tokens.at(2) == ST_EXPIRES) {
-                dc->setExpires(authSettings.value(key).toInt());
-            }
-        }
-    }
+void Settings::readAuthFile() {
+    QVariantMap map;
+    if(!_telegram_settings_read_fnc(m_baseConfigDirectory, m_phoneNumber, map))
+        telegram_settings_read_fnc(m_baseConfigDirectory, m_phoneNumber, map);
+    readAuthMap(map);
 }
 
 bool Settings::removeAuthFile() {

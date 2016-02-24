@@ -108,6 +108,8 @@ public:
                       const QString &configPath = DEFAULT_CONFIG_PATH,
                       const QString &publicKeyFile = DEFAULT_PUBLIC_KEY_FILE,
                       const QVariantMap &authSettings = QVariantMap());
+    /// @brief buildAuthMap takes auth settings and build a map with them
+    QVariantMap buildAuthMap();
     void writeAuthFile();
     void writeSecretFile();
     bool workingDcConfigAvailabe() const {return  m_workingDcConfigAvailabe;}
@@ -150,8 +152,8 @@ private:
     void readAuthFile();
     void readSecretFile();
 
-    /// @brief deserializeAuthSettings takes auth parameters and fulfills this Settings object
-    void deserializeAuthSettings(const QVariantMap& authSettings);
+    /// @brief readAuthMap takes auth parameters and fulfills this Settings object
+    void readAuthMap(const QVariantMap& authSettings);
 
     QString m_defaultHostAddress;
     qint16 m_defaultHostPort;
