@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 PeerNotifyEvents::PeerNotifyEvents(PeerNotifyEventsType classType, InboundPkt *in) :
     m_classType(classType)
 {
@@ -78,5 +80,35 @@ bool PeerNotifyEvents::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const PeerNotifyEvents &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case PeerNotifyEvents::typePeerNotifyEventsEmpty:
+        
+        break;
+    case PeerNotifyEvents::typePeerNotifyEventsAll:
+        
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, PeerNotifyEvents &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<PeerNotifyEvents::PeerNotifyEventsType>(type));
+    switch(type) {
+    case PeerNotifyEvents::typePeerNotifyEventsEmpty: {
+        
+    }
+        break;
+    case PeerNotifyEvents::typePeerNotifyEventsAll: {
+        
+    }
+        break;
+    }
+    return stream;
 }
 

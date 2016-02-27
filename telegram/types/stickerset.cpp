@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 StickerSet::StickerSet(StickerSetType classType, InboundPkt *in) :
     m_accessHash(0),
     m_count(0),
@@ -186,5 +188,54 @@ bool StickerSet::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const StickerSet &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case StickerSet::typeStickerSet:
+        stream << item.flags();
+        stream << item.id();
+        stream << item.accessHash();
+        stream << item.title();
+        stream << item.shortName();
+        stream << item.count();
+        stream << item.hash();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, StickerSet &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<StickerSet::StickerSetType>(type));
+    switch(type) {
+    case StickerSet::typeStickerSet: {
+        qint32 m_flags;
+        stream >> m_flags;
+        item.setFlags(m_flags);
+        qint64 m_id;
+        stream >> m_id;
+        item.setId(m_id);
+        qint64 m_access_hash;
+        stream >> m_access_hash;
+        item.setAccessHash(m_access_hash);
+        QString m_title;
+        stream >> m_title;
+        item.setTitle(m_title);
+        QString m_short_name;
+        stream >> m_short_name;
+        item.setShortName(m_short_name);
+        qint32 m_count;
+        stream >> m_count;
+        item.setCount(m_count);
+        qint32 m_hash;
+        stream >> m_hash;
+        item.setHash(m_hash);
+    }
+        break;
+    }
+    return stream;
 }
 

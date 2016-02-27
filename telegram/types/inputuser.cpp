@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 InputUser::InputUser(InputUserType classType, InboundPkt *in) :
     m_accessHash(0),
     m_userId(0),
@@ -117,5 +119,48 @@ bool InputUser::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const InputUser &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case InputUser::typeInputUserEmpty:
+        
+        break;
+    case InputUser::typeInputUserSelf:
+        
+        break;
+    case InputUser::typeInputUser:
+        stream << item.userId();
+        stream << item.accessHash();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, InputUser &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<InputUser::InputUserType>(type));
+    switch(type) {
+    case InputUser::typeInputUserEmpty: {
+        
+    }
+        break;
+    case InputUser::typeInputUserSelf: {
+        
+    }
+        break;
+    case InputUser::typeInputUser: {
+        qint32 m_user_id;
+        stream >> m_user_id;
+        item.setUserId(m_user_id);
+        qint64 m_access_hash;
+        stream >> m_access_hash;
+        item.setAccessHash(m_access_hash);
+    }
+        break;
+    }
+    return stream;
 }
 

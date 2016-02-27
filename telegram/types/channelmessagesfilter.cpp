@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 ChannelMessagesFilter::ChannelMessagesFilter(ChannelMessagesFilterType classType, InboundPkt *in) :
     m_flags(0),
     m_classType(classType)
@@ -143,5 +145,48 @@ bool ChannelMessagesFilter::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const ChannelMessagesFilter &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case ChannelMessagesFilter::typeChannelMessagesFilterEmpty:
+        
+        break;
+    case ChannelMessagesFilter::typeChannelMessagesFilter:
+        stream << item.flags();
+        stream << item.ranges();
+        break;
+    case ChannelMessagesFilter::typeChannelMessagesFilterCollapsed:
+        
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, ChannelMessagesFilter &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<ChannelMessagesFilter::ChannelMessagesFilterType>(type));
+    switch(type) {
+    case ChannelMessagesFilter::typeChannelMessagesFilterEmpty: {
+        
+    }
+        break;
+    case ChannelMessagesFilter::typeChannelMessagesFilter: {
+        qint32 m_flags;
+        stream >> m_flags;
+        item.setFlags(m_flags);
+        QList<MessageRange> m_ranges;
+        stream >> m_ranges;
+        item.setRanges(m_ranges);
+    }
+        break;
+    case ChannelMessagesFilter::typeChannelMessagesFilterCollapsed: {
+        
+    }
+        break;
+    }
+    return stream;
 }
 

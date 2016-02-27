@@ -101,4 +101,7 @@ private:
 
 Q_DECLARE_METATYPE(UpdatesChannelDifference)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const UpdatesChannelDifference &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, UpdatesChannelDifference &item);
+
 #endif // LQTG_TYPE_UPDATESCHANNELDIFFERENCE

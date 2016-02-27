@@ -84,4 +84,7 @@ private:
 
 Q_DECLARE_METATYPE(UpdatesDifference)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const UpdatesDifference &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, UpdatesDifference &item);
+
 #endif // LQTG_TYPE_UPDATESDIFFERENCE

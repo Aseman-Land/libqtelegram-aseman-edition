@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 MessagesStickers::MessagesStickers(MessagesStickersType classType, InboundPkt *in) :
     m_classType(classType)
 {
@@ -111,5 +113,41 @@ bool MessagesStickers::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const MessagesStickers &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case MessagesStickers::typeMessagesStickersNotModified:
+        
+        break;
+    case MessagesStickers::typeMessagesStickers:
+        stream << item.hash();
+        stream << item.stickers();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, MessagesStickers &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<MessagesStickers::MessagesStickersType>(type));
+    switch(type) {
+    case MessagesStickers::typeMessagesStickersNotModified: {
+        
+    }
+        break;
+    case MessagesStickers::typeMessagesStickers: {
+        QString m_hash;
+        stream >> m_hash;
+        item.setHash(m_hash);
+        QList<Document> m_stickers;
+        stream >> m_stickers;
+        item.setStickers(m_stickers);
+    }
+        break;
+    }
+    return stream;
 }
 

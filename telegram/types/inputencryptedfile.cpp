@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 InputEncryptedFile::InputEncryptedFile(InputEncryptedFileType classType, InboundPkt *in) :
     m_accessHash(0),
     m_id(0),
@@ -175,5 +177,79 @@ bool InputEncryptedFile::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const InputEncryptedFile &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case InputEncryptedFile::typeInputEncryptedFileEmpty:
+        
+        break;
+    case InputEncryptedFile::typeInputEncryptedFileUploaded:
+        stream << item.id();
+        stream << item.parts();
+        stream << item.md5Checksum();
+        stream << item.keyFingerprint();
+        break;
+    case InputEncryptedFile::typeInputEncryptedFile:
+        stream << item.id();
+        stream << item.accessHash();
+        break;
+    case InputEncryptedFile::typeInputEncryptedFileBigUploaded:
+        stream << item.id();
+        stream << item.parts();
+        stream << item.keyFingerprint();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, InputEncryptedFile &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<InputEncryptedFile::InputEncryptedFileType>(type));
+    switch(type) {
+    case InputEncryptedFile::typeInputEncryptedFileEmpty: {
+        
+    }
+        break;
+    case InputEncryptedFile::typeInputEncryptedFileUploaded: {
+        qint64 m_id;
+        stream >> m_id;
+        item.setId(m_id);
+        qint32 m_parts;
+        stream >> m_parts;
+        item.setParts(m_parts);
+        QString m_md5_checksum;
+        stream >> m_md5_checksum;
+        item.setMd5Checksum(m_md5_checksum);
+        qint32 m_key_fingerprint;
+        stream >> m_key_fingerprint;
+        item.setKeyFingerprint(m_key_fingerprint);
+    }
+        break;
+    case InputEncryptedFile::typeInputEncryptedFile: {
+        qint64 m_id;
+        stream >> m_id;
+        item.setId(m_id);
+        qint64 m_access_hash;
+        stream >> m_access_hash;
+        item.setAccessHash(m_access_hash);
+    }
+        break;
+    case InputEncryptedFile::typeInputEncryptedFileBigUploaded: {
+        qint64 m_id;
+        stream >> m_id;
+        item.setId(m_id);
+        qint32 m_parts;
+        stream >> m_parts;
+        item.setParts(m_parts);
+        qint32 m_key_fingerprint;
+        stream >> m_key_fingerprint;
+        item.setKeyFingerprint(m_key_fingerprint);
+    }
+        break;
+    }
+    return stream;
 }
 

@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 InputPrivacyRule::InputPrivacyRule(InputPrivacyRuleType classType, InboundPkt *in) :
     m_classType(classType)
 {
@@ -157,5 +159,67 @@ bool InputPrivacyRule::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const InputPrivacyRule &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case InputPrivacyRule::typeInputPrivacyValueAllowContacts:
+        
+        break;
+    case InputPrivacyRule::typeInputPrivacyValueAllowAll:
+        
+        break;
+    case InputPrivacyRule::typeInputPrivacyValueAllowUsers:
+        stream << item.users();
+        break;
+    case InputPrivacyRule::typeInputPrivacyValueDisallowContacts:
+        
+        break;
+    case InputPrivacyRule::typeInputPrivacyValueDisallowAll:
+        
+        break;
+    case InputPrivacyRule::typeInputPrivacyValueDisallowUsers:
+        stream << item.users();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, InputPrivacyRule &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<InputPrivacyRule::InputPrivacyRuleType>(type));
+    switch(type) {
+    case InputPrivacyRule::typeInputPrivacyValueAllowContacts: {
+        
+    }
+        break;
+    case InputPrivacyRule::typeInputPrivacyValueAllowAll: {
+        
+    }
+        break;
+    case InputPrivacyRule::typeInputPrivacyValueAllowUsers: {
+        QList<InputUser> m_users;
+        stream >> m_users;
+        item.setUsers(m_users);
+    }
+        break;
+    case InputPrivacyRule::typeInputPrivacyValueDisallowContacts: {
+        
+    }
+        break;
+    case InputPrivacyRule::typeInputPrivacyValueDisallowAll: {
+        
+    }
+        break;
+    case InputPrivacyRule::typeInputPrivacyValueDisallowUsers: {
+        QList<InputUser> m_users;
+        stream >> m_users;
+        item.setUsers(m_users);
+    }
+        break;
+    }
+    return stream;
 }
 

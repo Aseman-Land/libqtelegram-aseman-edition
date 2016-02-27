@@ -7,12 +7,13 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 UpdatesType::UpdatesType(UpdatesTypeType classType, InboundPkt *in) :
     m_chatId(0),
     m_date(0),
     m_flags(0),
     m_fromId(0),
-    m_fwdDate(0),
     m_id(0),
     m_pts(0),
     m_ptsCount(0),
@@ -31,7 +32,6 @@ UpdatesType::UpdatesType(InboundPkt *in) :
     m_date(0),
     m_flags(0),
     m_fromId(0),
-    m_fwdDate(0),
     m_id(0),
     m_pts(0),
     m_ptsCount(0),
@@ -51,7 +51,6 @@ UpdatesType::UpdatesType(const Null &null) :
     m_date(0),
     m_flags(0),
     m_fromId(0),
-    m_fwdDate(0),
     m_id(0),
     m_pts(0),
     m_ptsCount(0),
@@ -115,20 +114,12 @@ qint32 UpdatesType::fromId() const {
     return m_fromId;
 }
 
-void UpdatesType::setFwdDate(qint32 fwdDate) {
-    m_fwdDate = fwdDate;
+void UpdatesType::setFwdFrom(const MessageFwdHeader &fwdFrom) {
+    m_fwdFrom = fwdFrom;
 }
 
-qint32 UpdatesType::fwdDate() const {
-    return m_fwdDate;
-}
-
-void UpdatesType::setFwdFromId(const Peer &fwdFromId) {
-    m_fwdFromId = fwdFromId;
-}
-
-Peer UpdatesType::fwdFromId() const {
-    return m_fwdFromId;
+MessageFwdHeader UpdatesType::fwdFrom() const {
+    return m_fwdFrom;
 }
 
 void UpdatesType::setId(qint32 id) {
@@ -222,6 +213,15 @@ qint32 UpdatesType::seqStart() const {
     return m_seqStart;
 }
 
+void UpdatesType::setSilent(bool silent) {
+    if(silent) m_flags = (m_flags | (1<<13));
+    else m_flags = (m_flags & ~(1<<13));
+}
+
+bool UpdatesType::silent() const {
+    return (m_flags & 1<<13);
+}
+
 void UpdatesType::setUnread(bool unread) {
     if(unread) m_flags = (m_flags | (1<<0));
     else m_flags = (m_flags & ~(1<<0));
@@ -279,8 +279,7 @@ bool UpdatesType::operator ==(const UpdatesType &b) const {
            m_entities == b.m_entities &&
            m_flags == b.m_flags &&
            m_fromId == b.m_fromId &&
-           m_fwdDate == b.m_fwdDate &&
-           m_fwdFromId == b.m_fwdFromId &&
+           m_fwdFrom == b.m_fwdFrom &&
            m_id == b.m_id &&
            m_media == b.m_media &&
            m_message == b.m_message &&
@@ -323,10 +322,7 @@ bool UpdatesType::fetch(InboundPkt *in) {
         m_ptsCount = in->fetchInt();
         m_date = in->fetchInt();
         if(m_flags & 1<<2) {
-            m_fwdFromId.fetch(in);
-        }
-        if(m_flags & 1<<2) {
-            m_fwdDate = in->fetchInt();
+            m_fwdFrom.fetch(in);
         }
         if(m_flags & 1<<11) {
             m_viaBotId = in->fetchInt();
@@ -361,10 +357,7 @@ bool UpdatesType::fetch(InboundPkt *in) {
         m_ptsCount = in->fetchInt();
         m_date = in->fetchInt();
         if(m_flags & 1<<2) {
-            m_fwdFromId.fetch(in);
-        }
-        if(m_flags & 1<<2) {
-            m_fwdDate = in->fetchInt();
+            m_fwdFrom.fetch(in);
         }
         if(m_flags & 1<<11) {
             m_viaBotId = in->fetchInt();
@@ -510,8 +503,7 @@ bool UpdatesType::push(OutboundPkt *out) const {
         out->appendInt(m_pts);
         out->appendInt(m_ptsCount);
         out->appendInt(m_date);
-        m_fwdFromId.push(out);
-        out->appendInt(m_fwdDate);
+        m_fwdFrom.push(out);
         out->appendInt(m_viaBotId);
         out->appendInt(m_replyToMsgId);
         out->appendInt(CoreTypes::typeVector);
@@ -532,8 +524,7 @@ bool UpdatesType::push(OutboundPkt *out) const {
         out->appendInt(m_pts);
         out->appendInt(m_ptsCount);
         out->appendInt(m_date);
-        m_fwdFromId.push(out);
-        out->appendInt(m_fwdDate);
+        m_fwdFrom.push(out);
         out->appendInt(m_viaBotId);
         out->appendInt(m_replyToMsgId);
         out->appendInt(CoreTypes::typeVector);
@@ -616,5 +607,230 @@ bool UpdatesType::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const UpdatesType &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case UpdatesType::typeUpdatesTooLong:
+        
+        break;
+    case UpdatesType::typeUpdateShortMessage:
+        stream << item.flags();
+        stream << item.id();
+        stream << item.userId();
+        stream << item.message();
+        stream << item.pts();
+        stream << item.ptsCount();
+        stream << item.date();
+        stream << item.fwdFrom();
+        stream << item.viaBotId();
+        stream << item.replyToMsgId();
+        stream << item.entities();
+        break;
+    case UpdatesType::typeUpdateShortChatMessage:
+        stream << item.flags();
+        stream << item.id();
+        stream << item.fromId();
+        stream << item.chatId();
+        stream << item.message();
+        stream << item.pts();
+        stream << item.ptsCount();
+        stream << item.date();
+        stream << item.fwdFrom();
+        stream << item.viaBotId();
+        stream << item.replyToMsgId();
+        stream << item.entities();
+        break;
+    case UpdatesType::typeUpdateShort:
+        stream << item.update();
+        stream << item.date();
+        break;
+    case UpdatesType::typeUpdatesCombined:
+        stream << item.updates();
+        stream << item.users();
+        stream << item.chats();
+        stream << item.date();
+        stream << item.seqStart();
+        stream << item.seq();
+        break;
+    case UpdatesType::typeUpdates:
+        stream << item.updates();
+        stream << item.users();
+        stream << item.chats();
+        stream << item.date();
+        stream << item.seq();
+        break;
+    case UpdatesType::typeUpdateShortSentMessage:
+        stream << item.flags();
+        stream << item.id();
+        stream << item.pts();
+        stream << item.ptsCount();
+        stream << item.date();
+        stream << item.media();
+        stream << item.entities();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, UpdatesType &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<UpdatesType::UpdatesTypeType>(type));
+    switch(type) {
+    case UpdatesType::typeUpdatesTooLong: {
+        
+    }
+        break;
+    case UpdatesType::typeUpdateShortMessage: {
+        qint32 m_flags;
+        stream >> m_flags;
+        item.setFlags(m_flags);
+        qint32 m_id;
+        stream >> m_id;
+        item.setId(m_id);
+        qint32 m_user_id;
+        stream >> m_user_id;
+        item.setUserId(m_user_id);
+        QString m_message;
+        stream >> m_message;
+        item.setMessage(m_message);
+        qint32 m_pts;
+        stream >> m_pts;
+        item.setPts(m_pts);
+        qint32 m_pts_count;
+        stream >> m_pts_count;
+        item.setPtsCount(m_pts_count);
+        qint32 m_date;
+        stream >> m_date;
+        item.setDate(m_date);
+        MessageFwdHeader m_fwd_from;
+        stream >> m_fwd_from;
+        item.setFwdFrom(m_fwd_from);
+        qint32 m_via_bot_id;
+        stream >> m_via_bot_id;
+        item.setViaBotId(m_via_bot_id);
+        qint32 m_reply_to_msg_id;
+        stream >> m_reply_to_msg_id;
+        item.setReplyToMsgId(m_reply_to_msg_id);
+        QList<MessageEntity> m_entities;
+        stream >> m_entities;
+        item.setEntities(m_entities);
+    }
+        break;
+    case UpdatesType::typeUpdateShortChatMessage: {
+        qint32 m_flags;
+        stream >> m_flags;
+        item.setFlags(m_flags);
+        qint32 m_id;
+        stream >> m_id;
+        item.setId(m_id);
+        qint32 m_from_id;
+        stream >> m_from_id;
+        item.setFromId(m_from_id);
+        qint32 m_chat_id;
+        stream >> m_chat_id;
+        item.setChatId(m_chat_id);
+        QString m_message;
+        stream >> m_message;
+        item.setMessage(m_message);
+        qint32 m_pts;
+        stream >> m_pts;
+        item.setPts(m_pts);
+        qint32 m_pts_count;
+        stream >> m_pts_count;
+        item.setPtsCount(m_pts_count);
+        qint32 m_date;
+        stream >> m_date;
+        item.setDate(m_date);
+        MessageFwdHeader m_fwd_from;
+        stream >> m_fwd_from;
+        item.setFwdFrom(m_fwd_from);
+        qint32 m_via_bot_id;
+        stream >> m_via_bot_id;
+        item.setViaBotId(m_via_bot_id);
+        qint32 m_reply_to_msg_id;
+        stream >> m_reply_to_msg_id;
+        item.setReplyToMsgId(m_reply_to_msg_id);
+        QList<MessageEntity> m_entities;
+        stream >> m_entities;
+        item.setEntities(m_entities);
+    }
+        break;
+    case UpdatesType::typeUpdateShort: {
+        Update m_update;
+        stream >> m_update;
+        item.setUpdate(m_update);
+        qint32 m_date;
+        stream >> m_date;
+        item.setDate(m_date);
+    }
+        break;
+    case UpdatesType::typeUpdatesCombined: {
+        QList<Update> m_updates;
+        stream >> m_updates;
+        item.setUpdates(m_updates);
+        QList<User> m_users;
+        stream >> m_users;
+        item.setUsers(m_users);
+        QList<Chat> m_chats;
+        stream >> m_chats;
+        item.setChats(m_chats);
+        qint32 m_date;
+        stream >> m_date;
+        item.setDate(m_date);
+        qint32 m_seq_start;
+        stream >> m_seq_start;
+        item.setSeqStart(m_seq_start);
+        qint32 m_seq;
+        stream >> m_seq;
+        item.setSeq(m_seq);
+    }
+        break;
+    case UpdatesType::typeUpdates: {
+        QList<Update> m_updates;
+        stream >> m_updates;
+        item.setUpdates(m_updates);
+        QList<User> m_users;
+        stream >> m_users;
+        item.setUsers(m_users);
+        QList<Chat> m_chats;
+        stream >> m_chats;
+        item.setChats(m_chats);
+        qint32 m_date;
+        stream >> m_date;
+        item.setDate(m_date);
+        qint32 m_seq;
+        stream >> m_seq;
+        item.setSeq(m_seq);
+    }
+        break;
+    case UpdatesType::typeUpdateShortSentMessage: {
+        qint32 m_flags;
+        stream >> m_flags;
+        item.setFlags(m_flags);
+        qint32 m_id;
+        stream >> m_id;
+        item.setId(m_id);
+        qint32 m_pts;
+        stream >> m_pts;
+        item.setPts(m_pts);
+        qint32 m_pts_count;
+        stream >> m_pts_count;
+        item.setPtsCount(m_pts_count);
+        qint32 m_date;
+        stream >> m_date;
+        item.setDate(m_date);
+        MessageMedia m_media;
+        stream >> m_media;
+        item.setMedia(m_media);
+        QList<MessageEntity> m_entities;
+        stream >> m_entities;
+        item.setEntities(m_entities);
+    }
+        break;
+    }
+    return stream;
 }
 

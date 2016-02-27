@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 ChannelsChannelParticipant::ChannelsChannelParticipant(ChannelsChannelParticipantType classType, InboundPkt *in) :
     m_classType(classType)
 {
@@ -100,5 +102,34 @@ bool ChannelsChannelParticipant::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const ChannelsChannelParticipant &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case ChannelsChannelParticipant::typeChannelsChannelParticipant:
+        stream << item.participant();
+        stream << item.users();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, ChannelsChannelParticipant &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<ChannelsChannelParticipant::ChannelsChannelParticipantType>(type));
+    switch(type) {
+    case ChannelsChannelParticipant::typeChannelsChannelParticipant: {
+        ChannelParticipant m_participant;
+        stream >> m_participant;
+        item.setParticipant(m_participant);
+        QList<User> m_users;
+        stream >> m_users;
+        item.setUsers(m_users);
+    }
+        break;
+    }
+    return stream;
 }
 

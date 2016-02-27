@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 InputPhotoCrop::InputPhotoCrop(InputPhotoCropType classType, InboundPkt *in) :
     m_cropLeft(0),
     m_cropTop(0),
@@ -120,5 +122,45 @@ bool InputPhotoCrop::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const InputPhotoCrop &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case InputPhotoCrop::typeInputPhotoCropAuto:
+        
+        break;
+    case InputPhotoCrop::typeInputPhotoCrop:
+        stream << item.cropLeft();
+        stream << item.cropTop();
+        stream << item.cropWidth();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, InputPhotoCrop &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<InputPhotoCrop::InputPhotoCropType>(type));
+    switch(type) {
+    case InputPhotoCrop::typeInputPhotoCropAuto: {
+        
+    }
+        break;
+    case InputPhotoCrop::typeInputPhotoCrop: {
+        qreal m_crop_left;
+        stream >> m_crop_left;
+        item.setCropLeft(m_crop_left);
+        qreal m_crop_top;
+        stream >> m_crop_top;
+        item.setCropTop(m_crop_top);
+        qreal m_crop_width;
+        stream >> m_crop_width;
+        item.setCropWidth(m_crop_width);
+    }
+        break;
+    }
+    return stream;
 }
 

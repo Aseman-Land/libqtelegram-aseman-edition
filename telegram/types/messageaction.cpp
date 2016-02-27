@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 MessageAction::MessageAction(MessageActionType classType, InboundPkt *in) :
     m_channelId(0),
     m_chatId(0),
@@ -296,5 +298,124 @@ bool MessageAction::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const MessageAction &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case MessageAction::typeMessageActionEmpty:
+        
+        break;
+    case MessageAction::typeMessageActionChatCreate:
+        stream << item.title();
+        stream << item.users();
+        break;
+    case MessageAction::typeMessageActionChatEditTitle:
+        stream << item.title();
+        break;
+    case MessageAction::typeMessageActionChatEditPhoto:
+        stream << item.photo();
+        break;
+    case MessageAction::typeMessageActionChatDeletePhoto:
+        
+        break;
+    case MessageAction::typeMessageActionChatAddUser:
+        stream << item.users();
+        break;
+    case MessageAction::typeMessageActionChatDeleteUser:
+        stream << item.userId();
+        break;
+    case MessageAction::typeMessageActionChatJoinedByLink:
+        stream << item.inviterId();
+        break;
+    case MessageAction::typeMessageActionChannelCreate:
+        stream << item.title();
+        break;
+    case MessageAction::typeMessageActionChatMigrateTo:
+        stream << item.channelId();
+        break;
+    case MessageAction::typeMessageActionChannelMigrateFrom:
+        stream << item.title();
+        stream << item.chatId();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, MessageAction &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<MessageAction::MessageActionType>(type));
+    switch(type) {
+    case MessageAction::typeMessageActionEmpty: {
+        
+    }
+        break;
+    case MessageAction::typeMessageActionChatCreate: {
+        QString m_title;
+        stream >> m_title;
+        item.setTitle(m_title);
+        QList<qint32> m_users;
+        stream >> m_users;
+        item.setUsers(m_users);
+    }
+        break;
+    case MessageAction::typeMessageActionChatEditTitle: {
+        QString m_title;
+        stream >> m_title;
+        item.setTitle(m_title);
+    }
+        break;
+    case MessageAction::typeMessageActionChatEditPhoto: {
+        Photo m_photo;
+        stream >> m_photo;
+        item.setPhoto(m_photo);
+    }
+        break;
+    case MessageAction::typeMessageActionChatDeletePhoto: {
+        
+    }
+        break;
+    case MessageAction::typeMessageActionChatAddUser: {
+        QList<qint32> m_users;
+        stream >> m_users;
+        item.setUsers(m_users);
+    }
+        break;
+    case MessageAction::typeMessageActionChatDeleteUser: {
+        qint32 m_user_id;
+        stream >> m_user_id;
+        item.setUserId(m_user_id);
+    }
+        break;
+    case MessageAction::typeMessageActionChatJoinedByLink: {
+        qint32 m_inviter_id;
+        stream >> m_inviter_id;
+        item.setInviterId(m_inviter_id);
+    }
+        break;
+    case MessageAction::typeMessageActionChannelCreate: {
+        QString m_title;
+        stream >> m_title;
+        item.setTitle(m_title);
+    }
+        break;
+    case MessageAction::typeMessageActionChatMigrateTo: {
+        qint32 m_channel_id;
+        stream >> m_channel_id;
+        item.setChannelId(m_channel_id);
+    }
+        break;
+    case MessageAction::typeMessageActionChannelMigrateFrom: {
+        QString m_title;
+        stream >> m_title;
+        item.setTitle(m_title);
+        qint32 m_chat_id;
+        stream >> m_chat_id;
+        item.setChatId(m_chat_id);
+    }
+        break;
+    }
+    return stream;
 }
 

@@ -54,3 +54,11 @@
 
 * **Toggle invites** - [TelegramCore::channelsToggleInvites](methods/toggleinvites.md)
 
+* **Export message link** - [TelegramCore::channelsExportMessageLink](methods/exportmessagelink.md)
+
+* **Toggle signatures** - [TelegramCore::channelsToggleSignatures](methods/togglesignatures.md)
+
+* **Get message edit data** - [TelegramCore::channelsGetMessageEditData](methods/getmessageeditdata.md)
+
+* **Edit message** - [TelegramCore::channelsEditMessage](methods/editmessage.md)
+

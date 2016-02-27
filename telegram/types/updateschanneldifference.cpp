@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 UpdatesChannelDifference::UpdatesChannelDifference(UpdatesChannelDifferenceType classType, InboundPkt *in) :
     m_flags(0),
     m_pts(0),
@@ -364,5 +366,120 @@ bool UpdatesChannelDifference::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const UpdatesChannelDifference &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case UpdatesChannelDifference::typeUpdatesChannelDifferenceEmpty:
+        stream << item.flags();
+        stream << item.pts();
+        stream << item.timeout();
+        break;
+    case UpdatesChannelDifference::typeUpdatesChannelDifferenceTooLong:
+        stream << item.flags();
+        stream << item.pts();
+        stream << item.timeout();
+        stream << item.topMessage();
+        stream << item.topImportantMessage();
+        stream << item.readInboxMaxId();
+        stream << item.unreadCount();
+        stream << item.unreadImportantCount();
+        stream << item.messages();
+        stream << item.chats();
+        stream << item.users();
+        break;
+    case UpdatesChannelDifference::typeUpdatesChannelDifference:
+        stream << item.flags();
+        stream << item.pts();
+        stream << item.timeout();
+        stream << item.newMessages();
+        stream << item.otherUpdates();
+        stream << item.chats();
+        stream << item.users();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, UpdatesChannelDifference &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<UpdatesChannelDifference::UpdatesChannelDifferenceType>(type));
+    switch(type) {
+    case UpdatesChannelDifference::typeUpdatesChannelDifferenceEmpty: {
+        qint32 m_flags;
+        stream >> m_flags;
+        item.setFlags(m_flags);
+        qint32 m_pts;
+        stream >> m_pts;
+        item.setPts(m_pts);
+        qint32 m_timeout;
+        stream >> m_timeout;
+        item.setTimeout(m_timeout);
+    }
+        break;
+    case UpdatesChannelDifference::typeUpdatesChannelDifferenceTooLong: {
+        qint32 m_flags;
+        stream >> m_flags;
+        item.setFlags(m_flags);
+        qint32 m_pts;
+        stream >> m_pts;
+        item.setPts(m_pts);
+        qint32 m_timeout;
+        stream >> m_timeout;
+        item.setTimeout(m_timeout);
+        qint32 m_top_message;
+        stream >> m_top_message;
+        item.setTopMessage(m_top_message);
+        qint32 m_top_important_message;
+        stream >> m_top_important_message;
+        item.setTopImportantMessage(m_top_important_message);
+        qint32 m_read_inbox_max_id;
+        stream >> m_read_inbox_max_id;
+        item.setReadInboxMaxId(m_read_inbox_max_id);
+        qint32 m_unread_count;
+        stream >> m_unread_count;
+        item.setUnreadCount(m_unread_count);
+        qint32 m_unread_important_count;
+        stream >> m_unread_important_count;
+        item.setUnreadImportantCount(m_unread_important_count);
+        QList<Message> m_messages;
+        stream >> m_messages;
+        item.setMessages(m_messages);
+        QList<Chat> m_chats;
+        stream >> m_chats;
+        item.setChats(m_chats);
+        QList<User> m_users;
+        stream >> m_users;
+        item.setUsers(m_users);
+    }
+        break;
+    case UpdatesChannelDifference::typeUpdatesChannelDifference: {
+        qint32 m_flags;
+        stream >> m_flags;
+        item.setFlags(m_flags);
+        qint32 m_pts;
+        stream >> m_pts;
+        item.setPts(m_pts);
+        qint32 m_timeout;
+        stream >> m_timeout;
+        item.setTimeout(m_timeout);
+        QList<Message> m_new_messages;
+        stream >> m_new_messages;
+        item.setNewMessages(m_new_messages);
+        QList<Update> m_other_updates;
+        stream >> m_other_updates;
+        item.setOtherUpdates(m_other_updates);
+        QList<Chat> m_chats;
+        stream >> m_chats;
+        item.setChats(m_chats);
+        QList<User> m_users;
+        stream >> m_users;
+        item.setUsers(m_users);
+    }
+        break;
+    }
+    return stream;
 }
 

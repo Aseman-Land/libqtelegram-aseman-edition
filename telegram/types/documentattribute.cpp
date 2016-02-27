@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 DocumentAttribute::DocumentAttribute(DocumentAttributeType classType, InboundPkt *in) :
     m_duration(0),
     m_flags(0),
@@ -265,5 +267,105 @@ bool DocumentAttribute::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const DocumentAttribute &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case DocumentAttribute::typeDocumentAttributeImageSize:
+        stream << item.w();
+        stream << item.h();
+        break;
+    case DocumentAttribute::typeDocumentAttributeAnimated:
+        
+        break;
+    case DocumentAttribute::typeDocumentAttributeSticker:
+        stream << item.alt();
+        stream << item.stickerset();
+        break;
+    case DocumentAttribute::typeDocumentAttributeVideo:
+        stream << item.duration();
+        stream << item.w();
+        stream << item.h();
+        break;
+    case DocumentAttribute::typeDocumentAttributeAudio:
+        stream << item.flags();
+        stream << item.duration();
+        stream << item.title();
+        stream << item.performer();
+        stream << item.waveform();
+        break;
+    case DocumentAttribute::typeDocumentAttributeFilename:
+        stream << item.fileName();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, DocumentAttribute &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<DocumentAttribute::DocumentAttributeType>(type));
+    switch(type) {
+    case DocumentAttribute::typeDocumentAttributeImageSize: {
+        qint32 m_w;
+        stream >> m_w;
+        item.setW(m_w);
+        qint32 m_h;
+        stream >> m_h;
+        item.setH(m_h);
+    }
+        break;
+    case DocumentAttribute::typeDocumentAttributeAnimated: {
+        
+    }
+        break;
+    case DocumentAttribute::typeDocumentAttributeSticker: {
+        QString m_alt;
+        stream >> m_alt;
+        item.setAlt(m_alt);
+        InputStickerSet m_stickerset;
+        stream >> m_stickerset;
+        item.setStickerset(m_stickerset);
+    }
+        break;
+    case DocumentAttribute::typeDocumentAttributeVideo: {
+        qint32 m_duration;
+        stream >> m_duration;
+        item.setDuration(m_duration);
+        qint32 m_w;
+        stream >> m_w;
+        item.setW(m_w);
+        qint32 m_h;
+        stream >> m_h;
+        item.setH(m_h);
+    }
+        break;
+    case DocumentAttribute::typeDocumentAttributeAudio: {
+        qint32 m_flags;
+        stream >> m_flags;
+        item.setFlags(m_flags);
+        qint32 m_duration;
+        stream >> m_duration;
+        item.setDuration(m_duration);
+        QString m_title;
+        stream >> m_title;
+        item.setTitle(m_title);
+        QString m_performer;
+        stream >> m_performer;
+        item.setPerformer(m_performer);
+        QByteArray m_waveform;
+        stream >> m_waveform;
+        item.setWaveform(m_waveform);
+    }
+        break;
+    case DocumentAttribute::typeDocumentAttributeFilename: {
+        QString m_file_name;
+        stream >> m_file_name;
+        item.setFileName(m_file_name);
+    }
+        break;
+    }
+    return stream;
 }
 

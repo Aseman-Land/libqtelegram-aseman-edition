@@ -66,4 +66,7 @@ private:
 
 Q_DECLARE_METATYPE(MessageEntity)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const MessageEntity &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, MessageEntity &item);
+
 #endif // LQTG_TYPE_MESSAGEENTITY

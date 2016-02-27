@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 MessageEntity::MessageEntity(MessageEntityType classType, InboundPkt *in) :
     m_length(0),
     m_offset(0),
@@ -267,5 +269,172 @@ bool MessageEntity::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const MessageEntity &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case MessageEntity::typeMessageEntityUnknown:
+        stream << item.offset();
+        stream << item.length();
+        break;
+    case MessageEntity::typeMessageEntityMention:
+        stream << item.offset();
+        stream << item.length();
+        break;
+    case MessageEntity::typeMessageEntityHashtag:
+        stream << item.offset();
+        stream << item.length();
+        break;
+    case MessageEntity::typeMessageEntityBotCommand:
+        stream << item.offset();
+        stream << item.length();
+        break;
+    case MessageEntity::typeMessageEntityUrl:
+        stream << item.offset();
+        stream << item.length();
+        break;
+    case MessageEntity::typeMessageEntityEmail:
+        stream << item.offset();
+        stream << item.length();
+        break;
+    case MessageEntity::typeMessageEntityBold:
+        stream << item.offset();
+        stream << item.length();
+        break;
+    case MessageEntity::typeMessageEntityItalic:
+        stream << item.offset();
+        stream << item.length();
+        break;
+    case MessageEntity::typeMessageEntityCode:
+        stream << item.offset();
+        stream << item.length();
+        break;
+    case MessageEntity::typeMessageEntityPre:
+        stream << item.offset();
+        stream << item.length();
+        stream << item.language();
+        break;
+    case MessageEntity::typeMessageEntityTextUrl:
+        stream << item.offset();
+        stream << item.length();
+        stream << item.url();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, MessageEntity &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<MessageEntity::MessageEntityType>(type));
+    switch(type) {
+    case MessageEntity::typeMessageEntityUnknown: {
+        qint32 m_offset;
+        stream >> m_offset;
+        item.setOffset(m_offset);
+        qint32 m_length;
+        stream >> m_length;
+        item.setLength(m_length);
+    }
+        break;
+    case MessageEntity::typeMessageEntityMention: {
+        qint32 m_offset;
+        stream >> m_offset;
+        item.setOffset(m_offset);
+        qint32 m_length;
+        stream >> m_length;
+        item.setLength(m_length);
+    }
+        break;
+    case MessageEntity::typeMessageEntityHashtag: {
+        qint32 m_offset;
+        stream >> m_offset;
+        item.setOffset(m_offset);
+        qint32 m_length;
+        stream >> m_length;
+        item.setLength(m_length);
+    }
+        break;
+    case MessageEntity::typeMessageEntityBotCommand: {
+        qint32 m_offset;
+        stream >> m_offset;
+        item.setOffset(m_offset);
+        qint32 m_length;
+        stream >> m_length;
+        item.setLength(m_length);
+    }
+        break;
+    case MessageEntity::typeMessageEntityUrl: {
+        qint32 m_offset;
+        stream >> m_offset;
+        item.setOffset(m_offset);
+        qint32 m_length;
+        stream >> m_length;
+        item.setLength(m_length);
+    }
+        break;
+    case MessageEntity::typeMessageEntityEmail: {
+        qint32 m_offset;
+        stream >> m_offset;
+        item.setOffset(m_offset);
+        qint32 m_length;
+        stream >> m_length;
+        item.setLength(m_length);
+    }
+        break;
+    case MessageEntity::typeMessageEntityBold: {
+        qint32 m_offset;
+        stream >> m_offset;
+        item.setOffset(m_offset);
+        qint32 m_length;
+        stream >> m_length;
+        item.setLength(m_length);
+    }
+        break;
+    case MessageEntity::typeMessageEntityItalic: {
+        qint32 m_offset;
+        stream >> m_offset;
+        item.setOffset(m_offset);
+        qint32 m_length;
+        stream >> m_length;
+        item.setLength(m_length);
+    }
+        break;
+    case MessageEntity::typeMessageEntityCode: {
+        qint32 m_offset;
+        stream >> m_offset;
+        item.setOffset(m_offset);
+        qint32 m_length;
+        stream >> m_length;
+        item.setLength(m_length);
+    }
+        break;
+    case MessageEntity::typeMessageEntityPre: {
+        qint32 m_offset;
+        stream >> m_offset;
+        item.setOffset(m_offset);
+        qint32 m_length;
+        stream >> m_length;
+        item.setLength(m_length);
+        QString m_language;
+        stream >> m_language;
+        item.setLanguage(m_language);
+    }
+        break;
+    case MessageEntity::typeMessageEntityTextUrl: {
+        qint32 m_offset;
+        stream >> m_offset;
+        item.setOffset(m_offset);
+        qint32 m_length;
+        stream >> m_length;
+        item.setLength(m_length);
+        QString m_url;
+        stream >> m_url;
+        item.setUrl(m_url);
+    }
+        break;
+    }
+    return stream;
 }
 

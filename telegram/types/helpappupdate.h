@@ -57,4 +57,7 @@ private:
 
 Q_DECLARE_METATYPE(HelpAppUpdate)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const HelpAppUpdate &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, HelpAppUpdate &item);
+
 #endif // LQTG_TYPE_HELPAPPUPDATE

@@ -74,6 +74,17 @@ QList<DisabledFeature> ConfigObject::disabledFeatures() const {
     return m_core.disabledFeatures();
 }
 
+void ConfigObject::setEditTimeLimit(qint32 editTimeLimit) {
+    if(m_core.editTimeLimit() == editTimeLimit) return;
+    m_core.setEditTimeLimit(editTimeLimit);
+    Q_EMIT editTimeLimitChanged();
+    Q_EMIT coreChanged();
+}
+
+qint32 ConfigObject::editTimeLimit() const {
+    return m_core.editTimeLimit();
+}
+
 void ConfigObject::setExpires(qint32 expires) {
     if(m_core.expires() == expires) return;
     m_core.setExpires(expires);
@@ -237,6 +248,7 @@ ConfigObject &ConfigObject::operator =(const Config &b) {
     Q_EMIT dateChanged();
     Q_EMIT dcOptionsChanged();
     Q_EMIT disabledFeaturesChanged();
+    Q_EMIT editTimeLimitChanged();
     Q_EMIT expiresChanged();
     Q_EMIT forwardedCountMaxChanged();
     Q_EMIT megagroupSizeMaxChanged();

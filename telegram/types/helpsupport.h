@@ -48,4 +48,7 @@ private:
 
 Q_DECLARE_METATYPE(HelpSupport)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const HelpSupport &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, HelpSupport &item);
+
 #endif // LQTG_TYPE_HELPSUPPORT

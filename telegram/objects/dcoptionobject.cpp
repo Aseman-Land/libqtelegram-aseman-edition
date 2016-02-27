@@ -85,6 +85,17 @@ qint32 DcOptionObject::port() const {
     return m_core.port();
 }
 
+void DcOptionObject::setTcpoOnly(bool tcpoOnly) {
+    if(m_core.tcpoOnly() == tcpoOnly) return;
+    m_core.setTcpoOnly(tcpoOnly);
+    Q_EMIT tcpoOnlyChanged();
+    Q_EMIT coreChanged();
+}
+
+bool DcOptionObject::tcpoOnly() const {
+    return m_core.tcpoOnly();
+}
+
 DcOptionObject &DcOptionObject::operator =(const DcOption &b) {
     if(m_core == b) return *this;
     m_core = b;
@@ -95,6 +106,7 @@ DcOptionObject &DcOptionObject::operator =(const DcOption &b) {
     Q_EMIT ipv6Changed();
     Q_EMIT mediaOnlyChanged();
     Q_EMIT portChanged();
+    Q_EMIT tcpoOnlyChanged();
     Q_EMIT coreChanged();
     return *this;
 }

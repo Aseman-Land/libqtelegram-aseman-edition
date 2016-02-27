@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 UserStatus::UserStatus(UserStatusType classType, InboundPkt *in) :
     m_expires(0),
     m_wasOnline(0),
@@ -150,5 +152,67 @@ bool UserStatus::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const UserStatus &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case UserStatus::typeUserStatusEmpty:
+        
+        break;
+    case UserStatus::typeUserStatusOnline:
+        stream << item.expires();
+        break;
+    case UserStatus::typeUserStatusOffline:
+        stream << item.wasOnline();
+        break;
+    case UserStatus::typeUserStatusRecently:
+        
+        break;
+    case UserStatus::typeUserStatusLastWeek:
+        
+        break;
+    case UserStatus::typeUserStatusLastMonth:
+        
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, UserStatus &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<UserStatus::UserStatusType>(type));
+    switch(type) {
+    case UserStatus::typeUserStatusEmpty: {
+        
+    }
+        break;
+    case UserStatus::typeUserStatusOnline: {
+        qint32 m_expires;
+        stream >> m_expires;
+        item.setExpires(m_expires);
+    }
+        break;
+    case UserStatus::typeUserStatusOffline: {
+        qint32 m_was_online;
+        stream >> m_was_online;
+        item.setWasOnline(m_was_online);
+    }
+        break;
+    case UserStatus::typeUserStatusRecently: {
+        
+    }
+        break;
+    case UserStatus::typeUserStatusLastWeek: {
+        
+    }
+        break;
+    case UserStatus::typeUserStatusLastMonth: {
+        
+    }
+        break;
+    }
+    return stream;
 }
 

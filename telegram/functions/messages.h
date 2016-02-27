@@ -140,13 +140,13 @@ public:
     static bool setTyping(OutboundPkt *out, const InputPeer &peer, const SendMessageAction &action);
     static bool setTypingResult(InboundPkt *in);
 
-    static bool sendMessage(OutboundPkt *out, bool noWebpage, bool broadcast, const InputPeer &peer, qint32 replyToMsgId, const QString &message, qint64 randomId, const ReplyMarkup &replyMarkup, const QList<MessageEntity> &entities);
+    static bool sendMessage(OutboundPkt *out, bool noWebpage, bool broadcast, bool silent, bool background, const InputPeer &peer, qint32 replyToMsgId, const QString &message, qint64 randomId, const ReplyMarkup &replyMarkup, const QList<MessageEntity> &entities);
     static UpdatesType sendMessageResult(InboundPkt *in);
 
-    static bool sendMedia(OutboundPkt *out, bool broadcast, const InputPeer &peer, qint32 replyToMsgId, const InputMedia &media, qint64 randomId, const ReplyMarkup &replyMarkup);
+    static bool sendMedia(OutboundPkt *out, bool broadcast, bool silent, bool background, const InputPeer &peer, qint32 replyToMsgId, const InputMedia &media, qint64 randomId, const ReplyMarkup &replyMarkup);
     static UpdatesType sendMediaResult(InboundPkt *in);
 
-    static bool forwardMessages(OutboundPkt *out, bool broadcast, const InputPeer &fromPeer, const QList<qint32> &id, const QList<qint64> &randomId, const InputPeer &toPeer);
+    static bool forwardMessages(OutboundPkt *out, bool broadcast, bool silent, bool background, const InputPeer &fromPeer, const QList<qint32> &id, const QList<qint64> &randomId, const InputPeer &toPeer);
     static UpdatesType forwardMessagesResult(InboundPkt *in);
 
     static bool reportSpam(OutboundPkt *out, const InputPeer &peer);
@@ -278,7 +278,7 @@ public:
     static bool setInlineBotResults(OutboundPkt *out, bool gallery, bool privateValue, qint64 queryId, const QList<InputBotInlineResult> &results, qint32 cacheTime, const QString &nextOffset);
     static bool setInlineBotResultsResult(InboundPkt *in);
 
-    static bool sendInlineBotResult(OutboundPkt *out, bool broadcast, const InputPeer &peer, qint32 replyToMsgId, qint64 randomId, qint64 queryId, const QString &id);
+    static bool sendInlineBotResult(OutboundPkt *out, bool broadcast, bool silent, bool background, const InputPeer &peer, qint32 replyToMsgId, qint64 randomId, qint64 queryId, const QString &id);
     static UpdatesType sendInlineBotResultResult(InboundPkt *in);
 
 };

@@ -42,4 +42,7 @@ private:
 
 Q_DECLARE_METATYPE(AuthCheckedPhone)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const AuthCheckedPhone &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, AuthCheckedPhone &item);
+
 #endif // LQTG_TYPE_AUTHCHECKEDPHONE

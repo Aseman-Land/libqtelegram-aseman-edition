@@ -60,4 +60,7 @@ private:
 
 Q_DECLARE_METATYPE(ReplyMarkup)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const ReplyMarkup &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, ReplyMarkup &item);
+
 #endif // LQTG_TYPE_REPLYMARKUP

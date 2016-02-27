@@ -59,4 +59,7 @@ private:
 
 Q_DECLARE_METATYPE(InputPeer)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const InputPeer &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, InputPeer &item);
+
 #endif // LQTG_TYPE_INPUTPEER

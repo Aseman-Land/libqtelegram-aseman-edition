@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 BotCommand::BotCommand(BotCommandType classType, InboundPkt *in) :
     m_classType(classType)
 {
@@ -89,5 +91,34 @@ bool BotCommand::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const BotCommand &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case BotCommand::typeBotCommand:
+        stream << item.command();
+        stream << item.description();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, BotCommand &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<BotCommand::BotCommandType>(type));
+    switch(type) {
+    case BotCommand::typeBotCommand: {
+        QString m_command;
+        stream >> m_command;
+        item.setCommand(m_command);
+        QString m_description;
+        stream >> m_description;
+        item.setDescription(m_description);
+    }
+        break;
+    }
+    return stream;
 }
 

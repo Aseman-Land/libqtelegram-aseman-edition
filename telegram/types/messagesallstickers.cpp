@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 MessagesAllStickers::MessagesAllStickers(MessagesAllStickersType classType, InboundPkt *in) :
     m_hash(0),
     m_classType(classType)
@@ -114,5 +116,41 @@ bool MessagesAllStickers::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const MessagesAllStickers &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case MessagesAllStickers::typeMessagesAllStickersNotModified:
+        
+        break;
+    case MessagesAllStickers::typeMessagesAllStickers:
+        stream << item.hash();
+        stream << item.sets();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, MessagesAllStickers &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<MessagesAllStickers::MessagesAllStickersType>(type));
+    switch(type) {
+    case MessagesAllStickers::typeMessagesAllStickersNotModified: {
+        
+    }
+        break;
+    case MessagesAllStickers::typeMessagesAllStickers: {
+        qint32 m_hash;
+        stream >> m_hash;
+        item.setHash(m_hash);
+        QList<StickerSet> m_sets;
+        stream >> m_sets;
+        item.setSets(m_sets);
+    }
+        break;
+    }
+    return stream;
 }
 

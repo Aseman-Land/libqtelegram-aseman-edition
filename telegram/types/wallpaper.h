@@ -63,4 +63,7 @@ private:
 
 Q_DECLARE_METATYPE(WallPaper)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const WallPaper &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, WallPaper &item);
+
 #endif // LQTG_TYPE_WALLPAPER

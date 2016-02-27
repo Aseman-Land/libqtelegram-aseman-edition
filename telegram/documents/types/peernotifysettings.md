@@ -21,15 +21,15 @@ peerNotifySettingsEmpty#70a68512 = PeerNotifySettings;
 #### Schema:
 
 ```c++
-peerNotifySettings#8d5e11ee mute_until:int sound:string show_previews:Bool events_mask:int = PeerNotifySettings;
+peerNotifySettings#9acda4c0 flags:# show_previews:flags.0?true silent:flags.1?true mute_until:int sound:string = PeerNotifySettings;
 ```
 
 #### Parameters:
 
 |Name|Type|
 |----|----|
+|showPreviews|bool|
+|silent|bool|
 |muteUntil|qint32|
 |sound|QString|
-|showPreviews|bool|
-|eventsMask|qint32|
 

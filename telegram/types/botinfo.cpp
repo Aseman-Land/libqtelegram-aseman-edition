@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 BotInfo::BotInfo(BotInfoType classType, InboundPkt *in) :
     m_userId(0),
     m_version(0),
@@ -150,5 +152,53 @@ bool BotInfo::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const BotInfo &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case BotInfo::typeBotInfoEmpty:
+        
+        break;
+    case BotInfo::typeBotInfo:
+        stream << item.userId();
+        stream << item.version();
+        stream << item.shareText();
+        stream << item.description();
+        stream << item.commands();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, BotInfo &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<BotInfo::BotInfoType>(type));
+    switch(type) {
+    case BotInfo::typeBotInfoEmpty: {
+        
+    }
+        break;
+    case BotInfo::typeBotInfo: {
+        qint32 m_user_id;
+        stream >> m_user_id;
+        item.setUserId(m_user_id);
+        qint32 m_version;
+        stream >> m_version;
+        item.setVersion(m_version);
+        QString m_share_text;
+        stream >> m_share_text;
+        item.setShareText(m_share_text);
+        QString m_description;
+        stream >> m_description;
+        item.setDescription(m_description);
+        QList<BotCommand> m_commands;
+        stream >> m_commands;
+        item.setCommands(m_commands);
+    }
+        break;
+    }
+    return stream;
 }
 

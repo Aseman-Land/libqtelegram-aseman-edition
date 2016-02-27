@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 ContactsLink::ContactsLink(ContactsLinkType classType, InboundPkt *in) :
     m_classType(classType)
 {
@@ -100,5 +102,38 @@ bool ContactsLink::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const ContactsLink &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case ContactsLink::typeContactsLink:
+        stream << item.myLink();
+        stream << item.foreignLink();
+        stream << item.user();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, ContactsLink &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<ContactsLink::ContactsLinkType>(type));
+    switch(type) {
+    case ContactsLink::typeContactsLink: {
+        ContactLink m_my_link;
+        stream >> m_my_link;
+        item.setMyLink(m_my_link);
+        ContactLink m_foreign_link;
+        stream >> m_foreign_link;
+        item.setForeignLink(m_foreign_link);
+        User m_user;
+        stream >> m_user;
+        item.setUser(m_user);
+    }
+        break;
+    }
+    return stream;
 }
 

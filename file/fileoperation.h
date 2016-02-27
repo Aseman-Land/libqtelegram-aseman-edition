@@ -47,6 +47,8 @@ public:
         mRandomId(0),
         mReplyToMsgId(0),
         mBroadcast(false),
+        mSilent(false),
+        mBackground(false),
         mReplyMarkup(ReplyMarkup::null),
         mResultCallback(0),
         mTimeOut(0),
@@ -68,6 +70,10 @@ public:
     void setReplyToMsgId(const qint32 &replyToMsgId) { mReplyToMsgId = replyToMsgId; }
     bool broadcast() const { return mBroadcast; }
     void setBroadcast(bool broadcast) { mBroadcast = broadcast; }
+    bool silent() const { return mSilent; }
+    void setSilent(bool silent) { mSilent = silent; }
+    bool background() const { return mBackground; }
+    void setBackground(bool background) { mBackground = background; }
     ReplyMarkup replyMarkup() const { return mReplyMarkup; }
     void setReplyMarkup(const ReplyMarkup &replyMarkup) { mReplyMarkup = replyMarkup; }
     qint32 chatId() const { return mChatId; }
@@ -124,6 +130,8 @@ private:
     qint64 mRandomId;
     qint32 mReplyToMsgId;
     bool mBroadcast;
+    bool mSilent;
+    bool mBackground;
     ReplyMarkup mReplyMarkup;
     void *mResultCallback;
     qint32 mTimeOut;
@@ -144,3 +152,11 @@ private:
 };
 
 #endif // FILEOPERATION_H
+
+
+
+
+
+
+
+

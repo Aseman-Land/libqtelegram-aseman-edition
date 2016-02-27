@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 Document::Document(DocumentType classType, InboundPkt *in) :
     m_accessHash(0),
     m_date(0),
@@ -194,5 +196,67 @@ bool Document::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const Document &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case Document::typeDocumentEmpty:
+        stream << item.id();
+        break;
+    case Document::typeDocument:
+        stream << item.id();
+        stream << item.accessHash();
+        stream << item.date();
+        stream << item.mimeType();
+        stream << item.size();
+        stream << item.thumb();
+        stream << item.dcId();
+        stream << item.attributes();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, Document &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<Document::DocumentType>(type));
+    switch(type) {
+    case Document::typeDocumentEmpty: {
+        qint64 m_id;
+        stream >> m_id;
+        item.setId(m_id);
+    }
+        break;
+    case Document::typeDocument: {
+        qint64 m_id;
+        stream >> m_id;
+        item.setId(m_id);
+        qint64 m_access_hash;
+        stream >> m_access_hash;
+        item.setAccessHash(m_access_hash);
+        qint32 m_date;
+        stream >> m_date;
+        item.setDate(m_date);
+        QString m_mime_type;
+        stream >> m_mime_type;
+        item.setMimeType(m_mime_type);
+        qint32 m_size;
+        stream >> m_size;
+        item.setSize(m_size);
+        PhotoSize m_thumb;
+        stream >> m_thumb;
+        item.setThumb(m_thumb);
+        qint32 m_dc_id;
+        stream >> m_dc_id;
+        item.setDcId(m_dc_id);
+        QList<DocumentAttribute> m_attributes;
+        stream >> m_attributes;
+        item.setAttributes(m_attributes);
+    }
+        break;
+    }
+    return stream;
 }
 

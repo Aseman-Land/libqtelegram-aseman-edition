@@ -114,4 +114,7 @@ private:
 
 Q_DECLARE_METATYPE(ChatFull)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const ChatFull &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, ChatFull &item);
+
 #endif // LQTG_TYPE_CHATFULL

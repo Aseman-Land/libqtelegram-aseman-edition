@@ -7,13 +7,15 @@ TelegramCore::messagesSendInlineBotResult
 ## Schema:
 
 ```c++
-messages.sendInlineBotResult#b16e06fe flags:# broadcast:flags.4?true peer:InputPeer reply_to_msg_id:flags.0?int random_id:long query_id:long id:string = Updates;
+messages.sendInlineBotResult#b16e06fe flags:# broadcast:flags.4?true silent:flags.5?true background:flags.6?true peer:InputPeer reply_to_msg_id:flags.0?int random_id:long query_id:long id:string = Updates;
 ```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
 |broadcast|bool||
+|silent|bool||
+|background|bool||
 |peer|[InputPeer](../../types/inputpeer.md)||
 |replyToMsgId|qint32||
 |randomId|qint64||
@@ -55,7 +57,7 @@ onSendInlineBotResultError(qint64 msgId, qint32 errorCode, const QString &errorT
 ## Examples:
 
 ```c++
-tg->sendInlineBotResult(broadcast, peer, reply_to_msg_id, random_id, query_id, id, [=](TG_SEND_INLINE_BOT_RESULT_CALLBACK){
+tg->sendInlineBotResult(broadcast, silent, background, peer, reply_to_msg_id, random_id, query_id, id, [=](TG_SEND_INLINE_BOT_RESULT_CALLBACK){
     ...
 }, 30000);
 ```

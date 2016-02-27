@@ -67,4 +67,7 @@ private:
 
 Q_DECLARE_METATYPE(UserFull)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const UserFull &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, UserFull &item);
+
 #endif // LQTG_TYPE_USERFULL

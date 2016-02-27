@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 MessagesSentEncryptedMessage::MessagesSentEncryptedMessage(MessagesSentEncryptedMessageType classType, InboundPkt *in) :
     m_date(0),
     m_classType(classType)
@@ -105,5 +107,43 @@ bool MessagesSentEncryptedMessage::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const MessagesSentEncryptedMessage &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case MessagesSentEncryptedMessage::typeMessagesSentEncryptedMessage:
+        stream << item.date();
+        break;
+    case MessagesSentEncryptedMessage::typeMessagesSentEncryptedFile:
+        stream << item.date();
+        stream << item.file();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, MessagesSentEncryptedMessage &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<MessagesSentEncryptedMessage::MessagesSentEncryptedMessageType>(type));
+    switch(type) {
+    case MessagesSentEncryptedMessage::typeMessagesSentEncryptedMessage: {
+        qint32 m_date;
+        stream >> m_date;
+        item.setDate(m_date);
+    }
+        break;
+    case MessagesSentEncryptedMessage::typeMessagesSentEncryptedFile: {
+        qint32 m_date;
+        stream >> m_date;
+        item.setDate(m_date);
+        EncryptedFile m_file;
+        stream >> m_file;
+        item.setFile(m_file);
+    }
+        break;
+    }
+    return stream;
 }
 

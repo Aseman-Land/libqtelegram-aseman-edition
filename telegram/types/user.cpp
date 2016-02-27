@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 User::User(UserType classType, InboundPkt *in) :
     m_accessHash(0),
     m_botInfoVersion(0),
@@ -139,6 +141,15 @@ void User::setLastName(const QString &lastName) {
 
 QString User::lastName() const {
     return m_lastName;
+}
+
+void User::setMin(bool min) {
+    if(min) m_flags = (m_flags | (1<<20));
+    else m_flags = (m_flags & ~(1<<20));
+}
+
+bool User::min() const {
+    return (m_flags & 1<<20);
 }
 
 void User::setMutualContact(bool mutualContact) {
@@ -325,5 +336,83 @@ bool User::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const User &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case User::typeUserEmpty:
+        stream << item.id();
+        break;
+    case User::typeUser:
+        stream << item.flags();
+        stream << item.id();
+        stream << item.accessHash();
+        stream << item.firstName();
+        stream << item.lastName();
+        stream << item.username();
+        stream << item.phone();
+        stream << item.photo();
+        stream << item.status();
+        stream << item.botInfoVersion();
+        stream << item.restrictionReason();
+        stream << item.botInlinePlaceholder();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, User &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<User::UserType>(type));
+    switch(type) {
+    case User::typeUserEmpty: {
+        qint32 m_id;
+        stream >> m_id;
+        item.setId(m_id);
+    }
+        break;
+    case User::typeUser: {
+        qint32 m_flags;
+        stream >> m_flags;
+        item.setFlags(m_flags);
+        qint32 m_id;
+        stream >> m_id;
+        item.setId(m_id);
+        qint64 m_access_hash;
+        stream >> m_access_hash;
+        item.setAccessHash(m_access_hash);
+        QString m_first_name;
+        stream >> m_first_name;
+        item.setFirstName(m_first_name);
+        QString m_last_name;
+        stream >> m_last_name;
+        item.setLastName(m_last_name);
+        QString m_username;
+        stream >> m_username;
+        item.setUsername(m_username);
+        QString m_phone;
+        stream >> m_phone;
+        item.setPhone(m_phone);
+        UserProfilePhoto m_photo;
+        stream >> m_photo;
+        item.setPhoto(m_photo);
+        UserStatus m_status;
+        stream >> m_status;
+        item.setStatus(m_status);
+        qint32 m_bot_info_version;
+        stream >> m_bot_info_version;
+        item.setBotInfoVersion(m_bot_info_version);
+        QString m_restriction_reason;
+        stream >> m_restriction_reason;
+        item.setRestrictionReason(m_restriction_reason);
+        QString m_bot_inline_placeholder;
+        stream >> m_bot_inline_placeholder;
+        item.setBotInlinePlaceholder(m_bot_inline_placeholder);
+    }
+        break;
+    }
+    return stream;
 }
 

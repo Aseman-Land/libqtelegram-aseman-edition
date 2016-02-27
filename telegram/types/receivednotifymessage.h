@@ -47,4 +47,7 @@ private:
 
 Q_DECLARE_METATYPE(ReceivedNotifyMessage)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const ReceivedNotifyMessage &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, ReceivedNotifyMessage &item);
+
 #endif // LQTG_TYPE_RECEIVEDNOTIFYMESSAGE

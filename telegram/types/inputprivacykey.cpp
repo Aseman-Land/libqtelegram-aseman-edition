@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 InputPrivacyKey::InputPrivacyKey(InputPrivacyKeyType classType, InboundPkt *in) :
     m_classType(classType)
 {
@@ -78,5 +80,35 @@ bool InputPrivacyKey::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const InputPrivacyKey &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case InputPrivacyKey::typeInputPrivacyKeyStatusTimestamp:
+        
+        break;
+    case InputPrivacyKey::typeInputPrivacyKeyChatInvite:
+        
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, InputPrivacyKey &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<InputPrivacyKey::InputPrivacyKeyType>(type));
+    switch(type) {
+    case InputPrivacyKey::typeInputPrivacyKeyStatusTimestamp: {
+        
+    }
+        break;
+    case InputPrivacyKey::typeInputPrivacyKeyChatInvite: {
+        
+    }
+        break;
+    }
+    return stream;
 }
 

@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 UserProfilePhoto::UserProfilePhoto(UserProfilePhotoType classType, InboundPkt *in) :
     m_photoId(0),
     m_classType(classType)
@@ -114,5 +116,45 @@ bool UserProfilePhoto::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const UserProfilePhoto &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case UserProfilePhoto::typeUserProfilePhotoEmpty:
+        
+        break;
+    case UserProfilePhoto::typeUserProfilePhoto:
+        stream << item.photoId();
+        stream << item.photoSmall();
+        stream << item.photoBig();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, UserProfilePhoto &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<UserProfilePhoto::UserProfilePhotoType>(type));
+    switch(type) {
+    case UserProfilePhoto::typeUserProfilePhotoEmpty: {
+        
+    }
+        break;
+    case UserProfilePhoto::typeUserProfilePhoto: {
+        qint64 m_photo_id;
+        stream >> m_photo_id;
+        item.setPhotoId(m_photo_id);
+        FileLocation m_photo_small;
+        stream >> m_photo_small;
+        item.setPhotoSmall(m_photo_small);
+        FileLocation m_photo_big;
+        stream >> m_photo_big;
+        item.setPhotoBig(m_photo_big);
+    }
+        break;
+    }
+    return stream;
 }
 

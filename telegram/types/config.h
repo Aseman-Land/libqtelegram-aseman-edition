@@ -17,7 +17,7 @@ class LIBQTELEGRAMSHARED_EXPORT Config : public TelegramTypeObject
 {
 public:
     enum ConfigType {
-        typeConfig = 0x6bbc5f8
+        typeConfig = 0x317ceef4
     };
 
     Config(ConfigType classType = typeConfig, InboundPkt *in = 0);
@@ -39,6 +39,9 @@ public:
 
     void setDisabledFeatures(const QList<DisabledFeature> &disabledFeatures);
     QList<DisabledFeature> disabledFeatures() const;
+
+    void setEditTimeLimit(qint32 editTimeLimit);
+    qint32 editTimeLimit() const;
 
     void setExpires(qint32 expires);
     qint32 expires() const;
@@ -99,6 +102,7 @@ private:
     qint32 m_date;
     QList<DcOption> m_dcOptions;
     QList<DisabledFeature> m_disabledFeatures;
+    qint32 m_editTimeLimit;
     qint32 m_expires;
     qint32 m_forwardedCountMax;
     qint32 m_megagroupSizeMax;
@@ -117,5 +121,8 @@ private:
 };
 
 Q_DECLARE_METATYPE(Config)
+
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const Config &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, Config &item);
 
 #endif // LQTG_TYPE_CONFIG

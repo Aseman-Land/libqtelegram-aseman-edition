@@ -47,4 +47,7 @@ private:
 
 Q_DECLARE_METATYPE(StorageFileType)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const StorageFileType &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, StorageFileType &item);
+
 #endif // LQTG_TYPE_STORAGEFILETYPE

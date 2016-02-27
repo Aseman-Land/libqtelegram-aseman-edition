@@ -47,4 +47,7 @@ private:
 
 Q_DECLARE_METATYPE(InputEncryptedChat)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const InputEncryptedChat &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, InputEncryptedChat &item);
+
 #endif // LQTG_TYPE_INPUTENCRYPTEDCHAT

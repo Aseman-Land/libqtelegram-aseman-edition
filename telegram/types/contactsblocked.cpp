@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 ContactsBlocked::ContactsBlocked(ContactsBlockedType classType, InboundPkt *in) :
     m_count(0),
     m_classType(classType)
@@ -162,5 +164,51 @@ bool ContactsBlocked::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const ContactsBlocked &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case ContactsBlocked::typeContactsBlocked:
+        stream << item.blocked();
+        stream << item.users();
+        break;
+    case ContactsBlocked::typeContactsBlockedSlice:
+        stream << item.count();
+        stream << item.blocked();
+        stream << item.users();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, ContactsBlocked &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<ContactsBlocked::ContactsBlockedType>(type));
+    switch(type) {
+    case ContactsBlocked::typeContactsBlocked: {
+        QList<ContactBlocked> m_blocked;
+        stream >> m_blocked;
+        item.setBlocked(m_blocked);
+        QList<User> m_users;
+        stream >> m_users;
+        item.setUsers(m_users);
+    }
+        break;
+    case ContactsBlocked::typeContactsBlockedSlice: {
+        qint32 m_count;
+        stream >> m_count;
+        item.setCount(m_count);
+        QList<ContactBlocked> m_blocked;
+        stream >> m_blocked;
+        item.setBlocked(m_blocked);
+        QList<User> m_users;
+        stream >> m_users;
+        item.setUsers(m_users);
+    }
+        break;
+    }
+    return stream;
 }
 

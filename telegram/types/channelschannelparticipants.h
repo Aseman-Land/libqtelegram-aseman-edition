@@ -54,4 +54,7 @@ private:
 
 Q_DECLARE_METATYPE(ChannelsChannelParticipants)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const ChannelsChannelParticipants &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, ChannelsChannelParticipants &item);
+
 #endif // LQTG_TYPE_CHANNELSCHANNELPARTICIPANTS

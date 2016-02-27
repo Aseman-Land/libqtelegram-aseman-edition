@@ -112,4 +112,7 @@ private:
 
 Q_DECLARE_METATYPE(WebPage)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const WebPage &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, WebPage &item);
+
 #endif // LQTG_TYPE_WEBPAGE

@@ -57,4 +57,7 @@ private:
 
 Q_DECLARE_METATYPE(AuthSentCode)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const AuthSentCode &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, AuthSentCode &item);
+
 #endif // LQTG_TYPE_AUTHSENTCODE

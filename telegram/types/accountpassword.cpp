@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 AccountPassword::AccountPassword(AccountPasswordType classType, InboundPkt *in) :
     m_hasRecovery(false),
     m_classType(classType)
@@ -140,5 +142,59 @@ bool AccountPassword::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const AccountPassword &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case AccountPassword::typeAccountNoPassword:
+        stream << item.newSalt();
+        stream << item.emailUnconfirmedPattern();
+        break;
+    case AccountPassword::typeAccountPassword:
+        stream << item.currentSalt();
+        stream << item.newSalt();
+        stream << item.hint();
+        stream << item.hasRecovery();
+        stream << item.emailUnconfirmedPattern();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, AccountPassword &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<AccountPassword::AccountPasswordType>(type));
+    switch(type) {
+    case AccountPassword::typeAccountNoPassword: {
+        QByteArray m_new_salt;
+        stream >> m_new_salt;
+        item.setNewSalt(m_new_salt);
+        QString m_email_unconfirmed_pattern;
+        stream >> m_email_unconfirmed_pattern;
+        item.setEmailUnconfirmedPattern(m_email_unconfirmed_pattern);
+    }
+        break;
+    case AccountPassword::typeAccountPassword: {
+        QByteArray m_current_salt;
+        stream >> m_current_salt;
+        item.setCurrentSalt(m_current_salt);
+        QByteArray m_new_salt;
+        stream >> m_new_salt;
+        item.setNewSalt(m_new_salt);
+        QString m_hint;
+        stream >> m_hint;
+        item.setHint(m_hint);
+        bool m_has_recovery;
+        stream >> m_has_recovery;
+        item.setHasRecovery(m_has_recovery);
+        QString m_email_unconfirmed_pattern;
+        stream >> m_email_unconfirmed_pattern;
+        item.setEmailUnconfirmedPattern(m_email_unconfirmed_pattern);
+    }
+        break;
+    }
+    return stream;
 }
 

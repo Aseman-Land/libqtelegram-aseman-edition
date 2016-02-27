@@ -63,4 +63,7 @@ private:
 
 Q_DECLARE_METATYPE(InputEncryptedFile)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const InputEncryptedFile &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, InputEncryptedFile &item);
+
 #endif // LQTG_TYPE_INPUTENCRYPTEDFILE

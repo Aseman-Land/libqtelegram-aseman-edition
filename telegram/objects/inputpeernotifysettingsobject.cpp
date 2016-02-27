@@ -19,15 +19,15 @@ InputPeerNotifySettingsObject::InputPeerNotifySettingsObject(QObject *parent) :
 InputPeerNotifySettingsObject::~InputPeerNotifySettingsObject() {
 }
 
-void InputPeerNotifySettingsObject::setEventsMask(qint32 eventsMask) {
-    if(m_core.eventsMask() == eventsMask) return;
-    m_core.setEventsMask(eventsMask);
-    Q_EMIT eventsMaskChanged();
+void InputPeerNotifySettingsObject::setFlags(qint32 flags) {
+    if(m_core.flags() == flags) return;
+    m_core.setFlags(flags);
+    Q_EMIT flagsChanged();
     Q_EMIT coreChanged();
 }
 
-qint32 InputPeerNotifySettingsObject::eventsMask() const {
-    return m_core.eventsMask();
+qint32 InputPeerNotifySettingsObject::flags() const {
+    return m_core.flags();
 }
 
 void InputPeerNotifySettingsObject::setMuteUntil(qint32 muteUntil) {
@@ -52,6 +52,17 @@ bool InputPeerNotifySettingsObject::showPreviews() const {
     return m_core.showPreviews();
 }
 
+void InputPeerNotifySettingsObject::setSilent(bool silent) {
+    if(m_core.silent() == silent) return;
+    m_core.setSilent(silent);
+    Q_EMIT silentChanged();
+    Q_EMIT coreChanged();
+}
+
+bool InputPeerNotifySettingsObject::silent() const {
+    return m_core.silent();
+}
+
 void InputPeerNotifySettingsObject::setSound(const QString &sound) {
     if(m_core.sound() == sound) return;
     m_core.setSound(sound);
@@ -67,9 +78,10 @@ InputPeerNotifySettingsObject &InputPeerNotifySettingsObject::operator =(const I
     if(m_core == b) return *this;
     m_core = b;
 
-    Q_EMIT eventsMaskChanged();
+    Q_EMIT flagsChanged();
     Q_EMIT muteUntilChanged();
     Q_EMIT showPreviewsChanged();
+    Q_EMIT silentChanged();
     Q_EMIT soundChanged();
     Q_EMIT coreChanged();
     return *this;

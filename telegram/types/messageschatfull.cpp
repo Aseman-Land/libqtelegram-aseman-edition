@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 MessagesChatFull::MessagesChatFull(MessagesChatFullType classType, InboundPkt *in) :
     m_classType(classType)
 {
@@ -122,5 +124,38 @@ bool MessagesChatFull::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const MessagesChatFull &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case MessagesChatFull::typeMessagesChatFull:
+        stream << item.fullChat();
+        stream << item.chats();
+        stream << item.users();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, MessagesChatFull &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<MessagesChatFull::MessagesChatFullType>(type));
+    switch(type) {
+    case MessagesChatFull::typeMessagesChatFull: {
+        ChatFull m_full_chat;
+        stream >> m_full_chat;
+        item.setFullChat(m_full_chat);
+        QList<Chat> m_chats;
+        stream >> m_chats;
+        item.setChats(m_chats);
+        QList<User> m_users;
+        stream >> m_users;
+        item.setUsers(m_users);
+    }
+        break;
+    }
+    return stream;
 }
 

@@ -130,7 +130,8 @@ public:
         TypeUpdateStickerSets,
         TypeUpdateSavedGifs,
         TypeUpdateBotInlineQuery,
-        TypeUpdateBotInlineSend
+        TypeUpdateBotInlineSend,
+        TypeUpdateEditChannelMessage
     };
 
     UpdateObject(const Update &core, QObject *parent = 0);

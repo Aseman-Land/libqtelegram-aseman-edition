@@ -53,4 +53,7 @@ private:
 
 Q_DECLARE_METATYPE(ChatParticipant)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const ChatParticipant &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, ChatParticipant &item);
+
 #endif // LQTG_TYPE_CHATPARTICIPANT

@@ -63,4 +63,7 @@ private:
 
 Q_DECLARE_METATYPE(BotInfo)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const BotInfo &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, BotInfo &item);
+
 #endif // LQTG_TYPE_BOTINFO

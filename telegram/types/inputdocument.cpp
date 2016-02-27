@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 InputDocument::InputDocument(InputDocumentType classType, InboundPkt *in) :
     m_accessHash(0),
     m_id(0),
@@ -106,5 +108,41 @@ bool InputDocument::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const InputDocument &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case InputDocument::typeInputDocumentEmpty:
+        
+        break;
+    case InputDocument::typeInputDocument:
+        stream << item.id();
+        stream << item.accessHash();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, InputDocument &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<InputDocument::InputDocumentType>(type));
+    switch(type) {
+    case InputDocument::typeInputDocumentEmpty: {
+        
+    }
+        break;
+    case InputDocument::typeInputDocument: {
+        qint64 m_id;
+        stream >> m_id;
+        item.setId(m_id);
+        qint64 m_access_hash;
+        stream >> m_access_hash;
+        item.setAccessHash(m_access_hash);
+    }
+        break;
+    }
+    return stream;
 }
 

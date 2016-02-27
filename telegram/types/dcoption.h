@@ -41,6 +41,9 @@ public:
     void setPort(qint32 port);
     qint32 port() const;
 
+    void setTcpoOnly(bool tcpoOnly);
+    bool tcpoOnly() const;
+
     void setClassType(DcOptionType classType);
     DcOptionType classType() const;
 
@@ -61,5 +64,8 @@ private:
 };
 
 Q_DECLARE_METATYPE(DcOption)
+
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const DcOption &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, DcOption &item);
 
 #endif // LQTG_TYPE_DCOPTION

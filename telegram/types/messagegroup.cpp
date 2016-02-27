@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 MessageGroup::MessageGroup(MessageGroupType classType, InboundPkt *in) :
     m_count(0),
     m_date(0),
@@ -123,5 +125,42 @@ bool MessageGroup::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const MessageGroup &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case MessageGroup::typeMessageGroup:
+        stream << item.minId();
+        stream << item.maxId();
+        stream << item.count();
+        stream << item.date();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, MessageGroup &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<MessageGroup::MessageGroupType>(type));
+    switch(type) {
+    case MessageGroup::typeMessageGroup: {
+        qint32 m_min_id;
+        stream >> m_min_id;
+        item.setMinId(m_min_id);
+        qint32 m_max_id;
+        stream >> m_max_id;
+        item.setMaxId(m_max_id);
+        qint32 m_count;
+        stream >> m_count;
+        item.setCount(m_count);
+        qint32 m_date;
+        stream >> m_date;
+        item.setDate(m_date);
+    }
+        break;
+    }
+    return stream;
 }
 

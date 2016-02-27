@@ -68,4 +68,7 @@ private:
 
 Q_DECLARE_METATYPE(PhotoSize)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const PhotoSize &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, PhotoSize &item);
+
 #endif // LQTG_TYPE_PHOTOSIZE

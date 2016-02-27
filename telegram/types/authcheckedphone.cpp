@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 AuthCheckedPhone::AuthCheckedPhone(AuthCheckedPhoneType classType, InboundPkt *in) :
     m_phoneRegistered(false),
     m_classType(classType)
@@ -81,5 +83,30 @@ bool AuthCheckedPhone::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const AuthCheckedPhone &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case AuthCheckedPhone::typeAuthCheckedPhone:
+        stream << item.phoneRegistered();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, AuthCheckedPhone &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<AuthCheckedPhone::AuthCheckedPhoneType>(type));
+    switch(type) {
+    case AuthCheckedPhone::typeAuthCheckedPhone: {
+        bool m_phone_registered;
+        stream >> m_phone_registered;
+        item.setPhoneRegistered(m_phone_registered);
+    }
+        break;
+    }
+    return stream;
 }
 

@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 InputBotInlineResult::InputBotInlineResult(InputBotInlineResultType classType, InboundPkt *in) :
     m_duration(0),
     m_flags(0),
@@ -240,5 +242,78 @@ bool InputBotInlineResult::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const InputBotInlineResult &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case InputBotInlineResult::typeInputBotInlineResult:
+        stream << item.flags();
+        stream << item.id();
+        stream << item.type();
+        stream << item.title();
+        stream << item.description();
+        stream << item.url();
+        stream << item.thumbUrl();
+        stream << item.contentUrl();
+        stream << item.contentType();
+        stream << item.w();
+        stream << item.h();
+        stream << item.duration();
+        stream << item.sendMessage();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, InputBotInlineResult &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<InputBotInlineResult::InputBotInlineResultType>(type));
+    switch(type) {
+    case InputBotInlineResult::typeInputBotInlineResult: {
+        qint32 m_flags;
+        stream >> m_flags;
+        item.setFlags(m_flags);
+        QString m_id;
+        stream >> m_id;
+        item.setId(m_id);
+        QString m_type;
+        stream >> m_type;
+        item.setType(m_type);
+        QString m_title;
+        stream >> m_title;
+        item.setTitle(m_title);
+        QString m_description;
+        stream >> m_description;
+        item.setDescription(m_description);
+        QString m_url;
+        stream >> m_url;
+        item.setUrl(m_url);
+        QString m_thumb_url;
+        stream >> m_thumb_url;
+        item.setThumbUrl(m_thumb_url);
+        QString m_content_url;
+        stream >> m_content_url;
+        item.setContentUrl(m_content_url);
+        QString m_content_type;
+        stream >> m_content_type;
+        item.setContentType(m_content_type);
+        qint32 m_w;
+        stream >> m_w;
+        item.setW(m_w);
+        qint32 m_h;
+        stream >> m_h;
+        item.setH(m_h);
+        qint32 m_duration;
+        stream >> m_duration;
+        item.setDuration(m_duration);
+        InputBotInlineMessage m_send_message;
+        stream >> m_send_message;
+        item.setSendMessage(m_send_message);
+    }
+        break;
+    }
+    return stream;
 }
 

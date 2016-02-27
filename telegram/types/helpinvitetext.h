@@ -43,4 +43,7 @@ private:
 
 Q_DECLARE_METATYPE(HelpInviteText)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const HelpInviteText &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, HelpInviteText &item);
+
 #endif // LQTG_TYPE_HELPINVITETEXT

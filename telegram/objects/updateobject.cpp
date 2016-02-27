@@ -1020,6 +1020,9 @@ void UpdateObject::setClassType(quint32 classType) {
     case TypeUpdateBotInlineSend:
         result = Update::typeUpdateBotInlineSend;
         break;
+    case TypeUpdateEditChannelMessage:
+        result = Update::typeUpdateEditChannelMessage;
+        break;
     default:
         result = Update::typeUpdateNewMessage;
         break;
@@ -1162,6 +1165,9 @@ quint32 UpdateObject::classType() const {
         break;
     case Update::typeUpdateBotInlineSend:
         result = TypeUpdateBotInlineSend;
+        break;
+    case Update::typeUpdateEditChannelMessage:
+        result = TypeUpdateEditChannelMessage;
         break;
     default:
         result = TypeUpdateNewMessage;

@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 AccountPasswordSettings::AccountPasswordSettings(AccountPasswordSettingsType classType, InboundPkt *in) :
     m_classType(classType)
 {
@@ -78,5 +80,30 @@ bool AccountPasswordSettings::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const AccountPasswordSettings &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case AccountPasswordSettings::typeAccountPasswordSettings:
+        stream << item.email();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, AccountPasswordSettings &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<AccountPasswordSettings::AccountPasswordSettingsType>(type));
+    switch(type) {
+    case AccountPasswordSettings::typeAccountPasswordSettings: {
+        QString m_email;
+        stream >> m_email;
+        item.setEmail(m_email);
+    }
+        break;
+    }
+    return stream;
 }
 

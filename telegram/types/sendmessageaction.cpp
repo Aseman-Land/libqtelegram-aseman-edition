@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 SendMessageAction::SendMessageAction(SendMessageActionType classType, InboundPkt *in) :
     m_progress(0),
     m_classType(classType)
@@ -186,5 +188,99 @@ bool SendMessageAction::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const SendMessageAction &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case SendMessageAction::typeSendMessageTypingAction:
+        
+        break;
+    case SendMessageAction::typeSendMessageCancelAction:
+        
+        break;
+    case SendMessageAction::typeSendMessageRecordVideoAction:
+        
+        break;
+    case SendMessageAction::typeSendMessageUploadVideoAction:
+        stream << item.progress();
+        break;
+    case SendMessageAction::typeSendMessageRecordAudioAction:
+        
+        break;
+    case SendMessageAction::typeSendMessageUploadAudioAction:
+        stream << item.progress();
+        break;
+    case SendMessageAction::typeSendMessageUploadPhotoAction:
+        stream << item.progress();
+        break;
+    case SendMessageAction::typeSendMessageUploadDocumentAction:
+        stream << item.progress();
+        break;
+    case SendMessageAction::typeSendMessageGeoLocationAction:
+        
+        break;
+    case SendMessageAction::typeSendMessageChooseContactAction:
+        
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, SendMessageAction &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<SendMessageAction::SendMessageActionType>(type));
+    switch(type) {
+    case SendMessageAction::typeSendMessageTypingAction: {
+        
+    }
+        break;
+    case SendMessageAction::typeSendMessageCancelAction: {
+        
+    }
+        break;
+    case SendMessageAction::typeSendMessageRecordVideoAction: {
+        
+    }
+        break;
+    case SendMessageAction::typeSendMessageUploadVideoAction: {
+        qint32 m_progress;
+        stream >> m_progress;
+        item.setProgress(m_progress);
+    }
+        break;
+    case SendMessageAction::typeSendMessageRecordAudioAction: {
+        
+    }
+        break;
+    case SendMessageAction::typeSendMessageUploadAudioAction: {
+        qint32 m_progress;
+        stream >> m_progress;
+        item.setProgress(m_progress);
+    }
+        break;
+    case SendMessageAction::typeSendMessageUploadPhotoAction: {
+        qint32 m_progress;
+        stream >> m_progress;
+        item.setProgress(m_progress);
+    }
+        break;
+    case SendMessageAction::typeSendMessageUploadDocumentAction: {
+        qint32 m_progress;
+        stream >> m_progress;
+        item.setProgress(m_progress);
+    }
+        break;
+    case SendMessageAction::typeSendMessageGeoLocationAction: {
+        
+    }
+        break;
+    case SendMessageAction::typeSendMessageChooseContactAction: {
+        
+    }
+        break;
+    }
+    return stream;
 }
 

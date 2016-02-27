@@ -50,4 +50,7 @@ private:
 
 Q_DECLARE_METATYPE(MessagesSavedGifs)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const MessagesSavedGifs &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, MessagesSavedGifs &item);
+
 #endif // LQTG_TYPE_MESSAGESSAVEDGIFS

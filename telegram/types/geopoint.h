@@ -48,4 +48,7 @@ private:
 
 Q_DECLARE_METATYPE(GeoPoint)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const GeoPoint &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, GeoPoint &item);
+
 #endif // LQTG_TYPE_GEOPOINT

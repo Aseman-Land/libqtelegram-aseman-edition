@@ -75,4 +75,7 @@ private:
 
 Q_DECLARE_METATYPE(FoundGif)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const FoundGif &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, FoundGif &item);
+
 #endif // LQTG_TYPE_FOUNDGIF

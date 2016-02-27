@@ -61,4 +61,7 @@ private:
 
 Q_DECLARE_METATYPE(InputFileLocation)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const InputFileLocation &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, InputFileLocation &item);
+
 #endif // LQTG_TYPE_INPUTFILELOCATION

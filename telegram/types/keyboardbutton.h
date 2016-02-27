@@ -43,4 +43,7 @@ private:
 
 Q_DECLARE_METATYPE(KeyboardButton)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const KeyboardButton &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, KeyboardButton &item);
+
 #endif // LQTG_TYPE_KEYBOARDBUTTON

@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 UpdatesDifference::UpdatesDifference(UpdatesDifferenceType classType, InboundPkt *in) :
     m_date(0),
     m_seq(0),
@@ -314,5 +316,92 @@ bool UpdatesDifference::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const UpdatesDifference &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case UpdatesDifference::typeUpdatesDifferenceEmpty:
+        stream << item.date();
+        stream << item.seq();
+        break;
+    case UpdatesDifference::typeUpdatesDifference:
+        stream << item.newMessages();
+        stream << item.newEncryptedMessages();
+        stream << item.otherUpdates();
+        stream << item.chats();
+        stream << item.users();
+        stream << item.state();
+        break;
+    case UpdatesDifference::typeUpdatesDifferenceSlice:
+        stream << item.newMessages();
+        stream << item.newEncryptedMessages();
+        stream << item.otherUpdates();
+        stream << item.chats();
+        stream << item.users();
+        stream << item.intermediateState();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, UpdatesDifference &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<UpdatesDifference::UpdatesDifferenceType>(type));
+    switch(type) {
+    case UpdatesDifference::typeUpdatesDifferenceEmpty: {
+        qint32 m_date;
+        stream >> m_date;
+        item.setDate(m_date);
+        qint32 m_seq;
+        stream >> m_seq;
+        item.setSeq(m_seq);
+    }
+        break;
+    case UpdatesDifference::typeUpdatesDifference: {
+        QList<Message> m_new_messages;
+        stream >> m_new_messages;
+        item.setNewMessages(m_new_messages);
+        QList<EncryptedMessage> m_new_encrypted_messages;
+        stream >> m_new_encrypted_messages;
+        item.setNewEncryptedMessages(m_new_encrypted_messages);
+        QList<Update> m_other_updates;
+        stream >> m_other_updates;
+        item.setOtherUpdates(m_other_updates);
+        QList<Chat> m_chats;
+        stream >> m_chats;
+        item.setChats(m_chats);
+        QList<User> m_users;
+        stream >> m_users;
+        item.setUsers(m_users);
+        UpdatesState m_state;
+        stream >> m_state;
+        item.setState(m_state);
+    }
+        break;
+    case UpdatesDifference::typeUpdatesDifferenceSlice: {
+        QList<Message> m_new_messages;
+        stream >> m_new_messages;
+        item.setNewMessages(m_new_messages);
+        QList<EncryptedMessage> m_new_encrypted_messages;
+        stream >> m_new_encrypted_messages;
+        item.setNewEncryptedMessages(m_new_encrypted_messages);
+        QList<Update> m_other_updates;
+        stream >> m_other_updates;
+        item.setOtherUpdates(m_other_updates);
+        QList<Chat> m_chats;
+        stream >> m_chats;
+        item.setChats(m_chats);
+        QList<User> m_users;
+        stream >> m_users;
+        item.setUsers(m_users);
+        UpdatesState m_intermediate_state;
+        stream >> m_intermediate_state;
+        item.setIntermediateState(m_intermediate_state);
+    }
+        break;
+    }
+    return stream;
 }
 

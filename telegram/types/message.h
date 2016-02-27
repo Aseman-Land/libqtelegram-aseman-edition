@@ -12,17 +12,18 @@
 #include <QtGlobal>
 #include <QList>
 #include "messageentity.h"
-#include "peer.h"
+#include "messagefwdheader.h"
 #include "messagemedia.h"
 #include <QString>
 #include "replymarkup.h"
+#include "peer.h"
 
 class LIBQTELEGRAMSHARED_EXPORT Message : public TelegramTypeObject
 {
 public:
     enum MessageType {
         typeMessageEmpty = 0x83e5de54,
-        typeMessage = 0xc992e15c,
+        typeMessage = 0xc09be45f,
         typeMessageService = 0xc06b9607
     };
 
@@ -37,6 +38,9 @@ public:
     void setDate(qint32 date);
     qint32 date() const;
 
+    void setEditDate(qint32 editDate);
+    qint32 editDate() const;
+
     void setEntities(const QList<MessageEntity> &entities);
     QList<MessageEntity> entities() const;
 
@@ -46,11 +50,8 @@ public:
     void setFromId(qint32 fromId);
     qint32 fromId() const;
 
-    void setFwdDate(qint32 fwdDate);
-    qint32 fwdDate() const;
-
-    void setFwdFromId(const Peer &fwdFromId);
-    Peer fwdFromId() const;
+    void setFwdFrom(const MessageFwdHeader &fwdFrom);
+    MessageFwdHeader fwdFrom() const;
 
     void setId(qint32 id);
     qint32 id() const;
@@ -70,11 +71,17 @@ public:
     void setOut(bool out);
     bool out() const;
 
+    void setPost(bool post);
+    bool post() const;
+
     void setReplyMarkup(const ReplyMarkup &replyMarkup);
     ReplyMarkup replyMarkup() const;
 
     void setReplyToMsgId(qint32 replyToMsgId);
     qint32 replyToMsgId() const;
+
+    void setSilent(bool silent);
+    bool silent() const;
 
     void setToId(const Peer &toId);
     Peer toId() const;
@@ -102,11 +109,11 @@ public:
 private:
     MessageAction m_action;
     qint32 m_date;
+    qint32 m_editDate;
     QList<MessageEntity> m_entities;
     qint32 m_flags;
     qint32 m_fromId;
-    qint32 m_fwdDate;
-    Peer m_fwdFromId;
+    MessageFwdHeader m_fwdFrom;
     qint32 m_id;
     MessageMedia m_media;
     QString m_message;
@@ -119,5 +126,8 @@ private:
 };
 
 Q_DECLARE_METATYPE(Message)
+
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const Message &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, Message &item);
 
 #endif // LQTG_TYPE_MESSAGE

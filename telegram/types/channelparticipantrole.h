@@ -40,4 +40,7 @@ private:
 
 Q_DECLARE_METATYPE(ChannelParticipantRole)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const ChannelParticipantRole &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, ChannelParticipantRole &item);
+
 #endif // LQTG_TYPE_CHANNELPARTICIPANTROLE

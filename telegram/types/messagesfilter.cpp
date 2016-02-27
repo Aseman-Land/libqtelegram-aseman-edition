@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 MessagesFilter::MessagesFilter(MessagesFilterType classType, InboundPkt *in) :
     m_classType(classType)
 {
@@ -166,5 +168,91 @@ bool MessagesFilter::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const MessagesFilter &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case MessagesFilter::typeInputMessagesFilterEmpty:
+        
+        break;
+    case MessagesFilter::typeInputMessagesFilterPhotos:
+        
+        break;
+    case MessagesFilter::typeInputMessagesFilterVideo:
+        
+        break;
+    case MessagesFilter::typeInputMessagesFilterPhotoVideo:
+        
+        break;
+    case MessagesFilter::typeInputMessagesFilterPhotoVideoDocuments:
+        
+        break;
+    case MessagesFilter::typeInputMessagesFilterDocument:
+        
+        break;
+    case MessagesFilter::typeInputMessagesFilterUrl:
+        
+        break;
+    case MessagesFilter::typeInputMessagesFilterGif:
+        
+        break;
+    case MessagesFilter::typeInputMessagesFilterVoice:
+        
+        break;
+    case MessagesFilter::typeInputMessagesFilterMusic:
+        
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, MessagesFilter &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<MessagesFilter::MessagesFilterType>(type));
+    switch(type) {
+    case MessagesFilter::typeInputMessagesFilterEmpty: {
+        
+    }
+        break;
+    case MessagesFilter::typeInputMessagesFilterPhotos: {
+        
+    }
+        break;
+    case MessagesFilter::typeInputMessagesFilterVideo: {
+        
+    }
+        break;
+    case MessagesFilter::typeInputMessagesFilterPhotoVideo: {
+        
+    }
+        break;
+    case MessagesFilter::typeInputMessagesFilterPhotoVideoDocuments: {
+        
+    }
+        break;
+    case MessagesFilter::typeInputMessagesFilterDocument: {
+        
+    }
+        break;
+    case MessagesFilter::typeInputMessagesFilterUrl: {
+        
+    }
+        break;
+    case MessagesFilter::typeInputMessagesFilterGif: {
+        
+    }
+        break;
+    case MessagesFilter::typeInputMessagesFilterVoice: {
+        
+    }
+        break;
+    case MessagesFilter::typeInputMessagesFilterMusic: {
+        
+    }
+        break;
+    }
+    return stream;
 }
 

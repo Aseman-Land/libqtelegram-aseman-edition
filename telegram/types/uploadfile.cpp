@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 UploadFile::UploadFile(UploadFileType classType, InboundPkt *in) :
     m_mtime(0),
     m_classType(classType)
@@ -103,5 +105,38 @@ bool UploadFile::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const UploadFile &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case UploadFile::typeUploadFile:
+        stream << item.type();
+        stream << item.mtime();
+        stream << item.bytes();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, UploadFile &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<UploadFile::UploadFileType>(type));
+    switch(type) {
+    case UploadFile::typeUploadFile: {
+        StorageFileType m_type;
+        stream >> m_type;
+        item.setType(m_type);
+        qint32 m_mtime;
+        stream >> m_mtime;
+        item.setMtime(m_mtime);
+        QByteArray m_bytes;
+        stream >> m_bytes;
+        item.setBytes(m_bytes);
+    }
+        break;
+    }
+    return stream;
 }
 

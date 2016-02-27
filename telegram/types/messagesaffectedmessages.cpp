@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 MessagesAffectedMessages::MessagesAffectedMessages(MessagesAffectedMessagesType classType, InboundPkt *in) :
     m_pts(0),
     m_ptsCount(0),
@@ -95,5 +97,34 @@ bool MessagesAffectedMessages::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const MessagesAffectedMessages &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case MessagesAffectedMessages::typeMessagesAffectedMessages:
+        stream << item.pts();
+        stream << item.ptsCount();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, MessagesAffectedMessages &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<MessagesAffectedMessages::MessagesAffectedMessagesType>(type));
+    switch(type) {
+    case MessagesAffectedMessages::typeMessagesAffectedMessages: {
+        qint32 m_pts;
+        stream >> m_pts;
+        item.setPts(m_pts);
+        qint32 m_pts_count;
+        stream >> m_pts_count;
+        item.setPtsCount(m_pts_count);
+    }
+        break;
+    }
+    return stream;
 }
 

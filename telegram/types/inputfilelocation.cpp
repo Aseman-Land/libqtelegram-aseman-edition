@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 InputFileLocation::InputFileLocation(InputFileLocationType classType, InboundPkt *in) :
     m_accessHash(0),
     m_id(0),
@@ -163,5 +165,64 @@ bool InputFileLocation::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const InputFileLocation &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case InputFileLocation::typeInputFileLocation:
+        stream << item.volumeId();
+        stream << item.localId();
+        stream << item.secret();
+        break;
+    case InputFileLocation::typeInputEncryptedFileLocation:
+        stream << item.id();
+        stream << item.accessHash();
+        break;
+    case InputFileLocation::typeInputDocumentFileLocation:
+        stream << item.id();
+        stream << item.accessHash();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, InputFileLocation &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<InputFileLocation::InputFileLocationType>(type));
+    switch(type) {
+    case InputFileLocation::typeInputFileLocation: {
+        qint64 m_volume_id;
+        stream >> m_volume_id;
+        item.setVolumeId(m_volume_id);
+        qint32 m_local_id;
+        stream >> m_local_id;
+        item.setLocalId(m_local_id);
+        qint64 m_secret;
+        stream >> m_secret;
+        item.setSecret(m_secret);
+    }
+        break;
+    case InputFileLocation::typeInputEncryptedFileLocation: {
+        qint64 m_id;
+        stream >> m_id;
+        item.setId(m_id);
+        qint64 m_access_hash;
+        stream >> m_access_hash;
+        item.setAccessHash(m_access_hash);
+    }
+        break;
+    case InputFileLocation::typeInputDocumentFileLocation: {
+        qint64 m_id;
+        stream >> m_id;
+        item.setId(m_id);
+        qint64 m_access_hash;
+        stream >> m_access_hash;
+        item.setAccessHash(m_access_hash);
+    }
+        break;
+    }
+    return stream;
 }
 

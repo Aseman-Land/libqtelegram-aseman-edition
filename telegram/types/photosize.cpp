@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 PhotoSize::PhotoSize(PhotoSizeType classType, InboundPkt *in) :
     m_h(0),
     m_size(0),
@@ -174,5 +176,80 @@ bool PhotoSize::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const PhotoSize &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case PhotoSize::typePhotoSizeEmpty:
+        stream << item.type();
+        break;
+    case PhotoSize::typePhotoSize:
+        stream << item.type();
+        stream << item.location();
+        stream << item.w();
+        stream << item.h();
+        stream << item.size();
+        break;
+    case PhotoSize::typePhotoCachedSize:
+        stream << item.type();
+        stream << item.location();
+        stream << item.w();
+        stream << item.h();
+        stream << item.bytes();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, PhotoSize &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<PhotoSize::PhotoSizeType>(type));
+    switch(type) {
+    case PhotoSize::typePhotoSizeEmpty: {
+        QString m_type;
+        stream >> m_type;
+        item.setType(m_type);
+    }
+        break;
+    case PhotoSize::typePhotoSize: {
+        QString m_type;
+        stream >> m_type;
+        item.setType(m_type);
+        FileLocation m_location;
+        stream >> m_location;
+        item.setLocation(m_location);
+        qint32 m_w;
+        stream >> m_w;
+        item.setW(m_w);
+        qint32 m_h;
+        stream >> m_h;
+        item.setH(m_h);
+        qint32 m_size;
+        stream >> m_size;
+        item.setSize(m_size);
+    }
+        break;
+    case PhotoSize::typePhotoCachedSize: {
+        QString m_type;
+        stream >> m_type;
+        item.setType(m_type);
+        FileLocation m_location;
+        stream >> m_location;
+        item.setLocation(m_location);
+        qint32 m_w;
+        stream >> m_w;
+        item.setW(m_w);
+        qint32 m_h;
+        stream >> m_h;
+        item.setH(m_h);
+        QByteArray m_bytes;
+        stream >> m_bytes;
+        item.setBytes(m_bytes);
+    }
+        break;
+    }
+    return stream;
 }
 

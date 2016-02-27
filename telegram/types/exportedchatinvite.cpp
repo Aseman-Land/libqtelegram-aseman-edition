@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 ExportedChatInvite::ExportedChatInvite(ExportedChatInviteType classType, InboundPkt *in) :
     m_classType(classType)
 {
@@ -89,5 +91,37 @@ bool ExportedChatInvite::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const ExportedChatInvite &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case ExportedChatInvite::typeChatInviteEmpty:
+        
+        break;
+    case ExportedChatInvite::typeChatInviteExported:
+        stream << item.link();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, ExportedChatInvite &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<ExportedChatInvite::ExportedChatInviteType>(type));
+    switch(type) {
+    case ExportedChatInvite::typeChatInviteEmpty: {
+        
+    }
+        break;
+    case ExportedChatInvite::typeChatInviteExported: {
+        QString m_link;
+        stream >> m_link;
+        item.setLink(m_link);
+    }
+        break;
+    }
+    return stream;
 }
 

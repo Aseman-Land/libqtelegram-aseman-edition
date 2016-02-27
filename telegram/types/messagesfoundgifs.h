@@ -49,4 +49,7 @@ private:
 
 Q_DECLARE_METATYPE(MessagesFoundGifs)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const MessagesFoundGifs &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, MessagesFoundGifs &item);
+
 #endif // LQTG_TYPE_MESSAGESFOUNDGIFS

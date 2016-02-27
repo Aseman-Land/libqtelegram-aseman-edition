@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 ChannelParticipantRole::ChannelParticipantRole(ChannelParticipantRoleType classType, InboundPkt *in) :
     m_classType(classType)
 {
@@ -89,5 +91,42 @@ bool ChannelParticipantRole::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const ChannelParticipantRole &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case ChannelParticipantRole::typeChannelRoleEmpty:
+        
+        break;
+    case ChannelParticipantRole::typeChannelRoleModerator:
+        
+        break;
+    case ChannelParticipantRole::typeChannelRoleEditor:
+        
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, ChannelParticipantRole &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<ChannelParticipantRole::ChannelParticipantRoleType>(type));
+    switch(type) {
+    case ChannelParticipantRole::typeChannelRoleEmpty: {
+        
+    }
+        break;
+    case ChannelParticipantRole::typeChannelRoleModerator: {
+        
+    }
+        break;
+    case ChannelParticipantRole::typeChannelRoleEditor: {
+        
+    }
+        break;
+    }
+    return stream;
 }
 

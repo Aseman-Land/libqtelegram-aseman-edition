@@ -39,4 +39,7 @@ private:
 
 Q_DECLARE_METATYPE(InputPrivacyKey)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const InputPrivacyKey &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, InputPrivacyKey &item);
+
 #endif // LQTG_TYPE_INPUTPRIVACYKEY

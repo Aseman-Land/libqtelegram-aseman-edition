@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 HelpAppChangelog::HelpAppChangelog(HelpAppChangelogType classType, InboundPkt *in) :
     m_classType(classType)
 {
@@ -89,5 +91,37 @@ bool HelpAppChangelog::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const HelpAppChangelog &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case HelpAppChangelog::typeHelpAppChangelogEmpty:
+        
+        break;
+    case HelpAppChangelog::typeHelpAppChangelog:
+        stream << item.text();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, HelpAppChangelog &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<HelpAppChangelog::HelpAppChangelogType>(type));
+    switch(type) {
+    case HelpAppChangelog::typeHelpAppChangelogEmpty: {
+        
+    }
+        break;
+    case HelpAppChangelog::typeHelpAppChangelog: {
+        QString m_text;
+        stream >> m_text;
+        item.setText(m_text);
+    }
+        break;
+    }
+    return stream;
 }
 

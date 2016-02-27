@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 PhotosPhoto::PhotosPhoto(PhotosPhotoType classType, InboundPkt *in) :
     m_classType(classType)
 {
@@ -100,5 +102,34 @@ bool PhotosPhoto::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const PhotosPhoto &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case PhotosPhoto::typePhotosPhoto:
+        stream << item.photo();
+        stream << item.users();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, PhotosPhoto &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<PhotosPhoto::PhotosPhotoType>(type));
+    switch(type) {
+    case PhotosPhoto::typePhotosPhoto: {
+        Photo m_photo;
+        stream >> m_photo;
+        item.setPhoto(m_photo);
+        QList<User> m_users;
+        stream >> m_users;
+        item.setUsers(m_users);
+    }
+        break;
+    }
+    return stream;
 }
 

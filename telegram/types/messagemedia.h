@@ -103,4 +103,7 @@ private:
 
 Q_DECLARE_METATYPE(MessageMedia)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const MessageMedia &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, MessageMedia &item);
+
 #endif // LQTG_TYPE_MESSAGEMEDIA

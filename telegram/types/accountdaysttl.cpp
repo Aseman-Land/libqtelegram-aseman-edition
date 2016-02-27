@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 AccountDaysTTL::AccountDaysTTL(AccountDaysTTLType classType, InboundPkt *in) :
     m_days(0),
     m_classType(classType)
@@ -81,5 +83,30 @@ bool AccountDaysTTL::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const AccountDaysTTL &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case AccountDaysTTL::typeAccountDaysTTL:
+        stream << item.days();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, AccountDaysTTL &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<AccountDaysTTL::AccountDaysTTLType>(type));
+    switch(type) {
+    case AccountDaysTTL::typeAccountDaysTTL: {
+        qint32 m_days;
+        stream >> m_days;
+        item.setDays(m_days);
+    }
+        break;
+    }
+    return stream;
 }
 

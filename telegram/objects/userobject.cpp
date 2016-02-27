@@ -163,6 +163,17 @@ QString UserObject::lastName() const {
     return m_core.lastName();
 }
 
+void UserObject::setMin(bool min) {
+    if(m_core.min() == min) return;
+    m_core.setMin(min);
+    Q_EMIT minChanged();
+    Q_EMIT coreChanged();
+}
+
+bool UserObject::min() const {
+    return m_core.min();
+}
+
 void UserObject::setMutualContact(bool mutualContact) {
     if(m_core.mutualContact() == mutualContact) return;
     m_core.setMutualContact(mutualContact);
@@ -292,6 +303,7 @@ UserObject &UserObject::operator =(const User &b) {
     Q_EMIT flagsChanged();
     Q_EMIT idChanged();
     Q_EMIT lastNameChanged();
+    Q_EMIT minChanged();
     Q_EMIT mutualContactChanged();
     Q_EMIT phoneChanged();
     Q_EMIT photoChanged();

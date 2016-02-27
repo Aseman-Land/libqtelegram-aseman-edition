@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 ChatParticipants::ChatParticipants(ChatParticipantsType classType, InboundPkt *in) :
     m_chatId(0),
     m_flags(0),
@@ -157,5 +159,55 @@ bool ChatParticipants::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const ChatParticipants &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case ChatParticipants::typeChatParticipantsForbidden:
+        stream << item.flags();
+        stream << item.chatId();
+        stream << item.selfParticipant();
+        break;
+    case ChatParticipants::typeChatParticipants:
+        stream << item.chatId();
+        stream << item.participants();
+        stream << item.version();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, ChatParticipants &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<ChatParticipants::ChatParticipantsType>(type));
+    switch(type) {
+    case ChatParticipants::typeChatParticipantsForbidden: {
+        qint32 m_flags;
+        stream >> m_flags;
+        item.setFlags(m_flags);
+        qint32 m_chat_id;
+        stream >> m_chat_id;
+        item.setChatId(m_chat_id);
+        ChatParticipant m_self_participant;
+        stream >> m_self_participant;
+        item.setSelfParticipant(m_self_participant);
+    }
+        break;
+    case ChatParticipants::typeChatParticipants: {
+        qint32 m_chat_id;
+        stream >> m_chat_id;
+        item.setChatId(m_chat_id);
+        QList<ChatParticipant> m_participants;
+        stream >> m_participants;
+        item.setParticipants(m_participants);
+        qint32 m_version;
+        stream >> m_version;
+        item.setVersion(m_version);
+    }
+        break;
+    }
+    return stream;
 }
 

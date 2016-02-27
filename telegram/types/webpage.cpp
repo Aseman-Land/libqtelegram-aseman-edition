@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 WebPage::WebPage(WebPageType classType, InboundPkt *in) :
     m_date(0),
     m_duration(0),
@@ -322,5 +324,112 @@ bool WebPage::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const WebPage &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case WebPage::typeWebPageEmpty:
+        stream << item.id();
+        break;
+    case WebPage::typeWebPagePending:
+        stream << item.id();
+        stream << item.date();
+        break;
+    case WebPage::typeWebPage:
+        stream << item.flags();
+        stream << item.id();
+        stream << item.url();
+        stream << item.displayUrl();
+        stream << item.type();
+        stream << item.siteName();
+        stream << item.title();
+        stream << item.description();
+        stream << item.photo();
+        stream << item.embedUrl();
+        stream << item.embedType();
+        stream << item.embedWidth();
+        stream << item.embedHeight();
+        stream << item.duration();
+        stream << item.author();
+        stream << item.document();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, WebPage &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<WebPage::WebPageType>(type));
+    switch(type) {
+    case WebPage::typeWebPageEmpty: {
+        qint64 m_id;
+        stream >> m_id;
+        item.setId(m_id);
+    }
+        break;
+    case WebPage::typeWebPagePending: {
+        qint64 m_id;
+        stream >> m_id;
+        item.setId(m_id);
+        qint32 m_date;
+        stream >> m_date;
+        item.setDate(m_date);
+    }
+        break;
+    case WebPage::typeWebPage: {
+        qint32 m_flags;
+        stream >> m_flags;
+        item.setFlags(m_flags);
+        qint64 m_id;
+        stream >> m_id;
+        item.setId(m_id);
+        QString m_url;
+        stream >> m_url;
+        item.setUrl(m_url);
+        QString m_display_url;
+        stream >> m_display_url;
+        item.setDisplayUrl(m_display_url);
+        QString m_type;
+        stream >> m_type;
+        item.setType(m_type);
+        QString m_site_name;
+        stream >> m_site_name;
+        item.setSiteName(m_site_name);
+        QString m_title;
+        stream >> m_title;
+        item.setTitle(m_title);
+        QString m_description;
+        stream >> m_description;
+        item.setDescription(m_description);
+        Photo m_photo;
+        stream >> m_photo;
+        item.setPhoto(m_photo);
+        QString m_embed_url;
+        stream >> m_embed_url;
+        item.setEmbedUrl(m_embed_url);
+        QString m_embed_type;
+        stream >> m_embed_type;
+        item.setEmbedType(m_embed_type);
+        qint32 m_embed_width;
+        stream >> m_embed_width;
+        item.setEmbedWidth(m_embed_width);
+        qint32 m_embed_height;
+        stream >> m_embed_height;
+        item.setEmbedHeight(m_embed_height);
+        qint32 m_duration;
+        stream >> m_duration;
+        item.setDuration(m_duration);
+        QString m_author;
+        stream >> m_author;
+        item.setAuthor(m_author);
+        Document m_document;
+        stream >> m_document;
+        item.setDocument(m_document);
+    }
+        break;
+    }
+    return stream;
 }
 

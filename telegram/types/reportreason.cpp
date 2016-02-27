@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 ReportReason::ReportReason(ReportReasonType classType, InboundPkt *in) :
     m_classType(classType)
 {
@@ -111,5 +113,51 @@ bool ReportReason::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const ReportReason &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case ReportReason::typeInputReportReasonSpam:
+        
+        break;
+    case ReportReason::typeInputReportReasonViolence:
+        
+        break;
+    case ReportReason::typeInputReportReasonPornography:
+        
+        break;
+    case ReportReason::typeInputReportReasonOther:
+        stream << item.text();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, ReportReason &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<ReportReason::ReportReasonType>(type));
+    switch(type) {
+    case ReportReason::typeInputReportReasonSpam: {
+        
+    }
+        break;
+    case ReportReason::typeInputReportReasonViolence: {
+        
+    }
+        break;
+    case ReportReason::typeInputReportReasonPornography: {
+        
+    }
+        break;
+    case ReportReason::typeInputReportReasonOther: {
+        QString m_text;
+        stream >> m_text;
+        item.setText(m_text);
+    }
+        break;
+    }
+    return stream;
 }
 

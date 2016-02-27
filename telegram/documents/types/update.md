@@ -45,6 +45,7 @@
 * [typeUpdateSavedGifs](#updatetypeupdatesavedgifs)
 * [typeUpdateBotInlineQuery](#updatetypeupdatebotinlinequery)
 * [typeUpdateBotInlineSend](#updatetypeupdatebotinlinesend)
+* [typeUpdateEditChannelMessage](#updatetypeupdateeditchannelmessage)
 
 ## Update::typeUpdateNewMessage
 
@@ -708,4 +709,20 @@ updateBotInlineSend#f69e113 user_id:int query:string id:string = Update;
 |userId|qint32|
 |query|QString|
 |id|QString|
+
+## Update::typeUpdateEditChannelMessage
+
+#### Schema:
+
+```c++
+updateEditChannelMessage#1b3f4df7 message:Message pts:int pts_count:int = Update;
+```
+
+#### Parameters:
+
+|Name|Type|
+|----|----|
+|message|[Message](message.md)|
+|pts|qint32|
+|ptsCount|qint32|
 

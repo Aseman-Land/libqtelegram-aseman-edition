@@ -7,7 +7,7 @@
 MessageObject::MessageObject(const Message &core, QObject *parent) :
     TelegramTypeQObject(parent),
     m_action(0),
-    m_fwdFromId(0),
+    m_fwdFrom(0),
     m_media(0),
     m_replyMarkup(0),
     m_toId(0),
@@ -15,8 +15,8 @@ MessageObject::MessageObject(const Message &core, QObject *parent) :
 {
     m_action = new MessageActionObject(m_core.action(), this);
     connect(m_action.data(), &MessageActionObject::coreChanged, this, &MessageObject::coreActionChanged);
-    m_fwdFromId = new PeerObject(m_core.fwdFromId(), this);
-    connect(m_fwdFromId.data(), &PeerObject::coreChanged, this, &MessageObject::coreFwdFromIdChanged);
+    m_fwdFrom = new MessageFwdHeaderObject(m_core.fwdFrom(), this);
+    connect(m_fwdFrom.data(), &MessageFwdHeaderObject::coreChanged, this, &MessageObject::coreFwdFromChanged);
     m_media = new MessageMediaObject(m_core.media(), this);
     connect(m_media.data(), &MessageMediaObject::coreChanged, this, &MessageObject::coreMediaChanged);
     m_replyMarkup = new ReplyMarkupObject(m_core.replyMarkup(), this);
@@ -28,7 +28,7 @@ MessageObject::MessageObject(const Message &core, QObject *parent) :
 MessageObject::MessageObject(QObject *parent) :
     TelegramTypeQObject(parent),
     m_action(0),
-    m_fwdFromId(0),
+    m_fwdFrom(0),
     m_media(0),
     m_replyMarkup(0),
     m_toId(0),
@@ -36,8 +36,8 @@ MessageObject::MessageObject(QObject *parent) :
 {
     m_action = new MessageActionObject(m_core.action(), this);
     connect(m_action.data(), &MessageActionObject::coreChanged, this, &MessageObject::coreActionChanged);
-    m_fwdFromId = new PeerObject(m_core.fwdFromId(), this);
-    connect(m_fwdFromId.data(), &PeerObject::coreChanged, this, &MessageObject::coreFwdFromIdChanged);
+    m_fwdFrom = new MessageFwdHeaderObject(m_core.fwdFrom(), this);
+    connect(m_fwdFrom.data(), &MessageFwdHeaderObject::coreChanged, this, &MessageObject::coreFwdFromChanged);
     m_media = new MessageMediaObject(m_core.media(), this);
     connect(m_media.data(), &MessageMediaObject::coreChanged, this, &MessageObject::coreMediaChanged);
     m_replyMarkup = new ReplyMarkupObject(m_core.replyMarkup(), this);
@@ -77,6 +77,17 @@ qint32 MessageObject::date() const {
     return m_core.date();
 }
 
+void MessageObject::setEditDate(qint32 editDate) {
+    if(m_core.editDate() == editDate) return;
+    m_core.setEditDate(editDate);
+    Q_EMIT editDateChanged();
+    Q_EMIT coreChanged();
+}
+
+qint32 MessageObject::editDate() const {
+    return m_core.editDate();
+}
+
 void MessageObject::setEntities(const QList<MessageEntity> &entities) {
     if(m_core.entities() == entities) return;
     m_core.setEntities(entities);
@@ -110,32 +121,21 @@ qint32 MessageObject::fromId() const {
     return m_core.fromId();
 }
 
-void MessageObject::setFwdDate(qint32 fwdDate) {
-    if(m_core.fwdDate() == fwdDate) return;
-    m_core.setFwdDate(fwdDate);
-    Q_EMIT fwdDateChanged();
-    Q_EMIT coreChanged();
-}
-
-qint32 MessageObject::fwdDate() const {
-    return m_core.fwdDate();
-}
-
-void MessageObject::setFwdFromId(PeerObject* fwdFromId) {
-    if(m_fwdFromId == fwdFromId) return;
-    if(m_fwdFromId) delete m_fwdFromId;
-    m_fwdFromId = fwdFromId;
-    if(m_fwdFromId) {
-        m_fwdFromId->setParent(this);
-        m_core.setFwdFromId(m_fwdFromId->core());
-        connect(m_fwdFromId.data(), &PeerObject::coreChanged, this, &MessageObject::coreFwdFromIdChanged);
+void MessageObject::setFwdFrom(MessageFwdHeaderObject* fwdFrom) {
+    if(m_fwdFrom == fwdFrom) return;
+    if(m_fwdFrom) delete m_fwdFrom;
+    m_fwdFrom = fwdFrom;
+    if(m_fwdFrom) {
+        m_fwdFrom->setParent(this);
+        m_core.setFwdFrom(m_fwdFrom->core());
+        connect(m_fwdFrom.data(), &MessageFwdHeaderObject::coreChanged, this, &MessageObject::coreFwdFromChanged);
     }
-    Q_EMIT fwdFromIdChanged();
+    Q_EMIT fwdFromChanged();
     Q_EMIT coreChanged();
 }
 
-PeerObject*  MessageObject::fwdFromId() const {
-    return m_fwdFromId;
+MessageFwdHeaderObject*  MessageObject::fwdFrom() const {
+    return m_fwdFrom;
 }
 
 void MessageObject::setId(qint32 id) {
@@ -210,6 +210,17 @@ bool MessageObject::out() const {
     return m_core.out();
 }
 
+void MessageObject::setPost(bool post) {
+    if(m_core.post() == post) return;
+    m_core.setPost(post);
+    Q_EMIT postChanged();
+    Q_EMIT coreChanged();
+}
+
+bool MessageObject::post() const {
+    return m_core.post();
+}
+
 void MessageObject::setReplyMarkup(ReplyMarkupObject* replyMarkup) {
     if(m_replyMarkup == replyMarkup) return;
     if(m_replyMarkup) delete m_replyMarkup;
@@ -236,6 +247,17 @@ void MessageObject::setReplyToMsgId(qint32 replyToMsgId) {
 
 qint32 MessageObject::replyToMsgId() const {
     return m_core.replyToMsgId();
+}
+
+void MessageObject::setSilent(bool silent) {
+    if(m_core.silent() == silent) return;
+    m_core.setSilent(silent);
+    Q_EMIT silentChanged();
+    Q_EMIT coreChanged();
+}
+
+bool MessageObject::silent() const {
+    return m_core.silent();
 }
 
 void MessageObject::setToId(PeerObject* toId) {
@@ -292,26 +314,28 @@ MessageObject &MessageObject::operator =(const Message &b) {
     if(m_core == b) return *this;
     m_core = b;
     m_action->setCore(b.action());
-    m_fwdFromId->setCore(b.fwdFromId());
+    m_fwdFrom->setCore(b.fwdFrom());
     m_media->setCore(b.media());
     m_replyMarkup->setCore(b.replyMarkup());
     m_toId->setCore(b.toId());
 
     Q_EMIT actionChanged();
     Q_EMIT dateChanged();
+    Q_EMIT editDateChanged();
     Q_EMIT entitiesChanged();
     Q_EMIT flagsChanged();
     Q_EMIT fromIdChanged();
-    Q_EMIT fwdDateChanged();
-    Q_EMIT fwdFromIdChanged();
+    Q_EMIT fwdFromChanged();
     Q_EMIT idChanged();
     Q_EMIT mediaChanged();
     Q_EMIT mediaUnreadChanged();
     Q_EMIT mentionedChanged();
     Q_EMIT messageChanged();
     Q_EMIT outChanged();
+    Q_EMIT postChanged();
     Q_EMIT replyMarkupChanged();
     Q_EMIT replyToMsgIdChanged();
+    Q_EMIT silentChanged();
     Q_EMIT toIdChanged();
     Q_EMIT unreadChanged();
     Q_EMIT viaBotIdChanged();
@@ -382,10 +406,10 @@ void MessageObject::coreActionChanged() {
     Q_EMIT coreChanged();
 }
 
-void MessageObject::coreFwdFromIdChanged() {
-    if(m_core.fwdFromId() == m_fwdFromId->core()) return;
-    m_core.setFwdFromId(m_fwdFromId->core());
-    Q_EMIT fwdFromIdChanged();
+void MessageObject::coreFwdFromChanged() {
+    if(m_core.fwdFrom() == m_fwdFrom->core()) return;
+    m_core.setFwdFrom(m_fwdFrom->core());
+    Q_EMIT fwdFromChanged();
     Q_EMIT coreChanged();
 }
 

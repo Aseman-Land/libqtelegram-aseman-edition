@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 FileLocation::FileLocation(FileLocationType classType, InboundPkt *in) :
     m_dcId(0),
     m_localId(0),
@@ -140,5 +142,59 @@ bool FileLocation::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const FileLocation &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case FileLocation::typeFileLocationUnavailable:
+        stream << item.volumeId();
+        stream << item.localId();
+        stream << item.secret();
+        break;
+    case FileLocation::typeFileLocation:
+        stream << item.dcId();
+        stream << item.volumeId();
+        stream << item.localId();
+        stream << item.secret();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, FileLocation &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<FileLocation::FileLocationType>(type));
+    switch(type) {
+    case FileLocation::typeFileLocationUnavailable: {
+        qint64 m_volume_id;
+        stream >> m_volume_id;
+        item.setVolumeId(m_volume_id);
+        qint32 m_local_id;
+        stream >> m_local_id;
+        item.setLocalId(m_local_id);
+        qint64 m_secret;
+        stream >> m_secret;
+        item.setSecret(m_secret);
+    }
+        break;
+    case FileLocation::typeFileLocation: {
+        qint32 m_dc_id;
+        stream >> m_dc_id;
+        item.setDcId(m_dc_id);
+        qint64 m_volume_id;
+        stream >> m_volume_id;
+        item.setVolumeId(m_volume_id);
+        qint32 m_local_id;
+        stream >> m_local_id;
+        item.setLocalId(m_local_id);
+        qint64 m_secret;
+        stream >> m_secret;
+        item.setSecret(m_secret);
+    }
+        break;
+    }
+    return stream;
 }
 

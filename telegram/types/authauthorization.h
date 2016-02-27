@@ -43,4 +43,7 @@ private:
 
 Q_DECLARE_METATYPE(AuthAuthorization)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const AuthAuthorization &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, AuthAuthorization &item);
+
 #endif // LQTG_TYPE_AUTHAUTHORIZATION

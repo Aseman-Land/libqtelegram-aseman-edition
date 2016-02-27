@@ -60,6 +60,8 @@
 
 * [ExportedChatInvite](exportedchatinvite.md)
 
+* [ExportedMessageLink](exportedmessagelink.md)
+
 * [FileLocation](filelocation.md)
 
 * [FoundGif](foundgif.md)
@@ -123,6 +125,8 @@
 * [MessageAction](messageaction.md)
 
 * [MessageEntity](messageentity.md)
+
+* [MessageFwdHeader](messagefwdheader.md)
 
 * [MessageGroup](messagegroup.md)
 
@@ -203,6 +207,8 @@
 * [ChannelsChannelParticipant](channelschannelparticipant.md)
 
 * [ChannelsChannelParticipants](channelschannelparticipants.md)
+
+* [ChannelsMessageEditData](channelsmessageeditdata.md)
 
 * [ContactsBlocked](contactsblocked.md)
 

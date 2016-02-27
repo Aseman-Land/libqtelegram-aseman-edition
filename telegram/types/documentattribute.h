@@ -90,4 +90,7 @@ private:
 
 Q_DECLARE_METATYPE(DocumentAttribute)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const DocumentAttribute &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, DocumentAttribute &item);
+
 #endif // LQTG_TYPE_DOCUMENTATTRIBUTE

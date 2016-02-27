@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 ReplyMarkup::ReplyMarkup(ReplyMarkupType classType, InboundPkt *in) :
     m_flags(0),
     m_classType(classType)
@@ -156,5 +158,52 @@ bool ReplyMarkup::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const ReplyMarkup &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case ReplyMarkup::typeReplyKeyboardHide:
+        stream << item.flags();
+        break;
+    case ReplyMarkup::typeReplyKeyboardForceReply:
+        stream << item.flags();
+        break;
+    case ReplyMarkup::typeReplyKeyboardMarkup:
+        stream << item.flags();
+        stream << item.rows();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, ReplyMarkup &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<ReplyMarkup::ReplyMarkupType>(type));
+    switch(type) {
+    case ReplyMarkup::typeReplyKeyboardHide: {
+        qint32 m_flags;
+        stream >> m_flags;
+        item.setFlags(m_flags);
+    }
+        break;
+    case ReplyMarkup::typeReplyKeyboardForceReply: {
+        qint32 m_flags;
+        stream >> m_flags;
+        item.setFlags(m_flags);
+    }
+        break;
+    case ReplyMarkup::typeReplyKeyboardMarkup: {
+        qint32 m_flags;
+        stream >> m_flags;
+        item.setFlags(m_flags);
+        QList<KeyboardButtonRow> m_rows;
+        stream >> m_rows;
+        item.setRows(m_rows);
+    }
+        break;
+    }
+    return stream;
 }
 

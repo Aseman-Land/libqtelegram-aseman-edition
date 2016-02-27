@@ -49,4 +49,7 @@ private:
 
 Q_DECLARE_METATYPE(AccountPrivacyRules)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const AccountPrivacyRules &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, AccountPrivacyRules &item);
+
 #endif // LQTG_TYPE_ACCOUNTPRIVACYRULES

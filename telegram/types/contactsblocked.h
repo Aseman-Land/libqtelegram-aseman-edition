@@ -55,4 +55,7 @@ private:
 
 Q_DECLARE_METATYPE(ContactsBlocked)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const ContactsBlocked &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, ContactsBlocked &item);
+
 #endif // LQTG_TYPE_CONTACTSBLOCKED

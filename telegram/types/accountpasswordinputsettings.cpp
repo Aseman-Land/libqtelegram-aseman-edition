@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 AccountPasswordInputSettings::AccountPasswordInputSettings(AccountPasswordInputSettingsType classType, InboundPkt *in) :
     m_flags(0),
     m_classType(classType)
@@ -133,5 +135,46 @@ bool AccountPasswordInputSettings::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const AccountPasswordInputSettings &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case AccountPasswordInputSettings::typeAccountPasswordInputSettings:
+        stream << item.flags();
+        stream << item.newSalt();
+        stream << item.newPasswordHash();
+        stream << item.hint();
+        stream << item.email();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, AccountPasswordInputSettings &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<AccountPasswordInputSettings::AccountPasswordInputSettingsType>(type));
+    switch(type) {
+    case AccountPasswordInputSettings::typeAccountPasswordInputSettings: {
+        qint32 m_flags;
+        stream >> m_flags;
+        item.setFlags(m_flags);
+        QByteArray m_new_salt;
+        stream >> m_new_salt;
+        item.setNewSalt(m_new_salt);
+        QByteArray m_new_password_hash;
+        stream >> m_new_password_hash;
+        item.setNewPasswordHash(m_new_password_hash);
+        QString m_hint;
+        stream >> m_hint;
+        item.setHint(m_hint);
+        QString m_email;
+        stream >> m_email;
+        item.setEmail(m_email);
+    }
+        break;
+    }
+    return stream;
 }
 

@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 MessagesAffectedHistory::MessagesAffectedHistory(MessagesAffectedHistoryType classType, InboundPkt *in) :
     m_offset(0),
     m_pts(0),
@@ -109,5 +111,38 @@ bool MessagesAffectedHistory::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const MessagesAffectedHistory &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case MessagesAffectedHistory::typeMessagesAffectedHistory:
+        stream << item.pts();
+        stream << item.ptsCount();
+        stream << item.offset();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, MessagesAffectedHistory &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<MessagesAffectedHistory::MessagesAffectedHistoryType>(type));
+    switch(type) {
+    case MessagesAffectedHistory::typeMessagesAffectedHistory: {
+        qint32 m_pts;
+        stream >> m_pts;
+        item.setPts(m_pts);
+        qint32 m_pts_count;
+        stream >> m_pts_count;
+        item.setPtsCount(m_pts_count);
+        qint32 m_offset;
+        stream >> m_offset;
+        item.setOffset(m_offset);
+    }
+        break;
+    }
+    return stream;
 }
 

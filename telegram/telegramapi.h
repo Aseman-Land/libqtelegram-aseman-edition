@@ -88,6 +88,10 @@ public:
     qint64 channelsExportInvite(const InputChannel &channel, const QVariant &attachedData = QVariant(), Session *session = 0);
     qint64 channelsDeleteChannel(const InputChannel &channel, const QVariant &attachedData = QVariant(), Session *session = 0);
     qint64 channelsToggleInvites(const InputChannel &channel, bool enabled, const QVariant &attachedData = QVariant(), Session *session = 0);
+    qint64 channelsExportMessageLink(const InputChannel &channel, qint32 id, const QVariant &attachedData = QVariant(), Session *session = 0);
+    qint64 channelsToggleSignatures(const InputChannel &channel, bool enabled, const QVariant &attachedData = QVariant(), Session *session = 0);
+    qint64 channelsGetMessageEditData(const InputChannel &channel, qint32 id, const QVariant &attachedData = QVariant(), Session *session = 0);
+    qint64 channelsEditMessage(bool no_webpage, const InputChannel &channel, qint32 id, const QString &message, const QList<MessageEntity> &entities, const QVariant &attachedData = QVariant(), Session *session = 0);
     
     qint64 contactsGetStatuses(const QVariant &attachedData = QVariant(), Session *session = 0);
     qint64 contactsGetContacts(const QString &hash, const QVariant &attachedData = QVariant(), Session *session = 0);
@@ -120,9 +124,9 @@ public:
     qint64 messagesDeleteMessages(const QList<qint32> &id, const QVariant &attachedData = QVariant(), Session *session = 0);
     qint64 messagesReceivedMessages(qint32 max_id, const QVariant &attachedData = QVariant(), Session *session = 0);
     qint64 messagesSetTyping(const InputPeer &peer, const SendMessageAction &action, const QVariant &attachedData = QVariant(), Session *session = 0);
-    qint64 messagesSendMessage(bool no_webpage, bool broadcast, const InputPeer &peer, qint32 reply_to_msg_id, const QString &message, qint64 random_id, const ReplyMarkup &reply_markup, const QList<MessageEntity> &entities, const QVariant &attachedData = QVariant(), Session *session = 0);
-    qint64 messagesSendMedia(bool broadcast, const InputPeer &peer, qint32 reply_to_msg_id, const InputMedia &media, qint64 random_id, const ReplyMarkup &reply_markup, const QVariant &attachedData = QVariant(), Session *session = 0);
-    qint64 messagesForwardMessages(bool broadcast, const InputPeer &from_peer, const QList<qint32> &id, const QList<qint64> &random_id, const InputPeer &to_peer, const QVariant &attachedData = QVariant(), Session *session = 0);
+    qint64 messagesSendMessage(bool no_webpage, bool broadcast, bool silent, bool background, const InputPeer &peer, qint32 reply_to_msg_id, const QString &message, qint64 random_id, const ReplyMarkup &reply_markup, const QList<MessageEntity> &entities, const QVariant &attachedData = QVariant(), Session *session = 0);
+    qint64 messagesSendMedia(bool broadcast, bool silent, bool background, const InputPeer &peer, qint32 reply_to_msg_id, const InputMedia &media, qint64 random_id, const ReplyMarkup &reply_markup, const QVariant &attachedData = QVariant(), Session *session = 0);
+    qint64 messagesForwardMessages(bool broadcast, bool silent, bool background, const InputPeer &from_peer, const QList<qint32> &id, const QList<qint64> &random_id, const InputPeer &to_peer, const QVariant &attachedData = QVariant(), Session *session = 0);
     qint64 messagesReportSpam(const InputPeer &peer, const QVariant &attachedData = QVariant(), Session *session = 0);
     qint64 messagesGetChats(const QList<qint32> &id, const QVariant &attachedData = QVariant(), Session *session = 0);
     qint64 messagesGetFullChat(qint32 chat_id, const QVariant &attachedData = QVariant(), Session *session = 0);
@@ -166,7 +170,7 @@ public:
     qint64 messagesSaveGif(const InputDocument &id, bool unsave, const QVariant &attachedData = QVariant(), Session *session = 0);
     qint64 messagesGetInlineBotResults(const InputUser &bot, const QString &query, const QString &offset, const QVariant &attachedData = QVariant(), Session *session = 0);
     qint64 messagesSetInlineBotResults(bool gallery, bool privateValue, qint64 query_id, const QList<InputBotInlineResult> &results, qint32 cache_time, const QString &next_offset, const QVariant &attachedData = QVariant(), Session *session = 0);
-    qint64 messagesSendInlineBotResult(bool broadcast, const InputPeer &peer, qint32 reply_to_msg_id, qint64 random_id, qint64 query_id, const QString &id, const QVariant &attachedData = QVariant(), Session *session = 0);
+    qint64 messagesSendInlineBotResult(bool broadcast, bool silent, bool background, const InputPeer &peer, qint32 reply_to_msg_id, qint64 random_id, qint64 query_id, const QString &id, const QVariant &attachedData = QVariant(), Session *session = 0);
     
     qint64 photosUpdateProfilePhoto(const InputPhoto &id, const InputPhotoCrop &crop, const QVariant &attachedData = QVariant(), Session *session = 0);
     qint64 photosUploadProfilePhoto(const InputFile &file, const QString &caption, const InputGeoPoint &geo_point, const InputPhotoCrop &crop, const QVariant &attachedData = QVariant(), Session *session = 0);
@@ -253,6 +257,10 @@ Q_SIGNALS:
     void channelsExportInviteAnswer(qint64 msgId, const ExportedChatInvite &result, const QVariant &attachedData);
     void channelsDeleteChannelAnswer(qint64 msgId, const UpdatesType &result, const QVariant &attachedData);
     void channelsToggleInvitesAnswer(qint64 msgId, const UpdatesType &result, const QVariant &attachedData);
+    void channelsExportMessageLinkAnswer(qint64 msgId, const ExportedMessageLink &result, const QVariant &attachedData);
+    void channelsToggleSignaturesAnswer(qint64 msgId, const UpdatesType &result, const QVariant &attachedData);
+    void channelsGetMessageEditDataAnswer(qint64 msgId, const ChannelsMessageEditData &result, const QVariant &attachedData);
+    void channelsEditMessageAnswer(qint64 msgId, const UpdatesType &result, const QVariant &attachedData);
     
     void contactsGetStatusesAnswer(qint64 msgId, const QList<ContactStatus> &result, const QVariant &attachedData);
     void contactsGetContactsAnswer(qint64 msgId, const ContactsContacts &result, const QVariant &attachedData);
@@ -418,6 +426,10 @@ Q_SIGNALS:
     void channelsExportInviteError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     void channelsDeleteChannelError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     void channelsToggleInvitesError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
+    void channelsExportMessageLinkError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
+    void channelsToggleSignaturesError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
+    void channelsGetMessageEditDataError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
+    void channelsEditMessageError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     
     void contactsGetStatusesError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     void contactsGetContactsError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
@@ -588,6 +600,10 @@ private:
     QueryMethods channelsExportInviteMethods;
     QueryMethods channelsDeleteChannelMethods;
     QueryMethods channelsToggleInvitesMethods;
+    QueryMethods channelsExportMessageLinkMethods;
+    QueryMethods channelsToggleSignaturesMethods;
+    QueryMethods channelsGetMessageEditDataMethods;
+    QueryMethods channelsEditMessageMethods;
     
     QueryMethods contactsGetStatusesMethods;
     QueryMethods contactsGetContactsMethods;
@@ -753,6 +769,10 @@ private:
     void onChannelsExportInviteAnswer(Query *q, InboundPkt &inboundPkt);
     void onChannelsDeleteChannelAnswer(Query *q, InboundPkt &inboundPkt);
     void onChannelsToggleInvitesAnswer(Query *q, InboundPkt &inboundPkt);
+    void onChannelsExportMessageLinkAnswer(Query *q, InboundPkt &inboundPkt);
+    void onChannelsToggleSignaturesAnswer(Query *q, InboundPkt &inboundPkt);
+    void onChannelsGetMessageEditDataAnswer(Query *q, InboundPkt &inboundPkt);
+    void onChannelsEditMessageAnswer(Query *q, InboundPkt &inboundPkt);
     
     void onContactsGetStatusesAnswer(Query *q, InboundPkt &inboundPkt);
     void onContactsGetContactsAnswer(Query *q, InboundPkt &inboundPkt);
@@ -918,6 +938,10 @@ private:
     void onChannelsExportInviteError(Query *q, qint32 errorCode, const QString &errorText);
     void onChannelsDeleteChannelError(Query *q, qint32 errorCode, const QString &errorText);
     void onChannelsToggleInvitesError(Query *q, qint32 errorCode, const QString &errorText);
+    void onChannelsExportMessageLinkError(Query *q, qint32 errorCode, const QString &errorText);
+    void onChannelsToggleSignaturesError(Query *q, qint32 errorCode, const QString &errorText);
+    void onChannelsGetMessageEditDataError(Query *q, qint32 errorCode, const QString &errorText);
+    void onChannelsEditMessageError(Query *q, qint32 errorCode, const QString &errorText);
     
     void onContactsGetStatusesError(Query *q, qint32 errorCode, const QString &errorText);
     void onContactsGetContactsError(Query *q, qint32 errorCode, const QString &errorText);

@@ -52,4 +52,7 @@ private:
 
 Q_DECLARE_METATYPE(UserStatus)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const UserStatus &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, UserStatus &item);
+
 #endif // LQTG_TYPE_USERSTATUS

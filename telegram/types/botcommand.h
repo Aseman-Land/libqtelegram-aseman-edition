@@ -47,4 +47,7 @@ private:
 
 Q_DECLARE_METATYPE(BotCommand)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const BotCommand &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, BotCommand &item);
+
 #endif // LQTG_TYPE_BOTCOMMAND

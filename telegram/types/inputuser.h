@@ -49,4 +49,7 @@ private:
 
 Q_DECLARE_METATYPE(InputUser)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const InputUser &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, InputUser &item);
+
 #endif // LQTG_TYPE_INPUTUSER

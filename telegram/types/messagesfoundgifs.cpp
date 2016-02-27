@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 MessagesFoundGifs::MessagesFoundGifs(MessagesFoundGifsType classType, InboundPkt *in) :
     m_nextOffset(0),
     m_classType(classType)
@@ -103,5 +105,34 @@ bool MessagesFoundGifs::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const MessagesFoundGifs &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case MessagesFoundGifs::typeMessagesFoundGifs:
+        stream << item.nextOffset();
+        stream << item.results();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, MessagesFoundGifs &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<MessagesFoundGifs::MessagesFoundGifsType>(type));
+    switch(type) {
+    case MessagesFoundGifs::typeMessagesFoundGifs: {
+        qint32 m_next_offset;
+        stream >> m_next_offset;
+        item.setNextOffset(m_next_offset);
+        QList<FoundGif> m_results;
+        stream >> m_results;
+        item.setResults(m_results);
+    }
+        break;
+    }
+    return stream;
 }
 

@@ -48,4 +48,7 @@ private:
 
 Q_DECLARE_METATYPE(ChatPhoto)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const ChatPhoto &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, ChatPhoto &item);
+
 #endif // LQTG_TYPE_CHATPHOTO

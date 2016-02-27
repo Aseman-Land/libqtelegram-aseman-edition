@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 InputChatPhoto::InputChatPhoto(InputChatPhotoType classType, InboundPkt *in) :
     m_classType(classType)
 {
@@ -124,5 +126,54 @@ bool InputChatPhoto::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const InputChatPhoto &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case InputChatPhoto::typeInputChatPhotoEmpty:
+        
+        break;
+    case InputChatPhoto::typeInputChatUploadedPhoto:
+        stream << item.file();
+        stream << item.crop();
+        break;
+    case InputChatPhoto::typeInputChatPhoto:
+        stream << item.id();
+        stream << item.crop();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, InputChatPhoto &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<InputChatPhoto::InputChatPhotoType>(type));
+    switch(type) {
+    case InputChatPhoto::typeInputChatPhotoEmpty: {
+        
+    }
+        break;
+    case InputChatPhoto::typeInputChatUploadedPhoto: {
+        InputFile m_file;
+        stream >> m_file;
+        item.setFile(m_file);
+        InputPhotoCrop m_crop;
+        stream >> m_crop;
+        item.setCrop(m_crop);
+    }
+        break;
+    case InputChatPhoto::typeInputChatPhoto: {
+        InputPhoto m_id;
+        stream >> m_id;
+        item.setId(m_id);
+        InputPhotoCrop m_crop;
+        stream >> m_crop;
+        item.setCrop(m_crop);
+    }
+        break;
+    }
+    return stream;
 }
 

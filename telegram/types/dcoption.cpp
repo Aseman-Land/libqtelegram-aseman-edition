@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 DcOption::DcOption(DcOptionType classType, InboundPkt *in) :
     m_flags(0),
     m_id(0),
@@ -87,6 +89,15 @@ qint32 DcOption::port() const {
     return m_port;
 }
 
+void DcOption::setTcpoOnly(bool tcpoOnly) {
+    if(tcpoOnly) m_flags = (m_flags | (1<<2));
+    else m_flags = (m_flags & ~(1<<2));
+}
+
+bool DcOption::tcpoOnly() const {
+    return (m_flags & 1<<2);
+}
+
 bool DcOption::operator ==(const DcOption &b) const {
     return m_classType == b.m_classType &&
            m_flags == b.m_flags &&
@@ -138,5 +149,42 @@ bool DcOption::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const DcOption &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case DcOption::typeDcOption:
+        stream << item.flags();
+        stream << item.id();
+        stream << item.ipAddress();
+        stream << item.port();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, DcOption &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<DcOption::DcOptionType>(type));
+    switch(type) {
+    case DcOption::typeDcOption: {
+        qint32 m_flags;
+        stream >> m_flags;
+        item.setFlags(m_flags);
+        qint32 m_id;
+        stream >> m_id;
+        item.setId(m_id);
+        QString m_ip_address;
+        stream >> m_ip_address;
+        item.setIpAddress(m_ip_address);
+        qint32 m_port;
+        stream >> m_port;
+        item.setPort(m_port);
+    }
+        break;
+    }
+    return stream;
 }
 

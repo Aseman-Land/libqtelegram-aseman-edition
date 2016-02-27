@@ -76,4 +76,7 @@ private:
 
 Q_DECLARE_METATYPE(Document)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const Document &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, Document &item);
+
 #endif // LQTG_TYPE_DOCUMENT

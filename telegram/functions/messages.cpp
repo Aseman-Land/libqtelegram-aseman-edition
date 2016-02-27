@@ -162,12 +162,14 @@ bool Functions::Messages::setTypingResult(InboundPkt *in) {
     return result;
 }
 
-bool Functions::Messages::sendMessage(OutboundPkt *out, bool noWebpage, bool broadcast, const InputPeer &peer, qint32 replyToMsgId, const QString &message, qint64 randomId, const ReplyMarkup &replyMarkup, const QList<MessageEntity> &entities) {
+bool Functions::Messages::sendMessage(OutboundPkt *out, bool noWebpage, bool broadcast, bool silent, bool background, const InputPeer &peer, qint32 replyToMsgId, const QString &message, qint64 randomId, const ReplyMarkup &replyMarkup, const QList<MessageEntity> &entities) {
     out->appendInt(fncMessagesSendMessage);
     
     qint32 flags = 0;
     if(noWebpage != 0) flags = (1<<1 | flags);
     if(broadcast != 0) flags = (1<<4 | flags);
+    if(silent != 0) flags = (1<<5 | flags);
+    if(background != 0) flags = (1<<6 | flags);
     if(replyToMsgId != 0) flags = (1<<0 | flags);
     if(replyMarkup != 0) flags = (1<<2 | flags);
     if(entities.count() != 0) flags = (1<<3 | flags);
@@ -194,11 +196,13 @@ UpdatesType Functions::Messages::sendMessageResult(InboundPkt *in) {
     return result;
 }
 
-bool Functions::Messages::sendMedia(OutboundPkt *out, bool broadcast, const InputPeer &peer, qint32 replyToMsgId, const InputMedia &media, qint64 randomId, const ReplyMarkup &replyMarkup) {
+bool Functions::Messages::sendMedia(OutboundPkt *out, bool broadcast, bool silent, bool background, const InputPeer &peer, qint32 replyToMsgId, const InputMedia &media, qint64 randomId, const ReplyMarkup &replyMarkup) {
     out->appendInt(fncMessagesSendMedia);
     
     qint32 flags = 0;
     if(broadcast != 0) flags = (1<<4 | flags);
+    if(silent != 0) flags = (1<<5 | flags);
+    if(background != 0) flags = (1<<6 | flags);
     if(replyToMsgId != 0) flags = (1<<0 | flags);
     if(replyMarkup != 0) flags = (1<<2 | flags);
     
@@ -217,11 +221,13 @@ UpdatesType Functions::Messages::sendMediaResult(InboundPkt *in) {
     return result;
 }
 
-bool Functions::Messages::forwardMessages(OutboundPkt *out, bool broadcast, const InputPeer &fromPeer, const QList<qint32> &id, const QList<qint64> &randomId, const InputPeer &toPeer) {
+bool Functions::Messages::forwardMessages(OutboundPkt *out, bool broadcast, bool silent, bool background, const InputPeer &fromPeer, const QList<qint32> &id, const QList<qint64> &randomId, const InputPeer &toPeer) {
     out->appendInt(fncMessagesForwardMessages);
     
     qint32 flags = 0;
     if(broadcast != 0) flags = (1<<4 | flags);
+    if(silent != 0) flags = (1<<5 | flags);
+    if(background != 0) flags = (1<<6 | flags);
     
     out->appendInt(flags);
     if(!fromPeer.push(out)) return false;
@@ -862,11 +868,13 @@ bool Functions::Messages::setInlineBotResultsResult(InboundPkt *in) {
     return result;
 }
 
-bool Functions::Messages::sendInlineBotResult(OutboundPkt *out, bool broadcast, const InputPeer &peer, qint32 replyToMsgId, qint64 randomId, qint64 queryId, const QString &id) {
+bool Functions::Messages::sendInlineBotResult(OutboundPkt *out, bool broadcast, bool silent, bool background, const InputPeer &peer, qint32 replyToMsgId, qint64 randomId, qint64 queryId, const QString &id) {
     out->appendInt(fncMessagesSendInlineBotResult);
     
     qint32 flags = 0;
     if(broadcast != 0) flags = (1<<4 | flags);
+    if(silent != 0) flags = (1<<5 | flags);
+    if(background != 0) flags = (1<<6 | flags);
     if(replyToMsgId != 0) flags = (1<<0 | flags);
     
     out->appendInt(flags);

@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 NotifyPeer::NotifyPeer(NotifyPeerType classType, InboundPkt *in) :
     m_classType(classType)
 {
@@ -111,5 +113,51 @@ bool NotifyPeer::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const NotifyPeer &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case NotifyPeer::typeNotifyPeer:
+        stream << item.peer();
+        break;
+    case NotifyPeer::typeNotifyUsers:
+        
+        break;
+    case NotifyPeer::typeNotifyChats:
+        
+        break;
+    case NotifyPeer::typeNotifyAll:
+        
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, NotifyPeer &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<NotifyPeer::NotifyPeerType>(type));
+    switch(type) {
+    case NotifyPeer::typeNotifyPeer: {
+        Peer m_peer;
+        stream >> m_peer;
+        item.setPeer(m_peer);
+    }
+        break;
+    case NotifyPeer::typeNotifyUsers: {
+        
+    }
+        break;
+    case NotifyPeer::typeNotifyChats: {
+        
+    }
+        break;
+    case NotifyPeer::typeNotifyAll: {
+        
+    }
+        break;
+    }
+    return stream;
 }
 

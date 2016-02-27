@@ -9,7 +9,7 @@
 #include "telegram/types/updatestype.h"
 
 #include <QPointer>
-#include "peerobject.h"
+#include "messagefwdheaderobject.h"
 #include "messagemediaobject.h"
 #include "updateobject.h"
 
@@ -23,8 +23,7 @@ class LIBQTELEGRAMSHARED_EXPORT UpdatesTypeObject : public TelegramTypeQObject
     Q_PROPERTY(QList<MessageEntity> entities READ entities WRITE setEntities NOTIFY entitiesChanged)
     Q_PROPERTY(qint32 flags READ flags WRITE setFlags NOTIFY flagsChanged)
     Q_PROPERTY(qint32 fromId READ fromId WRITE setFromId NOTIFY fromIdChanged)
-    Q_PROPERTY(qint32 fwdDate READ fwdDate WRITE setFwdDate NOTIFY fwdDateChanged)
-    Q_PROPERTY(PeerObject* fwdFromId READ fwdFromId WRITE setFwdFromId NOTIFY fwdFromIdChanged)
+    Q_PROPERTY(MessageFwdHeaderObject* fwdFrom READ fwdFrom WRITE setFwdFrom NOTIFY fwdFromChanged)
     Q_PROPERTY(qint32 id READ id WRITE setId NOTIFY idChanged)
     Q_PROPERTY(MessageMediaObject* media READ media WRITE setMedia NOTIFY mediaChanged)
     Q_PROPERTY(bool mediaUnread READ mediaUnread WRITE setMediaUnread NOTIFY mediaUnreadChanged)
@@ -36,6 +35,7 @@ class LIBQTELEGRAMSHARED_EXPORT UpdatesTypeObject : public TelegramTypeQObject
     Q_PROPERTY(qint32 replyToMsgId READ replyToMsgId WRITE setReplyToMsgId NOTIFY replyToMsgIdChanged)
     Q_PROPERTY(qint32 seq READ seq WRITE setSeq NOTIFY seqChanged)
     Q_PROPERTY(qint32 seqStart READ seqStart WRITE setSeqStart NOTIFY seqStartChanged)
+    Q_PROPERTY(bool silent READ silent WRITE setSilent NOTIFY silentChanged)
     Q_PROPERTY(bool unread READ unread WRITE setUnread NOTIFY unreadChanged)
     Q_PROPERTY(UpdateObject* update READ update WRITE setUpdate NOTIFY updateChanged)
     Q_PROPERTY(QList<Update> updates READ updates WRITE setUpdates NOTIFY updatesChanged)
@@ -78,11 +78,8 @@ public:
     void setFromId(qint32 fromId);
     qint32 fromId() const;
 
-    void setFwdDate(qint32 fwdDate);
-    qint32 fwdDate() const;
-
-    void setFwdFromId(PeerObject* fwdFromId);
-    PeerObject* fwdFromId() const;
+    void setFwdFrom(MessageFwdHeaderObject* fwdFrom);
+    MessageFwdHeaderObject* fwdFrom() const;
 
     void setId(qint32 id);
     qint32 id() const;
@@ -116,6 +113,9 @@ public:
 
     void setSeqStart(qint32 seqStart);
     qint32 seqStart() const;
+
+    void setSilent(bool silent);
+    bool silent() const;
 
     void setUnread(bool unread);
     bool unread() const;
@@ -153,8 +153,7 @@ Q_SIGNALS:
     void entitiesChanged();
     void flagsChanged();
     void fromIdChanged();
-    void fwdDateChanged();
-    void fwdFromIdChanged();
+    void fwdFromChanged();
     void idChanged();
     void mediaChanged();
     void mediaUnreadChanged();
@@ -166,6 +165,7 @@ Q_SIGNALS:
     void replyToMsgIdChanged();
     void seqChanged();
     void seqStartChanged();
+    void silentChanged();
     void unreadChanged();
     void updateChanged();
     void updatesChanged();
@@ -174,12 +174,12 @@ Q_SIGNALS:
     void viaBotIdChanged();
 
 private Q_SLOTS:
-    void coreFwdFromIdChanged();
+    void coreFwdFromChanged();
     void coreMediaChanged();
     void coreUpdateChanged();
 
 private:
-    QPointer<PeerObject> m_fwdFromId;
+    QPointer<MessageFwdHeaderObject> m_fwdFrom;
     QPointer<MessageMediaObject> m_media;
     QPointer<UpdateObject> m_update;
     UpdatesType m_core;

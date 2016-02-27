@@ -43,4 +43,7 @@ private:
 
 Q_DECLARE_METATYPE(AccountDaysTTL)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const AccountDaysTTL &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, AccountDaysTTL &item);
+
 #endif // LQTG_TYPE_ACCOUNTDAYSTTL

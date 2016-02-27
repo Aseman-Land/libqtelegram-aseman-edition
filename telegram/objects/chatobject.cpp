@@ -108,6 +108,17 @@ bool ChatObject::deactivated() const {
     return m_core.deactivated();
 }
 
+void ChatObject::setDemocracy(bool democracy) {
+    if(m_core.democracy() == democracy) return;
+    m_core.setDemocracy(democracy);
+    Q_EMIT democracyChanged();
+    Q_EMIT coreChanged();
+}
+
+bool ChatObject::democracy() const {
+    return m_core.democracy();
+}
+
 void ChatObject::setEditor(bool editor) {
     if(m_core.editor() == editor) return;
     m_core.setEditor(editor);
@@ -139,17 +150,6 @@ void ChatObject::setId(qint32 id) {
 
 qint32 ChatObject::id() const {
     return m_core.id();
-}
-
-void ChatObject::setInvitesEnabled(bool invitesEnabled) {
-    if(m_core.invitesEnabled() == invitesEnabled) return;
-    m_core.setInvitesEnabled(invitesEnabled);
-    Q_EMIT invitesEnabledChanged();
-    Q_EMIT coreChanged();
-}
-
-bool ChatObject::invitesEnabled() const {
-    return m_core.invitesEnabled();
 }
 
 void ChatObject::setKicked(bool kicked) {
@@ -263,6 +263,17 @@ QString ChatObject::restrictionReason() const {
     return m_core.restrictionReason();
 }
 
+void ChatObject::setSignatures(bool signatures) {
+    if(m_core.signatures() == signatures) return;
+    m_core.setSignatures(signatures);
+    Q_EMIT signaturesChanged();
+    Q_EMIT coreChanged();
+}
+
+bool ChatObject::signatures() const {
+    return m_core.signatures();
+}
+
 void ChatObject::setTitle(const QString &title) {
     if(m_core.title() == title) return;
     m_core.setTitle(title);
@@ -320,10 +331,10 @@ ChatObject &ChatObject::operator =(const Chat &b) {
     Q_EMIT creatorChanged();
     Q_EMIT dateChanged();
     Q_EMIT deactivatedChanged();
+    Q_EMIT democracyChanged();
     Q_EMIT editorChanged();
     Q_EMIT flagsChanged();
     Q_EMIT idChanged();
-    Q_EMIT invitesEnabledChanged();
     Q_EMIT kickedChanged();
     Q_EMIT leftChanged();
     Q_EMIT megagroupChanged();
@@ -333,6 +344,7 @@ ChatObject &ChatObject::operator =(const Chat &b) {
     Q_EMIT photoChanged();
     Q_EMIT restrictedChanged();
     Q_EMIT restrictionReasonChanged();
+    Q_EMIT signaturesChanged();
     Q_EMIT titleChanged();
     Q_EMIT usernameChanged();
     Q_EMIT verifiedChanged();

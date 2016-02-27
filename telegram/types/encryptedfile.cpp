@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 EncryptedFile::EncryptedFile(EncryptedFileType classType, InboundPkt *in) :
     m_accessHash(0),
     m_dcId(0),
@@ -148,5 +150,53 @@ bool EncryptedFile::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const EncryptedFile &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case EncryptedFile::typeEncryptedFileEmpty:
+        
+        break;
+    case EncryptedFile::typeEncryptedFile:
+        stream << item.id();
+        stream << item.accessHash();
+        stream << item.size();
+        stream << item.dcId();
+        stream << item.keyFingerprint();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, EncryptedFile &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<EncryptedFile::EncryptedFileType>(type));
+    switch(type) {
+    case EncryptedFile::typeEncryptedFileEmpty: {
+        
+    }
+        break;
+    case EncryptedFile::typeEncryptedFile: {
+        qint64 m_id;
+        stream >> m_id;
+        item.setId(m_id);
+        qint64 m_access_hash;
+        stream >> m_access_hash;
+        item.setAccessHash(m_access_hash);
+        qint32 m_size;
+        stream >> m_size;
+        item.setSize(m_size);
+        qint32 m_dc_id;
+        stream >> m_dc_id;
+        item.setDcId(m_dc_id);
+        qint32 m_key_fingerprint;
+        stream >> m_key_fingerprint;
+        item.setKeyFingerprint(m_key_fingerprint);
+    }
+        break;
+    }
+    return stream;
 }
 

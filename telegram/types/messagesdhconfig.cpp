@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 MessagesDhConfig::MessagesDhConfig(MessagesDhConfigType classType, InboundPkt *in) :
     m_g(0),
     m_version(0),
@@ -130,5 +132,51 @@ bool MessagesDhConfig::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const MessagesDhConfig &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case MessagesDhConfig::typeMessagesDhConfigNotModified:
+        stream << item.random();
+        break;
+    case MessagesDhConfig::typeMessagesDhConfig:
+        stream << item.g();
+        stream << item.p();
+        stream << item.version();
+        stream << item.random();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, MessagesDhConfig &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<MessagesDhConfig::MessagesDhConfigType>(type));
+    switch(type) {
+    case MessagesDhConfig::typeMessagesDhConfigNotModified: {
+        QByteArray m_random;
+        stream >> m_random;
+        item.setRandom(m_random);
+    }
+        break;
+    case MessagesDhConfig::typeMessagesDhConfig: {
+        qint32 m_g;
+        stream >> m_g;
+        item.setG(m_g);
+        QByteArray m_p;
+        stream >> m_p;
+        item.setP(m_p);
+        qint32 m_version;
+        stream >> m_version;
+        item.setVersion(m_version);
+        QByteArray m_random;
+        stream >> m_random;
+        item.setRandom(m_random);
+    }
+        break;
+    }
+    return stream;
 }
 

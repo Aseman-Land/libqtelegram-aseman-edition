@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 PrivacyRule::PrivacyRule(PrivacyRuleType classType, InboundPkt *in) :
     m_classType(classType)
 {
@@ -157,5 +159,67 @@ bool PrivacyRule::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const PrivacyRule &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case PrivacyRule::typePrivacyValueAllowContacts:
+        
+        break;
+    case PrivacyRule::typePrivacyValueAllowAll:
+        
+        break;
+    case PrivacyRule::typePrivacyValueAllowUsers:
+        stream << item.users();
+        break;
+    case PrivacyRule::typePrivacyValueDisallowContacts:
+        
+        break;
+    case PrivacyRule::typePrivacyValueDisallowAll:
+        
+        break;
+    case PrivacyRule::typePrivacyValueDisallowUsers:
+        stream << item.users();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, PrivacyRule &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<PrivacyRule::PrivacyRuleType>(type));
+    switch(type) {
+    case PrivacyRule::typePrivacyValueAllowContacts: {
+        
+    }
+        break;
+    case PrivacyRule::typePrivacyValueAllowAll: {
+        
+    }
+        break;
+    case PrivacyRule::typePrivacyValueAllowUsers: {
+        QList<qint32> m_users;
+        stream >> m_users;
+        item.setUsers(m_users);
+    }
+        break;
+    case PrivacyRule::typePrivacyValueDisallowContacts: {
+        
+    }
+        break;
+    case PrivacyRule::typePrivacyValueDisallowAll: {
+        
+    }
+        break;
+    case PrivacyRule::typePrivacyValueDisallowUsers: {
+        QList<qint32> m_users;
+        stream >> m_users;
+        item.setUsers(m_users);
+    }
+        break;
+    }
+    return stream;
 }
 

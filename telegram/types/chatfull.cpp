@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 ChatFull::ChatFull(ChatFullType classType, InboundPkt *in) :
     m_adminsCount(0),
     m_flags(0),
@@ -335,5 +337,115 @@ bool ChatFull::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const ChatFull &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case ChatFull::typeChatFull:
+        stream << item.id();
+        stream << item.participants();
+        stream << item.chatPhoto();
+        stream << item.notifySettings();
+        stream << item.exportedInvite();
+        stream << item.botInfo();
+        break;
+    case ChatFull::typeChannelFull:
+        stream << item.flags();
+        stream << item.id();
+        stream << item.about();
+        stream << item.participantsCount();
+        stream << item.adminsCount();
+        stream << item.kickedCount();
+        stream << item.readInboxMaxId();
+        stream << item.unreadCount();
+        stream << item.unreadImportantCount();
+        stream << item.chatPhoto();
+        stream << item.notifySettings();
+        stream << item.exportedInvite();
+        stream << item.botInfo();
+        stream << item.migratedFromChatId();
+        stream << item.migratedFromMaxId();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, ChatFull &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<ChatFull::ChatFullType>(type));
+    switch(type) {
+    case ChatFull::typeChatFull: {
+        qint32 m_id;
+        stream >> m_id;
+        item.setId(m_id);
+        ChatParticipants m_participants;
+        stream >> m_participants;
+        item.setParticipants(m_participants);
+        Photo m_chat_photo;
+        stream >> m_chat_photo;
+        item.setChatPhoto(m_chat_photo);
+        PeerNotifySettings m_notify_settings;
+        stream >> m_notify_settings;
+        item.setNotifySettings(m_notify_settings);
+        ExportedChatInvite m_exported_invite;
+        stream >> m_exported_invite;
+        item.setExportedInvite(m_exported_invite);
+        QList<BotInfo> m_bot_info;
+        stream >> m_bot_info;
+        item.setBotInfo(m_bot_info);
+    }
+        break;
+    case ChatFull::typeChannelFull: {
+        qint32 m_flags;
+        stream >> m_flags;
+        item.setFlags(m_flags);
+        qint32 m_id;
+        stream >> m_id;
+        item.setId(m_id);
+        QString m_about;
+        stream >> m_about;
+        item.setAbout(m_about);
+        qint32 m_participants_count;
+        stream >> m_participants_count;
+        item.setParticipantsCount(m_participants_count);
+        qint32 m_admins_count;
+        stream >> m_admins_count;
+        item.setAdminsCount(m_admins_count);
+        qint32 m_kicked_count;
+        stream >> m_kicked_count;
+        item.setKickedCount(m_kicked_count);
+        qint32 m_read_inbox_max_id;
+        stream >> m_read_inbox_max_id;
+        item.setReadInboxMaxId(m_read_inbox_max_id);
+        qint32 m_unread_count;
+        stream >> m_unread_count;
+        item.setUnreadCount(m_unread_count);
+        qint32 m_unread_important_count;
+        stream >> m_unread_important_count;
+        item.setUnreadImportantCount(m_unread_important_count);
+        Photo m_chat_photo;
+        stream >> m_chat_photo;
+        item.setChatPhoto(m_chat_photo);
+        PeerNotifySettings m_notify_settings;
+        stream >> m_notify_settings;
+        item.setNotifySettings(m_notify_settings);
+        ExportedChatInvite m_exported_invite;
+        stream >> m_exported_invite;
+        item.setExportedInvite(m_exported_invite);
+        QList<BotInfo> m_bot_info;
+        stream >> m_bot_info;
+        item.setBotInfo(m_bot_info);
+        qint32 m_migrated_from_chat_id;
+        stream >> m_migrated_from_chat_id;
+        item.setMigratedFromChatId(m_migrated_from_chat_id);
+        qint32 m_migrated_from_max_id;
+        stream >> m_migrated_from_max_id;
+        item.setMigratedFromMaxId(m_migrated_from_max_id);
+    }
+        break;
+    }
+    return stream;
 }
 

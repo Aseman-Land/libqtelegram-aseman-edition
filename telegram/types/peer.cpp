@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 Peer::Peer(PeerType classType, InboundPkt *in) :
     m_channelId(0),
     m_chatId(0),
@@ -131,5 +133,48 @@ bool Peer::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const Peer &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case Peer::typePeerUser:
+        stream << item.userId();
+        break;
+    case Peer::typePeerChat:
+        stream << item.chatId();
+        break;
+    case Peer::typePeerChannel:
+        stream << item.channelId();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, Peer &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<Peer::PeerType>(type));
+    switch(type) {
+    case Peer::typePeerUser: {
+        qint32 m_user_id;
+        stream >> m_user_id;
+        item.setUserId(m_user_id);
+    }
+        break;
+    case Peer::typePeerChat: {
+        qint32 m_chat_id;
+        stream >> m_chat_id;
+        item.setChatId(m_chat_id);
+    }
+        break;
+    case Peer::typePeerChannel: {
+        qint32 m_channel_id;
+        stream >> m_channel_id;
+        item.setChannelId(m_channel_id);
+    }
+        break;
+    }
+    return stream;
 }
 

@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 InputAppEvent::InputAppEvent(InputAppEventType classType, InboundPkt *in) :
     m_peer(0),
     m_time(0),
@@ -117,5 +119,42 @@ bool InputAppEvent::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const InputAppEvent &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case InputAppEvent::typeInputAppEvent:
+        stream << item.time();
+        stream << item.type();
+        stream << item.peer();
+        stream << item.data();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, InputAppEvent &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<InputAppEvent::InputAppEventType>(type));
+    switch(type) {
+    case InputAppEvent::typeInputAppEvent: {
+        qreal m_time;
+        stream >> m_time;
+        item.setTime(m_time);
+        QString m_type;
+        stream >> m_type;
+        item.setType(m_type);
+        qint64 m_peer;
+        stream >> m_peer;
+        item.setPeer(m_peer);
+        QString m_data;
+        stream >> m_data;
+        item.setData(m_data);
+    }
+        break;
+    }
+    return stream;
 }
 

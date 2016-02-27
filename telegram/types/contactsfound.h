@@ -54,4 +54,7 @@ private:
 
 Q_DECLARE_METATYPE(ContactsFound)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const ContactsFound &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, ContactsFound &item);
+
 #endif // LQTG_TYPE_CONTACTSFOUND

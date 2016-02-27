@@ -47,4 +47,7 @@ private:
 
 Q_DECLARE_METATYPE(MessagesFilter)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const MessagesFilter &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, MessagesFilter &item);
+
 #endif // LQTG_TYPE_MESSAGESFILTER

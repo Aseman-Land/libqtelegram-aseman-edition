@@ -54,4 +54,7 @@ private:
 
 Q_DECLARE_METATYPE(MessagesChatFull)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const MessagesChatFull &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, MessagesChatFull &item);
+
 #endif // LQTG_TYPE_MESSAGESCHATFULL

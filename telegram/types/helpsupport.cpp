@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 HelpSupport::HelpSupport(HelpSupportType classType, InboundPkt *in) :
     m_classType(classType)
 {
@@ -89,5 +91,34 @@ bool HelpSupport::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const HelpSupport &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case HelpSupport::typeHelpSupport:
+        stream << item.phoneNumber();
+        stream << item.user();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, HelpSupport &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<HelpSupport::HelpSupportType>(type));
+    switch(type) {
+    case HelpSupport::typeHelpSupport: {
+        QString m_phone_number;
+        stream >> m_phone_number;
+        item.setPhoneNumber(m_phone_number);
+        User m_user;
+        stream >> m_user;
+        item.setUser(m_user);
+    }
+        break;
+    }
+    return stream;
 }
 

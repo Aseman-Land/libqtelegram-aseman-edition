@@ -6,13 +6,13 @@
 
 UpdatesTypeObject::UpdatesTypeObject(const UpdatesType &core, QObject *parent) :
     TelegramTypeQObject(parent),
-    m_fwdFromId(0),
+    m_fwdFrom(0),
     m_media(0),
     m_update(0),
     m_core(core)
 {
-    m_fwdFromId = new PeerObject(m_core.fwdFromId(), this);
-    connect(m_fwdFromId.data(), &PeerObject::coreChanged, this, &UpdatesTypeObject::coreFwdFromIdChanged);
+    m_fwdFrom = new MessageFwdHeaderObject(m_core.fwdFrom(), this);
+    connect(m_fwdFrom.data(), &MessageFwdHeaderObject::coreChanged, this, &UpdatesTypeObject::coreFwdFromChanged);
     m_media = new MessageMediaObject(m_core.media(), this);
     connect(m_media.data(), &MessageMediaObject::coreChanged, this, &UpdatesTypeObject::coreMediaChanged);
     m_update = new UpdateObject(m_core.update(), this);
@@ -21,13 +21,13 @@ UpdatesTypeObject::UpdatesTypeObject(const UpdatesType &core, QObject *parent) :
 
 UpdatesTypeObject::UpdatesTypeObject(QObject *parent) :
     TelegramTypeQObject(parent),
-    m_fwdFromId(0),
+    m_fwdFrom(0),
     m_media(0),
     m_update(0),
     m_core()
 {
-    m_fwdFromId = new PeerObject(m_core.fwdFromId(), this);
-    connect(m_fwdFromId.data(), &PeerObject::coreChanged, this, &UpdatesTypeObject::coreFwdFromIdChanged);
+    m_fwdFrom = new MessageFwdHeaderObject(m_core.fwdFrom(), this);
+    connect(m_fwdFrom.data(), &MessageFwdHeaderObject::coreChanged, this, &UpdatesTypeObject::coreFwdFromChanged);
     m_media = new MessageMediaObject(m_core.media(), this);
     connect(m_media.data(), &MessageMediaObject::coreChanged, this, &UpdatesTypeObject::coreMediaChanged);
     m_update = new UpdateObject(m_core.update(), this);
@@ -103,32 +103,21 @@ qint32 UpdatesTypeObject::fromId() const {
     return m_core.fromId();
 }
 
-void UpdatesTypeObject::setFwdDate(qint32 fwdDate) {
-    if(m_core.fwdDate() == fwdDate) return;
-    m_core.setFwdDate(fwdDate);
-    Q_EMIT fwdDateChanged();
-    Q_EMIT coreChanged();
-}
-
-qint32 UpdatesTypeObject::fwdDate() const {
-    return m_core.fwdDate();
-}
-
-void UpdatesTypeObject::setFwdFromId(PeerObject* fwdFromId) {
-    if(m_fwdFromId == fwdFromId) return;
-    if(m_fwdFromId) delete m_fwdFromId;
-    m_fwdFromId = fwdFromId;
-    if(m_fwdFromId) {
-        m_fwdFromId->setParent(this);
-        m_core.setFwdFromId(m_fwdFromId->core());
-        connect(m_fwdFromId.data(), &PeerObject::coreChanged, this, &UpdatesTypeObject::coreFwdFromIdChanged);
+void UpdatesTypeObject::setFwdFrom(MessageFwdHeaderObject* fwdFrom) {
+    if(m_fwdFrom == fwdFrom) return;
+    if(m_fwdFrom) delete m_fwdFrom;
+    m_fwdFrom = fwdFrom;
+    if(m_fwdFrom) {
+        m_fwdFrom->setParent(this);
+        m_core.setFwdFrom(m_fwdFrom->core());
+        connect(m_fwdFrom.data(), &MessageFwdHeaderObject::coreChanged, this, &UpdatesTypeObject::coreFwdFromChanged);
     }
-    Q_EMIT fwdFromIdChanged();
+    Q_EMIT fwdFromChanged();
     Q_EMIT coreChanged();
 }
 
-PeerObject*  UpdatesTypeObject::fwdFromId() const {
-    return m_fwdFromId;
+MessageFwdHeaderObject*  UpdatesTypeObject::fwdFrom() const {
+    return m_fwdFrom;
 }
 
 void UpdatesTypeObject::setId(qint32 id) {
@@ -258,6 +247,17 @@ qint32 UpdatesTypeObject::seqStart() const {
     return m_core.seqStart();
 }
 
+void UpdatesTypeObject::setSilent(bool silent) {
+    if(m_core.silent() == silent) return;
+    m_core.setSilent(silent);
+    Q_EMIT silentChanged();
+    Q_EMIT coreChanged();
+}
+
+bool UpdatesTypeObject::silent() const {
+    return m_core.silent();
+}
+
 void UpdatesTypeObject::setUnread(bool unread) {
     if(m_core.unread() == unread) return;
     m_core.setUnread(unread);
@@ -333,7 +333,7 @@ qint32 UpdatesTypeObject::viaBotId() const {
 UpdatesTypeObject &UpdatesTypeObject::operator =(const UpdatesType &b) {
     if(m_core == b) return *this;
     m_core = b;
-    m_fwdFromId->setCore(b.fwdFromId());
+    m_fwdFrom->setCore(b.fwdFrom());
     m_media->setCore(b.media());
     m_update->setCore(b.update());
 
@@ -343,8 +343,7 @@ UpdatesTypeObject &UpdatesTypeObject::operator =(const UpdatesType &b) {
     Q_EMIT entitiesChanged();
     Q_EMIT flagsChanged();
     Q_EMIT fromIdChanged();
-    Q_EMIT fwdDateChanged();
-    Q_EMIT fwdFromIdChanged();
+    Q_EMIT fwdFromChanged();
     Q_EMIT idChanged();
     Q_EMIT mediaChanged();
     Q_EMIT mediaUnreadChanged();
@@ -356,6 +355,7 @@ UpdatesTypeObject &UpdatesTypeObject::operator =(const UpdatesType &b) {
     Q_EMIT replyToMsgIdChanged();
     Q_EMIT seqChanged();
     Q_EMIT seqStartChanged();
+    Q_EMIT silentChanged();
     Q_EMIT unreadChanged();
     Q_EMIT updateChanged();
     Q_EMIT updatesChanged();
@@ -445,10 +445,10 @@ UpdatesType UpdatesTypeObject::core() const {
     return m_core;
 }
 
-void UpdatesTypeObject::coreFwdFromIdChanged() {
-    if(m_core.fwdFromId() == m_fwdFromId->core()) return;
-    m_core.setFwdFromId(m_fwdFromId->core());
-    Q_EMIT fwdFromIdChanged();
+void UpdatesTypeObject::coreFwdFromChanged() {
+    if(m_core.fwdFrom() == m_fwdFrom->core()) return;
+    m_core.setFwdFrom(m_fwdFrom->core());
+    Q_EMIT fwdFromChanged();
     Q_EMIT coreChanged();
 }
 

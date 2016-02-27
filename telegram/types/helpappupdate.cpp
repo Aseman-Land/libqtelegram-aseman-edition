@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 HelpAppUpdate::HelpAppUpdate(HelpAppUpdateType classType, InboundPkt *in) :
     m_critical(false),
     m_id(0),
@@ -128,5 +130,49 @@ bool HelpAppUpdate::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const HelpAppUpdate &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case HelpAppUpdate::typeHelpAppUpdate:
+        stream << item.id();
+        stream << item.critical();
+        stream << item.url();
+        stream << item.text();
+        break;
+    case HelpAppUpdate::typeHelpNoAppUpdate:
+        
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, HelpAppUpdate &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<HelpAppUpdate::HelpAppUpdateType>(type));
+    switch(type) {
+    case HelpAppUpdate::typeHelpAppUpdate: {
+        qint32 m_id;
+        stream >> m_id;
+        item.setId(m_id);
+        bool m_critical;
+        stream >> m_critical;
+        item.setCritical(m_critical);
+        QString m_url;
+        stream >> m_url;
+        item.setUrl(m_url);
+        QString m_text;
+        stream >> m_text;
+        item.setText(m_text);
+    }
+        break;
+    case HelpAppUpdate::typeHelpNoAppUpdate: {
+        
+    }
+        break;
+    }
+    return stream;
 }
 

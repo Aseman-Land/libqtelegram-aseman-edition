@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 InputEncryptedChat::InputEncryptedChat(InputEncryptedChatType classType, InboundPkt *in) :
     m_accessHash(0),
     m_chatId(0),
@@ -95,5 +97,34 @@ bool InputEncryptedChat::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const InputEncryptedChat &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case InputEncryptedChat::typeInputEncryptedChat:
+        stream << item.chatId();
+        stream << item.accessHash();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, InputEncryptedChat &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<InputEncryptedChat::InputEncryptedChatType>(type));
+    switch(type) {
+    case InputEncryptedChat::typeInputEncryptedChat: {
+        qint32 m_chat_id;
+        stream >> m_chat_id;
+        item.setChatId(m_chat_id);
+        qint64 m_access_hash;
+        stream >> m_access_hash;
+        item.setAccessHash(m_access_hash);
+    }
+        break;
+    }
+    return stream;
 }
 

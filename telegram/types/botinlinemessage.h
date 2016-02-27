@@ -62,4 +62,7 @@ private:
 
 Q_DECLARE_METATYPE(BotInlineMessage)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const BotInlineMessage &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, BotInlineMessage &item);
+
 #endif // LQTG_TYPE_BOTINLINEMESSAGE

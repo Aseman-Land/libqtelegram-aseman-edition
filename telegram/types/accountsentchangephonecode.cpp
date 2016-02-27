@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 AccountSentChangePhoneCode::AccountSentChangePhoneCode(AccountSentChangePhoneCodeType classType, InboundPkt *in) :
     m_sendCallTimeout(0),
     m_classType(classType)
@@ -92,5 +94,34 @@ bool AccountSentChangePhoneCode::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const AccountSentChangePhoneCode &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case AccountSentChangePhoneCode::typeAccountSentChangePhoneCode:
+        stream << item.phoneCodeHash();
+        stream << item.sendCallTimeout();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, AccountSentChangePhoneCode &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<AccountSentChangePhoneCode::AccountSentChangePhoneCodeType>(type));
+    switch(type) {
+    case AccountSentChangePhoneCode::typeAccountSentChangePhoneCode: {
+        QString m_phone_code_hash;
+        stream >> m_phone_code_hash;
+        item.setPhoneCodeHash(m_phone_code_hash);
+        qint32 m_send_call_timeout;
+        stream >> m_send_call_timeout;
+        item.setSendCallTimeout(m_send_call_timeout);
+    }
+        break;
+    }
+    return stream;
 }
 

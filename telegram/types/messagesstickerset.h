@@ -54,4 +54,7 @@ private:
 
 Q_DECLARE_METATYPE(MessagesStickerSet)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const MessagesStickerSet &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, MessagesStickerSet &item);
+
 #endif // LQTG_TYPE_MESSAGESSTICKERSET

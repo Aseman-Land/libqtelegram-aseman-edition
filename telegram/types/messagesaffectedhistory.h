@@ -51,4 +51,7 @@ private:
 
 Q_DECLARE_METATYPE(MessagesAffectedHistory)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const MessagesAffectedHistory &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, MessagesAffectedHistory &item);
+
 #endif // LQTG_TYPE_MESSAGESAFFECTEDHISTORY

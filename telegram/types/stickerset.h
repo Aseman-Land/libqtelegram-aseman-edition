@@ -77,4 +77,7 @@ private:
 
 Q_DECLARE_METATYPE(StickerSet)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const StickerSet &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, StickerSet &item);
+
 #endif // LQTG_TYPE_STICKERSET

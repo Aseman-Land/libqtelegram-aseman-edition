@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 MessageMedia::MessageMedia(MessageMediaType classType, InboundPkt *in) :
     m_userId(0),
     m_classType(classType)
@@ -294,5 +296,125 @@ bool MessageMedia::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const MessageMedia &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case MessageMedia::typeMessageMediaEmpty:
+        
+        break;
+    case MessageMedia::typeMessageMediaPhoto:
+        stream << item.photo();
+        stream << item.caption();
+        break;
+    case MessageMedia::typeMessageMediaGeo:
+        stream << item.geo();
+        break;
+    case MessageMedia::typeMessageMediaContact:
+        stream << item.phoneNumber();
+        stream << item.firstName();
+        stream << item.lastName();
+        stream << item.userId();
+        break;
+    case MessageMedia::typeMessageMediaUnsupported:
+        
+        break;
+    case MessageMedia::typeMessageMediaDocument:
+        stream << item.document();
+        stream << item.caption();
+        break;
+    case MessageMedia::typeMessageMediaWebPage:
+        stream << item.webpage();
+        break;
+    case MessageMedia::typeMessageMediaVenue:
+        stream << item.geo();
+        stream << item.title();
+        stream << item.address();
+        stream << item.provider();
+        stream << item.venueId();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, MessageMedia &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<MessageMedia::MessageMediaType>(type));
+    switch(type) {
+    case MessageMedia::typeMessageMediaEmpty: {
+        
+    }
+        break;
+    case MessageMedia::typeMessageMediaPhoto: {
+        Photo m_photo;
+        stream >> m_photo;
+        item.setPhoto(m_photo);
+        QString m_caption;
+        stream >> m_caption;
+        item.setCaption(m_caption);
+    }
+        break;
+    case MessageMedia::typeMessageMediaGeo: {
+        GeoPoint m_geo;
+        stream >> m_geo;
+        item.setGeo(m_geo);
+    }
+        break;
+    case MessageMedia::typeMessageMediaContact: {
+        QString m_phone_number;
+        stream >> m_phone_number;
+        item.setPhoneNumber(m_phone_number);
+        QString m_first_name;
+        stream >> m_first_name;
+        item.setFirstName(m_first_name);
+        QString m_last_name;
+        stream >> m_last_name;
+        item.setLastName(m_last_name);
+        qint32 m_user_id;
+        stream >> m_user_id;
+        item.setUserId(m_user_id);
+    }
+        break;
+    case MessageMedia::typeMessageMediaUnsupported: {
+        
+    }
+        break;
+    case MessageMedia::typeMessageMediaDocument: {
+        Document m_document;
+        stream >> m_document;
+        item.setDocument(m_document);
+        QString m_caption;
+        stream >> m_caption;
+        item.setCaption(m_caption);
+    }
+        break;
+    case MessageMedia::typeMessageMediaWebPage: {
+        WebPage m_webpage;
+        stream >> m_webpage;
+        item.setWebpage(m_webpage);
+    }
+        break;
+    case MessageMedia::typeMessageMediaVenue: {
+        GeoPoint m_geo;
+        stream >> m_geo;
+        item.setGeo(m_geo);
+        QString m_title;
+        stream >> m_title;
+        item.setTitle(m_title);
+        QString m_address;
+        stream >> m_address;
+        item.setAddress(m_address);
+        QString m_provider;
+        stream >> m_provider;
+        item.setProvider(m_provider);
+        QString m_venue_id;
+        stream >> m_venue_id;
+        item.setVenueId(m_venue_id);
+    }
+        break;
+    }
+    return stream;
 }
 

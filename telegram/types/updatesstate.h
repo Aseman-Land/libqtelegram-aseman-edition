@@ -59,4 +59,7 @@ private:
 
 Q_DECLARE_METATYPE(UpdatesState)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const UpdatesState &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, UpdatesState &item);
+
 #endif // LQTG_TYPE_UPDATESSTATE

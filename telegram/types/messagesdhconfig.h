@@ -57,4 +57,7 @@ private:
 
 Q_DECLARE_METATYPE(MessagesDhConfig)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const MessagesDhConfig &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, MessagesDhConfig &item);
+
 #endif // LQTG_TYPE_MESSAGESDHCONFIG

@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 HelpTermsOfService::HelpTermsOfService(HelpTermsOfServiceType classType, InboundPkt *in) :
     m_classType(classType)
 {
@@ -78,5 +80,30 @@ bool HelpTermsOfService::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const HelpTermsOfService &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case HelpTermsOfService::typeHelpTermsOfService:
+        stream << item.text();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, HelpTermsOfService &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<HelpTermsOfService::HelpTermsOfServiceType>(type));
+    switch(type) {
+    case HelpTermsOfService::typeHelpTermsOfService: {
+        QString m_text;
+        stream >> m_text;
+        item.setText(m_text);
+    }
+        break;
+    }
+    return stream;
 }
 

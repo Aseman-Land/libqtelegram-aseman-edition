@@ -76,7 +76,8 @@ public:
         typeUpdateStickerSets = 0x43ae3dec,
         typeUpdateSavedGifs = 0x9375341e,
         typeUpdateBotInlineQuery = 0xc01eea08,
-        typeUpdateBotInlineSend = 0xf69e113
+        typeUpdateBotInlineSend = 0xf69e113,
+        typeUpdateEditChannelMessage = 0x1b3f4df7
     };
 
     Update(UpdateType classType = typeUpdateNewMessage, InboundPkt *in = 0);
@@ -312,5 +313,8 @@ private:
 };
 
 Q_DECLARE_METATYPE(Update)
+
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const Update &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, Update &item);
 
 #endif // LQTG_TYPE_UPDATE

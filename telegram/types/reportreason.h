@@ -46,4 +46,7 @@ private:
 
 Q_DECLARE_METATYPE(ReportReason)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const ReportReason &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, ReportReason &item);
+
 #endif // LQTG_TYPE_REPORTREASON

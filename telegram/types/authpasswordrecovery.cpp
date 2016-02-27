@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 AuthPasswordRecovery::AuthPasswordRecovery(AuthPasswordRecoveryType classType, InboundPkt *in) :
     m_classType(classType)
 {
@@ -78,5 +80,30 @@ bool AuthPasswordRecovery::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const AuthPasswordRecovery &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case AuthPasswordRecovery::typeAuthPasswordRecovery:
+        stream << item.emailPattern();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, AuthPasswordRecovery &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<AuthPasswordRecovery::AuthPasswordRecoveryType>(type));
+    switch(type) {
+    case AuthPasswordRecovery::typeAuthPasswordRecovery: {
+        QString m_email_pattern;
+        stream >> m_email_pattern;
+        item.setEmailPattern(m_email_pattern);
+    }
+        break;
+    }
+    return stream;
 }
 

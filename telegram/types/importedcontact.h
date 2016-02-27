@@ -47,4 +47,7 @@ private:
 
 Q_DECLARE_METATYPE(ImportedContact)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const ImportedContact &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, ImportedContact &item);
+
 #endif // LQTG_TYPE_IMPORTEDCONTACT

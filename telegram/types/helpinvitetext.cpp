@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 HelpInviteText::HelpInviteText(HelpInviteTextType classType, InboundPkt *in) :
     m_classType(classType)
 {
@@ -78,5 +80,30 @@ bool HelpInviteText::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const HelpInviteText &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case HelpInviteText::typeHelpInviteText:
+        stream << item.message();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, HelpInviteText &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<HelpInviteText::HelpInviteTextType>(type));
+    switch(type) {
+    case HelpInviteText::typeHelpInviteText: {
+        QString m_message;
+        stream >> m_message;
+        item.setMessage(m_message);
+    }
+        break;
+    }
+    return stream;
 }
 

@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 FoundGif::FoundGif(FoundGifType classType, InboundPkt *in) :
     m_h(0),
     m_w(0),
@@ -174,5 +176,67 @@ bool FoundGif::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const FoundGif &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case FoundGif::typeFoundGif:
+        stream << item.url();
+        stream << item.thumbUrl();
+        stream << item.contentUrl();
+        stream << item.contentType();
+        stream << item.w();
+        stream << item.h();
+        break;
+    case FoundGif::typeFoundGifCached:
+        stream << item.url();
+        stream << item.photo();
+        stream << item.document();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, FoundGif &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<FoundGif::FoundGifType>(type));
+    switch(type) {
+    case FoundGif::typeFoundGif: {
+        QString m_url;
+        stream >> m_url;
+        item.setUrl(m_url);
+        QString m_thumb_url;
+        stream >> m_thumb_url;
+        item.setThumbUrl(m_thumb_url);
+        QString m_content_url;
+        stream >> m_content_url;
+        item.setContentUrl(m_content_url);
+        QString m_content_type;
+        stream >> m_content_type;
+        item.setContentType(m_content_type);
+        qint32 m_w;
+        stream >> m_w;
+        item.setW(m_w);
+        qint32 m_h;
+        stream >> m_h;
+        item.setH(m_h);
+    }
+        break;
+    case FoundGif::typeFoundGifCached: {
+        QString m_url;
+        stream >> m_url;
+        item.setUrl(m_url);
+        Photo m_photo;
+        stream >> m_photo;
+        item.setPhoto(m_photo);
+        Document m_document;
+        stream >> m_document;
+        item.setDocument(m_document);
+    }
+        break;
+    }
+    return stream;
 }
 

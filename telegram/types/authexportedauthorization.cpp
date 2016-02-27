@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 AuthExportedAuthorization::AuthExportedAuthorization(AuthExportedAuthorizationType classType, InboundPkt *in) :
     m_id(0),
     m_classType(classType)
@@ -92,5 +94,34 @@ bool AuthExportedAuthorization::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const AuthExportedAuthorization &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case AuthExportedAuthorization::typeAuthExportedAuthorization:
+        stream << item.id();
+        stream << item.bytes();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, AuthExportedAuthorization &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<AuthExportedAuthorization::AuthExportedAuthorizationType>(type));
+    switch(type) {
+    case AuthExportedAuthorization::typeAuthExportedAuthorization: {
+        qint32 m_id;
+        stream >> m_id;
+        item.setId(m_id);
+        QByteArray m_bytes;
+        stream >> m_bytes;
+        item.setBytes(m_bytes);
+    }
+        break;
+    }
+    return stream;
 }
 

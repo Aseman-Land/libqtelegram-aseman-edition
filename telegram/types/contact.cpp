@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 Contact::Contact(ContactType classType, InboundPkt *in) :
     m_mutual(false),
     m_userId(0),
@@ -95,5 +97,34 @@ bool Contact::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const Contact &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case Contact::typeContact:
+        stream << item.userId();
+        stream << item.mutual();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, Contact &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<Contact::ContactType>(type));
+    switch(type) {
+    case Contact::typeContact: {
+        qint32 m_user_id;
+        stream >> m_user_id;
+        item.setUserId(m_user_id);
+        bool m_mutual;
+        stream >> m_mutual;
+        item.setMutual(m_mutual);
+    }
+        break;
+    }
+    return stream;
 }
 

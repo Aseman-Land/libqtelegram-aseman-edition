@@ -39,4 +39,7 @@ private:
 
 Q_DECLARE_METATYPE(PrivacyKey)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const PrivacyKey &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, PrivacyKey &item);
+
 #endif // LQTG_TYPE_PRIVACYKEY

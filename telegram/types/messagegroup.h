@@ -55,4 +55,7 @@ private:
 
 Q_DECLARE_METATYPE(MessageGroup)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const MessageGroup &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, MessageGroup &item);
+
 #endif // LQTG_TYPE_MESSAGEGROUP

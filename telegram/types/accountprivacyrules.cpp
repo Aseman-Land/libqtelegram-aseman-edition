@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 AccountPrivacyRules::AccountPrivacyRules(AccountPrivacyRulesType classType, InboundPkt *in) :
     m_classType(classType)
 {
@@ -111,5 +113,34 @@ bool AccountPrivacyRules::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const AccountPrivacyRules &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case AccountPrivacyRules::typeAccountPrivacyRules:
+        stream << item.rules();
+        stream << item.users();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, AccountPrivacyRules &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<AccountPrivacyRules::AccountPrivacyRulesType>(type));
+    switch(type) {
+    case AccountPrivacyRules::typeAccountPrivacyRules: {
+        QList<PrivacyRule> m_rules;
+        stream >> m_rules;
+        item.setRules(m_rules);
+        QList<User> m_users;
+        stream >> m_users;
+        item.setUsers(m_users);
+    }
+        break;
+    }
+    return stream;
 }
 

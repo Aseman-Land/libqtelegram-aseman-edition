@@ -54,4 +54,7 @@ private:
 
 Q_DECLARE_METATYPE(InputStickerSet)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const InputStickerSet &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, InputStickerSet &item);
+
 #endif // LQTG_TYPE_INPUTSTICKERSET

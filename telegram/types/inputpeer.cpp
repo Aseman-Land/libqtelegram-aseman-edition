@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 InputPeer::InputPeer(InputPeerType classType, InboundPkt *in) :
     m_accessHash(0),
     m_channelId(0),
@@ -169,5 +171,70 @@ bool InputPeer::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const InputPeer &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case InputPeer::typeInputPeerEmpty:
+        
+        break;
+    case InputPeer::typeInputPeerSelf:
+        
+        break;
+    case InputPeer::typeInputPeerChat:
+        stream << item.chatId();
+        break;
+    case InputPeer::typeInputPeerUser:
+        stream << item.userId();
+        stream << item.accessHash();
+        break;
+    case InputPeer::typeInputPeerChannel:
+        stream << item.channelId();
+        stream << item.accessHash();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, InputPeer &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<InputPeer::InputPeerType>(type));
+    switch(type) {
+    case InputPeer::typeInputPeerEmpty: {
+        
+    }
+        break;
+    case InputPeer::typeInputPeerSelf: {
+        
+    }
+        break;
+    case InputPeer::typeInputPeerChat: {
+        qint32 m_chat_id;
+        stream >> m_chat_id;
+        item.setChatId(m_chat_id);
+    }
+        break;
+    case InputPeer::typeInputPeerUser: {
+        qint32 m_user_id;
+        stream >> m_user_id;
+        item.setUserId(m_user_id);
+        qint64 m_access_hash;
+        stream >> m_access_hash;
+        item.setAccessHash(m_access_hash);
+    }
+        break;
+    case InputPeer::typeInputPeerChannel: {
+        qint32 m_channel_id;
+        stream >> m_channel_id;
+        item.setChannelId(m_channel_id);
+        qint64 m_access_hash;
+        stream >> m_access_hash;
+        item.setAccessHash(m_access_hash);
+    }
+        break;
+    }
+    return stream;
 }
 

@@ -55,4 +55,7 @@ private:
 
 Q_DECLARE_METATYPE(PhotosPhotos)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const PhotosPhotos &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, PhotosPhotos &item);
+
 #endif // LQTG_TYPE_PHOTOSPHOTOS

@@ -44,4 +44,7 @@ private:
 
 Q_DECLARE_METATYPE(KeyboardButtonRow)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const KeyboardButtonRow &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, KeyboardButtonRow &item);
+
 #endif // LQTG_TYPE_KEYBOARDBUTTONROW

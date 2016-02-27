@@ -54,4 +54,7 @@ private:
 
 Q_DECLARE_METATYPE(ContactsResolvedPeer)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const ContactsResolvedPeer &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, ContactsResolvedPeer &item);
+
 #endif // LQTG_TYPE_CONTACTSRESOLVEDPEER

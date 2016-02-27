@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 MessagesBotResults::MessagesBotResults(MessagesBotResultsType classType, InboundPkt *in) :
     m_flags(0),
     m_queryId(0),
@@ -139,5 +141,42 @@ bool MessagesBotResults::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const MessagesBotResults &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case MessagesBotResults::typeMessagesBotResults:
+        stream << item.flags();
+        stream << item.queryId();
+        stream << item.nextOffset();
+        stream << item.results();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, MessagesBotResults &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<MessagesBotResults::MessagesBotResultsType>(type));
+    switch(type) {
+    case MessagesBotResults::typeMessagesBotResults: {
+        qint32 m_flags;
+        stream >> m_flags;
+        item.setFlags(m_flags);
+        qint64 m_query_id;
+        stream >> m_query_id;
+        item.setQueryId(m_query_id);
+        QString m_next_offset;
+        stream >> m_next_offset;
+        item.setNextOffset(m_next_offset);
+        QList<BotInlineResult> m_results;
+        stream >> m_results;
+        item.setResults(m_results);
+    }
+        break;
+    }
+    return stream;
 }
 

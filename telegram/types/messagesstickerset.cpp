@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 MessagesStickerSet::MessagesStickerSet(MessagesStickerSetType classType, InboundPkt *in) :
     m_classType(classType)
 {
@@ -122,5 +124,38 @@ bool MessagesStickerSet::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const MessagesStickerSet &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case MessagesStickerSet::typeMessagesStickerSet:
+        stream << item.set();
+        stream << item.packs();
+        stream << item.documents();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, MessagesStickerSet &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<MessagesStickerSet::MessagesStickerSetType>(type));
+    switch(type) {
+    case MessagesStickerSet::typeMessagesStickerSet: {
+        StickerSet m_set;
+        stream >> m_set;
+        item.setSet(m_set);
+        QList<StickerPack> m_packs;
+        stream >> m_packs;
+        item.setPacks(m_packs);
+        QList<Document> m_documents;
+        stream >> m_documents;
+        item.setDocuments(m_documents);
+    }
+        break;
+    }
+    return stream;
 }
 

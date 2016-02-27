@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 ContactBlocked::ContactBlocked(ContactBlockedType classType, InboundPkt *in) :
     m_date(0),
     m_userId(0),
@@ -95,5 +97,34 @@ bool ContactBlocked::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const ContactBlocked &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case ContactBlocked::typeContactBlocked:
+        stream << item.userId();
+        stream << item.date();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, ContactBlocked &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<ContactBlocked::ContactBlockedType>(type));
+    switch(type) {
+    case ContactBlocked::typeContactBlocked: {
+        qint32 m_user_id;
+        stream >> m_user_id;
+        item.setUserId(m_user_id);
+        qint32 m_date;
+        stream >> m_date;
+        item.setDate(m_date);
+    }
+        break;
+    }
+    return stream;
 }
 

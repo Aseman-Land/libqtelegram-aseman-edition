@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 MessagesChats::MessagesChats(MessagesChatsType classType, InboundPkt *in) :
     m_classType(classType)
 {
@@ -89,5 +91,30 @@ bool MessagesChats::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const MessagesChats &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case MessagesChats::typeMessagesChats:
+        stream << item.chats();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, MessagesChats &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<MessagesChats::MessagesChatsType>(type));
+    switch(type) {
+    case MessagesChats::typeMessagesChats: {
+        QList<Chat> m_chats;
+        stream >> m_chats;
+        item.setChats(m_chats);
+    }
+        break;
+    }
+    return stream;
 }
 

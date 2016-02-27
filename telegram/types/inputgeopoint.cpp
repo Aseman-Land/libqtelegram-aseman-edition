@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 InputGeoPoint::InputGeoPoint(InputGeoPointType classType, InboundPkt *in) :
     m_lat(0),
     m_longValue(0),
@@ -106,5 +108,41 @@ bool InputGeoPoint::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const InputGeoPoint &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case InputGeoPoint::typeInputGeoPointEmpty:
+        
+        break;
+    case InputGeoPoint::typeInputGeoPoint:
+        stream << item.lat();
+        stream << item.longValue();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, InputGeoPoint &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<InputGeoPoint::InputGeoPointType>(type));
+    switch(type) {
+    case InputGeoPoint::typeInputGeoPointEmpty: {
+        
+    }
+        break;
+    case InputGeoPoint::typeInputGeoPoint: {
+        qreal m_lat;
+        stream >> m_lat;
+        item.setLat(m_lat);
+        qreal m_longValue;
+        stream >> m_longValue;
+        item.setLongValue(m_longValue);
+    }
+        break;
+    }
+    return stream;
 }
 

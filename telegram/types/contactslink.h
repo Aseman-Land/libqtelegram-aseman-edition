@@ -52,4 +52,7 @@ private:
 
 Q_DECLARE_METATYPE(ContactsLink)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const ContactsLink &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, ContactsLink &item);
+
 #endif // LQTG_TYPE_CONTACTSLINK

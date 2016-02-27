@@ -26,7 +26,7 @@ updatesTooLong#e317af7e = Updates;
 #### Schema:
 
 ```c++
-updateShortMessage#13e4deaa flags:# unread:flags.0?true out:flags.1?true mentioned:flags.4?true media_unread:flags.5?true id:int user_id:int message:string pts:int pts_count:int date:int fwd_from_id:flags.2?Peer fwd_date:flags.2?int via_bot_id:flags.11?int reply_to_msg_id:flags.3?int entities:flags.7?Vector<MessageEntity> = Updates;
+updateShortMessage#914fbf11 flags:# unread:flags.0?true out:flags.1?true mentioned:flags.4?true media_unread:flags.5?true silent:flags.13?true id:int user_id:int message:string pts:int pts_count:int date:int fwd_from:flags.2?MessageFwdHeader via_bot_id:flags.11?int reply_to_msg_id:flags.3?int entities:flags.7?Vector<MessageEntity> = Updates;
 ```
 
 #### Parameters:
@@ -37,14 +37,14 @@ updateShortMessage#13e4deaa flags:# unread:flags.0?true out:flags.1?true mention
 |out|bool|
 |mentioned|bool|
 |mediaUnread|bool|
+|silent|bool|
 |id|qint32|
 |userId|qint32|
 |message|QString|
 |pts|qint32|
 |ptsCount|qint32|
 |date|qint32|
-|fwdFromId|[Peer](peer.md)|
-|fwdDate|qint32|
+|fwdFrom|[MessageFwdHeader](messagefwdheader.md)|
 |viaBotId|qint32|
 |replyToMsgId|qint32|
 |entities|QList&lt;[MessageEntity](messageentity.md)&gt;|
@@ -54,7 +54,7 @@ updateShortMessage#13e4deaa flags:# unread:flags.0?true out:flags.1?true mention
 #### Schema:
 
 ```c++
-updateShortChatMessage#248afa62 flags:# unread:flags.0?true out:flags.1?true mentioned:flags.4?true media_unread:flags.5?true id:int from_id:int chat_id:int message:string pts:int pts_count:int date:int fwd_from_id:flags.2?Peer fwd_date:flags.2?int via_bot_id:flags.11?int reply_to_msg_id:flags.3?int entities:flags.7?Vector<MessageEntity> = Updates;
+updateShortChatMessage#16812688 flags:# unread:flags.0?true out:flags.1?true mentioned:flags.4?true media_unread:flags.5?true silent:flags.13?true id:int from_id:int chat_id:int message:string pts:int pts_count:int date:int fwd_from:flags.2?MessageFwdHeader via_bot_id:flags.11?int reply_to_msg_id:flags.3?int entities:flags.7?Vector<MessageEntity> = Updates;
 ```
 
 #### Parameters:
@@ -65,6 +65,7 @@ updateShortChatMessage#248afa62 flags:# unread:flags.0?true out:flags.1?true men
 |out|bool|
 |mentioned|bool|
 |mediaUnread|bool|
+|silent|bool|
 |id|qint32|
 |fromId|qint32|
 |chatId|qint32|
@@ -72,8 +73,7 @@ updateShortChatMessage#248afa62 flags:# unread:flags.0?true out:flags.1?true men
 |pts|qint32|
 |ptsCount|qint32|
 |date|qint32|
-|fwdFromId|[Peer](peer.md)|
-|fwdDate|qint32|
+|fwdFrom|[MessageFwdHeader](messagefwdheader.md)|
 |viaBotId|qint32|
 |replyToMsgId|qint32|
 |entities|QList&lt;[MessageEntity](messageentity.md)&gt;|

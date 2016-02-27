@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 InputStickerSet::InputStickerSet(InputStickerSetType classType, InboundPkt *in) :
     m_accessHash(0),
     m_id(0),
@@ -128,5 +130,50 @@ bool InputStickerSet::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const InputStickerSet &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case InputStickerSet::typeInputStickerSetEmpty:
+        
+        break;
+    case InputStickerSet::typeInputStickerSetID:
+        stream << item.id();
+        stream << item.accessHash();
+        break;
+    case InputStickerSet::typeInputStickerSetShortName:
+        stream << item.shortName();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, InputStickerSet &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<InputStickerSet::InputStickerSetType>(type));
+    switch(type) {
+    case InputStickerSet::typeInputStickerSetEmpty: {
+        
+    }
+        break;
+    case InputStickerSet::typeInputStickerSetID: {
+        qint64 m_id;
+        stream >> m_id;
+        item.setId(m_id);
+        qint64 m_access_hash;
+        stream >> m_access_hash;
+        item.setAccessHash(m_access_hash);
+    }
+        break;
+    case InputStickerSet::typeInputStickerSetShortName: {
+        QString m_short_name;
+        stream >> m_short_name;
+        item.setShortName(m_short_name);
+    }
+        break;
+    }
+    return stream;
 }
 

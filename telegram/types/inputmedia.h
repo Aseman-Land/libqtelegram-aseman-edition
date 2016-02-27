@@ -122,4 +122,7 @@ private:
 
 Q_DECLARE_METATYPE(InputMedia)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const InputMedia &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, InputMedia &item);
+
 #endif // LQTG_TYPE_INPUTMEDIA

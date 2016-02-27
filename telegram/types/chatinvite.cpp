@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 ChatInvite::ChatInvite(ChatInviteType classType, InboundPkt *in) :
     m_flags(0),
     m_classType(classType)
@@ -150,5 +152,43 @@ bool ChatInvite::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const ChatInvite &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case ChatInvite::typeChatInviteAlready:
+        stream << item.chat();
+        break;
+    case ChatInvite::typeChatInvite:
+        stream << item.flags();
+        stream << item.title();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, ChatInvite &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<ChatInvite::ChatInviteType>(type));
+    switch(type) {
+    case ChatInvite::typeChatInviteAlready: {
+        Chat m_chat;
+        stream >> m_chat;
+        item.setChat(m_chat);
+    }
+        break;
+    case ChatInvite::typeChatInvite: {
+        qint32 m_flags;
+        stream >> m_flags;
+        item.setFlags(m_flags);
+        QString m_title;
+        stream >> m_title;
+        item.setTitle(m_title);
+    }
+        break;
+    }
+    return stream;
 }
 

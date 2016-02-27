@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 AuthSentCode::AuthSentCode(AuthSentCodeType classType, InboundPkt *in) :
     m_isPassword(false),
     m_phoneRegistered(false),
@@ -139,5 +141,63 @@ bool AuthSentCode::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const AuthSentCode &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case AuthSentCode::typeAuthSentCode:
+        stream << item.phoneRegistered();
+        stream << item.phoneCodeHash();
+        stream << item.sendCallTimeout();
+        stream << item.isPassword();
+        break;
+    case AuthSentCode::typeAuthSentAppCode:
+        stream << item.phoneRegistered();
+        stream << item.phoneCodeHash();
+        stream << item.sendCallTimeout();
+        stream << item.isPassword();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, AuthSentCode &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<AuthSentCode::AuthSentCodeType>(type));
+    switch(type) {
+    case AuthSentCode::typeAuthSentCode: {
+        bool m_phone_registered;
+        stream >> m_phone_registered;
+        item.setPhoneRegistered(m_phone_registered);
+        QString m_phone_code_hash;
+        stream >> m_phone_code_hash;
+        item.setPhoneCodeHash(m_phone_code_hash);
+        qint32 m_send_call_timeout;
+        stream >> m_send_call_timeout;
+        item.setSendCallTimeout(m_send_call_timeout);
+        bool m_is_password;
+        stream >> m_is_password;
+        item.setIsPassword(m_is_password);
+    }
+        break;
+    case AuthSentCode::typeAuthSentAppCode: {
+        bool m_phone_registered;
+        stream >> m_phone_registered;
+        item.setPhoneRegistered(m_phone_registered);
+        QString m_phone_code_hash;
+        stream >> m_phone_code_hash;
+        item.setPhoneCodeHash(m_phone_code_hash);
+        qint32 m_send_call_timeout;
+        stream >> m_send_call_timeout;
+        item.setSendCallTimeout(m_send_call_timeout);
+        bool m_is_password;
+        stream >> m_is_password;
+        item.setIsPassword(m_is_password);
+    }
+        break;
+    }
+    return stream;
 }
 

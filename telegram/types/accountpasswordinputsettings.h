@@ -61,4 +61,7 @@ private:
 
 Q_DECLARE_METATYPE(AccountPasswordInputSettings)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const AccountPasswordInputSettings &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, AccountPasswordInputSettings &item);
+
 #endif // LQTG_TYPE_ACCOUNTPASSWORDINPUTSETTINGS

@@ -28,6 +28,7 @@ class LIBQTELEGRAMSHARED_EXPORT UserObject : public TelegramTypeQObject
     Q_PROPERTY(qint32 flags READ flags WRITE setFlags NOTIFY flagsChanged)
     Q_PROPERTY(qint32 id READ id WRITE setId NOTIFY idChanged)
     Q_PROPERTY(QString lastName READ lastName WRITE setLastName NOTIFY lastNameChanged)
+    Q_PROPERTY(bool min READ min WRITE setMin NOTIFY minChanged)
     Q_PROPERTY(bool mutualContact READ mutualContact WRITE setMutualContact NOTIFY mutualContactChanged)
     Q_PROPERTY(QString phone READ phone WRITE setPhone NOTIFY phoneChanged)
     Q_PROPERTY(UserProfilePhotoObject* photo READ photo WRITE setPhoto NOTIFY photoChanged)
@@ -86,6 +87,9 @@ public:
     void setLastName(const QString &lastName);
     QString lastName() const;
 
+    void setMin(bool min);
+    bool min() const;
+
     void setMutualContact(bool mutualContact);
     bool mutualContact() const;
 
@@ -137,6 +141,7 @@ Q_SIGNALS:
     void flagsChanged();
     void idChanged();
     void lastNameChanged();
+    void minChanged();
     void mutualContactChanged();
     void phoneChanged();
     void photoChanged();

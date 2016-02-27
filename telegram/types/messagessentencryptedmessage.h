@@ -49,4 +49,7 @@ private:
 
 Q_DECLARE_METATYPE(MessagesSentEncryptedMessage)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const MessagesSentEncryptedMessage &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, MessagesSentEncryptedMessage &item);
+
 #endif // LQTG_TYPE_MESSAGESSENTENCRYPTEDMESSAGE

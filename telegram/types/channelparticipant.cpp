@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 ChannelParticipant::ChannelParticipant(ChannelParticipantType classType, InboundPkt *in) :
     m_date(0),
     m_inviterId(0),
@@ -200,5 +202,111 @@ bool ChannelParticipant::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const ChannelParticipant &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case ChannelParticipant::typeChannelParticipant:
+        stream << item.userId();
+        stream << item.date();
+        break;
+    case ChannelParticipant::typeChannelParticipantSelf:
+        stream << item.userId();
+        stream << item.inviterId();
+        stream << item.date();
+        break;
+    case ChannelParticipant::typeChannelParticipantModerator:
+        stream << item.userId();
+        stream << item.inviterId();
+        stream << item.date();
+        break;
+    case ChannelParticipant::typeChannelParticipantEditor:
+        stream << item.userId();
+        stream << item.inviterId();
+        stream << item.date();
+        break;
+    case ChannelParticipant::typeChannelParticipantKicked:
+        stream << item.userId();
+        stream << item.kickedBy();
+        stream << item.date();
+        break;
+    case ChannelParticipant::typeChannelParticipantCreator:
+        stream << item.userId();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, ChannelParticipant &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<ChannelParticipant::ChannelParticipantType>(type));
+    switch(type) {
+    case ChannelParticipant::typeChannelParticipant: {
+        qint32 m_user_id;
+        stream >> m_user_id;
+        item.setUserId(m_user_id);
+        qint32 m_date;
+        stream >> m_date;
+        item.setDate(m_date);
+    }
+        break;
+    case ChannelParticipant::typeChannelParticipantSelf: {
+        qint32 m_user_id;
+        stream >> m_user_id;
+        item.setUserId(m_user_id);
+        qint32 m_inviter_id;
+        stream >> m_inviter_id;
+        item.setInviterId(m_inviter_id);
+        qint32 m_date;
+        stream >> m_date;
+        item.setDate(m_date);
+    }
+        break;
+    case ChannelParticipant::typeChannelParticipantModerator: {
+        qint32 m_user_id;
+        stream >> m_user_id;
+        item.setUserId(m_user_id);
+        qint32 m_inviter_id;
+        stream >> m_inviter_id;
+        item.setInviterId(m_inviter_id);
+        qint32 m_date;
+        stream >> m_date;
+        item.setDate(m_date);
+    }
+        break;
+    case ChannelParticipant::typeChannelParticipantEditor: {
+        qint32 m_user_id;
+        stream >> m_user_id;
+        item.setUserId(m_user_id);
+        qint32 m_inviter_id;
+        stream >> m_inviter_id;
+        item.setInviterId(m_inviter_id);
+        qint32 m_date;
+        stream >> m_date;
+        item.setDate(m_date);
+    }
+        break;
+    case ChannelParticipant::typeChannelParticipantKicked: {
+        qint32 m_user_id;
+        stream >> m_user_id;
+        item.setUserId(m_user_id);
+        qint32 m_kicked_by;
+        stream >> m_kicked_by;
+        item.setKickedBy(m_kicked_by);
+        qint32 m_date;
+        stream >> m_date;
+        item.setDate(m_date);
+    }
+        break;
+    case ChannelParticipant::typeChannelParticipantCreator: {
+        qint32 m_user_id;
+        stream >> m_user_id;
+        item.setUserId(m_user_id);
+    }
+        break;
+    }
+    return stream;
 }
 

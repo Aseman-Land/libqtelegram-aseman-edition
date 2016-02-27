@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 Authorization::Authorization(AuthorizationType classType, InboundPkt *in) :
     m_apiId(0),
     m_dateActive(0),
@@ -225,5 +227,78 @@ bool Authorization::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const Authorization &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case Authorization::typeAuthorization:
+        stream << item.hash();
+        stream << item.flags();
+        stream << item.deviceModel();
+        stream << item.platform();
+        stream << item.systemVersion();
+        stream << item.apiId();
+        stream << item.appName();
+        stream << item.appVersion();
+        stream << item.dateCreated();
+        stream << item.dateActive();
+        stream << item.ip();
+        stream << item.country();
+        stream << item.region();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, Authorization &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<Authorization::AuthorizationType>(type));
+    switch(type) {
+    case Authorization::typeAuthorization: {
+        qint64 m_hash;
+        stream >> m_hash;
+        item.setHash(m_hash);
+        qint32 m_flags;
+        stream >> m_flags;
+        item.setFlags(m_flags);
+        QString m_device_model;
+        stream >> m_device_model;
+        item.setDeviceModel(m_device_model);
+        QString m_platform;
+        stream >> m_platform;
+        item.setPlatform(m_platform);
+        QString m_system_version;
+        stream >> m_system_version;
+        item.setSystemVersion(m_system_version);
+        qint32 m_api_id;
+        stream >> m_api_id;
+        item.setApiId(m_api_id);
+        QString m_app_name;
+        stream >> m_app_name;
+        item.setAppName(m_app_name);
+        QString m_app_version;
+        stream >> m_app_version;
+        item.setAppVersion(m_app_version);
+        qint32 m_date_created;
+        stream >> m_date_created;
+        item.setDateCreated(m_date_created);
+        qint32 m_date_active;
+        stream >> m_date_active;
+        item.setDateActive(m_date_active);
+        QString m_ip;
+        stream >> m_ip;
+        item.setIp(m_ip);
+        QString m_country;
+        stream >> m_country;
+        item.setCountry(m_country);
+        QString m_region;
+        stream >> m_region;
+        item.setRegion(m_region);
+    }
+        break;
+    }
+    return stream;
 }
 

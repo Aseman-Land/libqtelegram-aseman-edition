@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 Photo::Photo(PhotoType classType, InboundPkt *in) :
     m_accessHash(0),
     m_date(0),
@@ -144,5 +146,51 @@ bool Photo::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const Photo &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case Photo::typePhotoEmpty:
+        stream << item.id();
+        break;
+    case Photo::typePhoto:
+        stream << item.id();
+        stream << item.accessHash();
+        stream << item.date();
+        stream << item.sizes();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, Photo &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<Photo::PhotoType>(type));
+    switch(type) {
+    case Photo::typePhotoEmpty: {
+        qint64 m_id;
+        stream >> m_id;
+        item.setId(m_id);
+    }
+        break;
+    case Photo::typePhoto: {
+        qint64 m_id;
+        stream >> m_id;
+        item.setId(m_id);
+        qint64 m_access_hash;
+        stream >> m_access_hash;
+        item.setAccessHash(m_access_hash);
+        qint32 m_date;
+        stream >> m_date;
+        item.setDate(m_date);
+        QList<PhotoSize> m_sizes;
+        stream >> m_sizes;
+        item.setSizes(m_sizes);
+    }
+        break;
+    }
+    return stream;
 }
 

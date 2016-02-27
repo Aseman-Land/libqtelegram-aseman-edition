@@ -74,4 +74,7 @@ private:
 
 Q_DECLARE_METATYPE(Dialog)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const Dialog &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, Dialog &item);
+
 #endif // LQTG_TYPE_DIALOG

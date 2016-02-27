@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 InputBotInlineMessage::InputBotInlineMessage(InputBotInlineMessageType classType, InboundPkt *in) :
     m_flags(0),
     m_classType(classType)
@@ -149,5 +151,47 @@ bool InputBotInlineMessage::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const InputBotInlineMessage &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case InputBotInlineMessage::typeInputBotInlineMessageMediaAuto:
+        stream << item.caption();
+        break;
+    case InputBotInlineMessage::typeInputBotInlineMessageText:
+        stream << item.flags();
+        stream << item.message();
+        stream << item.entities();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, InputBotInlineMessage &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<InputBotInlineMessage::InputBotInlineMessageType>(type));
+    switch(type) {
+    case InputBotInlineMessage::typeInputBotInlineMessageMediaAuto: {
+        QString m_caption;
+        stream >> m_caption;
+        item.setCaption(m_caption);
+    }
+        break;
+    case InputBotInlineMessage::typeInputBotInlineMessageText: {
+        qint32 m_flags;
+        stream >> m_flags;
+        item.setFlags(m_flags);
+        QString m_message;
+        stream >> m_message;
+        item.setMessage(m_message);
+        QList<MessageEntity> m_entities;
+        stream >> m_entities;
+        item.setEntities(m_entities);
+    }
+        break;
+    }
+    return stream;
 }
 

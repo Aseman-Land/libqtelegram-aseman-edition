@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 KeyboardButton::KeyboardButton(KeyboardButtonType classType, InboundPkt *in) :
     m_classType(classType)
 {
@@ -78,5 +80,30 @@ bool KeyboardButton::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const KeyboardButton &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case KeyboardButton::typeKeyboardButton:
+        stream << item.text();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, KeyboardButton &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<KeyboardButton::KeyboardButtonType>(type));
+    switch(type) {
+    case KeyboardButton::typeKeyboardButton: {
+        QString m_text;
+        stream >> m_text;
+        item.setText(m_text);
+    }
+        break;
+    }
+    return stream;
 }
 

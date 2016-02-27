@@ -52,4 +52,7 @@ private:
 
 Q_DECLARE_METATYPE(NearestDc)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const NearestDc &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, NearestDc &item);
+
 #endif // LQTG_TYPE_NEARESTDC

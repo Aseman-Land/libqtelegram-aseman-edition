@@ -12,7 +12,7 @@
 #include <QList>
 #include "chat.h"
 #include "messageentity.h"
-#include "peer.h"
+#include "messagefwdheader.h"
 #include "messagemedia.h"
 #include <QString>
 #include "update.h"
@@ -23,8 +23,8 @@ class LIBQTELEGRAMSHARED_EXPORT UpdatesType : public TelegramTypeObject
 public:
     enum UpdatesTypeType {
         typeUpdatesTooLong = 0xe317af7e,
-        typeUpdateShortMessage = 0x13e4deaa,
-        typeUpdateShortChatMessage = 0x248afa62,
+        typeUpdateShortMessage = 0x914fbf11,
+        typeUpdateShortChatMessage = 0x16812688,
         typeUpdateShort = 0x78d4dec1,
         typeUpdatesCombined = 0x725b04c3,
         typeUpdates = 0x74ae4240,
@@ -54,11 +54,8 @@ public:
     void setFromId(qint32 fromId);
     qint32 fromId() const;
 
-    void setFwdDate(qint32 fwdDate);
-    qint32 fwdDate() const;
-
-    void setFwdFromId(const Peer &fwdFromId);
-    Peer fwdFromId() const;
+    void setFwdFrom(const MessageFwdHeader &fwdFrom);
+    MessageFwdHeader fwdFrom() const;
 
     void setId(qint32 id);
     qint32 id() const;
@@ -92,6 +89,9 @@ public:
 
     void setSeqStart(qint32 seqStart);
     qint32 seqStart() const;
+
+    void setSilent(bool silent);
+    bool silent() const;
 
     void setUnread(bool unread);
     bool unread() const;
@@ -129,8 +129,7 @@ private:
     QList<MessageEntity> m_entities;
     qint32 m_flags;
     qint32 m_fromId;
-    qint32 m_fwdDate;
-    Peer m_fwdFromId;
+    MessageFwdHeader m_fwdFrom;
     qint32 m_id;
     MessageMedia m_media;
     QString m_message;
@@ -148,5 +147,8 @@ private:
 };
 
 Q_DECLARE_METATYPE(UpdatesType)
+
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const UpdatesType &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, UpdatesType &item);
 
 #endif // LQTG_TYPE_UPDATESTYPE

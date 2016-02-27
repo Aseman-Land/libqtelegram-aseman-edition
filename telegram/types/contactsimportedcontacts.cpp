@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 ContactsImportedContacts::ContactsImportedContacts(ContactsImportedContactsType classType, InboundPkt *in) :
     m_classType(classType)
 {
@@ -133,5 +135,38 @@ bool ContactsImportedContacts::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const ContactsImportedContacts &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case ContactsImportedContacts::typeContactsImportedContacts:
+        stream << item.imported();
+        stream << item.retryContacts();
+        stream << item.users();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, ContactsImportedContacts &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<ContactsImportedContacts::ContactsImportedContactsType>(type));
+    switch(type) {
+    case ContactsImportedContacts::typeContactsImportedContacts: {
+        QList<ImportedContact> m_imported;
+        stream >> m_imported;
+        item.setImported(m_imported);
+        QList<qint64> m_retry_contacts;
+        stream >> m_retry_contacts;
+        item.setRetryContacts(m_retry_contacts);
+        QList<User> m_users;
+        stream >> m_users;
+        item.setUsers(m_users);
+    }
+        break;
+    }
+    return stream;
 }
 

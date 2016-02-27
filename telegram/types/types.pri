@@ -36,6 +36,7 @@ HEADERS += \
     $$PWD/encryptedfile.h \
     $$PWD/encryptedmessage.h \
     $$PWD/exportedchatinvite.h \
+    $$PWD/exportedmessagelink.h \
     $$PWD/filelocation.h \
     $$PWD/foundgif.h \
     $$PWD/geopoint.h \
@@ -68,6 +69,7 @@ HEADERS += \
     $$PWD/message.h \
     $$PWD/messageaction.h \
     $$PWD/messageentity.h \
+    $$PWD/messagefwdheader.h \
     $$PWD/messagegroup.h \
     $$PWD/messagemedia.h \
     $$PWD/messagerange.h \
@@ -108,6 +110,7 @@ HEADERS += \
     $$PWD/authsentcode.h \
     $$PWD/channelschannelparticipant.h \
     $$PWD/channelschannelparticipants.h \
+    $$PWD/channelsmessageeditdata.h \
     $$PWD/contactsblocked.h \
     $$PWD/contactscontacts.h \
     $$PWD/contactsfound.h \
@@ -173,6 +176,7 @@ SOURCES += \
     $$PWD/encryptedfile.cpp \
     $$PWD/encryptedmessage.cpp \
     $$PWD/exportedchatinvite.cpp \
+    $$PWD/exportedmessagelink.cpp \
     $$PWD/filelocation.cpp \
     $$PWD/foundgif.cpp \
     $$PWD/geopoint.cpp \
@@ -205,6 +209,7 @@ SOURCES += \
     $$PWD/message.cpp \
     $$PWD/messageaction.cpp \
     $$PWD/messageentity.cpp \
+    $$PWD/messagefwdheader.cpp \
     $$PWD/messagegroup.cpp \
     $$PWD/messagemedia.cpp \
     $$PWD/messagerange.cpp \
@@ -245,6 +250,7 @@ SOURCES += \
     $$PWD/authsentcode.cpp \
     $$PWD/channelschannelparticipant.cpp \
     $$PWD/channelschannelparticipants.cpp \
+    $$PWD/channelsmessageeditdata.cpp \
     $$PWD/contactsblocked.cpp \
     $$PWD/contactscontacts.cpp \
     $$PWD/contactsfound.cpp \

@@ -56,4 +56,7 @@ private:
 
 Q_DECLARE_METATYPE(InputContact)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const InputContact &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, InputContact &item);
+
 #endif // LQTG_TYPE_INPUTCONTACT

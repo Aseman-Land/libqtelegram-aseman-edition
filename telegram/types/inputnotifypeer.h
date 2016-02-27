@@ -46,4 +46,7 @@ private:
 
 Q_DECLARE_METATYPE(InputNotifyPeer)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const InputNotifyPeer &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, InputNotifyPeer &item);
+
 #endif // LQTG_TYPE_INPUTNOTIFYPEER

@@ -61,4 +61,7 @@ private:
 
 Q_DECLARE_METATYPE(MessagesBotResults)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const MessagesBotResults &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, MessagesBotResults &item);
+
 #endif // LQTG_TYPE_MESSAGESBOTRESULTS

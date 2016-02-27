@@ -383,3 +383,69 @@ UpdatesType Functions::Channels::toggleInvitesResult(InboundPkt *in) {
     return result;
 }
 
+bool Functions::Channels::exportMessageLink(OutboundPkt *out, const InputChannel &channel, qint32 id) {
+    out->appendInt(fncChannelsExportMessageLink);
+    if(!channel.push(out)) return false;
+    out->appendInt(id);
+    return true;
+}
+
+ExportedMessageLink Functions::Channels::exportMessageLinkResult(InboundPkt *in) {
+    ExportedMessageLink result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+bool Functions::Channels::toggleSignatures(OutboundPkt *out, const InputChannel &channel, bool enabled) {
+    out->appendInt(fncChannelsToggleSignatures);
+    if(!channel.push(out)) return false;
+    out->appendBool(enabled);
+    return true;
+}
+
+UpdatesType Functions::Channels::toggleSignaturesResult(InboundPkt *in) {
+    UpdatesType result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+bool Functions::Channels::getMessageEditData(OutboundPkt *out, const InputChannel &channel, qint32 id) {
+    out->appendInt(fncChannelsGetMessageEditData);
+    if(!channel.push(out)) return false;
+    out->appendInt(id);
+    return true;
+}
+
+ChannelsMessageEditData Functions::Channels::getMessageEditDataResult(InboundPkt *in) {
+    ChannelsMessageEditData result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+bool Functions::Channels::editMessage(OutboundPkt *out, bool noWebpage, const InputChannel &channel, qint32 id, const QString &message, const QList<MessageEntity> &entities) {
+    out->appendInt(fncChannelsEditMessage);
+    
+    qint32 flags = 0;
+    if(noWebpage != 0) flags = (1<<1 | flags);
+    if(entities.count() != 0) flags = (1<<3 | flags);
+    
+    out->appendInt(flags);
+    if(!channel.push(out)) return false;
+    out->appendInt(id);
+    out->appendQString(message);
+    if(flags & 1<<3) {
+        out->appendInt(CoreTypes::typeVector);
+        out->appendInt(entities.count());
+        for (qint32 i = 0; i < entities.count(); i++) {
+            if(flags & 1<<3) if(!entities[i].push(out)) return false;
+        }
+    }
+    return true;
+}
+
+UpdatesType Functions::Channels::editMessageResult(InboundPkt *in) {
+    UpdatesType result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+

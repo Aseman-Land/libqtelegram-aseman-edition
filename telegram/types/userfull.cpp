@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 UserFull::UserFull(UserFullType classType, InboundPkt *in) :
     m_blocked(false),
     m_classType(classType)
@@ -136,5 +138,50 @@ bool UserFull::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const UserFull &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case UserFull::typeUserFull:
+        stream << item.user();
+        stream << item.link();
+        stream << item.profilePhoto();
+        stream << item.notifySettings();
+        stream << item.blocked();
+        stream << item.botInfo();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, UserFull &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<UserFull::UserFullType>(type));
+    switch(type) {
+    case UserFull::typeUserFull: {
+        User m_user;
+        stream >> m_user;
+        item.setUser(m_user);
+        ContactsLink m_link;
+        stream >> m_link;
+        item.setLink(m_link);
+        Photo m_profile_photo;
+        stream >> m_profile_photo;
+        item.setProfilePhoto(m_profile_photo);
+        PeerNotifySettings m_notify_settings;
+        stream >> m_notify_settings;
+        item.setNotifySettings(m_notify_settings);
+        bool m_blocked;
+        stream >> m_blocked;
+        item.setBlocked(m_blocked);
+        BotInfo m_bot_info;
+        stream >> m_bot_info;
+        item.setBotInfo(m_bot_info);
+    }
+        break;
+    }
+    return stream;
 }
 

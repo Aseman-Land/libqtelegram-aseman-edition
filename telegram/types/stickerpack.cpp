@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 StickerPack::StickerPack(StickerPackType classType, InboundPkt *in) :
     m_classType(classType)
 {
@@ -100,5 +102,34 @@ bool StickerPack::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const StickerPack &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case StickerPack::typeStickerPack:
+        stream << item.emoticon();
+        stream << item.documents();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, StickerPack &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<StickerPack::StickerPackType>(type));
+    switch(type) {
+    case StickerPack::typeStickerPack: {
+        QString m_emoticon;
+        stream >> m_emoticon;
+        item.setEmoticon(m_emoticon);
+        QList<qint64> m_documents;
+        stream >> m_documents;
+        item.setDocuments(m_documents);
+    }
+        break;
+    }
+    return stream;
 }
 

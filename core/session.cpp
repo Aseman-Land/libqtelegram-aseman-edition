@@ -306,14 +306,14 @@ void Session::workUpdateShortMessage(InboundPkt &inboundPkt, qint64 msgId) {
     qCDebug(TG_CORE_SESSION) << "workUpdateShortMessage: msgId =" << QString::number(msgId, 16);
     Q_UNUSED(msgId)
     UpdatesType upd(&inboundPkt);
-    Q_EMIT updateShortMessage(upd.id(), upd.userId(), upd.message(), upd.pts(), upd.ptsCount(), upd.date(), upd.fwdFromId(), upd.fwdDate(), upd.replyToMsgId(), upd.unread(), upd.out());
+    Q_EMIT updateShortMessage(upd.id(), upd.userId(), upd.message(), upd.pts(), upd.ptsCount(), upd.date(), upd.fwdFrom(), upd.replyToMsgId(), upd.unread(), upd.out());
 }
 
 void Session::workUpdateShortChatMessage(InboundPkt &inboundPkt, qint64 msgId) {
     qCDebug(TG_CORE_SESSION) << "workUpdateShortChatMessage: msgId =" << QString::number(msgId, 16);
     Q_UNUSED(msgId)
     UpdatesType upd(&inboundPkt);
-    Q_EMIT updateShortChatMessage(upd.id(), upd.fromId(), upd.chatId(), upd.message(), upd.pts(), upd.ptsCount(), upd.date(), upd.fwdFromId(), upd.date(), upd.replyToMsgId(), upd.unread(), upd.out());
+    Q_EMIT updateShortChatMessage(upd.id(), upd.fromId(), upd.chatId(), upd.message(), upd.pts(), upd.ptsCount(), upd.date(), upd.fwdFrom(), upd.replyToMsgId(), upd.unread(), upd.out());
 }
 
 void Session::workPacked(InboundPkt &inboundPkt, qint64 msgId) {

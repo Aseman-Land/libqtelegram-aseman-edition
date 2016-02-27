@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 MessagesDialogs::MessagesDialogs(MessagesDialogsType classType, InboundPkt *in) :
     m_count(0),
     m_classType(classType)
@@ -232,5 +234,67 @@ bool MessagesDialogs::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const MessagesDialogs &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case MessagesDialogs::typeMessagesDialogs:
+        stream << item.dialogs();
+        stream << item.messages();
+        stream << item.chats();
+        stream << item.users();
+        break;
+    case MessagesDialogs::typeMessagesDialogsSlice:
+        stream << item.count();
+        stream << item.dialogs();
+        stream << item.messages();
+        stream << item.chats();
+        stream << item.users();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, MessagesDialogs &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<MessagesDialogs::MessagesDialogsType>(type));
+    switch(type) {
+    case MessagesDialogs::typeMessagesDialogs: {
+        QList<Dialog> m_dialogs;
+        stream >> m_dialogs;
+        item.setDialogs(m_dialogs);
+        QList<Message> m_messages;
+        stream >> m_messages;
+        item.setMessages(m_messages);
+        QList<Chat> m_chats;
+        stream >> m_chats;
+        item.setChats(m_chats);
+        QList<User> m_users;
+        stream >> m_users;
+        item.setUsers(m_users);
+    }
+        break;
+    case MessagesDialogs::typeMessagesDialogsSlice: {
+        qint32 m_count;
+        stream >> m_count;
+        item.setCount(m_count);
+        QList<Dialog> m_dialogs;
+        stream >> m_dialogs;
+        item.setDialogs(m_dialogs);
+        QList<Message> m_messages;
+        stream >> m_messages;
+        item.setMessages(m_messages);
+        QList<Chat> m_chats;
+        stream >> m_chats;
+        item.setChats(m_chats);
+        QList<User> m_users;
+        stream >> m_users;
+        item.setUsers(m_users);
+    }
+        break;
+    }
+    return stream;
 }
 

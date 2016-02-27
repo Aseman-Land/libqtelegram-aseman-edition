@@ -9,7 +9,7 @@
 #### Schema:
 
 ```c++
-dcOption#5d8c6cc flags:# ipv6:flags.0?true media_only:flags.1?true id:int ip_address:string port:int = DcOption;
+dcOption#5d8c6cc flags:# ipv6:flags.0?true media_only:flags.1?true tcpo_only:flags.2?true id:int ip_address:string port:int = DcOption;
 ```
 
 #### Parameters:
@@ -18,6 +18,7 @@ dcOption#5d8c6cc flags:# ipv6:flags.0?true media_only:flags.1?true id:int ip_add
 |----|----|
 |ipv6|bool|
 |mediaOnly|bool|
+|tcpoOnly|bool|
 |id|qint32|
 |ipAddress|QString|
 |port|qint32|

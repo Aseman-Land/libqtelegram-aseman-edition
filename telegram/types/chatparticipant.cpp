@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 ChatParticipant::ChatParticipant(ChatParticipantType classType, InboundPkt *in) :
     m_date(0),
     m_inviterId(0),
@@ -139,5 +141,64 @@ bool ChatParticipant::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const ChatParticipant &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case ChatParticipant::typeChatParticipant:
+        stream << item.userId();
+        stream << item.inviterId();
+        stream << item.date();
+        break;
+    case ChatParticipant::typeChatParticipantCreator:
+        stream << item.userId();
+        break;
+    case ChatParticipant::typeChatParticipantAdmin:
+        stream << item.userId();
+        stream << item.inviterId();
+        stream << item.date();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, ChatParticipant &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<ChatParticipant::ChatParticipantType>(type));
+    switch(type) {
+    case ChatParticipant::typeChatParticipant: {
+        qint32 m_user_id;
+        stream >> m_user_id;
+        item.setUserId(m_user_id);
+        qint32 m_inviter_id;
+        stream >> m_inviter_id;
+        item.setInviterId(m_inviter_id);
+        qint32 m_date;
+        stream >> m_date;
+        item.setDate(m_date);
+    }
+        break;
+    case ChatParticipant::typeChatParticipantCreator: {
+        qint32 m_user_id;
+        stream >> m_user_id;
+        item.setUserId(m_user_id);
+    }
+        break;
+    case ChatParticipant::typeChatParticipantAdmin: {
+        qint32 m_user_id;
+        stream >> m_user_id;
+        item.setUserId(m_user_id);
+        qint32 m_inviter_id;
+        stream >> m_inviter_id;
+        item.setInviterId(m_inviter_id);
+        qint32 m_date;
+        stream >> m_date;
+        item.setDate(m_date);
+    }
+        break;
+    }
+    return stream;
 }
 

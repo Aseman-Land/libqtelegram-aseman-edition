@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 AuthAuthorization::AuthAuthorization(AuthAuthorizationType classType, InboundPkt *in) :
     m_classType(classType)
 {
@@ -78,5 +80,30 @@ bool AuthAuthorization::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const AuthAuthorization &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case AuthAuthorization::typeAuthAuthorization:
+        stream << item.user();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, AuthAuthorization &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<AuthAuthorization::AuthAuthorizationType>(type));
+    switch(type) {
+    case AuthAuthorization::typeAuthAuthorization: {
+        User m_user;
+        stream >> m_user;
+        item.setUser(m_user);
+    }
+        break;
+    }
+    return stream;
 }
 

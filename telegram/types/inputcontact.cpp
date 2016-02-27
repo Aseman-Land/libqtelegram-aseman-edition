@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 InputContact::InputContact(InputContactType classType, InboundPkt *in) :
     m_clientId(0),
     m_classType(classType)
@@ -114,5 +116,42 @@ bool InputContact::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const InputContact &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case InputContact::typeInputPhoneContact:
+        stream << item.clientId();
+        stream << item.phone();
+        stream << item.firstName();
+        stream << item.lastName();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, InputContact &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<InputContact::InputContactType>(type));
+    switch(type) {
+    case InputContact::typeInputPhoneContact: {
+        qint64 m_client_id;
+        stream >> m_client_id;
+        item.setClientId(m_client_id);
+        QString m_phone;
+        stream >> m_phone;
+        item.setPhone(m_phone);
+        QString m_first_name;
+        stream >> m_first_name;
+        item.setFirstName(m_first_name);
+        QString m_last_name;
+        stream >> m_last_name;
+        item.setLastName(m_last_name);
+    }
+        break;
+    }
+    return stream;
 }
 

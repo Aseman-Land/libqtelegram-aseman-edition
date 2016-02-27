@@ -93,4 +93,7 @@ private:
 
 Q_DECLARE_METATYPE(InputBotInlineResult)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const InputBotInlineResult &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, InputBotInlineResult &item);
+
 #endif // LQTG_TYPE_INPUTBOTINLINERESULT

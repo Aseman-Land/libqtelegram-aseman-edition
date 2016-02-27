@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 DisabledFeature::DisabledFeature(DisabledFeatureType classType, InboundPkt *in) :
     m_classType(classType)
 {
@@ -89,5 +91,34 @@ bool DisabledFeature::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const DisabledFeature &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case DisabledFeature::typeDisabledFeature:
+        stream << item.feature();
+        stream << item.description();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, DisabledFeature &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<DisabledFeature::DisabledFeatureType>(type));
+    switch(type) {
+    case DisabledFeature::typeDisabledFeature: {
+        QString m_feature;
+        stream >> m_feature;
+        item.setFeature(m_feature);
+        QString m_description;
+        stream >> m_description;
+        item.setDescription(m_description);
+    }
+        break;
+    }
+    return stream;
 }
 

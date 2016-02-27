@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 InputFile::InputFile(InputFileType classType, InboundPkt *in) :
     m_id(0),
     m_parts(0),
@@ -134,5 +136,59 @@ bool InputFile::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const InputFile &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case InputFile::typeInputFile:
+        stream << item.id();
+        stream << item.parts();
+        stream << item.name();
+        stream << item.md5Checksum();
+        break;
+    case InputFile::typeInputFileBig:
+        stream << item.id();
+        stream << item.parts();
+        stream << item.name();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, InputFile &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<InputFile::InputFileType>(type));
+    switch(type) {
+    case InputFile::typeInputFile: {
+        qint64 m_id;
+        stream >> m_id;
+        item.setId(m_id);
+        qint32 m_parts;
+        stream >> m_parts;
+        item.setParts(m_parts);
+        QString m_name;
+        stream >> m_name;
+        item.setName(m_name);
+        QString m_md5_checksum;
+        stream >> m_md5_checksum;
+        item.setMd5Checksum(m_md5_checksum);
+    }
+        break;
+    case InputFile::typeInputFileBig: {
+        qint64 m_id;
+        stream >> m_id;
+        item.setId(m_id);
+        qint32 m_parts;
+        stream >> m_parts;
+        item.setParts(m_parts);
+        QString m_name;
+        stream >> m_name;
+        item.setName(m_name);
+    }
+        break;
+    }
+    return stream;
 }
 

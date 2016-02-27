@@ -24,6 +24,9 @@
 #include "telegram/types/channelparticipantrole.h"
 #include "telegram/types/inputchatphoto.h"
 #include "telegram/types/exportedchatinvite.h"
+#include "telegram/types/exportedmessagelink.h"
+#include "telegram/types/channelsmessageeditdata.h"
+#include "telegram/types/messageentity.h"
 
 namespace Tg {
 namespace Functions {
@@ -57,7 +60,11 @@ public:
         fncChannelsKickFromChannel = 0xa672de14,
         fncChannelsExportInvite = 0xc7560885,
         fncChannelsDeleteChannel = 0xc0111fe3,
-        fncChannelsToggleInvites = 0x49609307
+        fncChannelsToggleInvites = 0x49609307,
+        fncChannelsExportMessageLink = 0xc846d22d,
+        fncChannelsToggleSignatures = 0x1f69b606,
+        fncChannelsGetMessageEditData = 0x27ea3a28,
+        fncChannelsEditMessage = 0xdcda80ed
     };
 
     Channels();
@@ -140,6 +147,18 @@ public:
 
     static bool toggleInvites(OutboundPkt *out, const InputChannel &channel, bool enabled);
     static UpdatesType toggleInvitesResult(InboundPkt *in);
+
+    static bool exportMessageLink(OutboundPkt *out, const InputChannel &channel, qint32 id);
+    static ExportedMessageLink exportMessageLinkResult(InboundPkt *in);
+
+    static bool toggleSignatures(OutboundPkt *out, const InputChannel &channel, bool enabled);
+    static UpdatesType toggleSignaturesResult(InboundPkt *in);
+
+    static bool getMessageEditData(OutboundPkt *out, const InputChannel &channel, qint32 id);
+    static ChannelsMessageEditData getMessageEditDataResult(InboundPkt *in);
+
+    static bool editMessage(OutboundPkt *out, bool noWebpage, const InputChannel &channel, qint32 id, const QString &message, const QList<MessageEntity> &entities);
+    static UpdatesType editMessageResult(InboundPkt *in);
 
 };
 

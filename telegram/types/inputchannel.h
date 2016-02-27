@@ -48,4 +48,7 @@ private:
 
 Q_DECLARE_METATYPE(InputChannel)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const InputChannel &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, InputChannel &item);
+
 #endif // LQTG_TYPE_INPUTCHANNEL

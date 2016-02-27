@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 ContactsFound::ContactsFound(ContactsFoundType classType, InboundPkt *in) :
     m_classType(classType)
 {
@@ -133,5 +135,38 @@ bool ContactsFound::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const ContactsFound &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case ContactsFound::typeContactsFound:
+        stream << item.results();
+        stream << item.chats();
+        stream << item.users();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, ContactsFound &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<ContactsFound::ContactsFoundType>(type));
+    switch(type) {
+    case ContactsFound::typeContactsFound: {
+        QList<Peer> m_results;
+        stream >> m_results;
+        item.setResults(m_results);
+        QList<Chat> m_chats;
+        stream >> m_chats;
+        item.setChats(m_chats);
+        QList<User> m_users;
+        stream >> m_users;
+        item.setUsers(m_users);
+    }
+        break;
+    }
+    return stream;
 }
 

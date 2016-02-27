@@ -37,6 +37,7 @@ void qtelegramRegisterQmlTypes(const char *uri) {
     qmlRegisterType<EncryptedFileObject>(uri, 1, 0, "EncryptedFile");
     qmlRegisterType<EncryptedMessageObject>(uri, 1, 0, "EncryptedMessage");
     qmlRegisterType<ExportedChatInviteObject>(uri, 1, 0, "ExportedChatInvite");
+    qmlRegisterType<ExportedMessageLinkObject>(uri, 1, 0, "ExportedMessageLink");
     qmlRegisterType<FileLocationObject>(uri, 1, 0, "FileLocation");
     qmlRegisterType<FoundGifObject>(uri, 1, 0, "FoundGif");
     qmlRegisterType<GeoPointObject>(uri, 1, 0, "GeoPoint");
@@ -69,6 +70,7 @@ void qtelegramRegisterQmlTypes(const char *uri) {
     qmlRegisterType<MessageObject>(uri, 1, 0, "Message");
     qmlRegisterType<MessageActionObject>(uri, 1, 0, "MessageAction");
     qmlRegisterType<MessageEntityObject>(uri, 1, 0, "MessageEntity");
+    qmlRegisterType<MessageFwdHeaderObject>(uri, 1, 0, "MessageFwdHeader");
     qmlRegisterType<MessageGroupObject>(uri, 1, 0, "MessageGroup");
     qmlRegisterType<MessageMediaObject>(uri, 1, 0, "MessageMedia");
     qmlRegisterType<MessageRangeObject>(uri, 1, 0, "MessageRange");
@@ -109,6 +111,7 @@ void qtelegramRegisterQmlTypes(const char *uri) {
     qmlRegisterType<AuthSentCodeObject>(uri, 1, 0, "AuthSentCode");
     qmlRegisterType<ChannelsChannelParticipantObject>(uri, 1, 0, "ChannelsChannelParticipant");
     qmlRegisterType<ChannelsChannelParticipantsObject>(uri, 1, 0, "ChannelsChannelParticipants");
+    qmlRegisterType<ChannelsMessageEditDataObject>(uri, 1, 0, "ChannelsMessageEditData");
     qmlRegisterType<ContactsBlockedObject>(uri, 1, 0, "ContactsBlocked");
     qmlRegisterType<ContactsContactsObject>(uri, 1, 0, "ContactsContacts");
     qmlRegisterType<ContactsFoundObject>(uri, 1, 0, "ContactsFound");

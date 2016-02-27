@@ -65,4 +65,7 @@ private:
 
 Q_DECLARE_METATYPE(MessagesDialogs)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const MessagesDialogs &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, MessagesDialogs &item);
+
 #endif // LQTG_TYPE_MESSAGESDIALOGS

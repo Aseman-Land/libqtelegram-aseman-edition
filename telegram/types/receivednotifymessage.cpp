@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 ReceivedNotifyMessage::ReceivedNotifyMessage(ReceivedNotifyMessageType classType, InboundPkt *in) :
     m_flags(0),
     m_id(0),
@@ -95,5 +97,34 @@ bool ReceivedNotifyMessage::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const ReceivedNotifyMessage &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case ReceivedNotifyMessage::typeReceivedNotifyMessage:
+        stream << item.id();
+        stream << item.flags();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, ReceivedNotifyMessage &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<ReceivedNotifyMessage::ReceivedNotifyMessageType>(type));
+    switch(type) {
+    case ReceivedNotifyMessage::typeReceivedNotifyMessage: {
+        qint32 m_id;
+        stream >> m_id;
+        item.setId(m_id);
+        qint32 m_flags;
+        stream >> m_flags;
+        item.setFlags(m_flags);
+    }
+        break;
+    }
+    return stream;
 }
 

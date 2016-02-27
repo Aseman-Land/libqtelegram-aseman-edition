@@ -7,19 +7,19 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 InputPeerNotifySettings::InputPeerNotifySettings(InputPeerNotifySettingsType classType, InboundPkt *in) :
-    m_eventsMask(0),
+    m_flags(0),
     m_muteUntil(0),
-    m_showPreviews(false),
     m_classType(classType)
 {
     if(in) fetch(in);
 }
 
 InputPeerNotifySettings::InputPeerNotifySettings(InboundPkt *in) :
-    m_eventsMask(0),
+    m_flags(0),
     m_muteUntil(0),
-    m_showPreviews(false),
     m_classType(typeInputPeerNotifySettings)
 {
     fetch(in);
@@ -27,9 +27,8 @@ InputPeerNotifySettings::InputPeerNotifySettings(InboundPkt *in) :
 
 InputPeerNotifySettings::InputPeerNotifySettings(const Null &null) :
     TelegramTypeObject(null),
-    m_eventsMask(0),
+    m_flags(0),
     m_muteUntil(0),
-    m_showPreviews(false),
     m_classType(typeInputPeerNotifySettings)
 {
 }
@@ -37,12 +36,12 @@ InputPeerNotifySettings::InputPeerNotifySettings(const Null &null) :
 InputPeerNotifySettings::~InputPeerNotifySettings() {
 }
 
-void InputPeerNotifySettings::setEventsMask(qint32 eventsMask) {
-    m_eventsMask = eventsMask;
+void InputPeerNotifySettings::setFlags(qint32 flags) {
+    m_flags = flags;
 }
 
-qint32 InputPeerNotifySettings::eventsMask() const {
-    return m_eventsMask;
+qint32 InputPeerNotifySettings::flags() const {
+    return m_flags;
 }
 
 void InputPeerNotifySettings::setMuteUntil(qint32 muteUntil) {
@@ -54,11 +53,21 @@ qint32 InputPeerNotifySettings::muteUntil() const {
 }
 
 void InputPeerNotifySettings::setShowPreviews(bool showPreviews) {
-    m_showPreviews = showPreviews;
+    if(showPreviews) m_flags = (m_flags | (1<<0));
+    else m_flags = (m_flags & ~(1<<0));
 }
 
 bool InputPeerNotifySettings::showPreviews() const {
-    return m_showPreviews;
+    return (m_flags & 1<<0);
+}
+
+void InputPeerNotifySettings::setSilent(bool silent) {
+    if(silent) m_flags = (m_flags | (1<<1));
+    else m_flags = (m_flags & ~(1<<1));
+}
+
+bool InputPeerNotifySettings::silent() const {
+    return (m_flags & 1<<1);
 }
 
 void InputPeerNotifySettings::setSound(const QString &sound) {
@@ -71,9 +80,8 @@ QString InputPeerNotifySettings::sound() const {
 
 bool InputPeerNotifySettings::operator ==(const InputPeerNotifySettings &b) const {
     return m_classType == b.m_classType &&
-           m_eventsMask == b.m_eventsMask &&
+           m_flags == b.m_flags &&
            m_muteUntil == b.m_muteUntil &&
-           m_showPreviews == b.m_showPreviews &&
            m_sound == b.m_sound;
 }
 
@@ -90,10 +98,9 @@ bool InputPeerNotifySettings::fetch(InboundPkt *in) {
     int x = in->fetchInt();
     switch(x) {
     case typeInputPeerNotifySettings: {
+        m_flags = in->fetchInt();
         m_muteUntil = in->fetchInt();
         m_sound = in->fetchQString();
-        m_showPreviews = in->fetchBool();
-        m_eventsMask = in->fetchInt();
         m_classType = static_cast<InputPeerNotifySettingsType>(x);
         return true;
     }
@@ -109,10 +116,9 @@ bool InputPeerNotifySettings::push(OutboundPkt *out) const {
     out->appendInt(m_classType);
     switch(m_classType) {
     case typeInputPeerNotifySettings: {
+        out->appendInt(m_flags);
         out->appendInt(m_muteUntil);
         out->appendQString(m_sound);
-        out->appendBool(m_showPreviews);
-        out->appendInt(m_eventsMask);
         return true;
     }
         break;
@@ -120,5 +126,38 @@ bool InputPeerNotifySettings::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const InputPeerNotifySettings &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case InputPeerNotifySettings::typeInputPeerNotifySettings:
+        stream << item.flags();
+        stream << item.muteUntil();
+        stream << item.sound();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, InputPeerNotifySettings &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<InputPeerNotifySettings::InputPeerNotifySettingsType>(type));
+    switch(type) {
+    case InputPeerNotifySettings::typeInputPeerNotifySettings: {
+        qint32 m_flags;
+        stream >> m_flags;
+        item.setFlags(m_flags);
+        qint32 m_mute_until;
+        stream >> m_mute_until;
+        item.setMuteUntil(m_mute_until);
+        QString m_sound;
+        stream >> m_sound;
+        item.setSound(m_sound);
+    }
+        break;
+    }
+    return stream;
 }
 

@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 EncryptedChat::EncryptedChat(EncryptedChatType classType, InboundPkt *in) :
     m_accessHash(0),
     m_adminId(0),
@@ -241,5 +243,126 @@ bool EncryptedChat::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const EncryptedChat &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case EncryptedChat::typeEncryptedChatEmpty:
+        stream << item.id();
+        break;
+    case EncryptedChat::typeEncryptedChatWaiting:
+        stream << item.id();
+        stream << item.accessHash();
+        stream << item.date();
+        stream << item.adminId();
+        stream << item.participantId();
+        break;
+    case EncryptedChat::typeEncryptedChatRequested:
+        stream << item.id();
+        stream << item.accessHash();
+        stream << item.date();
+        stream << item.adminId();
+        stream << item.participantId();
+        stream << item.gA();
+        break;
+    case EncryptedChat::typeEncryptedChat:
+        stream << item.id();
+        stream << item.accessHash();
+        stream << item.date();
+        stream << item.adminId();
+        stream << item.participantId();
+        stream << item.gAOrB();
+        stream << item.keyFingerprint();
+        break;
+    case EncryptedChat::typeEncryptedChatDiscarded:
+        stream << item.id();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, EncryptedChat &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<EncryptedChat::EncryptedChatType>(type));
+    switch(type) {
+    case EncryptedChat::typeEncryptedChatEmpty: {
+        qint32 m_id;
+        stream >> m_id;
+        item.setId(m_id);
+    }
+        break;
+    case EncryptedChat::typeEncryptedChatWaiting: {
+        qint32 m_id;
+        stream >> m_id;
+        item.setId(m_id);
+        qint64 m_access_hash;
+        stream >> m_access_hash;
+        item.setAccessHash(m_access_hash);
+        qint32 m_date;
+        stream >> m_date;
+        item.setDate(m_date);
+        qint32 m_admin_id;
+        stream >> m_admin_id;
+        item.setAdminId(m_admin_id);
+        qint32 m_participant_id;
+        stream >> m_participant_id;
+        item.setParticipantId(m_participant_id);
+    }
+        break;
+    case EncryptedChat::typeEncryptedChatRequested: {
+        qint32 m_id;
+        stream >> m_id;
+        item.setId(m_id);
+        qint64 m_access_hash;
+        stream >> m_access_hash;
+        item.setAccessHash(m_access_hash);
+        qint32 m_date;
+        stream >> m_date;
+        item.setDate(m_date);
+        qint32 m_admin_id;
+        stream >> m_admin_id;
+        item.setAdminId(m_admin_id);
+        qint32 m_participant_id;
+        stream >> m_participant_id;
+        item.setParticipantId(m_participant_id);
+        QByteArray m_g_a;
+        stream >> m_g_a;
+        item.setGA(m_g_a);
+    }
+        break;
+    case EncryptedChat::typeEncryptedChat: {
+        qint32 m_id;
+        stream >> m_id;
+        item.setId(m_id);
+        qint64 m_access_hash;
+        stream >> m_access_hash;
+        item.setAccessHash(m_access_hash);
+        qint32 m_date;
+        stream >> m_date;
+        item.setDate(m_date);
+        qint32 m_admin_id;
+        stream >> m_admin_id;
+        item.setAdminId(m_admin_id);
+        qint32 m_participant_id;
+        stream >> m_participant_id;
+        item.setParticipantId(m_participant_id);
+        QByteArray m_g_a_or_b;
+        stream >> m_g_a_or_b;
+        item.setGAOrB(m_g_a_or_b);
+        qint64 m_key_fingerprint;
+        stream >> m_key_fingerprint;
+        item.setKeyFingerprint(m_key_fingerprint);
+    }
+        break;
+    case EncryptedChat::typeEncryptedChatDiscarded: {
+        qint32 m_id;
+        stream >> m_id;
+        item.setId(m_id);
+    }
+        break;
+    }
+    return stream;
 }
 

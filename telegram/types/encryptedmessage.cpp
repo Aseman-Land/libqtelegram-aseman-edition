@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 EncryptedMessage::EncryptedMessage(EncryptedMessageType classType, InboundPkt *in) :
     m_chatId(0),
     m_date(0),
@@ -150,5 +152,67 @@ bool EncryptedMessage::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const EncryptedMessage &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case EncryptedMessage::typeEncryptedMessage:
+        stream << item.randomId();
+        stream << item.chatId();
+        stream << item.date();
+        stream << item.bytes();
+        stream << item.file();
+        break;
+    case EncryptedMessage::typeEncryptedMessageService:
+        stream << item.randomId();
+        stream << item.chatId();
+        stream << item.date();
+        stream << item.bytes();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, EncryptedMessage &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<EncryptedMessage::EncryptedMessageType>(type));
+    switch(type) {
+    case EncryptedMessage::typeEncryptedMessage: {
+        qint64 m_random_id;
+        stream >> m_random_id;
+        item.setRandomId(m_random_id);
+        qint32 m_chat_id;
+        stream >> m_chat_id;
+        item.setChatId(m_chat_id);
+        qint32 m_date;
+        stream >> m_date;
+        item.setDate(m_date);
+        QByteArray m_bytes;
+        stream >> m_bytes;
+        item.setBytes(m_bytes);
+        EncryptedFile m_file;
+        stream >> m_file;
+        item.setFile(m_file);
+    }
+        break;
+    case EncryptedMessage::typeEncryptedMessageService: {
+        qint64 m_random_id;
+        stream >> m_random_id;
+        item.setRandomId(m_random_id);
+        qint32 m_chat_id;
+        stream >> m_chat_id;
+        item.setChatId(m_chat_id);
+        qint32 m_date;
+        stream >> m_date;
+        item.setDate(m_date);
+        QByteArray m_bytes;
+        stream >> m_bytes;
+        item.setBytes(m_bytes);
+    }
+        break;
+    }
+    return stream;
 }
 

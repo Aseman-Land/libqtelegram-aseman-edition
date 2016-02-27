@@ -53,4 +53,7 @@ private:
 
 Q_DECLARE_METATYPE(UploadFile)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const UploadFile &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, UploadFile &item);
+
 #endif // LQTG_TYPE_UPLOADFILE

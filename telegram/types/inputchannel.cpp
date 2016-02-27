@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 InputChannel::InputChannel(InputChannelType classType, InboundPkt *in) :
     m_accessHash(0),
     m_channelId(0),
@@ -106,5 +108,41 @@ bool InputChannel::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const InputChannel &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case InputChannel::typeInputChannelEmpty:
+        
+        break;
+    case InputChannel::typeInputChannel:
+        stream << item.channelId();
+        stream << item.accessHash();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, InputChannel &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<InputChannel::InputChannelType>(type));
+    switch(type) {
+    case InputChannel::typeInputChannelEmpty: {
+        
+    }
+        break;
+    case InputChannel::typeInputChannel: {
+        qint32 m_channel_id;
+        stream >> m_channel_id;
+        item.setChannelId(m_channel_id);
+        qint64 m_access_hash;
+        stream >> m_access_hash;
+        item.setAccessHash(m_access_hash);
+    }
+        break;
+    }
+    return stream;
 }
 

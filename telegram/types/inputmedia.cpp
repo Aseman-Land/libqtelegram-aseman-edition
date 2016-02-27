@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 InputMedia::InputMedia(InputMediaType classType, InboundPkt *in) :
     m_classType(classType)
 {
@@ -393,5 +395,177 @@ bool InputMedia::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const InputMedia &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case InputMedia::typeInputMediaEmpty:
+        
+        break;
+    case InputMedia::typeInputMediaUploadedPhoto:
+        stream << item.file();
+        stream << item.caption();
+        break;
+    case InputMedia::typeInputMediaPhoto:
+        stream << item.idInputPhoto();
+        stream << item.caption();
+        break;
+    case InputMedia::typeInputMediaGeoPoint:
+        stream << item.geoPoint();
+        break;
+    case InputMedia::typeInputMediaContact:
+        stream << item.phoneNumber();
+        stream << item.firstName();
+        stream << item.lastName();
+        break;
+    case InputMedia::typeInputMediaUploadedDocument:
+        stream << item.file();
+        stream << item.mimeType();
+        stream << item.attributes();
+        stream << item.caption();
+        break;
+    case InputMedia::typeInputMediaUploadedThumbDocument:
+        stream << item.file();
+        stream << item.thumb();
+        stream << item.mimeType();
+        stream << item.attributes();
+        stream << item.caption();
+        break;
+    case InputMedia::typeInputMediaDocument:
+        stream << item.idInputDocument();
+        stream << item.caption();
+        break;
+    case InputMedia::typeInputMediaVenue:
+        stream << item.geoPoint();
+        stream << item.title();
+        stream << item.address();
+        stream << item.provider();
+        stream << item.venueId();
+        break;
+    case InputMedia::typeInputMediaGifExternal:
+        stream << item.url();
+        stream << item.q();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, InputMedia &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<InputMedia::InputMediaType>(type));
+    switch(type) {
+    case InputMedia::typeInputMediaEmpty: {
+        
+    }
+        break;
+    case InputMedia::typeInputMediaUploadedPhoto: {
+        InputFile m_file;
+        stream >> m_file;
+        item.setFile(m_file);
+        QString m_caption;
+        stream >> m_caption;
+        item.setCaption(m_caption);
+    }
+        break;
+    case InputMedia::typeInputMediaPhoto: {
+        InputPhoto m_id_InputPhoto;
+        stream >> m_id_InputPhoto;
+        item.setIdInputPhoto(m_id_InputPhoto);
+        QString m_caption;
+        stream >> m_caption;
+        item.setCaption(m_caption);
+    }
+        break;
+    case InputMedia::typeInputMediaGeoPoint: {
+        InputGeoPoint m_geo_point;
+        stream >> m_geo_point;
+        item.setGeoPoint(m_geo_point);
+    }
+        break;
+    case InputMedia::typeInputMediaContact: {
+        QString m_phone_number;
+        stream >> m_phone_number;
+        item.setPhoneNumber(m_phone_number);
+        QString m_first_name;
+        stream >> m_first_name;
+        item.setFirstName(m_first_name);
+        QString m_last_name;
+        stream >> m_last_name;
+        item.setLastName(m_last_name);
+    }
+        break;
+    case InputMedia::typeInputMediaUploadedDocument: {
+        InputFile m_file;
+        stream >> m_file;
+        item.setFile(m_file);
+        QString m_mime_type;
+        stream >> m_mime_type;
+        item.setMimeType(m_mime_type);
+        QList<DocumentAttribute> m_attributes;
+        stream >> m_attributes;
+        item.setAttributes(m_attributes);
+        QString m_caption;
+        stream >> m_caption;
+        item.setCaption(m_caption);
+    }
+        break;
+    case InputMedia::typeInputMediaUploadedThumbDocument: {
+        InputFile m_file;
+        stream >> m_file;
+        item.setFile(m_file);
+        InputFile m_thumb;
+        stream >> m_thumb;
+        item.setThumb(m_thumb);
+        QString m_mime_type;
+        stream >> m_mime_type;
+        item.setMimeType(m_mime_type);
+        QList<DocumentAttribute> m_attributes;
+        stream >> m_attributes;
+        item.setAttributes(m_attributes);
+        QString m_caption;
+        stream >> m_caption;
+        item.setCaption(m_caption);
+    }
+        break;
+    case InputMedia::typeInputMediaDocument: {
+        InputDocument m_id_InputDocument;
+        stream >> m_id_InputDocument;
+        item.setIdInputDocument(m_id_InputDocument);
+        QString m_caption;
+        stream >> m_caption;
+        item.setCaption(m_caption);
+    }
+        break;
+    case InputMedia::typeInputMediaVenue: {
+        InputGeoPoint m_geo_point;
+        stream >> m_geo_point;
+        item.setGeoPoint(m_geo_point);
+        QString m_title;
+        stream >> m_title;
+        item.setTitle(m_title);
+        QString m_address;
+        stream >> m_address;
+        item.setAddress(m_address);
+        QString m_provider;
+        stream >> m_provider;
+        item.setProvider(m_provider);
+        QString m_venue_id;
+        stream >> m_venue_id;
+        item.setVenueId(m_venue_id);
+    }
+        break;
+    case InputMedia::typeInputMediaGifExternal: {
+        QString m_url;
+        stream >> m_url;
+        item.setUrl(m_url);
+        QString m_q;
+        stream >> m_q;
+        item.setQ(m_q);
+    }
+        break;
+    }
+    return stream;
 }
 

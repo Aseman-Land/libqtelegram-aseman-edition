@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 StorageFileType::StorageFileType(StorageFileTypeType classType, InboundPkt *in) :
     m_classType(classType)
 {
@@ -166,5 +168,91 @@ bool StorageFileType::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const StorageFileType &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case StorageFileType::typeStorageFileUnknown:
+        
+        break;
+    case StorageFileType::typeStorageFileJpeg:
+        
+        break;
+    case StorageFileType::typeStorageFileGif:
+        
+        break;
+    case StorageFileType::typeStorageFilePng:
+        
+        break;
+    case StorageFileType::typeStorageFilePdf:
+        
+        break;
+    case StorageFileType::typeStorageFileMp3:
+        
+        break;
+    case StorageFileType::typeStorageFileMov:
+        
+        break;
+    case StorageFileType::typeStorageFilePartial:
+        
+        break;
+    case StorageFileType::typeStorageFileMp4:
+        
+        break;
+    case StorageFileType::typeStorageFileWebp:
+        
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, StorageFileType &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<StorageFileType::StorageFileTypeType>(type));
+    switch(type) {
+    case StorageFileType::typeStorageFileUnknown: {
+        
+    }
+        break;
+    case StorageFileType::typeStorageFileJpeg: {
+        
+    }
+        break;
+    case StorageFileType::typeStorageFileGif: {
+        
+    }
+        break;
+    case StorageFileType::typeStorageFilePng: {
+        
+    }
+        break;
+    case StorageFileType::typeStorageFilePdf: {
+        
+    }
+        break;
+    case StorageFileType::typeStorageFileMp3: {
+        
+    }
+        break;
+    case StorageFileType::typeStorageFileMov: {
+        
+    }
+        break;
+    case StorageFileType::typeStorageFilePartial: {
+        
+    }
+        break;
+    case StorageFileType::typeStorageFileMp4: {
+        
+    }
+        break;
+    case StorageFileType::typeStorageFileWebp: {
+        
+    }
+        break;
+    }
+    return stream;
 }
 

@@ -44,4 +44,7 @@ private:
 
 Q_DECLARE_METATYPE(ExportedChatInvite)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const ExportedChatInvite &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, ExportedChatInvite &item);
+
 #endif // LQTG_TYPE_EXPORTEDCHATINVITE

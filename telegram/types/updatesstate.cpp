@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 UpdatesState::UpdatesState(UpdatesStateType classType, InboundPkt *in) :
     m_date(0),
     m_pts(0),
@@ -137,5 +139,46 @@ bool UpdatesState::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const UpdatesState &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case UpdatesState::typeUpdatesState:
+        stream << item.pts();
+        stream << item.qts();
+        stream << item.date();
+        stream << item.seq();
+        stream << item.unreadCount();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, UpdatesState &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<UpdatesState::UpdatesStateType>(type));
+    switch(type) {
+    case UpdatesState::typeUpdatesState: {
+        qint32 m_pts;
+        stream >> m_pts;
+        item.setPts(m_pts);
+        qint32 m_qts;
+        stream >> m_qts;
+        item.setQts(m_qts);
+        qint32 m_date;
+        stream >> m_date;
+        item.setDate(m_date);
+        qint32 m_seq;
+        stream >> m_seq;
+        item.setSeq(m_seq);
+        qint32 m_unread_count;
+        stream >> m_unread_count;
+        item.setUnreadCount(m_unread_count);
+    }
+        break;
+    }
+    return stream;
 }
 

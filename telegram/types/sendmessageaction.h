@@ -52,4 +52,7 @@ private:
 
 Q_DECLARE_METATYPE(SendMessageAction)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const SendMessageAction &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, SendMessageAction &item);
+
 #endif // LQTG_TYPE_SENDMESSAGEACTION

@@ -10,9 +10,10 @@
 
 #include <QPointer>
 #include "messageactionobject.h"
-#include "peerobject.h"
+#include "messagefwdheaderobject.h"
 #include "messagemediaobject.h"
 #include "replymarkupobject.h"
+#include "peerobject.h"
 
 class LIBQTELEGRAMSHARED_EXPORT MessageObject : public TelegramTypeQObject
 {
@@ -20,19 +21,21 @@ class LIBQTELEGRAMSHARED_EXPORT MessageObject : public TelegramTypeQObject
     Q_ENUMS(MessageType)
     Q_PROPERTY(MessageActionObject* action READ action WRITE setAction NOTIFY actionChanged)
     Q_PROPERTY(qint32 date READ date WRITE setDate NOTIFY dateChanged)
+    Q_PROPERTY(qint32 editDate READ editDate WRITE setEditDate NOTIFY editDateChanged)
     Q_PROPERTY(QList<MessageEntity> entities READ entities WRITE setEntities NOTIFY entitiesChanged)
     Q_PROPERTY(qint32 flags READ flags WRITE setFlags NOTIFY flagsChanged)
     Q_PROPERTY(qint32 fromId READ fromId WRITE setFromId NOTIFY fromIdChanged)
-    Q_PROPERTY(qint32 fwdDate READ fwdDate WRITE setFwdDate NOTIFY fwdDateChanged)
-    Q_PROPERTY(PeerObject* fwdFromId READ fwdFromId WRITE setFwdFromId NOTIFY fwdFromIdChanged)
+    Q_PROPERTY(MessageFwdHeaderObject* fwdFrom READ fwdFrom WRITE setFwdFrom NOTIFY fwdFromChanged)
     Q_PROPERTY(qint32 id READ id WRITE setId NOTIFY idChanged)
     Q_PROPERTY(MessageMediaObject* media READ media WRITE setMedia NOTIFY mediaChanged)
     Q_PROPERTY(bool mediaUnread READ mediaUnread WRITE setMediaUnread NOTIFY mediaUnreadChanged)
     Q_PROPERTY(bool mentioned READ mentioned WRITE setMentioned NOTIFY mentionedChanged)
     Q_PROPERTY(QString message READ message WRITE setMessage NOTIFY messageChanged)
     Q_PROPERTY(bool out READ out WRITE setOut NOTIFY outChanged)
+    Q_PROPERTY(bool post READ post WRITE setPost NOTIFY postChanged)
     Q_PROPERTY(ReplyMarkupObject* replyMarkup READ replyMarkup WRITE setReplyMarkup NOTIFY replyMarkupChanged)
     Q_PROPERTY(qint32 replyToMsgId READ replyToMsgId WRITE setReplyToMsgId NOTIFY replyToMsgIdChanged)
+    Q_PROPERTY(bool silent READ silent WRITE setSilent NOTIFY silentChanged)
     Q_PROPERTY(PeerObject* toId READ toId WRITE setToId NOTIFY toIdChanged)
     Q_PROPERTY(bool unread READ unread WRITE setUnread NOTIFY unreadChanged)
     Q_PROPERTY(qint32 viaBotId READ viaBotId WRITE setViaBotId NOTIFY viaBotIdChanged)
@@ -57,6 +60,9 @@ public:
     void setDate(qint32 date);
     qint32 date() const;
 
+    void setEditDate(qint32 editDate);
+    qint32 editDate() const;
+
     void setEntities(const QList<MessageEntity> &entities);
     QList<MessageEntity> entities() const;
 
@@ -66,11 +72,8 @@ public:
     void setFromId(qint32 fromId);
     qint32 fromId() const;
 
-    void setFwdDate(qint32 fwdDate);
-    qint32 fwdDate() const;
-
-    void setFwdFromId(PeerObject* fwdFromId);
-    PeerObject* fwdFromId() const;
+    void setFwdFrom(MessageFwdHeaderObject* fwdFrom);
+    MessageFwdHeaderObject* fwdFrom() const;
 
     void setId(qint32 id);
     qint32 id() const;
@@ -90,11 +93,17 @@ public:
     void setOut(bool out);
     bool out() const;
 
+    void setPost(bool post);
+    bool post() const;
+
     void setReplyMarkup(ReplyMarkupObject* replyMarkup);
     ReplyMarkupObject* replyMarkup() const;
 
     void setReplyToMsgId(qint32 replyToMsgId);
     qint32 replyToMsgId() const;
+
+    void setSilent(bool silent);
+    bool silent() const;
 
     void setToId(PeerObject* toId);
     PeerObject* toId() const;
@@ -122,19 +131,21 @@ Q_SIGNALS:
     void classTypeChanged();
     void actionChanged();
     void dateChanged();
+    void editDateChanged();
     void entitiesChanged();
     void flagsChanged();
     void fromIdChanged();
-    void fwdDateChanged();
-    void fwdFromIdChanged();
+    void fwdFromChanged();
     void idChanged();
     void mediaChanged();
     void mediaUnreadChanged();
     void mentionedChanged();
     void messageChanged();
     void outChanged();
+    void postChanged();
     void replyMarkupChanged();
     void replyToMsgIdChanged();
+    void silentChanged();
     void toIdChanged();
     void unreadChanged();
     void viaBotIdChanged();
@@ -142,14 +153,14 @@ Q_SIGNALS:
 
 private Q_SLOTS:
     void coreActionChanged();
-    void coreFwdFromIdChanged();
+    void coreFwdFromChanged();
     void coreMediaChanged();
     void coreReplyMarkupChanged();
     void coreToIdChanged();
 
 private:
     QPointer<MessageActionObject> m_action;
-    QPointer<PeerObject> m_fwdFromId;
+    QPointer<MessageFwdHeaderObject> m_fwdFrom;
     QPointer<MessageMediaObject> m_media;
     QPointer<ReplyMarkupObject> m_replyMarkup;
     QPointer<PeerObject> m_toId;

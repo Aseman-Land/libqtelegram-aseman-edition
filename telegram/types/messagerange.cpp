@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 MessageRange::MessageRange(MessageRangeType classType, InboundPkt *in) :
     m_maxId(0),
     m_minId(0),
@@ -95,5 +97,34 @@ bool MessageRange::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const MessageRange &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case MessageRange::typeMessageRange:
+        stream << item.minId();
+        stream << item.maxId();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, MessageRange &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<MessageRange::MessageRangeType>(type));
+    switch(type) {
+    case MessageRange::typeMessageRange: {
+        qint32 m_min_id;
+        stream >> m_min_id;
+        item.setMinId(m_min_id);
+        qint32 m_max_id;
+        stream >> m_max_id;
+        item.setMaxId(m_max_id);
+    }
+        break;
+    }
+    return stream;
 }
 

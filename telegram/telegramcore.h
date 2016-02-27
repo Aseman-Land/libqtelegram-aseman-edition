@@ -114,6 +114,10 @@ public:
     virtual qint64 channelsExportInvite(const InputChannel &channel, Callback<ExportedChatInvite > callBack = 0, qint32 timeout = timeOut());
     virtual qint64 channelsDeleteChannel(const InputChannel &channel, Callback<UpdatesType > callBack = 0, qint32 timeout = timeOut());
     virtual qint64 channelsToggleInvites(const InputChannel &channel, bool enabled, Callback<UpdatesType > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 channelsExportMessageLink(const InputChannel &channel, qint32 id, Callback<ExportedMessageLink > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 channelsToggleSignatures(const InputChannel &channel, bool enabled, Callback<UpdatesType > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 channelsGetMessageEditData(const InputChannel &channel, qint32 id, Callback<ChannelsMessageEditData > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 channelsEditMessage(bool no_webpage, const InputChannel &channel, qint32 id, const QString &message, const QList<MessageEntity> &entities, Callback<UpdatesType > callBack = 0, qint32 timeout = timeOut());
     
     virtual qint64 contactsGetStatuses(Callback<QList<ContactStatus> > callBack = 0, qint32 timeout = timeOut());
     virtual qint64 contactsGetContacts(const QString &hash, Callback<ContactsContacts > callBack = 0, qint32 timeout = timeOut());
@@ -146,9 +150,9 @@ public:
     virtual qint64 messagesDeleteMessages(const QList<qint32> &id, Callback<MessagesAffectedMessages > callBack = 0, qint32 timeout = timeOut());
     virtual qint64 messagesReceivedMessages(qint32 max_id, Callback<QList<ReceivedNotifyMessage> > callBack = 0, qint32 timeout = timeOut());
     virtual qint64 messagesSetTyping(const InputPeer &peer, const SendMessageAction &action, Callback<bool > callBack = 0, qint32 timeout = timeOut());
-    virtual qint64 messagesSendMessage(bool no_webpage, bool broadcast, const InputPeer &peer, qint32 reply_to_msg_id, const QString &message, qint64 random_id, const ReplyMarkup &reply_markup, const QList<MessageEntity> &entities, Callback<UpdatesType > callBack = 0, qint32 timeout = timeOut());
-    virtual qint64 messagesSendMedia(bool broadcast, const InputPeer &peer, qint32 reply_to_msg_id, const InputMedia &media, qint64 random_id, const ReplyMarkup &reply_markup, Callback<UpdatesType > callBack = 0, qint32 timeout = timeOut());
-    virtual qint64 messagesForwardMessages(bool broadcast, const InputPeer &from_peer, const QList<qint32> &id, const QList<qint64> &random_id, const InputPeer &to_peer, Callback<UpdatesType > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesSendMessage(bool no_webpage, bool broadcast, bool silent, bool background, const InputPeer &peer, qint32 reply_to_msg_id, const QString &message, qint64 random_id, const ReplyMarkup &reply_markup, const QList<MessageEntity> &entities, Callback<UpdatesType > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesSendMedia(bool broadcast, bool silent, bool background, const InputPeer &peer, qint32 reply_to_msg_id, const InputMedia &media, qint64 random_id, const ReplyMarkup &reply_markup, Callback<UpdatesType > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesForwardMessages(bool broadcast, bool silent, bool background, const InputPeer &from_peer, const QList<qint32> &id, const QList<qint64> &random_id, const InputPeer &to_peer, Callback<UpdatesType > callBack = 0, qint32 timeout = timeOut());
     virtual qint64 messagesReportSpam(const InputPeer &peer, Callback<bool > callBack = 0, qint32 timeout = timeOut());
     virtual qint64 messagesGetChats(const QList<qint32> &id, Callback<MessagesChats > callBack = 0, qint32 timeout = timeOut());
     virtual qint64 messagesGetFullChat(qint32 chat_id, Callback<MessagesChatFull > callBack = 0, qint32 timeout = timeOut());
@@ -192,7 +196,7 @@ public:
     virtual qint64 messagesSaveGif(const InputDocument &id, bool unsave, Callback<bool > callBack = 0, qint32 timeout = timeOut());
     virtual qint64 messagesGetInlineBotResults(const InputUser &bot, const QString &query, const QString &offset, Callback<MessagesBotResults > callBack = 0, qint32 timeout = timeOut());
     virtual qint64 messagesSetInlineBotResults(bool gallery, bool privateValue, qint64 query_id, const QList<InputBotInlineResult> &results, qint32 cache_time, const QString &next_offset, Callback<bool > callBack = 0, qint32 timeout = timeOut());
-    virtual qint64 messagesSendInlineBotResult(bool broadcast, const InputPeer &peer, qint32 reply_to_msg_id, qint64 random_id, qint64 query_id, const QString &id, Callback<UpdatesType > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesSendInlineBotResult(bool broadcast, bool silent, bool background, const InputPeer &peer, qint32 reply_to_msg_id, qint64 random_id, qint64 query_id, const QString &id, Callback<UpdatesType > callBack = 0, qint32 timeout = timeOut());
     
     virtual qint64 photosUpdateProfilePhoto(const InputPhoto &id, const InputPhotoCrop &crop, Callback<UserProfilePhoto > callBack = 0, qint32 timeout = timeOut());
     virtual qint64 photosUploadProfilePhoto(const InputFile &file, const QString &caption, const InputGeoPoint &geo_point, const InputPhotoCrop &crop, Callback<PhotosPhoto > callBack = 0, qint32 timeout = timeOut());
@@ -280,6 +284,10 @@ Q_SIGNALS:
     void channelsExportInviteAnswer(qint64 msgId, const ExportedChatInvite &result);
     void channelsDeleteChannelAnswer(qint64 msgId, const UpdatesType &result);
     void channelsToggleInvitesAnswer(qint64 msgId, const UpdatesType &result);
+    void channelsExportMessageLinkAnswer(qint64 msgId, const ExportedMessageLink &result);
+    void channelsToggleSignaturesAnswer(qint64 msgId, const UpdatesType &result);
+    void channelsGetMessageEditDataAnswer(qint64 msgId, const ChannelsMessageEditData &result);
+    void channelsEditMessageAnswer(qint64 msgId, const UpdatesType &result);
     
     void contactsGetStatusesAnswer(qint64 msgId, const QList<ContactStatus> &result);
     void contactsGetContactsAnswer(qint64 msgId, const ContactsContacts &result);
@@ -445,6 +453,10 @@ Q_SIGNALS:
     void channelsExportInviteError(qint64 msgId, qint32 errorCode, const QString &errorText);
     void channelsDeleteChannelError(qint64 msgId, qint32 errorCode, const QString &errorText);
     void channelsToggleInvitesError(qint64 msgId, qint32 errorCode, const QString &errorText);
+    void channelsExportMessageLinkError(qint64 msgId, qint32 errorCode, const QString &errorText);
+    void channelsToggleSignaturesError(qint64 msgId, qint32 errorCode, const QString &errorText);
+    void channelsGetMessageEditDataError(qint64 msgId, qint32 errorCode, const QString &errorText);
+    void channelsEditMessageError(qint64 msgId, qint32 errorCode, const QString &errorText);
     
     void contactsGetStatusesError(qint64 msgId, qint32 errorCode, const QString &errorText);
     void contactsGetContactsError(qint64 msgId, qint32 errorCode, const QString &errorText);
@@ -612,6 +624,10 @@ protected Q_SLOTS:
     virtual void onChannelsExportInviteAnswer(qint64 msgId, const ExportedChatInvite &result, const QVariant &attachedData);
     virtual void onChannelsDeleteChannelAnswer(qint64 msgId, const UpdatesType &result, const QVariant &attachedData);
     virtual void onChannelsToggleInvitesAnswer(qint64 msgId, const UpdatesType &result, const QVariant &attachedData);
+    virtual void onChannelsExportMessageLinkAnswer(qint64 msgId, const ExportedMessageLink &result, const QVariant &attachedData);
+    virtual void onChannelsToggleSignaturesAnswer(qint64 msgId, const UpdatesType &result, const QVariant &attachedData);
+    virtual void onChannelsGetMessageEditDataAnswer(qint64 msgId, const ChannelsMessageEditData &result, const QVariant &attachedData);
+    virtual void onChannelsEditMessageAnswer(qint64 msgId, const UpdatesType &result, const QVariant &attachedData);
     
     virtual void onContactsGetStatusesAnswer(qint64 msgId, const QList<ContactStatus> &result, const QVariant &attachedData);
     virtual void onContactsGetContactsAnswer(qint64 msgId, const ContactsContacts &result, const QVariant &attachedData);
@@ -777,6 +793,10 @@ protected Q_SLOTS:
     virtual void onChannelsExportInviteError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     virtual void onChannelsDeleteChannelError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     virtual void onChannelsToggleInvitesError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
+    virtual void onChannelsExportMessageLinkError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
+    virtual void onChannelsToggleSignaturesError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
+    virtual void onChannelsGetMessageEditDataError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
+    virtual void onChannelsEditMessageError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     
     virtual void onContactsGetStatusesError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     virtual void onContactsGetContactsError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);

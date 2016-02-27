@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 WallPaper::WallPaper(WallPaperType classType, InboundPkt *in) :
     m_bgColor(0),
     m_color(0),
@@ -159,5 +161,63 @@ bool WallPaper::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const WallPaper &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case WallPaper::typeWallPaper:
+        stream << item.id();
+        stream << item.title();
+        stream << item.sizes();
+        stream << item.color();
+        break;
+    case WallPaper::typeWallPaperSolid:
+        stream << item.id();
+        stream << item.title();
+        stream << item.bgColor();
+        stream << item.color();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, WallPaper &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<WallPaper::WallPaperType>(type));
+    switch(type) {
+    case WallPaper::typeWallPaper: {
+        qint32 m_id;
+        stream >> m_id;
+        item.setId(m_id);
+        QString m_title;
+        stream >> m_title;
+        item.setTitle(m_title);
+        QList<PhotoSize> m_sizes;
+        stream >> m_sizes;
+        item.setSizes(m_sizes);
+        qint32 m_color;
+        stream >> m_color;
+        item.setColor(m_color);
+    }
+        break;
+    case WallPaper::typeWallPaperSolid: {
+        qint32 m_id;
+        stream >> m_id;
+        item.setId(m_id);
+        QString m_title;
+        stream >> m_title;
+        item.setTitle(m_title);
+        qint32 m_bg_color;
+        stream >> m_bg_color;
+        item.setBgColor(m_bg_color);
+        qint32 m_color;
+        stream >> m_color;
+        item.setColor(m_color);
+    }
+        break;
+    }
+    return stream;
 }
 

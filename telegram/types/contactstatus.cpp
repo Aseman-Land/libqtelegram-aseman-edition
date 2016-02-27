@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 ContactStatus::ContactStatus(ContactStatusType classType, InboundPkt *in) :
     m_userId(0),
     m_classType(classType)
@@ -92,5 +94,34 @@ bool ContactStatus::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const ContactStatus &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case ContactStatus::typeContactStatus:
+        stream << item.userId();
+        stream << item.status();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, ContactStatus &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<ContactStatus::ContactStatusType>(type));
+    switch(type) {
+    case ContactStatus::typeContactStatus: {
+        qint32 m_user_id;
+        stream >> m_user_id;
+        item.setUserId(m_user_id);
+        UserStatus m_status;
+        stream >> m_status;
+        item.setStatus(m_status);
+    }
+        break;
+    }
+    return stream;
 }
 

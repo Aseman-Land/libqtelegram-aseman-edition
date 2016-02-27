@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 NearestDc::NearestDc(NearestDcType classType, InboundPkt *in) :
     m_nearestDc(0),
     m_thisDc(0),
@@ -106,5 +108,38 @@ bool NearestDc::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const NearestDc &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case NearestDc::typeNearestDc:
+        stream << item.country();
+        stream << item.thisDc();
+        stream << item.nearestDc();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, NearestDc &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<NearestDc::NearestDcType>(type));
+    switch(type) {
+    case NearestDc::typeNearestDc: {
+        QString m_country;
+        stream >> m_country;
+        item.setCountry(m_country);
+        qint32 m_this_dc;
+        stream >> m_this_dc;
+        item.setThisDc(m_this_dc);
+        qint32 m_nearest_dc;
+        stream >> m_nearest_dc;
+        item.setNearestDc(m_nearest_dc);
+    }
+        break;
+    }
+    return stream;
 }
 

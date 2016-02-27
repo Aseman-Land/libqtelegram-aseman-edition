@@ -44,4 +44,7 @@ private:
 
 Q_DECLARE_METATYPE(HelpAppChangelog)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const HelpAppChangelog &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, HelpAppChangelog &item);
+
 #endif // LQTG_TYPE_HELPAPPCHANGELOG

@@ -56,4 +56,7 @@ private:
 
 Q_DECLARE_METATYPE(InputAppEvent)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const InputAppEvent &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, InputAppEvent &item);
+
 #endif // LQTG_TYPE_INPUTAPPEVENT

@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 MessagesSavedGifs::MessagesSavedGifs(MessagesSavedGifsType classType, InboundPkt *in) :
     m_hash(0),
     m_classType(classType)
@@ -114,5 +116,41 @@ bool MessagesSavedGifs::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const MessagesSavedGifs &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case MessagesSavedGifs::typeMessagesSavedGifsNotModified:
+        
+        break;
+    case MessagesSavedGifs::typeMessagesSavedGifs:
+        stream << item.hash();
+        stream << item.gifs();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, MessagesSavedGifs &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<MessagesSavedGifs::MessagesSavedGifsType>(type));
+    switch(type) {
+    case MessagesSavedGifs::typeMessagesSavedGifsNotModified: {
+        
+    }
+        break;
+    case MessagesSavedGifs::typeMessagesSavedGifs: {
+        qint32 m_hash;
+        stream >> m_hash;
+        item.setHash(m_hash);
+        QList<Document> m_gifs;
+        stream >> m_gifs;
+        item.setGifs(m_gifs);
+    }
+        break;
+    }
+    return stream;
 }
 

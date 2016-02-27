@@ -48,4 +48,7 @@ private:
 
 Q_DECLARE_METATYPE(AccountSentChangePhoneCode)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const AccountSentChangePhoneCode &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, AccountSentChangePhoneCode &item);
+
 #endif // LQTG_TYPE_ACCOUNTSENTCHANGEPHONECODE

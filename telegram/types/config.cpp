@@ -7,10 +7,13 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 Config::Config(ConfigType classType, InboundPkt *in) :
     m_chatBigSize(0),
     m_chatSizeMax(0),
     m_date(0),
+    m_editTimeLimit(0),
     m_expires(0),
     m_forwardedCountMax(0),
     m_megagroupSizeMax(0),
@@ -34,6 +37,7 @@ Config::Config(InboundPkt *in) :
     m_chatBigSize(0),
     m_chatSizeMax(0),
     m_date(0),
+    m_editTimeLimit(0),
     m_expires(0),
     m_forwardedCountMax(0),
     m_megagroupSizeMax(0),
@@ -58,6 +62,7 @@ Config::Config(const Null &null) :
     m_chatBigSize(0),
     m_chatSizeMax(0),
     m_date(0),
+    m_editTimeLimit(0),
     m_expires(0),
     m_forwardedCountMax(0),
     m_megagroupSizeMax(0),
@@ -117,6 +122,14 @@ void Config::setDisabledFeatures(const QList<DisabledFeature> &disabledFeatures)
 
 QList<DisabledFeature> Config::disabledFeatures() const {
     return m_disabledFeatures;
+}
+
+void Config::setEditTimeLimit(qint32 editTimeLimit) {
+    m_editTimeLimit = editTimeLimit;
+}
+
+qint32 Config::editTimeLimit() const {
+    return m_editTimeLimit;
 }
 
 void Config::setExpires(qint32 expires) {
@@ -238,6 +251,7 @@ bool Config::operator ==(const Config &b) const {
            m_date == b.m_date &&
            m_dcOptions == b.m_dcOptions &&
            m_disabledFeatures == b.m_disabledFeatures &&
+           m_editTimeLimit == b.m_editTimeLimit &&
            m_expires == b.m_expires &&
            m_forwardedCountMax == b.m_forwardedCountMax &&
            m_megagroupSizeMax == b.m_megagroupSizeMax &&
@@ -292,6 +306,7 @@ bool Config::fetch(InboundPkt *in) {
         m_pushChatPeriodMs = in->fetchInt();
         m_pushChatLimit = in->fetchInt();
         m_savedGifsLimit = in->fetchInt();
+        m_editTimeLimit = in->fetchInt();
         if(in->fetchInt() != (qint32)CoreTypes::typeVector) return false;
         qint32 m_disabledFeatures_length = in->fetchInt();
         m_disabledFeatures.clear();
@@ -337,6 +352,7 @@ bool Config::push(OutboundPkt *out) const {
         out->appendInt(m_pushChatPeriodMs);
         out->appendInt(m_pushChatLimit);
         out->appendInt(m_savedGifsLimit);
+        out->appendInt(m_editTimeLimit);
         out->appendInt(CoreTypes::typeVector);
         out->appendInt(m_disabledFeatures.count());
         for (qint32 i = 0; i < m_disabledFeatures.count(); i++) {
@@ -349,5 +365,106 @@ bool Config::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const Config &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case Config::typeConfig:
+        stream << item.date();
+        stream << item.expires();
+        stream << item.testMode();
+        stream << item.thisDc();
+        stream << item.dcOptions();
+        stream << item.chatSizeMax();
+        stream << item.megagroupSizeMax();
+        stream << item.forwardedCountMax();
+        stream << item.onlineUpdatePeriodMs();
+        stream << item.offlineBlurTimeoutMs();
+        stream << item.offlineIdleTimeoutMs();
+        stream << item.onlineCloudTimeoutMs();
+        stream << item.notifyCloudDelayMs();
+        stream << item.notifyDefaultDelayMs();
+        stream << item.chatBigSize();
+        stream << item.pushChatPeriodMs();
+        stream << item.pushChatLimit();
+        stream << item.savedGifsLimit();
+        stream << item.editTimeLimit();
+        stream << item.disabledFeatures();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, Config &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<Config::ConfigType>(type));
+    switch(type) {
+    case Config::typeConfig: {
+        qint32 m_date;
+        stream >> m_date;
+        item.setDate(m_date);
+        qint32 m_expires;
+        stream >> m_expires;
+        item.setExpires(m_expires);
+        bool m_test_mode;
+        stream >> m_test_mode;
+        item.setTestMode(m_test_mode);
+        qint32 m_this_dc;
+        stream >> m_this_dc;
+        item.setThisDc(m_this_dc);
+        QList<DcOption> m_dc_options;
+        stream >> m_dc_options;
+        item.setDcOptions(m_dc_options);
+        qint32 m_chat_size_max;
+        stream >> m_chat_size_max;
+        item.setChatSizeMax(m_chat_size_max);
+        qint32 m_megagroup_size_max;
+        stream >> m_megagroup_size_max;
+        item.setMegagroupSizeMax(m_megagroup_size_max);
+        qint32 m_forwarded_count_max;
+        stream >> m_forwarded_count_max;
+        item.setForwardedCountMax(m_forwarded_count_max);
+        qint32 m_online_update_period_ms;
+        stream >> m_online_update_period_ms;
+        item.setOnlineUpdatePeriodMs(m_online_update_period_ms);
+        qint32 m_offline_blur_timeout_ms;
+        stream >> m_offline_blur_timeout_ms;
+        item.setOfflineBlurTimeoutMs(m_offline_blur_timeout_ms);
+        qint32 m_offline_idle_timeout_ms;
+        stream >> m_offline_idle_timeout_ms;
+        item.setOfflineIdleTimeoutMs(m_offline_idle_timeout_ms);
+        qint32 m_online_cloud_timeout_ms;
+        stream >> m_online_cloud_timeout_ms;
+        item.setOnlineCloudTimeoutMs(m_online_cloud_timeout_ms);
+        qint32 m_notify_cloud_delay_ms;
+        stream >> m_notify_cloud_delay_ms;
+        item.setNotifyCloudDelayMs(m_notify_cloud_delay_ms);
+        qint32 m_notify_default_delay_ms;
+        stream >> m_notify_default_delay_ms;
+        item.setNotifyDefaultDelayMs(m_notify_default_delay_ms);
+        qint32 m_chat_big_size;
+        stream >> m_chat_big_size;
+        item.setChatBigSize(m_chat_big_size);
+        qint32 m_push_chat_period_ms;
+        stream >> m_push_chat_period_ms;
+        item.setPushChatPeriodMs(m_push_chat_period_ms);
+        qint32 m_push_chat_limit;
+        stream >> m_push_chat_limit;
+        item.setPushChatLimit(m_push_chat_limit);
+        qint32 m_saved_gifs_limit;
+        stream >> m_saved_gifs_limit;
+        item.setSavedGifsLimit(m_saved_gifs_limit);
+        qint32 m_edit_time_limit;
+        stream >> m_edit_time_limit;
+        item.setEditTimeLimit(m_edit_time_limit);
+        QList<DisabledFeature> m_disabled_features;
+        stream >> m_disabled_features;
+        item.setDisabledFeatures(m_disabled_features);
+    }
+        break;
+    }
+    return stream;
 }
 

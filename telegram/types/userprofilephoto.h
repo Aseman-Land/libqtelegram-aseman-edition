@@ -53,4 +53,7 @@ private:
 
 Q_DECLARE_METATYPE(UserProfilePhoto)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const UserProfilePhoto &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, UserProfilePhoto &item);
+
 #endif // LQTG_TYPE_USERPROFILEPHOTO

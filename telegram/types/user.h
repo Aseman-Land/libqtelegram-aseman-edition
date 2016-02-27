@@ -62,6 +62,9 @@ public:
     void setLastName(const QString &lastName);
     QString lastName() const;
 
+    void setMin(bool min);
+    bool min() const;
+
     void setMutualContact(bool mutualContact);
     bool mutualContact() const;
 
@@ -117,5 +120,8 @@ private:
 };
 
 Q_DECLARE_METATYPE(User)
+
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const User &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, User &item);
 
 #endif // LQTG_TYPE_USER

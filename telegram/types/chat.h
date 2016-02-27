@@ -50,6 +50,9 @@ public:
     void setDeactivated(bool deactivated);
     bool deactivated() const;
 
+    void setDemocracy(bool democracy);
+    bool democracy() const;
+
     void setEditor(bool editor);
     bool editor() const;
 
@@ -58,9 +61,6 @@ public:
 
     void setId(qint32 id);
     qint32 id() const;
-
-    void setInvitesEnabled(bool invitesEnabled);
-    bool invitesEnabled() const;
 
     void setKicked(bool kicked);
     bool kicked() const;
@@ -88,6 +88,9 @@ public:
 
     void setRestrictionReason(const QString &restrictionReason);
     QString restrictionReason() const;
+
+    void setSignatures(bool signatures);
+    bool signatures() const;
 
     void setTitle(const QString &title);
     QString title() const;
@@ -128,5 +131,8 @@ private:
 };
 
 Q_DECLARE_METATYPE(Chat)
+
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const Chat &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, Chat &item);
 
 #endif // LQTG_TYPE_CHAT

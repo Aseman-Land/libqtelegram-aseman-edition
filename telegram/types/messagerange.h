@@ -47,4 +47,7 @@ private:
 
 Q_DECLARE_METATYPE(MessageRange)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const MessageRange &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, MessageRange &item);
+
 #endif // LQTG_TYPE_MESSAGERANGE

@@ -43,4 +43,7 @@ private:
 
 Q_DECLARE_METATYPE(AuthPasswordRecovery)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const AuthPasswordRecovery &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, AuthPasswordRecovery &item);
+
 #endif // LQTG_TYPE_AUTHPASSWORDRECOVERY

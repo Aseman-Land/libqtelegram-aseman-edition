@@ -55,4 +55,7 @@ private:
 
 Q_DECLARE_METATYPE(InputChatPhoto)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const InputChatPhoto &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, InputChatPhoto &item);
+
 #endif // LQTG_TYPE_INPUTCHATPHOTO

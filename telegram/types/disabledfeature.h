@@ -47,4 +47,7 @@ private:
 
 Q_DECLARE_METATYPE(DisabledFeature)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const DisabledFeature &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, DisabledFeature &item);
+
 #endif // LQTG_TYPE_DISABLEDFEATURE

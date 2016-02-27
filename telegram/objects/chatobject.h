@@ -23,10 +23,10 @@ class LIBQTELEGRAMSHARED_EXPORT ChatObject : public TelegramTypeQObject
     Q_PROPERTY(bool creator READ creator WRITE setCreator NOTIFY creatorChanged)
     Q_PROPERTY(qint32 date READ date WRITE setDate NOTIFY dateChanged)
     Q_PROPERTY(bool deactivated READ deactivated WRITE setDeactivated NOTIFY deactivatedChanged)
+    Q_PROPERTY(bool democracy READ democracy WRITE setDemocracy NOTIFY democracyChanged)
     Q_PROPERTY(bool editor READ editor WRITE setEditor NOTIFY editorChanged)
     Q_PROPERTY(qint32 flags READ flags WRITE setFlags NOTIFY flagsChanged)
     Q_PROPERTY(qint32 id READ id WRITE setId NOTIFY idChanged)
-    Q_PROPERTY(bool invitesEnabled READ invitesEnabled WRITE setInvitesEnabled NOTIFY invitesEnabledChanged)
     Q_PROPERTY(bool kicked READ kicked WRITE setKicked NOTIFY kickedChanged)
     Q_PROPERTY(bool left READ left WRITE setLeft NOTIFY leftChanged)
     Q_PROPERTY(bool megagroup READ megagroup WRITE setMegagroup NOTIFY megagroupChanged)
@@ -36,6 +36,7 @@ class LIBQTELEGRAMSHARED_EXPORT ChatObject : public TelegramTypeQObject
     Q_PROPERTY(ChatPhotoObject* photo READ photo WRITE setPhoto NOTIFY photoChanged)
     Q_PROPERTY(bool restricted READ restricted WRITE setRestricted NOTIFY restrictedChanged)
     Q_PROPERTY(QString restrictionReason READ restrictionReason WRITE setRestrictionReason NOTIFY restrictionReasonChanged)
+    Q_PROPERTY(bool signatures READ signatures WRITE setSignatures NOTIFY signaturesChanged)
     Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
     Q_PROPERTY(QString username READ username WRITE setUsername NOTIFY usernameChanged)
     Q_PROPERTY(bool verified READ verified WRITE setVerified NOTIFY verifiedChanged)
@@ -77,6 +78,9 @@ public:
     void setDeactivated(bool deactivated);
     bool deactivated() const;
 
+    void setDemocracy(bool democracy);
+    bool democracy() const;
+
     void setEditor(bool editor);
     bool editor() const;
 
@@ -85,9 +89,6 @@ public:
 
     void setId(qint32 id);
     qint32 id() const;
-
-    void setInvitesEnabled(bool invitesEnabled);
-    bool invitesEnabled() const;
 
     void setKicked(bool kicked);
     bool kicked() const;
@@ -115,6 +116,9 @@ public:
 
     void setRestrictionReason(const QString &restrictionReason);
     QString restrictionReason() const;
+
+    void setSignatures(bool signatures);
+    bool signatures() const;
 
     void setTitle(const QString &title);
     QString title() const;
@@ -147,10 +151,10 @@ Q_SIGNALS:
     void creatorChanged();
     void dateChanged();
     void deactivatedChanged();
+    void democracyChanged();
     void editorChanged();
     void flagsChanged();
     void idChanged();
-    void invitesEnabledChanged();
     void kickedChanged();
     void leftChanged();
     void megagroupChanged();
@@ -160,6 +164,7 @@ Q_SIGNALS:
     void photoChanged();
     void restrictedChanged();
     void restrictionReasonChanged();
+    void signaturesChanged();
     void titleChanged();
     void usernameChanged();
     void verifiedChanged();

@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 PhotosPhotos::PhotosPhotos(PhotosPhotosType classType, InboundPkt *in) :
     m_count(0),
     m_classType(classType)
@@ -162,5 +164,51 @@ bool PhotosPhotos::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const PhotosPhotos &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case PhotosPhotos::typePhotosPhotos:
+        stream << item.photos();
+        stream << item.users();
+        break;
+    case PhotosPhotos::typePhotosPhotosSlice:
+        stream << item.count();
+        stream << item.photos();
+        stream << item.users();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, PhotosPhotos &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<PhotosPhotos::PhotosPhotosType>(type));
+    switch(type) {
+    case PhotosPhotos::typePhotosPhotos: {
+        QList<Photo> m_photos;
+        stream >> m_photos;
+        item.setPhotos(m_photos);
+        QList<User> m_users;
+        stream >> m_users;
+        item.setUsers(m_users);
+    }
+        break;
+    case PhotosPhotos::typePhotosPhotosSlice: {
+        qint32 m_count;
+        stream >> m_count;
+        item.setCount(m_count);
+        QList<Photo> m_photos;
+        stream >> m_photos;
+        item.setPhotos(m_photos);
+        QList<User> m_users;
+        stream >> m_users;
+        item.setUsers(m_users);
+    }
+        break;
+    }
+    return stream;
 }
 

@@ -19,6 +19,7 @@ class LIBQTELEGRAMSHARED_EXPORT ConfigObject : public TelegramTypeQObject
     Q_PROPERTY(qint32 date READ date WRITE setDate NOTIFY dateChanged)
     Q_PROPERTY(QList<DcOption> dcOptions READ dcOptions WRITE setDcOptions NOTIFY dcOptionsChanged)
     Q_PROPERTY(QList<DisabledFeature> disabledFeatures READ disabledFeatures WRITE setDisabledFeatures NOTIFY disabledFeaturesChanged)
+    Q_PROPERTY(qint32 editTimeLimit READ editTimeLimit WRITE setEditTimeLimit NOTIFY editTimeLimitChanged)
     Q_PROPERTY(qint32 expires READ expires WRITE setExpires NOTIFY expiresChanged)
     Q_PROPERTY(qint32 forwardedCountMax READ forwardedCountMax WRITE setForwardedCountMax NOTIFY forwardedCountMaxChanged)
     Q_PROPERTY(qint32 megagroupSizeMax READ megagroupSizeMax WRITE setMegagroupSizeMax NOTIFY megagroupSizeMaxChanged)
@@ -59,6 +60,9 @@ public:
 
     void setDisabledFeatures(const QList<DisabledFeature> &disabledFeatures);
     QList<DisabledFeature> disabledFeatures() const;
+
+    void setEditTimeLimit(qint32 editTimeLimit);
+    qint32 editTimeLimit() const;
 
     void setExpires(qint32 expires);
     qint32 expires() const;
@@ -119,6 +123,7 @@ Q_SIGNALS:
     void dateChanged();
     void dcOptionsChanged();
     void disabledFeaturesChanged();
+    void editTimeLimitChanged();
     void expiresChanged();
     void forwardedCountMaxChanged();
     void megagroupSizeMaxChanged();

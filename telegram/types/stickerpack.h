@@ -49,4 +49,7 @@ private:
 
 Q_DECLARE_METATYPE(StickerPack)
 
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const StickerPack &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, StickerPack &item);
+
 #endif // LQTG_TYPE_STICKERPACK

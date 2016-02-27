@@ -37,6 +37,7 @@ HEADERS += \
     $$PWD/encryptedfileobject.h \
     $$PWD/encryptedmessageobject.h \
     $$PWD/exportedchatinviteobject.h \
+    $$PWD/exportedmessagelinkobject.h \
     $$PWD/filelocationobject.h \
     $$PWD/foundgifobject.h \
     $$PWD/geopointobject.h \
@@ -69,6 +70,7 @@ HEADERS += \
     $$PWD/messageobject.h \
     $$PWD/messageactionobject.h \
     $$PWD/messageentityobject.h \
+    $$PWD/messagefwdheaderobject.h \
     $$PWD/messagegroupobject.h \
     $$PWD/messagemediaobject.h \
     $$PWD/messagerangeobject.h \
@@ -109,6 +111,7 @@ HEADERS += \
     $$PWD/authsentcodeobject.h \
     $$PWD/channelschannelparticipantobject.h \
     $$PWD/channelschannelparticipantsobject.h \
+    $$PWD/channelsmessageeditdataobject.h \
     $$PWD/contactsblockedobject.h \
     $$PWD/contactscontactsobject.h \
     $$PWD/contactsfoundobject.h \
@@ -174,6 +177,7 @@ SOURCES += \
     $$PWD/encryptedfileobject.cpp \
     $$PWD/encryptedmessageobject.cpp \
     $$PWD/exportedchatinviteobject.cpp \
+    $$PWD/exportedmessagelinkobject.cpp \
     $$PWD/filelocationobject.cpp \
     $$PWD/foundgifobject.cpp \
     $$PWD/geopointobject.cpp \
@@ -206,6 +210,7 @@ SOURCES += \
     $$PWD/messageobject.cpp \
     $$PWD/messageactionobject.cpp \
     $$PWD/messageentityobject.cpp \
+    $$PWD/messagefwdheaderobject.cpp \
     $$PWD/messagegroupobject.cpp \
     $$PWD/messagemediaobject.cpp \
     $$PWD/messagerangeobject.cpp \
@@ -246,6 +251,7 @@ SOURCES += \
     $$PWD/authsentcodeobject.cpp \
     $$PWD/channelschannelparticipantobject.cpp \
     $$PWD/channelschannelparticipantsobject.cpp \
+    $$PWD/channelsmessageeditdataobject.cpp \
     $$PWD/contactsblockedobject.cpp \
     $$PWD/contactscontactsobject.cpp \
     $$PWD/contactsfoundobject.cpp \

@@ -199,7 +199,9 @@ void FileHandler::onUploadSaveFilePartResult(qint64, bool, const QVariant &attac
                     InputPeer peer = op->peer();
                     qint64 randomId = op->randomId();
                     qint32 replyToMsgId = op->replyToMsgId();
-                    requestId = mCore->messagesSendMedia(op->broadcast(), peer, replyToMsgId, metadata, randomId, op->replyMarkup(), [=](TG_MESSAGES_SEND_MEDIA_CALLBACK){
+                    requestId = mCore->messagesSendMedia(op->broadcast(), op->silent(), op->background(), peer, replyToMsgId,
+                                                         metadata, randomId, op->replyMarkup(),
+                                                         [=](TG_MESSAGES_SEND_MEDIA_CALLBACK){
                         UploadSendFile usf(error.null? UploadSendFile::typeUploadSendFileFinished :
                                                        UploadSendFile::typeUploadSendFileCanceled);
                         usf.setUpdates(result);

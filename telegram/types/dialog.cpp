@@ -7,6 +7,8 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
+#include <QDataStream>
+
 Dialog::Dialog(DialogType classType, InboundPkt *in) :
     m_pts(0),
     m_readInboxMaxId(0),
@@ -194,5 +196,83 @@ bool Dialog::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QDataStream &operator<<(QDataStream &stream, const Dialog &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case Dialog::typeDialog:
+        stream << item.peer();
+        stream << item.topMessage();
+        stream << item.readInboxMaxId();
+        stream << item.unreadCount();
+        stream << item.notifySettings();
+        break;
+    case Dialog::typeDialogChannel:
+        stream << item.peer();
+        stream << item.topMessage();
+        stream << item.topImportantMessage();
+        stream << item.readInboxMaxId();
+        stream << item.unreadCount();
+        stream << item.unreadImportantCount();
+        stream << item.notifySettings();
+        stream << item.pts();
+        break;
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, Dialog &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<Dialog::DialogType>(type));
+    switch(type) {
+    case Dialog::typeDialog: {
+        Peer m_peer;
+        stream >> m_peer;
+        item.setPeer(m_peer);
+        qint32 m_top_message;
+        stream >> m_top_message;
+        item.setTopMessage(m_top_message);
+        qint32 m_read_inbox_max_id;
+        stream >> m_read_inbox_max_id;
+        item.setReadInboxMaxId(m_read_inbox_max_id);
+        qint32 m_unread_count;
+        stream >> m_unread_count;
+        item.setUnreadCount(m_unread_count);
+        PeerNotifySettings m_notify_settings;
+        stream >> m_notify_settings;
+        item.setNotifySettings(m_notify_settings);
+    }
+        break;
+    case Dialog::typeDialogChannel: {
+        Peer m_peer;
+        stream >> m_peer;
+        item.setPeer(m_peer);
+        qint32 m_top_message;
+        stream >> m_top_message;
+        item.setTopMessage(m_top_message);
+        qint32 m_top_important_message;
+        stream >> m_top_important_message;
+        item.setTopImportantMessage(m_top_important_message);
+        qint32 m_read_inbox_max_id;
+        stream >> m_read_inbox_max_id;
+        item.setReadInboxMaxId(m_read_inbox_max_id);
+        qint32 m_unread_count;
+        stream >> m_unread_count;
+        item.setUnreadCount(m_unread_count);
+        qint32 m_unread_important_count;
+        stream >> m_unread_important_count;
+        item.setUnreadImportantCount(m_unread_important_count);
+        PeerNotifySettings m_notify_settings;
+        stream >> m_notify_settings;
+        item.setNotifySettings(m_notify_settings);
+        qint32 m_pts;
+        stream >> m_pts;
+        item.setPts(m_pts);
+    }
+        break;
+    }
+    return stream;
 }
 
