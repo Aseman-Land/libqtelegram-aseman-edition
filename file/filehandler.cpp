@@ -79,6 +79,9 @@ qint64 FileHandler::uploadSendFile(FileOperation &op, const QString &filePath, c
     // create dedicated session to working dc for the main file
     DC *dc = mDcProvider.getWorkingDc();
     Session *session = mApi->fileSession(dc);
+    if(!session)
+        return 0;
+
     UploadFileEngine::Ptr f = UploadFileEngine::Ptr(new UploadFileEngine(session, mCrypto, UploadFileEngine::Main, filePath, this));
     bool encrypted = op.opType() == FileOperation::sendEncryptedFile;
     if (encrypted) {
