@@ -20,11 +20,7 @@ Q_LOGGING_CATEGORY(TG_CORE_API, "tg.core.api")
     if(!SESSION) \
         return 0;
 
-#define INIT_MAIN_CONNECTION(SESSION) \
-    if (SESSION->initConnectionNeeded()) { \
-        p.initConnection(); \
-        SESSION->setInitConnectionNeeded(false); \
-    }
+#define INIT_MAIN_CONNECTION(SESSION)
 
 using namespace Tg;
 
