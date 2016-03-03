@@ -1227,7 +1227,7 @@ qint64 Telegram::contactsGetContacts(Callback<ContactsContacts> callBack, qint32
     return TelegramCore::contactsGetContacts(hash, callBack, timeout);
 }
 
-qint64 Telegram::messagesSendPhoto(const InputPeer &peer, qint64 randomId, const QByteArray &bytes, const QString &fileName, qint32 replyToMsgId, const ReplyMarkup &reply_markup, bool broadcast, Callback<UploadSendFile > callBack, qint32 timeout) {
+qint64 Telegram::messagesSendPhoto(const InputPeer &peer, qint64 randomId, const QByteArray &bytes, const QString &fileName, qint32 replyToMsgId, const ReplyMarkup &reply_markup, bool broadcast, bool silent, bool background, Callback<UploadSendFile > callBack, qint32 timeout) {
     InputMedia inputMedia(InputMedia::typeInputMediaUploadedPhoto);
     FileOperation *op = new FileOperation(FileOperation::sendMedia);
     op->setInputPeer(peer);
@@ -1235,13 +1235,15 @@ qint64 Telegram::messagesSendPhoto(const InputPeer &peer, qint64 randomId, const
     op->setRandomId(randomId);
     op->setReplyToMsgId(replyToMsgId);
     op->setBroadcast(broadcast);
+    op->setBackground(background);
+    op->setSilent(silent);
     op->setReplyMarkup(reply_markup);
     op->setResultCallback<UploadSendFile>(callBack);
     op->setTimeOut(timeout);
     return uploadSendFile(*op, inputMedia.classType(), fileName, bytes);
 }
 
-qint64 Telegram::messagesSendPhoto(const InputPeer &peer, qint64 randomId, const QString &filePath, qint32 replyToMsgId, const ReplyMarkup &reply_markup, bool broadcast, Callback<UploadSendFile > callBack, qint32 timeout) {
+qint64 Telegram::messagesSendPhoto(const InputPeer &peer, qint64 randomId, const QString &filePath, qint32 replyToMsgId, const ReplyMarkup &reply_markup, bool broadcast, bool silent, bool background, Callback<UploadSendFile > callBack, qint32 timeout) {
     InputMedia inputMedia(InputMedia::typeInputMediaUploadedPhoto);
     FileOperation *op = new FileOperation(FileOperation::sendMedia);
     op->setInputPeer(peer);
@@ -1249,6 +1251,8 @@ qint64 Telegram::messagesSendPhoto(const InputPeer &peer, qint64 randomId, const
     op->setRandomId(randomId);
     op->setReplyToMsgId(replyToMsgId);
     op->setBroadcast(broadcast);
+    op->setBackground(background);
+    op->setSilent(silent);
     op->setReplyMarkup(reply_markup);
     op->setResultCallback<UploadSendFile>(callBack);
     op->setTimeOut(timeout);
@@ -1273,7 +1277,7 @@ qint64 Telegram::messagesSendContact(const InputPeer &peer, qint64 randomId, con
     return msgId;
 }
 
-qint64 Telegram::messagesSendVideo(const InputPeer &peer, qint64 randomId, const QByteArray &bytes, const QString &fileName, qint32 duration, qint32 width, qint32 height, const QString &mimeType, const QByteArray &thumbnailBytes, const QString &thumbnailName, qint32 replyToMsgId, const ReplyMarkup &reply_markup, bool broadcast, Callback<UploadSendFile > callBack, qint32 timeout) {
+qint64 Telegram::messagesSendVideo(const InputPeer &peer, qint64 randomId, const QByteArray &bytes, const QString &fileName, qint32 duration, qint32 width, qint32 height, const QString &mimeType, const QByteArray &thumbnailBytes, const QString &thumbnailName, qint32 replyToMsgId, const ReplyMarkup &reply_markup, bool broadcast, bool silent, bool background, Callback<UploadSendFile > callBack, qint32 timeout) {
     DocumentAttribute attr(DocumentAttribute::typeDocumentAttributeVideo);
     attr.setDuration(duration);
     attr.setW(width);
@@ -1291,13 +1295,15 @@ qint64 Telegram::messagesSendVideo(const InputPeer &peer, qint64 randomId, const
     op->setRandomId(randomId);
     op->setReplyToMsgId(replyToMsgId);
     op->setBroadcast(broadcast);
+    op->setBackground(background);
+    op->setSilent(silent);
     op->setReplyMarkup(reply_markup);
     op->setResultCallback<UploadSendFile>(callBack);
     op->setTimeOut(timeout);
     return uploadSendFile(*op, inputMedia.classType(), fileName, bytes, thumbnailBytes, thumbnailName);
 }
 
-qint64 Telegram::messagesSendVideo(const InputPeer &peer, qint64 randomId, const QString &filePath, qint32 duration, qint32 width, qint32 height, const QString &thumbnailFilePath, qint32 replyToMsgId, const ReplyMarkup &reply_markup, bool broadcast, Callback<UploadSendFile > callBack, qint32 timeout) {
+qint64 Telegram::messagesSendVideo(const InputPeer &peer, qint64 randomId, const QString &filePath, qint32 duration, qint32 width, qint32 height, const QString &thumbnailFilePath, qint32 replyToMsgId, const ReplyMarkup &reply_markup, bool broadcast, bool silent, bool background, Callback<UploadSendFile > callBack, qint32 timeout) {
     DocumentAttribute attr(DocumentAttribute::typeDocumentAttributeVideo);
     attr.setDuration(duration);
     attr.setW(width);
@@ -1315,13 +1321,15 @@ qint64 Telegram::messagesSendVideo(const InputPeer &peer, qint64 randomId, const
     op->setRandomId(randomId);
     op->setReplyToMsgId(replyToMsgId);
     op->setBroadcast(broadcast);
+    op->setBackground(background);
+    op->setSilent(silent);
     op->setReplyMarkup(reply_markup);
     op->setResultCallback<UploadSendFile>(callBack);
     op->setTimeOut(timeout);
     return uploadSendFile(*op, inputMedia.classType(), filePath, thumbnailFilePath);
 }
 
-qint64 Telegram::messagesSendAudio(const InputPeer &peer, qint64 randomId, const QByteArray &bytes, const QString &fileName, qint32 duration, const QString &mimeType, qint32 replyToMsgId, const ReplyMarkup &reply_markup, bool broadcast, Callback<UploadSendFile > callBack, qint32 timeout) {
+qint64 Telegram::messagesSendAudio(const InputPeer &peer, qint64 randomId, const QByteArray &bytes, const QString &fileName, qint32 duration, const QString &mimeType, qint32 replyToMsgId, const ReplyMarkup &reply_markup, bool broadcast, bool silent, bool background, Callback<UploadSendFile > callBack, qint32 timeout) {
     DocumentAttribute attr(DocumentAttribute::typeDocumentAttributeAudio);
     attr.setDuration(duration);
 
@@ -1334,13 +1342,15 @@ qint64 Telegram::messagesSendAudio(const InputPeer &peer, qint64 randomId, const
     op->setRandomId(randomId);
     op->setReplyToMsgId(replyToMsgId);
     op->setBroadcast(broadcast);
+    op->setBackground(background);
+    op->setSilent(silent);
     op->setReplyMarkup(reply_markup);
     op->setResultCallback<UploadSendFile>(callBack);
     op->setTimeOut(timeout);
     return uploadSendFile(*op, inputMedia.classType(), fileName, bytes);
 }
 
-qint64 Telegram::messagesSendAudio(const InputPeer &peer, qint64 randomId, const QString &filePath, qint32 duration, qint32 replyToMsgId, const ReplyMarkup &reply_markup, bool broadcast, Callback<UploadSendFile > callBack, qint32 timeout) {
+qint64 Telegram::messagesSendAudio(const InputPeer &peer, qint64 randomId, const QString &filePath, qint32 duration, qint32 replyToMsgId, const ReplyMarkup &reply_markup, bool broadcast, bool silent, bool background, Callback<UploadSendFile > callBack, qint32 timeout) {
     DocumentAttribute attr(DocumentAttribute::typeDocumentAttributeAudio);
     attr.setDuration(duration);
 
@@ -1354,13 +1364,15 @@ qint64 Telegram::messagesSendAudio(const InputPeer &peer, qint64 randomId, const
     op->setRandomId(randomId);
     op->setReplyToMsgId(replyToMsgId);
     op->setBroadcast(broadcast);
+    op->setBackground(background);
+    op->setSilent(silent);
     op->setReplyMarkup(reply_markup);
     op->setResultCallback<UploadSendFile>(callBack);
     op->setTimeOut(timeout);
     return uploadSendFile(*op, inputMedia.classType(), filePath);
 }
 
-qint64 Telegram::messagesSendDocument(const InputPeer &peer, qint64 randomId, const QByteArray &bytes, const QString &fileName, const QString &mimeType, const QByteArray &thumbnailBytes, const QString &thumbnailName, const QList<DocumentAttribute> &extraAttributes, qint32 replyToMsgId, const ReplyMarkup &reply_markup, bool broadcast, Callback<UploadSendFile > callBack, qint32 timeout) {
+qint64 Telegram::messagesSendDocument(const InputPeer &peer, qint64 randomId, const QByteArray &bytes, const QString &fileName, const QString &mimeType, const QByteArray &thumbnailBytes, const QString &thumbnailName, const QList<DocumentAttribute> &extraAttributes, qint32 replyToMsgId, const ReplyMarkup &reply_markup, bool broadcast, bool silent, bool background, Callback<UploadSendFile > callBack, qint32 timeout) {
     DocumentAttribute fileAttr(DocumentAttribute::typeDocumentAttributeFilename);
     fileAttr.setFileName(fileName);
 
@@ -1380,13 +1392,15 @@ qint64 Telegram::messagesSendDocument(const InputPeer &peer, qint64 randomId, co
     op->setRandomId(randomId);
     op->setReplyToMsgId(replyToMsgId);
     op->setBroadcast(broadcast);
+    op->setBackground(background);
+    op->setSilent(silent);
     op->setReplyMarkup(reply_markup);
     op->setResultCallback<UploadSendFile>(callBack);
     op->setTimeOut(timeout);
     return uploadSendFile(*op, inputMedia.classType(), fileName, bytes, thumbnailBytes, thumbnailName);
 }
 
-qint64 Telegram::messagesSendDocument(const InputPeer &peer, qint64 randomId, const QString &filePath, const QString &thumbnailFilePath, bool sendAsSticker, qint32 replyToMsgId, const ReplyMarkup &reply_markup, bool broadcast, Callback<UploadSendFile > callBack, qint32 timeout) {
+qint64 Telegram::messagesSendDocument(const InputPeer &peer, qint64 randomId, const QString &filePath, const QString &thumbnailFilePath, bool sendAsSticker, qint32 replyToMsgId, const ReplyMarkup &reply_markup, bool broadcast, bool silent, bool background, Callback<UploadSendFile > callBack, qint32 timeout) {
     const QMimeType t = QMimeDatabase().mimeTypeForFile(QFileInfo(filePath));
     QString mimeType = t.name();
 
@@ -1419,6 +1433,8 @@ qint64 Telegram::messagesSendDocument(const InputPeer &peer, qint64 randomId, co
     op->setRandomId(randomId);
     op->setReplyToMsgId(replyToMsgId);
     op->setBroadcast(broadcast);
+    op->setBackground(background);
+    op->setSilent(silent);
     op->setReplyMarkup(reply_markup);
     op->setResultCallback<UploadSendFile>(callBack);
     op->setTimeOut(timeout);
