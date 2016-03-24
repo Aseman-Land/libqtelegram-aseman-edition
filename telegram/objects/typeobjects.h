@@ -77,6 +77,7 @@
 #include "peerobject.h"
 #include "peernotifyeventsobject.h"
 #include "peernotifysettingsobject.h"
+#include "peersettingsobject.h"
 #include "photoobject.h"
 #include "photosizeobject.h"
 #include "privacykeyobject.h"

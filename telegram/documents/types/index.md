@@ -146,6 +146,8 @@
 
 * [PeerNotifySettings](peernotifysettings.md)
 
+* [PeerSettings](peersettings.md)
+
 * [Photo](photo.md)
 
 * [PhotoSize](photosize.md)

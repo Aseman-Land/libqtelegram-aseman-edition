@@ -17,6 +17,7 @@
 #define LQTG_PUSH_LOG qDebug() << this << __PRETTY_FUNCTION__;
 #endif
 
+#include <QCryptographicHash>
 #include "libqtelegram_global.h"
 
 class InboundPkt;
@@ -33,6 +34,7 @@ public:
 
     virtual bool fetch(InboundPkt *in) = 0;
     virtual bool push(OutboundPkt *out) const = 0;
+    virtual QByteArray getHash(QCryptographicHash::Algorithm alg) const = 0;
 
     bool error() const { return mError; }
     bool isNull() const { return mNull; }

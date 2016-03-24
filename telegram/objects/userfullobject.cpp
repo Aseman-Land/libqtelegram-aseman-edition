@@ -49,6 +49,17 @@ UserFullObject::UserFullObject(QObject *parent) :
 UserFullObject::~UserFullObject() {
 }
 
+void UserFullObject::setAbout(const QString &about) {
+    if(m_core.about() == about) return;
+    m_core.setAbout(about);
+    Q_EMIT aboutChanged();
+    Q_EMIT coreChanged();
+}
+
+QString UserFullObject::about() const {
+    return m_core.about();
+}
+
 void UserFullObject::setBlocked(bool blocked) {
     if(m_core.blocked() == blocked) return;
     m_core.setBlocked(blocked);
@@ -75,6 +86,17 @@ void UserFullObject::setBotInfo(BotInfoObject* botInfo) {
 
 BotInfoObject*  UserFullObject::botInfo() const {
     return m_botInfo;
+}
+
+void UserFullObject::setFlags(qint32 flags) {
+    if(m_core.flags() == flags) return;
+    m_core.setFlags(flags);
+    Q_EMIT flagsChanged();
+    Q_EMIT coreChanged();
+}
+
+qint32 UserFullObject::flags() const {
+    return m_core.flags();
 }
 
 void UserFullObject::setLink(ContactsLinkObject* link) {
@@ -154,8 +176,10 @@ UserFullObject &UserFullObject::operator =(const UserFull &b) {
     m_profilePhoto->setCore(b.profilePhoto());
     m_user->setCore(b.user());
 
+    Q_EMIT aboutChanged();
     Q_EMIT blockedChanged();
     Q_EMIT botInfoChanged();
+    Q_EMIT flagsChanged();
     Q_EMIT linkChanged();
     Q_EMIT notifySettingsChanged();
     Q_EMIT profilePhotoChanged();

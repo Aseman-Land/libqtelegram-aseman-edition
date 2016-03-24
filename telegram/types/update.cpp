@@ -16,6 +16,7 @@ Update::Update(UpdateType classType, InboundPkt *in) :
     m_chatId(0),
     m_date(0),
     m_enabled(false),
+    m_flags(0),
     m_idInt(0),
     m_inviterId(0),
     m_isAdmin(false),
@@ -43,6 +44,7 @@ Update::Update(InboundPkt *in) :
     m_chatId(0),
     m_date(0),
     m_enabled(false),
+    m_flags(0),
     m_idInt(0),
     m_inviterId(0),
     m_isAdmin(false),
@@ -71,6 +73,7 @@ Update::Update(const Null &null) :
     m_chatId(0),
     m_date(0),
     m_enabled(false),
+    m_flags(0),
     m_idInt(0),
     m_inviterId(0),
     m_isAdmin(false),
@@ -179,6 +182,14 @@ void Update::setFirstName(const QString &firstName) {
 
 QString Update::firstName() const {
     return m_firstName;
+}
+
+void Update::setFlags(qint32 flags) {
+    m_flags = flags;
+}
+
+qint32 Update::flags() const {
+    return m_flags;
 }
 
 void Update::setForeignLink(const ContactLink &foreignLink) {
@@ -530,6 +541,7 @@ bool Update::operator ==(const Update &b) const {
            m_device == b.m_device &&
            m_enabled == b.m_enabled &&
            m_firstName == b.m_firstName &&
+           m_flags == b.m_flags &&
            m_foreignLink == b.m_foreignLink &&
            m_group == b.m_group &&
            m_idString == b.m_idString &&
@@ -859,7 +871,11 @@ bool Update::fetch(InboundPkt *in) {
         break;
     
     case typeUpdateChannelTooLong: {
+        m_flags = in->fetchInt();
         m_channelId = in->fetchInt();
+        if(m_flags & 1<<0) {
+            m_pts = in->fetchInt();
+        }
         m_classType = static_cast<UpdateType>(x);
         return true;
     }
@@ -998,6 +1014,14 @@ bool Update::fetch(InboundPkt *in) {
         m_message.fetch(in);
         m_pts = in->fetchInt();
         m_ptsCount = in->fetchInt();
+        m_classType = static_cast<UpdateType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateChannelPinnedMessage: {
+        m_channelId = in->fetchInt();
+        m_idInt = in->fetchInt();
         m_classType = static_cast<UpdateType>(x);
         return true;
     }
@@ -1245,7 +1269,9 @@ bool Update::push(OutboundPkt *out) const {
         break;
     
     case typeUpdateChannelTooLong: {
+        out->appendInt(m_flags);
         out->appendInt(m_channelId);
+        out->appendInt(m_pts);
         return true;
     }
         break;
@@ -1367,9 +1393,23 @@ bool Update::push(OutboundPkt *out) const {
     }
         break;
     
+    case typeUpdateChannelPinnedMessage: {
+        out->appendInt(m_channelId);
+        out->appendInt(m_idInt);
+        return true;
+    }
+        break;
+    
     default:
         return false;
     }
+}
+
+QByteArray Update::getHash(QCryptographicHash::Algorithm alg) const {
+    QByteArray data;
+    QDataStream str(&data, QIODevice::WriteOnly);
+    str << *this;
+    return QCryptographicHash::hash(data, alg);
 }
 
 QDataStream &operator<<(QDataStream &stream, const Update &item) {
@@ -1508,7 +1548,9 @@ QDataStream &operator<<(QDataStream &stream, const Update &item) {
         stream << item.ptsCount();
         break;
     case Update::typeUpdateChannelTooLong:
+        stream << item.flags();
         stream << item.channelId();
+        stream << item.pts();
         break;
     case Update::typeUpdateChannel:
         stream << item.channelId();
@@ -1575,6 +1617,10 @@ QDataStream &operator<<(QDataStream &stream, const Update &item) {
         stream << item.message();
         stream << item.pts();
         stream << item.ptsCount();
+        break;
+    case Update::typeUpdateChannelPinnedMessage:
+        stream << item.channelId();
+        stream << item.idInt();
         break;
     }
     return stream;
@@ -1898,9 +1944,15 @@ QDataStream &operator>>(QDataStream &stream, Update &item) {
     }
         break;
     case Update::typeUpdateChannelTooLong: {
+        qint32 m_flags;
+        stream >> m_flags;
+        item.setFlags(m_flags);
         qint32 m_channel_id;
         stream >> m_channel_id;
         item.setChannelId(m_channel_id);
+        qint32 m_pts;
+        stream >> m_pts;
+        item.setPts(m_pts);
     }
         break;
     case Update::typeUpdateChannel: {
@@ -2050,6 +2102,15 @@ QDataStream &operator>>(QDataStream &stream, Update &item) {
         qint32 m_pts_count;
         stream >> m_pts_count;
         item.setPtsCount(m_pts_count);
+    }
+        break;
+    case Update::typeUpdateChannelPinnedMessage: {
+        qint32 m_channel_id;
+        stream >> m_channel_id;
+        item.setChannelId(m_channel_id);
+        qint32 m_id_int;
+        stream >> m_id_int;
+        item.setIdInt(m_id_int);
     }
         break;
     }

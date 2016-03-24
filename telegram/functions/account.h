@@ -39,7 +39,7 @@ public:
         fncAccountUpdateNotifySettings = 0x84be5b93,
         fncAccountGetNotifySettings = 0x12b3ad31,
         fncAccountResetNotifySettings = 0xdb7e1747,
-        fncAccountUpdateProfile = 0xf0888d68,
+        fncAccountUpdateProfile = 0x78515775,
         fncAccountUpdateStatus = 0x6628562c,
         fncAccountGetWallPapers = 0xc04cfac2,
         fncAccountReportPeer = 0xae189d5f,
@@ -78,7 +78,7 @@ public:
     static bool resetNotifySettings(OutboundPkt *out);
     static bool resetNotifySettingsResult(InboundPkt *in);
 
-    static bool updateProfile(OutboundPkt *out, const QString &firstName, const QString &lastName);
+    static bool updateProfile(OutboundPkt *out, const QString &firstName, const QString &lastName, const QString &about);
     static User updateProfileResult(InboundPkt *in);
 
     static bool updateStatus(OutboundPkt *out, bool offline);

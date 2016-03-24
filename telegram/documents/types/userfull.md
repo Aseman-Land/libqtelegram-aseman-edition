@@ -9,17 +9,18 @@
 #### Schema:
 
 ```c++
-userFull#5a89ac5b user:User link:contacts.Link profile_photo:Photo notify_settings:PeerNotifySettings blocked:Bool bot_info:BotInfo = UserFull;
+userFull#5932fc03 flags:# blocked:flags.0?true user:User about:flags.1?string link:contacts.Link profile_photo:flags.2?Photo notify_settings:PeerNotifySettings bot_info:flags.3?BotInfo = UserFull;
 ```
 
 #### Parameters:
 
 |Name|Type|
 |----|----|
+|blocked|bool|
 |user|[User](user.md)|
+|about|QString|
 |link|[ContactsLink](contactslink.md)|
 |profilePhoto|[Photo](photo.md)|
 |notifySettings|[PeerNotifySettings](peernotifysettings.md)|
-|blocked|bool|
 |botInfo|[BotInfo](botinfo.md)|
 

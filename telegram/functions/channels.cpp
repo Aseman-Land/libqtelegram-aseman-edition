@@ -449,3 +449,21 @@ UpdatesType Functions::Channels::editMessageResult(InboundPkt *in) {
     return result;
 }
 
+bool Functions::Channels::updatePinnedMessage(OutboundPkt *out, bool silent, const InputChannel &channel, qint32 id) {
+    out->appendInt(fncChannelsUpdatePinnedMessage);
+    
+    qint32 flags = 0;
+    if(silent != 0) flags = (1<<0 | flags);
+    
+    out->appendInt(flags);
+    if(!channel.push(out)) return false;
+    out->appendInt(id);
+    return true;
+}
+
+UpdatesType Functions::Channels::updatePinnedMessageResult(InboundPkt *in) {
+    UpdatesType result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+

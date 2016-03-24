@@ -10,6 +10,7 @@
 
 class LIBQTELEGRAMSHARED_EXPORT TelegramTypeQObject: public QObject
 {
+    Q_OBJECT
 public:
     TelegramTypeQObject(QObject *parent = 0);
     virtual ~TelegramTypeQObject();

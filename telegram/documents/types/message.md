@@ -57,7 +57,7 @@ message#c09be45f flags:# unread:flags.0?true out:flags.1?true mentioned:flags.4?
 #### Schema:
 
 ```c++
-messageService#c06b9607 flags:# unread:flags.0?true out:flags.1?true mentioned:flags.4?true media_unread:flags.5?true silent:flags.13?true post:flags.14?true id:int from_id:flags.8?int to_id:Peer date:int action:MessageAction = Message;
+messageService#9e19a1f6 flags:# unread:flags.0?true out:flags.1?true mentioned:flags.4?true media_unread:flags.5?true silent:flags.13?true post:flags.14?true id:int from_id:flags.8?int to_id:Peer reply_to_msg_id:flags.3?int date:int action:MessageAction = Message;
 ```
 
 #### Parameters:
@@ -73,6 +73,7 @@ messageService#c06b9607 flags:# unread:flags.0?true out:flags.1?true mentioned:f
 |id|qint32|
 |fromId|qint32|
 |toId|[Peer](peer.md)|
+|replyToMsgId|qint32|
 |date|qint32|
 |action|[MessageAction](messageaction.md)|
 

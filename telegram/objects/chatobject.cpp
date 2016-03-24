@@ -202,6 +202,17 @@ InputChannelObject*  ChatObject::migratedTo() const {
     return m_migratedTo;
 }
 
+void ChatObject::setMin(bool min) {
+    if(m_core.min() == min) return;
+    m_core.setMin(min);
+    Q_EMIT minChanged();
+    Q_EMIT coreChanged();
+}
+
+bool ChatObject::min() const {
+    return m_core.min();
+}
+
 void ChatObject::setModerator(bool moderator) {
     if(m_core.moderator() == moderator) return;
     m_core.setModerator(moderator);
@@ -339,6 +350,7 @@ ChatObject &ChatObject::operator =(const Chat &b) {
     Q_EMIT leftChanged();
     Q_EMIT megagroupChanged();
     Q_EMIT migratedToChanged();
+    Q_EMIT minChanged();
     Q_EMIT moderatorChanged();
     Q_EMIT participantsCountChanged();
     Q_EMIT photoChanged();

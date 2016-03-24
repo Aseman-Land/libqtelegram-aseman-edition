@@ -11,7 +11,6 @@
 
 BotInfo::BotInfo(BotInfoType classType, InboundPkt *in) :
     m_userId(0),
-    m_version(0),
     m_classType(classType)
 {
     if(in) fetch(in);
@@ -19,8 +18,7 @@ BotInfo::BotInfo(BotInfoType classType, InboundPkt *in) :
 
 BotInfo::BotInfo(InboundPkt *in) :
     m_userId(0),
-    m_version(0),
-    m_classType(typeBotInfoEmpty)
+    m_classType(typeBotInfo)
 {
     fetch(in);
 }
@@ -28,8 +26,7 @@ BotInfo::BotInfo(InboundPkt *in) :
 BotInfo::BotInfo(const Null &null) :
     TelegramTypeObject(null),
     m_userId(0),
-    m_version(0),
-    m_classType(typeBotInfoEmpty)
+    m_classType(typeBotInfo)
 {
 }
 
@@ -52,14 +49,6 @@ QString BotInfo::description() const {
     return m_description;
 }
 
-void BotInfo::setShareText(const QString &shareText) {
-    m_shareText = shareText;
-}
-
-QString BotInfo::shareText() const {
-    return m_shareText;
-}
-
 void BotInfo::setUserId(qint32 userId) {
     m_userId = userId;
 }
@@ -68,21 +57,11 @@ qint32 BotInfo::userId() const {
     return m_userId;
 }
 
-void BotInfo::setVersion(qint32 version) {
-    m_version = version;
-}
-
-qint32 BotInfo::version() const {
-    return m_version;
-}
-
 bool BotInfo::operator ==(const BotInfo &b) const {
     return m_classType == b.m_classType &&
            m_commands == b.m_commands &&
            m_description == b.m_description &&
-           m_shareText == b.m_shareText &&
-           m_userId == b.m_userId &&
-           m_version == b.m_version;
+           m_userId == b.m_userId;
 }
 
 void BotInfo::setClassType(BotInfo::BotInfoType classType) {
@@ -97,16 +76,8 @@ bool BotInfo::fetch(InboundPkt *in) {
     LQTG_FETCH_LOG;
     int x = in->fetchInt();
     switch(x) {
-    case typeBotInfoEmpty: {
-        m_classType = static_cast<BotInfoType>(x);
-        return true;
-    }
-        break;
-    
     case typeBotInfo: {
         m_userId = in->fetchInt();
-        m_version = in->fetchInt();
-        m_shareText = in->fetchQString();
         m_description = in->fetchQString();
         if(in->fetchInt() != (qint32)CoreTypes::typeVector) return false;
         qint32 m_commands_length = in->fetchInt();
@@ -130,15 +101,8 @@ bool BotInfo::fetch(InboundPkt *in) {
 bool BotInfo::push(OutboundPkt *out) const {
     out->appendInt(m_classType);
     switch(m_classType) {
-    case typeBotInfoEmpty: {
-        return true;
-    }
-        break;
-    
     case typeBotInfo: {
         out->appendInt(m_userId);
-        out->appendInt(m_version);
-        out->appendQString(m_shareText);
         out->appendQString(m_description);
         out->appendInt(CoreTypes::typeVector);
         out->appendInt(m_commands.count());
@@ -154,16 +118,18 @@ bool BotInfo::push(OutboundPkt *out) const {
     }
 }
 
+QByteArray BotInfo::getHash(QCryptographicHash::Algorithm alg) const {
+    QByteArray data;
+    QDataStream str(&data, QIODevice::WriteOnly);
+    str << *this;
+    return QCryptographicHash::hash(data, alg);
+}
+
 QDataStream &operator<<(QDataStream &stream, const BotInfo &item) {
     stream << static_cast<uint>(item.classType());
     switch(item.classType()) {
-    case BotInfo::typeBotInfoEmpty:
-        
-        break;
     case BotInfo::typeBotInfo:
         stream << item.userId();
-        stream << item.version();
-        stream << item.shareText();
         stream << item.description();
         stream << item.commands();
         break;
@@ -176,20 +142,10 @@ QDataStream &operator>>(QDataStream &stream, BotInfo &item) {
     stream >> type;
     item.setClassType(static_cast<BotInfo::BotInfoType>(type));
     switch(type) {
-    case BotInfo::typeBotInfoEmpty: {
-        
-    }
-        break;
     case BotInfo::typeBotInfo: {
         qint32 m_user_id;
         stream >> m_user_id;
         item.setUserId(m_user_id);
-        qint32 m_version;
-        stream >> m_version;
-        item.setVersion(m_version);
-        QString m_share_text;
-        stream >> m_share_text;
-        item.setShareText(m_share_text);
         QString m_description;
         stream >> m_description;
         item.setDescription(m_description);

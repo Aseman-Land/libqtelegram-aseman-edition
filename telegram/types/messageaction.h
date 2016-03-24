@@ -27,7 +27,8 @@ public:
         typeMessageActionChatJoinedByLink = 0xf89cf5e8,
         typeMessageActionChannelCreate = 0x95d2ac92,
         typeMessageActionChatMigrateTo = 0x51bdb021,
-        typeMessageActionChannelMigrateFrom = 0xb055eaee
+        typeMessageActionChannelMigrateFrom = 0xb055eaee,
+        typeMessageActionPinMessage = 0x94bd38ed
     };
 
     MessageAction(MessageActionType classType = typeMessageActionEmpty, InboundPkt *in = 0);
@@ -66,6 +67,8 @@ public:
 
     bool operator==(bool stt) const { return isNull() != stt; }
     bool operator!=(bool stt) const { return !operator ==(stt); }
+
+    QByteArray getHash(QCryptographicHash::Algorithm alg = QCryptographicHash::Md5) const;
 
 private:
     qint32 m_channelId;

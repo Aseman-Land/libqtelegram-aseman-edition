@@ -21,6 +21,7 @@ class LIBQTELEGRAMSHARED_EXPORT ChatFullObject : public TelegramTypeQObject
     Q_PROPERTY(QString about READ about WRITE setAbout NOTIFY aboutChanged)
     Q_PROPERTY(qint32 adminsCount READ adminsCount WRITE setAdminsCount NOTIFY adminsCountChanged)
     Q_PROPERTY(QList<BotInfo> botInfo READ botInfo WRITE setBotInfo NOTIFY botInfoChanged)
+    Q_PROPERTY(bool canSetUsername READ canSetUsername WRITE setCanSetUsername NOTIFY canSetUsernameChanged)
     Q_PROPERTY(bool canViewParticipants READ canViewParticipants WRITE setCanViewParticipants NOTIFY canViewParticipantsChanged)
     Q_PROPERTY(PhotoObject* chatPhoto READ chatPhoto WRITE setChatPhoto NOTIFY chatPhotoChanged)
     Q_PROPERTY(ExportedChatInviteObject* exportedInvite READ exportedInvite WRITE setExportedInvite NOTIFY exportedInviteChanged)
@@ -32,6 +33,7 @@ class LIBQTELEGRAMSHARED_EXPORT ChatFullObject : public TelegramTypeQObject
     Q_PROPERTY(PeerNotifySettingsObject* notifySettings READ notifySettings WRITE setNotifySettings NOTIFY notifySettingsChanged)
     Q_PROPERTY(ChatParticipantsObject* participants READ participants WRITE setParticipants NOTIFY participantsChanged)
     Q_PROPERTY(qint32 participantsCount READ participantsCount WRITE setParticipantsCount NOTIFY participantsCountChanged)
+    Q_PROPERTY(qint32 pinnedMsgId READ pinnedMsgId WRITE setPinnedMsgId NOTIFY pinnedMsgIdChanged)
     Q_PROPERTY(qint32 readInboxMaxId READ readInboxMaxId WRITE setReadInboxMaxId NOTIFY readInboxMaxIdChanged)
     Q_PROPERTY(qint32 unreadCount READ unreadCount WRITE setUnreadCount NOTIFY unreadCountChanged)
     Q_PROPERTY(qint32 unreadImportantCount READ unreadImportantCount WRITE setUnreadImportantCount NOTIFY unreadImportantCountChanged)
@@ -56,6 +58,9 @@ public:
 
     void setBotInfo(const QList<BotInfo> &botInfo);
     QList<BotInfo> botInfo() const;
+
+    void setCanSetUsername(bool canSetUsername);
+    bool canSetUsername() const;
 
     void setCanViewParticipants(bool canViewParticipants);
     bool canViewParticipants() const;
@@ -90,6 +95,9 @@ public:
     void setParticipantsCount(qint32 participantsCount);
     qint32 participantsCount() const;
 
+    void setPinnedMsgId(qint32 pinnedMsgId);
+    qint32 pinnedMsgId() const;
+
     void setReadInboxMaxId(qint32 readInboxMaxId);
     qint32 readInboxMaxId() const;
 
@@ -114,6 +122,7 @@ Q_SIGNALS:
     void aboutChanged();
     void adminsCountChanged();
     void botInfoChanged();
+    void canSetUsernameChanged();
     void canViewParticipantsChanged();
     void chatPhotoChanged();
     void exportedInviteChanged();
@@ -125,6 +134,7 @@ Q_SIGNALS:
     void notifySettingsChanged();
     void participantsChanged();
     void participantsCountChanged();
+    void pinnedMsgIdChanged();
     void readInboxMaxIdChanged();
     void unreadCountChanged();
     void unreadImportantCountChanged();

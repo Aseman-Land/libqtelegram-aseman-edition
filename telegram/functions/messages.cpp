@@ -263,6 +263,30 @@ bool Functions::Messages::reportSpamResult(InboundPkt *in) {
     return result;
 }
 
+bool Functions::Messages::hideReportSpam(OutboundPkt *out, const InputPeer &peer) {
+    out->appendInt(fncMessagesHideReportSpam);
+    if(!peer.push(out)) return false;
+    return true;
+}
+
+bool Functions::Messages::hideReportSpamResult(InboundPkt *in) {
+    bool result;
+    result = in->fetchBool();
+    return result;
+}
+
+bool Functions::Messages::getPeerSettings(OutboundPkt *out, const InputPeer &peer) {
+    out->appendInt(fncMessagesGetPeerSettings);
+    if(!peer.push(out)) return false;
+    return true;
+}
+
+PeerSettings Functions::Messages::getPeerSettingsResult(InboundPkt *in) {
+    PeerSettings result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
 bool Functions::Messages::getChats(OutboundPkt *out, const QList<qint32> &id) {
     out->appendInt(fncMessagesGetChats);
     out->appendInt(CoreTypes::typeVector);

@@ -96,6 +96,13 @@ bool AuthExportedAuthorization::push(OutboundPkt *out) const {
     }
 }
 
+QByteArray AuthExportedAuthorization::getHash(QCryptographicHash::Algorithm alg) const {
+    QByteArray data;
+    QDataStream str(&data, QIODevice::WriteOnly);
+    str << *this;
+    return QCryptographicHash::hash(data, alg);
+}
+
 QDataStream &operator<<(QDataStream &stream, const AuthExportedAuthorization &item) {
     stream << static_cast<uint>(item.classType());
     switch(item.classType()) {

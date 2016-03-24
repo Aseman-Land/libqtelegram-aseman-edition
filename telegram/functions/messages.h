@@ -21,6 +21,7 @@
 #include "telegram/types/replymarkup.h"
 #include "telegram/types/messageentity.h"
 #include "telegram/types/inputmedia.h"
+#include "telegram/types/peersettings.h"
 #include "telegram/types/messageschats.h"
 #include "telegram/types/messageschatfull.h"
 #include "telegram/types/inputchatphoto.h"
@@ -65,6 +66,8 @@ public:
         fncMessagesSendMedia = 0xc8f16791,
         fncMessagesForwardMessages = 0x708e0195,
         fncMessagesReportSpam = 0xcf1592db,
+        fncMessagesHideReportSpam = 0xa8f1709b,
+        fncMessagesGetPeerSettings = 0x3672e09c,
         fncMessagesGetChats = 0x3c6aa187,
         fncMessagesGetFullChat = 0x3b831c66,
         fncMessagesEditChatTitle = 0xdc452855,
@@ -151,6 +154,12 @@ public:
 
     static bool reportSpam(OutboundPkt *out, const InputPeer &peer);
     static bool reportSpamResult(InboundPkt *in);
+
+    static bool hideReportSpam(OutboundPkt *out, const InputPeer &peer);
+    static bool hideReportSpamResult(InboundPkt *in);
+
+    static bool getPeerSettings(OutboundPkt *out, const InputPeer &peer);
+    static PeerSettings getPeerSettingsResult(InboundPkt *in);
 
     static bool getChats(OutboundPkt *out, const QList<qint32> &id);
     static MessagesChats getChatsResult(InboundPkt *in);

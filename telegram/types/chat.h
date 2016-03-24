@@ -20,7 +20,7 @@ public:
         typeChatEmpty = 0x9ba2d800,
         typeChat = 0xd91cdd54,
         typeChatForbidden = 0x7328bdb,
-        typeChannel = 0x4b1b7506,
+        typeChannel = 0xa14dca52,
         typeChannelForbidden = 0x2d85832c
     };
 
@@ -74,6 +74,9 @@ public:
     void setMigratedTo(const InputChannel &migratedTo);
     InputChannel migratedTo() const;
 
+    void setMin(bool min);
+    bool min() const;
+
     void setModerator(bool moderator);
     bool moderator() const;
 
@@ -114,6 +117,8 @@ public:
 
     bool operator==(bool stt) const { return isNull() != stt; }
     bool operator!=(bool stt) const { return !operator ==(stt); }
+
+    QByteArray getHash(QCryptographicHash::Algorithm alg = QCryptographicHash::Md5) const;
 
 private:
     qint64 m_accessHash;

@@ -76,6 +76,17 @@ QList<BotInfo> ChatFullObject::botInfo() const {
     return m_core.botInfo();
 }
 
+void ChatFullObject::setCanSetUsername(bool canSetUsername) {
+    if(m_core.canSetUsername() == canSetUsername) return;
+    m_core.setCanSetUsername(canSetUsername);
+    Q_EMIT canSetUsernameChanged();
+    Q_EMIT coreChanged();
+}
+
+bool ChatFullObject::canSetUsername() const {
+    return m_core.canSetUsername();
+}
+
 void ChatFullObject::setCanViewParticipants(bool canViewParticipants) {
     if(m_core.canViewParticipants() == canViewParticipants) return;
     m_core.setCanViewParticipants(canViewParticipants);
@@ -221,6 +232,17 @@ qint32 ChatFullObject::participantsCount() const {
     return m_core.participantsCount();
 }
 
+void ChatFullObject::setPinnedMsgId(qint32 pinnedMsgId) {
+    if(m_core.pinnedMsgId() == pinnedMsgId) return;
+    m_core.setPinnedMsgId(pinnedMsgId);
+    Q_EMIT pinnedMsgIdChanged();
+    Q_EMIT coreChanged();
+}
+
+qint32 ChatFullObject::pinnedMsgId() const {
+    return m_core.pinnedMsgId();
+}
+
 void ChatFullObject::setReadInboxMaxId(qint32 readInboxMaxId) {
     if(m_core.readInboxMaxId() == readInboxMaxId) return;
     m_core.setReadInboxMaxId(readInboxMaxId);
@@ -265,6 +287,7 @@ ChatFullObject &ChatFullObject::operator =(const ChatFull &b) {
     Q_EMIT aboutChanged();
     Q_EMIT adminsCountChanged();
     Q_EMIT botInfoChanged();
+    Q_EMIT canSetUsernameChanged();
     Q_EMIT canViewParticipantsChanged();
     Q_EMIT chatPhotoChanged();
     Q_EMIT exportedInviteChanged();
@@ -276,6 +299,7 @@ ChatFullObject &ChatFullObject::operator =(const ChatFull &b) {
     Q_EMIT notifySettingsChanged();
     Q_EMIT participantsChanged();
     Q_EMIT participantsCountChanged();
+    Q_EMIT pinnedMsgIdChanged();
     Q_EMIT readInboxMaxIdChanged();
     Q_EMIT unreadCountChanged();
     Q_EMIT unreadImportantCountChanged();

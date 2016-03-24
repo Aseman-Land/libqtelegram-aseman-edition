@@ -64,7 +64,8 @@ public:
         fncChannelsExportMessageLink = 0xc846d22d,
         fncChannelsToggleSignatures = 0x1f69b606,
         fncChannelsGetMessageEditData = 0x27ea3a28,
-        fncChannelsEditMessage = 0xdcda80ed
+        fncChannelsEditMessage = 0xdcda80ed,
+        fncChannelsUpdatePinnedMessage = 0xa72ded52
     };
 
     Channels();
@@ -159,6 +160,9 @@ public:
 
     static bool editMessage(OutboundPkt *out, bool noWebpage, const InputChannel &channel, qint32 id, const QString &message, const QList<MessageEntity> &entities);
     static UpdatesType editMessageResult(InboundPkt *in);
+
+    static bool updatePinnedMessage(OutboundPkt *out, bool silent, const InputChannel &channel, qint32 id);
+    static UpdatesType updatePinnedMessageResult(InboundPkt *in);
 
 };
 

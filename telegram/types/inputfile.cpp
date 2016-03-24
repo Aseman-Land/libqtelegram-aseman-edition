@@ -138,6 +138,13 @@ bool InputFile::push(OutboundPkt *out) const {
     }
 }
 
+QByteArray InputFile::getHash(QCryptographicHash::Algorithm alg) const {
+    QByteArray data;
+    QDataStream str(&data, QIODevice::WriteOnly);
+    str << *this;
+    return QCryptographicHash::hash(data, alg);
+}
+
 QDataStream &operator<<(QDataStream &stream, const InputFile &item) {
     stream << static_cast<uint>(item.classType());
     switch(item.classType()) {

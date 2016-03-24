@@ -79,6 +79,7 @@ HEADERS += \
     $$PWD/peer.h \
     $$PWD/peernotifyevents.h \
     $$PWD/peernotifysettings.h \
+    $$PWD/peersettings.h \
     $$PWD/photo.h \
     $$PWD/photosize.h \
     $$PWD/privacykey.h \
@@ -219,6 +220,7 @@ SOURCES += \
     $$PWD/peer.cpp \
     $$PWD/peernotifyevents.cpp \
     $$PWD/peernotifysettings.cpp \
+    $$PWD/peersettings.cpp \
     $$PWD/photo.cpp \
     $$PWD/photosize.cpp \
     $$PWD/privacykey.cpp \

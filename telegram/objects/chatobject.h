@@ -31,6 +31,7 @@ class LIBQTELEGRAMSHARED_EXPORT ChatObject : public TelegramTypeQObject
     Q_PROPERTY(bool left READ left WRITE setLeft NOTIFY leftChanged)
     Q_PROPERTY(bool megagroup READ megagroup WRITE setMegagroup NOTIFY megagroupChanged)
     Q_PROPERTY(InputChannelObject* migratedTo READ migratedTo WRITE setMigratedTo NOTIFY migratedToChanged)
+    Q_PROPERTY(bool min READ min WRITE setMin NOTIFY minChanged)
     Q_PROPERTY(bool moderator READ moderator WRITE setModerator NOTIFY moderatorChanged)
     Q_PROPERTY(qint32 participantsCount READ participantsCount WRITE setParticipantsCount NOTIFY participantsCountChanged)
     Q_PROPERTY(ChatPhotoObject* photo READ photo WRITE setPhoto NOTIFY photoChanged)
@@ -102,6 +103,9 @@ public:
     void setMigratedTo(InputChannelObject* migratedTo);
     InputChannelObject* migratedTo() const;
 
+    void setMin(bool min);
+    bool min() const;
+
     void setModerator(bool moderator);
     bool moderator() const;
 
@@ -159,6 +163,7 @@ Q_SIGNALS:
     void leftChanged();
     void megagroupChanged();
     void migratedToChanged();
+    void minChanged();
     void moderatorChanged();
     void participantsCountChanged();
     void photoChanged();

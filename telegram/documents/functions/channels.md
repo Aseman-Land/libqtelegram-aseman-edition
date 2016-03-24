@@ -62,3 +62,5 @@
 
 * **Edit message** - [TelegramCore::channelsEditMessage](methods/editmessage.md)
 
+* **Update pinned message** - [TelegramCore::channelsUpdatePinnedMessage](methods/updatepinnedmessage.md)
+

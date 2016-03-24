@@ -13,6 +13,7 @@
 * [typeMessageActionChannelCreate](#messageactiontypemessageactionchannelcreate)
 * [typeMessageActionChatMigrateTo](#messageactiontypemessageactionchatmigrateto)
 * [typeMessageActionChannelMigrateFrom](#messageactiontypemessageactionchannelmigratefrom)
+* [typeMessageActionPinMessage](#messageactiontypemessageactionpinmessage)
 
 ## MessageAction::typeMessageActionEmpty
 
@@ -163,4 +164,15 @@ messageActionChannelMigrateFrom#b055eaee title:string chat_id:int = MessageActio
 |----|----|
 |title|QString|
 |chatId|qint32|
+
+## MessageAction::typeMessageActionPinMessage
+
+#### Schema:
+
+```c++
+messageActionPinMessage#94bd38ed = MessageAction;
+```
+
+#### Parameters:
+
 

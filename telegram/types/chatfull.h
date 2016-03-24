@@ -22,7 +22,7 @@ class LIBQTELEGRAMSHARED_EXPORT ChatFull : public TelegramTypeObject
 public:
     enum ChatFullType {
         typeChatFull = 0x2e02a614,
-        typeChannelFull = 0x9e341ddf
+        typeChannelFull = 0x97bee562
     };
 
     ChatFull(ChatFullType classType = typeChatFull, InboundPkt *in = 0);
@@ -38,6 +38,9 @@ public:
 
     void setBotInfo(const QList<BotInfo> &botInfo);
     QList<BotInfo> botInfo() const;
+
+    void setCanSetUsername(bool canSetUsername);
+    bool canSetUsername() const;
 
     void setCanViewParticipants(bool canViewParticipants);
     bool canViewParticipants() const;
@@ -72,6 +75,9 @@ public:
     void setParticipantsCount(qint32 participantsCount);
     qint32 participantsCount() const;
 
+    void setPinnedMsgId(qint32 pinnedMsgId);
+    qint32 pinnedMsgId() const;
+
     void setReadInboxMaxId(qint32 readInboxMaxId);
     qint32 readInboxMaxId() const;
 
@@ -92,6 +98,8 @@ public:
     bool operator==(bool stt) const { return isNull() != stt; }
     bool operator!=(bool stt) const { return !operator ==(stt); }
 
+    QByteArray getHash(QCryptographicHash::Algorithm alg = QCryptographicHash::Md5) const;
+
 private:
     QString m_about;
     qint32 m_adminsCount;
@@ -106,6 +114,7 @@ private:
     PeerNotifySettings m_notifySettings;
     ChatParticipants m_participants;
     qint32 m_participantsCount;
+    qint32 m_pinnedMsgId;
     qint32 m_readInboxMaxId;
     qint32 m_unreadCount;
     qint32 m_unreadImportantCount;

@@ -41,6 +41,7 @@ class LIBQTELEGRAMSHARED_EXPORT UpdateObject : public TelegramTypeQObject
     Q_PROPERTY(QString device READ device WRITE setDevice NOTIFY deviceChanged)
     Q_PROPERTY(bool enabled READ enabled WRITE setEnabled NOTIFY enabledChanged)
     Q_PROPERTY(QString firstName READ firstName WRITE setFirstName NOTIFY firstNameChanged)
+    Q_PROPERTY(qint32 flags READ flags WRITE setFlags NOTIFY flagsChanged)
     Q_PROPERTY(ContactLinkObject* foreignLink READ foreignLink WRITE setForeignLink NOTIFY foreignLinkChanged)
     Q_PROPERTY(MessageGroupObject* group READ group WRITE setGroup NOTIFY groupChanged)
     Q_PROPERTY(QString idString READ idString WRITE setIdString NOTIFY idStringChanged)
@@ -131,7 +132,8 @@ public:
         TypeUpdateSavedGifs,
         TypeUpdateBotInlineQuery,
         TypeUpdateBotInlineSend,
-        TypeUpdateEditChannelMessage
+        TypeUpdateEditChannelMessage,
+        TypeUpdateChannelPinnedMessage
     };
 
     UpdateObject(const Update &core, QObject *parent = 0);
@@ -170,6 +172,9 @@ public:
 
     void setFirstName(const QString &firstName);
     QString firstName() const;
+
+    void setFlags(qint32 flags);
+    qint32 flags() const;
 
     void setForeignLink(ContactLinkObject* foreignLink);
     ContactLinkObject* foreignLink() const;
@@ -320,6 +325,7 @@ Q_SIGNALS:
     void deviceChanged();
     void enabledChanged();
     void firstNameChanged();
+    void flagsChanged();
     void foreignLinkChanged();
     void groupChanged();
     void idStringChanged();

@@ -39,6 +39,8 @@ public:
     bool operator==(bool stt) const { return isNull() != stt; }
     bool operator!=(bool stt) const { return !operator ==(stt); }
 
+    QByteArray getHash(QCryptographicHash::Algorithm alg = QCryptographicHash::Md5) const;
+
 private:
     bool m_mutual;
     qint32 m_userId;

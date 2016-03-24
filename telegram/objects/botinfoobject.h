@@ -16,15 +16,12 @@ class LIBQTELEGRAMSHARED_EXPORT BotInfoObject : public TelegramTypeQObject
     Q_ENUMS(BotInfoType)
     Q_PROPERTY(QList<BotCommand> commands READ commands WRITE setCommands NOTIFY commandsChanged)
     Q_PROPERTY(QString description READ description WRITE setDescription NOTIFY descriptionChanged)
-    Q_PROPERTY(QString shareText READ shareText WRITE setShareText NOTIFY shareTextChanged)
     Q_PROPERTY(qint32 userId READ userId WRITE setUserId NOTIFY userIdChanged)
-    Q_PROPERTY(qint32 version READ version WRITE setVersion NOTIFY versionChanged)
     Q_PROPERTY(BotInfo core READ core WRITE setCore NOTIFY coreChanged)
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum BotInfoType {
-        TypeBotInfoEmpty,
         TypeBotInfo
     };
 
@@ -38,14 +35,8 @@ public:
     void setDescription(const QString &description);
     QString description() const;
 
-    void setShareText(const QString &shareText);
-    QString shareText() const;
-
     void setUserId(qint32 userId);
     qint32 userId() const;
-
-    void setVersion(qint32 version);
-    qint32 version() const;
 
     void setClassType(quint32 classType);
     quint32 classType() const;
@@ -61,9 +52,7 @@ Q_SIGNALS:
     void classTypeChanged();
     void commandsChanged();
     void descriptionChanged();
-    void shareTextChanged();
     void userIdChanged();
-    void versionChanged();
 
 private Q_SLOTS:
 

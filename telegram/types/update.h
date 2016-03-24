@@ -62,7 +62,7 @@ public:
         typeUpdateReadHistoryOutbox = 0x2f2f21bf,
         typeUpdateWebPage = 0x7f891213,
         typeUpdateReadMessagesContents = 0x68c13933,
-        typeUpdateChannelTooLong = 0x60946422,
+        typeUpdateChannelTooLong = 0xeb0467fb,
         typeUpdateChannel = 0xb6d45656,
         typeUpdateChannelGroup = 0xc36c1e3c,
         typeUpdateNewChannelMessage = 0x62ba04d9,
@@ -77,7 +77,8 @@ public:
         typeUpdateSavedGifs = 0x9375341e,
         typeUpdateBotInlineQuery = 0xc01eea08,
         typeUpdateBotInlineSend = 0xf69e113,
-        typeUpdateEditChannelMessage = 0x1b3f4df7
+        typeUpdateEditChannelMessage = 0x1b3f4df7,
+        typeUpdateChannelPinnedMessage = 0x98592475
     };
 
     Update(UpdateType classType = typeUpdateNewMessage, InboundPkt *in = 0);
@@ -117,6 +118,9 @@ public:
 
     void setFirstName(const QString &firstName);
     QString firstName() const;
+
+    void setFlags(qint32 flags);
+    qint32 flags() const;
 
     void setForeignLink(const ContactLink &foreignLink);
     ContactLink foreignLink() const;
@@ -255,6 +259,8 @@ public:
     bool operator==(bool stt) const { return isNull() != stt; }
     bool operator!=(bool stt) const { return !operator ==(stt); }
 
+    QByteArray getHash(QCryptographicHash::Algorithm alg = QCryptographicHash::Md5) const;
+
 private:
     SendMessageAction m_action;
     qint64 m_authKeyId;
@@ -267,6 +273,7 @@ private:
     QString m_device;
     bool m_enabled;
     QString m_firstName;
+    qint32 m_flags;
     ContactLink m_foreignLink;
     MessageGroup m_group;
     QString m_idString;

@@ -171,6 +171,8 @@ TelegramApi::TelegramApi(Session *session, Settings *settings, CryptoUtils *cryp
     channelsGetMessageEditDataMethods.onError = &TelegramApi::onChannelsGetMessageEditDataError;
     channelsEditMessageMethods.onAnswer = &TelegramApi::onChannelsEditMessageAnswer;
     channelsEditMessageMethods.onError = &TelegramApi::onChannelsEditMessageError;
+    channelsUpdatePinnedMessageMethods.onAnswer = &TelegramApi::onChannelsUpdatePinnedMessageAnswer;
+    channelsUpdatePinnedMessageMethods.onError = &TelegramApi::onChannelsUpdatePinnedMessageError;
     
     contactsGetStatusesMethods.onAnswer = &TelegramApi::onContactsGetStatusesAnswer;
     contactsGetStatusesMethods.onError = &TelegramApi::onContactsGetStatusesError;
@@ -240,6 +242,10 @@ TelegramApi::TelegramApi(Session *session, Settings *settings, CryptoUtils *cryp
     messagesForwardMessagesMethods.onError = &TelegramApi::onMessagesForwardMessagesError;
     messagesReportSpamMethods.onAnswer = &TelegramApi::onMessagesReportSpamAnswer;
     messagesReportSpamMethods.onError = &TelegramApi::onMessagesReportSpamError;
+    messagesHideReportSpamMethods.onAnswer = &TelegramApi::onMessagesHideReportSpamAnswer;
+    messagesHideReportSpamMethods.onError = &TelegramApi::onMessagesHideReportSpamError;
+    messagesGetPeerSettingsMethods.onAnswer = &TelegramApi::onMessagesGetPeerSettingsAnswer;
+    messagesGetPeerSettingsMethods.onError = &TelegramApi::onMessagesGetPeerSettingsError;
     messagesGetChatsMethods.onAnswer = &TelegramApi::onMessagesGetChatsAnswer;
     messagesGetChatsMethods.onError = &TelegramApi::onMessagesGetChatsError;
     messagesGetFullChatMethods.onAnswer = &TelegramApi::onMessagesGetFullChatAnswer;
@@ -473,13 +479,13 @@ void TelegramApi::onAccountResetNotifySettingsError(Query *q, qint32 errorCode, 
         Q_EMIT accountResetNotifySettingsError(q->mainMsgId(), errorCode, errorText, q->extra());
 }
 
-qint64 TelegramApi::accountUpdateProfile(const QString &first_name, const QString &last_name, const QVariant &attachedData, Session *session) {
+qint64 TelegramApi::accountUpdateProfile(const QString &first_name, const QString &last_name, const QString &about, const QVariant &attachedData, Session *session) {
     if(!session) session = mMainSession;
     CHECK_SESSION(session)
     DEBUG_FUNCTION
     OutboundPkt p(mSettings);
     INIT_MAIN_CONNECTION(session)
-    Functions::Account::updateProfile(&p, first_name, last_name);
+    Functions::Account::updateProfile(&p, first_name, last_name, about);
     return session->sendQuery(p, &accountUpdateProfileMethods, attachedData, "Account->updateProfile" );
 }
 
@@ -2040,6 +2046,31 @@ void TelegramApi::onChannelsEditMessageError(Query *q, qint32 errorCode, const Q
         Q_EMIT channelsEditMessageError(q->mainMsgId(), errorCode, errorText, q->extra());
 }
 
+qint64 TelegramApi::channelsUpdatePinnedMessage(bool silent, const InputChannel &channel, qint32 id, const QVariant &attachedData, Session *session) {
+    if(!session) session = mMainSession;
+    CHECK_SESSION(session)
+    DEBUG_FUNCTION
+    OutboundPkt p(mSettings);
+    INIT_MAIN_CONNECTION(session)
+    Functions::Channels::updatePinnedMessage(&p, silent, channel, id);
+    return session->sendQuery(p, &channelsUpdatePinnedMessageMethods, attachedData, "Channels->updatePinnedMessage" );
+}
+
+void TelegramApi::onChannelsUpdatePinnedMessageAnswer(Query *q, InboundPkt &inboundPkt) {
+    const UpdatesType &result = Functions::Channels::updatePinnedMessageResult(&inboundPkt);
+    if(result.error())
+        onChannelsUpdatePinnedMessageError(q, -1, "LIBQTELEGRAM_INTERNAL_ERROR");
+    else
+        Q_EMIT channelsUpdatePinnedMessageAnswer(q->mainMsgId(), result, q->extra());
+}
+
+void TelegramApi::onChannelsUpdatePinnedMessageError(Query *q, qint32 errorCode, const QString &errorText) {
+    bool accepted = false;
+    onError(q, errorCode, errorText, q->extra(), accepted);
+    if(!accepted)
+        Q_EMIT channelsUpdatePinnedMessageError(q->mainMsgId(), errorCode, errorText, q->extra());
+}
+
 
 qint64 TelegramApi::contactsGetStatuses(const QVariant &attachedData, Session *session) {
     if(!session) session = mMainSession;
@@ -2839,6 +2870,53 @@ void TelegramApi::onMessagesReportSpamError(Query *q, qint32 errorCode, const QS
     onError(q, errorCode, errorText, q->extra(), accepted);
     if(!accepted)
         Q_EMIT messagesReportSpamError(q->mainMsgId(), errorCode, errorText, q->extra());
+}
+
+qint64 TelegramApi::messagesHideReportSpam(const InputPeer &peer, const QVariant &attachedData, Session *session) {
+    if(!session) session = mMainSession;
+    CHECK_SESSION(session)
+    DEBUG_FUNCTION
+    OutboundPkt p(mSettings);
+    INIT_MAIN_CONNECTION(session)
+    Functions::Messages::hideReportSpam(&p, peer);
+    return session->sendQuery(p, &messagesHideReportSpamMethods, attachedData, "Messages->hideReportSpam" );
+}
+
+void TelegramApi::onMessagesHideReportSpamAnswer(Query *q, InboundPkt &inboundPkt) {
+    const bool result = Functions::Messages::hideReportSpamResult(&inboundPkt);
+    Q_EMIT messagesHideReportSpamAnswer(q->mainMsgId(), result, q->extra());
+}
+
+void TelegramApi::onMessagesHideReportSpamError(Query *q, qint32 errorCode, const QString &errorText) {
+    bool accepted = false;
+    onError(q, errorCode, errorText, q->extra(), accepted);
+    if(!accepted)
+        Q_EMIT messagesHideReportSpamError(q->mainMsgId(), errorCode, errorText, q->extra());
+}
+
+qint64 TelegramApi::messagesGetPeerSettings(const InputPeer &peer, const QVariant &attachedData, Session *session) {
+    if(!session) session = mMainSession;
+    CHECK_SESSION(session)
+    DEBUG_FUNCTION
+    OutboundPkt p(mSettings);
+    INIT_MAIN_CONNECTION(session)
+    Functions::Messages::getPeerSettings(&p, peer);
+    return session->sendQuery(p, &messagesGetPeerSettingsMethods, attachedData, "Messages->getPeerSettings" );
+}
+
+void TelegramApi::onMessagesGetPeerSettingsAnswer(Query *q, InboundPkt &inboundPkt) {
+    const PeerSettings &result = Functions::Messages::getPeerSettingsResult(&inboundPkt);
+    if(result.error())
+        onMessagesGetPeerSettingsError(q, -1, "LIBQTELEGRAM_INTERNAL_ERROR");
+    else
+        Q_EMIT messagesGetPeerSettingsAnswer(q->mainMsgId(), result, q->extra());
+}
+
+void TelegramApi::onMessagesGetPeerSettingsError(Query *q, qint32 errorCode, const QString &errorText) {
+    bool accepted = false;
+    onError(q, errorCode, errorText, q->extra(), accepted);
+    if(!accepted)
+        Q_EMIT messagesGetPeerSettingsError(q->mainMsgId(), errorCode, errorText, q->extra());
 }
 
 qint64 TelegramApi::messagesGetChats(const QList<qint32> &id, const QVariant &attachedData, Session *session) {

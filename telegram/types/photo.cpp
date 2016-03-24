@@ -148,6 +148,13 @@ bool Photo::push(OutboundPkt *out) const {
     }
 }
 
+QByteArray Photo::getHash(QCryptographicHash::Algorithm alg) const {
+    QByteArray data;
+    QDataStream str(&data, QIODevice::WriteOnly);
+    str << *this;
+    return QCryptographicHash::hash(data, alg);
+}
+
 QDataStream &operator<<(QDataStream &stream, const Photo &item) {
     stream << static_cast<uint>(item.classType());
     switch(item.classType()) {

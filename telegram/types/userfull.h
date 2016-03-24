@@ -8,7 +8,9 @@
 #include "telegramtypeobject.h"
 
 #include <QMetaType>
+#include <QString>
 #include "botinfo.h"
+#include <QtGlobal>
 #include "contactslink.h"
 #include "peernotifysettings.h"
 #include "photo.h"
@@ -18,7 +20,7 @@ class LIBQTELEGRAMSHARED_EXPORT UserFull : public TelegramTypeObject
 {
 public:
     enum UserFullType {
-        typeUserFull = 0x5a89ac5b
+        typeUserFull = 0x5932fc03
     };
 
     UserFull(UserFullType classType = typeUserFull, InboundPkt *in = 0);
@@ -26,11 +28,17 @@ public:
     UserFull(const Null&);
     virtual ~UserFull();
 
+    void setAbout(const QString &about);
+    QString about() const;
+
     void setBlocked(bool blocked);
     bool blocked() const;
 
     void setBotInfo(const BotInfo &botInfo);
     BotInfo botInfo() const;
+
+    void setFlags(qint32 flags);
+    qint32 flags() const;
 
     void setLink(const ContactsLink &link);
     ContactsLink link() const;
@@ -55,9 +63,12 @@ public:
     bool operator==(bool stt) const { return isNull() != stt; }
     bool operator!=(bool stt) const { return !operator ==(stt); }
 
+    QByteArray getHash(QCryptographicHash::Algorithm alg = QCryptographicHash::Md5) const;
+
 private:
-    bool m_blocked;
+    QString m_about;
     BotInfo m_botInfo;
+    qint32 m_flags;
     ContactsLink m_link;
     PeerNotifySettings m_notifySettings;
     Photo m_profilePhoto;

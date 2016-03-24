@@ -68,7 +68,7 @@ chatForbidden#7328bdb id:int title:string = Chat;
 #### Schema:
 
 ```c++
-channel#4b1b7506 flags:# creator:flags.0?true kicked:flags.1?true left:flags.2?true editor:flags.3?true moderator:flags.4?true broadcast:flags.5?true verified:flags.7?true megagroup:flags.8?true restricted:flags.9?true democracy:flags.10?true signatures:flags.11?true id:int access_hash:long title:string username:flags.6?string photo:ChatPhoto date:int version:int restriction_reason:flags.9?string = Chat;
+channel#a14dca52 flags:# creator:flags.0?true kicked:flags.1?true left:flags.2?true editor:flags.3?true moderator:flags.4?true broadcast:flags.5?true verified:flags.7?true megagroup:flags.8?true restricted:flags.9?true democracy:flags.10?true signatures:flags.11?true min:flags.12?true id:int access_hash:flags.13?long title:string username:flags.6?string photo:ChatPhoto date:int version:int restriction_reason:flags.9?string = Chat;
 ```
 
 #### Parameters:
@@ -86,6 +86,7 @@ channel#4b1b7506 flags:# creator:flags.0?true kicked:flags.1?true left:flags.2?t
 |restricted|bool|
 |democracy|bool|
 |signatures|bool|
+|min|bool|
 |id|qint32|
 |accessHash|qint64|
 |title|QString|

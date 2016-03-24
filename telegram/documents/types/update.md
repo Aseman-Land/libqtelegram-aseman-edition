@@ -46,6 +46,7 @@
 * [typeUpdateBotInlineQuery](#updatetypeupdatebotinlinequery)
 * [typeUpdateBotInlineSend](#updatetypeupdatebotinlinesend)
 * [typeUpdateEditChannelMessage](#updatetypeupdateeditchannelmessage)
+* [typeUpdateChannelPinnedMessage](#updatetypeupdatechannelpinnedmessage)
 
 ## Update::typeUpdateNewMessage
 
@@ -492,7 +493,7 @@ updateReadMessagesContents#68c13933 messages:Vector<int> pts:int pts_count:int =
 #### Schema:
 
 ```c++
-updateChannelTooLong#60946422 channel_id:int = Update;
+updateChannelTooLong#eb0467fb flags:# channel_id:int pts:flags.0?int = Update;
 ```
 
 #### Parameters:
@@ -500,6 +501,7 @@ updateChannelTooLong#60946422 channel_id:int = Update;
 |Name|Type|
 |----|----|
 |channelId|qint32|
+|pts|qint32|
 
 ## Update::typeUpdateChannel
 
@@ -725,4 +727,19 @@ updateEditChannelMessage#1b3f4df7 message:Message pts:int pts_count:int = Update
 |message|[Message](message.md)|
 |pts|qint32|
 |ptsCount|qint32|
+
+## Update::typeUpdateChannelPinnedMessage
+
+#### Schema:
+
+```c++
+updateChannelPinnedMessage#98592475 channel_id:int id:int = Update;
+```
+
+#### Parameters:
+
+|Name|Type|
+|----|----|
+|channelId|qint32|
+|id|qint32|
 

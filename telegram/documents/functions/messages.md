@@ -28,6 +28,10 @@
 
 * **Report spam** - [TelegramCore::messagesReportSpam](methods/reportspam.md)
 
+* **Hide report spam** - [TelegramCore::messagesHideReportSpam](methods/hidereportspam.md)
+
+* **Get peer settings** - [TelegramCore::messagesGetPeerSettings](methods/getpeersettings.md)
+
 * **Get chats** - [TelegramCore::messagesGetChats](methods/getchats.md)
 
 * **Get full chat** - [TelegramCore::messagesGetFullChat](methods/getfullchat.md)

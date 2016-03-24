@@ -82,6 +82,13 @@ bool AccountPasswordSettings::push(OutboundPkt *out) const {
     }
 }
 
+QByteArray AccountPasswordSettings::getHash(QCryptographicHash::Algorithm alg) const {
+    QByteArray data;
+    QDataStream str(&data, QIODevice::WriteOnly);
+    str << *this;
+    return QCryptographicHash::hash(data, alg);
+}
+
 QDataStream &operator<<(QDataStream &stream, const AccountPasswordSettings &item) {
     stream << static_cast<uint>(item.classType());
     switch(item.classType()) {

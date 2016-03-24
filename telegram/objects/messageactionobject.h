@@ -37,7 +37,8 @@ public:
         TypeMessageActionChatJoinedByLink,
         TypeMessageActionChannelCreate,
         TypeMessageActionChatMigrateTo,
-        TypeMessageActionChannelMigrateFrom
+        TypeMessageActionChannelMigrateFrom,
+        TypeMessageActionPinMessage
     };
 
     MessageActionObject(const MessageAction &core, QObject *parent = 0);

@@ -17,6 +17,7 @@ ChatFull::ChatFull(ChatFullType classType, InboundPkt *in) :
     m_migratedFromChatId(0),
     m_migratedFromMaxId(0),
     m_participantsCount(0),
+    m_pinnedMsgId(0),
     m_readInboxMaxId(0),
     m_unreadCount(0),
     m_unreadImportantCount(0),
@@ -33,6 +34,7 @@ ChatFull::ChatFull(InboundPkt *in) :
     m_migratedFromChatId(0),
     m_migratedFromMaxId(0),
     m_participantsCount(0),
+    m_pinnedMsgId(0),
     m_readInboxMaxId(0),
     m_unreadCount(0),
     m_unreadImportantCount(0),
@@ -50,6 +52,7 @@ ChatFull::ChatFull(const Null &null) :
     m_migratedFromChatId(0),
     m_migratedFromMaxId(0),
     m_participantsCount(0),
+    m_pinnedMsgId(0),
     m_readInboxMaxId(0),
     m_unreadCount(0),
     m_unreadImportantCount(0),
@@ -82,6 +85,15 @@ void ChatFull::setBotInfo(const QList<BotInfo> &botInfo) {
 
 QList<BotInfo> ChatFull::botInfo() const {
     return m_botInfo;
+}
+
+void ChatFull::setCanSetUsername(bool canSetUsername) {
+    if(canSetUsername) m_flags = (m_flags | (1<<6));
+    else m_flags = (m_flags & ~(1<<6));
+}
+
+bool ChatFull::canSetUsername() const {
+    return (m_flags & 1<<6);
 }
 
 void ChatFull::setCanViewParticipants(bool canViewParticipants) {
@@ -173,6 +185,14 @@ qint32 ChatFull::participantsCount() const {
     return m_participantsCount;
 }
 
+void ChatFull::setPinnedMsgId(qint32 pinnedMsgId) {
+    m_pinnedMsgId = pinnedMsgId;
+}
+
+qint32 ChatFull::pinnedMsgId() const {
+    return m_pinnedMsgId;
+}
+
 void ChatFull::setReadInboxMaxId(qint32 readInboxMaxId) {
     m_readInboxMaxId = readInboxMaxId;
 }
@@ -212,6 +232,7 @@ bool ChatFull::operator ==(const ChatFull &b) const {
            m_notifySettings == b.m_notifySettings &&
            m_participants == b.m_participants &&
            m_participantsCount == b.m_participantsCount &&
+           m_pinnedMsgId == b.m_pinnedMsgId &&
            m_readInboxMaxId == b.m_readInboxMaxId &&
            m_unreadCount == b.m_unreadCount &&
            m_unreadImportantCount == b.m_unreadImportantCount;
@@ -281,6 +302,9 @@ bool ChatFull::fetch(InboundPkt *in) {
         if(m_flags & 1<<4) {
             m_migratedFromMaxId = in->fetchInt();
         }
+        if(m_flags & 1<<5) {
+            m_pinnedMsgId = in->fetchInt();
+        }
         m_classType = static_cast<ChatFullType>(x);
         return true;
     }
@@ -330,6 +354,7 @@ bool ChatFull::push(OutboundPkt *out) const {
         }
         out->appendInt(m_migratedFromChatId);
         out->appendInt(m_migratedFromMaxId);
+        out->appendInt(m_pinnedMsgId);
         return true;
     }
         break;
@@ -337,6 +362,13 @@ bool ChatFull::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QByteArray ChatFull::getHash(QCryptographicHash::Algorithm alg) const {
+    QByteArray data;
+    QDataStream str(&data, QIODevice::WriteOnly);
+    str << *this;
+    return QCryptographicHash::hash(data, alg);
 }
 
 QDataStream &operator<<(QDataStream &stream, const ChatFull &item) {
@@ -366,6 +398,7 @@ QDataStream &operator<<(QDataStream &stream, const ChatFull &item) {
         stream << item.botInfo();
         stream << item.migratedFromChatId();
         stream << item.migratedFromMaxId();
+        stream << item.pinnedMsgId();
         break;
     }
     return stream;
@@ -443,6 +476,9 @@ QDataStream &operator>>(QDataStream &stream, ChatFull &item) {
         qint32 m_migrated_from_max_id;
         stream >> m_migrated_from_max_id;
         item.setMigratedFromMaxId(m_migrated_from_max_id);
+        qint32 m_pinned_msg_id;
+        stream >> m_pinned_msg_id;
+        item.setPinnedMsgId(m_pinned_msg_id);
     }
         break;
     }

@@ -82,10 +82,18 @@ bool Functions::Account::resetNotifySettingsResult(InboundPkt *in) {
     return result;
 }
 
-bool Functions::Account::updateProfile(OutboundPkt *out, const QString &firstName, const QString &lastName) {
+bool Functions::Account::updateProfile(OutboundPkt *out, const QString &firstName, const QString &lastName, const QString &about) {
     out->appendInt(fncAccountUpdateProfile);
-    out->appendQString(firstName);
-    out->appendQString(lastName);
+    
+    qint32 flags = 0;
+    if(firstName != 0) flags = (1<<0 | flags);
+    if(lastName != 0) flags = (1<<1 | flags);
+    if(about != 0) flags = (1<<2 | flags);
+    
+    out->appendInt(flags);
+    if(flags & 1<<0) out->appendQString(firstName);
+    if(flags & 1<<1) out->appendQString(lastName);
+    if(flags & 1<<2) out->appendQString(about);
     return true;
 }
 

@@ -19,8 +19,10 @@ class LIBQTELEGRAMSHARED_EXPORT UserFullObject : public TelegramTypeQObject
 {
     Q_OBJECT
     Q_ENUMS(UserFullType)
+    Q_PROPERTY(QString about READ about WRITE setAbout NOTIFY aboutChanged)
     Q_PROPERTY(bool blocked READ blocked WRITE setBlocked NOTIFY blockedChanged)
     Q_PROPERTY(BotInfoObject* botInfo READ botInfo WRITE setBotInfo NOTIFY botInfoChanged)
+    Q_PROPERTY(qint32 flags READ flags WRITE setFlags NOTIFY flagsChanged)
     Q_PROPERTY(ContactsLinkObject* link READ link WRITE setLink NOTIFY linkChanged)
     Q_PROPERTY(PeerNotifySettingsObject* notifySettings READ notifySettings WRITE setNotifySettings NOTIFY notifySettingsChanged)
     Q_PROPERTY(PhotoObject* profilePhoto READ profilePhoto WRITE setProfilePhoto NOTIFY profilePhotoChanged)
@@ -37,11 +39,17 @@ public:
     UserFullObject(QObject *parent = 0);
     virtual ~UserFullObject();
 
+    void setAbout(const QString &about);
+    QString about() const;
+
     void setBlocked(bool blocked);
     bool blocked() const;
 
     void setBotInfo(BotInfoObject* botInfo);
     BotInfoObject* botInfo() const;
+
+    void setFlags(qint32 flags);
+    qint32 flags() const;
 
     void setLink(ContactsLinkObject* link);
     ContactsLinkObject* link() const;
@@ -67,8 +75,10 @@ public:
 Q_SIGNALS:
     void coreChanged();
     void classTypeChanged();
+    void aboutChanged();
     void blockedChanged();
     void botInfoChanged();
+    void flagsChanged();
     void linkChanged();
     void notifySettingsChanged();
     void profilePhotoChanged();

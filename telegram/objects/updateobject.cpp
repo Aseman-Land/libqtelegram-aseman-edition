@@ -254,6 +254,17 @@ QString UpdateObject::firstName() const {
     return m_core.firstName();
 }
 
+void UpdateObject::setFlags(qint32 flags) {
+    if(m_core.flags() == flags) return;
+    m_core.setFlags(flags);
+    Q_EMIT flagsChanged();
+    Q_EMIT coreChanged();
+}
+
+qint32 UpdateObject::flags() const {
+    return m_core.flags();
+}
+
 void UpdateObject::setForeignLink(ContactLinkObject* foreignLink) {
     if(m_foreignLink == foreignLink) return;
     if(m_foreignLink) delete m_foreignLink;
@@ -838,6 +849,7 @@ UpdateObject &UpdateObject::operator =(const Update &b) {
     Q_EMIT deviceChanged();
     Q_EMIT enabledChanged();
     Q_EMIT firstNameChanged();
+    Q_EMIT flagsChanged();
     Q_EMIT foreignLinkChanged();
     Q_EMIT groupChanged();
     Q_EMIT idStringChanged();
@@ -1023,6 +1035,9 @@ void UpdateObject::setClassType(quint32 classType) {
     case TypeUpdateEditChannelMessage:
         result = Update::typeUpdateEditChannelMessage;
         break;
+    case TypeUpdateChannelPinnedMessage:
+        result = Update::typeUpdateChannelPinnedMessage;
+        break;
     default:
         result = Update::typeUpdateNewMessage;
         break;
@@ -1168,6 +1183,9 @@ quint32 UpdateObject::classType() const {
         break;
     case Update::typeUpdateEditChannelMessage:
         result = TypeUpdateEditChannelMessage;
+        break;
+    case Update::typeUpdateChannelPinnedMessage:
+        result = TypeUpdateChannelPinnedMessage;
         break;
     default:
         result = TypeUpdateNewMessage;

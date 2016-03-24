@@ -41,17 +41,6 @@ QString BotInfoObject::description() const {
     return m_core.description();
 }
 
-void BotInfoObject::setShareText(const QString &shareText) {
-    if(m_core.shareText() == shareText) return;
-    m_core.setShareText(shareText);
-    Q_EMIT shareTextChanged();
-    Q_EMIT coreChanged();
-}
-
-QString BotInfoObject::shareText() const {
-    return m_core.shareText();
-}
-
 void BotInfoObject::setUserId(qint32 userId) {
     if(m_core.userId() == userId) return;
     m_core.setUserId(userId);
@@ -63,26 +52,13 @@ qint32 BotInfoObject::userId() const {
     return m_core.userId();
 }
 
-void BotInfoObject::setVersion(qint32 version) {
-    if(m_core.version() == version) return;
-    m_core.setVersion(version);
-    Q_EMIT versionChanged();
-    Q_EMIT coreChanged();
-}
-
-qint32 BotInfoObject::version() const {
-    return m_core.version();
-}
-
 BotInfoObject &BotInfoObject::operator =(const BotInfo &b) {
     if(m_core == b) return *this;
     m_core = b;
 
     Q_EMIT commandsChanged();
     Q_EMIT descriptionChanged();
-    Q_EMIT shareTextChanged();
     Q_EMIT userIdChanged();
-    Q_EMIT versionChanged();
     Q_EMIT coreChanged();
     return *this;
 }
@@ -94,14 +70,11 @@ bool BotInfoObject::operator ==(const BotInfo &b) const {
 void BotInfoObject::setClassType(quint32 classType) {
     BotInfo::BotInfoType result;
     switch(classType) {
-    case TypeBotInfoEmpty:
-        result = BotInfo::typeBotInfoEmpty;
-        break;
     case TypeBotInfo:
         result = BotInfo::typeBotInfo;
         break;
     default:
-        result = BotInfo::typeBotInfoEmpty;
+        result = BotInfo::typeBotInfo;
         break;
     }
 
@@ -114,14 +87,11 @@ void BotInfoObject::setClassType(quint32 classType) {
 quint32 BotInfoObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
-    case BotInfo::typeBotInfoEmpty:
-        result = TypeBotInfoEmpty;
-        break;
     case BotInfo::typeBotInfo:
         result = TypeBotInfo;
         break;
     default:
-        result = TypeBotInfoEmpty;
+        result = TypeBotInfo;
         break;
     }
 

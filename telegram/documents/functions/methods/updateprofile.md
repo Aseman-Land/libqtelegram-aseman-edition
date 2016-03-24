@@ -7,7 +7,7 @@ TelegramCore::accountUpdateProfile
 ## Schema:
 
 ```c++
-account.updateProfile#f0888d68 first_name:string last_name:string = User;
+account.updateProfile#78515775 flags:# first_name:flags.0?string last_name:flags.1?string about:flags.2?string = User;
 ```
 ## Parameters:
 
@@ -15,6 +15,7 @@ account.updateProfile#f0888d68 first_name:string last_name:string = User;
 |----|----|-------|
 |firstName|QString||
 |lastName|QString||
+|about|QString||
 |callBack|Callback&lt;[User](../../types/user.md)&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
@@ -51,7 +52,7 @@ onUpdateProfileError(qint64 msgId, qint32 errorCode, const QString &errorText)
 ## Examples:
 
 ```c++
-tg->updateProfile(first_name, last_name, [=](TG_UPDATE_PROFILE_CALLBACK){
+tg->updateProfile(first_name, last_name, about, [=](TG_UPDATE_PROFILE_CALLBACK){
     ...
 }, 30000);
 ```

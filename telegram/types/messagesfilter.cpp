@@ -170,6 +170,13 @@ bool MessagesFilter::push(OutboundPkt *out) const {
     }
 }
 
+QByteArray MessagesFilter::getHash(QCryptographicHash::Algorithm alg) const {
+    QByteArray data;
+    QDataStream str(&data, QIODevice::WriteOnly);
+    str << *this;
+    return QCryptographicHash::hash(data, alg);
+}
+
 QDataStream &operator<<(QDataStream &stream, const MessagesFilter &item) {
     stream << static_cast<uint>(item.classType());
     switch(item.classType()) {

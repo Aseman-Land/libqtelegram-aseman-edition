@@ -212,6 +212,12 @@ bool MessageAction::fetch(InboundPkt *in) {
     }
         break;
     
+    case typeMessageActionPinMessage: {
+        m_classType = static_cast<MessageActionType>(x);
+        return true;
+    }
+        break;
+    
     default:
         LQTG_FETCH_ASSERT;
         return false;
@@ -295,9 +301,21 @@ bool MessageAction::push(OutboundPkt *out) const {
     }
         break;
     
+    case typeMessageActionPinMessage: {
+        return true;
+    }
+        break;
+    
     default:
         return false;
     }
+}
+
+QByteArray MessageAction::getHash(QCryptographicHash::Algorithm alg) const {
+    QByteArray data;
+    QDataStream str(&data, QIODevice::WriteOnly);
+    str << *this;
+    return QCryptographicHash::hash(data, alg);
 }
 
 QDataStream &operator<<(QDataStream &stream, const MessageAction &item) {
@@ -337,6 +355,9 @@ QDataStream &operator<<(QDataStream &stream, const MessageAction &item) {
     case MessageAction::typeMessageActionChannelMigrateFrom:
         stream << item.title();
         stream << item.chatId();
+        break;
+    case MessageAction::typeMessageActionPinMessage:
+        
         break;
     }
     return stream;
@@ -413,6 +434,10 @@ QDataStream &operator>>(QDataStream &stream, MessageAction &item) {
         qint32 m_chat_id;
         stream >> m_chat_id;
         item.setChatId(m_chat_id);
+    }
+        break;
+    case MessageAction::typeMessageActionPinMessage: {
+        
     }
         break;
     }

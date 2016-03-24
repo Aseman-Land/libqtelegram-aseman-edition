@@ -320,6 +320,9 @@ bool Message::fetch(InboundPkt *in) {
             m_fromId = in->fetchInt();
         }
         m_toId.fetch(in);
+        if(m_flags & 1<<3) {
+            m_replyToMsgId = in->fetchInt();
+        }
         m_date = in->fetchInt();
         m_action.fetch(in);
         m_classType = static_cast<MessageType>(x);
@@ -370,6 +373,7 @@ bool Message::push(OutboundPkt *out) const {
         out->appendInt(m_id);
         out->appendInt(m_fromId);
         m_toId.push(out);
+        out->appendInt(m_replyToMsgId);
         out->appendInt(m_date);
         m_action.push(out);
         return true;
@@ -379,6 +383,13 @@ bool Message::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QByteArray Message::getHash(QCryptographicHash::Algorithm alg) const {
+    QByteArray data;
+    QDataStream str(&data, QIODevice::WriteOnly);
+    str << *this;
+    return QCryptographicHash::hash(data, alg);
 }
 
 QDataStream &operator<<(QDataStream &stream, const Message &item) {
@@ -408,6 +419,7 @@ QDataStream &operator<<(QDataStream &stream, const Message &item) {
         stream << item.id();
         stream << item.fromId();
         stream << item.toId();
+        stream << item.replyToMsgId();
         stream << item.date();
         stream << item.action();
         break;
@@ -484,6 +496,9 @@ QDataStream &operator>>(QDataStream &stream, Message &item) {
         Peer m_to_id;
         stream >> m_to_id;
         item.setToId(m_to_id);
+        qint32 m_reply_to_msg_id;
+        stream >> m_reply_to_msg_id;
+        item.setReplyToMsgId(m_reply_to_msg_id);
         qint32 m_date;
         stream >> m_date;
         item.setDate(m_date);

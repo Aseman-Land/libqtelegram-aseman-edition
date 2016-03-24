@@ -99,6 +99,13 @@ bool Contact::push(OutboundPkt *out) const {
     }
 }
 
+QByteArray Contact::getHash(QCryptographicHash::Algorithm alg) const {
+    QByteArray data;
+    QDataStream str(&data, QIODevice::WriteOnly);
+    str << *this;
+    return QCryptographicHash::hash(data, alg);
+}
+
 QDataStream &operator<<(QDataStream &stream, const Contact &item) {
     stream << static_cast<uint>(item.classType());
     switch(item.classType()) {

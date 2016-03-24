@@ -115,6 +115,13 @@ bool NotifyPeer::push(OutboundPkt *out) const {
     }
 }
 
+QByteArray NotifyPeer::getHash(QCryptographicHash::Algorithm alg) const {
+    QByteArray data;
+    QDataStream str(&data, QIODevice::WriteOnly);
+    str << *this;
+    return QCryptographicHash::hash(data, alg);
+}
+
 QDataStream &operator<<(QDataStream &stream, const NotifyPeer &item) {
     stream << static_cast<uint>(item.classType());
     switch(item.classType()) {

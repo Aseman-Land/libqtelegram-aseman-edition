@@ -164,6 +164,9 @@ void MessageActionObject::setClassType(quint32 classType) {
     case TypeMessageActionChannelMigrateFrom:
         result = MessageAction::typeMessageActionChannelMigrateFrom;
         break;
+    case TypeMessageActionPinMessage:
+        result = MessageAction::typeMessageActionPinMessage;
+        break;
     default:
         result = MessageAction::typeMessageActionEmpty;
         break;
@@ -210,6 +213,9 @@ quint32 MessageActionObject::classType() const {
         break;
     case MessageAction::typeMessageActionChannelMigrateFrom:
         result = TypeMessageActionChannelMigrateFrom;
+        break;
+    case MessageAction::typeMessageActionPinMessage:
+        result = TypeMessageActionPinMessage;
         break;
     default:
         result = TypeMessageActionEmpty;

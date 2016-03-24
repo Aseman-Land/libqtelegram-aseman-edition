@@ -178,6 +178,15 @@ InputChannel Chat::migratedTo() const {
     return m_migratedTo;
 }
 
+void Chat::setMin(bool min) {
+    if(min) m_flags = (m_flags | (1<<12));
+    else m_flags = (m_flags & ~(1<<12));
+}
+
+bool Chat::min() const {
+    return (m_flags & 1<<12);
+}
+
 void Chat::setModerator(bool moderator) {
     if(moderator) m_flags = (m_flags | (1<<4));
     else m_flags = (m_flags & ~(1<<4));
@@ -323,7 +332,9 @@ bool Chat::fetch(InboundPkt *in) {
     case typeChannel: {
         m_flags = in->fetchInt();
         m_id = in->fetchInt();
-        m_accessHash = in->fetchLong();
+        if(m_flags & 1<<13) {
+            m_accessHash = in->fetchLong();
+        }
         m_title = in->fetchQString();
         if(m_flags & 1<<6) {
             m_username = in->fetchQString();
@@ -408,6 +419,13 @@ bool Chat::push(OutboundPkt *out) const {
     default:
         return false;
     }
+}
+
+QByteArray Chat::getHash(QCryptographicHash::Algorithm alg) const {
+    QByteArray data;
+    QDataStream str(&data, QIODevice::WriteOnly);
+    str << *this;
+    return QCryptographicHash::hash(data, alg);
 }
 
 QDataStream &operator<<(QDataStream &stream, const Chat &item) {

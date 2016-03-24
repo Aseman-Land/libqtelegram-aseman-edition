@@ -10,14 +10,14 @@
 #include <QDataStream>
 
 UserFull::UserFull(UserFullType classType, InboundPkt *in) :
-    m_blocked(false),
+    m_flags(0),
     m_classType(classType)
 {
     if(in) fetch(in);
 }
 
 UserFull::UserFull(InboundPkt *in) :
-    m_blocked(false),
+    m_flags(0),
     m_classType(typeUserFull)
 {
     fetch(in);
@@ -25,7 +25,7 @@ UserFull::UserFull(InboundPkt *in) :
 
 UserFull::UserFull(const Null &null) :
     TelegramTypeObject(null),
-    m_blocked(false),
+    m_flags(0),
     m_classType(typeUserFull)
 {
 }
@@ -33,12 +33,21 @@ UserFull::UserFull(const Null &null) :
 UserFull::~UserFull() {
 }
 
+void UserFull::setAbout(const QString &about) {
+    m_about = about;
+}
+
+QString UserFull::about() const {
+    return m_about;
+}
+
 void UserFull::setBlocked(bool blocked) {
-    m_blocked = blocked;
+    if(blocked) m_flags = (m_flags | (1<<0));
+    else m_flags = (m_flags & ~(1<<0));
 }
 
 bool UserFull::blocked() const {
-    return m_blocked;
+    return (m_flags & 1<<0);
 }
 
 void UserFull::setBotInfo(const BotInfo &botInfo) {
@@ -47,6 +56,14 @@ void UserFull::setBotInfo(const BotInfo &botInfo) {
 
 BotInfo UserFull::botInfo() const {
     return m_botInfo;
+}
+
+void UserFull::setFlags(qint32 flags) {
+    m_flags = flags;
+}
+
+qint32 UserFull::flags() const {
+    return m_flags;
 }
 
 void UserFull::setLink(const ContactsLink &link) {
@@ -83,8 +100,9 @@ User UserFull::user() const {
 
 bool UserFull::operator ==(const UserFull &b) const {
     return m_classType == b.m_classType &&
-           m_blocked == b.m_blocked &&
+           m_about == b.m_about &&
            m_botInfo == b.m_botInfo &&
+           m_flags == b.m_flags &&
            m_link == b.m_link &&
            m_notifySettings == b.m_notifySettings &&
            m_profilePhoto == b.m_profilePhoto &&
@@ -104,12 +122,19 @@ bool UserFull::fetch(InboundPkt *in) {
     int x = in->fetchInt();
     switch(x) {
     case typeUserFull: {
+        m_flags = in->fetchInt();
         m_user.fetch(in);
+        if(m_flags & 1<<1) {
+            m_about = in->fetchQString();
+        }
         m_link.fetch(in);
-        m_profilePhoto.fetch(in);
+        if(m_flags & 1<<2) {
+            m_profilePhoto.fetch(in);
+        }
         m_notifySettings.fetch(in);
-        m_blocked = in->fetchBool();
-        m_botInfo.fetch(in);
+        if(m_flags & 1<<3) {
+            m_botInfo.fetch(in);
+        }
         m_classType = static_cast<UserFullType>(x);
         return true;
     }
@@ -125,11 +150,12 @@ bool UserFull::push(OutboundPkt *out) const {
     out->appendInt(m_classType);
     switch(m_classType) {
     case typeUserFull: {
+        out->appendInt(m_flags);
         m_user.push(out);
+        out->appendQString(m_about);
         m_link.push(out);
         m_profilePhoto.push(out);
         m_notifySettings.push(out);
-        out->appendBool(m_blocked);
         m_botInfo.push(out);
         return true;
     }
@@ -140,15 +166,23 @@ bool UserFull::push(OutboundPkt *out) const {
     }
 }
 
+QByteArray UserFull::getHash(QCryptographicHash::Algorithm alg) const {
+    QByteArray data;
+    QDataStream str(&data, QIODevice::WriteOnly);
+    str << *this;
+    return QCryptographicHash::hash(data, alg);
+}
+
 QDataStream &operator<<(QDataStream &stream, const UserFull &item) {
     stream << static_cast<uint>(item.classType());
     switch(item.classType()) {
     case UserFull::typeUserFull:
+        stream << item.flags();
         stream << item.user();
+        stream << item.about();
         stream << item.link();
         stream << item.profilePhoto();
         stream << item.notifySettings();
-        stream << item.blocked();
         stream << item.botInfo();
         break;
     }
@@ -161,9 +195,15 @@ QDataStream &operator>>(QDataStream &stream, UserFull &item) {
     item.setClassType(static_cast<UserFull::UserFullType>(type));
     switch(type) {
     case UserFull::typeUserFull: {
+        qint32 m_flags;
+        stream >> m_flags;
+        item.setFlags(m_flags);
         User m_user;
         stream >> m_user;
         item.setUser(m_user);
+        QString m_about;
+        stream >> m_about;
+        item.setAbout(m_about);
         ContactsLink m_link;
         stream >> m_link;
         item.setLink(m_link);
@@ -173,9 +213,6 @@ QDataStream &operator>>(QDataStream &stream, UserFull &item) {
         PeerNotifySettings m_notify_settings;
         stream >> m_notify_settings;
         item.setNotifySettings(m_notify_settings);
-        bool m_blocked;
-        stream >> m_blocked;
-        item.setBlocked(m_blocked);
         BotInfo m_bot_info;
         stream >> m_bot_info;
         item.setBotInfo(m_bot_info);

@@ -104,6 +104,13 @@ bool StickerPack::push(OutboundPkt *out) const {
     }
 }
 
+QByteArray StickerPack::getHash(QCryptographicHash::Algorithm alg) const {
+    QByteArray data;
+    QDataStream str(&data, QIODevice::WriteOnly);
+    str << *this;
+    return QCryptographicHash::hash(data, alg);
+}
+
 QDataStream &operator<<(QDataStream &stream, const StickerPack &item) {
     stream << static_cast<uint>(item.classType());
     switch(item.classType()) {

@@ -24,7 +24,7 @@ public:
     enum MessageType {
         typeMessageEmpty = 0x83e5de54,
         typeMessage = 0xc09be45f,
-        typeMessageService = 0xc06b9607
+        typeMessageService = 0x9e19a1f6
     };
 
     Message(MessageType classType = typeMessageEmpty, InboundPkt *in = 0);
@@ -105,6 +105,8 @@ public:
 
     bool operator==(bool stt) const { return isNull() != stt; }
     bool operator!=(bool stt) const { return !operator ==(stt); }
+
+    QByteArray getHash(QCryptographicHash::Algorithm alg = QCryptographicHash::Md5) const;
 
 private:
     MessageAction m_action;

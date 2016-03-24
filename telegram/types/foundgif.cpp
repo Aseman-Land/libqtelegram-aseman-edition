@@ -178,6 +178,13 @@ bool FoundGif::push(OutboundPkt *out) const {
     }
 }
 
+QByteArray FoundGif::getHash(QCryptographicHash::Algorithm alg) const {
+    QByteArray data;
+    QDataStream str(&data, QIODevice::WriteOnly);
+    str << *this;
+    return QCryptographicHash::hash(data, alg);
+}
+
 QDataStream &operator<<(QDataStream &stream, const FoundGif &item) {
     stream << static_cast<uint>(item.classType());
     switch(item.classType()) {

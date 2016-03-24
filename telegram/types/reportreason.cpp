@@ -115,6 +115,13 @@ bool ReportReason::push(OutboundPkt *out) const {
     }
 }
 
+QByteArray ReportReason::getHash(QCryptographicHash::Algorithm alg) const {
+    QByteArray data;
+    QDataStream str(&data, QIODevice::WriteOnly);
+    str << *this;
+    return QCryptographicHash::hash(data, alg);
+}
+
 QDataStream &operator<<(QDataStream &stream, const ReportReason &item) {
     stream << static_cast<uint>(item.classType());
     switch(item.classType()) {

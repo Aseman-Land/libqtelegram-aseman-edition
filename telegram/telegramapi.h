@@ -25,7 +25,7 @@ public:
     qint64 accountUpdateNotifySettings(const InputNotifyPeer &peer, const InputPeerNotifySettings &settings, const QVariant &attachedData = QVariant(), Session *session = 0);
     qint64 accountGetNotifySettings(const InputNotifyPeer &peer, const QVariant &attachedData = QVariant(), Session *session = 0);
     qint64 accountResetNotifySettings(const QVariant &attachedData = QVariant(), Session *session = 0);
-    qint64 accountUpdateProfile(const QString &first_name, const QString &last_name, const QVariant &attachedData = QVariant(), Session *session = 0);
+    qint64 accountUpdateProfile(const QString &first_name, const QString &last_name, const QString &about, const QVariant &attachedData = QVariant(), Session *session = 0);
     qint64 accountUpdateStatus(bool offline, const QVariant &attachedData = QVariant(), Session *session = 0);
     qint64 accountGetWallPapers(const QVariant &attachedData = QVariant(), Session *session = 0);
     qint64 accountReportPeer(const InputPeer &peer, const ReportReason &reason, const QVariant &attachedData = QVariant(), Session *session = 0);
@@ -92,6 +92,7 @@ public:
     qint64 channelsToggleSignatures(const InputChannel &channel, bool enabled, const QVariant &attachedData = QVariant(), Session *session = 0);
     qint64 channelsGetMessageEditData(const InputChannel &channel, qint32 id, const QVariant &attachedData = QVariant(), Session *session = 0);
     qint64 channelsEditMessage(bool no_webpage, const InputChannel &channel, qint32 id, const QString &message, const QList<MessageEntity> &entities, const QVariant &attachedData = QVariant(), Session *session = 0);
+    qint64 channelsUpdatePinnedMessage(bool silent, const InputChannel &channel, qint32 id, const QVariant &attachedData = QVariant(), Session *session = 0);
     
     qint64 contactsGetStatuses(const QVariant &attachedData = QVariant(), Session *session = 0);
     qint64 contactsGetContacts(const QString &hash, const QVariant &attachedData = QVariant(), Session *session = 0);
@@ -128,6 +129,8 @@ public:
     qint64 messagesSendMedia(bool broadcast, bool silent, bool background, const InputPeer &peer, qint32 reply_to_msg_id, const InputMedia &media, qint64 random_id, const ReplyMarkup &reply_markup, const QVariant &attachedData = QVariant(), Session *session = 0);
     qint64 messagesForwardMessages(bool broadcast, bool silent, bool background, const InputPeer &from_peer, const QList<qint32> &id, const QList<qint64> &random_id, const InputPeer &to_peer, const QVariant &attachedData = QVariant(), Session *session = 0);
     qint64 messagesReportSpam(const InputPeer &peer, const QVariant &attachedData = QVariant(), Session *session = 0);
+    qint64 messagesHideReportSpam(const InputPeer &peer, const QVariant &attachedData = QVariant(), Session *session = 0);
+    qint64 messagesGetPeerSettings(const InputPeer &peer, const QVariant &attachedData = QVariant(), Session *session = 0);
     qint64 messagesGetChats(const QList<qint32> &id, const QVariant &attachedData = QVariant(), Session *session = 0);
     qint64 messagesGetFullChat(qint32 chat_id, const QVariant &attachedData = QVariant(), Session *session = 0);
     qint64 messagesEditChatTitle(qint32 chat_id, const QString &title, const QVariant &attachedData = QVariant(), Session *session = 0);
@@ -261,6 +264,7 @@ Q_SIGNALS:
     void channelsToggleSignaturesAnswer(qint64 msgId, const UpdatesType &result, const QVariant &attachedData);
     void channelsGetMessageEditDataAnswer(qint64 msgId, const ChannelsMessageEditData &result, const QVariant &attachedData);
     void channelsEditMessageAnswer(qint64 msgId, const UpdatesType &result, const QVariant &attachedData);
+    void channelsUpdatePinnedMessageAnswer(qint64 msgId, const UpdatesType &result, const QVariant &attachedData);
     
     void contactsGetStatusesAnswer(qint64 msgId, const QList<ContactStatus> &result, const QVariant &attachedData);
     void contactsGetContactsAnswer(qint64 msgId, const ContactsContacts &result, const QVariant &attachedData);
@@ -297,6 +301,8 @@ Q_SIGNALS:
     void messagesSendMediaAnswer(qint64 msgId, const UpdatesType &result, const QVariant &attachedData);
     void messagesForwardMessagesAnswer(qint64 msgId, const UpdatesType &result, const QVariant &attachedData);
     void messagesReportSpamAnswer(qint64 msgId, bool result, const QVariant &attachedData);
+    void messagesHideReportSpamAnswer(qint64 msgId, bool result, const QVariant &attachedData);
+    void messagesGetPeerSettingsAnswer(qint64 msgId, const PeerSettings &result, const QVariant &attachedData);
     void messagesGetChatsAnswer(qint64 msgId, const MessagesChats &result, const QVariant &attachedData);
     void messagesGetFullChatAnswer(qint64 msgId, const MessagesChatFull &result, const QVariant &attachedData);
     void messagesEditChatTitleAnswer(qint64 msgId, const UpdatesType &result, const QVariant &attachedData);
@@ -430,6 +436,7 @@ Q_SIGNALS:
     void channelsToggleSignaturesError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     void channelsGetMessageEditDataError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     void channelsEditMessageError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
+    void channelsUpdatePinnedMessageError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     
     void contactsGetStatusesError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     void contactsGetContactsError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
@@ -466,6 +473,8 @@ Q_SIGNALS:
     void messagesSendMediaError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     void messagesForwardMessagesError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     void messagesReportSpamError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
+    void messagesHideReportSpamError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
+    void messagesGetPeerSettingsError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     void messagesGetChatsError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     void messagesGetFullChatError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     void messagesEditChatTitleError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
@@ -604,6 +613,7 @@ private:
     QueryMethods channelsToggleSignaturesMethods;
     QueryMethods channelsGetMessageEditDataMethods;
     QueryMethods channelsEditMessageMethods;
+    QueryMethods channelsUpdatePinnedMessageMethods;
     
     QueryMethods contactsGetStatusesMethods;
     QueryMethods contactsGetContactsMethods;
@@ -640,6 +650,8 @@ private:
     QueryMethods messagesSendMediaMethods;
     QueryMethods messagesForwardMessagesMethods;
     QueryMethods messagesReportSpamMethods;
+    QueryMethods messagesHideReportSpamMethods;
+    QueryMethods messagesGetPeerSettingsMethods;
     QueryMethods messagesGetChatsMethods;
     QueryMethods messagesGetFullChatMethods;
     QueryMethods messagesEditChatTitleMethods;
@@ -773,6 +785,7 @@ private:
     void onChannelsToggleSignaturesAnswer(Query *q, InboundPkt &inboundPkt);
     void onChannelsGetMessageEditDataAnswer(Query *q, InboundPkt &inboundPkt);
     void onChannelsEditMessageAnswer(Query *q, InboundPkt &inboundPkt);
+    void onChannelsUpdatePinnedMessageAnswer(Query *q, InboundPkt &inboundPkt);
     
     void onContactsGetStatusesAnswer(Query *q, InboundPkt &inboundPkt);
     void onContactsGetContactsAnswer(Query *q, InboundPkt &inboundPkt);
@@ -809,6 +822,8 @@ private:
     void onMessagesSendMediaAnswer(Query *q, InboundPkt &inboundPkt);
     void onMessagesForwardMessagesAnswer(Query *q, InboundPkt &inboundPkt);
     void onMessagesReportSpamAnswer(Query *q, InboundPkt &inboundPkt);
+    void onMessagesHideReportSpamAnswer(Query *q, InboundPkt &inboundPkt);
+    void onMessagesGetPeerSettingsAnswer(Query *q, InboundPkt &inboundPkt);
     void onMessagesGetChatsAnswer(Query *q, InboundPkt &inboundPkt);
     void onMessagesGetFullChatAnswer(Query *q, InboundPkt &inboundPkt);
     void onMessagesEditChatTitleAnswer(Query *q, InboundPkt &inboundPkt);
@@ -942,6 +957,7 @@ private:
     void onChannelsToggleSignaturesError(Query *q, qint32 errorCode, const QString &errorText);
     void onChannelsGetMessageEditDataError(Query *q, qint32 errorCode, const QString &errorText);
     void onChannelsEditMessageError(Query *q, qint32 errorCode, const QString &errorText);
+    void onChannelsUpdatePinnedMessageError(Query *q, qint32 errorCode, const QString &errorText);
     
     void onContactsGetStatusesError(Query *q, qint32 errorCode, const QString &errorText);
     void onContactsGetContactsError(Query *q, qint32 errorCode, const QString &errorText);
@@ -978,6 +994,8 @@ private:
     void onMessagesSendMediaError(Query *q, qint32 errorCode, const QString &errorText);
     void onMessagesForwardMessagesError(Query *q, qint32 errorCode, const QString &errorText);
     void onMessagesReportSpamError(Query *q, qint32 errorCode, const QString &errorText);
+    void onMessagesHideReportSpamError(Query *q, qint32 errorCode, const QString &errorText);
+    void onMessagesGetPeerSettingsError(Query *q, qint32 errorCode, const QString &errorText);
     void onMessagesGetChatsError(Query *q, qint32 errorCode, const QString &errorText);
     void onMessagesGetFullChatError(Query *q, qint32 errorCode, const QString &errorText);
     void onMessagesEditChatTitleError(Query *q, qint32 errorCode, const QString &errorText);
