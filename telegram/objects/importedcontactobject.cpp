@@ -56,7 +56,7 @@ bool ImportedContactObject::operator ==(const ImportedContact &b) const {
 }
 
 void ImportedContactObject::setClassType(quint32 classType) {
-    ImportedContact::ImportedContactType result;
+    ImportedContact::ImportedContactClassType result;
     switch(classType) {
     case TypeImportedContact:
         result = ImportedContact::typeImportedContact;

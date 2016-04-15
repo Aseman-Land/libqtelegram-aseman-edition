@@ -32,7 +32,7 @@ bool InputPeerNotifyEventsObject::operator ==(const InputPeerNotifyEvents &b) co
 }
 
 void InputPeerNotifyEventsObject::setClassType(quint32 classType) {
-    InputPeerNotifyEvents::InputPeerNotifyEventsType result;
+    InputPeerNotifyEvents::InputPeerNotifyEventsClassType result;
     switch(classType) {
     case TypeInputPeerNotifyEventsEmpty:
         result = InputPeerNotifyEvents::typeInputPeerNotifyEventsEmpty;

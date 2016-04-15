@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-InputStickerSet::InputStickerSet(InputStickerSetType classType, InboundPkt *in) :
+InputStickerSet::InputStickerSet(InputStickerSetClassType classType, InboundPkt *in) :
     m_accessHash(0),
     m_id(0),
     m_classType(classType)
@@ -67,11 +67,11 @@ bool InputStickerSet::operator ==(const InputStickerSet &b) const {
            m_shortName == b.m_shortName;
 }
 
-void InputStickerSet::setClassType(InputStickerSet::InputStickerSetType classType) {
+void InputStickerSet::setClassType(InputStickerSet::InputStickerSetClassType classType) {
     m_classType = classType;
 }
 
-InputStickerSet::InputStickerSetType InputStickerSet::classType() const {
+InputStickerSet::InputStickerSetClassType InputStickerSet::classType() const {
     return m_classType;
 }
 
@@ -80,7 +80,7 @@ bool InputStickerSet::fetch(InboundPkt *in) {
     int x = in->fetchInt();
     switch(x) {
     case typeInputStickerSetEmpty: {
-        m_classType = static_cast<InputStickerSetType>(x);
+        m_classType = static_cast<InputStickerSetClassType>(x);
         return true;
     }
         break;
@@ -88,14 +88,14 @@ bool InputStickerSet::fetch(InboundPkt *in) {
     case typeInputStickerSetID: {
         m_id = in->fetchLong();
         m_accessHash = in->fetchLong();
-        m_classType = static_cast<InputStickerSetType>(x);
+        m_classType = static_cast<InputStickerSetClassType>(x);
         return true;
     }
         break;
     
     case typeInputStickerSetShortName: {
         m_shortName = in->fetchQString();
-        m_classType = static_cast<InputStickerSetType>(x);
+        m_classType = static_cast<InputStickerSetClassType>(x);
         return true;
     }
         break;
@@ -159,7 +159,7 @@ QDataStream &operator<<(QDataStream &stream, const InputStickerSet &item) {
 QDataStream &operator>>(QDataStream &stream, InputStickerSet &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<InputStickerSet::InputStickerSetType>(type));
+    item.setClassType(static_cast<InputStickerSet::InputStickerSetClassType>(type));
     switch(type) {
     case InputStickerSet::typeInputStickerSetEmpty: {
         

@@ -13,14 +13,14 @@
 class LIBQTELEGRAMSHARED_EXPORT MessagesAllStickersObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(MessagesAllStickersType)
+    Q_ENUMS(MessagesAllStickersClassType)
     Q_PROPERTY(qint32 hash READ hash WRITE setHash NOTIFY hashChanged)
     Q_PROPERTY(QList<StickerSet> sets READ sets WRITE setSets NOTIFY setsChanged)
     Q_PROPERTY(MessagesAllStickers core READ core WRITE setCore NOTIFY coreChanged)
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum MessagesAllStickersType {
+    enum MessagesAllStickersClassType {
         TypeMessagesAllStickersNotModified,
         TypeMessagesAllStickers
     };

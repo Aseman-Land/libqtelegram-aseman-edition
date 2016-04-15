@@ -56,7 +56,7 @@ bool DisabledFeatureObject::operator ==(const DisabledFeature &b) const {
 }
 
 void DisabledFeatureObject::setClassType(quint32 classType) {
-    DisabledFeature::DisabledFeatureType result;
+    DisabledFeature::DisabledFeatureClassType result;
     switch(classType) {
     case TypeDisabledFeature:
         result = DisabledFeature::typeDisabledFeature;

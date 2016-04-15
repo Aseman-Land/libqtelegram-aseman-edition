@@ -129,7 +129,7 @@ bool MessageActionObject::operator ==(const MessageAction &b) const {
 }
 
 void MessageActionObject::setClassType(quint32 classType) {
-    MessageAction::MessageActionType result;
+    MessageAction::MessageActionClassType result;
     switch(classType) {
     case TypeMessageActionEmpty:
         result = MessageAction::typeMessageActionEmpty;

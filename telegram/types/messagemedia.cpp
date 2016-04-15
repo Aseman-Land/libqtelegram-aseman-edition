@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-MessageMedia::MessageMedia(MessageMediaType classType, InboundPkt *in) :
+MessageMedia::MessageMedia(MessageMediaClassType classType, InboundPkt *in) :
     m_userId(0),
     m_classType(classType)
 {
@@ -154,11 +154,11 @@ bool MessageMedia::operator ==(const MessageMedia &b) const {
            m_webpage == b.m_webpage;
 }
 
-void MessageMedia::setClassType(MessageMedia::MessageMediaType classType) {
+void MessageMedia::setClassType(MessageMedia::MessageMediaClassType classType) {
     m_classType = classType;
 }
 
-MessageMedia::MessageMediaType MessageMedia::classType() const {
+MessageMedia::MessageMediaClassType MessageMedia::classType() const {
     return m_classType;
 }
 
@@ -167,7 +167,7 @@ bool MessageMedia::fetch(InboundPkt *in) {
     int x = in->fetchInt();
     switch(x) {
     case typeMessageMediaEmpty: {
-        m_classType = static_cast<MessageMediaType>(x);
+        m_classType = static_cast<MessageMediaClassType>(x);
         return true;
     }
         break;
@@ -175,14 +175,14 @@ bool MessageMedia::fetch(InboundPkt *in) {
     case typeMessageMediaPhoto: {
         m_photo.fetch(in);
         m_caption = in->fetchQString();
-        m_classType = static_cast<MessageMediaType>(x);
+        m_classType = static_cast<MessageMediaClassType>(x);
         return true;
     }
         break;
     
     case typeMessageMediaGeo: {
         m_geo.fetch(in);
-        m_classType = static_cast<MessageMediaType>(x);
+        m_classType = static_cast<MessageMediaClassType>(x);
         return true;
     }
         break;
@@ -192,13 +192,13 @@ bool MessageMedia::fetch(InboundPkt *in) {
         m_firstName = in->fetchQString();
         m_lastName = in->fetchQString();
         m_userId = in->fetchInt();
-        m_classType = static_cast<MessageMediaType>(x);
+        m_classType = static_cast<MessageMediaClassType>(x);
         return true;
     }
         break;
     
     case typeMessageMediaUnsupported: {
-        m_classType = static_cast<MessageMediaType>(x);
+        m_classType = static_cast<MessageMediaClassType>(x);
         return true;
     }
         break;
@@ -206,14 +206,14 @@ bool MessageMedia::fetch(InboundPkt *in) {
     case typeMessageMediaDocument: {
         m_document.fetch(in);
         m_caption = in->fetchQString();
-        m_classType = static_cast<MessageMediaType>(x);
+        m_classType = static_cast<MessageMediaClassType>(x);
         return true;
     }
         break;
     
     case typeMessageMediaWebPage: {
         m_webpage.fetch(in);
-        m_classType = static_cast<MessageMediaType>(x);
+        m_classType = static_cast<MessageMediaClassType>(x);
         return true;
     }
         break;
@@ -224,7 +224,7 @@ bool MessageMedia::fetch(InboundPkt *in) {
         m_address = in->fetchQString();
         m_provider = in->fetchQString();
         m_venueId = in->fetchQString();
-        m_classType = static_cast<MessageMediaType>(x);
+        m_classType = static_cast<MessageMediaClassType>(x);
         return true;
     }
         break;
@@ -348,7 +348,7 @@ QDataStream &operator<<(QDataStream &stream, const MessageMedia &item) {
 QDataStream &operator>>(QDataStream &stream, MessageMedia &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<MessageMedia::MessageMediaType>(type));
+    item.setClassType(static_cast<MessageMedia::MessageMediaClassType>(type));
     switch(type) {
     case MessageMedia::typeMessageMediaEmpty: {
         

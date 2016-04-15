@@ -16,7 +16,7 @@
 class LIBQTELEGRAMSHARED_EXPORT InputChatPhotoObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(InputChatPhotoType)
+    Q_ENUMS(InputChatPhotoClassType)
     Q_PROPERTY(InputPhotoCropObject* crop READ crop WRITE setCrop NOTIFY cropChanged)
     Q_PROPERTY(InputFileObject* file READ file WRITE setFile NOTIFY fileChanged)
     Q_PROPERTY(InputPhotoObject* id READ id WRITE setId NOTIFY idChanged)
@@ -24,7 +24,7 @@ class LIBQTELEGRAMSHARED_EXPORT InputChatPhotoObject : public TelegramTypeQObjec
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum InputChatPhotoType {
+    enum InputChatPhotoClassType {
         TypeInputChatPhotoEmpty,
         TypeInputChatUploadedPhoto,
         TypeInputChatPhoto

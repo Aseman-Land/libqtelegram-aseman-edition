@@ -15,14 +15,14 @@
 class LIBQTELEGRAMSHARED_EXPORT UploadGetFile : public TelegramCustomTypeObject
 {
 public:
-    enum UploadGetFileType {
+    enum UploadGetFileClassType {
         typeUploadGetFileEmpty = 0xe662a8f,
         typeUploadGetFileFinished = 0xef122d8,
         typeUploadGetFileCanceled = 0xc52fa0a,
         typeUploadGetFileProgress = 0x6db838e
     };
 
-    UploadGetFile(UploadGetFileType classType = typeUploadGetFileEmpty);
+    UploadGetFile(UploadGetFileClassType classType = typeUploadGetFileEmpty);
     UploadGetFile(const Null&);
     virtual ~UploadGetFile();
 
@@ -44,8 +44,8 @@ public:
     void setType(const StorageFileType &type);
     StorageFileType type() const;
 
-    void setClassType(UploadGetFileType classType);
-    UploadGetFileType classType() const;
+    void setClassType(UploadGetFileClassType classType);
+    UploadGetFileClassType classType() const;
 
     bool operator ==(const UploadGetFile &b) const;
 
@@ -59,7 +59,7 @@ private:
     qint32 m_partId;
     qint32 m_total;
     StorageFileType m_type;
-    UploadGetFileType m_classType;
+    UploadGetFileClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(UploadGetFile)

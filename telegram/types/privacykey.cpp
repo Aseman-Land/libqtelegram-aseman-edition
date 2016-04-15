@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-PrivacyKey::PrivacyKey(PrivacyKeyType classType, InboundPkt *in) :
+PrivacyKey::PrivacyKey(PrivacyKeyClassType classType, InboundPkt *in) :
     m_classType(classType)
 {
     if(in) fetch(in);
@@ -34,11 +34,11 @@ bool PrivacyKey::operator ==(const PrivacyKey &b) const {
     return m_classType == b.m_classType;
 }
 
-void PrivacyKey::setClassType(PrivacyKey::PrivacyKeyType classType) {
+void PrivacyKey::setClassType(PrivacyKey::PrivacyKeyClassType classType) {
     m_classType = classType;
 }
 
-PrivacyKey::PrivacyKeyType PrivacyKey::classType() const {
+PrivacyKey::PrivacyKeyClassType PrivacyKey::classType() const {
     return m_classType;
 }
 
@@ -47,13 +47,13 @@ bool PrivacyKey::fetch(InboundPkt *in) {
     int x = in->fetchInt();
     switch(x) {
     case typePrivacyKeyStatusTimestamp: {
-        m_classType = static_cast<PrivacyKeyType>(x);
+        m_classType = static_cast<PrivacyKeyClassType>(x);
         return true;
     }
         break;
     
     case typePrivacyKeyChatInvite: {
-        m_classType = static_cast<PrivacyKeyType>(x);
+        m_classType = static_cast<PrivacyKeyClassType>(x);
         return true;
     }
         break;
@@ -105,7 +105,7 @@ QDataStream &operator<<(QDataStream &stream, const PrivacyKey &item) {
 QDataStream &operator>>(QDataStream &stream, PrivacyKey &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<PrivacyKey::PrivacyKeyType>(type));
+    item.setClassType(static_cast<PrivacyKey::PrivacyKeyClassType>(type));
     switch(type) {
     case PrivacyKey::typePrivacyKeyStatusTimestamp: {
         

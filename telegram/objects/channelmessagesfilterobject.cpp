@@ -80,7 +80,7 @@ bool ChannelMessagesFilterObject::operator ==(const ChannelMessagesFilter &b) co
 }
 
 void ChannelMessagesFilterObject::setClassType(quint32 classType) {
-    ChannelMessagesFilter::ChannelMessagesFilterType result;
+    ChannelMessagesFilter::ChannelMessagesFilterClassType result;
     switch(classType) {
     case TypeChannelMessagesFilterEmpty:
         result = ChannelMessagesFilter::typeChannelMessagesFilterEmpty;

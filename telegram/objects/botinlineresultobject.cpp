@@ -251,19 +251,16 @@ bool BotInlineResultObject::operator ==(const BotInlineResult &b) const {
 }
 
 void BotInlineResultObject::setClassType(quint32 classType) {
-    BotInlineResult::BotInlineResultType result;
+    BotInlineResult::BotInlineResultClassType result;
     switch(classType) {
-    case TypeBotInlineMediaResultDocument:
-        result = BotInlineResult::typeBotInlineMediaResultDocument;
-        break;
-    case TypeBotInlineMediaResultPhoto:
-        result = BotInlineResult::typeBotInlineMediaResultPhoto;
-        break;
     case TypeBotInlineResult:
         result = BotInlineResult::typeBotInlineResult;
         break;
+    case TypeBotInlineMediaResult:
+        result = BotInlineResult::typeBotInlineMediaResult;
+        break;
     default:
-        result = BotInlineResult::typeBotInlineMediaResultDocument;
+        result = BotInlineResult::typeBotInlineResult;
         break;
     }
 
@@ -276,17 +273,14 @@ void BotInlineResultObject::setClassType(quint32 classType) {
 quint32 BotInlineResultObject::classType() const {
     int result;
     switch(static_cast<qint64>(m_core.classType())) {
-    case BotInlineResult::typeBotInlineMediaResultDocument:
-        result = TypeBotInlineMediaResultDocument;
-        break;
-    case BotInlineResult::typeBotInlineMediaResultPhoto:
-        result = TypeBotInlineMediaResultPhoto;
-        break;
     case BotInlineResult::typeBotInlineResult:
         result = TypeBotInlineResult;
         break;
+    case BotInlineResult::typeBotInlineMediaResult:
+        result = TypeBotInlineMediaResult;
+        break;
     default:
-        result = TypeBotInlineMediaResultDocument;
+        result = TypeBotInlineResult;
         break;
     }
 

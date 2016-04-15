@@ -370,7 +370,7 @@ bool ChatObject::operator ==(const Chat &b) const {
 }
 
 void ChatObject::setClassType(quint32 classType) {
-    Chat::ChatType result;
+    Chat::ChatClassType result;
     switch(classType) {
     case TypeChatEmpty:
         result = Chat::typeChatEmpty;

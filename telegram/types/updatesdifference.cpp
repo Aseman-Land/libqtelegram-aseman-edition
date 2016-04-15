@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-UpdatesDifference::UpdatesDifference(UpdatesDifferenceType classType, InboundPkt *in) :
+UpdatesDifference::UpdatesDifference(UpdatesDifferenceClassType classType, InboundPkt *in) :
     m_date(0),
     m_seq(0),
     m_classType(classType)
@@ -121,11 +121,11 @@ bool UpdatesDifference::operator ==(const UpdatesDifference &b) const {
            m_users == b.m_users;
 }
 
-void UpdatesDifference::setClassType(UpdatesDifference::UpdatesDifferenceType classType) {
+void UpdatesDifference::setClassType(UpdatesDifference::UpdatesDifferenceClassType classType) {
     m_classType = classType;
 }
 
-UpdatesDifference::UpdatesDifferenceType UpdatesDifference::classType() const {
+UpdatesDifference::UpdatesDifferenceClassType UpdatesDifference::classType() const {
     return m_classType;
 }
 
@@ -136,7 +136,7 @@ bool UpdatesDifference::fetch(InboundPkt *in) {
     case typeUpdatesDifferenceEmpty: {
         m_date = in->fetchInt();
         m_seq = in->fetchInt();
-        m_classType = static_cast<UpdatesDifferenceType>(x);
+        m_classType = static_cast<UpdatesDifferenceClassType>(x);
         return true;
     }
         break;
@@ -183,7 +183,7 @@ bool UpdatesDifference::fetch(InboundPkt *in) {
             m_users.append(type);
         }
         m_state.fetch(in);
-        m_classType = static_cast<UpdatesDifferenceType>(x);
+        m_classType = static_cast<UpdatesDifferenceClassType>(x);
         return true;
     }
         break;
@@ -230,7 +230,7 @@ bool UpdatesDifference::fetch(InboundPkt *in) {
             m_users.append(type);
         }
         m_intermediateState.fetch(in);
-        m_classType = static_cast<UpdatesDifferenceType>(x);
+        m_classType = static_cast<UpdatesDifferenceClassType>(x);
         return true;
     }
         break;
@@ -355,7 +355,7 @@ QDataStream &operator<<(QDataStream &stream, const UpdatesDifference &item) {
 QDataStream &operator>>(QDataStream &stream, UpdatesDifference &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<UpdatesDifference::UpdatesDifferenceType>(type));
+    item.setClassType(static_cast<UpdatesDifference::UpdatesDifferenceClassType>(type));
     switch(type) {
     case UpdatesDifference::typeUpdatesDifferenceEmpty: {
         qint32 m_date;

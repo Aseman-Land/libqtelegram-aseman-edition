@@ -13,11 +13,11 @@
 class LIBQTELEGRAMSHARED_EXPORT AccountPasswordSettings : public TelegramTypeObject
 {
 public:
-    enum AccountPasswordSettingsType {
+    enum AccountPasswordSettingsClassType {
         typeAccountPasswordSettings = 0xb7b72ab3
     };
 
-    AccountPasswordSettings(AccountPasswordSettingsType classType = typeAccountPasswordSettings, InboundPkt *in = 0);
+    AccountPasswordSettings(AccountPasswordSettingsClassType classType = typeAccountPasswordSettings, InboundPkt *in = 0);
     AccountPasswordSettings(InboundPkt *in);
     AccountPasswordSettings(const Null&);
     virtual ~AccountPasswordSettings();
@@ -25,8 +25,8 @@ public:
     void setEmail(const QString &email);
     QString email() const;
 
-    void setClassType(AccountPasswordSettingsType classType);
-    AccountPasswordSettingsType classType() const;
+    void setClassType(AccountPasswordSettingsClassType classType);
+    AccountPasswordSettingsClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -40,7 +40,7 @@ public:
 
 private:
     QString m_email;
-    AccountPasswordSettingsType m_classType;
+    AccountPasswordSettingsClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(AccountPasswordSettings)

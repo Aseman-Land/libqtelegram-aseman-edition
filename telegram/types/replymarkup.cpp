@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-ReplyMarkup::ReplyMarkup(ReplyMarkupType classType, InboundPkt *in) :
+ReplyMarkup::ReplyMarkup(ReplyMarkupClassType classType, InboundPkt *in) :
     m_flags(0),
     m_classType(classType)
 {
@@ -82,11 +82,11 @@ bool ReplyMarkup::operator ==(const ReplyMarkup &b) const {
            m_rows == b.m_rows;
 }
 
-void ReplyMarkup::setClassType(ReplyMarkup::ReplyMarkupType classType) {
+void ReplyMarkup::setClassType(ReplyMarkup::ReplyMarkupClassType classType) {
     m_classType = classType;
 }
 
-ReplyMarkup::ReplyMarkupType ReplyMarkup::classType() const {
+ReplyMarkup::ReplyMarkupClassType ReplyMarkup::classType() const {
     return m_classType;
 }
 
@@ -96,14 +96,14 @@ bool ReplyMarkup::fetch(InboundPkt *in) {
     switch(x) {
     case typeReplyKeyboardHide: {
         m_flags = in->fetchInt();
-        m_classType = static_cast<ReplyMarkupType>(x);
+        m_classType = static_cast<ReplyMarkupClassType>(x);
         return true;
     }
         break;
     
     case typeReplyKeyboardForceReply: {
         m_flags = in->fetchInt();
-        m_classType = static_cast<ReplyMarkupType>(x);
+        m_classType = static_cast<ReplyMarkupClassType>(x);
         return true;
     }
         break;
@@ -118,7 +118,21 @@ bool ReplyMarkup::fetch(InboundPkt *in) {
             type.fetch(in);
             m_rows.append(type);
         }
-        m_classType = static_cast<ReplyMarkupType>(x);
+        m_classType = static_cast<ReplyMarkupClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeReplyInlineMarkup: {
+        if(in->fetchInt() != (qint32)CoreTypes::typeVector) return false;
+        qint32 m_rows_length = in->fetchInt();
+        m_rows.clear();
+        for (qint32 i = 0; i < m_rows_length; i++) {
+            KeyboardButtonRow type;
+            type.fetch(in);
+            m_rows.append(type);
+        }
+        m_classType = static_cast<ReplyMarkupClassType>(x);
         return true;
     }
         break;
@@ -155,6 +169,16 @@ bool ReplyMarkup::push(OutboundPkt *out) const {
     }
         break;
     
+    case typeReplyInlineMarkup: {
+        out->appendInt(CoreTypes::typeVector);
+        out->appendInt(m_rows.count());
+        for (qint32 i = 0; i < m_rows.count(); i++) {
+            m_rows[i].push(out);
+        }
+        return true;
+    }
+        break;
+    
     default:
         return false;
     }
@@ -180,6 +204,9 @@ QDataStream &operator<<(QDataStream &stream, const ReplyMarkup &item) {
         stream << item.flags();
         stream << item.rows();
         break;
+    case ReplyMarkup::typeReplyInlineMarkup:
+        stream << item.rows();
+        break;
     }
     return stream;
 }
@@ -187,7 +214,7 @@ QDataStream &operator<<(QDataStream &stream, const ReplyMarkup &item) {
 QDataStream &operator>>(QDataStream &stream, ReplyMarkup &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<ReplyMarkup::ReplyMarkupType>(type));
+    item.setClassType(static_cast<ReplyMarkup::ReplyMarkupClassType>(type));
     switch(type) {
     case ReplyMarkup::typeReplyKeyboardHide: {
         qint32 m_flags;
@@ -205,6 +232,12 @@ QDataStream &operator>>(QDataStream &stream, ReplyMarkup &item) {
         qint32 m_flags;
         stream >> m_flags;
         item.setFlags(m_flags);
+        QList<KeyboardButtonRow> m_rows;
+        stream >> m_rows;
+        item.setRows(m_rows);
+    }
+        break;
+    case ReplyMarkup::typeReplyInlineMarkup: {
         QList<KeyboardButtonRow> m_rows;
         stream >> m_rows;
         item.setRows(m_rows);

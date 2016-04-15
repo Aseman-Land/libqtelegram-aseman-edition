@@ -16,7 +16,7 @@
 class LIBQTELEGRAMSHARED_EXPORT MessageAction : public TelegramTypeObject
 {
 public:
-    enum MessageActionType {
+    enum MessageActionClassType {
         typeMessageActionEmpty = 0xb6aef7b0,
         typeMessageActionChatCreate = 0xa6638b9a,
         typeMessageActionChatEditTitle = 0xb5a1ce5a,
@@ -31,7 +31,7 @@ public:
         typeMessageActionPinMessage = 0x94bd38ed
     };
 
-    MessageAction(MessageActionType classType = typeMessageActionEmpty, InboundPkt *in = 0);
+    MessageAction(MessageActionClassType classType = typeMessageActionEmpty, InboundPkt *in = 0);
     MessageAction(InboundPkt *in);
     MessageAction(const Null&);
     virtual ~MessageAction();
@@ -57,8 +57,8 @@ public:
     void setUsers(const QList<qint32> &users);
     QList<qint32> users() const;
 
-    void setClassType(MessageActionType classType);
-    MessageActionType classType() const;
+    void setClassType(MessageActionClassType classType);
+    MessageActionClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -78,7 +78,7 @@ private:
     QString m_title;
     qint32 m_userId;
     QList<qint32> m_users;
-    MessageActionType m_classType;
+    MessageActionClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(MessageAction)

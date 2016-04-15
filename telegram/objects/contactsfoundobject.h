@@ -13,7 +13,7 @@
 class LIBQTELEGRAMSHARED_EXPORT ContactsFoundObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(ContactsFoundType)
+    Q_ENUMS(ContactsFoundClassType)
     Q_PROPERTY(QList<Chat> chats READ chats WRITE setChats NOTIFY chatsChanged)
     Q_PROPERTY(QList<Peer> results READ results WRITE setResults NOTIFY resultsChanged)
     Q_PROPERTY(QList<User> users READ users WRITE setUsers NOTIFY usersChanged)
@@ -21,7 +21,7 @@ class LIBQTELEGRAMSHARED_EXPORT ContactsFoundObject : public TelegramTypeQObject
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum ContactsFoundType {
+    enum ContactsFoundClassType {
         TypeContactsFound
     };
 

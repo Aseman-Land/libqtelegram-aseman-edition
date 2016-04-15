@@ -56,7 +56,7 @@ bool MessagesSavedGifsObject::operator ==(const MessagesSavedGifs &b) const {
 }
 
 void MessagesSavedGifsObject::setClassType(quint32 classType) {
-    MessagesSavedGifs::MessagesSavedGifsType result;
+    MessagesSavedGifs::MessagesSavedGifsClassType result;
     switch(classType) {
     case TypeMessagesSavedGifsNotModified:
         result = MessagesSavedGifs::typeMessagesSavedGifsNotModified;

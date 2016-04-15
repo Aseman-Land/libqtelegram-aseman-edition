@@ -80,7 +80,7 @@ bool InputAppEventObject::operator ==(const InputAppEvent &b) const {
 }
 
 void InputAppEventObject::setClassType(quint32 classType) {
-    InputAppEvent::InputAppEventType result;
+    InputAppEvent::InputAppEventClassType result;
     switch(classType) {
     case TypeInputAppEvent:
         result = InputAppEvent::typeInputAppEvent;

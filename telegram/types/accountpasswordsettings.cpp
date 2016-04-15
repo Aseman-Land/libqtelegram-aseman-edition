@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-AccountPasswordSettings::AccountPasswordSettings(AccountPasswordSettingsType classType, InboundPkt *in) :
+AccountPasswordSettings::AccountPasswordSettings(AccountPasswordSettingsClassType classType, InboundPkt *in) :
     m_classType(classType)
 {
     if(in) fetch(in);
@@ -43,11 +43,11 @@ bool AccountPasswordSettings::operator ==(const AccountPasswordSettings &b) cons
            m_email == b.m_email;
 }
 
-void AccountPasswordSettings::setClassType(AccountPasswordSettings::AccountPasswordSettingsType classType) {
+void AccountPasswordSettings::setClassType(AccountPasswordSettings::AccountPasswordSettingsClassType classType) {
     m_classType = classType;
 }
 
-AccountPasswordSettings::AccountPasswordSettingsType AccountPasswordSettings::classType() const {
+AccountPasswordSettings::AccountPasswordSettingsClassType AccountPasswordSettings::classType() const {
     return m_classType;
 }
 
@@ -57,7 +57,7 @@ bool AccountPasswordSettings::fetch(InboundPkt *in) {
     switch(x) {
     case typeAccountPasswordSettings: {
         m_email = in->fetchQString();
-        m_classType = static_cast<AccountPasswordSettingsType>(x);
+        m_classType = static_cast<AccountPasswordSettingsClassType>(x);
         return true;
     }
         break;
@@ -102,7 +102,7 @@ QDataStream &operator<<(QDataStream &stream, const AccountPasswordSettings &item
 QDataStream &operator>>(QDataStream &stream, AccountPasswordSettings &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<AccountPasswordSettings::AccountPasswordSettingsType>(type));
+    item.setClassType(static_cast<AccountPasswordSettings::AccountPasswordSettingsClassType>(type));
     switch(type) {
     case AccountPasswordSettings::typeAccountPasswordSettings: {
         QString m_email;

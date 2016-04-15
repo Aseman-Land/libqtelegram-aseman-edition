@@ -9,21 +9,23 @@
 #include "telegram/types/messagesbotresults.h"
 
 #include <QPointer>
+#include "inlinebotswitchpmobject.h"
 
 class LIBQTELEGRAMSHARED_EXPORT MessagesBotResultsObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(MessagesBotResultsType)
+    Q_ENUMS(MessagesBotResultsClassType)
     Q_PROPERTY(qint32 flags READ flags WRITE setFlags NOTIFY flagsChanged)
     Q_PROPERTY(bool gallery READ gallery WRITE setGallery NOTIFY galleryChanged)
     Q_PROPERTY(QString nextOffset READ nextOffset WRITE setNextOffset NOTIFY nextOffsetChanged)
     Q_PROPERTY(qint64 queryId READ queryId WRITE setQueryId NOTIFY queryIdChanged)
     Q_PROPERTY(QList<BotInlineResult> results READ results WRITE setResults NOTIFY resultsChanged)
+    Q_PROPERTY(InlineBotSwitchPMObject* switchPm READ switchPm WRITE setSwitchPm NOTIFY switchPmChanged)
     Q_PROPERTY(MessagesBotResults core READ core WRITE setCore NOTIFY coreChanged)
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum MessagesBotResultsType {
+    enum MessagesBotResultsClassType {
         TypeMessagesBotResults
     };
 
@@ -46,6 +48,9 @@ public:
     void setResults(const QList<BotInlineResult> &results);
     QList<BotInlineResult> results() const;
 
+    void setSwitchPm(InlineBotSwitchPMObject* switchPm);
+    InlineBotSwitchPMObject* switchPm() const;
+
     void setClassType(quint32 classType);
     quint32 classType() const;
 
@@ -63,10 +68,13 @@ Q_SIGNALS:
     void nextOffsetChanged();
     void queryIdChanged();
     void resultsChanged();
+    void switchPmChanged();
 
 private Q_SLOTS:
+    void coreSwitchPmChanged();
 
 private:
+    QPointer<InlineBotSwitchPMObject> m_switchPm;
     MessagesBotResults m_core;
 };
 

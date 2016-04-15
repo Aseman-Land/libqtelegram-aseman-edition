@@ -13,14 +13,14 @@
 class LIBQTELEGRAMSHARED_EXPORT MessageRangeObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(MessageRangeType)
+    Q_ENUMS(MessageRangeClassType)
     Q_PROPERTY(qint32 maxId READ maxId WRITE setMaxId NOTIFY maxIdChanged)
     Q_PROPERTY(qint32 minId READ minId WRITE setMinId NOTIFY minIdChanged)
     Q_PROPERTY(MessageRange core READ core WRITE setCore NOTIFY coreChanged)
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum MessageRangeType {
+    enum MessageRangeClassType {
         TypeMessageRange
     };
 

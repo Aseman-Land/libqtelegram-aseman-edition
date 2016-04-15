@@ -92,7 +92,7 @@ bool AccountPasswordObject::operator ==(const AccountPassword &b) const {
 }
 
 void AccountPasswordObject::setClassType(quint32 classType) {
-    AccountPassword::AccountPasswordType result;
+    AccountPassword::AccountPasswordClassType result;
     switch(classType) {
     case TypeAccountNoPassword:
         result = AccountPassword::typeAccountNoPassword;

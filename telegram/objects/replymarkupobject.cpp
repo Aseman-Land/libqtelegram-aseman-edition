@@ -92,7 +92,7 @@ bool ReplyMarkupObject::operator ==(const ReplyMarkup &b) const {
 }
 
 void ReplyMarkupObject::setClassType(quint32 classType) {
-    ReplyMarkup::ReplyMarkupType result;
+    ReplyMarkup::ReplyMarkupClassType result;
     switch(classType) {
     case TypeReplyKeyboardHide:
         result = ReplyMarkup::typeReplyKeyboardHide;
@@ -102,6 +102,9 @@ void ReplyMarkupObject::setClassType(quint32 classType) {
         break;
     case TypeReplyKeyboardMarkup:
         result = ReplyMarkup::typeReplyKeyboardMarkup;
+        break;
+    case TypeReplyInlineMarkup:
+        result = ReplyMarkup::typeReplyInlineMarkup;
         break;
     default:
         result = ReplyMarkup::typeReplyKeyboardHide;
@@ -125,6 +128,9 @@ quint32 ReplyMarkupObject::classType() const {
         break;
     case ReplyMarkup::typeReplyKeyboardMarkup:
         result = TypeReplyKeyboardMarkup;
+        break;
+    case ReplyMarkup::typeReplyInlineMarkup:
+        result = TypeReplyInlineMarkup;
         break;
     default:
         result = TypeReplyKeyboardHide;

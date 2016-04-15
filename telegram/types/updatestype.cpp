@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-UpdatesType::UpdatesType(UpdatesTypeType classType, InboundPkt *in) :
+UpdatesType::UpdatesType(UpdatesTypeClassType classType, InboundPkt *in) :
     m_chatId(0),
     m_date(0),
     m_flags(0),
@@ -295,11 +295,11 @@ bool UpdatesType::operator ==(const UpdatesType &b) const {
            m_viaBotId == b.m_viaBotId;
 }
 
-void UpdatesType::setClassType(UpdatesType::UpdatesTypeType classType) {
+void UpdatesType::setClassType(UpdatesType::UpdatesTypeClassType classType) {
     m_classType = classType;
 }
 
-UpdatesType::UpdatesTypeType UpdatesType::classType() const {
+UpdatesType::UpdatesTypeClassType UpdatesType::classType() const {
     return m_classType;
 }
 
@@ -308,7 +308,7 @@ bool UpdatesType::fetch(InboundPkt *in) {
     int x = in->fetchInt();
     switch(x) {
     case typeUpdatesTooLong: {
-        m_classType = static_cast<UpdatesTypeType>(x);
+        m_classType = static_cast<UpdatesTypeClassType>(x);
         return true;
     }
         break;
@@ -342,7 +342,7 @@ bool UpdatesType::fetch(InboundPkt *in) {
                 m_entities.append(type);
             }
         }
-        m_classType = static_cast<UpdatesTypeType>(x);
+        m_classType = static_cast<UpdatesTypeClassType>(x);
         return true;
     }
         break;
@@ -377,7 +377,7 @@ bool UpdatesType::fetch(InboundPkt *in) {
                 m_entities.append(type);
             }
         }
-        m_classType = static_cast<UpdatesTypeType>(x);
+        m_classType = static_cast<UpdatesTypeClassType>(x);
         return true;
     }
         break;
@@ -385,7 +385,7 @@ bool UpdatesType::fetch(InboundPkt *in) {
     case typeUpdateShort: {
         m_update.fetch(in);
         m_date = in->fetchInt();
-        m_classType = static_cast<UpdatesTypeType>(x);
+        m_classType = static_cast<UpdatesTypeClassType>(x);
         return true;
     }
         break;
@@ -418,7 +418,7 @@ bool UpdatesType::fetch(InboundPkt *in) {
         m_date = in->fetchInt();
         m_seqStart = in->fetchInt();
         m_seq = in->fetchInt();
-        m_classType = static_cast<UpdatesTypeType>(x);
+        m_classType = static_cast<UpdatesTypeClassType>(x);
         return true;
     }
         break;
@@ -450,7 +450,7 @@ bool UpdatesType::fetch(InboundPkt *in) {
         }
         m_date = in->fetchInt();
         m_seq = in->fetchInt();
-        m_classType = static_cast<UpdatesTypeType>(x);
+        m_classType = static_cast<UpdatesTypeClassType>(x);
         return true;
     }
         break;
@@ -476,7 +476,7 @@ bool UpdatesType::fetch(InboundPkt *in) {
                 m_entities.append(type);
             }
         }
-        m_classType = static_cast<UpdatesTypeType>(x);
+        m_classType = static_cast<UpdatesTypeClassType>(x);
         return true;
     }
         break;
@@ -684,7 +684,7 @@ QDataStream &operator<<(QDataStream &stream, const UpdatesType &item) {
 QDataStream &operator>>(QDataStream &stream, UpdatesType &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<UpdatesType::UpdatesTypeType>(type));
+    item.setClassType(static_cast<UpdatesType::UpdatesTypeClassType>(type));
     switch(type) {
     case UpdatesType::typeUpdatesTooLong: {
         

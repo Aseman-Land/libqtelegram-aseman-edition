@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-ChannelMessagesFilter::ChannelMessagesFilter(ChannelMessagesFilterType classType, InboundPkt *in) :
+ChannelMessagesFilter::ChannelMessagesFilter(ChannelMessagesFilterClassType classType, InboundPkt *in) :
     m_flags(0),
     m_classType(classType)
 {
@@ -73,11 +73,11 @@ bool ChannelMessagesFilter::operator ==(const ChannelMessagesFilter &b) const {
            m_ranges == b.m_ranges;
 }
 
-void ChannelMessagesFilter::setClassType(ChannelMessagesFilter::ChannelMessagesFilterType classType) {
+void ChannelMessagesFilter::setClassType(ChannelMessagesFilter::ChannelMessagesFilterClassType classType) {
     m_classType = classType;
 }
 
-ChannelMessagesFilter::ChannelMessagesFilterType ChannelMessagesFilter::classType() const {
+ChannelMessagesFilter::ChannelMessagesFilterClassType ChannelMessagesFilter::classType() const {
     return m_classType;
 }
 
@@ -86,7 +86,7 @@ bool ChannelMessagesFilter::fetch(InboundPkt *in) {
     int x = in->fetchInt();
     switch(x) {
     case typeChannelMessagesFilterEmpty: {
-        m_classType = static_cast<ChannelMessagesFilterType>(x);
+        m_classType = static_cast<ChannelMessagesFilterClassType>(x);
         return true;
     }
         break;
@@ -101,13 +101,13 @@ bool ChannelMessagesFilter::fetch(InboundPkt *in) {
             type.fetch(in);
             m_ranges.append(type);
         }
-        m_classType = static_cast<ChannelMessagesFilterType>(x);
+        m_classType = static_cast<ChannelMessagesFilterClassType>(x);
         return true;
     }
         break;
     
     case typeChannelMessagesFilterCollapsed: {
-        m_classType = static_cast<ChannelMessagesFilterType>(x);
+        m_classType = static_cast<ChannelMessagesFilterClassType>(x);
         return true;
     }
         break;
@@ -174,7 +174,7 @@ QDataStream &operator<<(QDataStream &stream, const ChannelMessagesFilter &item) 
 QDataStream &operator>>(QDataStream &stream, ChannelMessagesFilter &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<ChannelMessagesFilter::ChannelMessagesFilterType>(type));
+    item.setClassType(static_cast<ChannelMessagesFilter::ChannelMessagesFilterClassType>(type));
     switch(type) {
     case ChannelMessagesFilter::typeChannelMessagesFilterEmpty: {
         

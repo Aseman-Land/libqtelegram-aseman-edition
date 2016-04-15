@@ -13,14 +13,14 @@
 class LIBQTELEGRAMSHARED_EXPORT AuthExportedAuthorizationObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(AuthExportedAuthorizationType)
+    Q_ENUMS(AuthExportedAuthorizationClassType)
     Q_PROPERTY(QByteArray bytes READ bytes WRITE setBytes NOTIFY bytesChanged)
     Q_PROPERTY(qint32 id READ id WRITE setId NOTIFY idChanged)
     Q_PROPERTY(AuthExportedAuthorization core READ core WRITE setCore NOTIFY coreChanged)
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum AuthExportedAuthorizationType {
+    enum AuthExportedAuthorizationClassType {
         TypeAuthExportedAuthorization
     };
 

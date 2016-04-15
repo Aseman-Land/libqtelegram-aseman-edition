@@ -312,7 +312,7 @@ bool ChatFullObject::operator ==(const ChatFull &b) const {
 }
 
 void ChatFullObject::setClassType(quint32 classType) {
-    ChatFull::ChatFullType result;
+    ChatFull::ChatFullClassType result;
     switch(classType) {
     case TypeChatFull:
         result = ChatFull::typeChatFull;

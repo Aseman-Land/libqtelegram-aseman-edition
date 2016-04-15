@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-PhotosPhoto::PhotosPhoto(PhotosPhotoType classType, InboundPkt *in) :
+PhotosPhoto::PhotosPhoto(PhotosPhotoClassType classType, InboundPkt *in) :
     m_classType(classType)
 {
     if(in) fetch(in);
@@ -52,11 +52,11 @@ bool PhotosPhoto::operator ==(const PhotosPhoto &b) const {
            m_users == b.m_users;
 }
 
-void PhotosPhoto::setClassType(PhotosPhoto::PhotosPhotoType classType) {
+void PhotosPhoto::setClassType(PhotosPhoto::PhotosPhotoClassType classType) {
     m_classType = classType;
 }
 
-PhotosPhoto::PhotosPhotoType PhotosPhoto::classType() const {
+PhotosPhoto::PhotosPhotoClassType PhotosPhoto::classType() const {
     return m_classType;
 }
 
@@ -74,7 +74,7 @@ bool PhotosPhoto::fetch(InboundPkt *in) {
             type.fetch(in);
             m_users.append(type);
         }
-        m_classType = static_cast<PhotosPhotoType>(x);
+        m_classType = static_cast<PhotosPhotoClassType>(x);
         return true;
     }
         break;
@@ -125,7 +125,7 @@ QDataStream &operator<<(QDataStream &stream, const PhotosPhoto &item) {
 QDataStream &operator>>(QDataStream &stream, PhotosPhoto &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<PhotosPhoto::PhotosPhotoType>(type));
+    item.setClassType(static_cast<PhotosPhoto::PhotosPhotoClassType>(type));
     switch(type) {
     case PhotosPhoto::typePhotosPhoto: {
         Photo m_photo;

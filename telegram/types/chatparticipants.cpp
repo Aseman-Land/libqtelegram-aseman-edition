@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-ChatParticipants::ChatParticipants(ChatParticipantsType classType, InboundPkt *in) :
+ChatParticipants::ChatParticipants(ChatParticipantsClassType classType, InboundPkt *in) :
     m_chatId(0),
     m_flags(0),
     m_version(0),
@@ -88,11 +88,11 @@ bool ChatParticipants::operator ==(const ChatParticipants &b) const {
            m_version == b.m_version;
 }
 
-void ChatParticipants::setClassType(ChatParticipants::ChatParticipantsType classType) {
+void ChatParticipants::setClassType(ChatParticipants::ChatParticipantsClassType classType) {
     m_classType = classType;
 }
 
-ChatParticipants::ChatParticipantsType ChatParticipants::classType() const {
+ChatParticipants::ChatParticipantsClassType ChatParticipants::classType() const {
     return m_classType;
 }
 
@@ -106,7 +106,7 @@ bool ChatParticipants::fetch(InboundPkt *in) {
         if(m_flags & 1<<0) {
             m_selfParticipant.fetch(in);
         }
-        m_classType = static_cast<ChatParticipantsType>(x);
+        m_classType = static_cast<ChatParticipantsClassType>(x);
         return true;
     }
         break;
@@ -122,7 +122,7 @@ bool ChatParticipants::fetch(InboundPkt *in) {
             m_participants.append(type);
         }
         m_version = in->fetchInt();
-        m_classType = static_cast<ChatParticipantsType>(x);
+        m_classType = static_cast<ChatParticipantsClassType>(x);
         return true;
     }
         break;
@@ -188,7 +188,7 @@ QDataStream &operator<<(QDataStream &stream, const ChatParticipants &item) {
 QDataStream &operator>>(QDataStream &stream, ChatParticipants &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<ChatParticipants::ChatParticipantsType>(type));
+    item.setClassType(static_cast<ChatParticipants::ChatParticipantsClassType>(type));
     switch(type) {
     case ChatParticipants::typeChatParticipantsForbidden: {
         qint32 m_flags;

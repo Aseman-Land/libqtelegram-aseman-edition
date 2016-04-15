@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-WebPage::WebPage(WebPageType classType, InboundPkt *in) :
+WebPage::WebPage(WebPageClassType classType, InboundPkt *in) :
     m_date(0),
     m_duration(0),
     m_embedHeight(0),
@@ -205,11 +205,11 @@ bool WebPage::operator ==(const WebPage &b) const {
            m_url == b.m_url;
 }
 
-void WebPage::setClassType(WebPage::WebPageType classType) {
+void WebPage::setClassType(WebPage::WebPageClassType classType) {
     m_classType = classType;
 }
 
-WebPage::WebPageType WebPage::classType() const {
+WebPage::WebPageClassType WebPage::classType() const {
     return m_classType;
 }
 
@@ -219,7 +219,7 @@ bool WebPage::fetch(InboundPkt *in) {
     switch(x) {
     case typeWebPageEmpty: {
         m_id = in->fetchLong();
-        m_classType = static_cast<WebPageType>(x);
+        m_classType = static_cast<WebPageClassType>(x);
         return true;
     }
         break;
@@ -227,7 +227,7 @@ bool WebPage::fetch(InboundPkt *in) {
     case typeWebPagePending: {
         m_id = in->fetchLong();
         m_date = in->fetchInt();
-        m_classType = static_cast<WebPageType>(x);
+        m_classType = static_cast<WebPageClassType>(x);
         return true;
     }
         break;
@@ -273,7 +273,7 @@ bool WebPage::fetch(InboundPkt *in) {
         if(m_flags & 1<<9) {
             m_document.fetch(in);
         }
-        m_classType = static_cast<WebPageType>(x);
+        m_classType = static_cast<WebPageClassType>(x);
         return true;
     }
         break;
@@ -368,7 +368,7 @@ QDataStream &operator<<(QDataStream &stream, const WebPage &item) {
 QDataStream &operator>>(QDataStream &stream, WebPage &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<WebPage::WebPageType>(type));
+    item.setClassType(static_cast<WebPage::WebPageClassType>(type));
     switch(type) {
     case WebPage::typeWebPageEmpty: {
         qint64 m_id;

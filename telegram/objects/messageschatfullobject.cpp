@@ -81,7 +81,7 @@ bool MessagesChatFullObject::operator ==(const MessagesChatFull &b) const {
 }
 
 void MessagesChatFullObject::setClassType(quint32 classType) {
-    MessagesChatFull::MessagesChatFullType result;
+    MessagesChatFull::MessagesChatFullClassType result;
     switch(classType) {
     case TypeMessagesChatFull:
         result = MessagesChatFull::typeMessagesChatFull;

@@ -129,7 +129,7 @@ bool ChatInviteObject::operator ==(const ChatInvite &b) const {
 }
 
 void ChatInviteObject::setClassType(quint32 classType) {
-    ChatInvite::ChatInviteType result;
+    ChatInvite::ChatInviteClassType result;
     switch(classType) {
     case TypeChatInviteAlready:
         result = ChatInvite::typeChatInviteAlready;

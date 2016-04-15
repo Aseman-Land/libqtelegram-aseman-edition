@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-PhotoSize::PhotoSize(PhotoSizeType classType, InboundPkt *in) :
+PhotoSize::PhotoSize(PhotoSizeClassType classType, InboundPkt *in) :
     m_h(0),
     m_size(0),
     m_w(0),
@@ -97,11 +97,11 @@ bool PhotoSize::operator ==(const PhotoSize &b) const {
            m_w == b.m_w;
 }
 
-void PhotoSize::setClassType(PhotoSize::PhotoSizeType classType) {
+void PhotoSize::setClassType(PhotoSize::PhotoSizeClassType classType) {
     m_classType = classType;
 }
 
-PhotoSize::PhotoSizeType PhotoSize::classType() const {
+PhotoSize::PhotoSizeClassType PhotoSize::classType() const {
     return m_classType;
 }
 
@@ -111,7 +111,7 @@ bool PhotoSize::fetch(InboundPkt *in) {
     switch(x) {
     case typePhotoSizeEmpty: {
         m_type = in->fetchQString();
-        m_classType = static_cast<PhotoSizeType>(x);
+        m_classType = static_cast<PhotoSizeClassType>(x);
         return true;
     }
         break;
@@ -122,7 +122,7 @@ bool PhotoSize::fetch(InboundPkt *in) {
         m_w = in->fetchInt();
         m_h = in->fetchInt();
         m_size = in->fetchInt();
-        m_classType = static_cast<PhotoSizeType>(x);
+        m_classType = static_cast<PhotoSizeClassType>(x);
         return true;
     }
         break;
@@ -133,7 +133,7 @@ bool PhotoSize::fetch(InboundPkt *in) {
         m_w = in->fetchInt();
         m_h = in->fetchInt();
         m_bytes = in->fetchBytes();
-        m_classType = static_cast<PhotoSizeType>(x);
+        m_classType = static_cast<PhotoSizeClassType>(x);
         return true;
     }
         break;
@@ -212,7 +212,7 @@ QDataStream &operator<<(QDataStream &stream, const PhotoSize &item) {
 QDataStream &operator>>(QDataStream &stream, PhotoSize &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<PhotoSize::PhotoSizeType>(type));
+    item.setClassType(static_cast<PhotoSize::PhotoSizeClassType>(type));
     switch(type) {
     case PhotoSize::typePhotoSizeEmpty: {
         QString m_type;

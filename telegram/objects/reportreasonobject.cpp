@@ -44,7 +44,7 @@ bool ReportReasonObject::operator ==(const ReportReason &b) const {
 }
 
 void ReportReasonObject::setClassType(quint32 classType) {
-    ReportReason::ReportReasonType result;
+    ReportReason::ReportReasonClassType result;
     switch(classType) {
     case TypeInputReportReasonSpam:
         result = ReportReason::typeInputReportReasonSpam;

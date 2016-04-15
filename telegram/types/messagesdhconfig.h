@@ -14,12 +14,12 @@
 class LIBQTELEGRAMSHARED_EXPORT MessagesDhConfig : public TelegramTypeObject
 {
 public:
-    enum MessagesDhConfigType {
+    enum MessagesDhConfigClassType {
         typeMessagesDhConfigNotModified = 0xc0e24635,
         typeMessagesDhConfig = 0x2c221edd
     };
 
-    MessagesDhConfig(MessagesDhConfigType classType = typeMessagesDhConfigNotModified, InboundPkt *in = 0);
+    MessagesDhConfig(MessagesDhConfigClassType classType = typeMessagesDhConfigNotModified, InboundPkt *in = 0);
     MessagesDhConfig(InboundPkt *in);
     MessagesDhConfig(const Null&);
     virtual ~MessagesDhConfig();
@@ -36,8 +36,8 @@ public:
     void setVersion(qint32 version);
     qint32 version() const;
 
-    void setClassType(MessagesDhConfigType classType);
-    MessagesDhConfigType classType() const;
+    void setClassType(MessagesDhConfigClassType classType);
+    MessagesDhConfigClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -54,7 +54,7 @@ private:
     QByteArray m_p;
     QByteArray m_random;
     qint32 m_version;
-    MessagesDhConfigType m_classType;
+    MessagesDhConfigClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(MessagesDhConfig)

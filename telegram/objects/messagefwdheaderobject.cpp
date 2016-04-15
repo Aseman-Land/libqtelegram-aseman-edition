@@ -92,7 +92,7 @@ bool MessageFwdHeaderObject::operator ==(const MessageFwdHeader &b) const {
 }
 
 void MessageFwdHeaderObject::setClassType(quint32 classType) {
-    MessageFwdHeader::MessageFwdHeaderType result;
+    MessageFwdHeader::MessageFwdHeaderClassType result;
     switch(classType) {
     case TypeMessageFwdHeader:
         result = MessageFwdHeader::typeMessageFwdHeader;

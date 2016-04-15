@@ -15,12 +15,12 @@
 class LIBQTELEGRAMSHARED_EXPORT MessagesSavedGifs : public TelegramTypeObject
 {
 public:
-    enum MessagesSavedGifsType {
+    enum MessagesSavedGifsClassType {
         typeMessagesSavedGifsNotModified = 0xe8025ca2,
         typeMessagesSavedGifs = 0x2e0709a5
     };
 
-    MessagesSavedGifs(MessagesSavedGifsType classType = typeMessagesSavedGifsNotModified, InboundPkt *in = 0);
+    MessagesSavedGifs(MessagesSavedGifsClassType classType = typeMessagesSavedGifsNotModified, InboundPkt *in = 0);
     MessagesSavedGifs(InboundPkt *in);
     MessagesSavedGifs(const Null&);
     virtual ~MessagesSavedGifs();
@@ -31,8 +31,8 @@ public:
     void setHash(qint32 hash);
     qint32 hash() const;
 
-    void setClassType(MessagesSavedGifsType classType);
-    MessagesSavedGifsType classType() const;
+    void setClassType(MessagesSavedGifsClassType classType);
+    MessagesSavedGifsClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -47,7 +47,7 @@ public:
 private:
     QList<Document> m_gifs;
     qint32 m_hash;
-    MessagesSavedGifsType m_classType;
+    MessagesSavedGifsClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(MessagesSavedGifs)

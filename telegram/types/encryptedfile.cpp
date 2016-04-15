@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-EncryptedFile::EncryptedFile(EncryptedFileType classType, InboundPkt *in) :
+EncryptedFile::EncryptedFile(EncryptedFileClassType classType, InboundPkt *in) :
     m_accessHash(0),
     m_dcId(0),
     m_id(0),
@@ -94,11 +94,11 @@ bool EncryptedFile::operator ==(const EncryptedFile &b) const {
            m_size == b.m_size;
 }
 
-void EncryptedFile::setClassType(EncryptedFile::EncryptedFileType classType) {
+void EncryptedFile::setClassType(EncryptedFile::EncryptedFileClassType classType) {
     m_classType = classType;
 }
 
-EncryptedFile::EncryptedFileType EncryptedFile::classType() const {
+EncryptedFile::EncryptedFileClassType EncryptedFile::classType() const {
     return m_classType;
 }
 
@@ -107,7 +107,7 @@ bool EncryptedFile::fetch(InboundPkt *in) {
     int x = in->fetchInt();
     switch(x) {
     case typeEncryptedFileEmpty: {
-        m_classType = static_cast<EncryptedFileType>(x);
+        m_classType = static_cast<EncryptedFileClassType>(x);
         return true;
     }
         break;
@@ -118,7 +118,7 @@ bool EncryptedFile::fetch(InboundPkt *in) {
         m_size = in->fetchInt();
         m_dcId = in->fetchInt();
         m_keyFingerprint = in->fetchInt();
-        m_classType = static_cast<EncryptedFileType>(x);
+        m_classType = static_cast<EncryptedFileClassType>(x);
         return true;
     }
         break;
@@ -179,7 +179,7 @@ QDataStream &operator<<(QDataStream &stream, const EncryptedFile &item) {
 QDataStream &operator>>(QDataStream &stream, EncryptedFile &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<EncryptedFile::EncryptedFileType>(type));
+    item.setClassType(static_cast<EncryptedFile::EncryptedFileClassType>(type));
     switch(type) {
     case EncryptedFile::typeEncryptedFileEmpty: {
         

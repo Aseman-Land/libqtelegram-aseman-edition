@@ -13,7 +13,7 @@
 class LIBQTELEGRAMSHARED_EXPORT InputContactObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(InputContactType)
+    Q_ENUMS(InputContactClassType)
     Q_PROPERTY(qint64 clientId READ clientId WRITE setClientId NOTIFY clientIdChanged)
     Q_PROPERTY(QString firstName READ firstName WRITE setFirstName NOTIFY firstNameChanged)
     Q_PROPERTY(QString lastName READ lastName WRITE setLastName NOTIFY lastNameChanged)
@@ -22,7 +22,7 @@ class LIBQTELEGRAMSHARED_EXPORT InputContactObject : public TelegramTypeQObject
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum InputContactType {
+    enum InputContactClassType {
         TypeInputPhoneContact
     };
 

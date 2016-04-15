@@ -105,7 +105,7 @@ bool ChatParticipantsObject::operator ==(const ChatParticipants &b) const {
 }
 
 void ChatParticipantsObject::setClassType(quint32 classType) {
-    ChatParticipants::ChatParticipantsType result;
+    ChatParticipants::ChatParticipantsClassType result;
     switch(classType) {
     case TypeChatParticipantsForbidden:
         result = ChatParticipants::typeChatParticipantsForbidden;

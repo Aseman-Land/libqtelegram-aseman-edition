@@ -44,7 +44,7 @@ bool PrivacyRuleObject::operator ==(const PrivacyRule &b) const {
 }
 
 void PrivacyRuleObject::setClassType(quint32 classType) {
-    PrivacyRule::PrivacyRuleType result;
+    PrivacyRule::PrivacyRuleClassType result;
     switch(classType) {
     case TypePrivacyValueAllowContacts:
         result = PrivacyRule::typePrivacyValueAllowContacts;

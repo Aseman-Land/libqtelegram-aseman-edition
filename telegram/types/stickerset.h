@@ -14,11 +14,11 @@
 class LIBQTELEGRAMSHARED_EXPORT StickerSet : public TelegramTypeObject
 {
 public:
-    enum StickerSetType {
+    enum StickerSetClassType {
         typeStickerSet = 0xcd303b41
     };
 
-    StickerSet(StickerSetType classType = typeStickerSet, InboundPkt *in = 0);
+    StickerSet(StickerSetClassType classType = typeStickerSet, InboundPkt *in = 0);
     StickerSet(InboundPkt *in);
     StickerSet(const Null&);
     virtual ~StickerSet();
@@ -53,8 +53,8 @@ public:
     void setTitle(const QString &title);
     QString title() const;
 
-    void setClassType(StickerSetType classType);
-    StickerSetType classType() const;
+    void setClassType(StickerSetClassType classType);
+    StickerSetClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -74,7 +74,7 @@ private:
     qint64 m_id;
     QString m_shortName;
     QString m_title;
-    StickerSetType m_classType;
+    StickerSetClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(StickerSet)

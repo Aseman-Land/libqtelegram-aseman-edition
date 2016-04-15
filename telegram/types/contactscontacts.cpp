@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-ContactsContacts::ContactsContacts(ContactsContactsType classType, InboundPkt *in) :
+ContactsContacts::ContactsContacts(ContactsContactsClassType classType, InboundPkt *in) :
     m_classType(classType)
 {
     if(in) fetch(in);
@@ -52,11 +52,11 @@ bool ContactsContacts::operator ==(const ContactsContacts &b) const {
            m_users == b.m_users;
 }
 
-void ContactsContacts::setClassType(ContactsContacts::ContactsContactsType classType) {
+void ContactsContacts::setClassType(ContactsContacts::ContactsContactsClassType classType) {
     m_classType = classType;
 }
 
-ContactsContacts::ContactsContactsType ContactsContacts::classType() const {
+ContactsContacts::ContactsContactsClassType ContactsContacts::classType() const {
     return m_classType;
 }
 
@@ -65,7 +65,7 @@ bool ContactsContacts::fetch(InboundPkt *in) {
     int x = in->fetchInt();
     switch(x) {
     case typeContactsContactsNotModified: {
-        m_classType = static_cast<ContactsContactsType>(x);
+        m_classType = static_cast<ContactsContactsClassType>(x);
         return true;
     }
         break;
@@ -87,7 +87,7 @@ bool ContactsContacts::fetch(InboundPkt *in) {
             type.fetch(in);
             m_users.append(type);
         }
-        m_classType = static_cast<ContactsContactsType>(x);
+        m_classType = static_cast<ContactsContactsClassType>(x);
         return true;
     }
         break;
@@ -150,7 +150,7 @@ QDataStream &operator<<(QDataStream &stream, const ContactsContacts &item) {
 QDataStream &operator>>(QDataStream &stream, ContactsContacts &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<ContactsContacts::ContactsContactsType>(type));
+    item.setClassType(static_cast<ContactsContacts::ContactsContactsClassType>(type));
     switch(type) {
     case ContactsContacts::typeContactsContactsNotModified: {
         

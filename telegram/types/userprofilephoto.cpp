@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-UserProfilePhoto::UserProfilePhoto(UserProfilePhotoType classType, InboundPkt *in) :
+UserProfilePhoto::UserProfilePhoto(UserProfilePhotoClassType classType, InboundPkt *in) :
     m_photoId(0),
     m_classType(classType)
 {
@@ -64,11 +64,11 @@ bool UserProfilePhoto::operator ==(const UserProfilePhoto &b) const {
            m_photoSmall == b.m_photoSmall;
 }
 
-void UserProfilePhoto::setClassType(UserProfilePhoto::UserProfilePhotoType classType) {
+void UserProfilePhoto::setClassType(UserProfilePhoto::UserProfilePhotoClassType classType) {
     m_classType = classType;
 }
 
-UserProfilePhoto::UserProfilePhotoType UserProfilePhoto::classType() const {
+UserProfilePhoto::UserProfilePhotoClassType UserProfilePhoto::classType() const {
     return m_classType;
 }
 
@@ -77,7 +77,7 @@ bool UserProfilePhoto::fetch(InboundPkt *in) {
     int x = in->fetchInt();
     switch(x) {
     case typeUserProfilePhotoEmpty: {
-        m_classType = static_cast<UserProfilePhotoType>(x);
+        m_classType = static_cast<UserProfilePhotoClassType>(x);
         return true;
     }
         break;
@@ -86,7 +86,7 @@ bool UserProfilePhoto::fetch(InboundPkt *in) {
         m_photoId = in->fetchLong();
         m_photoSmall.fetch(in);
         m_photoBig.fetch(in);
-        m_classType = static_cast<UserProfilePhotoType>(x);
+        m_classType = static_cast<UserProfilePhotoClassType>(x);
         return true;
     }
         break;
@@ -143,7 +143,7 @@ QDataStream &operator<<(QDataStream &stream, const UserProfilePhoto &item) {
 QDataStream &operator>>(QDataStream &stream, UserProfilePhoto &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<UserProfilePhoto::UserProfilePhotoType>(type));
+    item.setClassType(static_cast<UserProfilePhoto::UserProfilePhotoClassType>(type));
     switch(type) {
     case UserProfilePhoto::typeUserProfilePhotoEmpty: {
         

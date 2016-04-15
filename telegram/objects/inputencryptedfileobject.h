@@ -13,7 +13,7 @@
 class LIBQTELEGRAMSHARED_EXPORT InputEncryptedFileObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(InputEncryptedFileType)
+    Q_ENUMS(InputEncryptedFileClassType)
     Q_PROPERTY(qint64 accessHash READ accessHash WRITE setAccessHash NOTIFY accessHashChanged)
     Q_PROPERTY(qint64 id READ id WRITE setId NOTIFY idChanged)
     Q_PROPERTY(qint32 keyFingerprint READ keyFingerprint WRITE setKeyFingerprint NOTIFY keyFingerprintChanged)
@@ -23,7 +23,7 @@ class LIBQTELEGRAMSHARED_EXPORT InputEncryptedFileObject : public TelegramTypeQO
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum InputEncryptedFileType {
+    enum InputEncryptedFileClassType {
         TypeInputEncryptedFileEmpty,
         TypeInputEncryptedFileUploaded,
         TypeInputEncryptedFile,

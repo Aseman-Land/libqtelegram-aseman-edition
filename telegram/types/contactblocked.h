@@ -13,11 +13,11 @@
 class LIBQTELEGRAMSHARED_EXPORT ContactBlocked : public TelegramTypeObject
 {
 public:
-    enum ContactBlockedType {
+    enum ContactBlockedClassType {
         typeContactBlocked = 0x561bc879
     };
 
-    ContactBlocked(ContactBlockedType classType = typeContactBlocked, InboundPkt *in = 0);
+    ContactBlocked(ContactBlockedClassType classType = typeContactBlocked, InboundPkt *in = 0);
     ContactBlocked(InboundPkt *in);
     ContactBlocked(const Null&);
     virtual ~ContactBlocked();
@@ -28,8 +28,8 @@ public:
     void setUserId(qint32 userId);
     qint32 userId() const;
 
-    void setClassType(ContactBlockedType classType);
-    ContactBlockedType classType() const;
+    void setClassType(ContactBlockedClassType classType);
+    ContactBlockedClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -44,7 +44,7 @@ public:
 private:
     qint32 m_date;
     qint32 m_userId;
-    ContactBlockedType m_classType;
+    ContactBlockedClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(ContactBlocked)

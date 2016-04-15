@@ -20,13 +20,13 @@
 class LIBQTELEGRAMSHARED_EXPORT UpdatesDifference : public TelegramTypeObject
 {
 public:
-    enum UpdatesDifferenceType {
+    enum UpdatesDifferenceClassType {
         typeUpdatesDifferenceEmpty = 0x5d75a138,
         typeUpdatesDifference = 0xf49ca0,
         typeUpdatesDifferenceSlice = 0xa8fb1981
     };
 
-    UpdatesDifference(UpdatesDifferenceType classType = typeUpdatesDifferenceEmpty, InboundPkt *in = 0);
+    UpdatesDifference(UpdatesDifferenceClassType classType = typeUpdatesDifferenceEmpty, InboundPkt *in = 0);
     UpdatesDifference(InboundPkt *in);
     UpdatesDifference(const Null&);
     virtual ~UpdatesDifference();
@@ -58,8 +58,8 @@ public:
     void setUsers(const QList<User> &users);
     QList<User> users() const;
 
-    void setClassType(UpdatesDifferenceType classType);
-    UpdatesDifferenceType classType() const;
+    void setClassType(UpdatesDifferenceClassType classType);
+    UpdatesDifferenceClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -81,7 +81,7 @@ private:
     qint32 m_seq;
     UpdatesState m_state;
     QList<User> m_users;
-    UpdatesDifferenceType m_classType;
+    UpdatesDifferenceClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(UpdatesDifference)

@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-Dialog::Dialog(DialogType classType, InboundPkt *in) :
+Dialog::Dialog(DialogClassType classType, InboundPkt *in) :
     m_pts(0),
     m_readInboxMaxId(0),
     m_topImportantMessage(0),
@@ -124,11 +124,11 @@ bool Dialog::operator ==(const Dialog &b) const {
            m_unreadImportantCount == b.m_unreadImportantCount;
 }
 
-void Dialog::setClassType(Dialog::DialogType classType) {
+void Dialog::setClassType(Dialog::DialogClassType classType) {
     m_classType = classType;
 }
 
-Dialog::DialogType Dialog::classType() const {
+Dialog::DialogClassType Dialog::classType() const {
     return m_classType;
 }
 
@@ -142,7 +142,7 @@ bool Dialog::fetch(InboundPkt *in) {
         m_readInboxMaxId = in->fetchInt();
         m_unreadCount = in->fetchInt();
         m_notifySettings.fetch(in);
-        m_classType = static_cast<DialogType>(x);
+        m_classType = static_cast<DialogClassType>(x);
         return true;
     }
         break;
@@ -156,7 +156,7 @@ bool Dialog::fetch(InboundPkt *in) {
         m_unreadImportantCount = in->fetchInt();
         m_notifySettings.fetch(in);
         m_pts = in->fetchInt();
-        m_classType = static_cast<DialogType>(x);
+        m_classType = static_cast<DialogClassType>(x);
         return true;
     }
         break;
@@ -232,7 +232,7 @@ QDataStream &operator<<(QDataStream &stream, const Dialog &item) {
 QDataStream &operator>>(QDataStream &stream, Dialog &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<Dialog::DialogType>(type));
+    item.setClassType(static_cast<Dialog::DialogClassType>(type));
     switch(type) {
     case Dialog::typeDialog: {
         Peer m_peer;

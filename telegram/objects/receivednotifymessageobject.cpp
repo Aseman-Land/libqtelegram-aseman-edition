@@ -56,7 +56,7 @@ bool ReceivedNotifyMessageObject::operator ==(const ReceivedNotifyMessage &b) co
 }
 
 void ReceivedNotifyMessageObject::setClassType(quint32 classType) {
-    ReceivedNotifyMessage::ReceivedNotifyMessageType result;
+    ReceivedNotifyMessage::ReceivedNotifyMessageClassType result;
     switch(classType) {
     case TypeReceivedNotifyMessage:
         result = ReceivedNotifyMessage::typeReceivedNotifyMessage;

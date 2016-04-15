@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-PhotosPhotos::PhotosPhotos(PhotosPhotosType classType, InboundPkt *in) :
+PhotosPhotos::PhotosPhotos(PhotosPhotosClassType classType, InboundPkt *in) :
     m_count(0),
     m_classType(classType)
 {
@@ -64,11 +64,11 @@ bool PhotosPhotos::operator ==(const PhotosPhotos &b) const {
            m_users == b.m_users;
 }
 
-void PhotosPhotos::setClassType(PhotosPhotos::PhotosPhotosType classType) {
+void PhotosPhotos::setClassType(PhotosPhotos::PhotosPhotosClassType classType) {
     m_classType = classType;
 }
 
-PhotosPhotos::PhotosPhotosType PhotosPhotos::classType() const {
+PhotosPhotos::PhotosPhotosClassType PhotosPhotos::classType() const {
     return m_classType;
 }
 
@@ -93,7 +93,7 @@ bool PhotosPhotos::fetch(InboundPkt *in) {
             type.fetch(in);
             m_users.append(type);
         }
-        m_classType = static_cast<PhotosPhotosType>(x);
+        m_classType = static_cast<PhotosPhotosClassType>(x);
         return true;
     }
         break;
@@ -116,7 +116,7 @@ bool PhotosPhotos::fetch(InboundPkt *in) {
             type.fetch(in);
             m_users.append(type);
         }
-        m_classType = static_cast<PhotosPhotosType>(x);
+        m_classType = static_cast<PhotosPhotosClassType>(x);
         return true;
     }
         break;
@@ -192,7 +192,7 @@ QDataStream &operator<<(QDataStream &stream, const PhotosPhotos &item) {
 QDataStream &operator>>(QDataStream &stream, PhotosPhotos &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<PhotosPhotos::PhotosPhotosType>(type));
+    item.setClassType(static_cast<PhotosPhotos::PhotosPhotosClassType>(type));
     switch(type) {
     case PhotosPhotos::typePhotosPhotos: {
         QList<Photo> m_photos;

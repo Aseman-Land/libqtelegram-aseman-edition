@@ -44,7 +44,7 @@ bool AccountAuthorizationsObject::operator ==(const AccountAuthorizations &b) co
 }
 
 void AccountAuthorizationsObject::setClassType(quint32 classType) {
-    AccountAuthorizations::AccountAuthorizationsType result;
+    AccountAuthorizations::AccountAuthorizationsClassType result;
     switch(classType) {
     case TypeAccountAuthorizations:
         result = AccountAuthorizations::typeAccountAuthorizations;

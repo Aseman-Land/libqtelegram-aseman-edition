@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-ChatParticipant::ChatParticipant(ChatParticipantType classType, InboundPkt *in) :
+ChatParticipant::ChatParticipant(ChatParticipantClassType classType, InboundPkt *in) :
     m_date(0),
     m_inviterId(0),
     m_userId(0),
@@ -70,11 +70,11 @@ bool ChatParticipant::operator ==(const ChatParticipant &b) const {
            m_userId == b.m_userId;
 }
 
-void ChatParticipant::setClassType(ChatParticipant::ChatParticipantType classType) {
+void ChatParticipant::setClassType(ChatParticipant::ChatParticipantClassType classType) {
     m_classType = classType;
 }
 
-ChatParticipant::ChatParticipantType ChatParticipant::classType() const {
+ChatParticipant::ChatParticipantClassType ChatParticipant::classType() const {
     return m_classType;
 }
 
@@ -86,14 +86,14 @@ bool ChatParticipant::fetch(InboundPkt *in) {
         m_userId = in->fetchInt();
         m_inviterId = in->fetchInt();
         m_date = in->fetchInt();
-        m_classType = static_cast<ChatParticipantType>(x);
+        m_classType = static_cast<ChatParticipantClassType>(x);
         return true;
     }
         break;
     
     case typeChatParticipantCreator: {
         m_userId = in->fetchInt();
-        m_classType = static_cast<ChatParticipantType>(x);
+        m_classType = static_cast<ChatParticipantClassType>(x);
         return true;
     }
         break;
@@ -102,7 +102,7 @@ bool ChatParticipant::fetch(InboundPkt *in) {
         m_userId = in->fetchInt();
         m_inviterId = in->fetchInt();
         m_date = in->fetchInt();
-        m_classType = static_cast<ChatParticipantType>(x);
+        m_classType = static_cast<ChatParticipantClassType>(x);
         return true;
     }
         break;
@@ -173,7 +173,7 @@ QDataStream &operator<<(QDataStream &stream, const ChatParticipant &item) {
 QDataStream &operator>>(QDataStream &stream, ChatParticipant &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<ChatParticipant::ChatParticipantType>(type));
+    item.setClassType(static_cast<ChatParticipant::ChatParticipantClassType>(type));
     switch(type) {
     case ChatParticipant::typeChatParticipant: {
         qint32 m_user_id;

@@ -13,7 +13,7 @@
 class LIBQTELEGRAMSHARED_EXPORT MessagesMessagesObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(MessagesMessagesType)
+    Q_ENUMS(MessagesMessagesClassType)
     Q_PROPERTY(QList<Chat> chats READ chats WRITE setChats NOTIFY chatsChanged)
     Q_PROPERTY(QList<MessageGroup> collapsed READ collapsed WRITE setCollapsed NOTIFY collapsedChanged)
     Q_PROPERTY(qint32 count READ count WRITE setCount NOTIFY countChanged)
@@ -25,7 +25,7 @@ class LIBQTELEGRAMSHARED_EXPORT MessagesMessagesObject : public TelegramTypeQObj
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum MessagesMessagesType {
+    enum MessagesMessagesClassType {
         TypeMessagesMessages,
         TypeMessagesMessagesSlice,
         TypeMessagesChannelMessages

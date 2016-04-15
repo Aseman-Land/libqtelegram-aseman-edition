@@ -301,7 +301,7 @@ bool InputMediaObject::operator ==(const InputMedia &b) const {
 }
 
 void InputMediaObject::setClassType(quint32 classType) {
-    InputMedia::InputMediaType result;
+    InputMedia::InputMediaClassType result;
     switch(classType) {
     case TypeInputMediaEmpty:
         result = InputMedia::typeInputMediaEmpty;

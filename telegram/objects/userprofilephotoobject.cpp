@@ -94,7 +94,7 @@ bool UserProfilePhotoObject::operator ==(const UserProfilePhoto &b) const {
 }
 
 void UserProfilePhotoObject::setClassType(quint32 classType) {
-    UserProfilePhoto::UserProfilePhotoType result;
+    UserProfilePhoto::UserProfilePhotoClassType result;
     switch(classType) {
     case TypeUserProfilePhotoEmpty:
         result = UserProfilePhoto::typeUserProfilePhotoEmpty;

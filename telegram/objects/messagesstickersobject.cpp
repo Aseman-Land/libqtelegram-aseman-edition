@@ -56,7 +56,7 @@ bool MessagesStickersObject::operator ==(const MessagesStickers &b) const {
 }
 
 void MessagesStickersObject::setClassType(quint32 classType) {
-    MessagesStickers::MessagesStickersType result;
+    MessagesStickers::MessagesStickersClassType result;
     switch(classType) {
     case TypeMessagesStickersNotModified:
         result = MessagesStickers::typeMessagesStickersNotModified;

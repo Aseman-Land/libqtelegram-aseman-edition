@@ -69,7 +69,7 @@ bool ChannelsChannelParticipantObject::operator ==(const ChannelsChannelParticip
 }
 
 void ChannelsChannelParticipantObject::setClassType(quint32 classType) {
-    ChannelsChannelParticipant::ChannelsChannelParticipantType result;
+    ChannelsChannelParticipant::ChannelsChannelParticipantClassType result;
     switch(classType) {
     case TypeChannelsChannelParticipant:
         result = ChannelsChannelParticipant::typeChannelsChannelParticipant;

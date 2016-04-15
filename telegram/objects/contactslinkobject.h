@@ -15,7 +15,7 @@
 class LIBQTELEGRAMSHARED_EXPORT ContactsLinkObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(ContactsLinkType)
+    Q_ENUMS(ContactsLinkClassType)
     Q_PROPERTY(ContactLinkObject* foreignLink READ foreignLink WRITE setForeignLink NOTIFY foreignLinkChanged)
     Q_PROPERTY(ContactLinkObject* myLink READ myLink WRITE setMyLink NOTIFY myLinkChanged)
     Q_PROPERTY(UserObject* user READ user WRITE setUser NOTIFY userChanged)
@@ -23,7 +23,7 @@ class LIBQTELEGRAMSHARED_EXPORT ContactsLinkObject : public TelegramTypeQObject
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum ContactsLinkType {
+    enum ContactsLinkClassType {
         TypeContactsLink
     };
 

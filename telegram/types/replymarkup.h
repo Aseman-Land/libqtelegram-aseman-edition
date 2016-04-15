@@ -15,13 +15,14 @@
 class LIBQTELEGRAMSHARED_EXPORT ReplyMarkup : public TelegramTypeObject
 {
 public:
-    enum ReplyMarkupType {
+    enum ReplyMarkupClassType {
         typeReplyKeyboardHide = 0xa03e5b85,
         typeReplyKeyboardForceReply = 0xf4108aa0,
-        typeReplyKeyboardMarkup = 0x3502758c
+        typeReplyKeyboardMarkup = 0x3502758c,
+        typeReplyInlineMarkup = 0x48a30254
     };
 
-    ReplyMarkup(ReplyMarkupType classType = typeReplyKeyboardHide, InboundPkt *in = 0);
+    ReplyMarkup(ReplyMarkupClassType classType = typeReplyKeyboardHide, InboundPkt *in = 0);
     ReplyMarkup(InboundPkt *in);
     ReplyMarkup(const Null&);
     virtual ~ReplyMarkup();
@@ -41,8 +42,8 @@ public:
     void setSingleUse(bool singleUse);
     bool singleUse() const;
 
-    void setClassType(ReplyMarkupType classType);
-    ReplyMarkupType classType() const;
+    void setClassType(ReplyMarkupClassType classType);
+    ReplyMarkupClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -57,7 +58,7 @@ public:
 private:
     qint32 m_flags;
     QList<KeyboardButtonRow> m_rows;
-    ReplyMarkupType m_classType;
+    ReplyMarkupClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(ReplyMarkup)

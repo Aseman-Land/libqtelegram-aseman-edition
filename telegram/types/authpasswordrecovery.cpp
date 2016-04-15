@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-AuthPasswordRecovery::AuthPasswordRecovery(AuthPasswordRecoveryType classType, InboundPkt *in) :
+AuthPasswordRecovery::AuthPasswordRecovery(AuthPasswordRecoveryClassType classType, InboundPkt *in) :
     m_classType(classType)
 {
     if(in) fetch(in);
@@ -43,11 +43,11 @@ bool AuthPasswordRecovery::operator ==(const AuthPasswordRecovery &b) const {
            m_emailPattern == b.m_emailPattern;
 }
 
-void AuthPasswordRecovery::setClassType(AuthPasswordRecovery::AuthPasswordRecoveryType classType) {
+void AuthPasswordRecovery::setClassType(AuthPasswordRecovery::AuthPasswordRecoveryClassType classType) {
     m_classType = classType;
 }
 
-AuthPasswordRecovery::AuthPasswordRecoveryType AuthPasswordRecovery::classType() const {
+AuthPasswordRecovery::AuthPasswordRecoveryClassType AuthPasswordRecovery::classType() const {
     return m_classType;
 }
 
@@ -57,7 +57,7 @@ bool AuthPasswordRecovery::fetch(InboundPkt *in) {
     switch(x) {
     case typeAuthPasswordRecovery: {
         m_emailPattern = in->fetchQString();
-        m_classType = static_cast<AuthPasswordRecoveryType>(x);
+        m_classType = static_cast<AuthPasswordRecoveryClassType>(x);
         return true;
     }
         break;
@@ -102,7 +102,7 @@ QDataStream &operator<<(QDataStream &stream, const AuthPasswordRecovery &item) {
 QDataStream &operator>>(QDataStream &stream, AuthPasswordRecovery &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<AuthPasswordRecovery::AuthPasswordRecoveryType>(type));
+    item.setClassType(static_cast<AuthPasswordRecovery::AuthPasswordRecoveryClassType>(type));
     switch(type) {
     case AuthPasswordRecovery::typeAuthPasswordRecovery: {
         QString m_email_pattern;

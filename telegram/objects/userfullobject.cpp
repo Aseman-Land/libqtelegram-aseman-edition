@@ -193,7 +193,7 @@ bool UserFullObject::operator ==(const UserFull &b) const {
 }
 
 void UserFullObject::setClassType(quint32 classType) {
-    UserFull::UserFullType result;
+    UserFull::UserFullClassType result;
     switch(classType) {
     case TypeUserFull:
         result = UserFull::typeUserFull;

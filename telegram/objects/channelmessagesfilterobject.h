@@ -13,7 +13,7 @@
 class LIBQTELEGRAMSHARED_EXPORT ChannelMessagesFilterObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(ChannelMessagesFilterType)
+    Q_ENUMS(ChannelMessagesFilterClassType)
     Q_PROPERTY(bool excludeNewMessages READ excludeNewMessages WRITE setExcludeNewMessages NOTIFY excludeNewMessagesChanged)
     Q_PROPERTY(qint32 flags READ flags WRITE setFlags NOTIFY flagsChanged)
     Q_PROPERTY(bool importantOnly READ importantOnly WRITE setImportantOnly NOTIFY importantOnlyChanged)
@@ -22,7 +22,7 @@ class LIBQTELEGRAMSHARED_EXPORT ChannelMessagesFilterObject : public TelegramTyp
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum ChannelMessagesFilterType {
+    enum ChannelMessagesFilterClassType {
         TypeChannelMessagesFilterEmpty,
         TypeChannelMessagesFilter,
         TypeChannelMessagesFilterCollapsed

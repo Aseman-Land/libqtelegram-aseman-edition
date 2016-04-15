@@ -13,12 +13,12 @@
 class LIBQTELEGRAMSHARED_EXPORT MessagesFilterObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(MessagesFilterType)
+    Q_ENUMS(MessagesFilterClassType)
     Q_PROPERTY(MessagesFilter core READ core WRITE setCore NOTIFY coreChanged)
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum MessagesFilterType {
+    enum MessagesFilterClassType {
         TypeInputMessagesFilterEmpty,
         TypeInputMessagesFilterPhotos,
         TypeInputMessagesFilterVideo,

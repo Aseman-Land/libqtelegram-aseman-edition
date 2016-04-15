@@ -81,7 +81,7 @@ bool MessagesStickerSetObject::operator ==(const MessagesStickerSet &b) const {
 }
 
 void MessagesStickerSetObject::setClassType(quint32 classType) {
-    MessagesStickerSet::MessagesStickerSetType result;
+    MessagesStickerSet::MessagesStickerSetClassType result;
     switch(classType) {
     case TypeMessagesStickerSet:
         result = MessagesStickerSet::typeMessagesStickerSet;

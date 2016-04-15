@@ -13,14 +13,14 @@
 class LIBQTELEGRAMSHARED_EXPORT InputPhotoObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(InputPhotoType)
+    Q_ENUMS(InputPhotoClassType)
     Q_PROPERTY(qint64 accessHash READ accessHash WRITE setAccessHash NOTIFY accessHashChanged)
     Q_PROPERTY(qint64 id READ id WRITE setId NOTIFY idChanged)
     Q_PROPERTY(InputPhoto core READ core WRITE setCore NOTIFY coreChanged)
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum InputPhotoType {
+    enum InputPhotoClassType {
         TypeInputPhotoEmpty,
         TypeInputPhoto
     };

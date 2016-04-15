@@ -21,7 +21,7 @@
 class LIBQTELEGRAMSHARED_EXPORT UpdatesType : public TelegramTypeObject
 {
 public:
-    enum UpdatesTypeType {
+    enum UpdatesTypeClassType {
         typeUpdatesTooLong = 0xe317af7e,
         typeUpdateShortMessage = 0x914fbf11,
         typeUpdateShortChatMessage = 0x16812688,
@@ -31,7 +31,7 @@ public:
         typeUpdateShortSentMessage = 0x11f1331c
     };
 
-    UpdatesType(UpdatesTypeType classType = typeUpdatesTooLong, InboundPkt *in = 0);
+    UpdatesType(UpdatesTypeClassType classType = typeUpdatesTooLong, InboundPkt *in = 0);
     UpdatesType(InboundPkt *in);
     UpdatesType(const Null&);
     virtual ~UpdatesType();
@@ -111,8 +111,8 @@ public:
     void setViaBotId(qint32 viaBotId);
     qint32 viaBotId() const;
 
-    void setClassType(UpdatesTypeType classType);
-    UpdatesTypeType classType() const;
+    void setClassType(UpdatesTypeClassType classType);
+    UpdatesTypeClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -145,7 +145,7 @@ private:
     qint32 m_userId;
     QList<User> m_users;
     qint32 m_viaBotId;
-    UpdatesTypeType m_classType;
+    UpdatesTypeClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(UpdatesType)

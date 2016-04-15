@@ -13,7 +13,7 @@
 class LIBQTELEGRAMSHARED_EXPORT DcOptionObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(DcOptionType)
+    Q_ENUMS(DcOptionClassType)
     Q_PROPERTY(qint32 flags READ flags WRITE setFlags NOTIFY flagsChanged)
     Q_PROPERTY(qint32 id READ id WRITE setId NOTIFY idChanged)
     Q_PROPERTY(QString ipAddress READ ipAddress WRITE setIpAddress NOTIFY ipAddressChanged)
@@ -25,7 +25,7 @@ class LIBQTELEGRAMSHARED_EXPORT DcOptionObject : public TelegramTypeQObject
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum DcOptionType {
+    enum DcOptionClassType {
         TypeDcOption
     };
 

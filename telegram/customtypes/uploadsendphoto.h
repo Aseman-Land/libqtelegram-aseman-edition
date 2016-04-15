@@ -14,14 +14,14 @@
 class LIBQTELEGRAMSHARED_EXPORT UploadSendPhoto : public TelegramCustomTypeObject
 {
 public:
-    enum UploadSendPhotoType {
+    enum UploadSendPhotoClassType {
         typeUploadSendPhotoEmpty = 0x9fd3cbf,
         typeUploadSendPhotoFinished = 0x29d89fa,
         typeUploadSendPhotoCanceled = 0xce5de24,
         typeUploadSendPhotoProgress = 0x403636a
     };
 
-    UploadSendPhoto(UploadSendPhotoType classType = typeUploadSendPhotoEmpty);
+    UploadSendPhoto(UploadSendPhotoClassType classType = typeUploadSendPhotoEmpty);
     UploadSendPhoto(const Null&);
     virtual ~UploadSendPhoto();
 
@@ -37,8 +37,8 @@ public:
     void setUploaded(qint32 uploaded);
     qint32 uploaded() const;
 
-    void setClassType(UploadSendPhotoType classType);
-    UploadSendPhotoType classType() const;
+    void setClassType(UploadSendPhotoClassType classType);
+    UploadSendPhotoClassType classType() const;
 
     bool operator ==(const UploadSendPhoto &b) const;
 
@@ -50,7 +50,7 @@ private:
     PhotosPhoto m_photo;
     qint32 m_totalSize;
     qint32 m_uploaded;
-    UploadSendPhotoType m_classType;
+    UploadSendPhotoClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(UploadSendPhoto)

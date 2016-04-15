@@ -13,11 +13,11 @@
 class LIBQTELEGRAMSHARED_EXPORT BotCommand : public TelegramTypeObject
 {
 public:
-    enum BotCommandType {
+    enum BotCommandClassType {
         typeBotCommand = 0xc27ac8c7
     };
 
-    BotCommand(BotCommandType classType = typeBotCommand, InboundPkt *in = 0);
+    BotCommand(BotCommandClassType classType = typeBotCommand, InboundPkt *in = 0);
     BotCommand(InboundPkt *in);
     BotCommand(const Null&);
     virtual ~BotCommand();
@@ -28,8 +28,8 @@ public:
     void setDescription(const QString &description);
     QString description() const;
 
-    void setClassType(BotCommandType classType);
-    BotCommandType classType() const;
+    void setClassType(BotCommandClassType classType);
+    BotCommandClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -44,7 +44,7 @@ public:
 private:
     QString m_command;
     QString m_description;
-    BotCommandType m_classType;
+    BotCommandClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(BotCommand)

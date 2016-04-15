@@ -13,12 +13,12 @@
 class LIBQTELEGRAMSHARED_EXPORT InputPrivacyKeyObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(InputPrivacyKeyType)
+    Q_ENUMS(InputPrivacyKeyClassType)
     Q_PROPERTY(InputPrivacyKey core READ core WRITE setCore NOTIFY coreChanged)
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum InputPrivacyKeyType {
+    enum InputPrivacyKeyClassType {
         TypeInputPrivacyKeyStatusTimestamp,
         TypeInputPrivacyKeyChatInvite
     };

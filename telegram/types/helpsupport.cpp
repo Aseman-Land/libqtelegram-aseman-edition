@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-HelpSupport::HelpSupport(HelpSupportType classType, InboundPkt *in) :
+HelpSupport::HelpSupport(HelpSupportClassType classType, InboundPkt *in) :
     m_classType(classType)
 {
     if(in) fetch(in);
@@ -52,11 +52,11 @@ bool HelpSupport::operator ==(const HelpSupport &b) const {
            m_user == b.m_user;
 }
 
-void HelpSupport::setClassType(HelpSupport::HelpSupportType classType) {
+void HelpSupport::setClassType(HelpSupport::HelpSupportClassType classType) {
     m_classType = classType;
 }
 
-HelpSupport::HelpSupportType HelpSupport::classType() const {
+HelpSupport::HelpSupportClassType HelpSupport::classType() const {
     return m_classType;
 }
 
@@ -67,7 +67,7 @@ bool HelpSupport::fetch(InboundPkt *in) {
     case typeHelpSupport: {
         m_phoneNumber = in->fetchQString();
         m_user.fetch(in);
-        m_classType = static_cast<HelpSupportType>(x);
+        m_classType = static_cast<HelpSupportClassType>(x);
         return true;
     }
         break;
@@ -114,7 +114,7 @@ QDataStream &operator<<(QDataStream &stream, const HelpSupport &item) {
 QDataStream &operator>>(QDataStream &stream, HelpSupport &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<HelpSupport::HelpSupportType>(type));
+    item.setClassType(static_cast<HelpSupport::HelpSupportClassType>(type));
     switch(type) {
     case HelpSupport::typeHelpSupport: {
         QString m_phone_number;

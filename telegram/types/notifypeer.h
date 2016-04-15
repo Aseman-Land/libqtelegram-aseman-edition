@@ -13,14 +13,14 @@
 class LIBQTELEGRAMSHARED_EXPORT NotifyPeer : public TelegramTypeObject
 {
 public:
-    enum NotifyPeerType {
+    enum NotifyPeerClassType {
         typeNotifyPeer = 0x9fd40bd8,
         typeNotifyUsers = 0xb4c83b4c,
         typeNotifyChats = 0xc007cec3,
         typeNotifyAll = 0x74d07c60
     };
 
-    NotifyPeer(NotifyPeerType classType = typeNotifyPeer, InboundPkt *in = 0);
+    NotifyPeer(NotifyPeerClassType classType = typeNotifyPeer, InboundPkt *in = 0);
     NotifyPeer(InboundPkt *in);
     NotifyPeer(const Null&);
     virtual ~NotifyPeer();
@@ -28,8 +28,8 @@ public:
     void setPeer(const Peer &peer);
     Peer peer() const;
 
-    void setClassType(NotifyPeerType classType);
-    NotifyPeerType classType() const;
+    void setClassType(NotifyPeerClassType classType);
+    NotifyPeerClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -43,7 +43,7 @@ public:
 
 private:
     Peer m_peer;
-    NotifyPeerType m_classType;
+    NotifyPeerClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(NotifyPeer)

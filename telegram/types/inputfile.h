@@ -14,12 +14,12 @@
 class LIBQTELEGRAMSHARED_EXPORT InputFile : public TelegramTypeObject
 {
 public:
-    enum InputFileType {
+    enum InputFileClassType {
         typeInputFile = 0xf52ff27f,
         typeInputFileBig = 0xfa4f0bb5
     };
 
-    InputFile(InputFileType classType = typeInputFile, InboundPkt *in = 0);
+    InputFile(InputFileClassType classType = typeInputFile, InboundPkt *in = 0);
     InputFile(InboundPkt *in);
     InputFile(const Null&);
     virtual ~InputFile();
@@ -36,8 +36,8 @@ public:
     void setParts(qint32 parts);
     qint32 parts() const;
 
-    void setClassType(InputFileType classType);
-    InputFileType classType() const;
+    void setClassType(InputFileClassType classType);
+    InputFileClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -54,7 +54,7 @@ private:
     QString m_md5Checksum;
     QString m_name;
     qint32 m_parts;
-    InputFileType m_classType;
+    InputFileClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(InputFile)

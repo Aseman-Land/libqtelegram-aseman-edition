@@ -13,13 +13,13 @@
 class LIBQTELEGRAMSHARED_EXPORT AccountPasswordSettingsObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(AccountPasswordSettingsType)
+    Q_ENUMS(AccountPasswordSettingsClassType)
     Q_PROPERTY(QString email READ email WRITE setEmail NOTIFY emailChanged)
     Q_PROPERTY(AccountPasswordSettings core READ core WRITE setCore NOTIFY coreChanged)
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum AccountPasswordSettingsType {
+    enum AccountPasswordSettingsClassType {
         TypeAccountPasswordSettings
     };
 

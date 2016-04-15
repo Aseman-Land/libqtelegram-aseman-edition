@@ -62,7 +62,7 @@ public:
     virtual qint64 accountDeleteAccount(const QString &reason, Callback<bool > callBack = 0, qint32 timeout = timeOut());
     virtual qint64 accountGetAccountTTL(Callback<AccountDaysTTL > callBack = 0, qint32 timeout = timeOut());
     virtual qint64 accountSetAccountTTL(const AccountDaysTTL &ttl, Callback<bool > callBack = 0, qint32 timeout = timeOut());
-    virtual qint64 accountSendChangePhoneCode(const QString &phone_number, Callback<AccountSentChangePhoneCode > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 accountSendChangePhoneCode(bool allow_flashcall, const QString &phone_number, bool current_number, Callback<AuthSentCode > callBack = 0, qint32 timeout = timeOut());
     virtual qint64 accountChangePhone(const QString &phone_number, const QString &phone_code_hash, const QString &phone_code, Callback<User > callBack = 0, qint32 timeout = timeOut());
     virtual qint64 accountUpdateDeviceLocked(qint32 period, Callback<bool > callBack = 0, qint32 timeout = timeOut());
     virtual qint64 accountGetAuthorizations(Callback<AccountAuthorizations > callBack = 0, qint32 timeout = timeOut());
@@ -72,8 +72,7 @@ public:
     virtual qint64 accountUpdatePasswordSettings(const QByteArray &current_password_hash, const AccountPasswordInputSettings &new_settings, Callback<bool > callBack = 0, qint32 timeout = timeOut());
     
     virtual qint64 authCheckPhone(const QString &phone_number, Callback<AuthCheckedPhone > callBack = 0, qint32 timeout = timeOut());
-    virtual qint64 authSendCode(const QString &phone_number, qint32 sms_type, qint32 api_id, const QString &api_hash, const QString &lang_code, Callback<AuthSentCode > callBack = 0, qint32 timeout = timeOut());
-    virtual qint64 authSendCall(const QString &phone_number, const QString &phone_code_hash, Callback<bool > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 authSendCode(bool allow_flashcall, const QString &phone_number, bool current_number, qint32 api_id, const QString &api_hash, const QString &lang_code, Callback<AuthSentCode > callBack = 0, qint32 timeout = timeOut());
     virtual qint64 authSignUp(const QString &phone_number, const QString &phone_code_hash, const QString &phone_code, const QString &first_name, const QString &last_name, Callback<AuthAuthorization > callBack = 0, qint32 timeout = timeOut());
     virtual qint64 authSignIn(const QString &phone_number, const QString &phone_code_hash, const QString &phone_code, Callback<AuthAuthorization > callBack = 0, qint32 timeout = timeOut());
     virtual qint64 authLogOut(Callback<bool > callBack = 0, qint32 timeout = timeOut());
@@ -82,11 +81,12 @@ public:
     virtual qint64 authExportAuthorization(qint32 dc_id, Callback<AuthExportedAuthorization > callBack = 0, qint32 timeout = timeOut());
     virtual qint64 authImportAuthorization(qint32 id, const QByteArray &bytes, Callback<AuthAuthorization > callBack = 0, qint32 timeout = timeOut());
     virtual qint64 authBindTempAuthKey(qint64 perm_auth_key_id, qint64 nonce, qint32 expires_at, const QByteArray &encrypted_message, Callback<bool > callBack = 0, qint32 timeout = timeOut());
-    virtual qint64 authSendSms(const QString &phone_number, const QString &phone_code_hash, Callback<bool > callBack = 0, qint32 timeout = timeOut());
     virtual qint64 authImportBotAuthorization(qint32 flags, qint32 api_id, const QString &api_hash, const QString &bot_auth_token, Callback<AuthAuthorization > callBack = 0, qint32 timeout = timeOut());
     virtual qint64 authCheckPassword(const QByteArray &password_hash, Callback<AuthAuthorization > callBack = 0, qint32 timeout = timeOut());
     virtual qint64 authRequestPasswordRecovery(Callback<AuthPasswordRecovery > callBack = 0, qint32 timeout = timeOut());
     virtual qint64 authRecoverPassword(const QString &code, Callback<AuthAuthorization > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 authResendCode(const QString &phone_number, const QString &phone_code_hash, Callback<AuthSentCode > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 authCancelCode(const QString &phone_number, const QString &phone_code_hash, Callback<bool > callBack = 0, qint32 timeout = timeOut());
     
     virtual qint64 channelsGetDialogs(qint32 offset, qint32 limit, Callback<MessagesDialogs > callBack = 0, qint32 timeout = timeOut());
     virtual qint64 channelsGetImportantHistory(const InputChannel &channel, qint32 offset_id, qint32 offset_date, qint32 add_offset, qint32 limit, qint32 max_id, qint32 min_id, Callback<MessagesMessages > callBack = 0, qint32 timeout = timeOut());
@@ -116,8 +116,6 @@ public:
     virtual qint64 channelsToggleInvites(const InputChannel &channel, bool enabled, Callback<UpdatesType > callBack = 0, qint32 timeout = timeOut());
     virtual qint64 channelsExportMessageLink(const InputChannel &channel, qint32 id, Callback<ExportedMessageLink > callBack = 0, qint32 timeout = timeOut());
     virtual qint64 channelsToggleSignatures(const InputChannel &channel, bool enabled, Callback<UpdatesType > callBack = 0, qint32 timeout = timeOut());
-    virtual qint64 channelsGetMessageEditData(const InputChannel &channel, qint32 id, Callback<ChannelsMessageEditData > callBack = 0, qint32 timeout = timeOut());
-    virtual qint64 channelsEditMessage(bool no_webpage, const InputChannel &channel, qint32 id, const QString &message, const QList<MessageEntity> &entities, Callback<UpdatesType > callBack = 0, qint32 timeout = timeOut());
     virtual qint64 channelsUpdatePinnedMessage(bool silent, const InputChannel &channel, qint32 id, Callback<UpdatesType > callBack = 0, qint32 timeout = timeOut());
     
     virtual qint64 contactsGetStatuses(Callback<QList<ContactStatus> > callBack = 0, qint32 timeout = timeOut());
@@ -197,9 +195,14 @@ public:
     virtual qint64 messagesSearchGifs(const QString &q, qint32 offset, Callback<MessagesFoundGifs > callBack = 0, qint32 timeout = timeOut());
     virtual qint64 messagesGetSavedGifs(qint32 hash, Callback<MessagesSavedGifs > callBack = 0, qint32 timeout = timeOut());
     virtual qint64 messagesSaveGif(const InputDocument &id, bool unsave, Callback<bool > callBack = 0, qint32 timeout = timeOut());
-    virtual qint64 messagesGetInlineBotResults(const InputUser &bot, const QString &query, const QString &offset, Callback<MessagesBotResults > callBack = 0, qint32 timeout = timeOut());
-    virtual qint64 messagesSetInlineBotResults(bool gallery, bool privateValue, qint64 query_id, const QList<InputBotInlineResult> &results, qint32 cache_time, const QString &next_offset, Callback<bool > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesGetInlineBotResults(const InputUser &bot, const InputPeer &peer, const InputGeoPoint &geo_point, const QString &query, const QString &offset, Callback<MessagesBotResults > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesSetInlineBotResults(bool gallery, bool privateValue, qint64 query_id, const QList<InputBotInlineResult> &results, qint32 cache_time, const QString &next_offset, const InlineBotSwitchPM &switch_pm, Callback<bool > callBack = 0, qint32 timeout = timeOut());
     virtual qint64 messagesSendInlineBotResult(bool broadcast, bool silent, bool background, const InputPeer &peer, qint32 reply_to_msg_id, qint64 random_id, qint64 query_id, const QString &id, Callback<UpdatesType > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesGetMessageEditData(const InputPeer &peer, qint32 id, Callback<MessagesMessageEditData > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesEditMessage(bool no_webpage, const InputPeer &peer, qint32 id, const QString &message, const ReplyMarkup &reply_markup, const QList<MessageEntity> &entities, Callback<UpdatesType > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesEditInlineBotMessage(bool no_webpage, const InputBotInlineMessageID &id, const QString &message, const ReplyMarkup &reply_markup, const QList<MessageEntity> &entities, Callback<bool > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesGetBotCallbackAnswer(const InputPeer &peer, qint32 msg_id, const QByteArray &data, Callback<MessagesBotCallbackAnswer > callBack = 0, qint32 timeout = timeOut());
+    virtual qint64 messagesSetBotCallbackAnswer(bool alert, qint64 query_id, const QString &message, Callback<bool > callBack = 0, qint32 timeout = timeOut());
     
     virtual qint64 photosUpdateProfilePhoto(const InputPhoto &id, const InputPhotoCrop &crop, Callback<UserProfilePhoto > callBack = 0, qint32 timeout = timeOut());
     virtual qint64 photosUploadProfilePhoto(const InputFile &file, const QString &caption, const InputGeoPoint &geo_point, const InputPhotoCrop &crop, Callback<PhotosPhoto > callBack = 0, qint32 timeout = timeOut());
@@ -235,7 +238,7 @@ Q_SIGNALS:
     void accountDeleteAccountAnswer(qint64 msgId, bool result);
     void accountGetAccountTTLAnswer(qint64 msgId, const AccountDaysTTL &result);
     void accountSetAccountTTLAnswer(qint64 msgId, bool result);
-    void accountSendChangePhoneCodeAnswer(qint64 msgId, const AccountSentChangePhoneCode &result);
+    void accountSendChangePhoneCodeAnswer(qint64 msgId, const AuthSentCode &result);
     void accountChangePhoneAnswer(qint64 msgId, const User &result);
     void accountUpdateDeviceLockedAnswer(qint64 msgId, bool result);
     void accountGetAuthorizationsAnswer(qint64 msgId, const AccountAuthorizations &result);
@@ -246,7 +249,6 @@ Q_SIGNALS:
     
     void authCheckPhoneAnswer(qint64 msgId, const AuthCheckedPhone &result);
     void authSendCodeAnswer(qint64 msgId, const AuthSentCode &result);
-    void authSendCallAnswer(qint64 msgId, bool result);
     void authSignUpAnswer(qint64 msgId, const AuthAuthorization &result);
     void authSignInAnswer(qint64 msgId, const AuthAuthorization &result);
     void authLogOutAnswer(qint64 msgId, bool result);
@@ -255,11 +257,12 @@ Q_SIGNALS:
     void authExportAuthorizationAnswer(qint64 msgId, const AuthExportedAuthorization &result);
     void authImportAuthorizationAnswer(qint64 msgId, const AuthAuthorization &result);
     void authBindTempAuthKeyAnswer(qint64 msgId, bool result);
-    void authSendSmsAnswer(qint64 msgId, bool result);
     void authImportBotAuthorizationAnswer(qint64 msgId, const AuthAuthorization &result);
     void authCheckPasswordAnswer(qint64 msgId, const AuthAuthorization &result);
     void authRequestPasswordRecoveryAnswer(qint64 msgId, const AuthPasswordRecovery &result);
     void authRecoverPasswordAnswer(qint64 msgId, const AuthAuthorization &result);
+    void authResendCodeAnswer(qint64 msgId, const AuthSentCode &result);
+    void authCancelCodeAnswer(qint64 msgId, bool result);
     
     void channelsGetDialogsAnswer(qint64 msgId, const MessagesDialogs &result);
     void channelsGetImportantHistoryAnswer(qint64 msgId, const MessagesMessages &result);
@@ -289,8 +292,6 @@ Q_SIGNALS:
     void channelsToggleInvitesAnswer(qint64 msgId, const UpdatesType &result);
     void channelsExportMessageLinkAnswer(qint64 msgId, const ExportedMessageLink &result);
     void channelsToggleSignaturesAnswer(qint64 msgId, const UpdatesType &result);
-    void channelsGetMessageEditDataAnswer(qint64 msgId, const ChannelsMessageEditData &result);
-    void channelsEditMessageAnswer(qint64 msgId, const UpdatesType &result);
     void channelsUpdatePinnedMessageAnswer(qint64 msgId, const UpdatesType &result);
     
     void contactsGetStatusesAnswer(qint64 msgId, const QList<ContactStatus> &result);
@@ -373,6 +374,11 @@ Q_SIGNALS:
     void messagesGetInlineBotResultsAnswer(qint64 msgId, const MessagesBotResults &result);
     void messagesSetInlineBotResultsAnswer(qint64 msgId, bool result);
     void messagesSendInlineBotResultAnswer(qint64 msgId, const UpdatesType &result);
+    void messagesGetMessageEditDataAnswer(qint64 msgId, const MessagesMessageEditData &result);
+    void messagesEditMessageAnswer(qint64 msgId, const UpdatesType &result);
+    void messagesEditInlineBotMessageAnswer(qint64 msgId, bool result);
+    void messagesGetBotCallbackAnswerAnswer(qint64 msgId, const MessagesBotCallbackAnswer &result);
+    void messagesSetBotCallbackAnswerAnswer(qint64 msgId, bool result);
     
     void photosUpdateProfilePhotoAnswer(qint64 msgId, const UserProfilePhoto &result);
     void photosUploadProfilePhotoAnswer(qint64 msgId, const PhotosPhoto &result);
@@ -418,7 +424,6 @@ Q_SIGNALS:
     
     void authCheckPhoneError(qint64 msgId, qint32 errorCode, const QString &errorText);
     void authSendCodeError(qint64 msgId, qint32 errorCode, const QString &errorText);
-    void authSendCallError(qint64 msgId, qint32 errorCode, const QString &errorText);
     void authSignUpError(qint64 msgId, qint32 errorCode, const QString &errorText);
     void authSignInError(qint64 msgId, qint32 errorCode, const QString &errorText);
     void authLogOutError(qint64 msgId, qint32 errorCode, const QString &errorText);
@@ -427,11 +432,12 @@ Q_SIGNALS:
     void authExportAuthorizationError(qint64 msgId, qint32 errorCode, const QString &errorText);
     void authImportAuthorizationError(qint64 msgId, qint32 errorCode, const QString &errorText);
     void authBindTempAuthKeyError(qint64 msgId, qint32 errorCode, const QString &errorText);
-    void authSendSmsError(qint64 msgId, qint32 errorCode, const QString &errorText);
     void authImportBotAuthorizationError(qint64 msgId, qint32 errorCode, const QString &errorText);
     void authCheckPasswordError(qint64 msgId, qint32 errorCode, const QString &errorText);
     void authRequestPasswordRecoveryError(qint64 msgId, qint32 errorCode, const QString &errorText);
     void authRecoverPasswordError(qint64 msgId, qint32 errorCode, const QString &errorText);
+    void authResendCodeError(qint64 msgId, qint32 errorCode, const QString &errorText);
+    void authCancelCodeError(qint64 msgId, qint32 errorCode, const QString &errorText);
     
     void channelsGetDialogsError(qint64 msgId, qint32 errorCode, const QString &errorText);
     void channelsGetImportantHistoryError(qint64 msgId, qint32 errorCode, const QString &errorText);
@@ -461,8 +467,6 @@ Q_SIGNALS:
     void channelsToggleInvitesError(qint64 msgId, qint32 errorCode, const QString &errorText);
     void channelsExportMessageLinkError(qint64 msgId, qint32 errorCode, const QString &errorText);
     void channelsToggleSignaturesError(qint64 msgId, qint32 errorCode, const QString &errorText);
-    void channelsGetMessageEditDataError(qint64 msgId, qint32 errorCode, const QString &errorText);
-    void channelsEditMessageError(qint64 msgId, qint32 errorCode, const QString &errorText);
     void channelsUpdatePinnedMessageError(qint64 msgId, qint32 errorCode, const QString &errorText);
     
     void contactsGetStatusesError(qint64 msgId, qint32 errorCode, const QString &errorText);
@@ -545,6 +549,11 @@ Q_SIGNALS:
     void messagesGetInlineBotResultsError(qint64 msgId, qint32 errorCode, const QString &errorText);
     void messagesSetInlineBotResultsError(qint64 msgId, qint32 errorCode, const QString &errorText);
     void messagesSendInlineBotResultError(qint64 msgId, qint32 errorCode, const QString &errorText);
+    void messagesGetMessageEditDataError(qint64 msgId, qint32 errorCode, const QString &errorText);
+    void messagesEditMessageError(qint64 msgId, qint32 errorCode, const QString &errorText);
+    void messagesEditInlineBotMessageError(qint64 msgId, qint32 errorCode, const QString &errorText);
+    void messagesGetBotCallbackAnswerError(qint64 msgId, qint32 errorCode, const QString &errorText);
+    void messagesSetBotCallbackAnswerError(qint64 msgId, qint32 errorCode, const QString &errorText);
     
     void photosUpdateProfilePhotoError(qint64 msgId, qint32 errorCode, const QString &errorText);
     void photosUploadProfilePhotoError(qint64 msgId, qint32 errorCode, const QString &errorText);
@@ -581,7 +590,7 @@ protected Q_SLOTS:
     virtual void onAccountDeleteAccountAnswer(qint64 msgId, bool result, const QVariant &attachedData);
     virtual void onAccountGetAccountTTLAnswer(qint64 msgId, const AccountDaysTTL &result, const QVariant &attachedData);
     virtual void onAccountSetAccountTTLAnswer(qint64 msgId, bool result, const QVariant &attachedData);
-    virtual void onAccountSendChangePhoneCodeAnswer(qint64 msgId, const AccountSentChangePhoneCode &result, const QVariant &attachedData);
+    virtual void onAccountSendChangePhoneCodeAnswer(qint64 msgId, const AuthSentCode &result, const QVariant &attachedData);
     virtual void onAccountChangePhoneAnswer(qint64 msgId, const User &result, const QVariant &attachedData);
     virtual void onAccountUpdateDeviceLockedAnswer(qint64 msgId, bool result, const QVariant &attachedData);
     virtual void onAccountGetAuthorizationsAnswer(qint64 msgId, const AccountAuthorizations &result, const QVariant &attachedData);
@@ -592,7 +601,6 @@ protected Q_SLOTS:
     
     virtual void onAuthCheckPhoneAnswer(qint64 msgId, const AuthCheckedPhone &result, const QVariant &attachedData);
     virtual void onAuthSendCodeAnswer(qint64 msgId, const AuthSentCode &result, const QVariant &attachedData);
-    virtual void onAuthSendCallAnswer(qint64 msgId, bool result, const QVariant &attachedData);
     virtual void onAuthSignUpAnswer(qint64 msgId, const AuthAuthorization &result, const QVariant &attachedData);
     virtual void onAuthSignInAnswer(qint64 msgId, const AuthAuthorization &result, const QVariant &attachedData);
     virtual void onAuthLogOutAnswer(qint64 msgId, bool result, const QVariant &attachedData);
@@ -601,11 +609,12 @@ protected Q_SLOTS:
     virtual void onAuthExportAuthorizationAnswer(qint64 msgId, const AuthExportedAuthorization &result, const QVariant &attachedData);
     virtual void onAuthImportAuthorizationAnswer(qint64 msgId, const AuthAuthorization &result, const QVariant &attachedData);
     virtual void onAuthBindTempAuthKeyAnswer(qint64 msgId, bool result, const QVariant &attachedData);
-    virtual void onAuthSendSmsAnswer(qint64 msgId, bool result, const QVariant &attachedData);
     virtual void onAuthImportBotAuthorizationAnswer(qint64 msgId, const AuthAuthorization &result, const QVariant &attachedData);
     virtual void onAuthCheckPasswordAnswer(qint64 msgId, const AuthAuthorization &result, const QVariant &attachedData);
     virtual void onAuthRequestPasswordRecoveryAnswer(qint64 msgId, const AuthPasswordRecovery &result, const QVariant &attachedData);
     virtual void onAuthRecoverPasswordAnswer(qint64 msgId, const AuthAuthorization &result, const QVariant &attachedData);
+    virtual void onAuthResendCodeAnswer(qint64 msgId, const AuthSentCode &result, const QVariant &attachedData);
+    virtual void onAuthCancelCodeAnswer(qint64 msgId, bool result, const QVariant &attachedData);
     
     virtual void onChannelsGetDialogsAnswer(qint64 msgId, const MessagesDialogs &result, const QVariant &attachedData);
     virtual void onChannelsGetImportantHistoryAnswer(qint64 msgId, const MessagesMessages &result, const QVariant &attachedData);
@@ -635,8 +644,6 @@ protected Q_SLOTS:
     virtual void onChannelsToggleInvitesAnswer(qint64 msgId, const UpdatesType &result, const QVariant &attachedData);
     virtual void onChannelsExportMessageLinkAnswer(qint64 msgId, const ExportedMessageLink &result, const QVariant &attachedData);
     virtual void onChannelsToggleSignaturesAnswer(qint64 msgId, const UpdatesType &result, const QVariant &attachedData);
-    virtual void onChannelsGetMessageEditDataAnswer(qint64 msgId, const ChannelsMessageEditData &result, const QVariant &attachedData);
-    virtual void onChannelsEditMessageAnswer(qint64 msgId, const UpdatesType &result, const QVariant &attachedData);
     virtual void onChannelsUpdatePinnedMessageAnswer(qint64 msgId, const UpdatesType &result, const QVariant &attachedData);
     
     virtual void onContactsGetStatusesAnswer(qint64 msgId, const QList<ContactStatus> &result, const QVariant &attachedData);
@@ -719,6 +726,11 @@ protected Q_SLOTS:
     virtual void onMessagesGetInlineBotResultsAnswer(qint64 msgId, const MessagesBotResults &result, const QVariant &attachedData);
     virtual void onMessagesSetInlineBotResultsAnswer(qint64 msgId, bool result, const QVariant &attachedData);
     virtual void onMessagesSendInlineBotResultAnswer(qint64 msgId, const UpdatesType &result, const QVariant &attachedData);
+    virtual void onMessagesGetMessageEditDataAnswer(qint64 msgId, const MessagesMessageEditData &result, const QVariant &attachedData);
+    virtual void onMessagesEditMessageAnswer(qint64 msgId, const UpdatesType &result, const QVariant &attachedData);
+    virtual void onMessagesEditInlineBotMessageAnswer(qint64 msgId, bool result, const QVariant &attachedData);
+    virtual void onMessagesGetBotCallbackAnswerAnswer(qint64 msgId, const MessagesBotCallbackAnswer &result, const QVariant &attachedData);
+    virtual void onMessagesSetBotCallbackAnswerAnswer(qint64 msgId, bool result, const QVariant &attachedData);
     
     virtual void onPhotosUpdateProfilePhotoAnswer(qint64 msgId, const UserProfilePhoto &result, const QVariant &attachedData);
     virtual void onPhotosUploadProfilePhotoAnswer(qint64 msgId, const PhotosPhoto &result, const QVariant &attachedData);
@@ -764,7 +776,6 @@ protected Q_SLOTS:
     
     virtual void onAuthCheckPhoneError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     virtual void onAuthSendCodeError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
-    virtual void onAuthSendCallError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     virtual void onAuthSignUpError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     virtual void onAuthSignInError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     virtual void onAuthLogOutError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
@@ -773,11 +784,12 @@ protected Q_SLOTS:
     virtual void onAuthExportAuthorizationError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     virtual void onAuthImportAuthorizationError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     virtual void onAuthBindTempAuthKeyError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
-    virtual void onAuthSendSmsError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     virtual void onAuthImportBotAuthorizationError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     virtual void onAuthCheckPasswordError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     virtual void onAuthRequestPasswordRecoveryError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     virtual void onAuthRecoverPasswordError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
+    virtual void onAuthResendCodeError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
+    virtual void onAuthCancelCodeError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     
     virtual void onChannelsGetDialogsError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     virtual void onChannelsGetImportantHistoryError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
@@ -807,8 +819,6 @@ protected Q_SLOTS:
     virtual void onChannelsToggleInvitesError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     virtual void onChannelsExportMessageLinkError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     virtual void onChannelsToggleSignaturesError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
-    virtual void onChannelsGetMessageEditDataError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
-    virtual void onChannelsEditMessageError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     virtual void onChannelsUpdatePinnedMessageError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     
     virtual void onContactsGetStatusesError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
@@ -891,6 +901,11 @@ protected Q_SLOTS:
     virtual void onMessagesGetInlineBotResultsError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     virtual void onMessagesSetInlineBotResultsError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     virtual void onMessagesSendInlineBotResultError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
+    virtual void onMessagesGetMessageEditDataError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
+    virtual void onMessagesEditMessageError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
+    virtual void onMessagesEditInlineBotMessageError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
+    virtual void onMessagesGetBotCallbackAnswerError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
+    virtual void onMessagesSetBotCallbackAnswerError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     
     virtual void onPhotosUpdateProfilePhotoError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     virtual void onPhotosUploadProfilePhotoError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);

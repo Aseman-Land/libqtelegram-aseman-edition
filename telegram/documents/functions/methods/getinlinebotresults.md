@@ -7,13 +7,15 @@ TelegramCore::messagesGetInlineBotResults
 ## Schema:
 
 ```c++
-messages.getInlineBotResults#9324600d bot:InputUser query:string offset:string = messages.BotResults;
+messages.getInlineBotResults#514e999d flags:# bot:InputUser peer:InputPeer geo_point:flags.0?InputGeoPoint query:string offset:string = messages.BotResults;
 ```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
 |bot|[InputUser](../../types/inputuser.md)||
+|peer|[InputPeer](../../types/inputpeer.md)||
+|geoPoint|[InputGeoPoint](../../types/inputgeopoint.md)||
 |query|QString||
 |offset|QString||
 |callBack|Callback&lt;[MessagesBotResults](../../types/messagesbotresults.md)&gt;|0|
@@ -52,7 +54,7 @@ onGetInlineBotResultsError(qint64 msgId, qint32 errorCode, const QString &errorT
 ## Examples:
 
 ```c++
-tg->getInlineBotResults(bot, query, offset, [=](TG_GET_INLINE_BOT_RESULTS_CALLBACK){
+tg->getInlineBotResults(bot, peer, geo_point, query, offset, [=](TG_GET_INLINE_BOT_RESULTS_CALLBACK){
     ...
 }, 30000);
 ```

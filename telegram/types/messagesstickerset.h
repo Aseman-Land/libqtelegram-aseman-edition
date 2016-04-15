@@ -16,11 +16,11 @@
 class LIBQTELEGRAMSHARED_EXPORT MessagesStickerSet : public TelegramTypeObject
 {
 public:
-    enum MessagesStickerSetType {
+    enum MessagesStickerSetClassType {
         typeMessagesStickerSet = 0xb60a24a6
     };
 
-    MessagesStickerSet(MessagesStickerSetType classType = typeMessagesStickerSet, InboundPkt *in = 0);
+    MessagesStickerSet(MessagesStickerSetClassType classType = typeMessagesStickerSet, InboundPkt *in = 0);
     MessagesStickerSet(InboundPkt *in);
     MessagesStickerSet(const Null&);
     virtual ~MessagesStickerSet();
@@ -34,8 +34,8 @@ public:
     void setSet(const StickerSet &set);
     StickerSet set() const;
 
-    void setClassType(MessagesStickerSetType classType);
-    MessagesStickerSetType classType() const;
+    void setClassType(MessagesStickerSetClassType classType);
+    MessagesStickerSetClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -51,7 +51,7 @@ private:
     QList<Document> m_documents;
     QList<StickerPack> m_packs;
     StickerSet m_set;
-    MessagesStickerSetType m_classType;
+    MessagesStickerSetClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(MessagesStickerSet)

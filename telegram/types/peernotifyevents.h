@@ -12,18 +12,18 @@
 class LIBQTELEGRAMSHARED_EXPORT PeerNotifyEvents : public TelegramTypeObject
 {
 public:
-    enum PeerNotifyEventsType {
+    enum PeerNotifyEventsClassType {
         typePeerNotifyEventsEmpty = 0xadd53cb3,
         typePeerNotifyEventsAll = 0x6d1ded88
     };
 
-    PeerNotifyEvents(PeerNotifyEventsType classType = typePeerNotifyEventsEmpty, InboundPkt *in = 0);
+    PeerNotifyEvents(PeerNotifyEventsClassType classType = typePeerNotifyEventsEmpty, InboundPkt *in = 0);
     PeerNotifyEvents(InboundPkt *in);
     PeerNotifyEvents(const Null&);
     virtual ~PeerNotifyEvents();
 
-    void setClassType(PeerNotifyEventsType classType);
-    PeerNotifyEventsType classType() const;
+    void setClassType(PeerNotifyEventsClassType classType);
+    PeerNotifyEventsClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -36,7 +36,7 @@ public:
     QByteArray getHash(QCryptographicHash::Algorithm alg = QCryptographicHash::Md5) const;
 
 private:
-    PeerNotifyEventsType m_classType;
+    PeerNotifyEventsClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(PeerNotifyEvents)

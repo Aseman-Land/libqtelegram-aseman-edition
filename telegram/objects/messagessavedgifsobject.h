@@ -13,14 +13,14 @@
 class LIBQTELEGRAMSHARED_EXPORT MessagesSavedGifsObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(MessagesSavedGifsType)
+    Q_ENUMS(MessagesSavedGifsClassType)
     Q_PROPERTY(QList<Document> gifs READ gifs WRITE setGifs NOTIFY gifsChanged)
     Q_PROPERTY(qint32 hash READ hash WRITE setHash NOTIFY hashChanged)
     Q_PROPERTY(MessagesSavedGifs core READ core WRITE setCore NOTIFY coreChanged)
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum MessagesSavedGifsType {
+    enum MessagesSavedGifsClassType {
         TypeMessagesSavedGifsNotModified,
         TypeMessagesSavedGifs
     };

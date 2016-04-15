@@ -47,6 +47,9 @@
 * [typeUpdateBotInlineSend](#updatetypeupdatebotinlinesend)
 * [typeUpdateEditChannelMessage](#updatetypeupdateeditchannelmessage)
 * [typeUpdateChannelPinnedMessage](#updatetypeupdatechannelpinnedmessage)
+* [typeUpdateBotCallbackQuery](#updatetypeupdatebotcallbackquery)
+* [typeUpdateEditMessage](#updatetypeupdateeditmessage)
+* [typeUpdateInlineBotCallbackQuery](#updatetypeupdateinlinebotcallbackquery)
 
 ## Update::typeUpdateNewMessage
 
@@ -684,7 +687,7 @@ updateSavedGifs#9375341e = Update;
 #### Schema:
 
 ```c++
-updateBotInlineQuery#c01eea08 query_id:long user_id:int query:string offset:string = Update;
+updateBotInlineQuery#54826690 flags:# query_id:long user_id:int query:string geo:flags.0?GeoPoint offset:string = Update;
 ```
 
 #### Parameters:
@@ -694,6 +697,7 @@ updateBotInlineQuery#c01eea08 query_id:long user_id:int query:string offset:stri
 |queryId|qint64|
 |userId|qint32|
 |query|QString|
+|geo|[GeoPoint](geopoint.md)|
 |offset|QString|
 
 ## Update::typeUpdateBotInlineSend
@@ -701,7 +705,7 @@ updateBotInlineQuery#c01eea08 query_id:long user_id:int query:string offset:stri
 #### Schema:
 
 ```c++
-updateBotInlineSend#f69e113 user_id:int query:string id:string = Update;
+updateBotInlineSend#e48f964 flags:# user_id:int query:string geo:flags.0?GeoPoint id:string msg_id:flags.1?InputBotInlineMessageID = Update;
 ```
 
 #### Parameters:
@@ -710,7 +714,9 @@ updateBotInlineSend#f69e113 user_id:int query:string id:string = Update;
 |----|----|
 |userId|qint32|
 |query|QString|
+|geo|[GeoPoint](geopoint.md)|
 |id|QString|
+|msgId|[InputBotInlineMessageID](inputbotinlinemessageid.md)|
 
 ## Update::typeUpdateEditChannelMessage
 
@@ -742,4 +748,55 @@ updateChannelPinnedMessage#98592475 channel_id:int id:int = Update;
 |----|----|
 |channelId|qint32|
 |id|qint32|
+
+## Update::typeUpdateBotCallbackQuery
+
+#### Schema:
+
+```c++
+updateBotCallbackQuery#a68c688c query_id:long user_id:int peer:Peer msg_id:int data:bytes = Update;
+```
+
+#### Parameters:
+
+|Name|Type|
+|----|----|
+|queryId|qint64|
+|userId|qint32|
+|peer|[Peer](peer.md)|
+|msgId|qint32|
+|data|QByteArray|
+
+## Update::typeUpdateEditMessage
+
+#### Schema:
+
+```c++
+updateEditMessage#e40370a3 message:Message pts:int pts_count:int = Update;
+```
+
+#### Parameters:
+
+|Name|Type|
+|----|----|
+|message|[Message](message.md)|
+|pts|qint32|
+|ptsCount|qint32|
+
+## Update::typeUpdateInlineBotCallbackQuery
+
+#### Schema:
+
+```c++
+updateInlineBotCallbackQuery#2cbd95af query_id:long user_id:int msg_id:InputBotInlineMessageID data:bytes = Update;
+```
+
+#### Parameters:
+
+|Name|Type|
+|----|----|
+|queryId|qint64|
+|userId|qint32|
+|msgId|[InputBotInlineMessageID](inputbotinlinemessageid.md)|
+|data|QByteArray|
 

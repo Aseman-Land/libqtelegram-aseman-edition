@@ -14,7 +14,7 @@
 class LIBQTELEGRAMSHARED_EXPORT UpdatesDifferenceObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(UpdatesDifferenceType)
+    Q_ENUMS(UpdatesDifferenceClassType)
     Q_PROPERTY(QList<Chat> chats READ chats WRITE setChats NOTIFY chatsChanged)
     Q_PROPERTY(qint32 date READ date WRITE setDate NOTIFY dateChanged)
     Q_PROPERTY(UpdatesStateObject* intermediateState READ intermediateState WRITE setIntermediateState NOTIFY intermediateStateChanged)
@@ -28,7 +28,7 @@ class LIBQTELEGRAMSHARED_EXPORT UpdatesDifferenceObject : public TelegramTypeQOb
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum UpdatesDifferenceType {
+    enum UpdatesDifferenceClassType {
         TypeUpdatesDifferenceEmpty,
         TypeUpdatesDifference,
         TypeUpdatesDifferenceSlice

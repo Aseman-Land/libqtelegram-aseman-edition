@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-ChatPhoto::ChatPhoto(ChatPhotoType classType, InboundPkt *in) :
+ChatPhoto::ChatPhoto(ChatPhotoClassType classType, InboundPkt *in) :
     m_classType(classType)
 {
     if(in) fetch(in);
@@ -52,11 +52,11 @@ bool ChatPhoto::operator ==(const ChatPhoto &b) const {
            m_photoSmall == b.m_photoSmall;
 }
 
-void ChatPhoto::setClassType(ChatPhoto::ChatPhotoType classType) {
+void ChatPhoto::setClassType(ChatPhoto::ChatPhotoClassType classType) {
     m_classType = classType;
 }
 
-ChatPhoto::ChatPhotoType ChatPhoto::classType() const {
+ChatPhoto::ChatPhotoClassType ChatPhoto::classType() const {
     return m_classType;
 }
 
@@ -65,7 +65,7 @@ bool ChatPhoto::fetch(InboundPkt *in) {
     int x = in->fetchInt();
     switch(x) {
     case typeChatPhotoEmpty: {
-        m_classType = static_cast<ChatPhotoType>(x);
+        m_classType = static_cast<ChatPhotoClassType>(x);
         return true;
     }
         break;
@@ -73,7 +73,7 @@ bool ChatPhoto::fetch(InboundPkt *in) {
     case typeChatPhoto: {
         m_photoSmall.fetch(in);
         m_photoBig.fetch(in);
-        m_classType = static_cast<ChatPhotoType>(x);
+        m_classType = static_cast<ChatPhotoClassType>(x);
         return true;
     }
         break;
@@ -128,7 +128,7 @@ QDataStream &operator<<(QDataStream &stream, const ChatPhoto &item) {
 QDataStream &operator>>(QDataStream &stream, ChatPhoto &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<ChatPhoto::ChatPhotoType>(type));
+    item.setClassType(static_cast<ChatPhoto::ChatPhotoClassType>(type));
     switch(type) {
     case ChatPhoto::typeChatPhotoEmpty: {
         

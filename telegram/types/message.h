@@ -21,13 +21,13 @@
 class LIBQTELEGRAMSHARED_EXPORT Message : public TelegramTypeObject
 {
 public:
-    enum MessageType {
+    enum MessageClassType {
         typeMessageEmpty = 0x83e5de54,
         typeMessage = 0xc09be45f,
         typeMessageService = 0x9e19a1f6
     };
 
-    Message(MessageType classType = typeMessageEmpty, InboundPkt *in = 0);
+    Message(MessageClassType classType = typeMessageEmpty, InboundPkt *in = 0);
     Message(InboundPkt *in);
     Message(const Null&);
     virtual ~Message();
@@ -95,8 +95,8 @@ public:
     void setViews(qint32 views);
     qint32 views() const;
 
-    void setClassType(MessageType classType);
-    MessageType classType() const;
+    void setClassType(MessageClassType classType);
+    MessageClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -124,7 +124,7 @@ private:
     Peer m_toId;
     qint32 m_viaBotId;
     qint32 m_views;
-    MessageType m_classType;
+    MessageClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(Message)

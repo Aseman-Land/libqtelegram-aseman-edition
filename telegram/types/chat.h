@@ -16,7 +16,7 @@
 class LIBQTELEGRAMSHARED_EXPORT Chat : public TelegramTypeObject
 {
 public:
-    enum ChatType {
+    enum ChatClassType {
         typeChatEmpty = 0x9ba2d800,
         typeChat = 0xd91cdd54,
         typeChatForbidden = 0x7328bdb,
@@ -24,7 +24,7 @@ public:
         typeChannelForbidden = 0x2d85832c
     };
 
-    Chat(ChatType classType = typeChatEmpty, InboundPkt *in = 0);
+    Chat(ChatClassType classType = typeChatEmpty, InboundPkt *in = 0);
     Chat(InboundPkt *in);
     Chat(const Null&);
     virtual ~Chat();
@@ -107,8 +107,8 @@ public:
     void setVersion(qint32 version);
     qint32 version() const;
 
-    void setClassType(ChatType classType);
-    ChatType classType() const;
+    void setClassType(ChatClassType classType);
+    ChatClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -132,7 +132,7 @@ private:
     QString m_title;
     QString m_username;
     qint32 m_version;
-    ChatType m_classType;
+    ChatClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(Chat)

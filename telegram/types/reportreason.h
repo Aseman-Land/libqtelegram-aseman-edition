@@ -13,14 +13,14 @@
 class LIBQTELEGRAMSHARED_EXPORT ReportReason : public TelegramTypeObject
 {
 public:
-    enum ReportReasonType {
+    enum ReportReasonClassType {
         typeInputReportReasonSpam = 0x58dbcab8,
         typeInputReportReasonViolence = 0x1e22c78d,
         typeInputReportReasonPornography = 0x2e59d922,
         typeInputReportReasonOther = 0xe1746d0a
     };
 
-    ReportReason(ReportReasonType classType = typeInputReportReasonSpam, InboundPkt *in = 0);
+    ReportReason(ReportReasonClassType classType = typeInputReportReasonSpam, InboundPkt *in = 0);
     ReportReason(InboundPkt *in);
     ReportReason(const Null&);
     virtual ~ReportReason();
@@ -28,8 +28,8 @@ public:
     void setText(const QString &text);
     QString text() const;
 
-    void setClassType(ReportReasonType classType);
-    ReportReasonType classType() const;
+    void setClassType(ReportReasonClassType classType);
+    ReportReasonClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -43,7 +43,7 @@ public:
 
 private:
     QString m_text;
-    ReportReasonType m_classType;
+    ReportReasonClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(ReportReason)

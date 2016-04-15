@@ -82,7 +82,7 @@ bool ChatPhotoObject::operator ==(const ChatPhoto &b) const {
 }
 
 void ChatPhotoObject::setClassType(quint32 classType) {
-    ChatPhoto::ChatPhotoType result;
+    ChatPhoto::ChatPhotoClassType result;
     switch(classType) {
     case TypeChatPhotoEmpty:
         result = ChatPhoto::typeChatPhotoEmpty;

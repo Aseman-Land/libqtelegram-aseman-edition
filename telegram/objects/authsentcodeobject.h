@@ -9,30 +9,36 @@
 #include "telegram/types/authsentcode.h"
 
 #include <QPointer>
+#include "authcodetypeobject.h"
+#include "authsentcodetypeobject.h"
 
 class LIBQTELEGRAMSHARED_EXPORT AuthSentCodeObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(AuthSentCodeType)
-    Q_PROPERTY(bool isPassword READ isPassword WRITE setIsPassword NOTIFY isPasswordChanged)
+    Q_ENUMS(AuthSentCodeClassType)
+    Q_PROPERTY(qint32 flags READ flags WRITE setFlags NOTIFY flagsChanged)
+    Q_PROPERTY(AuthCodeTypeObject* nextType READ nextType WRITE setNextType NOTIFY nextTypeChanged)
     Q_PROPERTY(QString phoneCodeHash READ phoneCodeHash WRITE setPhoneCodeHash NOTIFY phoneCodeHashChanged)
     Q_PROPERTY(bool phoneRegistered READ phoneRegistered WRITE setPhoneRegistered NOTIFY phoneRegisteredChanged)
-    Q_PROPERTY(qint32 sendCallTimeout READ sendCallTimeout WRITE setSendCallTimeout NOTIFY sendCallTimeoutChanged)
+    Q_PROPERTY(qint32 timeout READ timeout WRITE setTimeout NOTIFY timeoutChanged)
+    Q_PROPERTY(AuthSentCodeTypeObject* type READ type WRITE setType NOTIFY typeChanged)
     Q_PROPERTY(AuthSentCode core READ core WRITE setCore NOTIFY coreChanged)
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum AuthSentCodeType {
-        TypeAuthSentCode,
-        TypeAuthSentAppCode
+    enum AuthSentCodeClassType {
+        TypeAuthSentCode
     };
 
     AuthSentCodeObject(const AuthSentCode &core, QObject *parent = 0);
     AuthSentCodeObject(QObject *parent = 0);
     virtual ~AuthSentCodeObject();
 
-    void setIsPassword(bool isPassword);
-    bool isPassword() const;
+    void setFlags(qint32 flags);
+    qint32 flags() const;
+
+    void setNextType(AuthCodeTypeObject* nextType);
+    AuthCodeTypeObject* nextType() const;
 
     void setPhoneCodeHash(const QString &phoneCodeHash);
     QString phoneCodeHash() const;
@@ -40,8 +46,11 @@ public:
     void setPhoneRegistered(bool phoneRegistered);
     bool phoneRegistered() const;
 
-    void setSendCallTimeout(qint32 sendCallTimeout);
-    qint32 sendCallTimeout() const;
+    void setTimeout(qint32 timeout);
+    qint32 timeout() const;
+
+    void setType(AuthSentCodeTypeObject* type);
+    AuthSentCodeTypeObject* type() const;
 
     void setClassType(quint32 classType);
     quint32 classType() const;
@@ -55,14 +64,20 @@ public:
 Q_SIGNALS:
     void coreChanged();
     void classTypeChanged();
-    void isPasswordChanged();
+    void flagsChanged();
+    void nextTypeChanged();
     void phoneCodeHashChanged();
     void phoneRegisteredChanged();
-    void sendCallTimeoutChanged();
+    void timeoutChanged();
+    void typeChanged();
 
 private Q_SLOTS:
+    void coreNextTypeChanged();
+    void coreTypeChanged();
 
 private:
+    QPointer<AuthCodeTypeObject> m_nextType;
+    QPointer<AuthSentCodeTypeObject> m_type;
     AuthSentCode m_core;
 };
 

@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-InputDocument::InputDocument(InputDocumentType classType, InboundPkt *in) :
+InputDocument::InputDocument(InputDocumentClassType classType, InboundPkt *in) :
     m_accessHash(0),
     m_id(0),
     m_classType(classType)
@@ -58,11 +58,11 @@ bool InputDocument::operator ==(const InputDocument &b) const {
            m_id == b.m_id;
 }
 
-void InputDocument::setClassType(InputDocument::InputDocumentType classType) {
+void InputDocument::setClassType(InputDocument::InputDocumentClassType classType) {
     m_classType = classType;
 }
 
-InputDocument::InputDocumentType InputDocument::classType() const {
+InputDocument::InputDocumentClassType InputDocument::classType() const {
     return m_classType;
 }
 
@@ -71,7 +71,7 @@ bool InputDocument::fetch(InboundPkt *in) {
     int x = in->fetchInt();
     switch(x) {
     case typeInputDocumentEmpty: {
-        m_classType = static_cast<InputDocumentType>(x);
+        m_classType = static_cast<InputDocumentClassType>(x);
         return true;
     }
         break;
@@ -79,7 +79,7 @@ bool InputDocument::fetch(InboundPkt *in) {
     case typeInputDocument: {
         m_id = in->fetchLong();
         m_accessHash = in->fetchLong();
-        m_classType = static_cast<InputDocumentType>(x);
+        m_classType = static_cast<InputDocumentClassType>(x);
         return true;
     }
         break;
@@ -134,7 +134,7 @@ QDataStream &operator<<(QDataStream &stream, const InputDocument &item) {
 QDataStream &operator>>(QDataStream &stream, InputDocument &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<InputDocument::InputDocumentType>(type));
+    item.setClassType(static_cast<InputDocument::InputDocumentClassType>(type));
     switch(type) {
     case InputDocument::typeInputDocumentEmpty: {
         

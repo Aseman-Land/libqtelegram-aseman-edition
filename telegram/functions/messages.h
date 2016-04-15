@@ -44,7 +44,12 @@
 #include "telegram/types/messagessavedgifs.h"
 #include "telegram/types/inputdocument.h"
 #include "telegram/types/messagesbotresults.h"
+#include "telegram/types/inputgeopoint.h"
 #include "telegram/types/inputbotinlineresult.h"
+#include "telegram/types/inlinebotswitchpm.h"
+#include "telegram/types/messagesmessageeditdata.h"
+#include "telegram/types/inputbotinlinemessageid.h"
+#include "telegram/types/messagesbotcallbackanswer.h"
 
 namespace Tg {
 namespace Functions {
@@ -108,9 +113,14 @@ public:
         fncMessagesSearchGifs = 0xbf9a776b,
         fncMessagesGetSavedGifs = 0x83bf3d52,
         fncMessagesSaveGif = 0x327a30cb,
-        fncMessagesGetInlineBotResults = 0x9324600d,
-        fncMessagesSetInlineBotResults = 0x3f23ec12,
-        fncMessagesSendInlineBotResult = 0xb16e06fe
+        fncMessagesGetInlineBotResults = 0x514e999d,
+        fncMessagesSetInlineBotResults = 0xeb5ea206,
+        fncMessagesSendInlineBotResult = 0xb16e06fe,
+        fncMessagesGetMessageEditData = 0xfda68d36,
+        fncMessagesEditMessage = 0xce91e4ca,
+        fncMessagesEditInlineBotMessage = 0x130c2c85,
+        fncMessagesGetBotCallbackAnswer = 0xa6e94f04,
+        fncMessagesSetBotCallbackAnswer = 0x481c591a
     };
 
     Messages();
@@ -281,14 +291,29 @@ public:
     static bool saveGif(OutboundPkt *out, const InputDocument &id, bool unsave);
     static bool saveGifResult(InboundPkt *in);
 
-    static bool getInlineBotResults(OutboundPkt *out, const InputUser &bot, const QString &query, const QString &offset);
+    static bool getInlineBotResults(OutboundPkt *out, const InputUser &bot, const InputPeer &peer, const InputGeoPoint &geoPoint, const QString &query, const QString &offset);
     static MessagesBotResults getInlineBotResultsResult(InboundPkt *in);
 
-    static bool setInlineBotResults(OutboundPkt *out, bool gallery, bool privateValue, qint64 queryId, const QList<InputBotInlineResult> &results, qint32 cacheTime, const QString &nextOffset);
+    static bool setInlineBotResults(OutboundPkt *out, bool gallery, bool privateValue, qint64 queryId, const QList<InputBotInlineResult> &results, qint32 cacheTime, const QString &nextOffset, const InlineBotSwitchPM &switchPm);
     static bool setInlineBotResultsResult(InboundPkt *in);
 
     static bool sendInlineBotResult(OutboundPkt *out, bool broadcast, bool silent, bool background, const InputPeer &peer, qint32 replyToMsgId, qint64 randomId, qint64 queryId, const QString &id);
     static UpdatesType sendInlineBotResultResult(InboundPkt *in);
+
+    static bool getMessageEditData(OutboundPkt *out, const InputPeer &peer, qint32 id);
+    static MessagesMessageEditData getMessageEditDataResult(InboundPkt *in);
+
+    static bool editMessage(OutboundPkt *out, bool noWebpage, const InputPeer &peer, qint32 id, const QString &message, const ReplyMarkup &replyMarkup, const QList<MessageEntity> &entities);
+    static UpdatesType editMessageResult(InboundPkt *in);
+
+    static bool editInlineBotMessage(OutboundPkt *out, bool noWebpage, const InputBotInlineMessageID &id, const QString &message, const ReplyMarkup &replyMarkup, const QList<MessageEntity> &entities);
+    static bool editInlineBotMessageResult(InboundPkt *in);
+
+    static bool getBotCallbackAnswer(OutboundPkt *out, const InputPeer &peer, qint32 msgId, const QByteArray &data);
+    static MessagesBotCallbackAnswer getBotCallbackAnswerResult(InboundPkt *in);
+
+    static bool setBotCallbackAnswer(OutboundPkt *out, bool alert, qint64 queryId, const QString &message);
+    static bool setBotCallbackAnswerResult(InboundPkt *in);
 
 };
 

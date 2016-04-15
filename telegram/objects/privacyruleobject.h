@@ -13,13 +13,13 @@
 class LIBQTELEGRAMSHARED_EXPORT PrivacyRuleObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(PrivacyRuleType)
+    Q_ENUMS(PrivacyRuleClassType)
     Q_PROPERTY(QList<qint32> users READ users WRITE setUsers NOTIFY usersChanged)
     Q_PROPERTY(PrivacyRule core READ core WRITE setCore NOTIFY coreChanged)
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum PrivacyRuleType {
+    enum PrivacyRuleClassType {
         TypePrivacyValueAllowContacts,
         TypePrivacyValueAllowAll,
         TypePrivacyValueAllowUsers,

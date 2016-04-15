@@ -107,7 +107,7 @@ bool InputChatPhotoObject::operator ==(const InputChatPhoto &b) const {
 }
 
 void InputChatPhotoObject::setClassType(quint32 classType) {
-    InputChatPhoto::InputChatPhotoType result;
+    InputChatPhoto::InputChatPhotoClassType result;
     switch(classType) {
     case TypeInputChatPhotoEmpty:
         result = InputChatPhoto::typeInputChatPhotoEmpty;

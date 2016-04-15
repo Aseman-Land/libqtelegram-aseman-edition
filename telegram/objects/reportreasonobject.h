@@ -13,13 +13,13 @@
 class LIBQTELEGRAMSHARED_EXPORT ReportReasonObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(ReportReasonType)
+    Q_ENUMS(ReportReasonClassType)
     Q_PROPERTY(QString text READ text WRITE setText NOTIFY textChanged)
     Q_PROPERTY(ReportReason core READ core WRITE setCore NOTIFY coreChanged)
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum ReportReasonType {
+    enum ReportReasonClassType {
         TypeInputReportReasonSpam,
         TypeInputReportReasonViolence,
         TypeInputReportReasonPornography,

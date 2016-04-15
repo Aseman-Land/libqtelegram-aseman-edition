@@ -80,7 +80,7 @@ bool InputContactObject::operator ==(const InputContact &b) const {
 }
 
 void InputContactObject::setClassType(quint32 classType) {
-    InputContact::InputContactType result;
+    InputContact::InputContactClassType result;
     switch(classType) {
     case TypeInputPhoneContact:
         result = InputContact::typeInputPhoneContact;

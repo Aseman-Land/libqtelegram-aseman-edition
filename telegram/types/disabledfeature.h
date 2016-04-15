@@ -13,11 +13,11 @@
 class LIBQTELEGRAMSHARED_EXPORT DisabledFeature : public TelegramTypeObject
 {
 public:
-    enum DisabledFeatureType {
+    enum DisabledFeatureClassType {
         typeDisabledFeature = 0xae636f24
     };
 
-    DisabledFeature(DisabledFeatureType classType = typeDisabledFeature, InboundPkt *in = 0);
+    DisabledFeature(DisabledFeatureClassType classType = typeDisabledFeature, InboundPkt *in = 0);
     DisabledFeature(InboundPkt *in);
     DisabledFeature(const Null&);
     virtual ~DisabledFeature();
@@ -28,8 +28,8 @@ public:
     void setFeature(const QString &feature);
     QString feature() const;
 
-    void setClassType(DisabledFeatureType classType);
-    DisabledFeatureType classType() const;
+    void setClassType(DisabledFeatureClassType classType);
+    DisabledFeatureClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -44,7 +44,7 @@ public:
 private:
     QString m_description;
     QString m_feature;
-    DisabledFeatureType m_classType;
+    DisabledFeatureClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(DisabledFeature)

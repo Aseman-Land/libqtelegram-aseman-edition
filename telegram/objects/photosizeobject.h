@@ -14,7 +14,7 @@
 class LIBQTELEGRAMSHARED_EXPORT PhotoSizeObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(PhotoSizeType)
+    Q_ENUMS(PhotoSizeClassType)
     Q_PROPERTY(QByteArray bytes READ bytes WRITE setBytes NOTIFY bytesChanged)
     Q_PROPERTY(qint32 h READ h WRITE setH NOTIFY hChanged)
     Q_PROPERTY(FileLocationObject* location READ location WRITE setLocation NOTIFY locationChanged)
@@ -25,7 +25,7 @@ class LIBQTELEGRAMSHARED_EXPORT PhotoSizeObject : public TelegramTypeQObject
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum PhotoSizeType {
+    enum PhotoSizeClassType {
         TypePhotoSizeEmpty,
         TypePhotoSize,
         TypePhotoCachedSize

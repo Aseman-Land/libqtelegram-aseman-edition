@@ -58,9 +58,5 @@
 
 * **Toggle signatures** - [TelegramCore::channelsToggleSignatures](methods/togglesignatures.md)
 
-* **Get message edit data** - [TelegramCore::channelsGetMessageEditData](methods/getmessageeditdata.md)
-
-* **Edit message** - [TelegramCore::channelsEditMessage](methods/editmessage.md)
-
 * **Update pinned message** - [TelegramCore::channelsUpdatePinnedMessage](methods/updatepinnedmessage.md)
 

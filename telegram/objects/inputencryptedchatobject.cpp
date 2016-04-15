@@ -56,7 +56,7 @@ bool InputEncryptedChatObject::operator ==(const InputEncryptedChat &b) const {
 }
 
 void InputEncryptedChatObject::setClassType(quint32 classType) {
-    InputEncryptedChat::InputEncryptedChatType result;
+    InputEncryptedChat::InputEncryptedChatClassType result;
     switch(classType) {
     case TypeInputEncryptedChat:
         result = InputEncryptedChat::typeInputEncryptedChat;

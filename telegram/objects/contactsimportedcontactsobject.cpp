@@ -68,7 +68,7 @@ bool ContactsImportedContactsObject::operator ==(const ContactsImportedContacts 
 }
 
 void ContactsImportedContactsObject::setClassType(quint32 classType) {
-    ContactsImportedContacts::ContactsImportedContactsType result;
+    ContactsImportedContacts::ContactsImportedContactsClassType result;
     switch(classType) {
     case TypeContactsImportedContacts:
         result = ContactsImportedContacts::typeContactsImportedContacts;

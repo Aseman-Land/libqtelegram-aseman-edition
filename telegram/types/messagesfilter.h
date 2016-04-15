@@ -12,7 +12,7 @@
 class LIBQTELEGRAMSHARED_EXPORT MessagesFilter : public TelegramTypeObject
 {
 public:
-    enum MessagesFilterType {
+    enum MessagesFilterClassType {
         typeInputMessagesFilterEmpty = 0x57e2f66c,
         typeInputMessagesFilterPhotos = 0x9609a51c,
         typeInputMessagesFilterVideo = 0x9fc00e65,
@@ -25,13 +25,13 @@ public:
         typeInputMessagesFilterMusic = 0x3751b49e
     };
 
-    MessagesFilter(MessagesFilterType classType = typeInputMessagesFilterEmpty, InboundPkt *in = 0);
+    MessagesFilter(MessagesFilterClassType classType = typeInputMessagesFilterEmpty, InboundPkt *in = 0);
     MessagesFilter(InboundPkt *in);
     MessagesFilter(const Null&);
     virtual ~MessagesFilter();
 
-    void setClassType(MessagesFilterType classType);
-    MessagesFilterType classType() const;
+    void setClassType(MessagesFilterClassType classType);
+    MessagesFilterClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -44,7 +44,7 @@ public:
     QByteArray getHash(QCryptographicHash::Algorithm alg = QCryptographicHash::Md5) const;
 
 private:
-    MessagesFilterType m_classType;
+    MessagesFilterClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(MessagesFilter)

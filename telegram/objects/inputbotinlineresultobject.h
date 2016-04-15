@@ -9,19 +9,23 @@
 #include "telegram/types/inputbotinlineresult.h"
 
 #include <QPointer>
+#include "inputdocumentobject.h"
+#include "inputphotoobject.h"
 #include "inputbotinlinemessageobject.h"
 
 class LIBQTELEGRAMSHARED_EXPORT InputBotInlineResultObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(InputBotInlineResultType)
+    Q_ENUMS(InputBotInlineResultClassType)
     Q_PROPERTY(QString contentType READ contentType WRITE setContentType NOTIFY contentTypeChanged)
     Q_PROPERTY(QString contentUrl READ contentUrl WRITE setContentUrl NOTIFY contentUrlChanged)
     Q_PROPERTY(QString description READ description WRITE setDescription NOTIFY descriptionChanged)
+    Q_PROPERTY(InputDocumentObject* document READ document WRITE setDocument NOTIFY documentChanged)
     Q_PROPERTY(qint32 duration READ duration WRITE setDuration NOTIFY durationChanged)
     Q_PROPERTY(qint32 flags READ flags WRITE setFlags NOTIFY flagsChanged)
     Q_PROPERTY(qint32 h READ h WRITE setH NOTIFY hChanged)
     Q_PROPERTY(QString id READ id WRITE setId NOTIFY idChanged)
+    Q_PROPERTY(InputPhotoObject* photo READ photo WRITE setPhoto NOTIFY photoChanged)
     Q_PROPERTY(InputBotInlineMessageObject* sendMessage READ sendMessage WRITE setSendMessage NOTIFY sendMessageChanged)
     Q_PROPERTY(QString thumbUrl READ thumbUrl WRITE setThumbUrl NOTIFY thumbUrlChanged)
     Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
@@ -32,8 +36,10 @@ class LIBQTELEGRAMSHARED_EXPORT InputBotInlineResultObject : public TelegramType
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum InputBotInlineResultType {
-        TypeInputBotInlineResult
+    enum InputBotInlineResultClassType {
+        TypeInputBotInlineResult,
+        TypeInputBotInlineResultPhoto,
+        TypeInputBotInlineResultDocument
     };
 
     InputBotInlineResultObject(const InputBotInlineResult &core, QObject *parent = 0);
@@ -49,6 +55,9 @@ public:
     void setDescription(const QString &description);
     QString description() const;
 
+    void setDocument(InputDocumentObject* document);
+    InputDocumentObject* document() const;
+
     void setDuration(qint32 duration);
     qint32 duration() const;
 
@@ -60,6 +69,9 @@ public:
 
     void setId(const QString &id);
     QString id() const;
+
+    void setPhoto(InputPhotoObject* photo);
+    InputPhotoObject* photo() const;
 
     void setSendMessage(InputBotInlineMessageObject* sendMessage);
     InputBotInlineMessageObject* sendMessage() const;
@@ -94,10 +106,12 @@ Q_SIGNALS:
     void contentTypeChanged();
     void contentUrlChanged();
     void descriptionChanged();
+    void documentChanged();
     void durationChanged();
     void flagsChanged();
     void hChanged();
     void idChanged();
+    void photoChanged();
     void sendMessageChanged();
     void thumbUrlChanged();
     void titleChanged();
@@ -106,9 +120,13 @@ Q_SIGNALS:
     void wChanged();
 
 private Q_SLOTS:
+    void coreDocumentChanged();
+    void corePhotoChanged();
     void coreSendMessageChanged();
 
 private:
+    QPointer<InputDocumentObject> m_document;
+    QPointer<InputPhotoObject> m_photo;
     QPointer<InputBotInlineMessageObject> m_sendMessage;
     InputBotInlineResult m_core;
 };

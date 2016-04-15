@@ -16,11 +16,11 @@
 class LIBQTELEGRAMSHARED_EXPORT Config : public TelegramTypeObject
 {
 public:
-    enum ConfigType {
+    enum ConfigClassType {
         typeConfig = 0x317ceef4
     };
 
-    Config(ConfigType classType = typeConfig, InboundPkt *in = 0);
+    Config(ConfigClassType classType = typeConfig, InboundPkt *in = 0);
     Config(InboundPkt *in);
     Config(const Null&);
     virtual ~Config();
@@ -85,8 +85,8 @@ public:
     void setThisDc(qint32 thisDc);
     qint32 thisDc() const;
 
-    void setClassType(ConfigType classType);
-    ConfigType classType() const;
+    void setClassType(ConfigClassType classType);
+    ConfigClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -119,7 +119,7 @@ private:
     qint32 m_savedGifsLimit;
     bool m_testMode;
     qint32 m_thisDc;
-    ConfigType m_classType;
+    ConfigClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(Config)

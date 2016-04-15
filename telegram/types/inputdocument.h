@@ -13,12 +13,12 @@
 class LIBQTELEGRAMSHARED_EXPORT InputDocument : public TelegramTypeObject
 {
 public:
-    enum InputDocumentType {
+    enum InputDocumentClassType {
         typeInputDocumentEmpty = 0x72f0eaae,
         typeInputDocument = 0x18798952
     };
 
-    InputDocument(InputDocumentType classType = typeInputDocumentEmpty, InboundPkt *in = 0);
+    InputDocument(InputDocumentClassType classType = typeInputDocumentEmpty, InboundPkt *in = 0);
     InputDocument(InboundPkt *in);
     InputDocument(const Null&);
     virtual ~InputDocument();
@@ -29,8 +29,8 @@ public:
     void setId(qint64 id);
     qint64 id() const;
 
-    void setClassType(InputDocumentType classType);
-    InputDocumentType classType() const;
+    void setClassType(InputDocumentClassType classType);
+    InputDocumentClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -45,7 +45,7 @@ public:
 private:
     qint64 m_accessHash;
     qint64 m_id;
-    InputDocumentType m_classType;
+    InputDocumentClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(InputDocument)

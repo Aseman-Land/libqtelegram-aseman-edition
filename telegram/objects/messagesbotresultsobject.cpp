@@ -6,14 +6,20 @@
 
 MessagesBotResultsObject::MessagesBotResultsObject(const MessagesBotResults &core, QObject *parent) :
     TelegramTypeQObject(parent),
+    m_switchPm(0),
     m_core(core)
 {
+    m_switchPm = new InlineBotSwitchPMObject(m_core.switchPm(), this);
+    connect(m_switchPm.data(), &InlineBotSwitchPMObject::coreChanged, this, &MessagesBotResultsObject::coreSwitchPmChanged);
 }
 
 MessagesBotResultsObject::MessagesBotResultsObject(QObject *parent) :
     TelegramTypeQObject(parent),
+    m_switchPm(0),
     m_core()
 {
+    m_switchPm = new InlineBotSwitchPMObject(m_core.switchPm(), this);
+    connect(m_switchPm.data(), &InlineBotSwitchPMObject::coreChanged, this, &MessagesBotResultsObject::coreSwitchPmChanged);
 }
 
 MessagesBotResultsObject::~MessagesBotResultsObject() {
@@ -74,15 +80,34 @@ QList<BotInlineResult> MessagesBotResultsObject::results() const {
     return m_core.results();
 }
 
+void MessagesBotResultsObject::setSwitchPm(InlineBotSwitchPMObject* switchPm) {
+    if(m_switchPm == switchPm) return;
+    if(m_switchPm) delete m_switchPm;
+    m_switchPm = switchPm;
+    if(m_switchPm) {
+        m_switchPm->setParent(this);
+        m_core.setSwitchPm(m_switchPm->core());
+        connect(m_switchPm.data(), &InlineBotSwitchPMObject::coreChanged, this, &MessagesBotResultsObject::coreSwitchPmChanged);
+    }
+    Q_EMIT switchPmChanged();
+    Q_EMIT coreChanged();
+}
+
+InlineBotSwitchPMObject*  MessagesBotResultsObject::switchPm() const {
+    return m_switchPm;
+}
+
 MessagesBotResultsObject &MessagesBotResultsObject::operator =(const MessagesBotResults &b) {
     if(m_core == b) return *this;
     m_core = b;
+    m_switchPm->setCore(b.switchPm());
 
     Q_EMIT flagsChanged();
     Q_EMIT galleryChanged();
     Q_EMIT nextOffsetChanged();
     Q_EMIT queryIdChanged();
     Q_EMIT resultsChanged();
+    Q_EMIT switchPmChanged();
     Q_EMIT coreChanged();
     return *this;
 }
@@ -92,7 +117,7 @@ bool MessagesBotResultsObject::operator ==(const MessagesBotResults &b) const {
 }
 
 void MessagesBotResultsObject::setClassType(quint32 classType) {
-    MessagesBotResults::MessagesBotResultsType result;
+    MessagesBotResults::MessagesBotResultsClassType result;
     switch(classType) {
     case TypeMessagesBotResults:
         result = MessagesBotResults::typeMessagesBotResults;
@@ -128,5 +153,12 @@ void MessagesBotResultsObject::setCore(const MessagesBotResults &core) {
 
 MessagesBotResults MessagesBotResultsObject::core() const {
     return m_core;
+}
+
+void MessagesBotResultsObject::coreSwitchPmChanged() {
+    if(m_core.switchPm() == m_switchPm->core()) return;
+    m_core.setSwitchPm(m_switchPm->core());
+    Q_EMIT switchPmChanged();
+    Q_EMIT coreChanged();
 }
 

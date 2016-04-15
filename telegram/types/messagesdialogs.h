@@ -18,12 +18,12 @@
 class LIBQTELEGRAMSHARED_EXPORT MessagesDialogs : public TelegramTypeObject
 {
 public:
-    enum MessagesDialogsType {
+    enum MessagesDialogsClassType {
         typeMessagesDialogs = 0x15ba6c40,
         typeMessagesDialogsSlice = 0x71e094f3
     };
 
-    MessagesDialogs(MessagesDialogsType classType = typeMessagesDialogs, InboundPkt *in = 0);
+    MessagesDialogs(MessagesDialogsClassType classType = typeMessagesDialogs, InboundPkt *in = 0);
     MessagesDialogs(InboundPkt *in);
     MessagesDialogs(const Null&);
     virtual ~MessagesDialogs();
@@ -43,8 +43,8 @@ public:
     void setUsers(const QList<User> &users);
     QList<User> users() const;
 
-    void setClassType(MessagesDialogsType classType);
-    MessagesDialogsType classType() const;
+    void setClassType(MessagesDialogsClassType classType);
+    MessagesDialogsClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -62,7 +62,7 @@ private:
     QList<Dialog> m_dialogs;
     QList<Message> m_messages;
     QList<User> m_users;
-    MessagesDialogsType m_classType;
+    MessagesDialogsClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(MessagesDialogs)

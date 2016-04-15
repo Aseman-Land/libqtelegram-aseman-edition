@@ -17,13 +17,12 @@
 class LIBQTELEGRAMSHARED_EXPORT BotInlineResult : public TelegramTypeObject
 {
 public:
-    enum BotInlineResultType {
-        typeBotInlineMediaResultDocument = 0xf897d33e,
-        typeBotInlineMediaResultPhoto = 0xc5528587,
-        typeBotInlineResult = 0x9bebaeb9
+    enum BotInlineResultClassType {
+        typeBotInlineResult = 0x9bebaeb9,
+        typeBotInlineMediaResult = 0x17db940b
     };
 
-    BotInlineResult(BotInlineResultType classType = typeBotInlineMediaResultDocument, InboundPkt *in = 0);
+    BotInlineResult(BotInlineResultClassType classType = typeBotInlineResult, InboundPkt *in = 0);
     BotInlineResult(InboundPkt *in);
     BotInlineResult(const Null&);
     virtual ~BotInlineResult();
@@ -73,8 +72,8 @@ public:
     void setW(qint32 w);
     qint32 w() const;
 
-    void setClassType(BotInlineResultType classType);
-    BotInlineResultType classType() const;
+    void setClassType(BotInlineResultClassType classType);
+    BotInlineResultClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -102,7 +101,7 @@ private:
     QString m_type;
     QString m_url;
     qint32 m_w;
-    BotInlineResultType m_classType;
+    BotInlineResultClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(BotInlineResult)

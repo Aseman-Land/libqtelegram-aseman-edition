@@ -14,7 +14,7 @@
 class LIBQTELEGRAMSHARED_EXPORT EncryptedMessageObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(EncryptedMessageType)
+    Q_ENUMS(EncryptedMessageClassType)
     Q_PROPERTY(QByteArray bytes READ bytes WRITE setBytes NOTIFY bytesChanged)
     Q_PROPERTY(qint32 chatId READ chatId WRITE setChatId NOTIFY chatIdChanged)
     Q_PROPERTY(qint32 date READ date WRITE setDate NOTIFY dateChanged)
@@ -24,7 +24,7 @@ class LIBQTELEGRAMSHARED_EXPORT EncryptedMessageObject : public TelegramTypeQObj
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum EncryptedMessageType {
+    enum EncryptedMessageClassType {
         TypeEncryptedMessage,
         TypeEncryptedMessageService
     };

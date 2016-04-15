@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-AccountDaysTTL::AccountDaysTTL(AccountDaysTTLType classType, InboundPkt *in) :
+AccountDaysTTL::AccountDaysTTL(AccountDaysTTLClassType classType, InboundPkt *in) :
     m_days(0),
     m_classType(classType)
 {
@@ -46,11 +46,11 @@ bool AccountDaysTTL::operator ==(const AccountDaysTTL &b) const {
            m_days == b.m_days;
 }
 
-void AccountDaysTTL::setClassType(AccountDaysTTL::AccountDaysTTLType classType) {
+void AccountDaysTTL::setClassType(AccountDaysTTL::AccountDaysTTLClassType classType) {
     m_classType = classType;
 }
 
-AccountDaysTTL::AccountDaysTTLType AccountDaysTTL::classType() const {
+AccountDaysTTL::AccountDaysTTLClassType AccountDaysTTL::classType() const {
     return m_classType;
 }
 
@@ -60,7 +60,7 @@ bool AccountDaysTTL::fetch(InboundPkt *in) {
     switch(x) {
     case typeAccountDaysTTL: {
         m_days = in->fetchInt();
-        m_classType = static_cast<AccountDaysTTLType>(x);
+        m_classType = static_cast<AccountDaysTTLClassType>(x);
         return true;
     }
         break;
@@ -105,7 +105,7 @@ QDataStream &operator<<(QDataStream &stream, const AccountDaysTTL &item) {
 QDataStream &operator>>(QDataStream &stream, AccountDaysTTL &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<AccountDaysTTL::AccountDaysTTLType>(type));
+    item.setClassType(static_cast<AccountDaysTTL::AccountDaysTTLClassType>(type));
     switch(type) {
     case AccountDaysTTL::typeAccountDaysTTL: {
         qint32 m_days;

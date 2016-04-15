@@ -15,11 +15,11 @@
 class LIBQTELEGRAMSHARED_EXPORT MessagesFoundGifs : public TelegramTypeObject
 {
 public:
-    enum MessagesFoundGifsType {
+    enum MessagesFoundGifsClassType {
         typeMessagesFoundGifs = 0x450a1c0a
     };
 
-    MessagesFoundGifs(MessagesFoundGifsType classType = typeMessagesFoundGifs, InboundPkt *in = 0);
+    MessagesFoundGifs(MessagesFoundGifsClassType classType = typeMessagesFoundGifs, InboundPkt *in = 0);
     MessagesFoundGifs(InboundPkt *in);
     MessagesFoundGifs(const Null&);
     virtual ~MessagesFoundGifs();
@@ -30,8 +30,8 @@ public:
     void setResults(const QList<FoundGif> &results);
     QList<FoundGif> results() const;
 
-    void setClassType(MessagesFoundGifsType classType);
-    MessagesFoundGifsType classType() const;
+    void setClassType(MessagesFoundGifsClassType classType);
+    MessagesFoundGifsClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -46,7 +46,7 @@ public:
 private:
     qint32 m_nextOffset;
     QList<FoundGif> m_results;
-    MessagesFoundGifsType m_classType;
+    MessagesFoundGifsClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(MessagesFoundGifs)

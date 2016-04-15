@@ -68,7 +68,7 @@ bool MessagesAffectedHistoryObject::operator ==(const MessagesAffectedHistory &b
 }
 
 void MessagesAffectedHistoryObject::setClassType(quint32 classType) {
-    MessagesAffectedHistory::MessagesAffectedHistoryType result;
+    MessagesAffectedHistory::MessagesAffectedHistoryClassType result;
     switch(classType) {
     case TypeMessagesAffectedHistory:
         result = MessagesAffectedHistory::typeMessagesAffectedHistory;

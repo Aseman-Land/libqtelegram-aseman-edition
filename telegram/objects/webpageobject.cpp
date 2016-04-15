@@ -262,7 +262,7 @@ bool WebPageObject::operator ==(const WebPage &b) const {
 }
 
 void WebPageObject::setClassType(quint32 classType) {
-    WebPage::WebPageType result;
+    WebPage::WebPageClassType result;
     switch(classType) {
     case TypeWebPageEmpty:
         result = WebPage::typeWebPageEmpty;

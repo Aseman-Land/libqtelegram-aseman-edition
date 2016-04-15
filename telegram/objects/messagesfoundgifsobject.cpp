@@ -56,7 +56,7 @@ bool MessagesFoundGifsObject::operator ==(const MessagesFoundGifs &b) const {
 }
 
 void MessagesFoundGifsObject::setClassType(quint32 classType) {
-    MessagesFoundGifs::MessagesFoundGifsType result;
+    MessagesFoundGifs::MessagesFoundGifsClassType result;
     switch(classType) {
     case TypeMessagesFoundGifs:
         result = MessagesFoundGifs::typeMessagesFoundGifs;

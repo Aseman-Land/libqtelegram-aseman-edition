@@ -44,7 +44,7 @@ bool ExportedMessageLinkObject::operator ==(const ExportedMessageLink &b) const 
 }
 
 void ExportedMessageLinkObject::setClassType(quint32 classType) {
-    ExportedMessageLink::ExportedMessageLinkType result;
+    ExportedMessageLink::ExportedMessageLinkClassType result;
     switch(classType) {
     case TypeExportedMessageLink:
         result = ExportedMessageLink::typeExportedMessageLink;

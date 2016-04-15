@@ -13,7 +13,7 @@
 class LIBQTELEGRAMSHARED_EXPORT PeerObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(PeerType)
+    Q_ENUMS(PeerClassType)
     Q_PROPERTY(qint32 channelId READ channelId WRITE setChannelId NOTIFY channelIdChanged)
     Q_PROPERTY(qint32 chatId READ chatId WRITE setChatId NOTIFY chatIdChanged)
     Q_PROPERTY(qint32 userId READ userId WRITE setUserId NOTIFY userIdChanged)
@@ -21,7 +21,7 @@ class LIBQTELEGRAMSHARED_EXPORT PeerObject : public TelegramTypeQObject
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum PeerType {
+    enum PeerClassType {
         TypePeerUser,
         TypePeerChat,
         TypePeerChannel

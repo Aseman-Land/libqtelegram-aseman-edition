@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-MessageGroup::MessageGroup(MessageGroupType classType, InboundPkt *in) :
+MessageGroup::MessageGroup(MessageGroupClassType classType, InboundPkt *in) :
     m_count(0),
     m_date(0),
     m_maxId(0),
@@ -82,11 +82,11 @@ bool MessageGroup::operator ==(const MessageGroup &b) const {
            m_minId == b.m_minId;
 }
 
-void MessageGroup::setClassType(MessageGroup::MessageGroupType classType) {
+void MessageGroup::setClassType(MessageGroup::MessageGroupClassType classType) {
     m_classType = classType;
 }
 
-MessageGroup::MessageGroupType MessageGroup::classType() const {
+MessageGroup::MessageGroupClassType MessageGroup::classType() const {
     return m_classType;
 }
 
@@ -99,7 +99,7 @@ bool MessageGroup::fetch(InboundPkt *in) {
         m_maxId = in->fetchInt();
         m_count = in->fetchInt();
         m_date = in->fetchInt();
-        m_classType = static_cast<MessageGroupType>(x);
+        m_classType = static_cast<MessageGroupClassType>(x);
         return true;
     }
         break;
@@ -150,7 +150,7 @@ QDataStream &operator<<(QDataStream &stream, const MessageGroup &item) {
 QDataStream &operator>>(QDataStream &stream, MessageGroup &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<MessageGroup::MessageGroupType>(type));
+    item.setClassType(static_cast<MessageGroup::MessageGroupClassType>(type));
     switch(type) {
     case MessageGroup::typeMessageGroup: {
         qint32 m_min_id;

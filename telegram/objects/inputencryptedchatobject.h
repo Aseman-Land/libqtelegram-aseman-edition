@@ -13,14 +13,14 @@
 class LIBQTELEGRAMSHARED_EXPORT InputEncryptedChatObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(InputEncryptedChatType)
+    Q_ENUMS(InputEncryptedChatClassType)
     Q_PROPERTY(qint64 accessHash READ accessHash WRITE setAccessHash NOTIFY accessHashChanged)
     Q_PROPERTY(qint32 chatId READ chatId WRITE setChatId NOTIFY chatIdChanged)
     Q_PROPERTY(InputEncryptedChat core READ core WRITE setCore NOTIFY coreChanged)
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum InputEncryptedChatType {
+    enum InputEncryptedChatClassType {
         TypeInputEncryptedChat
     };
 

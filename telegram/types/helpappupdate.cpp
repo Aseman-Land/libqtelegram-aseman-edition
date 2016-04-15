@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-HelpAppUpdate::HelpAppUpdate(HelpAppUpdateType classType, InboundPkt *in) :
+HelpAppUpdate::HelpAppUpdate(HelpAppUpdateClassType classType, InboundPkt *in) :
     m_critical(false),
     m_id(0),
     m_classType(classType)
@@ -76,11 +76,11 @@ bool HelpAppUpdate::operator ==(const HelpAppUpdate &b) const {
            m_url == b.m_url;
 }
 
-void HelpAppUpdate::setClassType(HelpAppUpdate::HelpAppUpdateType classType) {
+void HelpAppUpdate::setClassType(HelpAppUpdate::HelpAppUpdateClassType classType) {
     m_classType = classType;
 }
 
-HelpAppUpdate::HelpAppUpdateType HelpAppUpdate::classType() const {
+HelpAppUpdate::HelpAppUpdateClassType HelpAppUpdate::classType() const {
     return m_classType;
 }
 
@@ -93,13 +93,13 @@ bool HelpAppUpdate::fetch(InboundPkt *in) {
         m_critical = in->fetchBool();
         m_url = in->fetchQString();
         m_text = in->fetchQString();
-        m_classType = static_cast<HelpAppUpdateType>(x);
+        m_classType = static_cast<HelpAppUpdateClassType>(x);
         return true;
     }
         break;
     
     case typeHelpNoAppUpdate: {
-        m_classType = static_cast<HelpAppUpdateType>(x);
+        m_classType = static_cast<HelpAppUpdateClassType>(x);
         return true;
     }
         break;
@@ -158,7 +158,7 @@ QDataStream &operator<<(QDataStream &stream, const HelpAppUpdate &item) {
 QDataStream &operator>>(QDataStream &stream, HelpAppUpdate &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<HelpAppUpdate::HelpAppUpdateType>(type));
+    item.setClassType(static_cast<HelpAppUpdate::HelpAppUpdateClassType>(type));
     switch(type) {
     case HelpAppUpdate::typeHelpAppUpdate: {
         qint32 m_id;

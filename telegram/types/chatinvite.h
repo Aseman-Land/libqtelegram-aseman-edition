@@ -15,12 +15,12 @@
 class LIBQTELEGRAMSHARED_EXPORT ChatInvite : public TelegramTypeObject
 {
 public:
-    enum ChatInviteType {
+    enum ChatInviteClassType {
         typeChatInviteAlready = 0x5a686d7c,
         typeChatInvite = 0x93e99b60
     };
 
-    ChatInvite(ChatInviteType classType = typeChatInviteAlready, InboundPkt *in = 0);
+    ChatInvite(ChatInviteClassType classType = typeChatInviteAlready, InboundPkt *in = 0);
     ChatInvite(InboundPkt *in);
     ChatInvite(const Null&);
     virtual ~ChatInvite();
@@ -46,8 +46,8 @@ public:
     void setTitle(const QString &title);
     QString title() const;
 
-    void setClassType(ChatInviteType classType);
-    ChatInviteType classType() const;
+    void setClassType(ChatInviteClassType classType);
+    ChatInviteClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -63,7 +63,7 @@ private:
     Chat m_chat;
     qint32 m_flags;
     QString m_title;
-    ChatInviteType m_classType;
+    ChatInviteClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(ChatInvite)

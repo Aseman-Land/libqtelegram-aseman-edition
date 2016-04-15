@@ -13,7 +13,7 @@
 class LIBQTELEGRAMSHARED_EXPORT AccountPasswordObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(AccountPasswordType)
+    Q_ENUMS(AccountPasswordClassType)
     Q_PROPERTY(QByteArray currentSalt READ currentSalt WRITE setCurrentSalt NOTIFY currentSaltChanged)
     Q_PROPERTY(QString emailUnconfirmedPattern READ emailUnconfirmedPattern WRITE setEmailUnconfirmedPattern NOTIFY emailUnconfirmedPatternChanged)
     Q_PROPERTY(bool hasRecovery READ hasRecovery WRITE setHasRecovery NOTIFY hasRecoveryChanged)
@@ -23,7 +23,7 @@ class LIBQTELEGRAMSHARED_EXPORT AccountPasswordObject : public TelegramTypeQObje
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum AccountPasswordType {
+    enum AccountPasswordClassType {
         TypeAccountNoPassword,
         TypeAccountPassword
     };

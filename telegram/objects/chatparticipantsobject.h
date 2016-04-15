@@ -14,7 +14,7 @@
 class LIBQTELEGRAMSHARED_EXPORT ChatParticipantsObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(ChatParticipantsType)
+    Q_ENUMS(ChatParticipantsClassType)
     Q_PROPERTY(qint32 chatId READ chatId WRITE setChatId NOTIFY chatIdChanged)
     Q_PROPERTY(qint32 flags READ flags WRITE setFlags NOTIFY flagsChanged)
     Q_PROPERTY(QList<ChatParticipant> participants READ participants WRITE setParticipants NOTIFY participantsChanged)
@@ -24,7 +24,7 @@ class LIBQTELEGRAMSHARED_EXPORT ChatParticipantsObject : public TelegramTypeQObj
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum ChatParticipantsType {
+    enum ChatParticipantsClassType {
         TypeChatParticipantsForbidden,
         TypeChatParticipants
     };

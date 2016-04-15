@@ -13,13 +13,13 @@
 class LIBQTELEGRAMSHARED_EXPORT KeyboardButtonRowObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(KeyboardButtonRowType)
+    Q_ENUMS(KeyboardButtonRowClassType)
     Q_PROPERTY(QList<KeyboardButton> buttons READ buttons WRITE setButtons NOTIFY buttonsChanged)
     Q_PROPERTY(KeyboardButtonRow core READ core WRITE setCore NOTIFY coreChanged)
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum KeyboardButtonRowType {
+    enum KeyboardButtonRowClassType {
         TypeKeyboardButtonRow
     };
 

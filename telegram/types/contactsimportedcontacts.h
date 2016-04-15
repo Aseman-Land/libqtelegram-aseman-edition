@@ -16,11 +16,11 @@
 class LIBQTELEGRAMSHARED_EXPORT ContactsImportedContacts : public TelegramTypeObject
 {
 public:
-    enum ContactsImportedContactsType {
+    enum ContactsImportedContactsClassType {
         typeContactsImportedContacts = 0xad524315
     };
 
-    ContactsImportedContacts(ContactsImportedContactsType classType = typeContactsImportedContacts, InboundPkt *in = 0);
+    ContactsImportedContacts(ContactsImportedContactsClassType classType = typeContactsImportedContacts, InboundPkt *in = 0);
     ContactsImportedContacts(InboundPkt *in);
     ContactsImportedContacts(const Null&);
     virtual ~ContactsImportedContacts();
@@ -34,8 +34,8 @@ public:
     void setUsers(const QList<User> &users);
     QList<User> users() const;
 
-    void setClassType(ContactsImportedContactsType classType);
-    ContactsImportedContactsType classType() const;
+    void setClassType(ContactsImportedContactsClassType classType);
+    ContactsImportedContactsClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -51,7 +51,7 @@ private:
     QList<ImportedContact> m_imported;
     QList<qint64> m_retryContacts;
     QList<User> m_users;
-    ContactsImportedContactsType m_classType;
+    ContactsImportedContactsClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(ContactsImportedContacts)

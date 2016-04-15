@@ -240,7 +240,7 @@ bool MessageMediaObject::operator ==(const MessageMedia &b) const {
 }
 
 void MessageMediaObject::setClassType(quint32 classType) {
-    MessageMedia::MessageMediaType result;
+    MessageMedia::MessageMediaClassType result;
     switch(classType) {
     case TypeMessageMediaEmpty:
         result = MessageMedia::typeMessageMediaEmpty;

@@ -44,7 +44,7 @@ bool HelpTermsOfServiceObject::operator ==(const HelpTermsOfService &b) const {
 }
 
 void HelpTermsOfServiceObject::setClassType(quint32 classType) {
-    HelpTermsOfService::HelpTermsOfServiceType result;
+    HelpTermsOfService::HelpTermsOfServiceClassType result;
     switch(classType) {
     case TypeHelpTermsOfService:
         result = HelpTermsOfService::typeHelpTermsOfService;

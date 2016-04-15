@@ -5,7 +5,7 @@
 #include "uploadsendphoto.h"
 #include "../coretypes.h"
 
-UploadSendPhoto::UploadSendPhoto(UploadSendPhotoType classType) :
+UploadSendPhoto::UploadSendPhoto(UploadSendPhotoClassType classType) :
     m_partId(0),
     m_totalSize(0),
     m_uploaded(0),
@@ -65,11 +65,11 @@ bool UploadSendPhoto::operator ==(const UploadSendPhoto &b) const {
            m_uploaded == b.m_uploaded;
 }
 
-void UploadSendPhoto::setClassType(UploadSendPhoto::UploadSendPhotoType classType) {
+void UploadSendPhoto::setClassType(UploadSendPhoto::UploadSendPhotoClassType classType) {
     m_classType = classType;
 }
 
-UploadSendPhoto::UploadSendPhotoType UploadSendPhoto::classType() const {
+UploadSendPhoto::UploadSendPhotoClassType UploadSendPhoto::classType() const {
     return m_classType;
 }
 

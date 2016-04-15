@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-AuthCheckedPhone::AuthCheckedPhone(AuthCheckedPhoneType classType, InboundPkt *in) :
+AuthCheckedPhone::AuthCheckedPhone(AuthCheckedPhoneClassType classType, InboundPkt *in) :
     m_phoneRegistered(false),
     m_classType(classType)
 {
@@ -46,11 +46,11 @@ bool AuthCheckedPhone::operator ==(const AuthCheckedPhone &b) const {
            m_phoneRegistered == b.m_phoneRegistered;
 }
 
-void AuthCheckedPhone::setClassType(AuthCheckedPhone::AuthCheckedPhoneType classType) {
+void AuthCheckedPhone::setClassType(AuthCheckedPhone::AuthCheckedPhoneClassType classType) {
     m_classType = classType;
 }
 
-AuthCheckedPhone::AuthCheckedPhoneType AuthCheckedPhone::classType() const {
+AuthCheckedPhone::AuthCheckedPhoneClassType AuthCheckedPhone::classType() const {
     return m_classType;
 }
 
@@ -60,7 +60,7 @@ bool AuthCheckedPhone::fetch(InboundPkt *in) {
     switch(x) {
     case typeAuthCheckedPhone: {
         m_phoneRegistered = in->fetchBool();
-        m_classType = static_cast<AuthCheckedPhoneType>(x);
+        m_classType = static_cast<AuthCheckedPhoneClassType>(x);
         return true;
     }
         break;
@@ -105,7 +105,7 @@ QDataStream &operator<<(QDataStream &stream, const AuthCheckedPhone &item) {
 QDataStream &operator>>(QDataStream &stream, AuthCheckedPhone &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<AuthCheckedPhone::AuthCheckedPhoneType>(type));
+    item.setClassType(static_cast<AuthCheckedPhone::AuthCheckedPhoneClassType>(type));
     switch(type) {
     case AuthCheckedPhone::typeAuthCheckedPhone: {
         bool m_phone_registered;

@@ -13,7 +13,7 @@
 class LIBQTELEGRAMSHARED_EXPORT MessageFwdHeaderObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(MessageFwdHeaderType)
+    Q_ENUMS(MessageFwdHeaderClassType)
     Q_PROPERTY(qint32 channelId READ channelId WRITE setChannelId NOTIFY channelIdChanged)
     Q_PROPERTY(qint32 channelPost READ channelPost WRITE setChannelPost NOTIFY channelPostChanged)
     Q_PROPERTY(qint32 date READ date WRITE setDate NOTIFY dateChanged)
@@ -23,7 +23,7 @@ class LIBQTELEGRAMSHARED_EXPORT MessageFwdHeaderObject : public TelegramTypeQObj
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum MessageFwdHeaderType {
+    enum MessageFwdHeaderClassType {
         TypeMessageFwdHeader
     };
 

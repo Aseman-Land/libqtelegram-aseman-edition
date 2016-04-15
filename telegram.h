@@ -75,10 +75,9 @@ public:
     // Registration / authorization
     qint64 authCheckPhone(Callback<AuthCheckedPhone > callBack = 0, qint32 timeout = timeOut());
     qint64 authSendCode(Callback<AuthSentCode > callBack = 0, qint32 timeout = timeOut());
-    qint64 authSendSms(Callback<bool > callBack = 0, qint32 timeout = timeOut());
     qint64 authSignIn(const QString &code, Callback<AuthAuthorization > callBack = 0, qint32 timeout = timeOut());
     qint64 authSignUp(const QString &code, const QString &firstName, const QString &lastName, Callback<AuthAuthorization > callBack = 0, qint32 timeout = timeOut());
-    qint64 authSendCall(Callback<bool > callBack = 0, qint32 timeout = timeOut());
+    qint64 authSendCall(Callback<AuthSentCode > callBack = 0, qint32 timeout = timeOut());
     qint64 authCheckPassword(const QByteArray &passwordHash, Callback<AuthAuthorization > callBack = 0, qint32 timeout = timeOut());
 
     // Working with push notifications. Settings
@@ -170,12 +169,7 @@ Q_SIGNALS:
     void uploadSendFileAnswer(qint64 fileId, qint32 partId, qint32 uploaded, qint32 totalSize);
 
     void updateSecretChatMessage(const SecretChatMessage &secretChatMessage, qint32 qts);
-    void updatesTooLong();
-    void updateShortMessage(qint32 id, qint32 userId, const QString &message, qint32 pts, qint32 pts_count, qint32 date, const MessageFwdHeader &fwd_from, qint32 reply_to_msg_id, bool unread, bool out);
-    void updateShortChatMessage(qint32 id, qint32 fromId, qint32 chatId, const QString &message, qint32 pts, qint32 pts_count, qint32 date, const MessageFwdHeader &fwd_from, qint32 reply_to_msg_id, bool unread, bool out);
-    void updateShort(const Update &update, qint32 date);
-    void updatesCombined(const QList<Update> &updates, const QList<User> &users, const QList<Chat> &chats, qint32 date, qint32 seqStart, qint32 seq);
-    void updates(const QList<Update> &udts, const QList<User> &users, const QList<Chat> &chats, qint32 date, qint32 seq);
+    void updates(const UpdatesType &update);
 
     // Additional signals
     void disconnected();
@@ -223,9 +217,7 @@ private Q_SLOTS:
     void onSequenceNumberGap(qint32 chatId, qint32 startSeqNo, qint32 endSeqNo);
 
     // secret chats slots
-    void onUpdateShort(const Update &update);
-    void onUpdatesCombined(const QList<Update> &updates);
-    void onUpdates(const QList<Update> &udts);
+    void onUpdates(const UpdatesType &upds);
 
     void onUploadGetFileAnswer(qint64 fileId, const UploadGetFile &result);
     void onUploadSendFileAnswer(qint64 fileId, qint32 partId, qint32 uploaded, qint32 totalSize);

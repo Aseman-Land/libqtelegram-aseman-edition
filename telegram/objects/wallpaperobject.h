@@ -13,7 +13,7 @@
 class LIBQTELEGRAMSHARED_EXPORT WallPaperObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(WallPaperType)
+    Q_ENUMS(WallPaperClassType)
     Q_PROPERTY(qint32 bgColor READ bgColor WRITE setBgColor NOTIFY bgColorChanged)
     Q_PROPERTY(qint32 color READ color WRITE setColor NOTIFY colorChanged)
     Q_PROPERTY(qint32 id READ id WRITE setId NOTIFY idChanged)
@@ -23,7 +23,7 @@ class LIBQTELEGRAMSHARED_EXPORT WallPaperObject : public TelegramTypeQObject
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum WallPaperType {
+    enum WallPaperClassType {
         TypeWallPaper,
         TypeWallPaperSolid
     };

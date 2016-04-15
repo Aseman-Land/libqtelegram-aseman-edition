@@ -188,7 +188,7 @@ bool AuthorizationObject::operator ==(const Authorization &b) const {
 }
 
 void AuthorizationObject::setClassType(quint32 classType) {
-    Authorization::AuthorizationType result;
+    Authorization::AuthorizationClassType result;
     switch(classType) {
     case TypeAuthorization:
         result = Authorization::typeAuthorization;

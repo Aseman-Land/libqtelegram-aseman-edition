@@ -16,7 +16,7 @@
 class LIBQTELEGRAMSHARED_EXPORT DocumentAttribute : public TelegramTypeObject
 {
 public:
-    enum DocumentAttributeType {
+    enum DocumentAttributeClassType {
         typeDocumentAttributeImageSize = 0x6c37c15c,
         typeDocumentAttributeAnimated = 0x11b58939,
         typeDocumentAttributeSticker = 0x3a556302,
@@ -25,7 +25,7 @@ public:
         typeDocumentAttributeFilename = 0x15590068
     };
 
-    DocumentAttribute(DocumentAttributeType classType = typeDocumentAttributeImageSize, InboundPkt *in = 0);
+    DocumentAttribute(DocumentAttributeClassType classType = typeDocumentAttributeImageSize, InboundPkt *in = 0);
     DocumentAttribute(InboundPkt *in);
     DocumentAttribute(const Null&);
     virtual ~DocumentAttribute();
@@ -63,8 +63,8 @@ public:
     void setWaveform(const QByteArray &waveform);
     QByteArray waveform() const;
 
-    void setClassType(DocumentAttributeType classType);
-    DocumentAttributeType classType() const;
+    void setClassType(DocumentAttributeClassType classType);
+    DocumentAttributeClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -87,7 +87,7 @@ private:
     QString m_title;
     qint32 m_w;
     QByteArray m_waveform;
-    DocumentAttributeType m_classType;
+    DocumentAttributeClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(DocumentAttribute)

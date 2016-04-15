@@ -56,7 +56,7 @@ bool InputGeoPointObject::operator ==(const InputGeoPoint &b) const {
 }
 
 void InputGeoPointObject::setClassType(quint32 classType) {
-    InputGeoPoint::InputGeoPointType result;
+    InputGeoPoint::InputGeoPointClassType result;
     switch(classType) {
     case TypeInputGeoPointEmpty:
         result = InputGeoPoint::typeInputGeoPointEmpty;

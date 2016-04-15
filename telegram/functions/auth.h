@@ -24,8 +24,7 @@ class LIBQTELEGRAMSHARED_EXPORT Auth : public TelegramFunctionObject
 public:
     enum AuthFunction {
         fncAuthCheckPhone = 0x6fe51dfb,
-        fncAuthSendCode = 0x768d5f4d,
-        fncAuthSendCall = 0x3c51564,
+        fncAuthSendCode = 0xccfd70cf,
         fncAuthSignUp = 0x1b067634,
         fncAuthSignIn = 0xbcd51581,
         fncAuthLogOut = 0x5717da40,
@@ -34,11 +33,12 @@ public:
         fncAuthExportAuthorization = 0xe5bfffcd,
         fncAuthImportAuthorization = 0xe3ef9613,
         fncAuthBindTempAuthKey = 0xcdd42a05,
-        fncAuthSendSms = 0xda9f3e8,
         fncAuthImportBotAuthorization = 0x67a3ff2c,
         fncAuthCheckPassword = 0xa63011e,
         fncAuthRequestPasswordRecovery = 0xd897bc66,
-        fncAuthRecoverPassword = 0x4ea56e92
+        fncAuthRecoverPassword = 0x4ea56e92,
+        fncAuthResendCode = 0x3ef1a9bf,
+        fncAuthCancelCode = 0x1f040578
     };
 
     Auth();
@@ -47,11 +47,8 @@ public:
     static bool checkPhone(OutboundPkt *out, const QString &phoneNumber);
     static AuthCheckedPhone checkPhoneResult(InboundPkt *in);
 
-    static bool sendCode(OutboundPkt *out, const QString &phoneNumber, qint32 smsType, qint32 apiId, const QString &apiHash, const QString &langCode);
+    static bool sendCode(OutboundPkt *out, bool allowFlashcall, const QString &phoneNumber, bool currentNumber, qint32 apiId, const QString &apiHash, const QString &langCode);
     static AuthSentCode sendCodeResult(InboundPkt *in);
-
-    static bool sendCall(OutboundPkt *out, const QString &phoneNumber, const QString &phoneCodeHash);
-    static bool sendCallResult(InboundPkt *in);
 
     static bool signUp(OutboundPkt *out, const QString &phoneNumber, const QString &phoneCodeHash, const QString &phoneCode, const QString &firstName, const QString &lastName);
     static AuthAuthorization signUpResult(InboundPkt *in);
@@ -77,9 +74,6 @@ public:
     static bool bindTempAuthKey(OutboundPkt *out, qint64 permAuthKeyId, qint64 nonce, qint32 expiresAt, const QByteArray &encryptedMessage);
     static bool bindTempAuthKeyResult(InboundPkt *in);
 
-    static bool sendSms(OutboundPkt *out, const QString &phoneNumber, const QString &phoneCodeHash);
-    static bool sendSmsResult(InboundPkt *in);
-
     static bool importBotAuthorization(OutboundPkt *out, qint32 flags, qint32 apiId, const QString &apiHash, const QString &botAuthToken);
     static AuthAuthorization importBotAuthorizationResult(InboundPkt *in);
 
@@ -91,6 +85,12 @@ public:
 
     static bool recoverPassword(OutboundPkt *out, const QString &code);
     static AuthAuthorization recoverPasswordResult(InboundPkt *in);
+
+    static bool resendCode(OutboundPkt *out, const QString &phoneNumber, const QString &phoneCodeHash);
+    static AuthSentCode resendCodeResult(InboundPkt *in);
+
+    static bool cancelCode(OutboundPkt *out, const QString &phoneNumber, const QString &phoneCodeHash);
+    static bool cancelCodeResult(InboundPkt *in);
 
 };
 

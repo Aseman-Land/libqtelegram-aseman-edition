@@ -13,7 +13,7 @@
 class LIBQTELEGRAMSHARED_EXPORT ContactsBlockedObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(ContactsBlockedType)
+    Q_ENUMS(ContactsBlockedClassType)
     Q_PROPERTY(QList<ContactBlocked> blocked READ blocked WRITE setBlocked NOTIFY blockedChanged)
     Q_PROPERTY(qint32 count READ count WRITE setCount NOTIFY countChanged)
     Q_PROPERTY(QList<User> users READ users WRITE setUsers NOTIFY usersChanged)
@@ -21,7 +21,7 @@ class LIBQTELEGRAMSHARED_EXPORT ContactsBlockedObject : public TelegramTypeQObje
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum ContactsBlockedType {
+    enum ContactsBlockedClassType {
         TypeContactsBlocked,
         TypeContactsBlockedSlice
     };

@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-InputChatPhoto::InputChatPhoto(InputChatPhotoType classType, InboundPkt *in) :
+InputChatPhoto::InputChatPhoto(InputChatPhotoClassType classType, InboundPkt *in) :
     m_classType(classType)
 {
     if(in) fetch(in);
@@ -61,11 +61,11 @@ bool InputChatPhoto::operator ==(const InputChatPhoto &b) const {
            m_id == b.m_id;
 }
 
-void InputChatPhoto::setClassType(InputChatPhoto::InputChatPhotoType classType) {
+void InputChatPhoto::setClassType(InputChatPhoto::InputChatPhotoClassType classType) {
     m_classType = classType;
 }
 
-InputChatPhoto::InputChatPhotoType InputChatPhoto::classType() const {
+InputChatPhoto::InputChatPhotoClassType InputChatPhoto::classType() const {
     return m_classType;
 }
 
@@ -74,7 +74,7 @@ bool InputChatPhoto::fetch(InboundPkt *in) {
     int x = in->fetchInt();
     switch(x) {
     case typeInputChatPhotoEmpty: {
-        m_classType = static_cast<InputChatPhotoType>(x);
+        m_classType = static_cast<InputChatPhotoClassType>(x);
         return true;
     }
         break;
@@ -82,7 +82,7 @@ bool InputChatPhoto::fetch(InboundPkt *in) {
     case typeInputChatUploadedPhoto: {
         m_file.fetch(in);
         m_crop.fetch(in);
-        m_classType = static_cast<InputChatPhotoType>(x);
+        m_classType = static_cast<InputChatPhotoClassType>(x);
         return true;
     }
         break;
@@ -90,7 +90,7 @@ bool InputChatPhoto::fetch(InboundPkt *in) {
     case typeInputChatPhoto: {
         m_id.fetch(in);
         m_crop.fetch(in);
-        m_classType = static_cast<InputChatPhotoType>(x);
+        m_classType = static_cast<InputChatPhotoClassType>(x);
         return true;
     }
         break;
@@ -156,7 +156,7 @@ QDataStream &operator<<(QDataStream &stream, const InputChatPhoto &item) {
 QDataStream &operator>>(QDataStream &stream, InputChatPhoto &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<InputChatPhoto::InputChatPhotoType>(type));
+    item.setClassType(static_cast<InputChatPhoto::InputChatPhotoClassType>(type));
     switch(type) {
     case InputChatPhoto::typeInputChatPhotoEmpty: {
         

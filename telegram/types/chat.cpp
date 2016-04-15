@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-Chat::Chat(ChatType classType, InboundPkt *in) :
+Chat::Chat(ChatClassType classType, InboundPkt *in) :
     m_accessHash(0),
     m_date(0),
     m_flags(0),
@@ -286,11 +286,11 @@ bool Chat::operator ==(const Chat &b) const {
            m_version == b.m_version;
 }
 
-void Chat::setClassType(Chat::ChatType classType) {
+void Chat::setClassType(Chat::ChatClassType classType) {
     m_classType = classType;
 }
 
-Chat::ChatType Chat::classType() const {
+Chat::ChatClassType Chat::classType() const {
     return m_classType;
 }
 
@@ -300,7 +300,7 @@ bool Chat::fetch(InboundPkt *in) {
     switch(x) {
     case typeChatEmpty: {
         m_id = in->fetchInt();
-        m_classType = static_cast<ChatType>(x);
+        m_classType = static_cast<ChatClassType>(x);
         return true;
     }
         break;
@@ -316,7 +316,7 @@ bool Chat::fetch(InboundPkt *in) {
         if(m_flags & 1<<6) {
             m_migratedTo.fetch(in);
         }
-        m_classType = static_cast<ChatType>(x);
+        m_classType = static_cast<ChatClassType>(x);
         return true;
     }
         break;
@@ -324,7 +324,7 @@ bool Chat::fetch(InboundPkt *in) {
     case typeChatForbidden: {
         m_id = in->fetchInt();
         m_title = in->fetchQString();
-        m_classType = static_cast<ChatType>(x);
+        m_classType = static_cast<ChatClassType>(x);
         return true;
     }
         break;
@@ -345,7 +345,7 @@ bool Chat::fetch(InboundPkt *in) {
         if(m_flags & 1<<9) {
             m_restrictionReason = in->fetchQString();
         }
-        m_classType = static_cast<ChatType>(x);
+        m_classType = static_cast<ChatClassType>(x);
         return true;
     }
         break;
@@ -354,7 +354,7 @@ bool Chat::fetch(InboundPkt *in) {
         m_id = in->fetchInt();
         m_accessHash = in->fetchLong();
         m_title = in->fetchQString();
-        m_classType = static_cast<ChatType>(x);
+        m_classType = static_cast<ChatClassType>(x);
         return true;
     }
         break;
@@ -471,7 +471,7 @@ QDataStream &operator<<(QDataStream &stream, const Chat &item) {
 QDataStream &operator>>(QDataStream &stream, Chat &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<Chat::ChatType>(type));
+    item.setClassType(static_cast<Chat::ChatClassType>(type));
     switch(type) {
     case Chat::typeChatEmpty: {
         qint32 m_id;

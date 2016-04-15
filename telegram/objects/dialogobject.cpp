@@ -154,7 +154,7 @@ bool DialogObject::operator ==(const Dialog &b) const {
 }
 
 void DialogObject::setClassType(quint32 classType) {
-    Dialog::DialogType result;
+    Dialog::DialogClassType result;
     switch(classType) {
     case TypeDialog:
         result = Dialog::typeDialog;

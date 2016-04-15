@@ -14,11 +14,11 @@
 class LIBQTELEGRAMSHARED_EXPORT HelpSupport : public TelegramTypeObject
 {
 public:
-    enum HelpSupportType {
+    enum HelpSupportClassType {
         typeHelpSupport = 0x17c6b5f6
     };
 
-    HelpSupport(HelpSupportType classType = typeHelpSupport, InboundPkt *in = 0);
+    HelpSupport(HelpSupportClassType classType = typeHelpSupport, InboundPkt *in = 0);
     HelpSupport(InboundPkt *in);
     HelpSupport(const Null&);
     virtual ~HelpSupport();
@@ -29,8 +29,8 @@ public:
     void setUser(const User &user);
     User user() const;
 
-    void setClassType(HelpSupportType classType);
-    HelpSupportType classType() const;
+    void setClassType(HelpSupportClassType classType);
+    HelpSupportClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -45,7 +45,7 @@ public:
 private:
     QString m_phoneNumber;
     User m_user;
-    HelpSupportType m_classType;
+    HelpSupportClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(HelpSupport)

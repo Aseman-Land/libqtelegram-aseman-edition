@@ -14,11 +14,11 @@
 class LIBQTELEGRAMSHARED_EXPORT InputAppEvent : public TelegramTypeObject
 {
 public:
-    enum InputAppEventType {
+    enum InputAppEventClassType {
         typeInputAppEvent = 0x770656a8
     };
 
-    InputAppEvent(InputAppEventType classType = typeInputAppEvent, InboundPkt *in = 0);
+    InputAppEvent(InputAppEventClassType classType = typeInputAppEvent, InboundPkt *in = 0);
     InputAppEvent(InboundPkt *in);
     InputAppEvent(const Null&);
     virtual ~InputAppEvent();
@@ -35,8 +35,8 @@ public:
     void setType(const QString &type);
     QString type() const;
 
-    void setClassType(InputAppEventType classType);
-    InputAppEventType classType() const;
+    void setClassType(InputAppEventClassType classType);
+    InputAppEventClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -53,7 +53,7 @@ private:
     qint64 m_peer;
     qreal m_time;
     QString m_type;
-    InputAppEventType m_classType;
+    InputAppEventClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(InputAppEvent)

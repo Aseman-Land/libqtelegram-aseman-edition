@@ -13,11 +13,11 @@
 class LIBQTELEGRAMSHARED_EXPORT UpdatesState : public TelegramTypeObject
 {
 public:
-    enum UpdatesStateType {
+    enum UpdatesStateClassType {
         typeUpdatesState = 0xa56c2a3e
     };
 
-    UpdatesState(UpdatesStateType classType = typeUpdatesState, InboundPkt *in = 0);
+    UpdatesState(UpdatesStateClassType classType = typeUpdatesState, InboundPkt *in = 0);
     UpdatesState(InboundPkt *in);
     UpdatesState(const Null&);
     virtual ~UpdatesState();
@@ -37,8 +37,8 @@ public:
     void setUnreadCount(qint32 unreadCount);
     qint32 unreadCount() const;
 
-    void setClassType(UpdatesStateType classType);
-    UpdatesStateType classType() const;
+    void setClassType(UpdatesStateClassType classType);
+    UpdatesStateClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -56,7 +56,7 @@ private:
     qint32 m_qts;
     qint32 m_seq;
     qint32 m_unreadCount;
-    UpdatesStateType m_classType;
+    UpdatesStateClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(UpdatesState)

@@ -13,14 +13,14 @@
 class LIBQTELEGRAMSHARED_EXPORT InputDocumentObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(InputDocumentType)
+    Q_ENUMS(InputDocumentClassType)
     Q_PROPERTY(qint64 accessHash READ accessHash WRITE setAccessHash NOTIFY accessHashChanged)
     Q_PROPERTY(qint64 id READ id WRITE setId NOTIFY idChanged)
     Q_PROPERTY(InputDocument core READ core WRITE setCore NOTIFY coreChanged)
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum InputDocumentType {
+    enum InputDocumentClassType {
         TypeInputDocumentEmpty,
         TypeInputDocument
     };

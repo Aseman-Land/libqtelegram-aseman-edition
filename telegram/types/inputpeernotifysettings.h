@@ -14,11 +14,11 @@
 class LIBQTELEGRAMSHARED_EXPORT InputPeerNotifySettings : public TelegramTypeObject
 {
 public:
-    enum InputPeerNotifySettingsType {
+    enum InputPeerNotifySettingsClassType {
         typeInputPeerNotifySettings = 0x38935eb2
     };
 
-    InputPeerNotifySettings(InputPeerNotifySettingsType classType = typeInputPeerNotifySettings, InboundPkt *in = 0);
+    InputPeerNotifySettings(InputPeerNotifySettingsClassType classType = typeInputPeerNotifySettings, InboundPkt *in = 0);
     InputPeerNotifySettings(InboundPkt *in);
     InputPeerNotifySettings(const Null&);
     virtual ~InputPeerNotifySettings();
@@ -38,8 +38,8 @@ public:
     void setSound(const QString &sound);
     QString sound() const;
 
-    void setClassType(InputPeerNotifySettingsType classType);
-    InputPeerNotifySettingsType classType() const;
+    void setClassType(InputPeerNotifySettingsClassType classType);
+    InputPeerNotifySettingsClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -55,7 +55,7 @@ private:
     qint32 m_flags;
     qint32 m_muteUntil;
     QString m_sound;
-    InputPeerNotifySettingsType m_classType;
+    InputPeerNotifySettingsClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(InputPeerNotifySettings)

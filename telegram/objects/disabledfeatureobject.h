@@ -13,14 +13,14 @@
 class LIBQTELEGRAMSHARED_EXPORT DisabledFeatureObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(DisabledFeatureType)
+    Q_ENUMS(DisabledFeatureClassType)
     Q_PROPERTY(QString description READ description WRITE setDescription NOTIFY descriptionChanged)
     Q_PROPERTY(QString feature READ feature WRITE setFeature NOTIFY featureChanged)
     Q_PROPERTY(DisabledFeature core READ core WRITE setCore NOTIFY coreChanged)
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum DisabledFeatureType {
+    enum DisabledFeatureClassType {
         TypeDisabledFeature
     };
 

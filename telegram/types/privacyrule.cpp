@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-PrivacyRule::PrivacyRule(PrivacyRuleType classType, InboundPkt *in) :
+PrivacyRule::PrivacyRule(PrivacyRuleClassType classType, InboundPkt *in) :
     m_classType(classType)
 {
     if(in) fetch(in);
@@ -43,11 +43,11 @@ bool PrivacyRule::operator ==(const PrivacyRule &b) const {
            m_users == b.m_users;
 }
 
-void PrivacyRule::setClassType(PrivacyRule::PrivacyRuleType classType) {
+void PrivacyRule::setClassType(PrivacyRule::PrivacyRuleClassType classType) {
     m_classType = classType;
 }
 
-PrivacyRule::PrivacyRuleType PrivacyRule::classType() const {
+PrivacyRule::PrivacyRuleClassType PrivacyRule::classType() const {
     return m_classType;
 }
 
@@ -56,13 +56,13 @@ bool PrivacyRule::fetch(InboundPkt *in) {
     int x = in->fetchInt();
     switch(x) {
     case typePrivacyValueAllowContacts: {
-        m_classType = static_cast<PrivacyRuleType>(x);
+        m_classType = static_cast<PrivacyRuleClassType>(x);
         return true;
     }
         break;
     
     case typePrivacyValueAllowAll: {
-        m_classType = static_cast<PrivacyRuleType>(x);
+        m_classType = static_cast<PrivacyRuleClassType>(x);
         return true;
     }
         break;
@@ -76,19 +76,19 @@ bool PrivacyRule::fetch(InboundPkt *in) {
             type = in->fetchInt();
             m_users.append(type);
         }
-        m_classType = static_cast<PrivacyRuleType>(x);
+        m_classType = static_cast<PrivacyRuleClassType>(x);
         return true;
     }
         break;
     
     case typePrivacyValueDisallowContacts: {
-        m_classType = static_cast<PrivacyRuleType>(x);
+        m_classType = static_cast<PrivacyRuleClassType>(x);
         return true;
     }
         break;
     
     case typePrivacyValueDisallowAll: {
-        m_classType = static_cast<PrivacyRuleType>(x);
+        m_classType = static_cast<PrivacyRuleClassType>(x);
         return true;
     }
         break;
@@ -102,7 +102,7 @@ bool PrivacyRule::fetch(InboundPkt *in) {
             type = in->fetchInt();
             m_users.append(type);
         }
-        m_classType = static_cast<PrivacyRuleType>(x);
+        m_classType = static_cast<PrivacyRuleClassType>(x);
         return true;
     }
         break;
@@ -196,7 +196,7 @@ QDataStream &operator<<(QDataStream &stream, const PrivacyRule &item) {
 QDataStream &operator>>(QDataStream &stream, PrivacyRule &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<PrivacyRule::PrivacyRuleType>(type));
+    item.setClassType(static_cast<PrivacyRule::PrivacyRuleClassType>(type));
     switch(type) {
     case PrivacyRule::typePrivacyValueAllowContacts: {
         

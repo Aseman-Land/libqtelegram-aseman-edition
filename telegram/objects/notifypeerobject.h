@@ -14,13 +14,13 @@
 class LIBQTELEGRAMSHARED_EXPORT NotifyPeerObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(NotifyPeerType)
+    Q_ENUMS(NotifyPeerClassType)
     Q_PROPERTY(PeerObject* peer READ peer WRITE setPeer NOTIFY peerChanged)
     Q_PROPERTY(NotifyPeer core READ core WRITE setCore NOTIFY coreChanged)
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum NotifyPeerType {
+    enum NotifyPeerClassType {
         TypeNotifyPeer,
         TypeNotifyUsers,
         TypeNotifyChats,

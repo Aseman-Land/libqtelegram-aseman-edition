@@ -92,7 +92,7 @@ bool UpdatesStateObject::operator ==(const UpdatesState &b) const {
 }
 
 void UpdatesStateObject::setClassType(quint32 classType) {
-    UpdatesState::UpdatesStateType result;
+    UpdatesState::UpdatesStateClassType result;
     switch(classType) {
     case TypeUpdatesState:
         result = UpdatesState::typeUpdatesState;

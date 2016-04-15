@@ -19,7 +19,7 @@
 class LIBQTELEGRAMSHARED_EXPORT InputMedia : public TelegramTypeObject
 {
 public:
-    enum InputMediaType {
+    enum InputMediaClassType {
         typeInputMediaEmpty = 0x9664f57f,
         typeInputMediaUploadedPhoto = 0xf7aff1c0,
         typeInputMediaPhoto = 0xe9bfb4f3,
@@ -32,7 +32,7 @@ public:
         typeInputMediaGifExternal = 0x4843b0fd
     };
 
-    InputMedia(InputMediaType classType = typeInputMediaEmpty, InboundPkt *in = 0);
+    InputMedia(InputMediaClassType classType = typeInputMediaEmpty, InboundPkt *in = 0);
     InputMedia(InboundPkt *in);
     InputMedia(const Null&);
     virtual ~InputMedia();
@@ -88,8 +88,8 @@ public:
     void setVenueId(const QString &venueId);
     QString venueId() const;
 
-    void setClassType(InputMediaType classType);
-    InputMediaType classType() const;
+    void setClassType(InputMediaClassType classType);
+    InputMediaClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -119,7 +119,7 @@ private:
     QString m_title;
     QString m_url;
     QString m_venueId;
-    InputMediaType m_classType;
+    InputMediaClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(InputMedia)

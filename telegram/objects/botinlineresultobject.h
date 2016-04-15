@@ -16,7 +16,7 @@
 class LIBQTELEGRAMSHARED_EXPORT BotInlineResultObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(BotInlineResultType)
+    Q_ENUMS(BotInlineResultClassType)
     Q_PROPERTY(QString contentType READ contentType WRITE setContentType NOTIFY contentTypeChanged)
     Q_PROPERTY(QString contentUrl READ contentUrl WRITE setContentUrl NOTIFY contentUrlChanged)
     Q_PROPERTY(QString description READ description WRITE setDescription NOTIFY descriptionChanged)
@@ -36,10 +36,9 @@ class LIBQTELEGRAMSHARED_EXPORT BotInlineResultObject : public TelegramTypeQObje
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum BotInlineResultType {
-        TypeBotInlineMediaResultDocument,
-        TypeBotInlineMediaResultPhoto,
-        TypeBotInlineResult
+    enum BotInlineResultClassType {
+        TypeBotInlineResult,
+        TypeBotInlineMediaResult
     };
 
     BotInlineResultObject(const BotInlineResult &core, QObject *parent = 0);

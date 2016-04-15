@@ -116,7 +116,7 @@ bool DcOptionObject::operator ==(const DcOption &b) const {
 }
 
 void DcOptionObject::setClassType(quint32 classType) {
-    DcOption::DcOptionType result;
+    DcOption::DcOptionClassType result;
     switch(classType) {
     case TypeDcOption:
         result = DcOption::typeDcOption;

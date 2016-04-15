@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-ChatFull::ChatFull(ChatFullType classType, InboundPkt *in) :
+ChatFull::ChatFull(ChatFullClassType classType, InboundPkt *in) :
     m_adminsCount(0),
     m_flags(0),
     m_id(0),
@@ -238,11 +238,11 @@ bool ChatFull::operator ==(const ChatFull &b) const {
            m_unreadImportantCount == b.m_unreadImportantCount;
 }
 
-void ChatFull::setClassType(ChatFull::ChatFullType classType) {
+void ChatFull::setClassType(ChatFull::ChatFullClassType classType) {
     m_classType = classType;
 }
 
-ChatFull::ChatFullType ChatFull::classType() const {
+ChatFull::ChatFullClassType ChatFull::classType() const {
     return m_classType;
 }
 
@@ -264,7 +264,7 @@ bool ChatFull::fetch(InboundPkt *in) {
             type.fetch(in);
             m_botInfo.append(type);
         }
-        m_classType = static_cast<ChatFullType>(x);
+        m_classType = static_cast<ChatFullClassType>(x);
         return true;
     }
         break;
@@ -305,7 +305,7 @@ bool ChatFull::fetch(InboundPkt *in) {
         if(m_flags & 1<<5) {
             m_pinnedMsgId = in->fetchInt();
         }
-        m_classType = static_cast<ChatFullType>(x);
+        m_classType = static_cast<ChatFullClassType>(x);
         return true;
     }
         break;
@@ -407,7 +407,7 @@ QDataStream &operator<<(QDataStream &stream, const ChatFull &item) {
 QDataStream &operator>>(QDataStream &stream, ChatFull &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<ChatFull::ChatFullType>(type));
+    item.setClassType(static_cast<ChatFull::ChatFullClassType>(type));
     switch(type) {
     case ChatFull::typeChatFull: {
         qint32 m_id;

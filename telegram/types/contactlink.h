@@ -12,20 +12,20 @@
 class LIBQTELEGRAMSHARED_EXPORT ContactLink : public TelegramTypeObject
 {
 public:
-    enum ContactLinkType {
+    enum ContactLinkClassType {
         typeContactLinkUnknown = 0x5f4f9247,
         typeContactLinkNone = 0xfeedd3ad,
         typeContactLinkHasPhone = 0x268f3f59,
         typeContactLinkContact = 0xd502c2d0
     };
 
-    ContactLink(ContactLinkType classType = typeContactLinkUnknown, InboundPkt *in = 0);
+    ContactLink(ContactLinkClassType classType = typeContactLinkUnknown, InboundPkt *in = 0);
     ContactLink(InboundPkt *in);
     ContactLink(const Null&);
     virtual ~ContactLink();
 
-    void setClassType(ContactLinkType classType);
-    ContactLinkType classType() const;
+    void setClassType(ContactLinkClassType classType);
+    ContactLinkClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -38,7 +38,7 @@ public:
     QByteArray getHash(QCryptographicHash::Algorithm alg = QCryptographicHash::Md5) const;
 
 private:
-    ContactLinkType m_classType;
+    ContactLinkClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(ContactLink)

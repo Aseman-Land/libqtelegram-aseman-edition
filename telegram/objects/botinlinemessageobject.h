@@ -9,28 +9,45 @@
 #include "telegram/types/botinlinemessage.h"
 
 #include <QPointer>
+#include "geopointobject.h"
+#include "replymarkupobject.h"
 
 class LIBQTELEGRAMSHARED_EXPORT BotInlineMessageObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(BotInlineMessageType)
+    Q_ENUMS(BotInlineMessageClassType)
+    Q_PROPERTY(QString address READ address WRITE setAddress NOTIFY addressChanged)
     Q_PROPERTY(QString caption READ caption WRITE setCaption NOTIFY captionChanged)
     Q_PROPERTY(QList<MessageEntity> entities READ entities WRITE setEntities NOTIFY entitiesChanged)
+    Q_PROPERTY(QString firstName READ firstName WRITE setFirstName NOTIFY firstNameChanged)
     Q_PROPERTY(qint32 flags READ flags WRITE setFlags NOTIFY flagsChanged)
+    Q_PROPERTY(GeoPointObject* geo READ geo WRITE setGeo NOTIFY geoChanged)
+    Q_PROPERTY(QString lastName READ lastName WRITE setLastName NOTIFY lastNameChanged)
     Q_PROPERTY(QString message READ message WRITE setMessage NOTIFY messageChanged)
     Q_PROPERTY(bool noWebpage READ noWebpage WRITE setNoWebpage NOTIFY noWebpageChanged)
+    Q_PROPERTY(QString phoneNumber READ phoneNumber WRITE setPhoneNumber NOTIFY phoneNumberChanged)
+    Q_PROPERTY(QString provider READ provider WRITE setProvider NOTIFY providerChanged)
+    Q_PROPERTY(ReplyMarkupObject* replyMarkup READ replyMarkup WRITE setReplyMarkup NOTIFY replyMarkupChanged)
+    Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
+    Q_PROPERTY(QString venueId READ venueId WRITE setVenueId NOTIFY venueIdChanged)
     Q_PROPERTY(BotInlineMessage core READ core WRITE setCore NOTIFY coreChanged)
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum BotInlineMessageType {
+    enum BotInlineMessageClassType {
         TypeBotInlineMessageMediaAuto,
-        TypeBotInlineMessageText
+        TypeBotInlineMessageText,
+        TypeBotInlineMessageMediaGeo,
+        TypeBotInlineMessageMediaVenue,
+        TypeBotInlineMessageMediaContact
     };
 
     BotInlineMessageObject(const BotInlineMessage &core, QObject *parent = 0);
     BotInlineMessageObject(QObject *parent = 0);
     virtual ~BotInlineMessageObject();
+
+    void setAddress(const QString &address);
+    QString address() const;
 
     void setCaption(const QString &caption);
     QString caption() const;
@@ -38,14 +55,38 @@ public:
     void setEntities(const QList<MessageEntity> &entities);
     QList<MessageEntity> entities() const;
 
+    void setFirstName(const QString &firstName);
+    QString firstName() const;
+
     void setFlags(qint32 flags);
     qint32 flags() const;
+
+    void setGeo(GeoPointObject* geo);
+    GeoPointObject* geo() const;
+
+    void setLastName(const QString &lastName);
+    QString lastName() const;
 
     void setMessage(const QString &message);
     QString message() const;
 
     void setNoWebpage(bool noWebpage);
     bool noWebpage() const;
+
+    void setPhoneNumber(const QString &phoneNumber);
+    QString phoneNumber() const;
+
+    void setProvider(const QString &provider);
+    QString provider() const;
+
+    void setReplyMarkup(ReplyMarkupObject* replyMarkup);
+    ReplyMarkupObject* replyMarkup() const;
+
+    void setTitle(const QString &title);
+    QString title() const;
+
+    void setVenueId(const QString &venueId);
+    QString venueId() const;
 
     void setClassType(quint32 classType);
     quint32 classType() const;
@@ -59,15 +100,28 @@ public:
 Q_SIGNALS:
     void coreChanged();
     void classTypeChanged();
+    void addressChanged();
     void captionChanged();
     void entitiesChanged();
+    void firstNameChanged();
     void flagsChanged();
+    void geoChanged();
+    void lastNameChanged();
     void messageChanged();
     void noWebpageChanged();
+    void phoneNumberChanged();
+    void providerChanged();
+    void replyMarkupChanged();
+    void titleChanged();
+    void venueIdChanged();
 
 private Q_SLOTS:
+    void coreGeoChanged();
+    void coreReplyMarkupChanged();
 
 private:
+    QPointer<GeoPointObject> m_geo;
+    QPointer<ReplyMarkupObject> m_replyMarkup;
     BotInlineMessage m_core;
 };
 

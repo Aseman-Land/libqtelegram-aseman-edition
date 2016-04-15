@@ -152,7 +152,7 @@ bool StickerSetObject::operator ==(const StickerSet &b) const {
 }
 
 void StickerSetObject::setClassType(quint32 classType) {
-    StickerSet::StickerSetType result;
+    StickerSet::StickerSetClassType result;
     switch(classType) {
     case TypeStickerSet:
         result = StickerSet::typeStickerSet;

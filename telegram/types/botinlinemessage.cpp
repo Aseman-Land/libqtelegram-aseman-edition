@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-BotInlineMessage::BotInlineMessage(BotInlineMessageType classType, InboundPkt *in) :
+BotInlineMessage::BotInlineMessage(BotInlineMessageClassType classType, InboundPkt *in) :
     m_flags(0),
     m_classType(classType)
 {
@@ -33,6 +33,14 @@ BotInlineMessage::BotInlineMessage(const Null &null) :
 BotInlineMessage::~BotInlineMessage() {
 }
 
+void BotInlineMessage::setAddress(const QString &address) {
+    m_address = address;
+}
+
+QString BotInlineMessage::address() const {
+    return m_address;
+}
+
 void BotInlineMessage::setCaption(const QString &caption) {
     m_caption = caption;
 }
@@ -49,12 +57,36 @@ QList<MessageEntity> BotInlineMessage::entities() const {
     return m_entities;
 }
 
+void BotInlineMessage::setFirstName(const QString &firstName) {
+    m_firstName = firstName;
+}
+
+QString BotInlineMessage::firstName() const {
+    return m_firstName;
+}
+
 void BotInlineMessage::setFlags(qint32 flags) {
     m_flags = flags;
 }
 
 qint32 BotInlineMessage::flags() const {
     return m_flags;
+}
+
+void BotInlineMessage::setGeo(const GeoPoint &geo) {
+    m_geo = geo;
+}
+
+GeoPoint BotInlineMessage::geo() const {
+    return m_geo;
+}
+
+void BotInlineMessage::setLastName(const QString &lastName) {
+    m_lastName = lastName;
+}
+
+QString BotInlineMessage::lastName() const {
+    return m_lastName;
 }
 
 void BotInlineMessage::setMessage(const QString &message) {
@@ -74,19 +106,68 @@ bool BotInlineMessage::noWebpage() const {
     return (m_flags & 1<<0);
 }
 
-bool BotInlineMessage::operator ==(const BotInlineMessage &b) const {
-    return m_classType == b.m_classType &&
-           m_caption == b.m_caption &&
-           m_entities == b.m_entities &&
-           m_flags == b.m_flags &&
-           m_message == b.m_message;
+void BotInlineMessage::setPhoneNumber(const QString &phoneNumber) {
+    m_phoneNumber = phoneNumber;
 }
 
-void BotInlineMessage::setClassType(BotInlineMessage::BotInlineMessageType classType) {
+QString BotInlineMessage::phoneNumber() const {
+    return m_phoneNumber;
+}
+
+void BotInlineMessage::setProvider(const QString &provider) {
+    m_provider = provider;
+}
+
+QString BotInlineMessage::provider() const {
+    return m_provider;
+}
+
+void BotInlineMessage::setReplyMarkup(const ReplyMarkup &replyMarkup) {
+    m_replyMarkup = replyMarkup;
+}
+
+ReplyMarkup BotInlineMessage::replyMarkup() const {
+    return m_replyMarkup;
+}
+
+void BotInlineMessage::setTitle(const QString &title) {
+    m_title = title;
+}
+
+QString BotInlineMessage::title() const {
+    return m_title;
+}
+
+void BotInlineMessage::setVenueId(const QString &venueId) {
+    m_venueId = venueId;
+}
+
+QString BotInlineMessage::venueId() const {
+    return m_venueId;
+}
+
+bool BotInlineMessage::operator ==(const BotInlineMessage &b) const {
+    return m_classType == b.m_classType &&
+           m_address == b.m_address &&
+           m_caption == b.m_caption &&
+           m_entities == b.m_entities &&
+           m_firstName == b.m_firstName &&
+           m_flags == b.m_flags &&
+           m_geo == b.m_geo &&
+           m_lastName == b.m_lastName &&
+           m_message == b.m_message &&
+           m_phoneNumber == b.m_phoneNumber &&
+           m_provider == b.m_provider &&
+           m_replyMarkup == b.m_replyMarkup &&
+           m_title == b.m_title &&
+           m_venueId == b.m_venueId;
+}
+
+void BotInlineMessage::setClassType(BotInlineMessage::BotInlineMessageClassType classType) {
     m_classType = classType;
 }
 
-BotInlineMessage::BotInlineMessageType BotInlineMessage::classType() const {
+BotInlineMessage::BotInlineMessageClassType BotInlineMessage::classType() const {
     return m_classType;
 }
 
@@ -95,8 +176,12 @@ bool BotInlineMessage::fetch(InboundPkt *in) {
     int x = in->fetchInt();
     switch(x) {
     case typeBotInlineMessageMediaAuto: {
+        m_flags = in->fetchInt();
         m_caption = in->fetchQString();
-        m_classType = static_cast<BotInlineMessageType>(x);
+        if(m_flags & 1<<2) {
+            m_replyMarkup.fetch(in);
+        }
+        m_classType = static_cast<BotInlineMessageClassType>(x);
         return true;
     }
         break;
@@ -116,7 +201,49 @@ bool BotInlineMessage::fetch(InboundPkt *in) {
                 m_entities.append(type);
             }
         }
-        m_classType = static_cast<BotInlineMessageType>(x);
+        if(m_flags & 1<<2) {
+            m_replyMarkup.fetch(in);
+        }
+        m_classType = static_cast<BotInlineMessageClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeBotInlineMessageMediaGeo: {
+        m_flags = in->fetchInt();
+        m_geo.fetch(in);
+        if(m_flags & 1<<2) {
+            m_replyMarkup.fetch(in);
+        }
+        m_classType = static_cast<BotInlineMessageClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeBotInlineMessageMediaVenue: {
+        m_flags = in->fetchInt();
+        m_geo.fetch(in);
+        m_title = in->fetchQString();
+        m_address = in->fetchQString();
+        m_provider = in->fetchQString();
+        m_venueId = in->fetchQString();
+        if(m_flags & 1<<2) {
+            m_replyMarkup.fetch(in);
+        }
+        m_classType = static_cast<BotInlineMessageClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeBotInlineMessageMediaContact: {
+        m_flags = in->fetchInt();
+        m_phoneNumber = in->fetchQString();
+        m_firstName = in->fetchQString();
+        m_lastName = in->fetchQString();
+        if(m_flags & 1<<2) {
+            m_replyMarkup.fetch(in);
+        }
+        m_classType = static_cast<BotInlineMessageClassType>(x);
         return true;
     }
         break;
@@ -131,7 +258,9 @@ bool BotInlineMessage::push(OutboundPkt *out) const {
     out->appendInt(m_classType);
     switch(m_classType) {
     case typeBotInlineMessageMediaAuto: {
+        out->appendInt(m_flags);
         out->appendQString(m_caption);
+        m_replyMarkup.push(out);
         return true;
     }
         break;
@@ -144,6 +273,37 @@ bool BotInlineMessage::push(OutboundPkt *out) const {
         for (qint32 i = 0; i < m_entities.count(); i++) {
             m_entities[i].push(out);
         }
+        m_replyMarkup.push(out);
+        return true;
+    }
+        break;
+    
+    case typeBotInlineMessageMediaGeo: {
+        out->appendInt(m_flags);
+        m_geo.push(out);
+        m_replyMarkup.push(out);
+        return true;
+    }
+        break;
+    
+    case typeBotInlineMessageMediaVenue: {
+        out->appendInt(m_flags);
+        m_geo.push(out);
+        out->appendQString(m_title);
+        out->appendQString(m_address);
+        out->appendQString(m_provider);
+        out->appendQString(m_venueId);
+        m_replyMarkup.push(out);
+        return true;
+    }
+        break;
+    
+    case typeBotInlineMessageMediaContact: {
+        out->appendInt(m_flags);
+        out->appendQString(m_phoneNumber);
+        out->appendQString(m_firstName);
+        out->appendQString(m_lastName);
+        m_replyMarkup.push(out);
         return true;
     }
         break;
@@ -164,12 +324,36 @@ QDataStream &operator<<(QDataStream &stream, const BotInlineMessage &item) {
     stream << static_cast<uint>(item.classType());
     switch(item.classType()) {
     case BotInlineMessage::typeBotInlineMessageMediaAuto:
+        stream << item.flags();
         stream << item.caption();
+        stream << item.replyMarkup();
         break;
     case BotInlineMessage::typeBotInlineMessageText:
         stream << item.flags();
         stream << item.message();
         stream << item.entities();
+        stream << item.replyMarkup();
+        break;
+    case BotInlineMessage::typeBotInlineMessageMediaGeo:
+        stream << item.flags();
+        stream << item.geo();
+        stream << item.replyMarkup();
+        break;
+    case BotInlineMessage::typeBotInlineMessageMediaVenue:
+        stream << item.flags();
+        stream << item.geo();
+        stream << item.title();
+        stream << item.address();
+        stream << item.provider();
+        stream << item.venueId();
+        stream << item.replyMarkup();
+        break;
+    case BotInlineMessage::typeBotInlineMessageMediaContact:
+        stream << item.flags();
+        stream << item.phoneNumber();
+        stream << item.firstName();
+        stream << item.lastName();
+        stream << item.replyMarkup();
         break;
     }
     return stream;
@@ -178,12 +362,18 @@ QDataStream &operator<<(QDataStream &stream, const BotInlineMessage &item) {
 QDataStream &operator>>(QDataStream &stream, BotInlineMessage &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<BotInlineMessage::BotInlineMessageType>(type));
+    item.setClassType(static_cast<BotInlineMessage::BotInlineMessageClassType>(type));
     switch(type) {
     case BotInlineMessage::typeBotInlineMessageMediaAuto: {
+        qint32 m_flags;
+        stream >> m_flags;
+        item.setFlags(m_flags);
         QString m_caption;
         stream >> m_caption;
         item.setCaption(m_caption);
+        ReplyMarkup m_reply_markup;
+        stream >> m_reply_markup;
+        item.setReplyMarkup(m_reply_markup);
     }
         break;
     case BotInlineMessage::typeBotInlineMessageText: {
@@ -196,6 +386,63 @@ QDataStream &operator>>(QDataStream &stream, BotInlineMessage &item) {
         QList<MessageEntity> m_entities;
         stream >> m_entities;
         item.setEntities(m_entities);
+        ReplyMarkup m_reply_markup;
+        stream >> m_reply_markup;
+        item.setReplyMarkup(m_reply_markup);
+    }
+        break;
+    case BotInlineMessage::typeBotInlineMessageMediaGeo: {
+        qint32 m_flags;
+        stream >> m_flags;
+        item.setFlags(m_flags);
+        GeoPoint m_geo;
+        stream >> m_geo;
+        item.setGeo(m_geo);
+        ReplyMarkup m_reply_markup;
+        stream >> m_reply_markup;
+        item.setReplyMarkup(m_reply_markup);
+    }
+        break;
+    case BotInlineMessage::typeBotInlineMessageMediaVenue: {
+        qint32 m_flags;
+        stream >> m_flags;
+        item.setFlags(m_flags);
+        GeoPoint m_geo;
+        stream >> m_geo;
+        item.setGeo(m_geo);
+        QString m_title;
+        stream >> m_title;
+        item.setTitle(m_title);
+        QString m_address;
+        stream >> m_address;
+        item.setAddress(m_address);
+        QString m_provider;
+        stream >> m_provider;
+        item.setProvider(m_provider);
+        QString m_venue_id;
+        stream >> m_venue_id;
+        item.setVenueId(m_venue_id);
+        ReplyMarkup m_reply_markup;
+        stream >> m_reply_markup;
+        item.setReplyMarkup(m_reply_markup);
+    }
+        break;
+    case BotInlineMessage::typeBotInlineMessageMediaContact: {
+        qint32 m_flags;
+        stream >> m_flags;
+        item.setFlags(m_flags);
+        QString m_phone_number;
+        stream >> m_phone_number;
+        item.setPhoneNumber(m_phone_number);
+        QString m_first_name;
+        stream >> m_first_name;
+        item.setFirstName(m_first_name);
+        QString m_last_name;
+        stream >> m_last_name;
+        item.setLastName(m_last_name);
+        ReplyMarkup m_reply_markup;
+        stream >> m_reply_markup;
+        item.setReplyMarkup(m_reply_markup);
     }
         break;
     }

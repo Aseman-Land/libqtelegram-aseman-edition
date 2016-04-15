@@ -19,11 +19,11 @@
 class LIBQTELEGRAMSHARED_EXPORT UserFull : public TelegramTypeObject
 {
 public:
-    enum UserFullType {
+    enum UserFullClassType {
         typeUserFull = 0x5932fc03
     };
 
-    UserFull(UserFullType classType = typeUserFull, InboundPkt *in = 0);
+    UserFull(UserFullClassType classType = typeUserFull, InboundPkt *in = 0);
     UserFull(InboundPkt *in);
     UserFull(const Null&);
     virtual ~UserFull();
@@ -52,8 +52,8 @@ public:
     void setUser(const User &user);
     User user() const;
 
-    void setClassType(UserFullType classType);
-    UserFullType classType() const;
+    void setClassType(UserFullClassType classType);
+    UserFullClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -73,7 +73,7 @@ private:
     PeerNotifySettings m_notifySettings;
     Photo m_profilePhoto;
     User m_user;
-    UserFullType m_classType;
+    UserFullClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(UserFull)

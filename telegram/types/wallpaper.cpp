@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-WallPaper::WallPaper(WallPaperType classType, InboundPkt *in) :
+WallPaper::WallPaper(WallPaperClassType classType, InboundPkt *in) :
     m_bgColor(0),
     m_color(0),
     m_id(0),
@@ -88,11 +88,11 @@ bool WallPaper::operator ==(const WallPaper &b) const {
            m_title == b.m_title;
 }
 
-void WallPaper::setClassType(WallPaper::WallPaperType classType) {
+void WallPaper::setClassType(WallPaper::WallPaperClassType classType) {
     m_classType = classType;
 }
 
-WallPaper::WallPaperType WallPaper::classType() const {
+WallPaper::WallPaperClassType WallPaper::classType() const {
     return m_classType;
 }
 
@@ -112,7 +112,7 @@ bool WallPaper::fetch(InboundPkt *in) {
             m_sizes.append(type);
         }
         m_color = in->fetchInt();
-        m_classType = static_cast<WallPaperType>(x);
+        m_classType = static_cast<WallPaperClassType>(x);
         return true;
     }
         break;
@@ -122,7 +122,7 @@ bool WallPaper::fetch(InboundPkt *in) {
         m_title = in->fetchQString();
         m_bgColor = in->fetchInt();
         m_color = in->fetchInt();
-        m_classType = static_cast<WallPaperType>(x);
+        m_classType = static_cast<WallPaperClassType>(x);
         return true;
     }
         break;
@@ -192,7 +192,7 @@ QDataStream &operator<<(QDataStream &stream, const WallPaper &item) {
 QDataStream &operator>>(QDataStream &stream, WallPaper &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<WallPaper::WallPaperType>(type));
+    item.setClassType(static_cast<WallPaper::WallPaperClassType>(type));
     switch(type) {
     case WallPaper::typeWallPaper: {
         qint32 m_id;

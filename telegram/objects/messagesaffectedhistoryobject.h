@@ -13,7 +13,7 @@
 class LIBQTELEGRAMSHARED_EXPORT MessagesAffectedHistoryObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(MessagesAffectedHistoryType)
+    Q_ENUMS(MessagesAffectedHistoryClassType)
     Q_PROPERTY(qint32 offset READ offset WRITE setOffset NOTIFY offsetChanged)
     Q_PROPERTY(qint32 pts READ pts WRITE setPts NOTIFY ptsChanged)
     Q_PROPERTY(qint32 ptsCount READ ptsCount WRITE setPtsCount NOTIFY ptsCountChanged)
@@ -21,7 +21,7 @@ class LIBQTELEGRAMSHARED_EXPORT MessagesAffectedHistoryObject : public TelegramT
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum MessagesAffectedHistoryType {
+    enum MessagesAffectedHistoryClassType {
         TypeMessagesAffectedHistory
     };
 

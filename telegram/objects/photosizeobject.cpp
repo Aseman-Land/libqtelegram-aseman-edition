@@ -117,7 +117,7 @@ bool PhotoSizeObject::operator ==(const PhotoSize &b) const {
 }
 
 void PhotoSizeObject::setClassType(quint32 classType) {
-    PhotoSize::PhotoSizeType result;
+    PhotoSize::PhotoSizeClassType result;
     switch(classType) {
     case TypePhotoSizeEmpty:
         result = PhotoSize::typePhotoSizeEmpty;

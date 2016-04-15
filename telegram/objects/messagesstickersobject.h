@@ -13,14 +13,14 @@
 class LIBQTELEGRAMSHARED_EXPORT MessagesStickersObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(MessagesStickersType)
+    Q_ENUMS(MessagesStickersClassType)
     Q_PROPERTY(QString hash READ hash WRITE setHash NOTIFY hashChanged)
     Q_PROPERTY(QList<Document> stickers READ stickers WRITE setStickers NOTIFY stickersChanged)
     Q_PROPERTY(MessagesStickers core READ core WRITE setCore NOTIFY coreChanged)
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum MessagesStickersType {
+    enum MessagesStickersClassType {
         TypeMessagesStickersNotModified,
         TypeMessagesStickers
     };

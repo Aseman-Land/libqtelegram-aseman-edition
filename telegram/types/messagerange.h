@@ -13,11 +13,11 @@
 class LIBQTELEGRAMSHARED_EXPORT MessageRange : public TelegramTypeObject
 {
 public:
-    enum MessageRangeType {
+    enum MessageRangeClassType {
         typeMessageRange = 0xae30253
     };
 
-    MessageRange(MessageRangeType classType = typeMessageRange, InboundPkt *in = 0);
+    MessageRange(MessageRangeClassType classType = typeMessageRange, InboundPkt *in = 0);
     MessageRange(InboundPkt *in);
     MessageRange(const Null&);
     virtual ~MessageRange();
@@ -28,8 +28,8 @@ public:
     void setMinId(qint32 minId);
     qint32 minId() const;
 
-    void setClassType(MessageRangeType classType);
-    MessageRangeType classType() const;
+    void setClassType(MessageRangeClassType classType);
+    MessageRangeClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -44,7 +44,7 @@ public:
 private:
     qint32 m_maxId;
     qint32 m_minId;
-    MessageRangeType m_classType;
+    MessageRangeClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(MessageRange)

@@ -14,12 +14,12 @@
 class LIBQTELEGRAMSHARED_EXPORT PeerNotifySettings : public TelegramTypeObject
 {
 public:
-    enum PeerNotifySettingsType {
+    enum PeerNotifySettingsClassType {
         typePeerNotifySettingsEmpty = 0x70a68512,
         typePeerNotifySettings = 0x9acda4c0
     };
 
-    PeerNotifySettings(PeerNotifySettingsType classType = typePeerNotifySettingsEmpty, InboundPkt *in = 0);
+    PeerNotifySettings(PeerNotifySettingsClassType classType = typePeerNotifySettingsEmpty, InboundPkt *in = 0);
     PeerNotifySettings(InboundPkt *in);
     PeerNotifySettings(const Null&);
     virtual ~PeerNotifySettings();
@@ -39,8 +39,8 @@ public:
     void setSound(const QString &sound);
     QString sound() const;
 
-    void setClassType(PeerNotifySettingsType classType);
-    PeerNotifySettingsType classType() const;
+    void setClassType(PeerNotifySettingsClassType classType);
+    PeerNotifySettingsClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -56,7 +56,7 @@ private:
     qint32 m_flags;
     qint32 m_muteUntil;
     QString m_sound;
-    PeerNotifySettingsType m_classType;
+    PeerNotifySettingsClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(PeerNotifySettings)

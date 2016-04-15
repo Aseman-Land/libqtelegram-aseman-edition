@@ -15,11 +15,11 @@
 class LIBQTELEGRAMSHARED_EXPORT AccountPrivacyRules : public TelegramTypeObject
 {
 public:
-    enum AccountPrivacyRulesType {
+    enum AccountPrivacyRulesClassType {
         typeAccountPrivacyRules = 0x554abb6f
     };
 
-    AccountPrivacyRules(AccountPrivacyRulesType classType = typeAccountPrivacyRules, InboundPkt *in = 0);
+    AccountPrivacyRules(AccountPrivacyRulesClassType classType = typeAccountPrivacyRules, InboundPkt *in = 0);
     AccountPrivacyRules(InboundPkt *in);
     AccountPrivacyRules(const Null&);
     virtual ~AccountPrivacyRules();
@@ -30,8 +30,8 @@ public:
     void setUsers(const QList<User> &users);
     QList<User> users() const;
 
-    void setClassType(AccountPrivacyRulesType classType);
-    AccountPrivacyRulesType classType() const;
+    void setClassType(AccountPrivacyRulesClassType classType);
+    AccountPrivacyRulesClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -46,7 +46,7 @@ public:
 private:
     QList<PrivacyRule> m_rules;
     QList<User> m_users;
-    AccountPrivacyRulesType m_classType;
+    AccountPrivacyRulesClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(AccountPrivacyRules)

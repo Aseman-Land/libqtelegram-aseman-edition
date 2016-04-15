@@ -13,13 +13,13 @@
 class LIBQTELEGRAMSHARED_EXPORT AccountDaysTTLObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(AccountDaysTTLType)
+    Q_ENUMS(AccountDaysTTLClassType)
     Q_PROPERTY(qint32 days READ days WRITE setDays NOTIFY daysChanged)
     Q_PROPERTY(AccountDaysTTL core READ core WRITE setCore NOTIFY coreChanged)
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum AccountDaysTTLType {
+    enum AccountDaysTTLClassType {
         TypeAccountDaysTTL
     };
 

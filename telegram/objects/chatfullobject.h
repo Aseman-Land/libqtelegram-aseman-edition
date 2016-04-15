@@ -17,7 +17,7 @@
 class LIBQTELEGRAMSHARED_EXPORT ChatFullObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(ChatFullType)
+    Q_ENUMS(ChatFullClassType)
     Q_PROPERTY(QString about READ about WRITE setAbout NOTIFY aboutChanged)
     Q_PROPERTY(qint32 adminsCount READ adminsCount WRITE setAdminsCount NOTIFY adminsCountChanged)
     Q_PROPERTY(QList<BotInfo> botInfo READ botInfo WRITE setBotInfo NOTIFY botInfoChanged)
@@ -41,7 +41,7 @@ class LIBQTELEGRAMSHARED_EXPORT ChatFullObject : public TelegramTypeQObject
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum ChatFullType {
+    enum ChatFullClassType {
         TypeChatFull,
         TypeChannelFull
     };

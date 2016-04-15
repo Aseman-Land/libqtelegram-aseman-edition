@@ -9,19 +9,17 @@
 
 #include <QDataStream>
 
-AuthSentCode::AuthSentCode(AuthSentCodeType classType, InboundPkt *in) :
-    m_isPassword(false),
-    m_phoneRegistered(false),
-    m_sendCallTimeout(0),
+AuthSentCode::AuthSentCode(AuthSentCodeClassType classType, InboundPkt *in) :
+    m_flags(0),
+    m_timeout(0),
     m_classType(classType)
 {
     if(in) fetch(in);
 }
 
 AuthSentCode::AuthSentCode(InboundPkt *in) :
-    m_isPassword(false),
-    m_phoneRegistered(false),
-    m_sendCallTimeout(0),
+    m_flags(0),
+    m_timeout(0),
     m_classType(typeAuthSentCode)
 {
     fetch(in);
@@ -29,9 +27,8 @@ AuthSentCode::AuthSentCode(InboundPkt *in) :
 
 AuthSentCode::AuthSentCode(const Null &null) :
     TelegramTypeObject(null),
-    m_isPassword(false),
-    m_phoneRegistered(false),
-    m_sendCallTimeout(0),
+    m_flags(0),
+    m_timeout(0),
     m_classType(typeAuthSentCode)
 {
 }
@@ -39,12 +36,20 @@ AuthSentCode::AuthSentCode(const Null &null) :
 AuthSentCode::~AuthSentCode() {
 }
 
-void AuthSentCode::setIsPassword(bool isPassword) {
-    m_isPassword = isPassword;
+void AuthSentCode::setFlags(qint32 flags) {
+    m_flags = flags;
 }
 
-bool AuthSentCode::isPassword() const {
-    return m_isPassword;
+qint32 AuthSentCode::flags() const {
+    return m_flags;
+}
+
+void AuthSentCode::setNextType(const AuthCodeType &nextType) {
+    m_nextType = nextType;
+}
+
+AuthCodeType AuthSentCode::nextType() const {
+    return m_nextType;
 }
 
 void AuthSentCode::setPhoneCodeHash(const QString &phoneCodeHash) {
@@ -56,34 +61,44 @@ QString AuthSentCode::phoneCodeHash() const {
 }
 
 void AuthSentCode::setPhoneRegistered(bool phoneRegistered) {
-    m_phoneRegistered = phoneRegistered;
+    if(phoneRegistered) m_flags = (m_flags | (1<<0));
+    else m_flags = (m_flags & ~(1<<0));
 }
 
 bool AuthSentCode::phoneRegistered() const {
-    return m_phoneRegistered;
+    return (m_flags & 1<<0);
 }
 
-void AuthSentCode::setSendCallTimeout(qint32 sendCallTimeout) {
-    m_sendCallTimeout = sendCallTimeout;
+void AuthSentCode::setTimeout(qint32 timeout) {
+    m_timeout = timeout;
 }
 
-qint32 AuthSentCode::sendCallTimeout() const {
-    return m_sendCallTimeout;
+qint32 AuthSentCode::timeout() const {
+    return m_timeout;
+}
+
+void AuthSentCode::setType(const AuthSentCodeType &type) {
+    m_type = type;
+}
+
+AuthSentCodeType AuthSentCode::type() const {
+    return m_type;
 }
 
 bool AuthSentCode::operator ==(const AuthSentCode &b) const {
     return m_classType == b.m_classType &&
-           m_isPassword == b.m_isPassword &&
+           m_flags == b.m_flags &&
+           m_nextType == b.m_nextType &&
            m_phoneCodeHash == b.m_phoneCodeHash &&
-           m_phoneRegistered == b.m_phoneRegistered &&
-           m_sendCallTimeout == b.m_sendCallTimeout;
+           m_timeout == b.m_timeout &&
+           m_type == b.m_type;
 }
 
-void AuthSentCode::setClassType(AuthSentCode::AuthSentCodeType classType) {
+void AuthSentCode::setClassType(AuthSentCode::AuthSentCodeClassType classType) {
     m_classType = classType;
 }
 
-AuthSentCode::AuthSentCodeType AuthSentCode::classType() const {
+AuthSentCode::AuthSentCodeClassType AuthSentCode::classType() const {
     return m_classType;
 }
 
@@ -92,21 +107,16 @@ bool AuthSentCode::fetch(InboundPkt *in) {
     int x = in->fetchInt();
     switch(x) {
     case typeAuthSentCode: {
-        m_phoneRegistered = in->fetchBool();
+        m_flags = in->fetchInt();
+        m_type.fetch(in);
         m_phoneCodeHash = in->fetchQString();
-        m_sendCallTimeout = in->fetchInt();
-        m_isPassword = in->fetchBool();
-        m_classType = static_cast<AuthSentCodeType>(x);
-        return true;
-    }
-        break;
-    
-    case typeAuthSentAppCode: {
-        m_phoneRegistered = in->fetchBool();
-        m_phoneCodeHash = in->fetchQString();
-        m_sendCallTimeout = in->fetchInt();
-        m_isPassword = in->fetchBool();
-        m_classType = static_cast<AuthSentCodeType>(x);
+        if(m_flags & 1<<1) {
+            m_nextType.fetch(in);
+        }
+        if(m_flags & 1<<2) {
+            m_timeout = in->fetchInt();
+        }
+        m_classType = static_cast<AuthSentCodeClassType>(x);
         return true;
     }
         break;
@@ -121,19 +131,11 @@ bool AuthSentCode::push(OutboundPkt *out) const {
     out->appendInt(m_classType);
     switch(m_classType) {
     case typeAuthSentCode: {
-        out->appendBool(m_phoneRegistered);
+        out->appendInt(m_flags);
+        m_type.push(out);
         out->appendQString(m_phoneCodeHash);
-        out->appendInt(m_sendCallTimeout);
-        out->appendBool(m_isPassword);
-        return true;
-    }
-        break;
-    
-    case typeAuthSentAppCode: {
-        out->appendBool(m_phoneRegistered);
-        out->appendQString(m_phoneCodeHash);
-        out->appendInt(m_sendCallTimeout);
-        out->appendBool(m_isPassword);
+        m_nextType.push(out);
+        out->appendInt(m_timeout);
         return true;
     }
         break;
@@ -154,16 +156,11 @@ QDataStream &operator<<(QDataStream &stream, const AuthSentCode &item) {
     stream << static_cast<uint>(item.classType());
     switch(item.classType()) {
     case AuthSentCode::typeAuthSentCode:
-        stream << item.phoneRegistered();
+        stream << item.flags();
+        stream << item.type();
         stream << item.phoneCodeHash();
-        stream << item.sendCallTimeout();
-        stream << item.isPassword();
-        break;
-    case AuthSentCode::typeAuthSentAppCode:
-        stream << item.phoneRegistered();
-        stream << item.phoneCodeHash();
-        stream << item.sendCallTimeout();
-        stream << item.isPassword();
+        stream << item.nextType();
+        stream << item.timeout();
         break;
     }
     return stream;
@@ -172,36 +169,24 @@ QDataStream &operator<<(QDataStream &stream, const AuthSentCode &item) {
 QDataStream &operator>>(QDataStream &stream, AuthSentCode &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<AuthSentCode::AuthSentCodeType>(type));
+    item.setClassType(static_cast<AuthSentCode::AuthSentCodeClassType>(type));
     switch(type) {
     case AuthSentCode::typeAuthSentCode: {
-        bool m_phone_registered;
-        stream >> m_phone_registered;
-        item.setPhoneRegistered(m_phone_registered);
+        qint32 m_flags;
+        stream >> m_flags;
+        item.setFlags(m_flags);
+        AuthSentCodeType m_type;
+        stream >> m_type;
+        item.setType(m_type);
         QString m_phone_code_hash;
         stream >> m_phone_code_hash;
         item.setPhoneCodeHash(m_phone_code_hash);
-        qint32 m_send_call_timeout;
-        stream >> m_send_call_timeout;
-        item.setSendCallTimeout(m_send_call_timeout);
-        bool m_is_password;
-        stream >> m_is_password;
-        item.setIsPassword(m_is_password);
-    }
-        break;
-    case AuthSentCode::typeAuthSentAppCode: {
-        bool m_phone_registered;
-        stream >> m_phone_registered;
-        item.setPhoneRegistered(m_phone_registered);
-        QString m_phone_code_hash;
-        stream >> m_phone_code_hash;
-        item.setPhoneCodeHash(m_phone_code_hash);
-        qint32 m_send_call_timeout;
-        stream >> m_send_call_timeout;
-        item.setSendCallTimeout(m_send_call_timeout);
-        bool m_is_password;
-        stream >> m_is_password;
-        item.setIsPassword(m_is_password);
+        AuthCodeType m_next_type;
+        stream >> m_next_type;
+        item.setNextType(m_next_type);
+        qint32 m_timeout;
+        stream >> m_timeout;
+        item.setTimeout(m_timeout);
     }
         break;
     }

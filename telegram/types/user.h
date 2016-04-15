@@ -16,12 +16,12 @@
 class LIBQTELEGRAMSHARED_EXPORT User : public TelegramTypeObject
 {
 public:
-    enum UserType {
+    enum UserClassType {
         typeUserEmpty = 0x200250ba,
         typeUser = 0xd10d979a
     };
 
-    User(UserType classType = typeUserEmpty, InboundPkt *in = 0);
+    User(UserClassType classType = typeUserEmpty, InboundPkt *in = 0);
     User(InboundPkt *in);
     User(const Null&);
     virtual ~User();
@@ -37,6 +37,9 @@ public:
 
     void setBotInfoVersion(qint32 botInfoVersion);
     qint32 botInfoVersion() const;
+
+    void setBotInlineGeo(bool botInlineGeo);
+    bool botInlineGeo() const;
 
     void setBotInlinePlaceholder(const QString &botInlinePlaceholder);
     QString botInlinePlaceholder() const;
@@ -92,8 +95,8 @@ public:
     void setVerified(bool verified);
     bool verified() const;
 
-    void setClassType(UserType classType);
-    UserType classType() const;
+    void setClassType(UserClassType classType);
+    UserClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -118,7 +121,7 @@ private:
     QString m_restrictionReason;
     UserStatus m_status;
     QString m_username;
-    UserType m_classType;
+    UserClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(User)

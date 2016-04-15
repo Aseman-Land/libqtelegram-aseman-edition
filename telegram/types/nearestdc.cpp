@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-NearestDc::NearestDc(NearestDcType classType, InboundPkt *in) :
+NearestDc::NearestDc(NearestDcClassType classType, InboundPkt *in) :
     m_nearestDc(0),
     m_thisDc(0),
     m_classType(classType)
@@ -67,11 +67,11 @@ bool NearestDc::operator ==(const NearestDc &b) const {
            m_thisDc == b.m_thisDc;
 }
 
-void NearestDc::setClassType(NearestDc::NearestDcType classType) {
+void NearestDc::setClassType(NearestDc::NearestDcClassType classType) {
     m_classType = classType;
 }
 
-NearestDc::NearestDcType NearestDc::classType() const {
+NearestDc::NearestDcClassType NearestDc::classType() const {
     return m_classType;
 }
 
@@ -83,7 +83,7 @@ bool NearestDc::fetch(InboundPkt *in) {
         m_country = in->fetchQString();
         m_thisDc = in->fetchInt();
         m_nearestDc = in->fetchInt();
-        m_classType = static_cast<NearestDcType>(x);
+        m_classType = static_cast<NearestDcClassType>(x);
         return true;
     }
         break;
@@ -132,7 +132,7 @@ QDataStream &operator<<(QDataStream &stream, const NearestDc &item) {
 QDataStream &operator>>(QDataStream &stream, NearestDc &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<NearestDc::NearestDcType>(type));
+    item.setClassType(static_cast<NearestDc::NearestDcClassType>(type));
     switch(type) {
     case NearestDc::typeNearestDc: {
         QString m_country;

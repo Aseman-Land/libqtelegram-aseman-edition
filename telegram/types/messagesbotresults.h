@@ -12,15 +12,16 @@
 #include <QString>
 #include <QList>
 #include "botinlineresult.h"
+#include "inlinebotswitchpm.h"
 
 class LIBQTELEGRAMSHARED_EXPORT MessagesBotResults : public TelegramTypeObject
 {
 public:
-    enum MessagesBotResultsType {
-        typeMessagesBotResults = 0x1170b0a3
+    enum MessagesBotResultsClassType {
+        typeMessagesBotResults = 0x256709a6
     };
 
-    MessagesBotResults(MessagesBotResultsType classType = typeMessagesBotResults, InboundPkt *in = 0);
+    MessagesBotResults(MessagesBotResultsClassType classType = typeMessagesBotResults, InboundPkt *in = 0);
     MessagesBotResults(InboundPkt *in);
     MessagesBotResults(const Null&);
     virtual ~MessagesBotResults();
@@ -40,8 +41,11 @@ public:
     void setResults(const QList<BotInlineResult> &results);
     QList<BotInlineResult> results() const;
 
-    void setClassType(MessagesBotResultsType classType);
-    MessagesBotResultsType classType() const;
+    void setSwitchPm(const InlineBotSwitchPM &switchPm);
+    InlineBotSwitchPM switchPm() const;
+
+    void setClassType(MessagesBotResultsClassType classType);
+    MessagesBotResultsClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -58,7 +62,8 @@ private:
     QString m_nextOffset;
     qint64 m_queryId;
     QList<BotInlineResult> m_results;
-    MessagesBotResultsType m_classType;
+    InlineBotSwitchPM m_switchPm;
+    MessagesBotResultsClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(MessagesBotResults)

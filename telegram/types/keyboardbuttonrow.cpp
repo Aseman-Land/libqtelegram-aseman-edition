@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-KeyboardButtonRow::KeyboardButtonRow(KeyboardButtonRowType classType, InboundPkt *in) :
+KeyboardButtonRow::KeyboardButtonRow(KeyboardButtonRowClassType classType, InboundPkt *in) :
     m_classType(classType)
 {
     if(in) fetch(in);
@@ -43,11 +43,11 @@ bool KeyboardButtonRow::operator ==(const KeyboardButtonRow &b) const {
            m_buttons == b.m_buttons;
 }
 
-void KeyboardButtonRow::setClassType(KeyboardButtonRow::KeyboardButtonRowType classType) {
+void KeyboardButtonRow::setClassType(KeyboardButtonRow::KeyboardButtonRowClassType classType) {
     m_classType = classType;
 }
 
-KeyboardButtonRow::KeyboardButtonRowType KeyboardButtonRow::classType() const {
+KeyboardButtonRow::KeyboardButtonRowClassType KeyboardButtonRow::classType() const {
     return m_classType;
 }
 
@@ -64,7 +64,7 @@ bool KeyboardButtonRow::fetch(InboundPkt *in) {
             type.fetch(in);
             m_buttons.append(type);
         }
-        m_classType = static_cast<KeyboardButtonRowType>(x);
+        m_classType = static_cast<KeyboardButtonRowClassType>(x);
         return true;
     }
         break;
@@ -113,7 +113,7 @@ QDataStream &operator<<(QDataStream &stream, const KeyboardButtonRow &item) {
 QDataStream &operator>>(QDataStream &stream, KeyboardButtonRow &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<KeyboardButtonRow::KeyboardButtonRowType>(type));
+    item.setClassType(static_cast<KeyboardButtonRow::KeyboardButtonRowClassType>(type));
     switch(type) {
     case KeyboardButtonRow::typeKeyboardButtonRow: {
         QList<KeyboardButton> m_buttons;

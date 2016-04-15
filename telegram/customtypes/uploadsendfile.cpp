@@ -5,7 +5,7 @@
 #include "uploadsendfile.h"
 #include "../coretypes.h"
 
-UploadSendFile::UploadSendFile(UploadSendFileType classType) :
+UploadSendFile::UploadSendFile(UploadSendFileClassType classType) :
     m_partId(0),
     m_totalSize(0),
     m_uploaded(0),
@@ -65,11 +65,11 @@ bool UploadSendFile::operator ==(const UploadSendFile &b) const {
            m_uploaded == b.m_uploaded;
 }
 
-void UploadSendFile::setClassType(UploadSendFile::UploadSendFileType classType) {
+void UploadSendFile::setClassType(UploadSendFile::UploadSendFileClassType classType) {
     m_classType = classType;
 }
 
-UploadSendFile::UploadSendFileType UploadSendFile::classType() const {
+UploadSendFile::UploadSendFileClassType UploadSendFile::classType() const {
     return m_classType;
 }
 

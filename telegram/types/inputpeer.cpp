@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-InputPeer::InputPeer(InputPeerType classType, InboundPkt *in) :
+InputPeer::InputPeer(InputPeerClassType classType, InboundPkt *in) :
     m_accessHash(0),
     m_channelId(0),
     m_chatId(0),
@@ -82,11 +82,11 @@ bool InputPeer::operator ==(const InputPeer &b) const {
            m_userId == b.m_userId;
 }
 
-void InputPeer::setClassType(InputPeer::InputPeerType classType) {
+void InputPeer::setClassType(InputPeer::InputPeerClassType classType) {
     m_classType = classType;
 }
 
-InputPeer::InputPeerType InputPeer::classType() const {
+InputPeer::InputPeerClassType InputPeer::classType() const {
     return m_classType;
 }
 
@@ -95,20 +95,20 @@ bool InputPeer::fetch(InboundPkt *in) {
     int x = in->fetchInt();
     switch(x) {
     case typeInputPeerEmpty: {
-        m_classType = static_cast<InputPeerType>(x);
+        m_classType = static_cast<InputPeerClassType>(x);
         return true;
     }
         break;
     
     case typeInputPeerSelf: {
-        m_classType = static_cast<InputPeerType>(x);
+        m_classType = static_cast<InputPeerClassType>(x);
         return true;
     }
         break;
     
     case typeInputPeerChat: {
         m_chatId = in->fetchInt();
-        m_classType = static_cast<InputPeerType>(x);
+        m_classType = static_cast<InputPeerClassType>(x);
         return true;
     }
         break;
@@ -116,7 +116,7 @@ bool InputPeer::fetch(InboundPkt *in) {
     case typeInputPeerUser: {
         m_userId = in->fetchInt();
         m_accessHash = in->fetchLong();
-        m_classType = static_cast<InputPeerType>(x);
+        m_classType = static_cast<InputPeerClassType>(x);
         return true;
     }
         break;
@@ -124,7 +124,7 @@ bool InputPeer::fetch(InboundPkt *in) {
     case typeInputPeerChannel: {
         m_channelId = in->fetchInt();
         m_accessHash = in->fetchLong();
-        m_classType = static_cast<InputPeerType>(x);
+        m_classType = static_cast<InputPeerClassType>(x);
         return true;
     }
         break;
@@ -207,7 +207,7 @@ QDataStream &operator<<(QDataStream &stream, const InputPeer &item) {
 QDataStream &operator>>(QDataStream &stream, InputPeer &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<InputPeer::InputPeerType>(type));
+    item.setClassType(static_cast<InputPeer::InputPeerClassType>(type));
     switch(type) {
     case InputPeer::typeInputPeerEmpty: {
         

@@ -13,7 +13,7 @@
 class LIBQTELEGRAMSHARED_EXPORT UpdatesChannelDifferenceObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(UpdatesChannelDifferenceType)
+    Q_ENUMS(UpdatesChannelDifferenceClassType)
     Q_PROPERTY(QList<Chat> chats READ chats WRITE setChats NOTIFY chatsChanged)
     Q_PROPERTY(bool final READ final WRITE setFinal NOTIFY finalChanged)
     Q_PROPERTY(qint32 flags READ flags WRITE setFlags NOTIFY flagsChanged)
@@ -32,7 +32,7 @@ class LIBQTELEGRAMSHARED_EXPORT UpdatesChannelDifferenceObject : public Telegram
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum UpdatesChannelDifferenceType {
+    enum UpdatesChannelDifferenceClassType {
         TypeUpdatesChannelDifferenceEmpty,
         TypeUpdatesChannelDifferenceTooLong,
         TypeUpdatesChannelDifference

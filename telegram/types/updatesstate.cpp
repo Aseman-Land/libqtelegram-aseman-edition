@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-UpdatesState::UpdatesState(UpdatesStateType classType, InboundPkt *in) :
+UpdatesState::UpdatesState(UpdatesStateClassType classType, InboundPkt *in) :
     m_date(0),
     m_pts(0),
     m_qts(0),
@@ -94,11 +94,11 @@ bool UpdatesState::operator ==(const UpdatesState &b) const {
            m_unreadCount == b.m_unreadCount;
 }
 
-void UpdatesState::setClassType(UpdatesState::UpdatesStateType classType) {
+void UpdatesState::setClassType(UpdatesState::UpdatesStateClassType classType) {
     m_classType = classType;
 }
 
-UpdatesState::UpdatesStateType UpdatesState::classType() const {
+UpdatesState::UpdatesStateClassType UpdatesState::classType() const {
     return m_classType;
 }
 
@@ -112,7 +112,7 @@ bool UpdatesState::fetch(InboundPkt *in) {
         m_date = in->fetchInt();
         m_seq = in->fetchInt();
         m_unreadCount = in->fetchInt();
-        m_classType = static_cast<UpdatesStateType>(x);
+        m_classType = static_cast<UpdatesStateClassType>(x);
         return true;
     }
         break;
@@ -165,7 +165,7 @@ QDataStream &operator<<(QDataStream &stream, const UpdatesState &item) {
 QDataStream &operator>>(QDataStream &stream, UpdatesState &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<UpdatesState::UpdatesStateType>(type));
+    item.setClassType(static_cast<UpdatesState::UpdatesStateClassType>(type));
     switch(type) {
     case UpdatesState::typeUpdatesState: {
         qint32 m_pts;

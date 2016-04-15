@@ -12,18 +12,18 @@
 class LIBQTELEGRAMSHARED_EXPORT InputPrivacyKey : public TelegramTypeObject
 {
 public:
-    enum InputPrivacyKeyType {
+    enum InputPrivacyKeyClassType {
         typeInputPrivacyKeyStatusTimestamp = 0x4f96cb18,
         typeInputPrivacyKeyChatInvite = 0xbdfb0426
     };
 
-    InputPrivacyKey(InputPrivacyKeyType classType = typeInputPrivacyKeyStatusTimestamp, InboundPkt *in = 0);
+    InputPrivacyKey(InputPrivacyKeyClassType classType = typeInputPrivacyKeyStatusTimestamp, InboundPkt *in = 0);
     InputPrivacyKey(InboundPkt *in);
     InputPrivacyKey(const Null&);
     virtual ~InputPrivacyKey();
 
-    void setClassType(InputPrivacyKeyType classType);
-    InputPrivacyKeyType classType() const;
+    void setClassType(InputPrivacyKeyClassType classType);
+    InputPrivacyKeyClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -36,7 +36,7 @@ public:
     QByteArray getHash(QCryptographicHash::Algorithm alg = QCryptographicHash::Md5) const;
 
 private:
-    InputPrivacyKeyType m_classType;
+    InputPrivacyKeyClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(InputPrivacyKey)

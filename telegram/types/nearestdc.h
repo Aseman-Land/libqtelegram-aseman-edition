@@ -14,11 +14,11 @@
 class LIBQTELEGRAMSHARED_EXPORT NearestDc : public TelegramTypeObject
 {
 public:
-    enum NearestDcType {
+    enum NearestDcClassType {
         typeNearestDc = 0x8e1a1775
     };
 
-    NearestDc(NearestDcType classType = typeNearestDc, InboundPkt *in = 0);
+    NearestDc(NearestDcClassType classType = typeNearestDc, InboundPkt *in = 0);
     NearestDc(InboundPkt *in);
     NearestDc(const Null&);
     virtual ~NearestDc();
@@ -32,8 +32,8 @@ public:
     void setThisDc(qint32 thisDc);
     qint32 thisDc() const;
 
-    void setClassType(NearestDcType classType);
-    NearestDcType classType() const;
+    void setClassType(NearestDcClassType classType);
+    NearestDcClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -49,7 +49,7 @@ private:
     QString m_country;
     qint32 m_nearestDc;
     qint32 m_thisDc;
-    NearestDcType m_classType;
+    NearestDcClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(NearestDc)

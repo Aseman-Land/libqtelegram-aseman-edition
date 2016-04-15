@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-MessagesSentEncryptedMessage::MessagesSentEncryptedMessage(MessagesSentEncryptedMessageType classType, InboundPkt *in) :
+MessagesSentEncryptedMessage::MessagesSentEncryptedMessage(MessagesSentEncryptedMessageClassType classType, InboundPkt *in) :
     m_date(0),
     m_classType(classType)
 {
@@ -55,11 +55,11 @@ bool MessagesSentEncryptedMessage::operator ==(const MessagesSentEncryptedMessag
            m_file == b.m_file;
 }
 
-void MessagesSentEncryptedMessage::setClassType(MessagesSentEncryptedMessage::MessagesSentEncryptedMessageType classType) {
+void MessagesSentEncryptedMessage::setClassType(MessagesSentEncryptedMessage::MessagesSentEncryptedMessageClassType classType) {
     m_classType = classType;
 }
 
-MessagesSentEncryptedMessage::MessagesSentEncryptedMessageType MessagesSentEncryptedMessage::classType() const {
+MessagesSentEncryptedMessage::MessagesSentEncryptedMessageClassType MessagesSentEncryptedMessage::classType() const {
     return m_classType;
 }
 
@@ -69,7 +69,7 @@ bool MessagesSentEncryptedMessage::fetch(InboundPkt *in) {
     switch(x) {
     case typeMessagesSentEncryptedMessage: {
         m_date = in->fetchInt();
-        m_classType = static_cast<MessagesSentEncryptedMessageType>(x);
+        m_classType = static_cast<MessagesSentEncryptedMessageClassType>(x);
         return true;
     }
         break;
@@ -77,7 +77,7 @@ bool MessagesSentEncryptedMessage::fetch(InboundPkt *in) {
     case typeMessagesSentEncryptedFile: {
         m_date = in->fetchInt();
         m_file.fetch(in);
-        m_classType = static_cast<MessagesSentEncryptedMessageType>(x);
+        m_classType = static_cast<MessagesSentEncryptedMessageClassType>(x);
         return true;
     }
         break;
@@ -133,7 +133,7 @@ QDataStream &operator<<(QDataStream &stream, const MessagesSentEncryptedMessage 
 QDataStream &operator>>(QDataStream &stream, MessagesSentEncryptedMessage &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<MessagesSentEncryptedMessage::MessagesSentEncryptedMessageType>(type));
+    item.setClassType(static_cast<MessagesSentEncryptedMessage::MessagesSentEncryptedMessageClassType>(type));
     switch(type) {
     case MessagesSentEncryptedMessage::typeMessagesSentEncryptedMessage: {
         qint32 m_date;

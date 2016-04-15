@@ -13,11 +13,11 @@
 class LIBQTELEGRAMSHARED_EXPORT PeerSettings : public TelegramTypeObject
 {
 public:
-    enum PeerSettingsType {
+    enum PeerSettingsClassType {
         typePeerSettings = 0x818426cd
     };
 
-    PeerSettings(PeerSettingsType classType = typePeerSettings, InboundPkt *in = 0);
+    PeerSettings(PeerSettingsClassType classType = typePeerSettings, InboundPkt *in = 0);
     PeerSettings(InboundPkt *in);
     PeerSettings(const Null&);
     virtual ~PeerSettings();
@@ -28,8 +28,8 @@ public:
     void setReportSpam(bool reportSpam);
     bool reportSpam() const;
 
-    void setClassType(PeerSettingsType classType);
-    PeerSettingsType classType() const;
+    void setClassType(PeerSettingsClassType classType);
+    PeerSettingsClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -43,7 +43,7 @@ public:
 
 private:
     qint32 m_flags;
-    PeerSettingsType m_classType;
+    PeerSettingsClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(PeerSettings)

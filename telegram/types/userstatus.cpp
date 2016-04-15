@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-UserStatus::UserStatus(UserStatusType classType, InboundPkt *in) :
+UserStatus::UserStatus(UserStatusClassType classType, InboundPkt *in) :
     m_expires(0),
     m_wasOnline(0),
     m_classType(classType)
@@ -58,11 +58,11 @@ bool UserStatus::operator ==(const UserStatus &b) const {
            m_wasOnline == b.m_wasOnline;
 }
 
-void UserStatus::setClassType(UserStatus::UserStatusType classType) {
+void UserStatus::setClassType(UserStatus::UserStatusClassType classType) {
     m_classType = classType;
 }
 
-UserStatus::UserStatusType UserStatus::classType() const {
+UserStatus::UserStatusClassType UserStatus::classType() const {
     return m_classType;
 }
 
@@ -71,39 +71,39 @@ bool UserStatus::fetch(InboundPkt *in) {
     int x = in->fetchInt();
     switch(x) {
     case typeUserStatusEmpty: {
-        m_classType = static_cast<UserStatusType>(x);
+        m_classType = static_cast<UserStatusClassType>(x);
         return true;
     }
         break;
     
     case typeUserStatusOnline: {
         m_expires = in->fetchInt();
-        m_classType = static_cast<UserStatusType>(x);
+        m_classType = static_cast<UserStatusClassType>(x);
         return true;
     }
         break;
     
     case typeUserStatusOffline: {
         m_wasOnline = in->fetchInt();
-        m_classType = static_cast<UserStatusType>(x);
+        m_classType = static_cast<UserStatusClassType>(x);
         return true;
     }
         break;
     
     case typeUserStatusRecently: {
-        m_classType = static_cast<UserStatusType>(x);
+        m_classType = static_cast<UserStatusClassType>(x);
         return true;
     }
         break;
     
     case typeUserStatusLastWeek: {
-        m_classType = static_cast<UserStatusType>(x);
+        m_classType = static_cast<UserStatusClassType>(x);
         return true;
     }
         break;
     
     case typeUserStatusLastMonth: {
-        m_classType = static_cast<UserStatusType>(x);
+        m_classType = static_cast<UserStatusClassType>(x);
         return true;
     }
         break;
@@ -189,7 +189,7 @@ QDataStream &operator<<(QDataStream &stream, const UserStatus &item) {
 QDataStream &operator>>(QDataStream &stream, UserStatus &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<UserStatus::UserStatusType>(type));
+    item.setClassType(static_cast<UserStatus::UserStatusClassType>(type));
     switch(type) {
     case UserStatus::typeUserStatusEmpty: {
         

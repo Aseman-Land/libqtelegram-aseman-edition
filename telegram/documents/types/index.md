@@ -70,9 +70,13 @@
 
 * [ImportedContact](importedcontact.md)
 
+* [InlineBotSwitchPM](inlinebotswitchpm.md)
+
 * [InputAppEvent](inputappevent.md)
 
 * [InputBotInlineMessage](inputbotinlinemessage.md)
+
+* [InputBotInlineMessageID](inputbotinlinemessageid.md)
 
 * [InputBotInlineResult](inputbotinlineresult.md)
 
@@ -194,11 +198,11 @@
 
 * [AccountPrivacyRules](accountprivacyrules.md)
 
-* [AccountSentChangePhoneCode](accountsentchangephonecode.md)
-
 * [AuthAuthorization](authauthorization.md)
 
 * [AuthCheckedPhone](authcheckedphone.md)
+
+* [AuthCodeType](authcodetype.md)
 
 * [AuthExportedAuthorization](authexportedauthorization.md)
 
@@ -206,11 +210,11 @@
 
 * [AuthSentCode](authsentcode.md)
 
+* [AuthSentCodeType](authsentcodetype.md)
+
 * [ChannelsChannelParticipant](channelschannelparticipant.md)
 
 * [ChannelsChannelParticipants](channelschannelparticipants.md)
-
-* [ChannelsMessageEditData](channelsmessageeditdata.md)
 
 * [ContactsBlocked](contactsblocked.md)
 
@@ -240,6 +244,8 @@
 
 * [MessagesAllStickers](messagesallstickers.md)
 
+* [MessagesBotCallbackAnswer](messagesbotcallbackanswer.md)
+
 * [MessagesBotResults](messagesbotresults.md)
 
 * [MessagesChatFull](messageschatfull.md)
@@ -251,6 +257,8 @@
 * [MessagesDialogs](messagesdialogs.md)
 
 * [MessagesFoundGifs](messagesfoundgifs.md)
+
+* [MessagesMessageEditData](messagesmessageeditdata.md)
 
 * [MessagesMessages](messagesmessages.md)
 

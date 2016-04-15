@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-Message::Message(MessageType classType, InboundPkt *in) :
+Message::Message(MessageClassType classType, InboundPkt *in) :
     m_date(0),
     m_editDate(0),
     m_flags(0),
@@ -247,11 +247,11 @@ bool Message::operator ==(const Message &b) const {
            m_views == b.m_views;
 }
 
-void Message::setClassType(Message::MessageType classType) {
+void Message::setClassType(Message::MessageClassType classType) {
     m_classType = classType;
 }
 
-Message::MessageType Message::classType() const {
+Message::MessageClassType Message::classType() const {
     return m_classType;
 }
 
@@ -261,7 +261,7 @@ bool Message::fetch(InboundPkt *in) {
     switch(x) {
     case typeMessageEmpty: {
         m_id = in->fetchInt();
-        m_classType = static_cast<MessageType>(x);
+        m_classType = static_cast<MessageClassType>(x);
         return true;
     }
         break;
@@ -308,7 +308,7 @@ bool Message::fetch(InboundPkt *in) {
         if(m_flags & 1<<15) {
             m_editDate = in->fetchInt();
         }
-        m_classType = static_cast<MessageType>(x);
+        m_classType = static_cast<MessageClassType>(x);
         return true;
     }
         break;
@@ -325,7 +325,7 @@ bool Message::fetch(InboundPkt *in) {
         }
         m_date = in->fetchInt();
         m_action.fetch(in);
-        m_classType = static_cast<MessageType>(x);
+        m_classType = static_cast<MessageClassType>(x);
         return true;
     }
         break;
@@ -430,7 +430,7 @@ QDataStream &operator<<(QDataStream &stream, const Message &item) {
 QDataStream &operator>>(QDataStream &stream, Message &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<Message::MessageType>(type));
+    item.setClassType(static_cast<Message::MessageClassType>(type));
     switch(type) {
     case Message::typeMessageEmpty: {
         qint32 m_id;

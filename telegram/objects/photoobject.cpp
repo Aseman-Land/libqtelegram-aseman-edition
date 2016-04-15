@@ -80,7 +80,7 @@ bool PhotoObject::operator ==(const Photo &b) const {
 }
 
 void PhotoObject::setClassType(quint32 classType) {
-    Photo::PhotoType result;
+    Photo::PhotoClassType result;
     switch(classType) {
     case TypePhotoEmpty:
         result = Photo::typePhotoEmpty;

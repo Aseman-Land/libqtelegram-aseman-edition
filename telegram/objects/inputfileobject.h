@@ -13,7 +13,7 @@
 class LIBQTELEGRAMSHARED_EXPORT InputFileObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(InputFileType)
+    Q_ENUMS(InputFileClassType)
     Q_PROPERTY(qint64 id READ id WRITE setId NOTIFY idChanged)
     Q_PROPERTY(QString md5Checksum READ md5Checksum WRITE setMd5Checksum NOTIFY md5ChecksumChanged)
     Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
@@ -22,7 +22,7 @@ class LIBQTELEGRAMSHARED_EXPORT InputFileObject : public TelegramTypeQObject
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum InputFileType {
+    enum InputFileClassType {
         TypeInputFile,
         TypeInputFileBig
     };

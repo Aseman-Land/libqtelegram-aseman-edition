@@ -13,7 +13,7 @@
 class LIBQTELEGRAMSHARED_EXPORT ConfigObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(ConfigType)
+    Q_ENUMS(ConfigClassType)
     Q_PROPERTY(qint32 chatBigSize READ chatBigSize WRITE setChatBigSize NOTIFY chatBigSizeChanged)
     Q_PROPERTY(qint32 chatSizeMax READ chatSizeMax WRITE setChatSizeMax NOTIFY chatSizeMaxChanged)
     Q_PROPERTY(qint32 date READ date WRITE setDate NOTIFY dateChanged)
@@ -38,7 +38,7 @@ class LIBQTELEGRAMSHARED_EXPORT ConfigObject : public TelegramTypeQObject
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum ConfigType {
+    enum ConfigClassType {
         TypeConfig
     };
 

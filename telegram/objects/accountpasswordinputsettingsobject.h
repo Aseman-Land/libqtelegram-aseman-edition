@@ -13,7 +13,7 @@
 class LIBQTELEGRAMSHARED_EXPORT AccountPasswordInputSettingsObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(AccountPasswordInputSettingsType)
+    Q_ENUMS(AccountPasswordInputSettingsClassType)
     Q_PROPERTY(QString email READ email WRITE setEmail NOTIFY emailChanged)
     Q_PROPERTY(qint32 flags READ flags WRITE setFlags NOTIFY flagsChanged)
     Q_PROPERTY(QString hint READ hint WRITE setHint NOTIFY hintChanged)
@@ -23,7 +23,7 @@ class LIBQTELEGRAMSHARED_EXPORT AccountPasswordInputSettingsObject : public Tele
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum AccountPasswordInputSettingsType {
+    enum AccountPasswordInputSettingsClassType {
         TypeAccountPasswordInputSettings
     };
 

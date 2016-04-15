@@ -1,21 +1,21 @@
-# Channels.getMessageEditData
+# Messages.getMessageEditData
 
 ## Function:
 
-TelegramCore::channelsGetMessageEditData
+TelegramCore::messagesGetMessageEditData
 
 ## Schema:
 
 ```c++
-channels.getMessageEditData#27ea3a28 channel:InputChannel id:int = channels.MessageEditData;
+messages.getMessageEditData#fda68d36 peer:InputPeer id:int = messages.MessageEditData;
 ```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
-|channel|[InputChannel](../../types/inputchannel.md)||
+|peer|[InputPeer](../../types/inputpeer.md)||
 |id|qint32||
-|callBack|Callback&lt;[ChannelsMessageEditData](../../types/channelsmessageeditdata.md)&gt;|0|
+|callBack|Callback&lt;[MessagesMessageEditData](../../types/messagesmessageeditdata.md)&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
 ## Callback Result:
@@ -23,13 +23,13 @@ channels.getMessageEditData#27ea3a28 channel:InputChannel id:int = channels.Mess
 |Name|Type|
 |----|----|
 |msgId|qint64|
-|result|[ChannelsMessageEditData](../../types/channelsmessageeditdata.md)|
+|result|[MessagesMessageEditData](../../types/messagesmessageeditdata.md)|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
 ```c++
-getMessageEditDataAnswer(qint64 msgId, const ChannelsMessageEditData & result)
+getMessageEditDataAnswer(qint64 msgId, const MessagesMessageEditData & result)
 ```
 ```c++
 getMessageEditDataError(qint64 msgId, qint32 errorCode, const QString &errorText)
@@ -38,7 +38,7 @@ getMessageEditDataError(qint64 msgId, qint32 errorCode, const QString &errorText
 ## Events:
 
 ```c++
-onGetMessageEditDataAnswer(qint64 msgId, const ChannelsMessageEditData & result)
+onGetMessageEditDataAnswer(qint64 msgId, const MessagesMessageEditData & result)
 ```
 ```c++
 onGetMessageEditDataError(qint64 msgId, qint32 errorCode, const QString &errorText)
@@ -51,7 +51,7 @@ onGetMessageEditDataError(qint64 msgId, qint32 errorCode, const QString &errorTe
 ## Examples:
 
 ```c++
-tg->getMessageEditData(channel, id, [=](TG_GET_MESSAGE_EDIT_DATA_CALLBACK){
+tg->getMessageEditData(peer, id, [=](TG_GET_MESSAGE_EDIT_DATA_CALLBACK){
     ...
 }, 30000);
 ```

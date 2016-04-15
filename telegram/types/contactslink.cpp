@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-ContactsLink::ContactsLink(ContactsLinkType classType, InboundPkt *in) :
+ContactsLink::ContactsLink(ContactsLinkClassType classType, InboundPkt *in) :
     m_classType(classType)
 {
     if(in) fetch(in);
@@ -61,11 +61,11 @@ bool ContactsLink::operator ==(const ContactsLink &b) const {
            m_user == b.m_user;
 }
 
-void ContactsLink::setClassType(ContactsLink::ContactsLinkType classType) {
+void ContactsLink::setClassType(ContactsLink::ContactsLinkClassType classType) {
     m_classType = classType;
 }
 
-ContactsLink::ContactsLinkType ContactsLink::classType() const {
+ContactsLink::ContactsLinkClassType ContactsLink::classType() const {
     return m_classType;
 }
 
@@ -77,7 +77,7 @@ bool ContactsLink::fetch(InboundPkt *in) {
         m_myLink.fetch(in);
         m_foreignLink.fetch(in);
         m_user.fetch(in);
-        m_classType = static_cast<ContactsLinkType>(x);
+        m_classType = static_cast<ContactsLinkClassType>(x);
         return true;
     }
         break;
@@ -126,7 +126,7 @@ QDataStream &operator<<(QDataStream &stream, const ContactsLink &item) {
 QDataStream &operator>>(QDataStream &stream, ContactsLink &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<ContactsLink::ContactsLinkType>(type));
+    item.setClassType(static_cast<ContactsLink::ContactsLinkClassType>(type));
     switch(type) {
     case ContactsLink::typeContactsLink: {
         ContactLink m_my_link;

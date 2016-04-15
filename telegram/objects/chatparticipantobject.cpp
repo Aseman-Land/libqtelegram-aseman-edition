@@ -68,7 +68,7 @@ bool ChatParticipantObject::operator ==(const ChatParticipant &b) const {
 }
 
 void ChatParticipantObject::setClassType(quint32 classType) {
-    ChatParticipant::ChatParticipantType result;
+    ChatParticipant::ChatParticipantClassType result;
     switch(classType) {
     case TypeChatParticipant:
         result = ChatParticipant::typeChatParticipant;

@@ -14,14 +14,14 @@
 class LIBQTELEGRAMSHARED_EXPORT MessagesSentEncryptedMessageObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(MessagesSentEncryptedMessageType)
+    Q_ENUMS(MessagesSentEncryptedMessageClassType)
     Q_PROPERTY(qint32 date READ date WRITE setDate NOTIFY dateChanged)
     Q_PROPERTY(EncryptedFileObject* file READ file WRITE setFile NOTIFY fileChanged)
     Q_PROPERTY(MessagesSentEncryptedMessage core READ core WRITE setCore NOTIFY coreChanged)
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum MessagesSentEncryptedMessageType {
+    enum MessagesSentEncryptedMessageClassType {
         TypeMessagesSentEncryptedMessage,
         TypeMessagesSentEncryptedFile
     };

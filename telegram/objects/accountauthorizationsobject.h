@@ -13,13 +13,13 @@
 class LIBQTELEGRAMSHARED_EXPORT AccountAuthorizationsObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(AccountAuthorizationsType)
+    Q_ENUMS(AccountAuthorizationsClassType)
     Q_PROPERTY(QList<Authorization> authorizations READ authorizations WRITE setAuthorizations NOTIFY authorizationsChanged)
     Q_PROPERTY(AccountAuthorizations core READ core WRITE setCore NOTIFY coreChanged)
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum AccountAuthorizationsType {
+    enum AccountAuthorizationsClassType {
         TypeAccountAuthorizations
     };
 

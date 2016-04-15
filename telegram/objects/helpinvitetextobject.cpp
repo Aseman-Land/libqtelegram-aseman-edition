@@ -44,7 +44,7 @@ bool HelpInviteTextObject::operator ==(const HelpInviteText &b) const {
 }
 
 void HelpInviteTextObject::setClassType(quint32 classType) {
-    HelpInviteText::HelpInviteTextType result;
+    HelpInviteText::HelpInviteTextClassType result;
     switch(classType) {
     case TypeHelpInviteText:
         result = HelpInviteText::typeHelpInviteText;

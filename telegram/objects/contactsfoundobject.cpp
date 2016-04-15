@@ -68,7 +68,7 @@ bool ContactsFoundObject::operator ==(const ContactsFound &b) const {
 }
 
 void ContactsFoundObject::setClassType(quint32 classType) {
-    ContactsFound::ContactsFoundType result;
+    ContactsFound::ContactsFoundClassType result;
     switch(classType) {
     case TypeContactsFound:
         result = ContactsFound::typeContactsFound;

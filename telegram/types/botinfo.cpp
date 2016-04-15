@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-BotInfo::BotInfo(BotInfoType classType, InboundPkt *in) :
+BotInfo::BotInfo(BotInfoClassType classType, InboundPkt *in) :
     m_userId(0),
     m_classType(classType)
 {
@@ -64,11 +64,11 @@ bool BotInfo::operator ==(const BotInfo &b) const {
            m_userId == b.m_userId;
 }
 
-void BotInfo::setClassType(BotInfo::BotInfoType classType) {
+void BotInfo::setClassType(BotInfo::BotInfoClassType classType) {
     m_classType = classType;
 }
 
-BotInfo::BotInfoType BotInfo::classType() const {
+BotInfo::BotInfoClassType BotInfo::classType() const {
     return m_classType;
 }
 
@@ -87,7 +87,7 @@ bool BotInfo::fetch(InboundPkt *in) {
             type.fetch(in);
             m_commands.append(type);
         }
-        m_classType = static_cast<BotInfoType>(x);
+        m_classType = static_cast<BotInfoClassType>(x);
         return true;
     }
         break;
@@ -140,7 +140,7 @@ QDataStream &operator<<(QDataStream &stream, const BotInfo &item) {
 QDataStream &operator>>(QDataStream &stream, BotInfo &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<BotInfo::BotInfoType>(type));
+    item.setClassType(static_cast<BotInfo::BotInfoClassType>(type));
     switch(type) {
     case BotInfo::typeBotInfo: {
         qint32 m_user_id;

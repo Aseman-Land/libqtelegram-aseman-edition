@@ -16,12 +16,12 @@
 class LIBQTELEGRAMSHARED_EXPORT WallPaper : public TelegramTypeObject
 {
 public:
-    enum WallPaperType {
+    enum WallPaperClassType {
         typeWallPaper = 0xccb03657,
         typeWallPaperSolid = 0x63117f24
     };
 
-    WallPaper(WallPaperType classType = typeWallPaper, InboundPkt *in = 0);
+    WallPaper(WallPaperClassType classType = typeWallPaper, InboundPkt *in = 0);
     WallPaper(InboundPkt *in);
     WallPaper(const Null&);
     virtual ~WallPaper();
@@ -41,8 +41,8 @@ public:
     void setTitle(const QString &title);
     QString title() const;
 
-    void setClassType(WallPaperType classType);
-    WallPaperType classType() const;
+    void setClassType(WallPaperClassType classType);
+    WallPaperClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -60,7 +60,7 @@ private:
     qint32 m_id;
     QList<PhotoSize> m_sizes;
     QString m_title;
-    WallPaperType m_classType;
+    WallPaperClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(WallPaper)

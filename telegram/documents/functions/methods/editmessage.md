@@ -1,22 +1,23 @@
-# Channels.editMessage
+# Messages.editMessage
 
 ## Function:
 
-TelegramCore::channelsEditMessage
+TelegramCore::messagesEditMessage
 
 ## Schema:
 
 ```c++
-channels.editMessage#dcda80ed flags:# no_webpage:flags.1?true channel:InputChannel id:int message:string entities:flags.3?Vector<MessageEntity> = Updates;
+messages.editMessage#ce91e4ca flags:# no_webpage:flags.1?true peer:InputPeer id:int message:flags.11?string reply_markup:flags.2?ReplyMarkup entities:flags.3?Vector<MessageEntity> = Updates;
 ```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
 |noWebpage|bool||
-|channel|[InputChannel](../../types/inputchannel.md)||
+|peer|[InputPeer](../../types/inputpeer.md)||
 |id|qint32||
 |message|QString||
+|replyMarkup|[ReplyMarkup](../../types/replymarkup.md)||
 |entities|QList&lt;[MessageEntity](../../types/messageentity.md)&gt;||
 |callBack|Callback&lt;[UpdatesType](../../types/updatestype.md)&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
@@ -54,7 +55,7 @@ onEditMessageError(qint64 msgId, qint32 errorCode, const QString &errorText)
 ## Examples:
 
 ```c++
-tg->editMessage(no_webpage, channel, id, message, entities, [=](TG_EDIT_MESSAGE_CALLBACK){
+tg->editMessage(no_webpage, peer, id, message, reply_markup, entities, [=](TG_EDIT_MESSAGE_CALLBACK){
     ...
 }, 30000);
 ```

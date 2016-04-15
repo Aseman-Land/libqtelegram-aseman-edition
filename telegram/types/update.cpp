@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-Update::Update(UpdateType classType, InboundPkt *in) :
+Update::Update(UpdateClassType classType, InboundPkt *in) :
     m_authKeyId(0),
     m_blocked(false),
     m_channelId(0),
@@ -22,6 +22,7 @@ Update::Update(UpdateType classType, InboundPkt *in) :
     m_isAdmin(false),
     m_maxDate(0),
     m_maxId(0),
+    m_msgIdInt(0),
     m_popup(false),
     m_previous(false),
     m_pts(0),
@@ -50,6 +51,7 @@ Update::Update(InboundPkt *in) :
     m_isAdmin(false),
     m_maxDate(0),
     m_maxId(0),
+    m_msgIdInt(0),
     m_popup(false),
     m_previous(false),
     m_pts(0),
@@ -79,6 +81,7 @@ Update::Update(const Null &null) :
     m_isAdmin(false),
     m_maxDate(0),
     m_maxId(0),
+    m_msgIdInt(0),
     m_popup(false),
     m_previous(false),
     m_pts(0),
@@ -144,6 +147,14 @@ qint32 Update::chatId() const {
     return m_chatId;
 }
 
+void Update::setData(const QByteArray &data) {
+    m_data = data;
+}
+
+QByteArray Update::data() const {
+    return m_data;
+}
+
 void Update::setDate(qint32 date) {
     m_date = date;
 }
@@ -198,6 +209,14 @@ void Update::setForeignLink(const ContactLink &foreignLink) {
 
 ContactLink Update::foreignLink() const {
     return m_foreignLink;
+}
+
+void Update::setGeo(const GeoPoint &geo) {
+    m_geo = geo;
+}
+
+GeoPoint Update::geo() const {
+    return m_geo;
 }
 
 void Update::setGroup(const MessageGroup &group) {
@@ -318,6 +337,22 @@ void Update::setMessages(const QList<qint32> &messages) {
 
 QList<qint32> Update::messages() const {
     return m_messages;
+}
+
+void Update::setMsgIdInputBotInlineMessageID(const InputBotInlineMessageID &msgIdInputBotInlineMessageID) {
+    m_msgIdInputBotInlineMessageID = msgIdInputBotInlineMessageID;
+}
+
+InputBotInlineMessageID Update::msgIdInputBotInlineMessageID() const {
+    return m_msgIdInputBotInlineMessageID;
+}
+
+void Update::setMsgIdInt(qint32 msgIdInt) {
+    m_msgIdInt = msgIdInt;
+}
+
+qint32 Update::msgIdInt() const {
+    return m_msgIdInt;
 }
 
 void Update::setMyLink(const ContactLink &myLink) {
@@ -536,6 +571,7 @@ bool Update::operator ==(const Update &b) const {
            m_channelId == b.m_channelId &&
            m_chat == b.m_chat &&
            m_chatId == b.m_chatId &&
+           m_data == b.m_data &&
            m_date == b.m_date &&
            m_dcOptions == b.m_dcOptions &&
            m_device == b.m_device &&
@@ -543,6 +579,7 @@ bool Update::operator ==(const Update &b) const {
            m_firstName == b.m_firstName &&
            m_flags == b.m_flags &&
            m_foreignLink == b.m_foreignLink &&
+           m_geo == b.m_geo &&
            m_group == b.m_group &&
            m_idString == b.m_idString &&
            m_idInt == b.m_idInt &&
@@ -558,6 +595,8 @@ bool Update::operator ==(const Update &b) const {
            m_message == b.m_message &&
            m_messageString == b.m_messageString &&
            m_messages == b.m_messages &&
+           m_msgIdInputBotInlineMessageID == b.m_msgIdInputBotInlineMessageID &&
+           m_msgIdInt == b.m_msgIdInt &&
            m_myLink == b.m_myLink &&
            m_notifySettings == b.m_notifySettings &&
            m_offset == b.m_offset &&
@@ -586,11 +625,11 @@ bool Update::operator ==(const Update &b) const {
            m_webpage == b.m_webpage;
 }
 
-void Update::setClassType(Update::UpdateType classType) {
+void Update::setClassType(Update::UpdateClassType classType) {
     m_classType = classType;
 }
 
-Update::UpdateType Update::classType() const {
+Update::UpdateClassType Update::classType() const {
     return m_classType;
 }
 
@@ -602,7 +641,7 @@ bool Update::fetch(InboundPkt *in) {
         m_message.fetch(in);
         m_pts = in->fetchInt();
         m_ptsCount = in->fetchInt();
-        m_classType = static_cast<UpdateType>(x);
+        m_classType = static_cast<UpdateClassType>(x);
         return true;
     }
         break;
@@ -610,7 +649,7 @@ bool Update::fetch(InboundPkt *in) {
     case typeUpdateMessageID: {
         m_idInt = in->fetchInt();
         m_randomId = in->fetchLong();
-        m_classType = static_cast<UpdateType>(x);
+        m_classType = static_cast<UpdateClassType>(x);
         return true;
     }
         break;
@@ -626,7 +665,7 @@ bool Update::fetch(InboundPkt *in) {
         }
         m_pts = in->fetchInt();
         m_ptsCount = in->fetchInt();
-        m_classType = static_cast<UpdateType>(x);
+        m_classType = static_cast<UpdateClassType>(x);
         return true;
     }
         break;
@@ -634,7 +673,7 @@ bool Update::fetch(InboundPkt *in) {
     case typeUpdateUserTyping: {
         m_userId = in->fetchInt();
         m_action.fetch(in);
-        m_classType = static_cast<UpdateType>(x);
+        m_classType = static_cast<UpdateClassType>(x);
         return true;
     }
         break;
@@ -643,14 +682,14 @@ bool Update::fetch(InboundPkt *in) {
         m_chatId = in->fetchInt();
         m_userId = in->fetchInt();
         m_action.fetch(in);
-        m_classType = static_cast<UpdateType>(x);
+        m_classType = static_cast<UpdateClassType>(x);
         return true;
     }
         break;
     
     case typeUpdateChatParticipants: {
         m_participants.fetch(in);
-        m_classType = static_cast<UpdateType>(x);
+        m_classType = static_cast<UpdateClassType>(x);
         return true;
     }
         break;
@@ -658,7 +697,7 @@ bool Update::fetch(InboundPkt *in) {
     case typeUpdateUserStatus: {
         m_userId = in->fetchInt();
         m_status.fetch(in);
-        m_classType = static_cast<UpdateType>(x);
+        m_classType = static_cast<UpdateClassType>(x);
         return true;
     }
         break;
@@ -668,7 +707,7 @@ bool Update::fetch(InboundPkt *in) {
         m_firstName = in->fetchQString();
         m_lastName = in->fetchQString();
         m_username = in->fetchQString();
-        m_classType = static_cast<UpdateType>(x);
+        m_classType = static_cast<UpdateClassType>(x);
         return true;
     }
         break;
@@ -678,7 +717,7 @@ bool Update::fetch(InboundPkt *in) {
         m_date = in->fetchInt();
         m_photo.fetch(in);
         m_previous = in->fetchBool();
-        m_classType = static_cast<UpdateType>(x);
+        m_classType = static_cast<UpdateClassType>(x);
         return true;
     }
         break;
@@ -686,7 +725,7 @@ bool Update::fetch(InboundPkt *in) {
     case typeUpdateContactRegistered: {
         m_userId = in->fetchInt();
         m_date = in->fetchInt();
-        m_classType = static_cast<UpdateType>(x);
+        m_classType = static_cast<UpdateClassType>(x);
         return true;
     }
         break;
@@ -695,7 +734,7 @@ bool Update::fetch(InboundPkt *in) {
         m_userId = in->fetchInt();
         m_myLink.fetch(in);
         m_foreignLink.fetch(in);
-        m_classType = static_cast<UpdateType>(x);
+        m_classType = static_cast<UpdateClassType>(x);
         return true;
     }
         break;
@@ -705,7 +744,7 @@ bool Update::fetch(InboundPkt *in) {
         m_date = in->fetchInt();
         m_device = in->fetchQString();
         m_location = in->fetchQString();
-        m_classType = static_cast<UpdateType>(x);
+        m_classType = static_cast<UpdateClassType>(x);
         return true;
     }
         break;
@@ -713,14 +752,14 @@ bool Update::fetch(InboundPkt *in) {
     case typeUpdateNewEncryptedMessage: {
         m_messageEncrypted.fetch(in);
         m_qts = in->fetchInt();
-        m_classType = static_cast<UpdateType>(x);
+        m_classType = static_cast<UpdateClassType>(x);
         return true;
     }
         break;
     
     case typeUpdateEncryptedChatTyping: {
         m_chatId = in->fetchInt();
-        m_classType = static_cast<UpdateType>(x);
+        m_classType = static_cast<UpdateClassType>(x);
         return true;
     }
         break;
@@ -728,7 +767,7 @@ bool Update::fetch(InboundPkt *in) {
     case typeUpdateEncryption: {
         m_chat.fetch(in);
         m_date = in->fetchInt();
-        m_classType = static_cast<UpdateType>(x);
+        m_classType = static_cast<UpdateClassType>(x);
         return true;
     }
         break;
@@ -737,7 +776,7 @@ bool Update::fetch(InboundPkt *in) {
         m_chatId = in->fetchInt();
         m_maxDate = in->fetchInt();
         m_date = in->fetchInt();
-        m_classType = static_cast<UpdateType>(x);
+        m_classType = static_cast<UpdateClassType>(x);
         return true;
     }
         break;
@@ -748,7 +787,7 @@ bool Update::fetch(InboundPkt *in) {
         m_inviterId = in->fetchInt();
         m_date = in->fetchInt();
         m_version = in->fetchInt();
-        m_classType = static_cast<UpdateType>(x);
+        m_classType = static_cast<UpdateClassType>(x);
         return true;
     }
         break;
@@ -757,7 +796,7 @@ bool Update::fetch(InboundPkt *in) {
         m_chatId = in->fetchInt();
         m_userId = in->fetchInt();
         m_version = in->fetchInt();
-        m_classType = static_cast<UpdateType>(x);
+        m_classType = static_cast<UpdateClassType>(x);
         return true;
     }
         break;
@@ -771,7 +810,7 @@ bool Update::fetch(InboundPkt *in) {
             type.fetch(in);
             m_dcOptions.append(type);
         }
-        m_classType = static_cast<UpdateType>(x);
+        m_classType = static_cast<UpdateClassType>(x);
         return true;
     }
         break;
@@ -779,7 +818,7 @@ bool Update::fetch(InboundPkt *in) {
     case typeUpdateUserBlocked: {
         m_userId = in->fetchInt();
         m_blocked = in->fetchBool();
-        m_classType = static_cast<UpdateType>(x);
+        m_classType = static_cast<UpdateClassType>(x);
         return true;
     }
         break;
@@ -787,7 +826,7 @@ bool Update::fetch(InboundPkt *in) {
     case typeUpdateNotifySettings: {
         m_peerNotify.fetch(in);
         m_notifySettings.fetch(in);
-        m_classType = static_cast<UpdateType>(x);
+        m_classType = static_cast<UpdateClassType>(x);
         return true;
     }
         break;
@@ -797,7 +836,7 @@ bool Update::fetch(InboundPkt *in) {
         m_messageString = in->fetchQString();
         m_media.fetch(in);
         m_popup = in->fetchBool();
-        m_classType = static_cast<UpdateType>(x);
+        m_classType = static_cast<UpdateClassType>(x);
         return true;
     }
         break;
@@ -812,7 +851,7 @@ bool Update::fetch(InboundPkt *in) {
             type.fetch(in);
             m_rules.append(type);
         }
-        m_classType = static_cast<UpdateType>(x);
+        m_classType = static_cast<UpdateClassType>(x);
         return true;
     }
         break;
@@ -820,7 +859,7 @@ bool Update::fetch(InboundPkt *in) {
     case typeUpdateUserPhone: {
         m_userId = in->fetchInt();
         m_phone = in->fetchQString();
-        m_classType = static_cast<UpdateType>(x);
+        m_classType = static_cast<UpdateClassType>(x);
         return true;
     }
         break;
@@ -830,7 +869,7 @@ bool Update::fetch(InboundPkt *in) {
         m_maxId = in->fetchInt();
         m_pts = in->fetchInt();
         m_ptsCount = in->fetchInt();
-        m_classType = static_cast<UpdateType>(x);
+        m_classType = static_cast<UpdateClassType>(x);
         return true;
     }
         break;
@@ -840,7 +879,7 @@ bool Update::fetch(InboundPkt *in) {
         m_maxId = in->fetchInt();
         m_pts = in->fetchInt();
         m_ptsCount = in->fetchInt();
-        m_classType = static_cast<UpdateType>(x);
+        m_classType = static_cast<UpdateClassType>(x);
         return true;
     }
         break;
@@ -849,7 +888,7 @@ bool Update::fetch(InboundPkt *in) {
         m_webpage.fetch(in);
         m_pts = in->fetchInt();
         m_ptsCount = in->fetchInt();
-        m_classType = static_cast<UpdateType>(x);
+        m_classType = static_cast<UpdateClassType>(x);
         return true;
     }
         break;
@@ -865,7 +904,7 @@ bool Update::fetch(InboundPkt *in) {
         }
         m_pts = in->fetchInt();
         m_ptsCount = in->fetchInt();
-        m_classType = static_cast<UpdateType>(x);
+        m_classType = static_cast<UpdateClassType>(x);
         return true;
     }
         break;
@@ -876,14 +915,14 @@ bool Update::fetch(InboundPkt *in) {
         if(m_flags & 1<<0) {
             m_pts = in->fetchInt();
         }
-        m_classType = static_cast<UpdateType>(x);
+        m_classType = static_cast<UpdateClassType>(x);
         return true;
     }
         break;
     
     case typeUpdateChannel: {
         m_channelId = in->fetchInt();
-        m_classType = static_cast<UpdateType>(x);
+        m_classType = static_cast<UpdateClassType>(x);
         return true;
     }
         break;
@@ -891,7 +930,7 @@ bool Update::fetch(InboundPkt *in) {
     case typeUpdateChannelGroup: {
         m_channelId = in->fetchInt();
         m_group.fetch(in);
-        m_classType = static_cast<UpdateType>(x);
+        m_classType = static_cast<UpdateClassType>(x);
         return true;
     }
         break;
@@ -900,7 +939,7 @@ bool Update::fetch(InboundPkt *in) {
         m_message.fetch(in);
         m_pts = in->fetchInt();
         m_ptsCount = in->fetchInt();
-        m_classType = static_cast<UpdateType>(x);
+        m_classType = static_cast<UpdateClassType>(x);
         return true;
     }
         break;
@@ -908,7 +947,7 @@ bool Update::fetch(InboundPkt *in) {
     case typeUpdateReadChannelInbox: {
         m_channelId = in->fetchInt();
         m_maxId = in->fetchInt();
-        m_classType = static_cast<UpdateType>(x);
+        m_classType = static_cast<UpdateClassType>(x);
         return true;
     }
         break;
@@ -925,7 +964,7 @@ bool Update::fetch(InboundPkt *in) {
         }
         m_pts = in->fetchInt();
         m_ptsCount = in->fetchInt();
-        m_classType = static_cast<UpdateType>(x);
+        m_classType = static_cast<UpdateClassType>(x);
         return true;
     }
         break;
@@ -934,7 +973,7 @@ bool Update::fetch(InboundPkt *in) {
         m_channelId = in->fetchInt();
         m_idInt = in->fetchInt();
         m_views = in->fetchInt();
-        m_classType = static_cast<UpdateType>(x);
+        m_classType = static_cast<UpdateClassType>(x);
         return true;
     }
         break;
@@ -943,7 +982,7 @@ bool Update::fetch(InboundPkt *in) {
         m_chatId = in->fetchInt();
         m_enabled = in->fetchBool();
         m_version = in->fetchInt();
-        m_classType = static_cast<UpdateType>(x);
+        m_classType = static_cast<UpdateClassType>(x);
         return true;
     }
         break;
@@ -953,14 +992,14 @@ bool Update::fetch(InboundPkt *in) {
         m_userId = in->fetchInt();
         m_isAdmin = in->fetchBool();
         m_version = in->fetchInt();
-        m_classType = static_cast<UpdateType>(x);
+        m_classType = static_cast<UpdateClassType>(x);
         return true;
     }
         break;
     
     case typeUpdateNewStickerSet: {
         m_stickerset.fetch(in);
-        m_classType = static_cast<UpdateType>(x);
+        m_classType = static_cast<UpdateClassType>(x);
         return true;
     }
         break;
@@ -974,38 +1013,49 @@ bool Update::fetch(InboundPkt *in) {
             type = in->fetchLong();
             m_order.append(type);
         }
-        m_classType = static_cast<UpdateType>(x);
+        m_classType = static_cast<UpdateClassType>(x);
         return true;
     }
         break;
     
     case typeUpdateStickerSets: {
-        m_classType = static_cast<UpdateType>(x);
+        m_classType = static_cast<UpdateClassType>(x);
         return true;
     }
         break;
     
     case typeUpdateSavedGifs: {
-        m_classType = static_cast<UpdateType>(x);
+        m_classType = static_cast<UpdateClassType>(x);
         return true;
     }
         break;
     
     case typeUpdateBotInlineQuery: {
+        m_flags = in->fetchInt();
         m_queryId = in->fetchLong();
         m_userId = in->fetchInt();
         m_query = in->fetchQString();
+        if(m_flags & 1<<0) {
+            m_geo.fetch(in);
+        }
         m_offset = in->fetchQString();
-        m_classType = static_cast<UpdateType>(x);
+        m_classType = static_cast<UpdateClassType>(x);
         return true;
     }
         break;
     
     case typeUpdateBotInlineSend: {
+        m_flags = in->fetchInt();
         m_userId = in->fetchInt();
         m_query = in->fetchQString();
+        if(m_flags & 1<<0) {
+            m_geo.fetch(in);
+        }
         m_idString = in->fetchQString();
-        m_classType = static_cast<UpdateType>(x);
+        if(m_flags & 1<<1) {
+            m_msgIdInputBotInlineMessageID.fetch(in);
+        }
+        m_classType = static_cast<UpdateClassType>(x);
         return true;
     }
         break;
@@ -1014,7 +1064,7 @@ bool Update::fetch(InboundPkt *in) {
         m_message.fetch(in);
         m_pts = in->fetchInt();
         m_ptsCount = in->fetchInt();
-        m_classType = static_cast<UpdateType>(x);
+        m_classType = static_cast<UpdateClassType>(x);
         return true;
     }
         break;
@@ -1022,7 +1072,37 @@ bool Update::fetch(InboundPkt *in) {
     case typeUpdateChannelPinnedMessage: {
         m_channelId = in->fetchInt();
         m_idInt = in->fetchInt();
-        m_classType = static_cast<UpdateType>(x);
+        m_classType = static_cast<UpdateClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateBotCallbackQuery: {
+        m_queryId = in->fetchLong();
+        m_userId = in->fetchInt();
+        m_peer.fetch(in);
+        m_msgIdInt = in->fetchInt();
+        m_data = in->fetchBytes();
+        m_classType = static_cast<UpdateClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateEditMessage: {
+        m_message.fetch(in);
+        m_pts = in->fetchInt();
+        m_ptsCount = in->fetchInt();
+        m_classType = static_cast<UpdateClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateInlineBotCallbackQuery: {
+        m_queryId = in->fetchLong();
+        m_userId = in->fetchInt();
+        m_msgIdInputBotInlineMessageID.fetch(in);
+        m_data = in->fetchBytes();
+        m_classType = static_cast<UpdateClassType>(x);
         return true;
     }
         break;
@@ -1369,18 +1449,23 @@ bool Update::push(OutboundPkt *out) const {
         break;
     
     case typeUpdateBotInlineQuery: {
+        out->appendInt(m_flags);
         out->appendLong(m_queryId);
         out->appendInt(m_userId);
         out->appendQString(m_query);
+        m_geo.push(out);
         out->appendQString(m_offset);
         return true;
     }
         break;
     
     case typeUpdateBotInlineSend: {
+        out->appendInt(m_flags);
         out->appendInt(m_userId);
         out->appendQString(m_query);
+        m_geo.push(out);
         out->appendQString(m_idString);
+        m_msgIdInputBotInlineMessageID.push(out);
         return true;
     }
         break;
@@ -1396,6 +1481,33 @@ bool Update::push(OutboundPkt *out) const {
     case typeUpdateChannelPinnedMessage: {
         out->appendInt(m_channelId);
         out->appendInt(m_idInt);
+        return true;
+    }
+        break;
+    
+    case typeUpdateBotCallbackQuery: {
+        out->appendLong(m_queryId);
+        out->appendInt(m_userId);
+        m_peer.push(out);
+        out->appendInt(m_msgIdInt);
+        out->appendBytes(m_data);
+        return true;
+    }
+        break;
+    
+    case typeUpdateEditMessage: {
+        m_message.push(out);
+        out->appendInt(m_pts);
+        out->appendInt(m_ptsCount);
+        return true;
+    }
+        break;
+    
+    case typeUpdateInlineBotCallbackQuery: {
+        out->appendLong(m_queryId);
+        out->appendInt(m_userId);
+        m_msgIdInputBotInlineMessageID.push(out);
+        out->appendBytes(m_data);
         return true;
     }
         break;
@@ -1603,15 +1715,20 @@ QDataStream &operator<<(QDataStream &stream, const Update &item) {
         
         break;
     case Update::typeUpdateBotInlineQuery:
+        stream << item.flags();
         stream << item.queryId();
         stream << item.userId();
         stream << item.query();
+        stream << item.geo();
         stream << item.offset();
         break;
     case Update::typeUpdateBotInlineSend:
+        stream << item.flags();
         stream << item.userId();
         stream << item.query();
+        stream << item.geo();
         stream << item.idString();
+        stream << item.msgIdInputBotInlineMessageID();
         break;
     case Update::typeUpdateEditChannelMessage:
         stream << item.message();
@@ -1622,6 +1739,24 @@ QDataStream &operator<<(QDataStream &stream, const Update &item) {
         stream << item.channelId();
         stream << item.idInt();
         break;
+    case Update::typeUpdateBotCallbackQuery:
+        stream << item.queryId();
+        stream << item.userId();
+        stream << item.peer();
+        stream << item.msgIdInt();
+        stream << item.data();
+        break;
+    case Update::typeUpdateEditMessage:
+        stream << item.message();
+        stream << item.pts();
+        stream << item.ptsCount();
+        break;
+    case Update::typeUpdateInlineBotCallbackQuery:
+        stream << item.queryId();
+        stream << item.userId();
+        stream << item.msgIdInputBotInlineMessageID();
+        stream << item.data();
+        break;
     }
     return stream;
 }
@@ -1629,7 +1764,7 @@ QDataStream &operator<<(QDataStream &stream, const Update &item) {
 QDataStream &operator>>(QDataStream &stream, Update &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<Update::UpdateType>(type));
+    item.setClassType(static_cast<Update::UpdateClassType>(type));
     switch(type) {
     case Update::typeUpdateNewMessage: {
         Message m_message;
@@ -2066,6 +2201,9 @@ QDataStream &operator>>(QDataStream &stream, Update &item) {
     }
         break;
     case Update::typeUpdateBotInlineQuery: {
+        qint32 m_flags;
+        stream >> m_flags;
+        item.setFlags(m_flags);
         qint64 m_query_id;
         stream >> m_query_id;
         item.setQueryId(m_query_id);
@@ -2075,21 +2213,33 @@ QDataStream &operator>>(QDataStream &stream, Update &item) {
         QString m_query;
         stream >> m_query;
         item.setQuery(m_query);
+        GeoPoint m_geo;
+        stream >> m_geo;
+        item.setGeo(m_geo);
         QString m_offset;
         stream >> m_offset;
         item.setOffset(m_offset);
     }
         break;
     case Update::typeUpdateBotInlineSend: {
+        qint32 m_flags;
+        stream >> m_flags;
+        item.setFlags(m_flags);
         qint32 m_user_id;
         stream >> m_user_id;
         item.setUserId(m_user_id);
         QString m_query;
         stream >> m_query;
         item.setQuery(m_query);
+        GeoPoint m_geo;
+        stream >> m_geo;
+        item.setGeo(m_geo);
         QString m_id_string;
         stream >> m_id_string;
         item.setIdString(m_id_string);
+        InputBotInlineMessageID m_msg_id_InputBotInlineMessageID;
+        stream >> m_msg_id_InputBotInlineMessageID;
+        item.setMsgIdInputBotInlineMessageID(m_msg_id_InputBotInlineMessageID);
     }
         break;
     case Update::typeUpdateEditChannelMessage: {
@@ -2111,6 +2261,51 @@ QDataStream &operator>>(QDataStream &stream, Update &item) {
         qint32 m_id_int;
         stream >> m_id_int;
         item.setIdInt(m_id_int);
+    }
+        break;
+    case Update::typeUpdateBotCallbackQuery: {
+        qint64 m_query_id;
+        stream >> m_query_id;
+        item.setQueryId(m_query_id);
+        qint32 m_user_id;
+        stream >> m_user_id;
+        item.setUserId(m_user_id);
+        Peer m_peer;
+        stream >> m_peer;
+        item.setPeer(m_peer);
+        qint32 m_msg_id_int;
+        stream >> m_msg_id_int;
+        item.setMsgIdInt(m_msg_id_int);
+        QByteArray m_data;
+        stream >> m_data;
+        item.setData(m_data);
+    }
+        break;
+    case Update::typeUpdateEditMessage: {
+        Message m_message;
+        stream >> m_message;
+        item.setMessage(m_message);
+        qint32 m_pts;
+        stream >> m_pts;
+        item.setPts(m_pts);
+        qint32 m_pts_count;
+        stream >> m_pts_count;
+        item.setPtsCount(m_pts_count);
+    }
+        break;
+    case Update::typeUpdateInlineBotCallbackQuery: {
+        qint64 m_query_id;
+        stream >> m_query_id;
+        item.setQueryId(m_query_id);
+        qint32 m_user_id;
+        stream >> m_user_id;
+        item.setUserId(m_user_id);
+        InputBotInlineMessageID m_msg_id_InputBotInlineMessageID;
+        stream >> m_msg_id_InputBotInlineMessageID;
+        item.setMsgIdInputBotInlineMessageID(m_msg_id_InputBotInlineMessageID);
+        QByteArray m_data;
+        stream >> m_data;
+        item.setData(m_data);
     }
         break;
     }

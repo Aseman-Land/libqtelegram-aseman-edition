@@ -80,7 +80,7 @@ bool HelpAppUpdateObject::operator ==(const HelpAppUpdate &b) const {
 }
 
 void HelpAppUpdateObject::setClassType(quint32 classType) {
-    HelpAppUpdate::HelpAppUpdateType result;
+    HelpAppUpdate::HelpAppUpdateClassType result;
     switch(classType) {
     case TypeHelpAppUpdate:
         result = HelpAppUpdate::typeHelpAppUpdate;

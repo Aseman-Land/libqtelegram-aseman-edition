@@ -13,11 +13,11 @@
 class LIBQTELEGRAMSHARED_EXPORT AccountDaysTTL : public TelegramTypeObject
 {
 public:
-    enum AccountDaysTTLType {
+    enum AccountDaysTTLClassType {
         typeAccountDaysTTL = 0xb8d0afdf
     };
 
-    AccountDaysTTL(AccountDaysTTLType classType = typeAccountDaysTTL, InboundPkt *in = 0);
+    AccountDaysTTL(AccountDaysTTLClassType classType = typeAccountDaysTTL, InboundPkt *in = 0);
     AccountDaysTTL(InboundPkt *in);
     AccountDaysTTL(const Null&);
     virtual ~AccountDaysTTL();
@@ -25,8 +25,8 @@ public:
     void setDays(qint32 days);
     qint32 days() const;
 
-    void setClassType(AccountDaysTTLType classType);
-    AccountDaysTTLType classType() const;
+    void setClassType(AccountDaysTTLClassType classType);
+    AccountDaysTTLClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -40,7 +40,7 @@ public:
 
 private:
     qint32 m_days;
-    AccountDaysTTLType m_classType;
+    AccountDaysTTLClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(AccountDaysTTL)

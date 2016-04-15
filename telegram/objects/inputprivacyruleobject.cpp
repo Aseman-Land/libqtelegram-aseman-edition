@@ -44,7 +44,7 @@ bool InputPrivacyRuleObject::operator ==(const InputPrivacyRule &b) const {
 }
 
 void InputPrivacyRuleObject::setClassType(quint32 classType) {
-    InputPrivacyRule::InputPrivacyRuleType result;
+    InputPrivacyRule::InputPrivacyRuleClassType result;
     switch(classType) {
     case TypeInputPrivacyValueAllowContacts:
         result = InputPrivacyRule::typeInputPrivacyValueAllowContacts;

@@ -13,12 +13,12 @@
 class LIBQTELEGRAMSHARED_EXPORT FileLocation : public TelegramTypeObject
 {
 public:
-    enum FileLocationType {
+    enum FileLocationClassType {
         typeFileLocationUnavailable = 0x7c596b46,
         typeFileLocation = 0x53d69076
     };
 
-    FileLocation(FileLocationType classType = typeFileLocationUnavailable, InboundPkt *in = 0);
+    FileLocation(FileLocationClassType classType = typeFileLocationUnavailable, InboundPkt *in = 0);
     FileLocation(InboundPkt *in);
     FileLocation(const Null&);
     virtual ~FileLocation();
@@ -35,8 +35,8 @@ public:
     void setVolumeId(qint64 volumeId);
     qint64 volumeId() const;
 
-    void setClassType(FileLocationType classType);
-    FileLocationType classType() const;
+    void setClassType(FileLocationClassType classType);
+    FileLocationClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -53,7 +53,7 @@ private:
     qint32 m_localId;
     qint64 m_secret;
     qint64 m_volumeId;
-    FileLocationType m_classType;
+    FileLocationClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(FileLocation)

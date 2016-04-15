@@ -6,8 +6,6 @@
 
 * **Send code** - [TelegramCore::authSendCode](methods/sendcode.md)
 
-* **Send call** - [TelegramCore::authSendCall](methods/sendcall.md)
-
 * **Sign up** - [TelegramCore::authSignUp](methods/signup.md)
 
 * **Sign in** - [TelegramCore::authSignIn](methods/signin.md)
@@ -24,8 +22,6 @@
 
 * **Bind temp auth key** - [TelegramCore::authBindTempAuthKey](methods/bindtempauthkey.md)
 
-* **Send sms** - [TelegramCore::authSendSms](methods/sendsms.md)
-
 * **Import bot authorization** - [TelegramCore::authImportBotAuthorization](methods/importbotauthorization.md)
 
 * **Check password** - [TelegramCore::authCheckPassword](methods/checkpassword.md)
@@ -33,4 +29,8 @@
 * **Request password recovery** - [TelegramCore::authRequestPasswordRecovery](methods/requestpasswordrecovery.md)
 
 * **Recover password** - [TelegramCore::authRecoverPassword](methods/recoverpassword.md)
+
+* **Resend code** - [TelegramCore::authResendCode](methods/resendcode.md)
+
+* **Cancel code** - [TelegramCore::authCancelCode](methods/cancelcode.md)
 

@@ -80,7 +80,7 @@ bool FileLocationObject::operator ==(const FileLocation &b) const {
 }
 
 void FileLocationObject::setClassType(quint32 classType) {
-    FileLocation::FileLocationType result;
+    FileLocation::FileLocationClassType result;
     switch(classType) {
     case TypeFileLocationUnavailable:
         result = FileLocation::typeFileLocationUnavailable;

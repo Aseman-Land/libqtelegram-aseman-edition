@@ -32,7 +32,7 @@ bool StorageFileTypeObject::operator ==(const StorageFileType &b) const {
 }
 
 void StorageFileTypeObject::setClassType(quint32 classType) {
-    StorageFileType::StorageFileTypeType result;
+    StorageFileType::StorageFileTypeClassType result;
     switch(classType) {
     case TypeStorageFileUnknown:
         result = StorageFileType::typeStorageFileUnknown;

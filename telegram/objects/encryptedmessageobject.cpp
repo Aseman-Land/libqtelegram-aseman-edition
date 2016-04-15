@@ -105,7 +105,7 @@ bool EncryptedMessageObject::operator ==(const EncryptedMessage &b) const {
 }
 
 void EncryptedMessageObject::setClassType(quint32 classType) {
-    EncryptedMessage::EncryptedMessageType result;
+    EncryptedMessage::EncryptedMessageClassType result;
     switch(classType) {
     case TypeEncryptedMessage:
         result = EncryptedMessage::typeEncryptedMessage;

@@ -13,22 +13,39 @@
 class LIBQTELEGRAMSHARED_EXPORT KeyboardButtonObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(KeyboardButtonType)
+    Q_ENUMS(KeyboardButtonClassType)
+    Q_PROPERTY(QByteArray data READ data WRITE setData NOTIFY dataChanged)
+    Q_PROPERTY(QString query READ query WRITE setQuery NOTIFY queryChanged)
     Q_PROPERTY(QString text READ text WRITE setText NOTIFY textChanged)
+    Q_PROPERTY(QString url READ url WRITE setUrl NOTIFY urlChanged)
     Q_PROPERTY(KeyboardButton core READ core WRITE setCore NOTIFY coreChanged)
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum KeyboardButtonType {
-        TypeKeyboardButton
+    enum KeyboardButtonClassType {
+        TypeKeyboardButton,
+        TypeKeyboardButtonUrl,
+        TypeKeyboardButtonCallback,
+        TypeKeyboardButtonRequestPhone,
+        TypeKeyboardButtonRequestGeoLocation,
+        TypeKeyboardButtonSwitchInline
     };
 
     KeyboardButtonObject(const KeyboardButton &core, QObject *parent = 0);
     KeyboardButtonObject(QObject *parent = 0);
     virtual ~KeyboardButtonObject();
 
+    void setData(const QByteArray &data);
+    QByteArray data() const;
+
+    void setQuery(const QString &query);
+    QString query() const;
+
     void setText(const QString &text);
     QString text() const;
+
+    void setUrl(const QString &url);
+    QString url() const;
 
     void setClassType(quint32 classType);
     quint32 classType() const;
@@ -42,7 +59,10 @@ public:
 Q_SIGNALS:
     void coreChanged();
     void classTypeChanged();
+    void dataChanged();
+    void queryChanged();
     void textChanged();
+    void urlChanged();
 
 private Q_SLOTS:
 

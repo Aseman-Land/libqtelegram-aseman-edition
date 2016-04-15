@@ -128,7 +128,7 @@ bool EncryptedChatObject::operator ==(const EncryptedChat &b) const {
 }
 
 void EncryptedChatObject::setClassType(quint32 classType) {
-    EncryptedChat::EncryptedChatType result;
+    EncryptedChat::EncryptedChatClassType result;
     switch(classType) {
     case TypeEncryptedChatEmpty:
         result = EncryptedChat::typeEncryptedChatEmpty;

@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-User::User(UserType classType, InboundPkt *in) :
+User::User(UserClassType classType, InboundPkt *in) :
     m_accessHash(0),
     m_botInfoVersion(0),
     m_flags(0),
@@ -74,6 +74,15 @@ void User::setBotInfoVersion(qint32 botInfoVersion) {
 
 qint32 User::botInfoVersion() const {
     return m_botInfoVersion;
+}
+
+void User::setBotInlineGeo(bool botInlineGeo) {
+    if(botInlineGeo) m_flags = (m_flags | (1<<21));
+    else m_flags = (m_flags & ~(1<<21));
+}
+
+bool User::botInlineGeo() const {
+    return (m_flags & 1<<21);
 }
 
 void User::setBotInlinePlaceholder(const QString &botInlinePlaceholder) {
@@ -244,11 +253,11 @@ bool User::operator ==(const User &b) const {
            m_username == b.m_username;
 }
 
-void User::setClassType(User::UserType classType) {
+void User::setClassType(User::UserClassType classType) {
     m_classType = classType;
 }
 
-User::UserType User::classType() const {
+User::UserClassType User::classType() const {
     return m_classType;
 }
 
@@ -258,7 +267,7 @@ bool User::fetch(InboundPkt *in) {
     switch(x) {
     case typeUserEmpty: {
         m_id = in->fetchInt();
-        m_classType = static_cast<UserType>(x);
+        m_classType = static_cast<UserClassType>(x);
         return true;
     }
         break;
@@ -296,7 +305,7 @@ bool User::fetch(InboundPkt *in) {
         if(m_flags & 1<<19) {
             m_botInlinePlaceholder = in->fetchQString();
         }
-        m_classType = static_cast<UserType>(x);
+        m_classType = static_cast<UserClassType>(x);
         return true;
     }
         break;
@@ -372,7 +381,7 @@ QDataStream &operator<<(QDataStream &stream, const User &item) {
 QDataStream &operator>>(QDataStream &stream, User &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<User::UserType>(type));
+    item.setClassType(static_cast<User::UserClassType>(type));
     switch(type) {
     case User::typeUserEmpty: {
         qint32 m_id;

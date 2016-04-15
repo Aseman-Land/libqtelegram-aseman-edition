@@ -9,17 +9,21 @@
 
 #include <QMetaType>
 #include <QString>
+#include "inputdocument.h"
 #include <QtGlobal>
+#include "inputphoto.h"
 #include "inputbotinlinemessage.h"
 
 class LIBQTELEGRAMSHARED_EXPORT InputBotInlineResult : public TelegramTypeObject
 {
 public:
-    enum InputBotInlineResultType {
-        typeInputBotInlineResult = 0x2cbbe15a
+    enum InputBotInlineResultClassType {
+        typeInputBotInlineResult = 0x2cbbe15a,
+        typeInputBotInlineResultPhoto = 0xa8d864a7,
+        typeInputBotInlineResultDocument = 0xfff8fdc4
     };
 
-    InputBotInlineResult(InputBotInlineResultType classType = typeInputBotInlineResult, InboundPkt *in = 0);
+    InputBotInlineResult(InputBotInlineResultClassType classType = typeInputBotInlineResult, InboundPkt *in = 0);
     InputBotInlineResult(InboundPkt *in);
     InputBotInlineResult(const Null&);
     virtual ~InputBotInlineResult();
@@ -33,6 +37,9 @@ public:
     void setDescription(const QString &description);
     QString description() const;
 
+    void setDocument(const InputDocument &document);
+    InputDocument document() const;
+
     void setDuration(qint32 duration);
     qint32 duration() const;
 
@@ -44,6 +51,9 @@ public:
 
     void setId(const QString &id);
     QString id() const;
+
+    void setPhoto(const InputPhoto &photo);
+    InputPhoto photo() const;
 
     void setSendMessage(const InputBotInlineMessage &sendMessage);
     InputBotInlineMessage sendMessage() const;
@@ -63,8 +73,8 @@ public:
     void setW(qint32 w);
     qint32 w() const;
 
-    void setClassType(InputBotInlineResultType classType);
-    InputBotInlineResultType classType() const;
+    void setClassType(InputBotInlineResultClassType classType);
+    InputBotInlineResultClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -80,17 +90,19 @@ private:
     QString m_contentType;
     QString m_contentUrl;
     QString m_description;
+    InputDocument m_document;
     qint32 m_duration;
     qint32 m_flags;
     qint32 m_h;
     QString m_id;
+    InputPhoto m_photo;
     InputBotInlineMessage m_sendMessage;
     QString m_thumbUrl;
     QString m_title;
     QString m_type;
     QString m_url;
     qint32 m_w;
-    InputBotInlineResultType m_classType;
+    InputBotInlineResultClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(InputBotInlineResult)

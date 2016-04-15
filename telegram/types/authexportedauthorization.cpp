@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-AuthExportedAuthorization::AuthExportedAuthorization(AuthExportedAuthorizationType classType, InboundPkt *in) :
+AuthExportedAuthorization::AuthExportedAuthorization(AuthExportedAuthorizationClassType classType, InboundPkt *in) :
     m_id(0),
     m_classType(classType)
 {
@@ -55,11 +55,11 @@ bool AuthExportedAuthorization::operator ==(const AuthExportedAuthorization &b) 
            m_id == b.m_id;
 }
 
-void AuthExportedAuthorization::setClassType(AuthExportedAuthorization::AuthExportedAuthorizationType classType) {
+void AuthExportedAuthorization::setClassType(AuthExportedAuthorization::AuthExportedAuthorizationClassType classType) {
     m_classType = classType;
 }
 
-AuthExportedAuthorization::AuthExportedAuthorizationType AuthExportedAuthorization::classType() const {
+AuthExportedAuthorization::AuthExportedAuthorizationClassType AuthExportedAuthorization::classType() const {
     return m_classType;
 }
 
@@ -70,7 +70,7 @@ bool AuthExportedAuthorization::fetch(InboundPkt *in) {
     case typeAuthExportedAuthorization: {
         m_id = in->fetchInt();
         m_bytes = in->fetchBytes();
-        m_classType = static_cast<AuthExportedAuthorizationType>(x);
+        m_classType = static_cast<AuthExportedAuthorizationClassType>(x);
         return true;
     }
         break;
@@ -117,7 +117,7 @@ QDataStream &operator<<(QDataStream &stream, const AuthExportedAuthorization &it
 QDataStream &operator>>(QDataStream &stream, AuthExportedAuthorization &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<AuthExportedAuthorization::AuthExportedAuthorizationType>(type));
+    item.setClassType(static_cast<AuthExportedAuthorization::AuthExportedAuthorizationClassType>(type));
     switch(type) {
     case AuthExportedAuthorization::typeAuthExportedAuthorization: {
         qint32 m_id;

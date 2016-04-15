@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-MessagesAllStickers::MessagesAllStickers(MessagesAllStickersType classType, InboundPkt *in) :
+MessagesAllStickers::MessagesAllStickers(MessagesAllStickersClassType classType, InboundPkt *in) :
     m_hash(0),
     m_classType(classType)
 {
@@ -55,11 +55,11 @@ bool MessagesAllStickers::operator ==(const MessagesAllStickers &b) const {
            m_sets == b.m_sets;
 }
 
-void MessagesAllStickers::setClassType(MessagesAllStickers::MessagesAllStickersType classType) {
+void MessagesAllStickers::setClassType(MessagesAllStickers::MessagesAllStickersClassType classType) {
     m_classType = classType;
 }
 
-MessagesAllStickers::MessagesAllStickersType MessagesAllStickers::classType() const {
+MessagesAllStickers::MessagesAllStickersClassType MessagesAllStickers::classType() const {
     return m_classType;
 }
 
@@ -68,7 +68,7 @@ bool MessagesAllStickers::fetch(InboundPkt *in) {
     int x = in->fetchInt();
     switch(x) {
     case typeMessagesAllStickersNotModified: {
-        m_classType = static_cast<MessagesAllStickersType>(x);
+        m_classType = static_cast<MessagesAllStickersClassType>(x);
         return true;
     }
         break;
@@ -83,7 +83,7 @@ bool MessagesAllStickers::fetch(InboundPkt *in) {
             type.fetch(in);
             m_sets.append(type);
         }
-        m_classType = static_cast<MessagesAllStickersType>(x);
+        m_classType = static_cast<MessagesAllStickersClassType>(x);
         return true;
     }
         break;
@@ -142,7 +142,7 @@ QDataStream &operator<<(QDataStream &stream, const MessagesAllStickers &item) {
 QDataStream &operator>>(QDataStream &stream, MessagesAllStickers &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<MessagesAllStickers::MessagesAllStickersType>(type));
+    item.setClassType(static_cast<MessagesAllStickers::MessagesAllStickersClassType>(type));
     switch(type) {
     case MessagesAllStickers::typeMessagesAllStickersNotModified: {
         

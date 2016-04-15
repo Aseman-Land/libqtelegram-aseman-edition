@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-Photo::Photo(PhotoType classType, InboundPkt *in) :
+Photo::Photo(PhotoClassType classType, InboundPkt *in) :
     m_accessHash(0),
     m_date(0),
     m_id(0),
@@ -79,11 +79,11 @@ bool Photo::operator ==(const Photo &b) const {
            m_sizes == b.m_sizes;
 }
 
-void Photo::setClassType(Photo::PhotoType classType) {
+void Photo::setClassType(Photo::PhotoClassType classType) {
     m_classType = classType;
 }
 
-Photo::PhotoType Photo::classType() const {
+Photo::PhotoClassType Photo::classType() const {
     return m_classType;
 }
 
@@ -93,7 +93,7 @@ bool Photo::fetch(InboundPkt *in) {
     switch(x) {
     case typePhotoEmpty: {
         m_id = in->fetchLong();
-        m_classType = static_cast<PhotoType>(x);
+        m_classType = static_cast<PhotoClassType>(x);
         return true;
     }
         break;
@@ -110,7 +110,7 @@ bool Photo::fetch(InboundPkt *in) {
             type.fetch(in);
             m_sizes.append(type);
         }
-        m_classType = static_cast<PhotoType>(x);
+        m_classType = static_cast<PhotoClassType>(x);
         return true;
     }
         break;
@@ -174,7 +174,7 @@ QDataStream &operator<<(QDataStream &stream, const Photo &item) {
 QDataStream &operator>>(QDataStream &stream, Photo &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<Photo::PhotoType>(type));
+    item.setClassType(static_cast<Photo::PhotoClassType>(type));
     switch(type) {
     case Photo::typePhotoEmpty: {
         qint64 m_id;

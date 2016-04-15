@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-InputPrivacyKey::InputPrivacyKey(InputPrivacyKeyType classType, InboundPkt *in) :
+InputPrivacyKey::InputPrivacyKey(InputPrivacyKeyClassType classType, InboundPkt *in) :
     m_classType(classType)
 {
     if(in) fetch(in);
@@ -34,11 +34,11 @@ bool InputPrivacyKey::operator ==(const InputPrivacyKey &b) const {
     return m_classType == b.m_classType;
 }
 
-void InputPrivacyKey::setClassType(InputPrivacyKey::InputPrivacyKeyType classType) {
+void InputPrivacyKey::setClassType(InputPrivacyKey::InputPrivacyKeyClassType classType) {
     m_classType = classType;
 }
 
-InputPrivacyKey::InputPrivacyKeyType InputPrivacyKey::classType() const {
+InputPrivacyKey::InputPrivacyKeyClassType InputPrivacyKey::classType() const {
     return m_classType;
 }
 
@@ -47,13 +47,13 @@ bool InputPrivacyKey::fetch(InboundPkt *in) {
     int x = in->fetchInt();
     switch(x) {
     case typeInputPrivacyKeyStatusTimestamp: {
-        m_classType = static_cast<InputPrivacyKeyType>(x);
+        m_classType = static_cast<InputPrivacyKeyClassType>(x);
         return true;
     }
         break;
     
     case typeInputPrivacyKeyChatInvite: {
-        m_classType = static_cast<InputPrivacyKeyType>(x);
+        m_classType = static_cast<InputPrivacyKeyClassType>(x);
         return true;
     }
         break;
@@ -105,7 +105,7 @@ QDataStream &operator<<(QDataStream &stream, const InputPrivacyKey &item) {
 QDataStream &operator>>(QDataStream &stream, InputPrivacyKey &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<InputPrivacyKey::InputPrivacyKeyType>(type));
+    item.setClassType(static_cast<InputPrivacyKey::InputPrivacyKeyClassType>(type));
     switch(type) {
     case InputPrivacyKey::typeInputPrivacyKeyStatusTimestamp: {
         

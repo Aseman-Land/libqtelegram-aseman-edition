@@ -7,14 +7,16 @@ TelegramCore::accountSendChangePhoneCode
 ## Schema:
 
 ```c++
-account.sendChangePhoneCode#a407a8f4 phone_number:string = account.SentChangePhoneCode;
+account.sendChangePhoneCode#8e57deb flags:# allow_flashcall:flags.0?true phone_number:string current_number:flags.0?Bool = auth.SentCode;
 ```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
+|allowFlashcall|bool||
 |phoneNumber|QString||
-|callBack|Callback&lt;[AccountSentChangePhoneCode](../../types/accountsentchangephonecode.md)&gt;|0|
+|currentNumber|bool||
+|callBack|Callback&lt;[AuthSentCode](../../types/authsentcode.md)&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
 ## Callback Result:
@@ -22,13 +24,13 @@ account.sendChangePhoneCode#a407a8f4 phone_number:string = account.SentChangePho
 |Name|Type|
 |----|----|
 |msgId|qint64|
-|result|[AccountSentChangePhoneCode](../../types/accountsentchangephonecode.md)|
+|result|[AuthSentCode](../../types/authsentcode.md)|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
 ```c++
-sendChangePhoneCodeAnswer(qint64 msgId, const AccountSentChangePhoneCode & result)
+sendChangePhoneCodeAnswer(qint64 msgId, const AuthSentCode & result)
 ```
 ```c++
 sendChangePhoneCodeError(qint64 msgId, qint32 errorCode, const QString &errorText)
@@ -37,7 +39,7 @@ sendChangePhoneCodeError(qint64 msgId, qint32 errorCode, const QString &errorTex
 ## Events:
 
 ```c++
-onSendChangePhoneCodeAnswer(qint64 msgId, const AccountSentChangePhoneCode & result)
+onSendChangePhoneCodeAnswer(qint64 msgId, const AuthSentCode & result)
 ```
 ```c++
 onSendChangePhoneCodeError(qint64 msgId, qint32 errorCode, const QString &errorText)
@@ -50,7 +52,7 @@ onSendChangePhoneCodeError(qint64 msgId, qint32 errorCode, const QString &errorT
 ## Examples:
 
 ```c++
-tg->sendChangePhoneCode(phone_number, [=](TG_SEND_CHANGE_PHONE_CODE_CALLBACK){
+tg->sendChangePhoneCode(allow_flashcall, phone_number, current_number, [=](TG_SEND_CHANGE_PHONE_CODE_CALLBACK){
     ...
 }, 30000);
 ```

@@ -20,12 +20,12 @@
 class LIBQTELEGRAMSHARED_EXPORT ChatFull : public TelegramTypeObject
 {
 public:
-    enum ChatFullType {
+    enum ChatFullClassType {
         typeChatFull = 0x2e02a614,
         typeChannelFull = 0x97bee562
     };
 
-    ChatFull(ChatFullType classType = typeChatFull, InboundPkt *in = 0);
+    ChatFull(ChatFullClassType classType = typeChatFull, InboundPkt *in = 0);
     ChatFull(InboundPkt *in);
     ChatFull(const Null&);
     virtual ~ChatFull();
@@ -87,8 +87,8 @@ public:
     void setUnreadImportantCount(qint32 unreadImportantCount);
     qint32 unreadImportantCount() const;
 
-    void setClassType(ChatFullType classType);
-    ChatFullType classType() const;
+    void setClassType(ChatFullClassType classType);
+    ChatFullClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -118,7 +118,7 @@ private:
     qint32 m_readInboxMaxId;
     qint32 m_unreadCount;
     qint32 m_unreadImportantCount;
-    ChatFullType m_classType;
+    ChatFullClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(ChatFull)

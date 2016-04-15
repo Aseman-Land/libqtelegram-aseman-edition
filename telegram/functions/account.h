@@ -20,7 +20,7 @@
 #include "telegram/types/inputprivacykey.h"
 #include "telegram/types/inputprivacyrule.h"
 #include "telegram/types/accountdaysttl.h"
-#include "telegram/types/accountsentchangephonecode.h"
+#include "telegram/types/authsentcode.h"
 #include "telegram/types/accountauthorizations.h"
 #include "telegram/types/accountpassword.h"
 #include "telegram/types/accountpasswordsettings.h"
@@ -50,7 +50,7 @@ public:
         fncAccountDeleteAccount = 0x418d4e0b,
         fncAccountGetAccountTTL = 0x8fc711d,
         fncAccountSetAccountTTL = 0x2442485e,
-        fncAccountSendChangePhoneCode = 0xa407a8f4,
+        fncAccountSendChangePhoneCode = 0x8e57deb,
         fncAccountChangePhone = 0x70c32edb,
         fncAccountUpdateDeviceLocked = 0x38df3532,
         fncAccountGetAuthorizations = 0xe320c158,
@@ -111,8 +111,8 @@ public:
     static bool setAccountTTL(OutboundPkt *out, const AccountDaysTTL &ttl);
     static bool setAccountTTLResult(InboundPkt *in);
 
-    static bool sendChangePhoneCode(OutboundPkt *out, const QString &phoneNumber);
-    static AccountSentChangePhoneCode sendChangePhoneCodeResult(InboundPkt *in);
+    static bool sendChangePhoneCode(OutboundPkt *out, bool allowFlashcall, const QString &phoneNumber, bool currentNumber);
+    static AuthSentCode sendChangePhoneCodeResult(InboundPkt *in);
 
     static bool changePhone(OutboundPkt *out, const QString &phoneNumber, const QString &phoneCodeHash, const QString &phoneCode);
     static User changePhoneResult(InboundPkt *in);

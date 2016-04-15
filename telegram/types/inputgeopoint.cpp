@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-InputGeoPoint::InputGeoPoint(InputGeoPointType classType, InboundPkt *in) :
+InputGeoPoint::InputGeoPoint(InputGeoPointClassType classType, InboundPkt *in) :
     m_lat(0),
     m_longValue(0),
     m_classType(classType)
@@ -58,11 +58,11 @@ bool InputGeoPoint::operator ==(const InputGeoPoint &b) const {
            m_longValue == b.m_longValue;
 }
 
-void InputGeoPoint::setClassType(InputGeoPoint::InputGeoPointType classType) {
+void InputGeoPoint::setClassType(InputGeoPoint::InputGeoPointClassType classType) {
     m_classType = classType;
 }
 
-InputGeoPoint::InputGeoPointType InputGeoPoint::classType() const {
+InputGeoPoint::InputGeoPointClassType InputGeoPoint::classType() const {
     return m_classType;
 }
 
@@ -71,7 +71,7 @@ bool InputGeoPoint::fetch(InboundPkt *in) {
     int x = in->fetchInt();
     switch(x) {
     case typeInputGeoPointEmpty: {
-        m_classType = static_cast<InputGeoPointType>(x);
+        m_classType = static_cast<InputGeoPointClassType>(x);
         return true;
     }
         break;
@@ -79,7 +79,7 @@ bool InputGeoPoint::fetch(InboundPkt *in) {
     case typeInputGeoPoint: {
         m_lat = in->fetchDouble();
         m_longValue = in->fetchDouble();
-        m_classType = static_cast<InputGeoPointType>(x);
+        m_classType = static_cast<InputGeoPointClassType>(x);
         return true;
     }
         break;
@@ -134,7 +134,7 @@ QDataStream &operator<<(QDataStream &stream, const InputGeoPoint &item) {
 QDataStream &operator>>(QDataStream &stream, InputGeoPoint &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<InputGeoPoint::InputGeoPointType>(type));
+    item.setClassType(static_cast<InputGeoPoint::InputGeoPointClassType>(type));
     switch(type) {
     case InputGeoPoint::typeInputGeoPointEmpty: {
         

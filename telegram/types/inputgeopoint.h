@@ -13,12 +13,12 @@
 class LIBQTELEGRAMSHARED_EXPORT InputGeoPoint : public TelegramTypeObject
 {
 public:
-    enum InputGeoPointType {
+    enum InputGeoPointClassType {
         typeInputGeoPointEmpty = 0xe4c123d6,
         typeInputGeoPoint = 0xf3b7acc9
     };
 
-    InputGeoPoint(InputGeoPointType classType = typeInputGeoPointEmpty, InboundPkt *in = 0);
+    InputGeoPoint(InputGeoPointClassType classType = typeInputGeoPointEmpty, InboundPkt *in = 0);
     InputGeoPoint(InboundPkt *in);
     InputGeoPoint(const Null&);
     virtual ~InputGeoPoint();
@@ -29,8 +29,8 @@ public:
     void setLongValue(qreal longValue);
     qreal longValue() const;
 
-    void setClassType(InputGeoPointType classType);
-    InputGeoPointType classType() const;
+    void setClassType(InputGeoPointClassType classType);
+    InputGeoPointClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -45,7 +45,7 @@ public:
 private:
     qreal m_lat;
     qreal m_longValue;
-    InputGeoPointType m_classType;
+    InputGeoPointClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(InputGeoPoint)

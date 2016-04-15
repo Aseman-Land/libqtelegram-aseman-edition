@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-MessagesFilter::MessagesFilter(MessagesFilterType classType, InboundPkt *in) :
+MessagesFilter::MessagesFilter(MessagesFilterClassType classType, InboundPkt *in) :
     m_classType(classType)
 {
     if(in) fetch(in);
@@ -34,11 +34,11 @@ bool MessagesFilter::operator ==(const MessagesFilter &b) const {
     return m_classType == b.m_classType;
 }
 
-void MessagesFilter::setClassType(MessagesFilter::MessagesFilterType classType) {
+void MessagesFilter::setClassType(MessagesFilter::MessagesFilterClassType classType) {
     m_classType = classType;
 }
 
-MessagesFilter::MessagesFilterType MessagesFilter::classType() const {
+MessagesFilter::MessagesFilterClassType MessagesFilter::classType() const {
     return m_classType;
 }
 
@@ -47,61 +47,61 @@ bool MessagesFilter::fetch(InboundPkt *in) {
     int x = in->fetchInt();
     switch(x) {
     case typeInputMessagesFilterEmpty: {
-        m_classType = static_cast<MessagesFilterType>(x);
+        m_classType = static_cast<MessagesFilterClassType>(x);
         return true;
     }
         break;
     
     case typeInputMessagesFilterPhotos: {
-        m_classType = static_cast<MessagesFilterType>(x);
+        m_classType = static_cast<MessagesFilterClassType>(x);
         return true;
     }
         break;
     
     case typeInputMessagesFilterVideo: {
-        m_classType = static_cast<MessagesFilterType>(x);
+        m_classType = static_cast<MessagesFilterClassType>(x);
         return true;
     }
         break;
     
     case typeInputMessagesFilterPhotoVideo: {
-        m_classType = static_cast<MessagesFilterType>(x);
+        m_classType = static_cast<MessagesFilterClassType>(x);
         return true;
     }
         break;
     
     case typeInputMessagesFilterPhotoVideoDocuments: {
-        m_classType = static_cast<MessagesFilterType>(x);
+        m_classType = static_cast<MessagesFilterClassType>(x);
         return true;
     }
         break;
     
     case typeInputMessagesFilterDocument: {
-        m_classType = static_cast<MessagesFilterType>(x);
+        m_classType = static_cast<MessagesFilterClassType>(x);
         return true;
     }
         break;
     
     case typeInputMessagesFilterUrl: {
-        m_classType = static_cast<MessagesFilterType>(x);
+        m_classType = static_cast<MessagesFilterClassType>(x);
         return true;
     }
         break;
     
     case typeInputMessagesFilterGif: {
-        m_classType = static_cast<MessagesFilterType>(x);
+        m_classType = static_cast<MessagesFilterClassType>(x);
         return true;
     }
         break;
     
     case typeInputMessagesFilterVoice: {
-        m_classType = static_cast<MessagesFilterType>(x);
+        m_classType = static_cast<MessagesFilterClassType>(x);
         return true;
     }
         break;
     
     case typeInputMessagesFilterMusic: {
-        m_classType = static_cast<MessagesFilterType>(x);
+        m_classType = static_cast<MessagesFilterClassType>(x);
         return true;
     }
         break;
@@ -217,7 +217,7 @@ QDataStream &operator<<(QDataStream &stream, const MessagesFilter &item) {
 QDataStream &operator>>(QDataStream &stream, MessagesFilter &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<MessagesFilter::MessagesFilterType>(type));
+    item.setClassType(static_cast<MessagesFilter::MessagesFilterClassType>(type));
     switch(type) {
     case MessagesFilter::typeInputMessagesFilterEmpty: {
         

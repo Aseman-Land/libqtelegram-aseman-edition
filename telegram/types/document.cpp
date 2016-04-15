@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-Document::Document(DocumentType classType, InboundPkt *in) :
+Document::Document(DocumentClassType classType, InboundPkt *in) :
     m_accessHash(0),
     m_date(0),
     m_dcId(0),
@@ -121,11 +121,11 @@ bool Document::operator ==(const Document &b) const {
            m_thumb == b.m_thumb;
 }
 
-void Document::setClassType(Document::DocumentType classType) {
+void Document::setClassType(Document::DocumentClassType classType) {
     m_classType = classType;
 }
 
-Document::DocumentType Document::classType() const {
+Document::DocumentClassType Document::classType() const {
     return m_classType;
 }
 
@@ -135,7 +135,7 @@ bool Document::fetch(InboundPkt *in) {
     switch(x) {
     case typeDocumentEmpty: {
         m_id = in->fetchLong();
-        m_classType = static_cast<DocumentType>(x);
+        m_classType = static_cast<DocumentClassType>(x);
         return true;
     }
         break;
@@ -156,7 +156,7 @@ bool Document::fetch(InboundPkt *in) {
             type.fetch(in);
             m_attributes.append(type);
         }
-        m_classType = static_cast<DocumentType>(x);
+        m_classType = static_cast<DocumentClassType>(x);
         return true;
     }
         break;
@@ -228,7 +228,7 @@ QDataStream &operator<<(QDataStream &stream, const Document &item) {
 QDataStream &operator>>(QDataStream &stream, Document &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<Document::DocumentType>(type));
+    item.setClassType(static_cast<Document::DocumentClassType>(type));
     switch(type) {
     case Document::typeDocumentEmpty: {
         qint64 m_id;

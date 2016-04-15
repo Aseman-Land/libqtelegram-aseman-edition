@@ -56,7 +56,7 @@ bool BotCommandObject::operator ==(const BotCommand &b) const {
 }
 
 void BotCommandObject::setClassType(quint32 classType) {
-    BotCommand::BotCommandType result;
+    BotCommand::BotCommandClassType result;
     switch(classType) {
     case TypeBotCommand:
         result = BotCommand::typeBotCommand;

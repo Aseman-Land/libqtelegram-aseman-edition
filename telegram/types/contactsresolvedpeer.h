@@ -16,11 +16,11 @@
 class LIBQTELEGRAMSHARED_EXPORT ContactsResolvedPeer : public TelegramTypeObject
 {
 public:
-    enum ContactsResolvedPeerType {
+    enum ContactsResolvedPeerClassType {
         typeContactsResolvedPeer = 0x7f077ad9
     };
 
-    ContactsResolvedPeer(ContactsResolvedPeerType classType = typeContactsResolvedPeer, InboundPkt *in = 0);
+    ContactsResolvedPeer(ContactsResolvedPeerClassType classType = typeContactsResolvedPeer, InboundPkt *in = 0);
     ContactsResolvedPeer(InboundPkt *in);
     ContactsResolvedPeer(const Null&);
     virtual ~ContactsResolvedPeer();
@@ -34,8 +34,8 @@ public:
     void setUsers(const QList<User> &users);
     QList<User> users() const;
 
-    void setClassType(ContactsResolvedPeerType classType);
-    ContactsResolvedPeerType classType() const;
+    void setClassType(ContactsResolvedPeerClassType classType);
+    ContactsResolvedPeerClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -51,7 +51,7 @@ private:
     QList<Chat> m_chats;
     Peer m_peer;
     QList<User> m_users;
-    ContactsResolvedPeerType m_classType;
+    ContactsResolvedPeerClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(ContactsResolvedPeer)

@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-InputEncryptedFile::InputEncryptedFile(InputEncryptedFileType classType, InboundPkt *in) :
+InputEncryptedFile::InputEncryptedFile(InputEncryptedFileClassType classType, InboundPkt *in) :
     m_accessHash(0),
     m_id(0),
     m_keyFingerprint(0),
@@ -91,11 +91,11 @@ bool InputEncryptedFile::operator ==(const InputEncryptedFile &b) const {
            m_parts == b.m_parts;
 }
 
-void InputEncryptedFile::setClassType(InputEncryptedFile::InputEncryptedFileType classType) {
+void InputEncryptedFile::setClassType(InputEncryptedFile::InputEncryptedFileClassType classType) {
     m_classType = classType;
 }
 
-InputEncryptedFile::InputEncryptedFileType InputEncryptedFile::classType() const {
+InputEncryptedFile::InputEncryptedFileClassType InputEncryptedFile::classType() const {
     return m_classType;
 }
 
@@ -104,7 +104,7 @@ bool InputEncryptedFile::fetch(InboundPkt *in) {
     int x = in->fetchInt();
     switch(x) {
     case typeInputEncryptedFileEmpty: {
-        m_classType = static_cast<InputEncryptedFileType>(x);
+        m_classType = static_cast<InputEncryptedFileClassType>(x);
         return true;
     }
         break;
@@ -114,7 +114,7 @@ bool InputEncryptedFile::fetch(InboundPkt *in) {
         m_parts = in->fetchInt();
         m_md5Checksum = in->fetchQString();
         m_keyFingerprint = in->fetchInt();
-        m_classType = static_cast<InputEncryptedFileType>(x);
+        m_classType = static_cast<InputEncryptedFileClassType>(x);
         return true;
     }
         break;
@@ -122,7 +122,7 @@ bool InputEncryptedFile::fetch(InboundPkt *in) {
     case typeInputEncryptedFile: {
         m_id = in->fetchLong();
         m_accessHash = in->fetchLong();
-        m_classType = static_cast<InputEncryptedFileType>(x);
+        m_classType = static_cast<InputEncryptedFileClassType>(x);
         return true;
     }
         break;
@@ -131,7 +131,7 @@ bool InputEncryptedFile::fetch(InboundPkt *in) {
         m_id = in->fetchLong();
         m_parts = in->fetchInt();
         m_keyFingerprint = in->fetchInt();
-        m_classType = static_cast<InputEncryptedFileType>(x);
+        m_classType = static_cast<InputEncryptedFileClassType>(x);
         return true;
     }
         break;
@@ -214,7 +214,7 @@ QDataStream &operator<<(QDataStream &stream, const InputEncryptedFile &item) {
 QDataStream &operator>>(QDataStream &stream, InputEncryptedFile &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<InputEncryptedFile::InputEncryptedFileType>(type));
+    item.setClassType(static_cast<InputEncryptedFile::InputEncryptedFileClassType>(type));
     switch(type) {
     case InputEncryptedFile::typeInputEncryptedFileEmpty: {
         

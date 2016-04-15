@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-InputBotInlineResult::InputBotInlineResult(InputBotInlineResultType classType, InboundPkt *in) :
+InputBotInlineResult::InputBotInlineResult(InputBotInlineResultClassType classType, InboundPkt *in) :
     m_duration(0),
     m_flags(0),
     m_h(0),
@@ -66,6 +66,14 @@ QString InputBotInlineResult::description() const {
     return m_description;
 }
 
+void InputBotInlineResult::setDocument(const InputDocument &document) {
+    m_document = document;
+}
+
+InputDocument InputBotInlineResult::document() const {
+    return m_document;
+}
+
 void InputBotInlineResult::setDuration(qint32 duration) {
     m_duration = duration;
 }
@@ -96,6 +104,14 @@ void InputBotInlineResult::setId(const QString &id) {
 
 QString InputBotInlineResult::id() const {
     return m_id;
+}
+
+void InputBotInlineResult::setPhoto(const InputPhoto &photo) {
+    m_photo = photo;
+}
+
+InputPhoto InputBotInlineResult::photo() const {
+    return m_photo;
 }
 
 void InputBotInlineResult::setSendMessage(const InputBotInlineMessage &sendMessage) {
@@ -151,10 +167,12 @@ bool InputBotInlineResult::operator ==(const InputBotInlineResult &b) const {
            m_contentType == b.m_contentType &&
            m_contentUrl == b.m_contentUrl &&
            m_description == b.m_description &&
+           m_document == b.m_document &&
            m_duration == b.m_duration &&
            m_flags == b.m_flags &&
            m_h == b.m_h &&
            m_id == b.m_id &&
+           m_photo == b.m_photo &&
            m_sendMessage == b.m_sendMessage &&
            m_thumbUrl == b.m_thumbUrl &&
            m_title == b.m_title &&
@@ -163,11 +181,11 @@ bool InputBotInlineResult::operator ==(const InputBotInlineResult &b) const {
            m_w == b.m_w;
 }
 
-void InputBotInlineResult::setClassType(InputBotInlineResult::InputBotInlineResultType classType) {
+void InputBotInlineResult::setClassType(InputBotInlineResult::InputBotInlineResultClassType classType) {
     m_classType = classType;
 }
 
-InputBotInlineResult::InputBotInlineResultType InputBotInlineResult::classType() const {
+InputBotInlineResult::InputBotInlineResultClassType InputBotInlineResult::classType() const {
     return m_classType;
 }
 
@@ -207,7 +225,34 @@ bool InputBotInlineResult::fetch(InboundPkt *in) {
             m_duration = in->fetchInt();
         }
         m_sendMessage.fetch(in);
-        m_classType = static_cast<InputBotInlineResultType>(x);
+        m_classType = static_cast<InputBotInlineResultClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeInputBotInlineResultPhoto: {
+        m_id = in->fetchQString();
+        m_type = in->fetchQString();
+        m_photo.fetch(in);
+        m_sendMessage.fetch(in);
+        m_classType = static_cast<InputBotInlineResultClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeInputBotInlineResultDocument: {
+        m_flags = in->fetchInt();
+        m_id = in->fetchQString();
+        m_type = in->fetchQString();
+        if(m_flags & 1<<1) {
+            m_title = in->fetchQString();
+        }
+        if(m_flags & 1<<2) {
+            m_description = in->fetchQString();
+        }
+        m_document.fetch(in);
+        m_sendMessage.fetch(in);
+        m_classType = static_cast<InputBotInlineResultClassType>(x);
         return true;
     }
         break;
@@ -234,6 +279,27 @@ bool InputBotInlineResult::push(OutboundPkt *out) const {
         out->appendInt(m_w);
         out->appendInt(m_h);
         out->appendInt(m_duration);
+        m_sendMessage.push(out);
+        return true;
+    }
+        break;
+    
+    case typeInputBotInlineResultPhoto: {
+        out->appendQString(m_id);
+        out->appendQString(m_type);
+        m_photo.push(out);
+        m_sendMessage.push(out);
+        return true;
+    }
+        break;
+    
+    case typeInputBotInlineResultDocument: {
+        out->appendInt(m_flags);
+        out->appendQString(m_id);
+        out->appendQString(m_type);
+        out->appendQString(m_title);
+        out->appendQString(m_description);
+        m_document.push(out);
         m_sendMessage.push(out);
         return true;
     }
@@ -269,6 +335,21 @@ QDataStream &operator<<(QDataStream &stream, const InputBotInlineResult &item) {
         stream << item.duration();
         stream << item.sendMessage();
         break;
+    case InputBotInlineResult::typeInputBotInlineResultPhoto:
+        stream << item.id();
+        stream << item.type();
+        stream << item.photo();
+        stream << item.sendMessage();
+        break;
+    case InputBotInlineResult::typeInputBotInlineResultDocument:
+        stream << item.flags();
+        stream << item.id();
+        stream << item.type();
+        stream << item.title();
+        stream << item.description();
+        stream << item.document();
+        stream << item.sendMessage();
+        break;
     }
     return stream;
 }
@@ -276,7 +357,7 @@ QDataStream &operator<<(QDataStream &stream, const InputBotInlineResult &item) {
 QDataStream &operator>>(QDataStream &stream, InputBotInlineResult &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<InputBotInlineResult::InputBotInlineResultType>(type));
+    item.setClassType(static_cast<InputBotInlineResult::InputBotInlineResultClassType>(type));
     switch(type) {
     case InputBotInlineResult::typeInputBotInlineResult: {
         qint32 m_flags;
@@ -315,6 +396,45 @@ QDataStream &operator>>(QDataStream &stream, InputBotInlineResult &item) {
         qint32 m_duration;
         stream >> m_duration;
         item.setDuration(m_duration);
+        InputBotInlineMessage m_send_message;
+        stream >> m_send_message;
+        item.setSendMessage(m_send_message);
+    }
+        break;
+    case InputBotInlineResult::typeInputBotInlineResultPhoto: {
+        QString m_id;
+        stream >> m_id;
+        item.setId(m_id);
+        QString m_type;
+        stream >> m_type;
+        item.setType(m_type);
+        InputPhoto m_photo;
+        stream >> m_photo;
+        item.setPhoto(m_photo);
+        InputBotInlineMessage m_send_message;
+        stream >> m_send_message;
+        item.setSendMessage(m_send_message);
+    }
+        break;
+    case InputBotInlineResult::typeInputBotInlineResultDocument: {
+        qint32 m_flags;
+        stream >> m_flags;
+        item.setFlags(m_flags);
+        QString m_id;
+        stream >> m_id;
+        item.setId(m_id);
+        QString m_type;
+        stream >> m_type;
+        item.setType(m_type);
+        QString m_title;
+        stream >> m_title;
+        item.setTitle(m_title);
+        QString m_description;
+        stream >> m_description;
+        item.setDescription(m_description);
+        InputDocument m_document;
+        stream >> m_document;
+        item.setDocument(m_document);
         InputBotInlineMessage m_send_message;
         stream >> m_send_message;
         item.setSendMessage(m_send_message);

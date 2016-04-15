@@ -81,7 +81,7 @@ bool ContactsResolvedPeerObject::operator ==(const ContactsResolvedPeer &b) cons
 }
 
 void ContactsResolvedPeerObject::setClassType(quint32 classType) {
-    ContactsResolvedPeer::ContactsResolvedPeerType result;
+    ContactsResolvedPeer::ContactsResolvedPeerClassType result;
     switch(classType) {
     case TypeContactsResolvedPeer:
         result = ContactsResolvedPeer::typeContactsResolvedPeer;

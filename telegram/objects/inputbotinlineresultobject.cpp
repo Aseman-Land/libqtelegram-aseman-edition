@@ -6,18 +6,30 @@
 
 InputBotInlineResultObject::InputBotInlineResultObject(const InputBotInlineResult &core, QObject *parent) :
     TelegramTypeQObject(parent),
+    m_document(0),
+    m_photo(0),
     m_sendMessage(0),
     m_core(core)
 {
+    m_document = new InputDocumentObject(m_core.document(), this);
+    connect(m_document.data(), &InputDocumentObject::coreChanged, this, &InputBotInlineResultObject::coreDocumentChanged);
+    m_photo = new InputPhotoObject(m_core.photo(), this);
+    connect(m_photo.data(), &InputPhotoObject::coreChanged, this, &InputBotInlineResultObject::corePhotoChanged);
     m_sendMessage = new InputBotInlineMessageObject(m_core.sendMessage(), this);
     connect(m_sendMessage.data(), &InputBotInlineMessageObject::coreChanged, this, &InputBotInlineResultObject::coreSendMessageChanged);
 }
 
 InputBotInlineResultObject::InputBotInlineResultObject(QObject *parent) :
     TelegramTypeQObject(parent),
+    m_document(0),
+    m_photo(0),
     m_sendMessage(0),
     m_core()
 {
+    m_document = new InputDocumentObject(m_core.document(), this);
+    connect(m_document.data(), &InputDocumentObject::coreChanged, this, &InputBotInlineResultObject::coreDocumentChanged);
+    m_photo = new InputPhotoObject(m_core.photo(), this);
+    connect(m_photo.data(), &InputPhotoObject::coreChanged, this, &InputBotInlineResultObject::corePhotoChanged);
     m_sendMessage = new InputBotInlineMessageObject(m_core.sendMessage(), this);
     connect(m_sendMessage.data(), &InputBotInlineMessageObject::coreChanged, this, &InputBotInlineResultObject::coreSendMessageChanged);
 }
@@ -56,6 +68,23 @@ void InputBotInlineResultObject::setDescription(const QString &description) {
 
 QString InputBotInlineResultObject::description() const {
     return m_core.description();
+}
+
+void InputBotInlineResultObject::setDocument(InputDocumentObject* document) {
+    if(m_document == document) return;
+    if(m_document) delete m_document;
+    m_document = document;
+    if(m_document) {
+        m_document->setParent(this);
+        m_core.setDocument(m_document->core());
+        connect(m_document.data(), &InputDocumentObject::coreChanged, this, &InputBotInlineResultObject::coreDocumentChanged);
+    }
+    Q_EMIT documentChanged();
+    Q_EMIT coreChanged();
+}
+
+InputDocumentObject*  InputBotInlineResultObject::document() const {
+    return m_document;
 }
 
 void InputBotInlineResultObject::setDuration(qint32 duration) {
@@ -100,6 +129,23 @@ void InputBotInlineResultObject::setId(const QString &id) {
 
 QString InputBotInlineResultObject::id() const {
     return m_core.id();
+}
+
+void InputBotInlineResultObject::setPhoto(InputPhotoObject* photo) {
+    if(m_photo == photo) return;
+    if(m_photo) delete m_photo;
+    m_photo = photo;
+    if(m_photo) {
+        m_photo->setParent(this);
+        m_core.setPhoto(m_photo->core());
+        connect(m_photo.data(), &InputPhotoObject::coreChanged, this, &InputBotInlineResultObject::corePhotoChanged);
+    }
+    Q_EMIT photoChanged();
+    Q_EMIT coreChanged();
+}
+
+InputPhotoObject*  InputBotInlineResultObject::photo() const {
+    return m_photo;
 }
 
 void InputBotInlineResultObject::setSendMessage(InputBotInlineMessageObject* sendMessage) {
@@ -177,15 +223,19 @@ qint32 InputBotInlineResultObject::w() const {
 InputBotInlineResultObject &InputBotInlineResultObject::operator =(const InputBotInlineResult &b) {
     if(m_core == b) return *this;
     m_core = b;
+    m_document->setCore(b.document());
+    m_photo->setCore(b.photo());
     m_sendMessage->setCore(b.sendMessage());
 
     Q_EMIT contentTypeChanged();
     Q_EMIT contentUrlChanged();
     Q_EMIT descriptionChanged();
+    Q_EMIT documentChanged();
     Q_EMIT durationChanged();
     Q_EMIT flagsChanged();
     Q_EMIT hChanged();
     Q_EMIT idChanged();
+    Q_EMIT photoChanged();
     Q_EMIT sendMessageChanged();
     Q_EMIT thumbUrlChanged();
     Q_EMIT titleChanged();
@@ -201,10 +251,16 @@ bool InputBotInlineResultObject::operator ==(const InputBotInlineResult &b) cons
 }
 
 void InputBotInlineResultObject::setClassType(quint32 classType) {
-    InputBotInlineResult::InputBotInlineResultType result;
+    InputBotInlineResult::InputBotInlineResultClassType result;
     switch(classType) {
     case TypeInputBotInlineResult:
         result = InputBotInlineResult::typeInputBotInlineResult;
+        break;
+    case TypeInputBotInlineResultPhoto:
+        result = InputBotInlineResult::typeInputBotInlineResultPhoto;
+        break;
+    case TypeInputBotInlineResultDocument:
+        result = InputBotInlineResult::typeInputBotInlineResultDocument;
         break;
     default:
         result = InputBotInlineResult::typeInputBotInlineResult;
@@ -223,6 +279,12 @@ quint32 InputBotInlineResultObject::classType() const {
     case InputBotInlineResult::typeInputBotInlineResult:
         result = TypeInputBotInlineResult;
         break;
+    case InputBotInlineResult::typeInputBotInlineResultPhoto:
+        result = TypeInputBotInlineResultPhoto;
+        break;
+    case InputBotInlineResult::typeInputBotInlineResultDocument:
+        result = TypeInputBotInlineResultDocument;
+        break;
     default:
         result = TypeInputBotInlineResult;
         break;
@@ -237,6 +299,20 @@ void InputBotInlineResultObject::setCore(const InputBotInlineResult &core) {
 
 InputBotInlineResult InputBotInlineResultObject::core() const {
     return m_core;
+}
+
+void InputBotInlineResultObject::coreDocumentChanged() {
+    if(m_core.document() == m_document->core()) return;
+    m_core.setDocument(m_document->core());
+    Q_EMIT documentChanged();
+    Q_EMIT coreChanged();
+}
+
+void InputBotInlineResultObject::corePhotoChanged() {
+    if(m_core.photo() == m_photo->core()) return;
+    m_core.setPhoto(m_photo->core());
+    Q_EMIT photoChanged();
+    Q_EMIT coreChanged();
 }
 
 void InputBotInlineResultObject::coreSendMessageChanged() {

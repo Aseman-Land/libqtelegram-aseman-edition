@@ -13,7 +13,7 @@
 class LIBQTELEGRAMSHARED_EXPORT PhotosPhotosObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(PhotosPhotosType)
+    Q_ENUMS(PhotosPhotosClassType)
     Q_PROPERTY(qint32 count READ count WRITE setCount NOTIFY countChanged)
     Q_PROPERTY(QList<Photo> photos READ photos WRITE setPhotos NOTIFY photosChanged)
     Q_PROPERTY(QList<User> users READ users WRITE setUsers NOTIFY usersChanged)
@@ -21,7 +21,7 @@ class LIBQTELEGRAMSHARED_EXPORT PhotosPhotosObject : public TelegramTypeQObject
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum PhotosPhotosType {
+    enum PhotosPhotosClassType {
         TypePhotosPhotos,
         TypePhotosPhotosSlice
     };

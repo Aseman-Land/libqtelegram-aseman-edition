@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-ChannelParticipant::ChannelParticipant(ChannelParticipantType classType, InboundPkt *in) :
+ChannelParticipant::ChannelParticipant(ChannelParticipantClassType classType, InboundPkt *in) :
     m_date(0),
     m_inviterId(0),
     m_kickedBy(0),
@@ -82,11 +82,11 @@ bool ChannelParticipant::operator ==(const ChannelParticipant &b) const {
            m_userId == b.m_userId;
 }
 
-void ChannelParticipant::setClassType(ChannelParticipant::ChannelParticipantType classType) {
+void ChannelParticipant::setClassType(ChannelParticipant::ChannelParticipantClassType classType) {
     m_classType = classType;
 }
 
-ChannelParticipant::ChannelParticipantType ChannelParticipant::classType() const {
+ChannelParticipant::ChannelParticipantClassType ChannelParticipant::classType() const {
     return m_classType;
 }
 
@@ -97,7 +97,7 @@ bool ChannelParticipant::fetch(InboundPkt *in) {
     case typeChannelParticipant: {
         m_userId = in->fetchInt();
         m_date = in->fetchInt();
-        m_classType = static_cast<ChannelParticipantType>(x);
+        m_classType = static_cast<ChannelParticipantClassType>(x);
         return true;
     }
         break;
@@ -106,7 +106,7 @@ bool ChannelParticipant::fetch(InboundPkt *in) {
         m_userId = in->fetchInt();
         m_inviterId = in->fetchInt();
         m_date = in->fetchInt();
-        m_classType = static_cast<ChannelParticipantType>(x);
+        m_classType = static_cast<ChannelParticipantClassType>(x);
         return true;
     }
         break;
@@ -115,7 +115,7 @@ bool ChannelParticipant::fetch(InboundPkt *in) {
         m_userId = in->fetchInt();
         m_inviterId = in->fetchInt();
         m_date = in->fetchInt();
-        m_classType = static_cast<ChannelParticipantType>(x);
+        m_classType = static_cast<ChannelParticipantClassType>(x);
         return true;
     }
         break;
@@ -124,7 +124,7 @@ bool ChannelParticipant::fetch(InboundPkt *in) {
         m_userId = in->fetchInt();
         m_inviterId = in->fetchInt();
         m_date = in->fetchInt();
-        m_classType = static_cast<ChannelParticipantType>(x);
+        m_classType = static_cast<ChannelParticipantClassType>(x);
         return true;
     }
         break;
@@ -133,14 +133,14 @@ bool ChannelParticipant::fetch(InboundPkt *in) {
         m_userId = in->fetchInt();
         m_kickedBy = in->fetchInt();
         m_date = in->fetchInt();
-        m_classType = static_cast<ChannelParticipantType>(x);
+        m_classType = static_cast<ChannelParticipantClassType>(x);
         return true;
     }
         break;
     
     case typeChannelParticipantCreator: {
         m_userId = in->fetchInt();
-        m_classType = static_cast<ChannelParticipantType>(x);
+        m_classType = static_cast<ChannelParticipantClassType>(x);
         return true;
     }
         break;
@@ -248,7 +248,7 @@ QDataStream &operator<<(QDataStream &stream, const ChannelParticipant &item) {
 QDataStream &operator>>(QDataStream &stream, ChannelParticipant &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<ChannelParticipant::ChannelParticipantType>(type));
+    item.setClassType(static_cast<ChannelParticipant::ChannelParticipantClassType>(type));
     switch(type) {
     case ChannelParticipant::typeChannelParticipant: {
         qint32 m_user_id;

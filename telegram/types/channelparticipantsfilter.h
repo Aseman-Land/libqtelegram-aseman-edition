@@ -12,20 +12,20 @@
 class LIBQTELEGRAMSHARED_EXPORT ChannelParticipantsFilter : public TelegramTypeObject
 {
 public:
-    enum ChannelParticipantsFilterType {
+    enum ChannelParticipantsFilterClassType {
         typeChannelParticipantsRecent = 0xde3f3c79,
         typeChannelParticipantsAdmins = 0xb4608969,
         typeChannelParticipantsKicked = 0x3c37bb7a,
         typeChannelParticipantsBots = 0xb0d1865b
     };
 
-    ChannelParticipantsFilter(ChannelParticipantsFilterType classType = typeChannelParticipantsRecent, InboundPkt *in = 0);
+    ChannelParticipantsFilter(ChannelParticipantsFilterClassType classType = typeChannelParticipantsRecent, InboundPkt *in = 0);
     ChannelParticipantsFilter(InboundPkt *in);
     ChannelParticipantsFilter(const Null&);
     virtual ~ChannelParticipantsFilter();
 
-    void setClassType(ChannelParticipantsFilterType classType);
-    ChannelParticipantsFilterType classType() const;
+    void setClassType(ChannelParticipantsFilterClassType classType);
+    ChannelParticipantsFilterClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -38,7 +38,7 @@ public:
     QByteArray getHash(QCryptographicHash::Algorithm alg = QCryptographicHash::Md5) const;
 
 private:
-    ChannelParticipantsFilterType m_classType;
+    ChannelParticipantsFilterClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(ChannelParticipantsFilter)

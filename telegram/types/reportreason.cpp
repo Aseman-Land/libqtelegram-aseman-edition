@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-ReportReason::ReportReason(ReportReasonType classType, InboundPkt *in) :
+ReportReason::ReportReason(ReportReasonClassType classType, InboundPkt *in) :
     m_classType(classType)
 {
     if(in) fetch(in);
@@ -43,11 +43,11 @@ bool ReportReason::operator ==(const ReportReason &b) const {
            m_text == b.m_text;
 }
 
-void ReportReason::setClassType(ReportReason::ReportReasonType classType) {
+void ReportReason::setClassType(ReportReason::ReportReasonClassType classType) {
     m_classType = classType;
 }
 
-ReportReason::ReportReasonType ReportReason::classType() const {
+ReportReason::ReportReasonClassType ReportReason::classType() const {
     return m_classType;
 }
 
@@ -56,26 +56,26 @@ bool ReportReason::fetch(InboundPkt *in) {
     int x = in->fetchInt();
     switch(x) {
     case typeInputReportReasonSpam: {
-        m_classType = static_cast<ReportReasonType>(x);
+        m_classType = static_cast<ReportReasonClassType>(x);
         return true;
     }
         break;
     
     case typeInputReportReasonViolence: {
-        m_classType = static_cast<ReportReasonType>(x);
+        m_classType = static_cast<ReportReasonClassType>(x);
         return true;
     }
         break;
     
     case typeInputReportReasonPornography: {
-        m_classType = static_cast<ReportReasonType>(x);
+        m_classType = static_cast<ReportReasonClassType>(x);
         return true;
     }
         break;
     
     case typeInputReportReasonOther: {
         m_text = in->fetchQString();
-        m_classType = static_cast<ReportReasonType>(x);
+        m_classType = static_cast<ReportReasonClassType>(x);
         return true;
     }
         break;
@@ -144,7 +144,7 @@ QDataStream &operator<<(QDataStream &stream, const ReportReason &item) {
 QDataStream &operator>>(QDataStream &stream, ReportReason &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<ReportReason::ReportReasonType>(type));
+    item.setClassType(static_cast<ReportReason::ReportReasonClassType>(type));
     switch(type) {
     case ReportReason::typeInputReportReasonSpam: {
         

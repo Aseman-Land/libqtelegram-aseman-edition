@@ -13,14 +13,14 @@
 class LIBQTELEGRAMSHARED_EXPORT BotCommandObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(BotCommandType)
+    Q_ENUMS(BotCommandClassType)
     Q_PROPERTY(QString command READ command WRITE setCommand NOTIFY commandChanged)
     Q_PROPERTY(QString description READ description WRITE setDescription NOTIFY descriptionChanged)
     Q_PROPERTY(BotCommand core READ core WRITE setCore NOTIFY coreChanged)
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum BotCommandType {
+    enum BotCommandClassType {
         TypeBotCommand
     };
 

@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-StickerSet::StickerSet(StickerSetType classType, InboundPkt *in) :
+StickerSet::StickerSet(StickerSetClassType classType, InboundPkt *in) :
     m_accessHash(0),
     m_count(0),
     m_flags(0),
@@ -139,11 +139,11 @@ bool StickerSet::operator ==(const StickerSet &b) const {
            m_title == b.m_title;
 }
 
-void StickerSet::setClassType(StickerSet::StickerSetType classType) {
+void StickerSet::setClassType(StickerSet::StickerSetClassType classType) {
     m_classType = classType;
 }
 
-StickerSet::StickerSetType StickerSet::classType() const {
+StickerSet::StickerSetClassType StickerSet::classType() const {
     return m_classType;
 }
 
@@ -159,7 +159,7 @@ bool StickerSet::fetch(InboundPkt *in) {
         m_shortName = in->fetchQString();
         m_count = in->fetchInt();
         m_hash = in->fetchInt();
-        m_classType = static_cast<StickerSetType>(x);
+        m_classType = static_cast<StickerSetClassType>(x);
         return true;
     }
         break;
@@ -216,7 +216,7 @@ QDataStream &operator<<(QDataStream &stream, const StickerSet &item) {
 QDataStream &operator>>(QDataStream &stream, StickerSet &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<StickerSet::StickerSetType>(type));
+    item.setClassType(static_cast<StickerSet::StickerSetClassType>(type));
     switch(type) {
     case StickerSet::typeStickerSet: {
         qint32 m_flags;

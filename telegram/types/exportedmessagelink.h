@@ -13,11 +13,11 @@
 class LIBQTELEGRAMSHARED_EXPORT ExportedMessageLink : public TelegramTypeObject
 {
 public:
-    enum ExportedMessageLinkType {
+    enum ExportedMessageLinkClassType {
         typeExportedMessageLink = 0x1f486803
     };
 
-    ExportedMessageLink(ExportedMessageLinkType classType = typeExportedMessageLink, InboundPkt *in = 0);
+    ExportedMessageLink(ExportedMessageLinkClassType classType = typeExportedMessageLink, InboundPkt *in = 0);
     ExportedMessageLink(InboundPkt *in);
     ExportedMessageLink(const Null&);
     virtual ~ExportedMessageLink();
@@ -25,8 +25,8 @@ public:
     void setLink(const QString &link);
     QString link() const;
 
-    void setClassType(ExportedMessageLinkType classType);
-    ExportedMessageLinkType classType() const;
+    void setClassType(ExportedMessageLinkClassType classType);
+    ExportedMessageLinkClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -40,7 +40,7 @@ public:
 
 private:
     QString m_link;
-    ExportedMessageLinkType m_classType;
+    ExportedMessageLinkClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(ExportedMessageLink)

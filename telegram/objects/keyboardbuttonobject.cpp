@@ -19,6 +19,28 @@ KeyboardButtonObject::KeyboardButtonObject(QObject *parent) :
 KeyboardButtonObject::~KeyboardButtonObject() {
 }
 
+void KeyboardButtonObject::setData(const QByteArray &data) {
+    if(m_core.data() == data) return;
+    m_core.setData(data);
+    Q_EMIT dataChanged();
+    Q_EMIT coreChanged();
+}
+
+QByteArray KeyboardButtonObject::data() const {
+    return m_core.data();
+}
+
+void KeyboardButtonObject::setQuery(const QString &query) {
+    if(m_core.query() == query) return;
+    m_core.setQuery(query);
+    Q_EMIT queryChanged();
+    Q_EMIT coreChanged();
+}
+
+QString KeyboardButtonObject::query() const {
+    return m_core.query();
+}
+
 void KeyboardButtonObject::setText(const QString &text) {
     if(m_core.text() == text) return;
     m_core.setText(text);
@@ -30,11 +52,25 @@ QString KeyboardButtonObject::text() const {
     return m_core.text();
 }
 
+void KeyboardButtonObject::setUrl(const QString &url) {
+    if(m_core.url() == url) return;
+    m_core.setUrl(url);
+    Q_EMIT urlChanged();
+    Q_EMIT coreChanged();
+}
+
+QString KeyboardButtonObject::url() const {
+    return m_core.url();
+}
+
 KeyboardButtonObject &KeyboardButtonObject::operator =(const KeyboardButton &b) {
     if(m_core == b) return *this;
     m_core = b;
 
+    Q_EMIT dataChanged();
+    Q_EMIT queryChanged();
     Q_EMIT textChanged();
+    Q_EMIT urlChanged();
     Q_EMIT coreChanged();
     return *this;
 }
@@ -44,10 +80,25 @@ bool KeyboardButtonObject::operator ==(const KeyboardButton &b) const {
 }
 
 void KeyboardButtonObject::setClassType(quint32 classType) {
-    KeyboardButton::KeyboardButtonType result;
+    KeyboardButton::KeyboardButtonClassType result;
     switch(classType) {
     case TypeKeyboardButton:
         result = KeyboardButton::typeKeyboardButton;
+        break;
+    case TypeKeyboardButtonUrl:
+        result = KeyboardButton::typeKeyboardButtonUrl;
+        break;
+    case TypeKeyboardButtonCallback:
+        result = KeyboardButton::typeKeyboardButtonCallback;
+        break;
+    case TypeKeyboardButtonRequestPhone:
+        result = KeyboardButton::typeKeyboardButtonRequestPhone;
+        break;
+    case TypeKeyboardButtonRequestGeoLocation:
+        result = KeyboardButton::typeKeyboardButtonRequestGeoLocation;
+        break;
+    case TypeKeyboardButtonSwitchInline:
+        result = KeyboardButton::typeKeyboardButtonSwitchInline;
         break;
     default:
         result = KeyboardButton::typeKeyboardButton;
@@ -65,6 +116,21 @@ quint32 KeyboardButtonObject::classType() const {
     switch(static_cast<qint64>(m_core.classType())) {
     case KeyboardButton::typeKeyboardButton:
         result = TypeKeyboardButton;
+        break;
+    case KeyboardButton::typeKeyboardButtonUrl:
+        result = TypeKeyboardButtonUrl;
+        break;
+    case KeyboardButton::typeKeyboardButtonCallback:
+        result = TypeKeyboardButtonCallback;
+        break;
+    case KeyboardButton::typeKeyboardButtonRequestPhone:
+        result = TypeKeyboardButtonRequestPhone;
+        break;
+    case KeyboardButton::typeKeyboardButtonRequestGeoLocation:
+        result = TypeKeyboardButtonRequestGeoLocation;
+        break;
+    case KeyboardButton::typeKeyboardButtonSwitchInline:
+        result = TypeKeyboardButtonSwitchInline;
         break;
     default:
         result = TypeKeyboardButton;

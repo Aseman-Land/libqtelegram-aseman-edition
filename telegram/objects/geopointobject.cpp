@@ -56,7 +56,7 @@ bool GeoPointObject::operator ==(const GeoPoint &b) const {
 }
 
 void GeoPointObject::setClassType(quint32 classType) {
-    GeoPoint::GeoPointType result;
+    GeoPoint::GeoPointClassType result;
     switch(classType) {
     case TypeGeoPointEmpty:
         result = GeoPoint::typeGeoPointEmpty;

@@ -234,14 +234,21 @@ bool Functions::Account::setAccountTTLResult(InboundPkt *in) {
     return result;
 }
 
-bool Functions::Account::sendChangePhoneCode(OutboundPkt *out, const QString &phoneNumber) {
+bool Functions::Account::sendChangePhoneCode(OutboundPkt *out, bool allowFlashcall, const QString &phoneNumber, bool currentNumber) {
     out->appendInt(fncAccountSendChangePhoneCode);
+    
+    qint32 flags = 0;
+    if(allowFlashcall != 0) flags = (1<<0 | flags);
+    if(currentNumber != 0) flags = (1<<0 | flags);
+    
+    out->appendInt(flags);
     out->appendQString(phoneNumber);
+    if(flags & 1<<0) out->appendBool(currentNumber);
     return true;
 }
 
-AccountSentChangePhoneCode Functions::Account::sendChangePhoneCodeResult(InboundPkt *in) {
-    AccountSentChangePhoneCode result;
+AuthSentCode Functions::Account::sendChangePhoneCodeResult(InboundPkt *in) {
+    AuthSentCode result;
     if(!result.fetch(in)) return result;
     return result;
 }

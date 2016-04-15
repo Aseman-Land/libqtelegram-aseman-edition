@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-ContactLink::ContactLink(ContactLinkType classType, InboundPkt *in) :
+ContactLink::ContactLink(ContactLinkClassType classType, InboundPkt *in) :
     m_classType(classType)
 {
     if(in) fetch(in);
@@ -34,11 +34,11 @@ bool ContactLink::operator ==(const ContactLink &b) const {
     return m_classType == b.m_classType;
 }
 
-void ContactLink::setClassType(ContactLink::ContactLinkType classType) {
+void ContactLink::setClassType(ContactLink::ContactLinkClassType classType) {
     m_classType = classType;
 }
 
-ContactLink::ContactLinkType ContactLink::classType() const {
+ContactLink::ContactLinkClassType ContactLink::classType() const {
     return m_classType;
 }
 
@@ -47,25 +47,25 @@ bool ContactLink::fetch(InboundPkt *in) {
     int x = in->fetchInt();
     switch(x) {
     case typeContactLinkUnknown: {
-        m_classType = static_cast<ContactLinkType>(x);
+        m_classType = static_cast<ContactLinkClassType>(x);
         return true;
     }
         break;
     
     case typeContactLinkNone: {
-        m_classType = static_cast<ContactLinkType>(x);
+        m_classType = static_cast<ContactLinkClassType>(x);
         return true;
     }
         break;
     
     case typeContactLinkHasPhone: {
-        m_classType = static_cast<ContactLinkType>(x);
+        m_classType = static_cast<ContactLinkClassType>(x);
         return true;
     }
         break;
     
     case typeContactLinkContact: {
-        m_classType = static_cast<ContactLinkType>(x);
+        m_classType = static_cast<ContactLinkClassType>(x);
         return true;
     }
         break;
@@ -133,7 +133,7 @@ QDataStream &operator<<(QDataStream &stream, const ContactLink &item) {
 QDataStream &operator>>(QDataStream &stream, ContactLink &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<ContactLink::ContactLinkType>(type));
+    item.setClassType(static_cast<ContactLink::ContactLinkClassType>(type));
     switch(type) {
     case ContactLink::typeContactLinkUnknown: {
         

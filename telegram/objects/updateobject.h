@@ -12,11 +12,13 @@
 #include "sendmessageactionobject.h"
 #include "encryptedchatobject.h"
 #include "contactlinkobject.h"
+#include "geopointobject.h"
 #include "messagegroupobject.h"
 #include "privacykeyobject.h"
 #include "messagemediaobject.h"
 #include "encryptedmessageobject.h"
 #include "messageobject.h"
+#include "inputbotinlinemessageidobject.h"
 #include "peernotifysettingsobject.h"
 #include "chatparticipantsobject.h"
 #include "notifypeerobject.h"
@@ -29,13 +31,14 @@
 class LIBQTELEGRAMSHARED_EXPORT UpdateObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(UpdateType)
+    Q_ENUMS(UpdateClassType)
     Q_PROPERTY(SendMessageActionObject* action READ action WRITE setAction NOTIFY actionChanged)
     Q_PROPERTY(qint64 authKeyId READ authKeyId WRITE setAuthKeyId NOTIFY authKeyIdChanged)
     Q_PROPERTY(bool blocked READ blocked WRITE setBlocked NOTIFY blockedChanged)
     Q_PROPERTY(qint32 channelId READ channelId WRITE setChannelId NOTIFY channelIdChanged)
     Q_PROPERTY(EncryptedChatObject* chat READ chat WRITE setChat NOTIFY chatChanged)
     Q_PROPERTY(qint32 chatId READ chatId WRITE setChatId NOTIFY chatIdChanged)
+    Q_PROPERTY(QByteArray data READ data WRITE setData NOTIFY dataChanged)
     Q_PROPERTY(qint32 date READ date WRITE setDate NOTIFY dateChanged)
     Q_PROPERTY(QList<DcOption> dcOptions READ dcOptions WRITE setDcOptions NOTIFY dcOptionsChanged)
     Q_PROPERTY(QString device READ device WRITE setDevice NOTIFY deviceChanged)
@@ -43,6 +46,7 @@ class LIBQTELEGRAMSHARED_EXPORT UpdateObject : public TelegramTypeQObject
     Q_PROPERTY(QString firstName READ firstName WRITE setFirstName NOTIFY firstNameChanged)
     Q_PROPERTY(qint32 flags READ flags WRITE setFlags NOTIFY flagsChanged)
     Q_PROPERTY(ContactLinkObject* foreignLink READ foreignLink WRITE setForeignLink NOTIFY foreignLinkChanged)
+    Q_PROPERTY(GeoPointObject* geo READ geo WRITE setGeo NOTIFY geoChanged)
     Q_PROPERTY(MessageGroupObject* group READ group WRITE setGroup NOTIFY groupChanged)
     Q_PROPERTY(QString idString READ idString WRITE setIdString NOTIFY idStringChanged)
     Q_PROPERTY(qint32 idInt READ idInt WRITE setIdInt NOTIFY idIntChanged)
@@ -58,6 +62,8 @@ class LIBQTELEGRAMSHARED_EXPORT UpdateObject : public TelegramTypeQObject
     Q_PROPERTY(MessageObject* message READ message WRITE setMessage NOTIFY messageChanged)
     Q_PROPERTY(QString messageString READ messageString WRITE setMessageString NOTIFY messageStringChanged)
     Q_PROPERTY(QList<qint32> messages READ messages WRITE setMessages NOTIFY messagesChanged)
+    Q_PROPERTY(InputBotInlineMessageIDObject* msgIdInputBotInlineMessageID READ msgIdInputBotInlineMessageID WRITE setMsgIdInputBotInlineMessageID NOTIFY msgIdInputBotInlineMessageIDChanged)
+    Q_PROPERTY(qint32 msgIdInt READ msgIdInt WRITE setMsgIdInt NOTIFY msgIdIntChanged)
     Q_PROPERTY(ContactLinkObject* myLink READ myLink WRITE setMyLink NOTIFY myLinkChanged)
     Q_PROPERTY(PeerNotifySettingsObject* notifySettings READ notifySettings WRITE setNotifySettings NOTIFY notifySettingsChanged)
     Q_PROPERTY(QString offset READ offset WRITE setOffset NOTIFY offsetChanged)
@@ -88,7 +94,7 @@ class LIBQTELEGRAMSHARED_EXPORT UpdateObject : public TelegramTypeQObject
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum UpdateType {
+    enum UpdateClassType {
         TypeUpdateNewMessage,
         TypeUpdateMessageID,
         TypeUpdateDeleteMessages,
@@ -133,7 +139,10 @@ public:
         TypeUpdateBotInlineQuery,
         TypeUpdateBotInlineSend,
         TypeUpdateEditChannelMessage,
-        TypeUpdateChannelPinnedMessage
+        TypeUpdateChannelPinnedMessage,
+        TypeUpdateBotCallbackQuery,
+        TypeUpdateEditMessage,
+        TypeUpdateInlineBotCallbackQuery
     };
 
     UpdateObject(const Update &core, QObject *parent = 0);
@@ -158,6 +167,9 @@ public:
     void setChatId(qint32 chatId);
     qint32 chatId() const;
 
+    void setData(const QByteArray &data);
+    QByteArray data() const;
+
     void setDate(qint32 date);
     qint32 date() const;
 
@@ -178,6 +190,9 @@ public:
 
     void setForeignLink(ContactLinkObject* foreignLink);
     ContactLinkObject* foreignLink() const;
+
+    void setGeo(GeoPointObject* geo);
+    GeoPointObject* geo() const;
 
     void setGroup(MessageGroupObject* group);
     MessageGroupObject* group() const;
@@ -223,6 +238,12 @@ public:
 
     void setMessages(const QList<qint32> &messages);
     QList<qint32> messages() const;
+
+    void setMsgIdInputBotInlineMessageID(InputBotInlineMessageIDObject* msgIdInputBotInlineMessageID);
+    InputBotInlineMessageIDObject* msgIdInputBotInlineMessageID() const;
+
+    void setMsgIdInt(qint32 msgIdInt);
+    qint32 msgIdInt() const;
 
     void setMyLink(ContactLinkObject* myLink);
     ContactLinkObject* myLink() const;
@@ -320,6 +341,7 @@ Q_SIGNALS:
     void channelIdChanged();
     void chatChanged();
     void chatIdChanged();
+    void dataChanged();
     void dateChanged();
     void dcOptionsChanged();
     void deviceChanged();
@@ -327,6 +349,7 @@ Q_SIGNALS:
     void firstNameChanged();
     void flagsChanged();
     void foreignLinkChanged();
+    void geoChanged();
     void groupChanged();
     void idStringChanged();
     void idIntChanged();
@@ -342,6 +365,8 @@ Q_SIGNALS:
     void messageChanged();
     void messageStringChanged();
     void messagesChanged();
+    void msgIdInputBotInlineMessageIDChanged();
+    void msgIdIntChanged();
     void myLinkChanged();
     void notifySettingsChanged();
     void offsetChanged();
@@ -373,11 +398,13 @@ private Q_SLOTS:
     void coreActionChanged();
     void coreChatChanged();
     void coreForeignLinkChanged();
+    void coreGeoChanged();
     void coreGroupChanged();
     void coreKeyChanged();
     void coreMediaChanged();
     void coreMessageEncryptedChanged();
     void coreMessageChanged();
+    void coreMsgIdInputBotInlineMessageIDChanged();
     void coreMyLinkChanged();
     void coreNotifySettingsChanged();
     void coreParticipantsChanged();
@@ -392,11 +419,13 @@ private:
     QPointer<SendMessageActionObject> m_action;
     QPointer<EncryptedChatObject> m_chat;
     QPointer<ContactLinkObject> m_foreignLink;
+    QPointer<GeoPointObject> m_geo;
     QPointer<MessageGroupObject> m_group;
     QPointer<PrivacyKeyObject> m_key;
     QPointer<MessageMediaObject> m_media;
     QPointer<EncryptedMessageObject> m_messageEncrypted;
     QPointer<MessageObject> m_message;
+    QPointer<InputBotInlineMessageIDObject> m_msgIdInputBotInlineMessageID;
     QPointer<ContactLinkObject> m_myLink;
     QPointer<PeerNotifySettingsObject> m_notifySettings;
     QPointer<ChatParticipantsObject> m_participants;

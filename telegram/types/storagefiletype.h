@@ -12,7 +12,7 @@
 class LIBQTELEGRAMSHARED_EXPORT StorageFileType : public TelegramTypeObject
 {
 public:
-    enum StorageFileTypeType {
+    enum StorageFileTypeClassType {
         typeStorageFileUnknown = 0xaa963b05,
         typeStorageFileJpeg = 0x7efe0e,
         typeStorageFileGif = 0xcae1aadf,
@@ -25,13 +25,13 @@ public:
         typeStorageFileWebp = 0x1081464c
     };
 
-    StorageFileType(StorageFileTypeType classType = typeStorageFileUnknown, InboundPkt *in = 0);
+    StorageFileType(StorageFileTypeClassType classType = typeStorageFileUnknown, InboundPkt *in = 0);
     StorageFileType(InboundPkt *in);
     StorageFileType(const Null&);
     virtual ~StorageFileType();
 
-    void setClassType(StorageFileTypeType classType);
-    StorageFileTypeType classType() const;
+    void setClassType(StorageFileTypeClassType classType);
+    StorageFileTypeClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -44,7 +44,7 @@ public:
     QByteArray getHash(QCryptographicHash::Algorithm alg = QCryptographicHash::Md5) const;
 
 private:
-    StorageFileTypeType m_classType;
+    StorageFileTypeClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(StorageFileType)

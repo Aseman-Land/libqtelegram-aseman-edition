@@ -13,7 +13,7 @@
 class LIBQTELEGRAMSHARED_EXPORT UpdatesStateObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(UpdatesStateType)
+    Q_ENUMS(UpdatesStateClassType)
     Q_PROPERTY(qint32 date READ date WRITE setDate NOTIFY dateChanged)
     Q_PROPERTY(qint32 pts READ pts WRITE setPts NOTIFY ptsChanged)
     Q_PROPERTY(qint32 qts READ qts WRITE setQts NOTIFY qtsChanged)
@@ -23,7 +23,7 @@ class LIBQTELEGRAMSHARED_EXPORT UpdatesStateObject : public TelegramTypeQObject
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum UpdatesStateType {
+    enum UpdatesStateClassType {
         TypeUpdatesState
     };
 

@@ -57,7 +57,7 @@ bool NotifyPeerObject::operator ==(const NotifyPeer &b) const {
 }
 
 void NotifyPeerObject::setClassType(quint32 classType) {
-    NotifyPeer::NotifyPeerType result;
+    NotifyPeer::NotifyPeerClassType result;
     switch(classType) {
     case TypeNotifyPeer:
         result = NotifyPeer::typeNotifyPeer;

@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-Config::Config(ConfigType classType, InboundPkt *in) :
+Config::Config(ConfigClassType classType, InboundPkt *in) :
     m_chatBigSize(0),
     m_chatSizeMax(0),
     m_date(0),
@@ -268,11 +268,11 @@ bool Config::operator ==(const Config &b) const {
            m_thisDc == b.m_thisDc;
 }
 
-void Config::setClassType(Config::ConfigType classType) {
+void Config::setClassType(Config::ConfigClassType classType) {
     m_classType = classType;
 }
 
-Config::ConfigType Config::classType() const {
+Config::ConfigClassType Config::classType() const {
     return m_classType;
 }
 
@@ -315,7 +315,7 @@ bool Config::fetch(InboundPkt *in) {
             type.fetch(in);
             m_disabledFeatures.append(type);
         }
-        m_classType = static_cast<ConfigType>(x);
+        m_classType = static_cast<ConfigClassType>(x);
         return true;
     }
         break;
@@ -406,7 +406,7 @@ QDataStream &operator<<(QDataStream &stream, const Config &item) {
 QDataStream &operator>>(QDataStream &stream, Config &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<Config::ConfigType>(type));
+    item.setClassType(static_cast<Config::ConfigClassType>(type));
     switch(type) {
     case Config::typeConfig: {
         qint32 m_date;

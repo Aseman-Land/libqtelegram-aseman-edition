@@ -92,7 +92,7 @@ bool InputEncryptedFileObject::operator ==(const InputEncryptedFile &b) const {
 }
 
 void InputEncryptedFileObject::setClassType(quint32 classType) {
-    InputEncryptedFile::InputEncryptedFileType result;
+    InputEncryptedFile::InputEncryptedFileClassType result;
     switch(classType) {
     case TypeInputEncryptedFileEmpty:
         result = InputEncryptedFile::typeInputEncryptedFileEmpty;

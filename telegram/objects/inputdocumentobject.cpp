@@ -56,7 +56,7 @@ bool InputDocumentObject::operator ==(const InputDocument &b) const {
 }
 
 void InputDocumentObject::setClassType(quint32 classType) {
-    InputDocument::InputDocumentType result;
+    InputDocument::InputDocumentClassType result;
     switch(classType) {
     case TypeInputDocumentEmpty:
         result = InputDocument::typeInputDocumentEmpty;

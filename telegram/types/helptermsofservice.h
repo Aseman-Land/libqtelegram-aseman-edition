@@ -13,11 +13,11 @@
 class LIBQTELEGRAMSHARED_EXPORT HelpTermsOfService : public TelegramTypeObject
 {
 public:
-    enum HelpTermsOfServiceType {
+    enum HelpTermsOfServiceClassType {
         typeHelpTermsOfService = 0xf1ee3e90
     };
 
-    HelpTermsOfService(HelpTermsOfServiceType classType = typeHelpTermsOfService, InboundPkt *in = 0);
+    HelpTermsOfService(HelpTermsOfServiceClassType classType = typeHelpTermsOfService, InboundPkt *in = 0);
     HelpTermsOfService(InboundPkt *in);
     HelpTermsOfService(const Null&);
     virtual ~HelpTermsOfService();
@@ -25,8 +25,8 @@ public:
     void setText(const QString &text);
     QString text() const;
 
-    void setClassType(HelpTermsOfServiceType classType);
-    HelpTermsOfServiceType classType() const;
+    void setClassType(HelpTermsOfServiceClassType classType);
+    HelpTermsOfServiceClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -40,7 +40,7 @@ public:
 
 private:
     QString m_text;
-    HelpTermsOfServiceType m_classType;
+    HelpTermsOfServiceClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(HelpTermsOfService)

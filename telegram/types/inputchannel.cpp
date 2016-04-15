@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-InputChannel::InputChannel(InputChannelType classType, InboundPkt *in) :
+InputChannel::InputChannel(InputChannelClassType classType, InboundPkt *in) :
     m_accessHash(0),
     m_channelId(0),
     m_classType(classType)
@@ -58,11 +58,11 @@ bool InputChannel::operator ==(const InputChannel &b) const {
            m_channelId == b.m_channelId;
 }
 
-void InputChannel::setClassType(InputChannel::InputChannelType classType) {
+void InputChannel::setClassType(InputChannel::InputChannelClassType classType) {
     m_classType = classType;
 }
 
-InputChannel::InputChannelType InputChannel::classType() const {
+InputChannel::InputChannelClassType InputChannel::classType() const {
     return m_classType;
 }
 
@@ -71,7 +71,7 @@ bool InputChannel::fetch(InboundPkt *in) {
     int x = in->fetchInt();
     switch(x) {
     case typeInputChannelEmpty: {
-        m_classType = static_cast<InputChannelType>(x);
+        m_classType = static_cast<InputChannelClassType>(x);
         return true;
     }
         break;
@@ -79,7 +79,7 @@ bool InputChannel::fetch(InboundPkt *in) {
     case typeInputChannel: {
         m_channelId = in->fetchInt();
         m_accessHash = in->fetchLong();
-        m_classType = static_cast<InputChannelType>(x);
+        m_classType = static_cast<InputChannelClassType>(x);
         return true;
     }
         break;
@@ -134,7 +134,7 @@ QDataStream &operator<<(QDataStream &stream, const InputChannel &item) {
 QDataStream &operator>>(QDataStream &stream, InputChannel &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<InputChannel::InputChannelType>(type));
+    item.setClassType(static_cast<InputChannel::InputChannelClassType>(type));
     switch(type) {
     case InputChannel::typeInputChannelEmpty: {
         

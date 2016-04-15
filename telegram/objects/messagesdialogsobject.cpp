@@ -92,7 +92,7 @@ bool MessagesDialogsObject::operator ==(const MessagesDialogs &b) const {
 }
 
 void MessagesDialogsObject::setClassType(quint32 classType) {
-    MessagesDialogs::MessagesDialogsType result;
+    MessagesDialogs::MessagesDialogsClassType result;
     switch(classType) {
     case TypeMessagesDialogs:
         result = MessagesDialogs::typeMessagesDialogs;

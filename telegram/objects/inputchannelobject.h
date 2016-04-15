@@ -13,14 +13,14 @@
 class LIBQTELEGRAMSHARED_EXPORT InputChannelObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(InputChannelType)
+    Q_ENUMS(InputChannelClassType)
     Q_PROPERTY(qint64 accessHash READ accessHash WRITE setAccessHash NOTIFY accessHashChanged)
     Q_PROPERTY(qint32 channelId READ channelId WRITE setChannelId NOTIFY channelIdChanged)
     Q_PROPERTY(InputChannel core READ core WRITE setCore NOTIFY coreChanged)
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum InputChannelType {
+    enum InputChannelClassType {
         TypeInputChannelEmpty,
         TypeInputChannel
     };

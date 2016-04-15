@@ -56,7 +56,7 @@ bool ContactBlockedObject::operator ==(const ContactBlocked &b) const {
 }
 
 void ContactBlockedObject::setClassType(quint32 classType) {
-    ContactBlocked::ContactBlockedType result;
+    ContactBlocked::ContactBlockedClassType result;
     switch(classType) {
     case TypeContactBlocked:
         result = ContactBlocked::typeContactBlocked;

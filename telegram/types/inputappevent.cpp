@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-InputAppEvent::InputAppEvent(InputAppEventType classType, InboundPkt *in) :
+InputAppEvent::InputAppEvent(InputAppEventClassType classType, InboundPkt *in) :
     m_peer(0),
     m_time(0),
     m_classType(classType)
@@ -76,11 +76,11 @@ bool InputAppEvent::operator ==(const InputAppEvent &b) const {
            m_type == b.m_type;
 }
 
-void InputAppEvent::setClassType(InputAppEvent::InputAppEventType classType) {
+void InputAppEvent::setClassType(InputAppEvent::InputAppEventClassType classType) {
     m_classType = classType;
 }
 
-InputAppEvent::InputAppEventType InputAppEvent::classType() const {
+InputAppEvent::InputAppEventClassType InputAppEvent::classType() const {
     return m_classType;
 }
 
@@ -93,7 +93,7 @@ bool InputAppEvent::fetch(InboundPkt *in) {
         m_type = in->fetchQString();
         m_peer = in->fetchLong();
         m_data = in->fetchQString();
-        m_classType = static_cast<InputAppEventType>(x);
+        m_classType = static_cast<InputAppEventClassType>(x);
         return true;
     }
         break;
@@ -144,7 +144,7 @@ QDataStream &operator<<(QDataStream &stream, const InputAppEvent &item) {
 QDataStream &operator>>(QDataStream &stream, InputAppEvent &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<InputAppEvent::InputAppEventType>(type));
+    item.setClassType(static_cast<InputAppEvent::InputAppEventClassType>(type));
     switch(type) {
     case InputAppEvent::typeInputAppEvent: {
         qreal m_time;

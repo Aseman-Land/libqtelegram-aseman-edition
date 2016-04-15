@@ -44,7 +44,7 @@ bool AccountDaysTTLObject::operator ==(const AccountDaysTTL &b) const {
 }
 
 void AccountDaysTTLObject::setClassType(quint32 classType) {
-    AccountDaysTTL::AccountDaysTTLType result;
+    AccountDaysTTL::AccountDaysTTLClassType result;
     switch(classType) {
     case TypeAccountDaysTTL:
         result = AccountDaysTTL::typeAccountDaysTTL;

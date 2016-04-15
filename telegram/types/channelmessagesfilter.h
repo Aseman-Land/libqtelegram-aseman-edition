@@ -15,13 +15,13 @@
 class LIBQTELEGRAMSHARED_EXPORT ChannelMessagesFilter : public TelegramTypeObject
 {
 public:
-    enum ChannelMessagesFilterType {
+    enum ChannelMessagesFilterClassType {
         typeChannelMessagesFilterEmpty = 0x94d42ee7,
         typeChannelMessagesFilter = 0xcd77d957,
         typeChannelMessagesFilterCollapsed = 0xfa01232e
     };
 
-    ChannelMessagesFilter(ChannelMessagesFilterType classType = typeChannelMessagesFilterEmpty, InboundPkt *in = 0);
+    ChannelMessagesFilter(ChannelMessagesFilterClassType classType = typeChannelMessagesFilterEmpty, InboundPkt *in = 0);
     ChannelMessagesFilter(InboundPkt *in);
     ChannelMessagesFilter(const Null&);
     virtual ~ChannelMessagesFilter();
@@ -38,8 +38,8 @@ public:
     void setRanges(const QList<MessageRange> &ranges);
     QList<MessageRange> ranges() const;
 
-    void setClassType(ChannelMessagesFilterType classType);
-    ChannelMessagesFilterType classType() const;
+    void setClassType(ChannelMessagesFilterClassType classType);
+    ChannelMessagesFilterClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -54,7 +54,7 @@ public:
 private:
     qint32 m_flags;
     QList<MessageRange> m_ranges;
-    ChannelMessagesFilterType m_classType;
+    ChannelMessagesFilterClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(ChannelMessagesFilter)

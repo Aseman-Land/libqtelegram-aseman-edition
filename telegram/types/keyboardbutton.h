@@ -8,25 +8,40 @@
 #include "telegramtypeobject.h"
 
 #include <QMetaType>
+#include <QByteArray>
 #include <QString>
 
 class LIBQTELEGRAMSHARED_EXPORT KeyboardButton : public TelegramTypeObject
 {
 public:
-    enum KeyboardButtonType {
-        typeKeyboardButton = 0xa2fa4880
+    enum KeyboardButtonClassType {
+        typeKeyboardButton = 0xa2fa4880,
+        typeKeyboardButtonUrl = 0x258aff05,
+        typeKeyboardButtonCallback = 0x683a5e46,
+        typeKeyboardButtonRequestPhone = 0xb16a6c29,
+        typeKeyboardButtonRequestGeoLocation = 0xfc796b3f,
+        typeKeyboardButtonSwitchInline = 0xea1b7a14
     };
 
-    KeyboardButton(KeyboardButtonType classType = typeKeyboardButton, InboundPkt *in = 0);
+    KeyboardButton(KeyboardButtonClassType classType = typeKeyboardButton, InboundPkt *in = 0);
     KeyboardButton(InboundPkt *in);
     KeyboardButton(const Null&);
     virtual ~KeyboardButton();
 
+    void setData(const QByteArray &data);
+    QByteArray data() const;
+
+    void setQuery(const QString &query);
+    QString query() const;
+
     void setText(const QString &text);
     QString text() const;
 
-    void setClassType(KeyboardButtonType classType);
-    KeyboardButtonType classType() const;
+    void setUrl(const QString &url);
+    QString url() const;
+
+    void setClassType(KeyboardButtonClassType classType);
+    KeyboardButtonClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -39,8 +54,11 @@ public:
     QByteArray getHash(QCryptographicHash::Algorithm alg = QCryptographicHash::Md5) const;
 
 private:
+    QByteArray m_data;
+    QString m_query;
     QString m_text;
-    KeyboardButtonType m_classType;
+    QString m_url;
+    KeyboardButtonClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(KeyboardButton)

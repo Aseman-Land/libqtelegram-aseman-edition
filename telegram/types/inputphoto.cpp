@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-InputPhoto::InputPhoto(InputPhotoType classType, InboundPkt *in) :
+InputPhoto::InputPhoto(InputPhotoClassType classType, InboundPkt *in) :
     m_accessHash(0),
     m_id(0),
     m_classType(classType)
@@ -58,11 +58,11 @@ bool InputPhoto::operator ==(const InputPhoto &b) const {
            m_id == b.m_id;
 }
 
-void InputPhoto::setClassType(InputPhoto::InputPhotoType classType) {
+void InputPhoto::setClassType(InputPhoto::InputPhotoClassType classType) {
     m_classType = classType;
 }
 
-InputPhoto::InputPhotoType InputPhoto::classType() const {
+InputPhoto::InputPhotoClassType InputPhoto::classType() const {
     return m_classType;
 }
 
@@ -71,7 +71,7 @@ bool InputPhoto::fetch(InboundPkt *in) {
     int x = in->fetchInt();
     switch(x) {
     case typeInputPhotoEmpty: {
-        m_classType = static_cast<InputPhotoType>(x);
+        m_classType = static_cast<InputPhotoClassType>(x);
         return true;
     }
         break;
@@ -79,7 +79,7 @@ bool InputPhoto::fetch(InboundPkt *in) {
     case typeInputPhoto: {
         m_id = in->fetchLong();
         m_accessHash = in->fetchLong();
-        m_classType = static_cast<InputPhotoType>(x);
+        m_classType = static_cast<InputPhotoClassType>(x);
         return true;
     }
         break;
@@ -134,7 +134,7 @@ QDataStream &operator<<(QDataStream &stream, const InputPhoto &item) {
 QDataStream &operator>>(QDataStream &stream, InputPhoto &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<InputPhoto::InputPhotoType>(type));
+    item.setClassType(static_cast<InputPhoto::InputPhotoClassType>(type));
     switch(type) {
     case InputPhoto::typeInputPhotoEmpty: {
         

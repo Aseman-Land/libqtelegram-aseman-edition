@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-BotCommand::BotCommand(BotCommandType classType, InboundPkt *in) :
+BotCommand::BotCommand(BotCommandClassType classType, InboundPkt *in) :
     m_classType(classType)
 {
     if(in) fetch(in);
@@ -52,11 +52,11 @@ bool BotCommand::operator ==(const BotCommand &b) const {
            m_description == b.m_description;
 }
 
-void BotCommand::setClassType(BotCommand::BotCommandType classType) {
+void BotCommand::setClassType(BotCommand::BotCommandClassType classType) {
     m_classType = classType;
 }
 
-BotCommand::BotCommandType BotCommand::classType() const {
+BotCommand::BotCommandClassType BotCommand::classType() const {
     return m_classType;
 }
 
@@ -67,7 +67,7 @@ bool BotCommand::fetch(InboundPkt *in) {
     case typeBotCommand: {
         m_command = in->fetchQString();
         m_description = in->fetchQString();
-        m_classType = static_cast<BotCommandType>(x);
+        m_classType = static_cast<BotCommandClassType>(x);
         return true;
     }
         break;
@@ -114,7 +114,7 @@ QDataStream &operator<<(QDataStream &stream, const BotCommand &item) {
 QDataStream &operator>>(QDataStream &stream, BotCommand &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<BotCommand::BotCommandType>(type));
+    item.setClassType(static_cast<BotCommand::BotCommandClassType>(type));
     switch(type) {
     case BotCommand::typeBotCommand: {
         QString m_command;

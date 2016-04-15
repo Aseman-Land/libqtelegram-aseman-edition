@@ -13,7 +13,7 @@
 class LIBQTELEGRAMSHARED_EXPORT PeerNotifySettingsObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(PeerNotifySettingsType)
+    Q_ENUMS(PeerNotifySettingsClassType)
     Q_PROPERTY(qint32 flags READ flags WRITE setFlags NOTIFY flagsChanged)
     Q_PROPERTY(qint32 muteUntil READ muteUntil WRITE setMuteUntil NOTIFY muteUntilChanged)
     Q_PROPERTY(bool showPreviews READ showPreviews WRITE setShowPreviews NOTIFY showPreviewsChanged)
@@ -23,7 +23,7 @@ class LIBQTELEGRAMSHARED_EXPORT PeerNotifySettingsObject : public TelegramTypeQO
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum PeerNotifySettingsType {
+    enum PeerNotifySettingsClassType {
         TypePeerNotifySettingsEmpty,
         TypePeerNotifySettings
     };

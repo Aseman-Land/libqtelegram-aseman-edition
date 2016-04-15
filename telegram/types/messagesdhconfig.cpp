@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-MessagesDhConfig::MessagesDhConfig(MessagesDhConfigType classType, InboundPkt *in) :
+MessagesDhConfig::MessagesDhConfig(MessagesDhConfigClassType classType, InboundPkt *in) :
     m_g(0),
     m_version(0),
     m_classType(classType)
@@ -76,11 +76,11 @@ bool MessagesDhConfig::operator ==(const MessagesDhConfig &b) const {
            m_version == b.m_version;
 }
 
-void MessagesDhConfig::setClassType(MessagesDhConfig::MessagesDhConfigType classType) {
+void MessagesDhConfig::setClassType(MessagesDhConfig::MessagesDhConfigClassType classType) {
     m_classType = classType;
 }
 
-MessagesDhConfig::MessagesDhConfigType MessagesDhConfig::classType() const {
+MessagesDhConfig::MessagesDhConfigClassType MessagesDhConfig::classType() const {
     return m_classType;
 }
 
@@ -90,7 +90,7 @@ bool MessagesDhConfig::fetch(InboundPkt *in) {
     switch(x) {
     case typeMessagesDhConfigNotModified: {
         m_random = in->fetchBytes();
-        m_classType = static_cast<MessagesDhConfigType>(x);
+        m_classType = static_cast<MessagesDhConfigClassType>(x);
         return true;
     }
         break;
@@ -100,7 +100,7 @@ bool MessagesDhConfig::fetch(InboundPkt *in) {
         m_p = in->fetchBytes();
         m_version = in->fetchInt();
         m_random = in->fetchBytes();
-        m_classType = static_cast<MessagesDhConfigType>(x);
+        m_classType = static_cast<MessagesDhConfigClassType>(x);
         return true;
     }
         break;
@@ -160,7 +160,7 @@ QDataStream &operator<<(QDataStream &stream, const MessagesDhConfig &item) {
 QDataStream &operator>>(QDataStream &stream, MessagesDhConfig &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<MessagesDhConfig::MessagesDhConfigType>(type));
+    item.setClassType(static_cast<MessagesDhConfig::MessagesDhConfigClassType>(type));
     switch(type) {
     case MessagesDhConfig::typeMessagesDhConfigNotModified: {
         QByteArray m_random;

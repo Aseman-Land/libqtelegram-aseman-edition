@@ -14,7 +14,7 @@
 class LIBQTELEGRAMSHARED_EXPORT MessagesStickerSetObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(MessagesStickerSetType)
+    Q_ENUMS(MessagesStickerSetClassType)
     Q_PROPERTY(QList<Document> documents READ documents WRITE setDocuments NOTIFY documentsChanged)
     Q_PROPERTY(QList<StickerPack> packs READ packs WRITE setPacks NOTIFY packsChanged)
     Q_PROPERTY(StickerSetObject* set READ set WRITE setSet NOTIFY setChanged)
@@ -22,7 +22,7 @@ class LIBQTELEGRAMSHARED_EXPORT MessagesStickerSetObject : public TelegramTypeQO
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum MessagesStickerSetType {
+    enum MessagesStickerSetClassType {
         TypeMessagesStickerSet
     };
 

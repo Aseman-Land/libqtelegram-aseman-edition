@@ -69,7 +69,7 @@ bool ContactStatusObject::operator ==(const ContactStatus &b) const {
 }
 
 void ContactStatusObject::setClassType(quint32 classType) {
-    ContactStatus::ContactStatusType result;
+    ContactStatus::ContactStatusClassType result;
     switch(classType) {
     case TypeContactStatus:
         result = ContactStatus::typeContactStatus;

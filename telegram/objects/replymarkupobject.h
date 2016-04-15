@@ -13,7 +13,7 @@
 class LIBQTELEGRAMSHARED_EXPORT ReplyMarkupObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(ReplyMarkupType)
+    Q_ENUMS(ReplyMarkupClassType)
     Q_PROPERTY(qint32 flags READ flags WRITE setFlags NOTIFY flagsChanged)
     Q_PROPERTY(bool resize READ resize WRITE setResize NOTIFY resizeChanged)
     Q_PROPERTY(QList<KeyboardButtonRow> rows READ rows WRITE setRows NOTIFY rowsChanged)
@@ -23,10 +23,11 @@ class LIBQTELEGRAMSHARED_EXPORT ReplyMarkupObject : public TelegramTypeQObject
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum ReplyMarkupType {
+    enum ReplyMarkupClassType {
         TypeReplyKeyboardHide,
         TypeReplyKeyboardForceReply,
-        TypeReplyKeyboardMarkup
+        TypeReplyKeyboardMarkup,
+        TypeReplyInlineMarkup
     };
 
     ReplyMarkupObject(const ReplyMarkup &core, QObject *parent = 0);

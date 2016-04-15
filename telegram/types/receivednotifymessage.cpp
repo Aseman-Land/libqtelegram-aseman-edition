@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-ReceivedNotifyMessage::ReceivedNotifyMessage(ReceivedNotifyMessageType classType, InboundPkt *in) :
+ReceivedNotifyMessage::ReceivedNotifyMessage(ReceivedNotifyMessageClassType classType, InboundPkt *in) :
     m_flags(0),
     m_id(0),
     m_classType(classType)
@@ -58,11 +58,11 @@ bool ReceivedNotifyMessage::operator ==(const ReceivedNotifyMessage &b) const {
            m_id == b.m_id;
 }
 
-void ReceivedNotifyMessage::setClassType(ReceivedNotifyMessage::ReceivedNotifyMessageType classType) {
+void ReceivedNotifyMessage::setClassType(ReceivedNotifyMessage::ReceivedNotifyMessageClassType classType) {
     m_classType = classType;
 }
 
-ReceivedNotifyMessage::ReceivedNotifyMessageType ReceivedNotifyMessage::classType() const {
+ReceivedNotifyMessage::ReceivedNotifyMessageClassType ReceivedNotifyMessage::classType() const {
     return m_classType;
 }
 
@@ -73,7 +73,7 @@ bool ReceivedNotifyMessage::fetch(InboundPkt *in) {
     case typeReceivedNotifyMessage: {
         m_id = in->fetchInt();
         m_flags = in->fetchInt();
-        m_classType = static_cast<ReceivedNotifyMessageType>(x);
+        m_classType = static_cast<ReceivedNotifyMessageClassType>(x);
         return true;
     }
         break;
@@ -120,7 +120,7 @@ QDataStream &operator<<(QDataStream &stream, const ReceivedNotifyMessage &item) 
 QDataStream &operator>>(QDataStream &stream, ReceivedNotifyMessage &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<ReceivedNotifyMessage::ReceivedNotifyMessageType>(type));
+    item.setClassType(static_cast<ReceivedNotifyMessage::ReceivedNotifyMessageClassType>(type));
     switch(type) {
     case ReceivedNotifyMessage::typeReceivedNotifyMessage: {
         qint32 m_id;

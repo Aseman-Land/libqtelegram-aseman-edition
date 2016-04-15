@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-ExportedChatInvite::ExportedChatInvite(ExportedChatInviteType classType, InboundPkt *in) :
+ExportedChatInvite::ExportedChatInvite(ExportedChatInviteClassType classType, InboundPkt *in) :
     m_classType(classType)
 {
     if(in) fetch(in);
@@ -43,11 +43,11 @@ bool ExportedChatInvite::operator ==(const ExportedChatInvite &b) const {
            m_link == b.m_link;
 }
 
-void ExportedChatInvite::setClassType(ExportedChatInvite::ExportedChatInviteType classType) {
+void ExportedChatInvite::setClassType(ExportedChatInvite::ExportedChatInviteClassType classType) {
     m_classType = classType;
 }
 
-ExportedChatInvite::ExportedChatInviteType ExportedChatInvite::classType() const {
+ExportedChatInvite::ExportedChatInviteClassType ExportedChatInvite::classType() const {
     return m_classType;
 }
 
@@ -56,14 +56,14 @@ bool ExportedChatInvite::fetch(InboundPkt *in) {
     int x = in->fetchInt();
     switch(x) {
     case typeChatInviteEmpty: {
-        m_classType = static_cast<ExportedChatInviteType>(x);
+        m_classType = static_cast<ExportedChatInviteClassType>(x);
         return true;
     }
         break;
     
     case typeChatInviteExported: {
         m_link = in->fetchQString();
-        m_classType = static_cast<ExportedChatInviteType>(x);
+        m_classType = static_cast<ExportedChatInviteClassType>(x);
         return true;
     }
         break;
@@ -116,7 +116,7 @@ QDataStream &operator<<(QDataStream &stream, const ExportedChatInvite &item) {
 QDataStream &operator>>(QDataStream &stream, ExportedChatInvite &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<ExportedChatInvite::ExportedChatInviteType>(type));
+    item.setClassType(static_cast<ExportedChatInvite::ExportedChatInviteClassType>(type));
     switch(type) {
     case ExportedChatInvite::typeChatInviteEmpty: {
         

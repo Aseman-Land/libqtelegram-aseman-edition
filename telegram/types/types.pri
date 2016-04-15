@@ -41,8 +41,10 @@ HEADERS += \
     $$PWD/foundgif.h \
     $$PWD/geopoint.h \
     $$PWD/importedcontact.h \
+    $$PWD/inlinebotswitchpm.h \
     $$PWD/inputappevent.h \
     $$PWD/inputbotinlinemessage.h \
+    $$PWD/inputbotinlinemessageid.h \
     $$PWD/inputbotinlineresult.h \
     $$PWD/inputchannel.h \
     $$PWD/inputchatphoto.h \
@@ -103,15 +105,15 @@ HEADERS += \
     $$PWD/accountpasswordinputsettings.h \
     $$PWD/accountpasswordsettings.h \
     $$PWD/accountprivacyrules.h \
-    $$PWD/accountsentchangephonecode.h \
     $$PWD/authauthorization.h \
     $$PWD/authcheckedphone.h \
+    $$PWD/authcodetype.h \
     $$PWD/authexportedauthorization.h \
     $$PWD/authpasswordrecovery.h \
     $$PWD/authsentcode.h \
+    $$PWD/authsentcodetype.h \
     $$PWD/channelschannelparticipant.h \
     $$PWD/channelschannelparticipants.h \
-    $$PWD/channelsmessageeditdata.h \
     $$PWD/contactsblocked.h \
     $$PWD/contactscontacts.h \
     $$PWD/contactsfound.h \
@@ -126,12 +128,14 @@ HEADERS += \
     $$PWD/messagesaffectedhistory.h \
     $$PWD/messagesaffectedmessages.h \
     $$PWD/messagesallstickers.h \
+    $$PWD/messagesbotcallbackanswer.h \
     $$PWD/messagesbotresults.h \
     $$PWD/messageschatfull.h \
     $$PWD/messageschats.h \
     $$PWD/messagesdhconfig.h \
     $$PWD/messagesdialogs.h \
     $$PWD/messagesfoundgifs.h \
+    $$PWD/messagesmessageeditdata.h \
     $$PWD/messagesmessages.h \
     $$PWD/messagessavedgifs.h \
     $$PWD/messagessentencryptedmessage.h \
@@ -182,8 +186,10 @@ SOURCES += \
     $$PWD/foundgif.cpp \
     $$PWD/geopoint.cpp \
     $$PWD/importedcontact.cpp \
+    $$PWD/inlinebotswitchpm.cpp \
     $$PWD/inputappevent.cpp \
     $$PWD/inputbotinlinemessage.cpp \
+    $$PWD/inputbotinlinemessageid.cpp \
     $$PWD/inputbotinlineresult.cpp \
     $$PWD/inputchannel.cpp \
     $$PWD/inputchatphoto.cpp \
@@ -244,15 +250,15 @@ SOURCES += \
     $$PWD/accountpasswordinputsettings.cpp \
     $$PWD/accountpasswordsettings.cpp \
     $$PWD/accountprivacyrules.cpp \
-    $$PWD/accountsentchangephonecode.cpp \
     $$PWD/authauthorization.cpp \
     $$PWD/authcheckedphone.cpp \
+    $$PWD/authcodetype.cpp \
     $$PWD/authexportedauthorization.cpp \
     $$PWD/authpasswordrecovery.cpp \
     $$PWD/authsentcode.cpp \
+    $$PWD/authsentcodetype.cpp \
     $$PWD/channelschannelparticipant.cpp \
     $$PWD/channelschannelparticipants.cpp \
-    $$PWD/channelsmessageeditdata.cpp \
     $$PWD/contactsblocked.cpp \
     $$PWD/contactscontacts.cpp \
     $$PWD/contactsfound.cpp \
@@ -267,12 +273,14 @@ SOURCES += \
     $$PWD/messagesaffectedhistory.cpp \
     $$PWD/messagesaffectedmessages.cpp \
     $$PWD/messagesallstickers.cpp \
+    $$PWD/messagesbotcallbackanswer.cpp \
     $$PWD/messagesbotresults.cpp \
     $$PWD/messageschatfull.cpp \
     $$PWD/messageschats.cpp \
     $$PWD/messagesdhconfig.cpp \
     $$PWD/messagesdialogs.cpp \
     $$PWD/messagesfoundgifs.cpp \
+    $$PWD/messagesmessageeditdata.cpp \
     $$PWD/messagesmessages.cpp \
     $$PWD/messagessavedgifs.cpp \
     $$PWD/messagessentencryptedmessage.cpp \

@@ -349,7 +349,7 @@ bool MessageObject::operator ==(const Message &b) const {
 }
 
 void MessageObject::setClassType(quint32 classType) {
-    Message::MessageType result;
+    Message::MessageClassType result;
     switch(classType) {
     case TypeMessageEmpty:
         result = Message::typeMessageEmpty;

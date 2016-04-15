@@ -15,7 +15,7 @@
 class LIBQTELEGRAMSHARED_EXPORT WebPageObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(WebPageType)
+    Q_ENUMS(WebPageClassType)
     Q_PROPERTY(QString author READ author WRITE setAuthor NOTIFY authorChanged)
     Q_PROPERTY(qint32 date READ date WRITE setDate NOTIFY dateChanged)
     Q_PROPERTY(QString description READ description WRITE setDescription NOTIFY descriptionChanged)
@@ -37,7 +37,7 @@ class LIBQTELEGRAMSHARED_EXPORT WebPageObject : public TelegramTypeQObject
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum WebPageType {
+    enum WebPageClassType {
         TypeWebPageEmpty,
         TypeWebPagePending,
         TypeWebPage

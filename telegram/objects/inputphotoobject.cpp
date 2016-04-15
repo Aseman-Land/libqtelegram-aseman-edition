@@ -56,7 +56,7 @@ bool InputPhotoObject::operator ==(const InputPhoto &b) const {
 }
 
 void InputPhotoObject::setClassType(quint32 classType) {
-    InputPhoto::InputPhotoType result;
+    InputPhoto::InputPhotoClassType result;
     switch(classType) {
     case TypeInputPhotoEmpty:
         result = InputPhoto::typeInputPhotoEmpty;

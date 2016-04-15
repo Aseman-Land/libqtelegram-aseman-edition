@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-AuthAuthorization::AuthAuthorization(AuthAuthorizationType classType, InboundPkt *in) :
+AuthAuthorization::AuthAuthorization(AuthAuthorizationClassType classType, InboundPkt *in) :
     m_classType(classType)
 {
     if(in) fetch(in);
@@ -43,11 +43,11 @@ bool AuthAuthorization::operator ==(const AuthAuthorization &b) const {
            m_user == b.m_user;
 }
 
-void AuthAuthorization::setClassType(AuthAuthorization::AuthAuthorizationType classType) {
+void AuthAuthorization::setClassType(AuthAuthorization::AuthAuthorizationClassType classType) {
     m_classType = classType;
 }
 
-AuthAuthorization::AuthAuthorizationType AuthAuthorization::classType() const {
+AuthAuthorization::AuthAuthorizationClassType AuthAuthorization::classType() const {
     return m_classType;
 }
 
@@ -57,7 +57,7 @@ bool AuthAuthorization::fetch(InboundPkt *in) {
     switch(x) {
     case typeAuthAuthorization: {
         m_user.fetch(in);
-        m_classType = static_cast<AuthAuthorizationType>(x);
+        m_classType = static_cast<AuthAuthorizationClassType>(x);
         return true;
     }
         break;
@@ -102,7 +102,7 @@ QDataStream &operator<<(QDataStream &stream, const AuthAuthorization &item) {
 QDataStream &operator>>(QDataStream &stream, AuthAuthorization &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<AuthAuthorization::AuthAuthorizationType>(type));
+    item.setClassType(static_cast<AuthAuthorization::AuthAuthorizationClassType>(type));
     switch(type) {
     case AuthAuthorization::typeAuthAuthorization: {
         User m_user;

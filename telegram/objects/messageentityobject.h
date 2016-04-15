@@ -13,7 +13,7 @@
 class LIBQTELEGRAMSHARED_EXPORT MessageEntityObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(MessageEntityType)
+    Q_ENUMS(MessageEntityClassType)
     Q_PROPERTY(QString language READ language WRITE setLanguage NOTIFY languageChanged)
     Q_PROPERTY(qint32 length READ length WRITE setLength NOTIFY lengthChanged)
     Q_PROPERTY(qint32 offset READ offset WRITE setOffset NOTIFY offsetChanged)
@@ -22,7 +22,7 @@ class LIBQTELEGRAMSHARED_EXPORT MessageEntityObject : public TelegramTypeQObject
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum MessageEntityType {
+    enum MessageEntityClassType {
         TypeMessageEntityUnknown,
         TypeMessageEntityMention,
         TypeMessageEntityHashtag,

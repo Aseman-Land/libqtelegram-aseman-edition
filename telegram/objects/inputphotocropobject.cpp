@@ -68,7 +68,7 @@ bool InputPhotoCropObject::operator ==(const InputPhotoCrop &b) const {
 }
 
 void InputPhotoCropObject::setClassType(quint32 classType) {
-    InputPhotoCrop::InputPhotoCropType result;
+    InputPhotoCrop::InputPhotoCropClassType result;
     switch(classType) {
     case TypeInputPhotoCropAuto:
         result = InputPhotoCrop::typeInputPhotoCropAuto;

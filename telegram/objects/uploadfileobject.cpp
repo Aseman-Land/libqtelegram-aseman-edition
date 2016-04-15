@@ -81,7 +81,7 @@ bool UploadFileObject::operator ==(const UploadFile &b) const {
 }
 
 void UploadFileObject::setClassType(quint32 classType) {
-    UploadFile::UploadFileType result;
+    UploadFile::UploadFileClassType result;
     switch(classType) {
     case TypeUploadFile:
         result = UploadFile::typeUploadFile;

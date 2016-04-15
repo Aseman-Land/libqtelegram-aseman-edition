@@ -56,7 +56,7 @@ bool UserStatusObject::operator ==(const UserStatus &b) const {
 }
 
 void UserStatusObject::setClassType(quint32 classType) {
-    UserStatus::UserStatusType result;
+    UserStatus::UserStatusClassType result;
     switch(classType) {
     case TypeUserStatusEmpty:
         result = UserStatus::typeUserStatusEmpty;

@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-StickerPack::StickerPack(StickerPackType classType, InboundPkt *in) :
+StickerPack::StickerPack(StickerPackClassType classType, InboundPkt *in) :
     m_classType(classType)
 {
     if(in) fetch(in);
@@ -52,11 +52,11 @@ bool StickerPack::operator ==(const StickerPack &b) const {
            m_emoticon == b.m_emoticon;
 }
 
-void StickerPack::setClassType(StickerPack::StickerPackType classType) {
+void StickerPack::setClassType(StickerPack::StickerPackClassType classType) {
     m_classType = classType;
 }
 
-StickerPack::StickerPackType StickerPack::classType() const {
+StickerPack::StickerPackClassType StickerPack::classType() const {
     return m_classType;
 }
 
@@ -74,7 +74,7 @@ bool StickerPack::fetch(InboundPkt *in) {
             type = in->fetchLong();
             m_documents.append(type);
         }
-        m_classType = static_cast<StickerPackType>(x);
+        m_classType = static_cast<StickerPackClassType>(x);
         return true;
     }
         break;
@@ -125,7 +125,7 @@ QDataStream &operator<<(QDataStream &stream, const StickerPack &item) {
 QDataStream &operator>>(QDataStream &stream, StickerPack &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<StickerPack::StickerPackType>(type));
+    item.setClassType(static_cast<StickerPack::StickerPackClassType>(type));
     switch(type) {
     case StickerPack::typeStickerPack: {
         QString m_emoticon;

@@ -92,7 +92,7 @@ bool InputFileLocationObject::operator ==(const InputFileLocation &b) const {
 }
 
 void InputFileLocationObject::setClassType(quint32 classType) {
-    InputFileLocation::InputFileLocationType result;
+    InputFileLocation::InputFileLocationClassType result;
     switch(classType) {
     case TypeInputFileLocation:
         result = InputFileLocation::typeInputFileLocation;

@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-Peer::Peer(PeerType classType, InboundPkt *in) :
+Peer::Peer(PeerClassType classType, InboundPkt *in) :
     m_channelId(0),
     m_chatId(0),
     m_userId(0),
@@ -70,11 +70,11 @@ bool Peer::operator ==(const Peer &b) const {
            m_userId == b.m_userId;
 }
 
-void Peer::setClassType(Peer::PeerType classType) {
+void Peer::setClassType(Peer::PeerClassType classType) {
     m_classType = classType;
 }
 
-Peer::PeerType Peer::classType() const {
+Peer::PeerClassType Peer::classType() const {
     return m_classType;
 }
 
@@ -84,21 +84,21 @@ bool Peer::fetch(InboundPkt *in) {
     switch(x) {
     case typePeerUser: {
         m_userId = in->fetchInt();
-        m_classType = static_cast<PeerType>(x);
+        m_classType = static_cast<PeerClassType>(x);
         return true;
     }
         break;
     
     case typePeerChat: {
         m_chatId = in->fetchInt();
-        m_classType = static_cast<PeerType>(x);
+        m_classType = static_cast<PeerClassType>(x);
         return true;
     }
         break;
     
     case typePeerChannel: {
         m_channelId = in->fetchInt();
-        m_classType = static_cast<PeerType>(x);
+        m_classType = static_cast<PeerClassType>(x);
         return true;
     }
         break;
@@ -161,7 +161,7 @@ QDataStream &operator<<(QDataStream &stream, const Peer &item) {
 QDataStream &operator>>(QDataStream &stream, Peer &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<Peer::PeerType>(type));
+    item.setClassType(static_cast<Peer::PeerClassType>(type));
     switch(type) {
     case Peer::typePeerUser: {
         qint32 m_user_id;

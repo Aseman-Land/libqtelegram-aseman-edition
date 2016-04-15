@@ -32,7 +32,7 @@ bool PrivacyKeyObject::operator ==(const PrivacyKey &b) const {
 }
 
 void PrivacyKeyObject::setClassType(quint32 classType) {
-    PrivacyKey::PrivacyKeyType result;
+    PrivacyKey::PrivacyKeyClassType result;
     switch(classType) {
     case TypePrivacyKeyStatusTimestamp:
         result = PrivacyKey::typePrivacyKeyStatusTimestamp;

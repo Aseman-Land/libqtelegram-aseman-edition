@@ -16,13 +16,13 @@
 class LIBQTELEGRAMSHARED_EXPORT WebPage : public TelegramTypeObject
 {
 public:
-    enum WebPageType {
+    enum WebPageClassType {
         typeWebPageEmpty = 0xeb1477e8,
         typeWebPagePending = 0xc586da1c,
         typeWebPage = 0xca820ed7
     };
 
-    WebPage(WebPageType classType = typeWebPageEmpty, InboundPkt *in = 0);
+    WebPage(WebPageClassType classType = typeWebPageEmpty, InboundPkt *in = 0);
     WebPage(InboundPkt *in);
     WebPage(const Null&);
     virtual ~WebPage();
@@ -78,8 +78,8 @@ public:
     void setUrl(const QString &url);
     QString url() const;
 
-    void setClassType(WebPageType classType);
-    WebPageType classType() const;
+    void setClassType(WebPageClassType classType);
+    WebPageClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -109,7 +109,7 @@ private:
     QString m_title;
     QString m_type;
     QString m_url;
-    WebPageType m_classType;
+    WebPageClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(WebPage)

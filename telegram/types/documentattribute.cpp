@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-DocumentAttribute::DocumentAttribute(DocumentAttributeType classType, InboundPkt *in) :
+DocumentAttribute::DocumentAttribute(DocumentAttributeClassType classType, InboundPkt *in) :
     m_duration(0),
     m_flags(0),
     m_h(0),
@@ -145,11 +145,11 @@ bool DocumentAttribute::operator ==(const DocumentAttribute &b) const {
            m_waveform == b.m_waveform;
 }
 
-void DocumentAttribute::setClassType(DocumentAttribute::DocumentAttributeType classType) {
+void DocumentAttribute::setClassType(DocumentAttribute::DocumentAttributeClassType classType) {
     m_classType = classType;
 }
 
-DocumentAttribute::DocumentAttributeType DocumentAttribute::classType() const {
+DocumentAttribute::DocumentAttributeClassType DocumentAttribute::classType() const {
     return m_classType;
 }
 
@@ -160,13 +160,13 @@ bool DocumentAttribute::fetch(InboundPkt *in) {
     case typeDocumentAttributeImageSize: {
         m_w = in->fetchInt();
         m_h = in->fetchInt();
-        m_classType = static_cast<DocumentAttributeType>(x);
+        m_classType = static_cast<DocumentAttributeClassType>(x);
         return true;
     }
         break;
     
     case typeDocumentAttributeAnimated: {
-        m_classType = static_cast<DocumentAttributeType>(x);
+        m_classType = static_cast<DocumentAttributeClassType>(x);
         return true;
     }
         break;
@@ -174,7 +174,7 @@ bool DocumentAttribute::fetch(InboundPkt *in) {
     case typeDocumentAttributeSticker: {
         m_alt = in->fetchQString();
         m_stickerset.fetch(in);
-        m_classType = static_cast<DocumentAttributeType>(x);
+        m_classType = static_cast<DocumentAttributeClassType>(x);
         return true;
     }
         break;
@@ -183,7 +183,7 @@ bool DocumentAttribute::fetch(InboundPkt *in) {
         m_duration = in->fetchInt();
         m_w = in->fetchInt();
         m_h = in->fetchInt();
-        m_classType = static_cast<DocumentAttributeType>(x);
+        m_classType = static_cast<DocumentAttributeClassType>(x);
         return true;
     }
         break;
@@ -200,14 +200,14 @@ bool DocumentAttribute::fetch(InboundPkt *in) {
         if(m_flags & 1<<2) {
             m_waveform = in->fetchBytes();
         }
-        m_classType = static_cast<DocumentAttributeType>(x);
+        m_classType = static_cast<DocumentAttributeClassType>(x);
         return true;
     }
         break;
     
     case typeDocumentAttributeFilename: {
         m_fileName = in->fetchQString();
-        m_classType = static_cast<DocumentAttributeType>(x);
+        m_classType = static_cast<DocumentAttributeClassType>(x);
         return true;
     }
         break;
@@ -312,7 +312,7 @@ QDataStream &operator<<(QDataStream &stream, const DocumentAttribute &item) {
 QDataStream &operator>>(QDataStream &stream, DocumentAttribute &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<DocumentAttribute::DocumentAttributeType>(type));
+    item.setClassType(static_cast<DocumentAttribute::DocumentAttributeClassType>(type));
     switch(type) {
     case DocumentAttribute::typeDocumentAttributeImageSize: {
         qint32 m_w;

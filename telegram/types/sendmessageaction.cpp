@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-SendMessageAction::SendMessageAction(SendMessageActionType classType, InboundPkt *in) :
+SendMessageAction::SendMessageAction(SendMessageActionClassType classType, InboundPkt *in) :
     m_progress(0),
     m_classType(classType)
 {
@@ -46,11 +46,11 @@ bool SendMessageAction::operator ==(const SendMessageAction &b) const {
            m_progress == b.m_progress;
 }
 
-void SendMessageAction::setClassType(SendMessageAction::SendMessageActionType classType) {
+void SendMessageAction::setClassType(SendMessageAction::SendMessageActionClassType classType) {
     m_classType = classType;
 }
 
-SendMessageAction::SendMessageActionType SendMessageAction::classType() const {
+SendMessageAction::SendMessageActionClassType SendMessageAction::classType() const {
     return m_classType;
 }
 
@@ -59,65 +59,65 @@ bool SendMessageAction::fetch(InboundPkt *in) {
     int x = in->fetchInt();
     switch(x) {
     case typeSendMessageTypingAction: {
-        m_classType = static_cast<SendMessageActionType>(x);
+        m_classType = static_cast<SendMessageActionClassType>(x);
         return true;
     }
         break;
     
     case typeSendMessageCancelAction: {
-        m_classType = static_cast<SendMessageActionType>(x);
+        m_classType = static_cast<SendMessageActionClassType>(x);
         return true;
     }
         break;
     
     case typeSendMessageRecordVideoAction: {
-        m_classType = static_cast<SendMessageActionType>(x);
+        m_classType = static_cast<SendMessageActionClassType>(x);
         return true;
     }
         break;
     
     case typeSendMessageUploadVideoAction: {
         m_progress = in->fetchInt();
-        m_classType = static_cast<SendMessageActionType>(x);
+        m_classType = static_cast<SendMessageActionClassType>(x);
         return true;
     }
         break;
     
     case typeSendMessageRecordAudioAction: {
-        m_classType = static_cast<SendMessageActionType>(x);
+        m_classType = static_cast<SendMessageActionClassType>(x);
         return true;
     }
         break;
     
     case typeSendMessageUploadAudioAction: {
         m_progress = in->fetchInt();
-        m_classType = static_cast<SendMessageActionType>(x);
+        m_classType = static_cast<SendMessageActionClassType>(x);
         return true;
     }
         break;
     
     case typeSendMessageUploadPhotoAction: {
         m_progress = in->fetchInt();
-        m_classType = static_cast<SendMessageActionType>(x);
+        m_classType = static_cast<SendMessageActionClassType>(x);
         return true;
     }
         break;
     
     case typeSendMessageUploadDocumentAction: {
         m_progress = in->fetchInt();
-        m_classType = static_cast<SendMessageActionType>(x);
+        m_classType = static_cast<SendMessageActionClassType>(x);
         return true;
     }
         break;
     
     case typeSendMessageGeoLocationAction: {
-        m_classType = static_cast<SendMessageActionType>(x);
+        m_classType = static_cast<SendMessageActionClassType>(x);
         return true;
     }
         break;
     
     case typeSendMessageChooseContactAction: {
-        m_classType = static_cast<SendMessageActionType>(x);
+        m_classType = static_cast<SendMessageActionClassType>(x);
         return true;
     }
         break;
@@ -237,7 +237,7 @@ QDataStream &operator<<(QDataStream &stream, const SendMessageAction &item) {
 QDataStream &operator>>(QDataStream &stream, SendMessageAction &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<SendMessageAction::SendMessageActionType>(type));
+    item.setClassType(static_cast<SendMessageAction::SendMessageActionClassType>(type));
     switch(type) {
     case SendMessageAction::typeSendMessageTypingAction: {
         

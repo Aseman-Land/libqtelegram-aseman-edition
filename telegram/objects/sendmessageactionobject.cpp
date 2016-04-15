@@ -44,7 +44,7 @@ bool SendMessageActionObject::operator ==(const SendMessageAction &b) const {
 }
 
 void SendMessageActionObject::setClassType(quint32 classType) {
-    SendMessageAction::SendMessageActionType result;
+    SendMessageAction::SendMessageActionClassType result;
     switch(classType) {
     case TypeSendMessageTypingAction:
         result = SendMessageAction::typeSendMessageTypingAction;

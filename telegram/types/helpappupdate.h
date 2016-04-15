@@ -14,12 +14,12 @@
 class LIBQTELEGRAMSHARED_EXPORT HelpAppUpdate : public TelegramTypeObject
 {
 public:
-    enum HelpAppUpdateType {
+    enum HelpAppUpdateClassType {
         typeHelpAppUpdate = 0x8987f311,
         typeHelpNoAppUpdate = 0xc45a6536
     };
 
-    HelpAppUpdate(HelpAppUpdateType classType = typeHelpAppUpdate, InboundPkt *in = 0);
+    HelpAppUpdate(HelpAppUpdateClassType classType = typeHelpAppUpdate, InboundPkt *in = 0);
     HelpAppUpdate(InboundPkt *in);
     HelpAppUpdate(const Null&);
     virtual ~HelpAppUpdate();
@@ -36,8 +36,8 @@ public:
     void setUrl(const QString &url);
     QString url() const;
 
-    void setClassType(HelpAppUpdateType classType);
-    HelpAppUpdateType classType() const;
+    void setClassType(HelpAppUpdateClassType classType);
+    HelpAppUpdateClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -54,7 +54,7 @@ private:
     qint32 m_id;
     QString m_text;
     QString m_url;
-    HelpAppUpdateType m_classType;
+    HelpAppUpdateClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(HelpAppUpdate)

@@ -15,12 +15,12 @@
 class LIBQTELEGRAMSHARED_EXPORT EncryptedMessage : public TelegramTypeObject
 {
 public:
-    enum EncryptedMessageType {
+    enum EncryptedMessageClassType {
         typeEncryptedMessage = 0xed18c118,
         typeEncryptedMessageService = 0x23734b06
     };
 
-    EncryptedMessage(EncryptedMessageType classType = typeEncryptedMessage, InboundPkt *in = 0);
+    EncryptedMessage(EncryptedMessageClassType classType = typeEncryptedMessage, InboundPkt *in = 0);
     EncryptedMessage(InboundPkt *in);
     EncryptedMessage(const Null&);
     virtual ~EncryptedMessage();
@@ -40,8 +40,8 @@ public:
     void setRandomId(qint64 randomId);
     qint64 randomId() const;
 
-    void setClassType(EncryptedMessageType classType);
-    EncryptedMessageType classType() const;
+    void setClassType(EncryptedMessageClassType classType);
+    EncryptedMessageClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -59,7 +59,7 @@ private:
     qint32 m_date;
     EncryptedFile m_file;
     qint64 m_randomId;
-    EncryptedMessageType m_classType;
+    EncryptedMessageClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(EncryptedMessage)

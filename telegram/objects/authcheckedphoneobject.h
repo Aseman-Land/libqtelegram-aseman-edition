@@ -13,13 +13,13 @@
 class LIBQTELEGRAMSHARED_EXPORT AuthCheckedPhoneObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(AuthCheckedPhoneType)
+    Q_ENUMS(AuthCheckedPhoneClassType)
     Q_PROPERTY(bool phoneRegistered READ phoneRegistered WRITE setPhoneRegistered NOTIFY phoneRegisteredChanged)
     Q_PROPERTY(AuthCheckedPhone core READ core WRITE setCore NOTIFY coreChanged)
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum AuthCheckedPhoneType {
+    enum AuthCheckedPhoneClassType {
         TypeAuthCheckedPhone
     };
 

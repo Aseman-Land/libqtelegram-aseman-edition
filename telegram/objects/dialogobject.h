@@ -15,7 +15,7 @@
 class LIBQTELEGRAMSHARED_EXPORT DialogObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(DialogType)
+    Q_ENUMS(DialogClassType)
     Q_PROPERTY(PeerNotifySettingsObject* notifySettings READ notifySettings WRITE setNotifySettings NOTIFY notifySettingsChanged)
     Q_PROPERTY(PeerObject* peer READ peer WRITE setPeer NOTIFY peerChanged)
     Q_PROPERTY(qint32 pts READ pts WRITE setPts NOTIFY ptsChanged)
@@ -28,7 +28,7 @@ class LIBQTELEGRAMSHARED_EXPORT DialogObject : public TelegramTypeQObject
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum DialogType {
+    enum DialogClassType {
         TypeDialog,
         TypeDialogChannel
     };

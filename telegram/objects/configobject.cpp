@@ -272,7 +272,7 @@ bool ConfigObject::operator ==(const Config &b) const {
 }
 
 void ConfigObject::setClassType(quint32 classType) {
-    Config::ConfigType result;
+    Config::ConfigClassType result;
     switch(classType) {
     case TypeConfig:
         result = Config::typeConfig;

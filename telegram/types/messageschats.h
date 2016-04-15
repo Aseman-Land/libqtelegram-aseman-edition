@@ -14,11 +14,11 @@
 class LIBQTELEGRAMSHARED_EXPORT MessagesChats : public TelegramTypeObject
 {
 public:
-    enum MessagesChatsType {
+    enum MessagesChatsClassType {
         typeMessagesChats = 0x64ff9fd5
     };
 
-    MessagesChats(MessagesChatsType classType = typeMessagesChats, InboundPkt *in = 0);
+    MessagesChats(MessagesChatsClassType classType = typeMessagesChats, InboundPkt *in = 0);
     MessagesChats(InboundPkt *in);
     MessagesChats(const Null&);
     virtual ~MessagesChats();
@@ -26,8 +26,8 @@ public:
     void setChats(const QList<Chat> &chats);
     QList<Chat> chats() const;
 
-    void setClassType(MessagesChatsType classType);
-    MessagesChatsType classType() const;
+    void setClassType(MessagesChatsClassType classType);
+    MessagesChatsClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -41,7 +41,7 @@ public:
 
 private:
     QList<Chat> m_chats;
-    MessagesChatsType m_classType;
+    MessagesChatsClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(MessagesChats)

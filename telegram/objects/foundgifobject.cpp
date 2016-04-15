@@ -154,7 +154,7 @@ bool FoundGifObject::operator ==(const FoundGif &b) const {
 }
 
 void FoundGifObject::setClassType(quint32 classType) {
-    FoundGif::FoundGifType result;
+    FoundGif::FoundGifClassType result;
     switch(classType) {
     case TypeFoundGif:
         result = FoundGif::typeFoundGif;

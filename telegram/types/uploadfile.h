@@ -15,11 +15,11 @@
 class LIBQTELEGRAMSHARED_EXPORT UploadFile : public TelegramTypeObject
 {
 public:
-    enum UploadFileType {
+    enum UploadFileClassType {
         typeUploadFile = 0x96a18d5
     };
 
-    UploadFile(UploadFileType classType = typeUploadFile, InboundPkt *in = 0);
+    UploadFile(UploadFileClassType classType = typeUploadFile, InboundPkt *in = 0);
     UploadFile(InboundPkt *in);
     UploadFile(const Null&);
     virtual ~UploadFile();
@@ -33,8 +33,8 @@ public:
     void setType(const StorageFileType &type);
     StorageFileType type() const;
 
-    void setClassType(UploadFileType classType);
-    UploadFileType classType() const;
+    void setClassType(UploadFileClassType classType);
+    UploadFileClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -50,7 +50,7 @@ private:
     QByteArray m_bytes;
     qint32 m_mtime;
     StorageFileType m_type;
-    UploadFileType m_classType;
+    UploadFileClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(UploadFile)

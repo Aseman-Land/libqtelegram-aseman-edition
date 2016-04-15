@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-EncryptedChat::EncryptedChat(EncryptedChatType classType, InboundPkt *in) :
+EncryptedChat::EncryptedChat(EncryptedChatClassType classType, InboundPkt *in) :
     m_accessHash(0),
     m_adminId(0),
     m_date(0),
@@ -124,11 +124,11 @@ bool EncryptedChat::operator ==(const EncryptedChat &b) const {
            m_participantId == b.m_participantId;
 }
 
-void EncryptedChat::setClassType(EncryptedChat::EncryptedChatType classType) {
+void EncryptedChat::setClassType(EncryptedChat::EncryptedChatClassType classType) {
     m_classType = classType;
 }
 
-EncryptedChat::EncryptedChatType EncryptedChat::classType() const {
+EncryptedChat::EncryptedChatClassType EncryptedChat::classType() const {
     return m_classType;
 }
 
@@ -138,7 +138,7 @@ bool EncryptedChat::fetch(InboundPkt *in) {
     switch(x) {
     case typeEncryptedChatEmpty: {
         m_id = in->fetchInt();
-        m_classType = static_cast<EncryptedChatType>(x);
+        m_classType = static_cast<EncryptedChatClassType>(x);
         return true;
     }
         break;
@@ -149,7 +149,7 @@ bool EncryptedChat::fetch(InboundPkt *in) {
         m_date = in->fetchInt();
         m_adminId = in->fetchInt();
         m_participantId = in->fetchInt();
-        m_classType = static_cast<EncryptedChatType>(x);
+        m_classType = static_cast<EncryptedChatClassType>(x);
         return true;
     }
         break;
@@ -161,7 +161,7 @@ bool EncryptedChat::fetch(InboundPkt *in) {
         m_adminId = in->fetchInt();
         m_participantId = in->fetchInt();
         m_gA = in->fetchBytes();
-        m_classType = static_cast<EncryptedChatType>(x);
+        m_classType = static_cast<EncryptedChatClassType>(x);
         return true;
     }
         break;
@@ -174,14 +174,14 @@ bool EncryptedChat::fetch(InboundPkt *in) {
         m_participantId = in->fetchInt();
         m_gAOrB = in->fetchBytes();
         m_keyFingerprint = in->fetchLong();
-        m_classType = static_cast<EncryptedChatType>(x);
+        m_classType = static_cast<EncryptedChatClassType>(x);
         return true;
     }
         break;
     
     case typeEncryptedChatDiscarded: {
         m_id = in->fetchInt();
-        m_classType = static_cast<EncryptedChatType>(x);
+        m_classType = static_cast<EncryptedChatClassType>(x);
         return true;
     }
         break;
@@ -292,7 +292,7 @@ QDataStream &operator<<(QDataStream &stream, const EncryptedChat &item) {
 QDataStream &operator>>(QDataStream &stream, EncryptedChat &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<EncryptedChat::EncryptedChatType>(type));
+    item.setClassType(static_cast<EncryptedChat::EncryptedChatClassType>(type));
     switch(type) {
     case EncryptedChat::typeEncryptedChatEmpty: {
         qint32 m_id;

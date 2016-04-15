@@ -13,14 +13,14 @@
 class LIBQTELEGRAMSHARED_EXPORT ContactBlockedObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(ContactBlockedType)
+    Q_ENUMS(ContactBlockedClassType)
     Q_PROPERTY(qint32 date READ date WRITE setDate NOTIFY dateChanged)
     Q_PROPERTY(qint32 userId READ userId WRITE setUserId NOTIFY userIdChanged)
     Q_PROPERTY(ContactBlocked core READ core WRITE setCore NOTIFY coreChanged)
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum ContactBlockedType {
+    enum ContactBlockedClassType {
         TypeContactBlocked
     };
 

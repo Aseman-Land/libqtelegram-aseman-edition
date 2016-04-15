@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-InputFile::InputFile(InputFileType classType, InboundPkt *in) :
+InputFile::InputFile(InputFileClassType classType, InboundPkt *in) :
     m_id(0),
     m_parts(0),
     m_classType(classType)
@@ -76,11 +76,11 @@ bool InputFile::operator ==(const InputFile &b) const {
            m_parts == b.m_parts;
 }
 
-void InputFile::setClassType(InputFile::InputFileType classType) {
+void InputFile::setClassType(InputFile::InputFileClassType classType) {
     m_classType = classType;
 }
 
-InputFile::InputFileType InputFile::classType() const {
+InputFile::InputFileClassType InputFile::classType() const {
     return m_classType;
 }
 
@@ -93,7 +93,7 @@ bool InputFile::fetch(InboundPkt *in) {
         m_parts = in->fetchInt();
         m_name = in->fetchQString();
         m_md5Checksum = in->fetchQString();
-        m_classType = static_cast<InputFileType>(x);
+        m_classType = static_cast<InputFileClassType>(x);
         return true;
     }
         break;
@@ -102,7 +102,7 @@ bool InputFile::fetch(InboundPkt *in) {
         m_id = in->fetchLong();
         m_parts = in->fetchInt();
         m_name = in->fetchQString();
-        m_classType = static_cast<InputFileType>(x);
+        m_classType = static_cast<InputFileClassType>(x);
         return true;
     }
         break;
@@ -166,7 +166,7 @@ QDataStream &operator<<(QDataStream &stream, const InputFile &item) {
 QDataStream &operator>>(QDataStream &stream, InputFile &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<InputFile::InputFileType>(type));
+    item.setClassType(static_cast<InputFile::InputFileClassType>(type));
     switch(type) {
     case InputFile::typeInputFile: {
         qint64 m_id;

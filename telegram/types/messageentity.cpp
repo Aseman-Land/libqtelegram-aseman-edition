@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-MessageEntity::MessageEntity(MessageEntityType classType, InboundPkt *in) :
+MessageEntity::MessageEntity(MessageEntityClassType classType, InboundPkt *in) :
     m_length(0),
     m_offset(0),
     m_classType(classType)
@@ -76,11 +76,11 @@ bool MessageEntity::operator ==(const MessageEntity &b) const {
            m_url == b.m_url;
 }
 
-void MessageEntity::setClassType(MessageEntity::MessageEntityType classType) {
+void MessageEntity::setClassType(MessageEntity::MessageEntityClassType classType) {
     m_classType = classType;
 }
 
-MessageEntity::MessageEntityType MessageEntity::classType() const {
+MessageEntity::MessageEntityClassType MessageEntity::classType() const {
     return m_classType;
 }
 
@@ -91,7 +91,7 @@ bool MessageEntity::fetch(InboundPkt *in) {
     case typeMessageEntityUnknown: {
         m_offset = in->fetchInt();
         m_length = in->fetchInt();
-        m_classType = static_cast<MessageEntityType>(x);
+        m_classType = static_cast<MessageEntityClassType>(x);
         return true;
     }
         break;
@@ -99,7 +99,7 @@ bool MessageEntity::fetch(InboundPkt *in) {
     case typeMessageEntityMention: {
         m_offset = in->fetchInt();
         m_length = in->fetchInt();
-        m_classType = static_cast<MessageEntityType>(x);
+        m_classType = static_cast<MessageEntityClassType>(x);
         return true;
     }
         break;
@@ -107,7 +107,7 @@ bool MessageEntity::fetch(InboundPkt *in) {
     case typeMessageEntityHashtag: {
         m_offset = in->fetchInt();
         m_length = in->fetchInt();
-        m_classType = static_cast<MessageEntityType>(x);
+        m_classType = static_cast<MessageEntityClassType>(x);
         return true;
     }
         break;
@@ -115,7 +115,7 @@ bool MessageEntity::fetch(InboundPkt *in) {
     case typeMessageEntityBotCommand: {
         m_offset = in->fetchInt();
         m_length = in->fetchInt();
-        m_classType = static_cast<MessageEntityType>(x);
+        m_classType = static_cast<MessageEntityClassType>(x);
         return true;
     }
         break;
@@ -123,7 +123,7 @@ bool MessageEntity::fetch(InboundPkt *in) {
     case typeMessageEntityUrl: {
         m_offset = in->fetchInt();
         m_length = in->fetchInt();
-        m_classType = static_cast<MessageEntityType>(x);
+        m_classType = static_cast<MessageEntityClassType>(x);
         return true;
     }
         break;
@@ -131,7 +131,7 @@ bool MessageEntity::fetch(InboundPkt *in) {
     case typeMessageEntityEmail: {
         m_offset = in->fetchInt();
         m_length = in->fetchInt();
-        m_classType = static_cast<MessageEntityType>(x);
+        m_classType = static_cast<MessageEntityClassType>(x);
         return true;
     }
         break;
@@ -139,7 +139,7 @@ bool MessageEntity::fetch(InboundPkt *in) {
     case typeMessageEntityBold: {
         m_offset = in->fetchInt();
         m_length = in->fetchInt();
-        m_classType = static_cast<MessageEntityType>(x);
+        m_classType = static_cast<MessageEntityClassType>(x);
         return true;
     }
         break;
@@ -147,7 +147,7 @@ bool MessageEntity::fetch(InboundPkt *in) {
     case typeMessageEntityItalic: {
         m_offset = in->fetchInt();
         m_length = in->fetchInt();
-        m_classType = static_cast<MessageEntityType>(x);
+        m_classType = static_cast<MessageEntityClassType>(x);
         return true;
     }
         break;
@@ -155,7 +155,7 @@ bool MessageEntity::fetch(InboundPkt *in) {
     case typeMessageEntityCode: {
         m_offset = in->fetchInt();
         m_length = in->fetchInt();
-        m_classType = static_cast<MessageEntityType>(x);
+        m_classType = static_cast<MessageEntityClassType>(x);
         return true;
     }
         break;
@@ -164,7 +164,7 @@ bool MessageEntity::fetch(InboundPkt *in) {
         m_offset = in->fetchInt();
         m_length = in->fetchInt();
         m_language = in->fetchQString();
-        m_classType = static_cast<MessageEntityType>(x);
+        m_classType = static_cast<MessageEntityClassType>(x);
         return true;
     }
         break;
@@ -173,7 +173,7 @@ bool MessageEntity::fetch(InboundPkt *in) {
         m_offset = in->fetchInt();
         m_length = in->fetchInt();
         m_url = in->fetchQString();
-        m_classType = static_cast<MessageEntityType>(x);
+        m_classType = static_cast<MessageEntityClassType>(x);
         return true;
     }
         break;
@@ -334,7 +334,7 @@ QDataStream &operator<<(QDataStream &stream, const MessageEntity &item) {
 QDataStream &operator>>(QDataStream &stream, MessageEntity &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<MessageEntity::MessageEntityType>(type));
+    item.setClassType(static_cast<MessageEntity::MessageEntityClassType>(type));
     switch(type) {
     case MessageEntity::typeMessageEntityUnknown: {
         qint32 m_offset;

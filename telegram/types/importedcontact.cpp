@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-ImportedContact::ImportedContact(ImportedContactType classType, InboundPkt *in) :
+ImportedContact::ImportedContact(ImportedContactClassType classType, InboundPkt *in) :
     m_clientId(0),
     m_userId(0),
     m_classType(classType)
@@ -58,11 +58,11 @@ bool ImportedContact::operator ==(const ImportedContact &b) const {
            m_userId == b.m_userId;
 }
 
-void ImportedContact::setClassType(ImportedContact::ImportedContactType classType) {
+void ImportedContact::setClassType(ImportedContact::ImportedContactClassType classType) {
     m_classType = classType;
 }
 
-ImportedContact::ImportedContactType ImportedContact::classType() const {
+ImportedContact::ImportedContactClassType ImportedContact::classType() const {
     return m_classType;
 }
 
@@ -73,7 +73,7 @@ bool ImportedContact::fetch(InboundPkt *in) {
     case typeImportedContact: {
         m_userId = in->fetchInt();
         m_clientId = in->fetchLong();
-        m_classType = static_cast<ImportedContactType>(x);
+        m_classType = static_cast<ImportedContactClassType>(x);
         return true;
     }
         break;
@@ -120,7 +120,7 @@ QDataStream &operator<<(QDataStream &stream, const ImportedContact &item) {
 QDataStream &operator>>(QDataStream &stream, ImportedContact &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<ImportedContact::ImportedContactType>(type));
+    item.setClassType(static_cast<ImportedContact::ImportedContactClassType>(type));
     switch(type) {
     case ImportedContact::typeImportedContact: {
         qint32 m_user_id;

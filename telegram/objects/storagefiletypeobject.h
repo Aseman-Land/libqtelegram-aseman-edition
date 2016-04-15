@@ -13,12 +13,12 @@
 class LIBQTELEGRAMSHARED_EXPORT StorageFileTypeObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(StorageFileTypeType)
+    Q_ENUMS(StorageFileTypeClassType)
     Q_PROPERTY(StorageFileType core READ core WRITE setCore NOTIFY coreChanged)
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum StorageFileTypeType {
+    enum StorageFileTypeClassType {
         TypeStorageFileUnknown,
         TypeStorageFileJpeg,
         TypeStorageFileGif,

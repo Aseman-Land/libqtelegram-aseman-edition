@@ -13,14 +13,14 @@
 class LIBQTELEGRAMSHARED_EXPORT ContactObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(ContactType)
+    Q_ENUMS(ContactClassType)
     Q_PROPERTY(bool mutual READ mutual WRITE setMutual NOTIFY mutualChanged)
     Q_PROPERTY(qint32 userId READ userId WRITE setUserId NOTIFY userIdChanged)
     Q_PROPERTY(Contact core READ core WRITE setCore NOTIFY coreChanged)
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum ContactType {
+    enum ContactClassType {
         TypeContact
     };
 

@@ -14,11 +14,11 @@
 class LIBQTELEGRAMSHARED_EXPORT ContactStatus : public TelegramTypeObject
 {
 public:
-    enum ContactStatusType {
+    enum ContactStatusClassType {
         typeContactStatus = 0xd3680c61
     };
 
-    ContactStatus(ContactStatusType classType = typeContactStatus, InboundPkt *in = 0);
+    ContactStatus(ContactStatusClassType classType = typeContactStatus, InboundPkt *in = 0);
     ContactStatus(InboundPkt *in);
     ContactStatus(const Null&);
     virtual ~ContactStatus();
@@ -29,8 +29,8 @@ public:
     void setUserId(qint32 userId);
     qint32 userId() const;
 
-    void setClassType(ContactStatusType classType);
-    ContactStatusType classType() const;
+    void setClassType(ContactStatusClassType classType);
+    ContactStatusClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -45,7 +45,7 @@ public:
 private:
     UserStatus m_status;
     qint32 m_userId;
-    ContactStatusType m_classType;
+    ContactStatusClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(ContactStatus)

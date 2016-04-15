@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-ChannelParticipantRole::ChannelParticipantRole(ChannelParticipantRoleType classType, InboundPkt *in) :
+ChannelParticipantRole::ChannelParticipantRole(ChannelParticipantRoleClassType classType, InboundPkt *in) :
     m_classType(classType)
 {
     if(in) fetch(in);
@@ -34,11 +34,11 @@ bool ChannelParticipantRole::operator ==(const ChannelParticipantRole &b) const 
     return m_classType == b.m_classType;
 }
 
-void ChannelParticipantRole::setClassType(ChannelParticipantRole::ChannelParticipantRoleType classType) {
+void ChannelParticipantRole::setClassType(ChannelParticipantRole::ChannelParticipantRoleClassType classType) {
     m_classType = classType;
 }
 
-ChannelParticipantRole::ChannelParticipantRoleType ChannelParticipantRole::classType() const {
+ChannelParticipantRole::ChannelParticipantRoleClassType ChannelParticipantRole::classType() const {
     return m_classType;
 }
 
@@ -47,19 +47,19 @@ bool ChannelParticipantRole::fetch(InboundPkt *in) {
     int x = in->fetchInt();
     switch(x) {
     case typeChannelRoleEmpty: {
-        m_classType = static_cast<ChannelParticipantRoleType>(x);
+        m_classType = static_cast<ChannelParticipantRoleClassType>(x);
         return true;
     }
         break;
     
     case typeChannelRoleModerator: {
-        m_classType = static_cast<ChannelParticipantRoleType>(x);
+        m_classType = static_cast<ChannelParticipantRoleClassType>(x);
         return true;
     }
         break;
     
     case typeChannelRoleEditor: {
-        m_classType = static_cast<ChannelParticipantRoleType>(x);
+        m_classType = static_cast<ChannelParticipantRoleClassType>(x);
         return true;
     }
         break;
@@ -119,7 +119,7 @@ QDataStream &operator<<(QDataStream &stream, const ChannelParticipantRole &item)
 QDataStream &operator>>(QDataStream &stream, ChannelParticipantRole &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<ChannelParticipantRole::ChannelParticipantRoleType>(type));
+    item.setClassType(static_cast<ChannelParticipantRole::ChannelParticipantRoleClassType>(type));
     switch(type) {
     case ChannelParticipantRole::typeChannelRoleEmpty: {
         

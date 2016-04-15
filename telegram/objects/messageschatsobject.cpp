@@ -44,7 +44,7 @@ bool MessagesChatsObject::operator ==(const MessagesChats &b) const {
 }
 
 void MessagesChatsObject::setClassType(quint32 classType) {
-    MessagesChats::MessagesChatsType result;
+    MessagesChats::MessagesChatsClassType result;
     switch(classType) {
     case TypeMessagesChats:
         result = MessagesChats::typeMessagesChats;

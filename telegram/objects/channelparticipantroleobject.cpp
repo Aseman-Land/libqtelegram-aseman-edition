@@ -32,7 +32,7 @@ bool ChannelParticipantRoleObject::operator ==(const ChannelParticipantRole &b) 
 }
 
 void ChannelParticipantRoleObject::setClassType(quint32 classType) {
-    ChannelParticipantRole::ChannelParticipantRoleType result;
+    ChannelParticipantRole::ChannelParticipantRoleClassType result;
     switch(classType) {
     case TypeChannelRoleEmpty:
         result = ChannelParticipantRole::typeChannelRoleEmpty;

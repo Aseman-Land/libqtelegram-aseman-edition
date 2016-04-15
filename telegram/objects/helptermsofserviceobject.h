@@ -13,13 +13,13 @@
 class LIBQTELEGRAMSHARED_EXPORT HelpTermsOfServiceObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(HelpTermsOfServiceType)
+    Q_ENUMS(HelpTermsOfServiceClassType)
     Q_PROPERTY(QString text READ text WRITE setText NOTIFY textChanged)
     Q_PROPERTY(HelpTermsOfService core READ core WRITE setCore NOTIFY coreChanged)
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum HelpTermsOfServiceType {
+    enum HelpTermsOfServiceClassType {
         TypeHelpTermsOfService
     };
 

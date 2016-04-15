@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-EncryptedMessage::EncryptedMessage(EncryptedMessageType classType, InboundPkt *in) :
+EncryptedMessage::EncryptedMessage(EncryptedMessageClassType classType, InboundPkt *in) :
     m_chatId(0),
     m_date(0),
     m_randomId(0),
@@ -88,11 +88,11 @@ bool EncryptedMessage::operator ==(const EncryptedMessage &b) const {
            m_randomId == b.m_randomId;
 }
 
-void EncryptedMessage::setClassType(EncryptedMessage::EncryptedMessageType classType) {
+void EncryptedMessage::setClassType(EncryptedMessage::EncryptedMessageClassType classType) {
     m_classType = classType;
 }
 
-EncryptedMessage::EncryptedMessageType EncryptedMessage::classType() const {
+EncryptedMessage::EncryptedMessageClassType EncryptedMessage::classType() const {
     return m_classType;
 }
 
@@ -106,7 +106,7 @@ bool EncryptedMessage::fetch(InboundPkt *in) {
         m_date = in->fetchInt();
         m_bytes = in->fetchBytes();
         m_file.fetch(in);
-        m_classType = static_cast<EncryptedMessageType>(x);
+        m_classType = static_cast<EncryptedMessageClassType>(x);
         return true;
     }
         break;
@@ -116,7 +116,7 @@ bool EncryptedMessage::fetch(InboundPkt *in) {
         m_chatId = in->fetchInt();
         m_date = in->fetchInt();
         m_bytes = in->fetchBytes();
-        m_classType = static_cast<EncryptedMessageType>(x);
+        m_classType = static_cast<EncryptedMessageClassType>(x);
         return true;
     }
         break;
@@ -184,7 +184,7 @@ QDataStream &operator<<(QDataStream &stream, const EncryptedMessage &item) {
 QDataStream &operator>>(QDataStream &stream, EncryptedMessage &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<EncryptedMessage::EncryptedMessageType>(type));
+    item.setClassType(static_cast<EncryptedMessage::EncryptedMessageClassType>(type));
     switch(type) {
     case EncryptedMessage::typeEncryptedMessage: {
         qint64 m_random_id;

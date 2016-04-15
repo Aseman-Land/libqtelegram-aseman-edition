@@ -13,14 +13,14 @@
 class LIBQTELEGRAMSHARED_EXPORT MessagesFoundGifsObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(MessagesFoundGifsType)
+    Q_ENUMS(MessagesFoundGifsClassType)
     Q_PROPERTY(qint32 nextOffset READ nextOffset WRITE setNextOffset NOTIFY nextOffsetChanged)
     Q_PROPERTY(QList<FoundGif> results READ results WRITE setResults NOTIFY resultsChanged)
     Q_PROPERTY(MessagesFoundGifs core READ core WRITE setCore NOTIFY coreChanged)
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum MessagesFoundGifsType {
+    enum MessagesFoundGifsClassType {
         TypeMessagesFoundGifs
     };
 

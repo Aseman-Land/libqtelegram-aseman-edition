@@ -13,7 +13,7 @@
 class LIBQTELEGRAMSHARED_EXPORT ChannelParticipantObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(ChannelParticipantType)
+    Q_ENUMS(ChannelParticipantClassType)
     Q_PROPERTY(qint32 date READ date WRITE setDate NOTIFY dateChanged)
     Q_PROPERTY(qint32 inviterId READ inviterId WRITE setInviterId NOTIFY inviterIdChanged)
     Q_PROPERTY(qint32 kickedBy READ kickedBy WRITE setKickedBy NOTIFY kickedByChanged)
@@ -22,7 +22,7 @@ class LIBQTELEGRAMSHARED_EXPORT ChannelParticipantObject : public TelegramTypeQO
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum ChannelParticipantType {
+    enum ChannelParticipantClassType {
         TypeChannelParticipant,
         TypeChannelParticipantSelf,
         TypeChannelParticipantModerator,

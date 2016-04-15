@@ -14,11 +14,11 @@
 class LIBQTELEGRAMSHARED_EXPORT AccountAuthorizations : public TelegramTypeObject
 {
 public:
-    enum AccountAuthorizationsType {
+    enum AccountAuthorizationsClassType {
         typeAccountAuthorizations = 0x1250abde
     };
 
-    AccountAuthorizations(AccountAuthorizationsType classType = typeAccountAuthorizations, InboundPkt *in = 0);
+    AccountAuthorizations(AccountAuthorizationsClassType classType = typeAccountAuthorizations, InboundPkt *in = 0);
     AccountAuthorizations(InboundPkt *in);
     AccountAuthorizations(const Null&);
     virtual ~AccountAuthorizations();
@@ -26,8 +26,8 @@ public:
     void setAuthorizations(const QList<Authorization> &authorizations);
     QList<Authorization> authorizations() const;
 
-    void setClassType(AccountAuthorizationsType classType);
-    AccountAuthorizationsType classType() const;
+    void setClassType(AccountAuthorizationsClassType classType);
+    AccountAuthorizationsClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -41,7 +41,7 @@ public:
 
 private:
     QList<Authorization> m_authorizations;
-    AccountAuthorizationsType m_classType;
+    AccountAuthorizationsClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(AccountAuthorizations)

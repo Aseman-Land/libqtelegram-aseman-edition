@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-MessageAction::MessageAction(MessageActionType classType, InboundPkt *in) :
+MessageAction::MessageAction(MessageActionClassType classType, InboundPkt *in) :
     m_channelId(0),
     m_chatId(0),
     m_inviterId(0),
@@ -109,11 +109,11 @@ bool MessageAction::operator ==(const MessageAction &b) const {
            m_users == b.m_users;
 }
 
-void MessageAction::setClassType(MessageAction::MessageActionType classType) {
+void MessageAction::setClassType(MessageAction::MessageActionClassType classType) {
     m_classType = classType;
 }
 
-MessageAction::MessageActionType MessageAction::classType() const {
+MessageAction::MessageActionClassType MessageAction::classType() const {
     return m_classType;
 }
 
@@ -122,7 +122,7 @@ bool MessageAction::fetch(InboundPkt *in) {
     int x = in->fetchInt();
     switch(x) {
     case typeMessageActionEmpty: {
-        m_classType = static_cast<MessageActionType>(x);
+        m_classType = static_cast<MessageActionClassType>(x);
         return true;
     }
         break;
@@ -137,27 +137,27 @@ bool MessageAction::fetch(InboundPkt *in) {
             type = in->fetchInt();
             m_users.append(type);
         }
-        m_classType = static_cast<MessageActionType>(x);
+        m_classType = static_cast<MessageActionClassType>(x);
         return true;
     }
         break;
     
     case typeMessageActionChatEditTitle: {
         m_title = in->fetchQString();
-        m_classType = static_cast<MessageActionType>(x);
+        m_classType = static_cast<MessageActionClassType>(x);
         return true;
     }
         break;
     
     case typeMessageActionChatEditPhoto: {
         m_photo.fetch(in);
-        m_classType = static_cast<MessageActionType>(x);
+        m_classType = static_cast<MessageActionClassType>(x);
         return true;
     }
         break;
     
     case typeMessageActionChatDeletePhoto: {
-        m_classType = static_cast<MessageActionType>(x);
+        m_classType = static_cast<MessageActionClassType>(x);
         return true;
     }
         break;
@@ -171,35 +171,35 @@ bool MessageAction::fetch(InboundPkt *in) {
             type = in->fetchInt();
             m_users.append(type);
         }
-        m_classType = static_cast<MessageActionType>(x);
+        m_classType = static_cast<MessageActionClassType>(x);
         return true;
     }
         break;
     
     case typeMessageActionChatDeleteUser: {
         m_userId = in->fetchInt();
-        m_classType = static_cast<MessageActionType>(x);
+        m_classType = static_cast<MessageActionClassType>(x);
         return true;
     }
         break;
     
     case typeMessageActionChatJoinedByLink: {
         m_inviterId = in->fetchInt();
-        m_classType = static_cast<MessageActionType>(x);
+        m_classType = static_cast<MessageActionClassType>(x);
         return true;
     }
         break;
     
     case typeMessageActionChannelCreate: {
         m_title = in->fetchQString();
-        m_classType = static_cast<MessageActionType>(x);
+        m_classType = static_cast<MessageActionClassType>(x);
         return true;
     }
         break;
     
     case typeMessageActionChatMigrateTo: {
         m_channelId = in->fetchInt();
-        m_classType = static_cast<MessageActionType>(x);
+        m_classType = static_cast<MessageActionClassType>(x);
         return true;
     }
         break;
@@ -207,13 +207,13 @@ bool MessageAction::fetch(InboundPkt *in) {
     case typeMessageActionChannelMigrateFrom: {
         m_title = in->fetchQString();
         m_chatId = in->fetchInt();
-        m_classType = static_cast<MessageActionType>(x);
+        m_classType = static_cast<MessageActionClassType>(x);
         return true;
     }
         break;
     
     case typeMessageActionPinMessage: {
-        m_classType = static_cast<MessageActionType>(x);
+        m_classType = static_cast<MessageActionClassType>(x);
         return true;
     }
         break;
@@ -366,7 +366,7 @@ QDataStream &operator<<(QDataStream &stream, const MessageAction &item) {
 QDataStream &operator>>(QDataStream &stream, MessageAction &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<MessageAction::MessageActionType>(type));
+    item.setClassType(static_cast<MessageAction::MessageActionClassType>(type));
     switch(type) {
     case MessageAction::typeMessageActionEmpty: {
         

@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-MessagesChatFull::MessagesChatFull(MessagesChatFullType classType, InboundPkt *in) :
+MessagesChatFull::MessagesChatFull(MessagesChatFullClassType classType, InboundPkt *in) :
     m_classType(classType)
 {
     if(in) fetch(in);
@@ -61,11 +61,11 @@ bool MessagesChatFull::operator ==(const MessagesChatFull &b) const {
            m_users == b.m_users;
 }
 
-void MessagesChatFull::setClassType(MessagesChatFull::MessagesChatFullType classType) {
+void MessagesChatFull::setClassType(MessagesChatFull::MessagesChatFullClassType classType) {
     m_classType = classType;
 }
 
-MessagesChatFull::MessagesChatFullType MessagesChatFull::classType() const {
+MessagesChatFull::MessagesChatFullClassType MessagesChatFull::classType() const {
     return m_classType;
 }
 
@@ -91,7 +91,7 @@ bool MessagesChatFull::fetch(InboundPkt *in) {
             type.fetch(in);
             m_users.append(type);
         }
-        m_classType = static_cast<MessagesChatFullType>(x);
+        m_classType = static_cast<MessagesChatFullClassType>(x);
         return true;
     }
         break;
@@ -148,7 +148,7 @@ QDataStream &operator<<(QDataStream &stream, const MessagesChatFull &item) {
 QDataStream &operator>>(QDataStream &stream, MessagesChatFull &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<MessagesChatFull::MessagesChatFullType>(type));
+    item.setClassType(static_cast<MessagesChatFull::MessagesChatFullClassType>(type));
     switch(type) {
     case MessagesChatFull::typeMessagesChatFull: {
         ChatFull m_full_chat;

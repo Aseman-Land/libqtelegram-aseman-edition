@@ -14,11 +14,11 @@
 class LIBQTELEGRAMSHARED_EXPORT DcOption : public TelegramTypeObject
 {
 public:
-    enum DcOptionType {
+    enum DcOptionClassType {
         typeDcOption = 0x5d8c6cc
     };
 
-    DcOption(DcOptionType classType = typeDcOption, InboundPkt *in = 0);
+    DcOption(DcOptionClassType classType = typeDcOption, InboundPkt *in = 0);
     DcOption(InboundPkt *in);
     DcOption(const Null&);
     virtual ~DcOption();
@@ -44,8 +44,8 @@ public:
     void setTcpoOnly(bool tcpoOnly);
     bool tcpoOnly() const;
 
-    void setClassType(DcOptionType classType);
-    DcOptionType classType() const;
+    void setClassType(DcOptionClassType classType);
+    DcOptionClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -62,7 +62,7 @@ private:
     qint32 m_id;
     QString m_ipAddress;
     qint32 m_port;
-    DcOptionType m_classType;
+    DcOptionClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(DcOption)

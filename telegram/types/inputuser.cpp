@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-InputUser::InputUser(InputUserType classType, InboundPkt *in) :
+InputUser::InputUser(InputUserClassType classType, InboundPkt *in) :
     m_accessHash(0),
     m_userId(0),
     m_classType(classType)
@@ -58,11 +58,11 @@ bool InputUser::operator ==(const InputUser &b) const {
            m_userId == b.m_userId;
 }
 
-void InputUser::setClassType(InputUser::InputUserType classType) {
+void InputUser::setClassType(InputUser::InputUserClassType classType) {
     m_classType = classType;
 }
 
-InputUser::InputUserType InputUser::classType() const {
+InputUser::InputUserClassType InputUser::classType() const {
     return m_classType;
 }
 
@@ -71,13 +71,13 @@ bool InputUser::fetch(InboundPkt *in) {
     int x = in->fetchInt();
     switch(x) {
     case typeInputUserEmpty: {
-        m_classType = static_cast<InputUserType>(x);
+        m_classType = static_cast<InputUserClassType>(x);
         return true;
     }
         break;
     
     case typeInputUserSelf: {
-        m_classType = static_cast<InputUserType>(x);
+        m_classType = static_cast<InputUserClassType>(x);
         return true;
     }
         break;
@@ -85,7 +85,7 @@ bool InputUser::fetch(InboundPkt *in) {
     case typeInputUser: {
         m_userId = in->fetchInt();
         m_accessHash = in->fetchLong();
-        m_classType = static_cast<InputUserType>(x);
+        m_classType = static_cast<InputUserClassType>(x);
         return true;
     }
         break;
@@ -148,7 +148,7 @@ QDataStream &operator<<(QDataStream &stream, const InputUser &item) {
 QDataStream &operator>>(QDataStream &stream, InputUser &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<InputUser::InputUserType>(type));
+    item.setClassType(static_cast<InputUser::InputUserClassType>(type));
     switch(type) {
     case InputUser::typeInputUserEmpty: {
         

@@ -13,7 +13,7 @@
 class LIBQTELEGRAMSHARED_EXPORT InputPeerObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(InputPeerType)
+    Q_ENUMS(InputPeerClassType)
     Q_PROPERTY(qint64 accessHash READ accessHash WRITE setAccessHash NOTIFY accessHashChanged)
     Q_PROPERTY(qint32 channelId READ channelId WRITE setChannelId NOTIFY channelIdChanged)
     Q_PROPERTY(qint32 chatId READ chatId WRITE setChatId NOTIFY chatIdChanged)
@@ -22,7 +22,7 @@ class LIBQTELEGRAMSHARED_EXPORT InputPeerObject : public TelegramTypeQObject
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum InputPeerType {
+    enum InputPeerClassType {
         TypeInputPeerEmpty,
         TypeInputPeerSelf,
         TypeInputPeerChat,

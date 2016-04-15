@@ -13,14 +13,14 @@
 class LIBQTELEGRAMSHARED_EXPORT InputGeoPointObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(InputGeoPointType)
+    Q_ENUMS(InputGeoPointClassType)
     Q_PROPERTY(qreal lat READ lat WRITE setLat NOTIFY latChanged)
     Q_PROPERTY(qreal longValue READ longValue WRITE setLongValue NOTIFY longValueChanged)
     Q_PROPERTY(InputGeoPoint core READ core WRITE setCore NOTIFY coreChanged)
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum InputGeoPointType {
+    enum InputGeoPointClassType {
         TypeInputGeoPointEmpty,
         TypeInputGeoPoint
     };

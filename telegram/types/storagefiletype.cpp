@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-StorageFileType::StorageFileType(StorageFileTypeType classType, InboundPkt *in) :
+StorageFileType::StorageFileType(StorageFileTypeClassType classType, InboundPkt *in) :
     m_classType(classType)
 {
     if(in) fetch(in);
@@ -34,11 +34,11 @@ bool StorageFileType::operator ==(const StorageFileType &b) const {
     return m_classType == b.m_classType;
 }
 
-void StorageFileType::setClassType(StorageFileType::StorageFileTypeType classType) {
+void StorageFileType::setClassType(StorageFileType::StorageFileTypeClassType classType) {
     m_classType = classType;
 }
 
-StorageFileType::StorageFileTypeType StorageFileType::classType() const {
+StorageFileType::StorageFileTypeClassType StorageFileType::classType() const {
     return m_classType;
 }
 
@@ -47,61 +47,61 @@ bool StorageFileType::fetch(InboundPkt *in) {
     int x = in->fetchInt();
     switch(x) {
     case typeStorageFileUnknown: {
-        m_classType = static_cast<StorageFileTypeType>(x);
+        m_classType = static_cast<StorageFileTypeClassType>(x);
         return true;
     }
         break;
     
     case typeStorageFileJpeg: {
-        m_classType = static_cast<StorageFileTypeType>(x);
+        m_classType = static_cast<StorageFileTypeClassType>(x);
         return true;
     }
         break;
     
     case typeStorageFileGif: {
-        m_classType = static_cast<StorageFileTypeType>(x);
+        m_classType = static_cast<StorageFileTypeClassType>(x);
         return true;
     }
         break;
     
     case typeStorageFilePng: {
-        m_classType = static_cast<StorageFileTypeType>(x);
+        m_classType = static_cast<StorageFileTypeClassType>(x);
         return true;
     }
         break;
     
     case typeStorageFilePdf: {
-        m_classType = static_cast<StorageFileTypeType>(x);
+        m_classType = static_cast<StorageFileTypeClassType>(x);
         return true;
     }
         break;
     
     case typeStorageFileMp3: {
-        m_classType = static_cast<StorageFileTypeType>(x);
+        m_classType = static_cast<StorageFileTypeClassType>(x);
         return true;
     }
         break;
     
     case typeStorageFileMov: {
-        m_classType = static_cast<StorageFileTypeType>(x);
+        m_classType = static_cast<StorageFileTypeClassType>(x);
         return true;
     }
         break;
     
     case typeStorageFilePartial: {
-        m_classType = static_cast<StorageFileTypeType>(x);
+        m_classType = static_cast<StorageFileTypeClassType>(x);
         return true;
     }
         break;
     
     case typeStorageFileMp4: {
-        m_classType = static_cast<StorageFileTypeType>(x);
+        m_classType = static_cast<StorageFileTypeClassType>(x);
         return true;
     }
         break;
     
     case typeStorageFileWebp: {
-        m_classType = static_cast<StorageFileTypeType>(x);
+        m_classType = static_cast<StorageFileTypeClassType>(x);
         return true;
     }
         break;
@@ -217,7 +217,7 @@ QDataStream &operator<<(QDataStream &stream, const StorageFileType &item) {
 QDataStream &operator>>(QDataStream &stream, StorageFileType &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<StorageFileType::StorageFileTypeType>(type));
+    item.setClassType(static_cast<StorageFileType::StorageFileTypeClassType>(type));
     switch(type) {
     case StorageFileType::typeStorageFileUnknown: {
         

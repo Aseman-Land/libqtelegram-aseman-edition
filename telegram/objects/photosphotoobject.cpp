@@ -69,7 +69,7 @@ bool PhotosPhotoObject::operator ==(const PhotosPhoto &b) const {
 }
 
 void PhotosPhotoObject::setClassType(quint32 classType) {
-    PhotosPhoto::PhotosPhotoType result;
+    PhotosPhoto::PhotosPhotoClassType result;
     switch(classType) {
     case TypePhotosPhoto:
         result = PhotosPhoto::typePhotosPhoto;

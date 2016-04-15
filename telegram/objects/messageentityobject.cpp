@@ -80,7 +80,7 @@ bool MessageEntityObject::operator ==(const MessageEntity &b) const {
 }
 
 void MessageEntityObject::setClassType(quint32 classType) {
-    MessageEntity::MessageEntityType result;
+    MessageEntity::MessageEntityClassType result;
     switch(classType) {
     case TypeMessageEntityUnknown:
         result = MessageEntity::typeMessageEntityUnknown;

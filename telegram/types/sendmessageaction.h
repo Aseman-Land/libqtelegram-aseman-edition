@@ -13,7 +13,7 @@
 class LIBQTELEGRAMSHARED_EXPORT SendMessageAction : public TelegramTypeObject
 {
 public:
-    enum SendMessageActionType {
+    enum SendMessageActionClassType {
         typeSendMessageTypingAction = 0x16bf744e,
         typeSendMessageCancelAction = 0xfd5ec8f5,
         typeSendMessageRecordVideoAction = 0xa187d66f,
@@ -26,7 +26,7 @@ public:
         typeSendMessageChooseContactAction = 0x628cbc6f
     };
 
-    SendMessageAction(SendMessageActionType classType = typeSendMessageTypingAction, InboundPkt *in = 0);
+    SendMessageAction(SendMessageActionClassType classType = typeSendMessageTypingAction, InboundPkt *in = 0);
     SendMessageAction(InboundPkt *in);
     SendMessageAction(const Null&);
     virtual ~SendMessageAction();
@@ -34,8 +34,8 @@ public:
     void setProgress(qint32 progress);
     qint32 progress() const;
 
-    void setClassType(SendMessageActionType classType);
-    SendMessageActionType classType() const;
+    void setClassType(SendMessageActionClassType classType);
+    SendMessageActionClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -49,7 +49,7 @@ public:
 
 private:
     qint32 m_progress;
-    SendMessageActionType m_classType;
+    SendMessageActionClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(SendMessageAction)

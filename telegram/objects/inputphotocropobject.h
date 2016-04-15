@@ -13,7 +13,7 @@
 class LIBQTELEGRAMSHARED_EXPORT InputPhotoCropObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(InputPhotoCropType)
+    Q_ENUMS(InputPhotoCropClassType)
     Q_PROPERTY(qreal cropLeft READ cropLeft WRITE setCropLeft NOTIFY cropLeftChanged)
     Q_PROPERTY(qreal cropTop READ cropTop WRITE setCropTop NOTIFY cropTopChanged)
     Q_PROPERTY(qreal cropWidth READ cropWidth WRITE setCropWidth NOTIFY cropWidthChanged)
@@ -21,7 +21,7 @@ class LIBQTELEGRAMSHARED_EXPORT InputPhotoCropObject : public TelegramTypeQObjec
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum InputPhotoCropType {
+    enum InputPhotoCropClassType {
         TypeInputPhotoCropAuto,
         TypeInputPhotoCrop
     };

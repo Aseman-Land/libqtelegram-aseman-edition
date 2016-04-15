@@ -92,7 +92,7 @@ bool AccountPasswordInputSettingsObject::operator ==(const AccountPasswordInputS
 }
 
 void AccountPasswordInputSettingsObject::setClassType(quint32 classType) {
-    AccountPasswordInputSettings::AccountPasswordInputSettingsType result;
+    AccountPasswordInputSettings::AccountPasswordInputSettingsClassType result;
     switch(classType) {
     case TypeAccountPasswordInputSettings:
         result = AccountPasswordInputSettings::typeAccountPasswordInputSettings;

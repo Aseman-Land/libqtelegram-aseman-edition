@@ -325,19 +325,10 @@ void Telegram::onDcProviderReady() {
     prv->mLibraryState = CreatedSharedKeys;
     setApi( prv->mDcProvider->getApi() );
     // api signal-signal and signal-slot connections
-    // updates
-    connect(mApi.data(), &TelegramApi::updatesTooLong, this, &Telegram::updatesTooLong);
-    connect(mApi.data(), &TelegramApi::updateShortMessage, this, &Telegram::updateShortMessage);
-    connect(mApi.data(), &TelegramApi::updateShortChatMessage, this, &Telegram::updateShortChatMessage);
-    connect(mApi.data(), &TelegramApi::updateShort, this, &Telegram::updateShort);
-    connect(mApi.data(), &TelegramApi::updatesCombined, this, &Telegram::updatesCombined);
-    connect(mApi.data(), &TelegramApi::updates, this, &Telegram::updates);
     // errors
     connect(mApi.data(), &TelegramApi::fatalError, this, &Telegram::fatalError);
 
     // updates
-    connect(mApi.data(), &TelegramApi::updateShort, this, &Telegram::onUpdateShort);
-    connect(mApi.data(), &TelegramApi::updatesCombined, this, &Telegram::onUpdatesCombined);
     connect(mApi.data(), &TelegramApi::updates, this, &Telegram::onUpdates);
     // logic additional signal slots
     connect(mApi.data(), &TelegramApi::mainSessionDcChanged, this, &Telegram::onMainDcChanged, Qt::QueuedConnection);
@@ -690,20 +681,21 @@ void Telegram::messagesDhConfigNotModified(qint64 msgId, const QByteArray &rando
     prv->mSecretState.save();
 }
 
-void Telegram::onUpdateShort(const Update &update) {
-    processSecretChatUpdate(update);
-}
-
-void Telegram::onUpdatesCombined(const QList<Update> &updates) {
-    Q_FOREACH (const Update &update, updates) {
-        processSecretChatUpdate(update);
+void Telegram::onUpdates(const UpdatesType &upds) {
+    switch(static_cast<int>(upds.classType()))
+    {
+    case UpdatesType::typeUpdates:
+    case UpdatesType::typeUpdatesCombined:
+        Q_FOREACH (const Update &update, upds.updates()) {
+            processSecretChatUpdate(update);
+        }
+        break;
+    case UpdatesType::typeUpdateShort:
+        processSecretChatUpdate(upds.update());
+        break;
     }
-}
 
-void Telegram::onUpdates(const QList<Update> &udts) {
-    Q_FOREACH (const Update &update, udts) {
-        processSecretChatUpdate(update);
-    }
+    Q_EMIT updates(upds);
 }
 
 void Telegram::onUploadGetFileAnswer(qint64 fileId, const UploadGetFile &result)
@@ -1140,15 +1132,11 @@ qint64 Telegram::authCheckPhone(Callback<AuthCheckedPhone> callBack, qint32 time
 }
 
 qint64 Telegram::authSendCode(Callback<AuthSentCode> callBack, qint32 timeout) {
-    return TelegramCore::authSendCode(prv->mSettings->phoneNumber(), 0, prv->mSettings->appId(), prv->mSettings->appHash(), LANG_CODE, callBack, timeout);
+    return TelegramCore::authSendCode(false, prv->mSettings->phoneNumber(), 0, prv->mSettings->appId(), prv->mSettings->appHash(), LANG_CODE, callBack, timeout);
 }
 
-qint64 Telegram::authSendSms(Callback<bool> callBack, qint32 timeout) {
-    return TelegramCore::authSendSms(prv->mSettings->phoneNumber(), prv->m_phoneCodeHash, callBack, timeout);
-}
-
-qint64 Telegram::authSendCall(Callback<bool> callBack, qint32 timeout) {
-    return TelegramCore::authSendCall(prv->mSettings->phoneNumber(), prv->m_phoneCodeHash, callBack, timeout);
+qint64 Telegram::authSendCall(Callback<AuthSentCode> callBack, qint32 timeout) {
+    return TelegramCore::authSendCode(true, prv->mSettings->phoneNumber(), 0, prv->mSettings->appId(), prv->mSettings->appHash(), LANG_CODE, callBack, timeout);
 }
 
 qint64 Telegram::authSignIn(const QString &code, Callback<AuthAuthorization> callBack, qint32 timeout) {

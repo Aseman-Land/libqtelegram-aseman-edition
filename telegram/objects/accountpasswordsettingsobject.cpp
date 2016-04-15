@@ -44,7 +44,7 @@ bool AccountPasswordSettingsObject::operator ==(const AccountPasswordSettings &b
 }
 
 void AccountPasswordSettingsObject::setClassType(quint32 classType) {
-    AccountPasswordSettings::AccountPasswordSettingsType result;
+    AccountPasswordSettings::AccountPasswordSettingsClassType result;
     switch(classType) {
     case TypeAccountPasswordSettings:
         result = AccountPasswordSettings::typeAccountPasswordSettings;

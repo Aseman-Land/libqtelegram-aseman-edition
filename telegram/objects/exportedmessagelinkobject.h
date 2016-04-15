@@ -13,13 +13,13 @@
 class LIBQTELEGRAMSHARED_EXPORT ExportedMessageLinkObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(ExportedMessageLinkType)
+    Q_ENUMS(ExportedMessageLinkClassType)
     Q_PROPERTY(QString link READ link WRITE setLink NOTIFY linkChanged)
     Q_PROPERTY(ExportedMessageLink core READ core WRITE setCore NOTIFY coreChanged)
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum ExportedMessageLinkType {
+    enum ExportedMessageLinkClassType {
         TypeExportedMessageLink
     };
 

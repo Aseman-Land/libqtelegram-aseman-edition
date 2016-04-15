@@ -13,14 +13,14 @@
 class LIBQTELEGRAMSHARED_EXPORT AccountPrivacyRulesObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(AccountPrivacyRulesType)
+    Q_ENUMS(AccountPrivacyRulesClassType)
     Q_PROPERTY(QList<PrivacyRule> rules READ rules WRITE setRules NOTIFY rulesChanged)
     Q_PROPERTY(QList<User> users READ users WRITE setUsers NOTIFY usersChanged)
     Q_PROPERTY(AccountPrivacyRules core READ core WRITE setCore NOTIFY coreChanged)
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum AccountPrivacyRulesType {
+    enum AccountPrivacyRulesClassType {
         TypeAccountPrivacyRules
     };
 

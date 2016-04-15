@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-InputFileLocation::InputFileLocation(InputFileLocationType classType, InboundPkt *in) :
+InputFileLocation::InputFileLocation(InputFileLocationClassType classType, InboundPkt *in) :
     m_accessHash(0),
     m_id(0),
     m_localId(0),
@@ -94,11 +94,11 @@ bool InputFileLocation::operator ==(const InputFileLocation &b) const {
            m_volumeId == b.m_volumeId;
 }
 
-void InputFileLocation::setClassType(InputFileLocation::InputFileLocationType classType) {
+void InputFileLocation::setClassType(InputFileLocation::InputFileLocationClassType classType) {
     m_classType = classType;
 }
 
-InputFileLocation::InputFileLocationType InputFileLocation::classType() const {
+InputFileLocation::InputFileLocationClassType InputFileLocation::classType() const {
     return m_classType;
 }
 
@@ -110,7 +110,7 @@ bool InputFileLocation::fetch(InboundPkt *in) {
         m_volumeId = in->fetchLong();
         m_localId = in->fetchInt();
         m_secret = in->fetchLong();
-        m_classType = static_cast<InputFileLocationType>(x);
+        m_classType = static_cast<InputFileLocationClassType>(x);
         return true;
     }
         break;
@@ -118,7 +118,7 @@ bool InputFileLocation::fetch(InboundPkt *in) {
     case typeInputEncryptedFileLocation: {
         m_id = in->fetchLong();
         m_accessHash = in->fetchLong();
-        m_classType = static_cast<InputFileLocationType>(x);
+        m_classType = static_cast<InputFileLocationClassType>(x);
         return true;
     }
         break;
@@ -126,7 +126,7 @@ bool InputFileLocation::fetch(InboundPkt *in) {
     case typeInputDocumentFileLocation: {
         m_id = in->fetchLong();
         m_accessHash = in->fetchLong();
-        m_classType = static_cast<InputFileLocationType>(x);
+        m_classType = static_cast<InputFileLocationClassType>(x);
         return true;
     }
         break;
@@ -197,7 +197,7 @@ QDataStream &operator<<(QDataStream &stream, const InputFileLocation &item) {
 QDataStream &operator>>(QDataStream &stream, InputFileLocation &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<InputFileLocation::InputFileLocationType>(type));
+    item.setClassType(static_cast<InputFileLocation::InputFileLocationClassType>(type));
     switch(type) {
     case InputFileLocation::typeInputFileLocation: {
         qint64 m_volume_id;

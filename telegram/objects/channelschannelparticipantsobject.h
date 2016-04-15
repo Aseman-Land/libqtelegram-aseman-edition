@@ -13,7 +13,7 @@
 class LIBQTELEGRAMSHARED_EXPORT ChannelsChannelParticipantsObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(ChannelsChannelParticipantsType)
+    Q_ENUMS(ChannelsChannelParticipantsClassType)
     Q_PROPERTY(qint32 count READ count WRITE setCount NOTIFY countChanged)
     Q_PROPERTY(QList<ChannelParticipant> participants READ participants WRITE setParticipants NOTIFY participantsChanged)
     Q_PROPERTY(QList<User> users READ users WRITE setUsers NOTIFY usersChanged)
@@ -21,7 +21,7 @@ class LIBQTELEGRAMSHARED_EXPORT ChannelsChannelParticipantsObject : public Teleg
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum ChannelsChannelParticipantsType {
+    enum ChannelsChannelParticipantsClassType {
         TypeChannelsChannelParticipants
     };
 

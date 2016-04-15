@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-UpdatesChannelDifference::UpdatesChannelDifference(UpdatesChannelDifferenceType classType, InboundPkt *in) :
+UpdatesChannelDifference::UpdatesChannelDifference(UpdatesChannelDifferenceClassType classType, InboundPkt *in) :
     m_flags(0),
     m_pts(0),
     m_readInboxMaxId(0),
@@ -184,11 +184,11 @@ bool UpdatesChannelDifference::operator ==(const UpdatesChannelDifference &b) co
            m_users == b.m_users;
 }
 
-void UpdatesChannelDifference::setClassType(UpdatesChannelDifference::UpdatesChannelDifferenceType classType) {
+void UpdatesChannelDifference::setClassType(UpdatesChannelDifference::UpdatesChannelDifferenceClassType classType) {
     m_classType = classType;
 }
 
-UpdatesChannelDifference::UpdatesChannelDifferenceType UpdatesChannelDifference::classType() const {
+UpdatesChannelDifference::UpdatesChannelDifferenceClassType UpdatesChannelDifference::classType() const {
     return m_classType;
 }
 
@@ -202,7 +202,7 @@ bool UpdatesChannelDifference::fetch(InboundPkt *in) {
         if(m_flags & 1<<1) {
             m_timeout = in->fetchInt();
         }
-        m_classType = static_cast<UpdatesChannelDifferenceType>(x);
+        m_classType = static_cast<UpdatesChannelDifferenceClassType>(x);
         return true;
     }
         break;
@@ -242,7 +242,7 @@ bool UpdatesChannelDifference::fetch(InboundPkt *in) {
             type.fetch(in);
             m_users.append(type);
         }
-        m_classType = static_cast<UpdatesChannelDifferenceType>(x);
+        m_classType = static_cast<UpdatesChannelDifferenceClassType>(x);
         return true;
     }
         break;
@@ -285,7 +285,7 @@ bool UpdatesChannelDifference::fetch(InboundPkt *in) {
             type.fetch(in);
             m_users.append(type);
         }
-        m_classType = static_cast<UpdatesChannelDifferenceType>(x);
+        m_classType = static_cast<UpdatesChannelDifferenceClassType>(x);
         return true;
     }
         break;
@@ -412,7 +412,7 @@ QDataStream &operator<<(QDataStream &stream, const UpdatesChannelDifference &ite
 QDataStream &operator>>(QDataStream &stream, UpdatesChannelDifference &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<UpdatesChannelDifference::UpdatesChannelDifferenceType>(type));
+    item.setClassType(static_cast<UpdatesChannelDifference::UpdatesChannelDifferenceClassType>(type));
     switch(type) {
     case UpdatesChannelDifference::typeUpdatesChannelDifferenceEmpty: {
         qint32 m_flags;

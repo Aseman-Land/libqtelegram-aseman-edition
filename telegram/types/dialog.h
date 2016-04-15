@@ -15,12 +15,12 @@
 class LIBQTELEGRAMSHARED_EXPORT Dialog : public TelegramTypeObject
 {
 public:
-    enum DialogType {
+    enum DialogClassType {
         typeDialog = 0xc1dd804a,
         typeDialogChannel = 0x5b8496b2
     };
 
-    Dialog(DialogType classType = typeDialog, InboundPkt *in = 0);
+    Dialog(DialogClassType classType = typeDialog, InboundPkt *in = 0);
     Dialog(InboundPkt *in);
     Dialog(const Null&);
     virtual ~Dialog();
@@ -49,8 +49,8 @@ public:
     void setUnreadImportantCount(qint32 unreadImportantCount);
     qint32 unreadImportantCount() const;
 
-    void setClassType(DialogType classType);
-    DialogType classType() const;
+    void setClassType(DialogClassType classType);
+    DialogClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -71,7 +71,7 @@ private:
     qint32 m_topMessage;
     qint32 m_unreadCount;
     qint32 m_unreadImportantCount;
-    DialogType m_classType;
+    DialogClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(Dialog)

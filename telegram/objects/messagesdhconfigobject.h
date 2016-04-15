@@ -13,7 +13,7 @@
 class LIBQTELEGRAMSHARED_EXPORT MessagesDhConfigObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(MessagesDhConfigType)
+    Q_ENUMS(MessagesDhConfigClassType)
     Q_PROPERTY(qint32 g READ g WRITE setG NOTIFY gChanged)
     Q_PROPERTY(QByteArray p READ p WRITE setP NOTIFY pChanged)
     Q_PROPERTY(QByteArray random READ random WRITE setRandom NOTIFY randomChanged)
@@ -22,7 +22,7 @@ class LIBQTELEGRAMSHARED_EXPORT MessagesDhConfigObject : public TelegramTypeQObj
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum MessagesDhConfigType {
+    enum MessagesDhConfigClassType {
         TypeMessagesDhConfigNotModified,
         TypeMessagesDhConfig
     };

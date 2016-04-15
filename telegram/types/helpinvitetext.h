@@ -13,11 +13,11 @@
 class LIBQTELEGRAMSHARED_EXPORT HelpInviteText : public TelegramTypeObject
 {
 public:
-    enum HelpInviteTextType {
+    enum HelpInviteTextClassType {
         typeHelpInviteText = 0x18cb9f78
     };
 
-    HelpInviteText(HelpInviteTextType classType = typeHelpInviteText, InboundPkt *in = 0);
+    HelpInviteText(HelpInviteTextClassType classType = typeHelpInviteText, InboundPkt *in = 0);
     HelpInviteText(InboundPkt *in);
     HelpInviteText(const Null&);
     virtual ~HelpInviteText();
@@ -25,8 +25,8 @@ public:
     void setMessage(const QString &message);
     QString message() const;
 
-    void setClassType(HelpInviteTextType classType);
-    HelpInviteTextType classType() const;
+    void setClassType(HelpInviteTextClassType classType);
+    HelpInviteTextClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -40,7 +40,7 @@ public:
 
 private:
     QString m_message;
-    HelpInviteTextType m_classType;
+    HelpInviteTextClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(HelpInviteText)

@@ -13,7 +13,7 @@
 class LIBQTELEGRAMSHARED_EXPORT ContactsImportedContactsObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(ContactsImportedContactsType)
+    Q_ENUMS(ContactsImportedContactsClassType)
     Q_PROPERTY(QList<ImportedContact> imported READ imported WRITE setImported NOTIFY importedChanged)
     Q_PROPERTY(QList<qint64> retryContacts READ retryContacts WRITE setRetryContacts NOTIFY retryContactsChanged)
     Q_PROPERTY(QList<User> users READ users WRITE setUsers NOTIFY usersChanged)
@@ -21,7 +21,7 @@ class LIBQTELEGRAMSHARED_EXPORT ContactsImportedContactsObject : public Telegram
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum ContactsImportedContactsType {
+    enum ContactsImportedContactsClassType {
         TypeContactsImportedContacts
     };
 

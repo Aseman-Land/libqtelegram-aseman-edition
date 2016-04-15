@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-AccountPrivacyRules::AccountPrivacyRules(AccountPrivacyRulesType classType, InboundPkt *in) :
+AccountPrivacyRules::AccountPrivacyRules(AccountPrivacyRulesClassType classType, InboundPkt *in) :
     m_classType(classType)
 {
     if(in) fetch(in);
@@ -52,11 +52,11 @@ bool AccountPrivacyRules::operator ==(const AccountPrivacyRules &b) const {
            m_users == b.m_users;
 }
 
-void AccountPrivacyRules::setClassType(AccountPrivacyRules::AccountPrivacyRulesType classType) {
+void AccountPrivacyRules::setClassType(AccountPrivacyRules::AccountPrivacyRulesClassType classType) {
     m_classType = classType;
 }
 
-AccountPrivacyRules::AccountPrivacyRulesType AccountPrivacyRules::classType() const {
+AccountPrivacyRules::AccountPrivacyRulesClassType AccountPrivacyRules::classType() const {
     return m_classType;
 }
 
@@ -81,7 +81,7 @@ bool AccountPrivacyRules::fetch(InboundPkt *in) {
             type.fetch(in);
             m_users.append(type);
         }
-        m_classType = static_cast<AccountPrivacyRulesType>(x);
+        m_classType = static_cast<AccountPrivacyRulesClassType>(x);
         return true;
     }
         break;
@@ -136,7 +136,7 @@ QDataStream &operator<<(QDataStream &stream, const AccountPrivacyRules &item) {
 QDataStream &operator>>(QDataStream &stream, AccountPrivacyRules &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<AccountPrivacyRules::AccountPrivacyRulesType>(type));
+    item.setClassType(static_cast<AccountPrivacyRules::AccountPrivacyRulesClassType>(type));
     switch(type) {
     case AccountPrivacyRules::typeAccountPrivacyRules: {
         QList<PrivacyRule> m_rules;

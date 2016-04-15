@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-DcOption::DcOption(DcOptionType classType, InboundPkt *in) :
+DcOption::DcOption(DcOptionClassType classType, InboundPkt *in) :
     m_flags(0),
     m_id(0),
     m_port(0),
@@ -106,11 +106,11 @@ bool DcOption::operator ==(const DcOption &b) const {
            m_port == b.m_port;
 }
 
-void DcOption::setClassType(DcOption::DcOptionType classType) {
+void DcOption::setClassType(DcOption::DcOptionClassType classType) {
     m_classType = classType;
 }
 
-DcOption::DcOptionType DcOption::classType() const {
+DcOption::DcOptionClassType DcOption::classType() const {
     return m_classType;
 }
 
@@ -123,7 +123,7 @@ bool DcOption::fetch(InboundPkt *in) {
         m_id = in->fetchInt();
         m_ipAddress = in->fetchQString();
         m_port = in->fetchInt();
-        m_classType = static_cast<DcOptionType>(x);
+        m_classType = static_cast<DcOptionClassType>(x);
         return true;
     }
         break;
@@ -174,7 +174,7 @@ QDataStream &operator<<(QDataStream &stream, const DcOption &item) {
 QDataStream &operator>>(QDataStream &stream, DcOption &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<DcOption::DcOptionType>(type));
+    item.setClassType(static_cast<DcOption::DcOptionClassType>(type));
     switch(type) {
     case DcOption::typeDcOption: {
         qint32 m_flags;

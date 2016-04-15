@@ -75,6 +75,17 @@ qint32 UserObject::botInfoVersion() const {
     return m_core.botInfoVersion();
 }
 
+void UserObject::setBotInlineGeo(bool botInlineGeo) {
+    if(m_core.botInlineGeo() == botInlineGeo) return;
+    m_core.setBotInlineGeo(botInlineGeo);
+    Q_EMIT botInlineGeoChanged();
+    Q_EMIT coreChanged();
+}
+
+bool UserObject::botInlineGeo() const {
+    return m_core.botInlineGeo();
+}
+
 void UserObject::setBotInlinePlaceholder(const QString &botInlinePlaceholder) {
     if(m_core.botInlinePlaceholder() == botInlinePlaceholder) return;
     m_core.setBotInlinePlaceholder(botInlinePlaceholder);
@@ -295,6 +306,7 @@ UserObject &UserObject::operator =(const User &b) {
     Q_EMIT botChanged();
     Q_EMIT botChatHistoryChanged();
     Q_EMIT botInfoVersionChanged();
+    Q_EMIT botInlineGeoChanged();
     Q_EMIT botInlinePlaceholderChanged();
     Q_EMIT botNochatsChanged();
     Q_EMIT contactChanged();
@@ -322,7 +334,7 @@ bool UserObject::operator ==(const User &b) const {
 }
 
 void UserObject::setClassType(quint32 classType) {
-    User::UserType result;
+    User::UserClassType result;
     switch(classType) {
     case TypeUserEmpty:
         result = User::typeUserEmpty;

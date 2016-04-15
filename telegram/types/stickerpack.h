@@ -15,11 +15,11 @@
 class LIBQTELEGRAMSHARED_EXPORT StickerPack : public TelegramTypeObject
 {
 public:
-    enum StickerPackType {
+    enum StickerPackClassType {
         typeStickerPack = 0x12b299d4
     };
 
-    StickerPack(StickerPackType classType = typeStickerPack, InboundPkt *in = 0);
+    StickerPack(StickerPackClassType classType = typeStickerPack, InboundPkt *in = 0);
     StickerPack(InboundPkt *in);
     StickerPack(const Null&);
     virtual ~StickerPack();
@@ -30,8 +30,8 @@ public:
     void setEmoticon(const QString &emoticon);
     QString emoticon() const;
 
-    void setClassType(StickerPackType classType);
-    StickerPackType classType() const;
+    void setClassType(StickerPackClassType classType);
+    StickerPackClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -46,7 +46,7 @@ public:
 private:
     QList<qint64> m_documents;
     QString m_emoticon;
-    StickerPackType m_classType;
+    StickerPackClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(StickerPack)

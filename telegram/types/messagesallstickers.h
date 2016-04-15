@@ -15,12 +15,12 @@
 class LIBQTELEGRAMSHARED_EXPORT MessagesAllStickers : public TelegramTypeObject
 {
 public:
-    enum MessagesAllStickersType {
+    enum MessagesAllStickersClassType {
         typeMessagesAllStickersNotModified = 0xe86602c3,
         typeMessagesAllStickers = 0xedfd405f
     };
 
-    MessagesAllStickers(MessagesAllStickersType classType = typeMessagesAllStickersNotModified, InboundPkt *in = 0);
+    MessagesAllStickers(MessagesAllStickersClassType classType = typeMessagesAllStickersNotModified, InboundPkt *in = 0);
     MessagesAllStickers(InboundPkt *in);
     MessagesAllStickers(const Null&);
     virtual ~MessagesAllStickers();
@@ -31,8 +31,8 @@ public:
     void setSets(const QList<StickerSet> &sets);
     QList<StickerSet> sets() const;
 
-    void setClassType(MessagesAllStickersType classType);
-    MessagesAllStickersType classType() const;
+    void setClassType(MessagesAllStickersClassType classType);
+    MessagesAllStickersClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -47,7 +47,7 @@ public:
 private:
     qint32 m_hash;
     QList<StickerSet> m_sets;
-    MessagesAllStickersType m_classType;
+    MessagesAllStickersClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(MessagesAllStickers)

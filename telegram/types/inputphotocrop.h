@@ -13,12 +13,12 @@
 class LIBQTELEGRAMSHARED_EXPORT InputPhotoCrop : public TelegramTypeObject
 {
 public:
-    enum InputPhotoCropType {
+    enum InputPhotoCropClassType {
         typeInputPhotoCropAuto = 0xade6b004,
         typeInputPhotoCrop = 0xd9915325
     };
 
-    InputPhotoCrop(InputPhotoCropType classType = typeInputPhotoCropAuto, InboundPkt *in = 0);
+    InputPhotoCrop(InputPhotoCropClassType classType = typeInputPhotoCropAuto, InboundPkt *in = 0);
     InputPhotoCrop(InboundPkt *in);
     InputPhotoCrop(const Null&);
     virtual ~InputPhotoCrop();
@@ -32,8 +32,8 @@ public:
     void setCropWidth(qreal cropWidth);
     qreal cropWidth() const;
 
-    void setClassType(InputPhotoCropType classType);
-    InputPhotoCropType classType() const;
+    void setClassType(InputPhotoCropClassType classType);
+    InputPhotoCropClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -49,7 +49,7 @@ private:
     qreal m_cropLeft;
     qreal m_cropTop;
     qreal m_cropWidth;
-    InputPhotoCropType m_classType;
+    InputPhotoCropClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(InputPhotoCrop)

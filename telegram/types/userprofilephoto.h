@@ -14,12 +14,12 @@
 class LIBQTELEGRAMSHARED_EXPORT UserProfilePhoto : public TelegramTypeObject
 {
 public:
-    enum UserProfilePhotoType {
+    enum UserProfilePhotoClassType {
         typeUserProfilePhotoEmpty = 0x4f11bae1,
         typeUserProfilePhoto = 0xd559d8c8
     };
 
-    UserProfilePhoto(UserProfilePhotoType classType = typeUserProfilePhotoEmpty, InboundPkt *in = 0);
+    UserProfilePhoto(UserProfilePhotoClassType classType = typeUserProfilePhotoEmpty, InboundPkt *in = 0);
     UserProfilePhoto(InboundPkt *in);
     UserProfilePhoto(const Null&);
     virtual ~UserProfilePhoto();
@@ -33,8 +33,8 @@ public:
     void setPhotoSmall(const FileLocation &photoSmall);
     FileLocation photoSmall() const;
 
-    void setClassType(UserProfilePhotoType classType);
-    UserProfilePhotoType classType() const;
+    void setClassType(UserProfilePhotoClassType classType);
+    UserProfilePhotoClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -50,7 +50,7 @@ private:
     FileLocation m_photoBig;
     qint64 m_photoId;
     FileLocation m_photoSmall;
-    UserProfilePhotoType m_classType;
+    UserProfilePhotoClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(UserProfilePhoto)

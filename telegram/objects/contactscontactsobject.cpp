@@ -56,7 +56,7 @@ bool ContactsContactsObject::operator ==(const ContactsContacts &b) const {
 }
 
 void ContactsContactsObject::setClassType(quint32 classType) {
-    ContactsContacts::ContactsContactsType result;
+    ContactsContacts::ContactsContactsClassType result;
     switch(classType) {
     case TypeContactsContactsNotModified:
         result = ContactsContacts::typeContactsContactsNotModified;

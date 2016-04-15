@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-Authorization::Authorization(AuthorizationType classType, InboundPkt *in) :
+Authorization::Authorization(AuthorizationClassType classType, InboundPkt *in) :
     m_apiId(0),
     m_dateActive(0),
     m_dateCreated(0),
@@ -166,11 +166,11 @@ bool Authorization::operator ==(const Authorization &b) const {
            m_systemVersion == b.m_systemVersion;
 }
 
-void Authorization::setClassType(Authorization::AuthorizationType classType) {
+void Authorization::setClassType(Authorization::AuthorizationClassType classType) {
     m_classType = classType;
 }
 
-Authorization::AuthorizationType Authorization::classType() const {
+Authorization::AuthorizationClassType Authorization::classType() const {
     return m_classType;
 }
 
@@ -192,7 +192,7 @@ bool Authorization::fetch(InboundPkt *in) {
         m_ip = in->fetchQString();
         m_country = in->fetchQString();
         m_region = in->fetchQString();
-        m_classType = static_cast<AuthorizationType>(x);
+        m_classType = static_cast<AuthorizationClassType>(x);
         return true;
     }
         break;
@@ -261,7 +261,7 @@ QDataStream &operator<<(QDataStream &stream, const Authorization &item) {
 QDataStream &operator>>(QDataStream &stream, Authorization &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<Authorization::AuthorizationType>(type));
+    item.setClassType(static_cast<Authorization::AuthorizationClassType>(type));
     switch(type) {
     case Authorization::typeAuthorization: {
         qint64 m_hash;

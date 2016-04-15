@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-MessagesDialogs::MessagesDialogs(MessagesDialogsType classType, InboundPkt *in) :
+MessagesDialogs::MessagesDialogs(MessagesDialogsClassType classType, InboundPkt *in) :
     m_count(0),
     m_classType(classType)
 {
@@ -82,11 +82,11 @@ bool MessagesDialogs::operator ==(const MessagesDialogs &b) const {
            m_users == b.m_users;
 }
 
-void MessagesDialogs::setClassType(MessagesDialogs::MessagesDialogsType classType) {
+void MessagesDialogs::setClassType(MessagesDialogs::MessagesDialogsClassType classType) {
     m_classType = classType;
 }
 
-MessagesDialogs::MessagesDialogsType MessagesDialogs::classType() const {
+MessagesDialogs::MessagesDialogsClassType MessagesDialogs::classType() const {
     return m_classType;
 }
 
@@ -127,7 +127,7 @@ bool MessagesDialogs::fetch(InboundPkt *in) {
             type.fetch(in);
             m_users.append(type);
         }
-        m_classType = static_cast<MessagesDialogsType>(x);
+        m_classType = static_cast<MessagesDialogsClassType>(x);
         return true;
     }
         break;
@@ -166,7 +166,7 @@ bool MessagesDialogs::fetch(InboundPkt *in) {
             type.fetch(in);
             m_users.append(type);
         }
-        m_classType = static_cast<MessagesDialogsType>(x);
+        m_classType = static_cast<MessagesDialogsClassType>(x);
         return true;
     }
         break;
@@ -266,7 +266,7 @@ QDataStream &operator<<(QDataStream &stream, const MessagesDialogs &item) {
 QDataStream &operator>>(QDataStream &stream, MessagesDialogs &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<MessagesDialogs::MessagesDialogsType>(type));
+    item.setClassType(static_cast<MessagesDialogs::MessagesDialogsClassType>(type));
     switch(type) {
     case MessagesDialogs::typeMessagesDialogs: {
         QList<Dialog> m_dialogs;

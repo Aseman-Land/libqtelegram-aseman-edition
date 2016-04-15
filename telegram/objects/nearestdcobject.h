@@ -13,7 +13,7 @@
 class LIBQTELEGRAMSHARED_EXPORT NearestDcObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(NearestDcType)
+    Q_ENUMS(NearestDcClassType)
     Q_PROPERTY(QString country READ country WRITE setCountry NOTIFY countryChanged)
     Q_PROPERTY(qint32 nearestDc READ nearestDc WRITE setNearestDc NOTIFY nearestDcChanged)
     Q_PROPERTY(qint32 thisDc READ thisDc WRITE setThisDc NOTIFY thisDcChanged)
@@ -21,7 +21,7 @@ class LIBQTELEGRAMSHARED_EXPORT NearestDcObject : public TelegramTypeQObject
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum NearestDcType {
+    enum NearestDcClassType {
         TypeNearestDc
     };
 

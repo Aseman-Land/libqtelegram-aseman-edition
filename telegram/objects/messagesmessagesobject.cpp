@@ -116,7 +116,7 @@ bool MessagesMessagesObject::operator ==(const MessagesMessages &b) const {
 }
 
 void MessagesMessagesObject::setClassType(quint32 classType) {
-    MessagesMessages::MessagesMessagesType result;
+    MessagesMessages::MessagesMessagesClassType result;
     switch(classType) {
     case TypeMessagesMessages:
         result = MessagesMessages::typeMessagesMessages;

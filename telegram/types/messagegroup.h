@@ -13,11 +13,11 @@
 class LIBQTELEGRAMSHARED_EXPORT MessageGroup : public TelegramTypeObject
 {
 public:
-    enum MessageGroupType {
+    enum MessageGroupClassType {
         typeMessageGroup = 0xe8346f53
     };
 
-    MessageGroup(MessageGroupType classType = typeMessageGroup, InboundPkt *in = 0);
+    MessageGroup(MessageGroupClassType classType = typeMessageGroup, InboundPkt *in = 0);
     MessageGroup(InboundPkt *in);
     MessageGroup(const Null&);
     virtual ~MessageGroup();
@@ -34,8 +34,8 @@ public:
     void setMinId(qint32 minId);
     qint32 minId() const;
 
-    void setClassType(MessageGroupType classType);
-    MessageGroupType classType() const;
+    void setClassType(MessageGroupClassType classType);
+    MessageGroupClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -52,7 +52,7 @@ private:
     qint32 m_date;
     qint32 m_maxId;
     qint32 m_minId;
-    MessageGroupType m_classType;
+    MessageGroupClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(MessageGroup)

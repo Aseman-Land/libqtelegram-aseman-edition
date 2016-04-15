@@ -14,11 +14,11 @@
 class LIBQTELEGRAMSHARED_EXPORT AuthExportedAuthorization : public TelegramTypeObject
 {
 public:
-    enum AuthExportedAuthorizationType {
+    enum AuthExportedAuthorizationClassType {
         typeAuthExportedAuthorization = 0xdf969c2d
     };
 
-    AuthExportedAuthorization(AuthExportedAuthorizationType classType = typeAuthExportedAuthorization, InboundPkt *in = 0);
+    AuthExportedAuthorization(AuthExportedAuthorizationClassType classType = typeAuthExportedAuthorization, InboundPkt *in = 0);
     AuthExportedAuthorization(InboundPkt *in);
     AuthExportedAuthorization(const Null&);
     virtual ~AuthExportedAuthorization();
@@ -29,8 +29,8 @@ public:
     void setId(qint32 id);
     qint32 id() const;
 
-    void setClassType(AuthExportedAuthorizationType classType);
-    AuthExportedAuthorizationType classType() const;
+    void setClassType(AuthExportedAuthorizationClassType classType);
+    AuthExportedAuthorizationClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -45,7 +45,7 @@ public:
 private:
     QByteArray m_bytes;
     qint32 m_id;
-    AuthExportedAuthorizationType m_classType;
+    AuthExportedAuthorizationClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(AuthExportedAuthorization)

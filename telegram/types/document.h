@@ -17,12 +17,12 @@
 class LIBQTELEGRAMSHARED_EXPORT Document : public TelegramTypeObject
 {
 public:
-    enum DocumentType {
+    enum DocumentClassType {
         typeDocumentEmpty = 0x36f8c871,
         typeDocument = 0xf9a39f4f
     };
 
-    Document(DocumentType classType = typeDocumentEmpty, InboundPkt *in = 0);
+    Document(DocumentClassType classType = typeDocumentEmpty, InboundPkt *in = 0);
     Document(InboundPkt *in);
     Document(const Null&);
     virtual ~Document();
@@ -51,8 +51,8 @@ public:
     void setThumb(const PhotoSize &thumb);
     PhotoSize thumb() const;
 
-    void setClassType(DocumentType classType);
-    DocumentType classType() const;
+    void setClassType(DocumentClassType classType);
+    DocumentClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -73,7 +73,7 @@ private:
     QString m_mimeType;
     qint32 m_size;
     PhotoSize m_thumb;
-    DocumentType m_classType;
+    DocumentClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(Document)

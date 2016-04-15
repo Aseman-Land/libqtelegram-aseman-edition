@@ -80,7 +80,7 @@ bool InputPeerObject::operator ==(const InputPeer &b) const {
 }
 
 void InputPeerObject::setClassType(quint32 classType) {
-    InputPeer::InputPeerType result;
+    InputPeer::InputPeerClassType result;
     switch(classType) {
     case TypeInputPeerEmpty:
         result = InputPeer::typeInputPeerEmpty;

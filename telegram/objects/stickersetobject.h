@@ -13,7 +13,7 @@
 class LIBQTELEGRAMSHARED_EXPORT StickerSetObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(StickerSetType)
+    Q_ENUMS(StickerSetClassType)
     Q_PROPERTY(qint64 accessHash READ accessHash WRITE setAccessHash NOTIFY accessHashChanged)
     Q_PROPERTY(qint32 count READ count WRITE setCount NOTIFY countChanged)
     Q_PROPERTY(bool disabled READ disabled WRITE setDisabled NOTIFY disabledChanged)
@@ -28,7 +28,7 @@ class LIBQTELEGRAMSHARED_EXPORT StickerSetObject : public TelegramTypeQObject
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum StickerSetType {
+    enum StickerSetClassType {
         TypeStickerSet
     };
 

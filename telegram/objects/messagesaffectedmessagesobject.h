@@ -13,14 +13,14 @@
 class LIBQTELEGRAMSHARED_EXPORT MessagesAffectedMessagesObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(MessagesAffectedMessagesType)
+    Q_ENUMS(MessagesAffectedMessagesClassType)
     Q_PROPERTY(qint32 pts READ pts WRITE setPts NOTIFY ptsChanged)
     Q_PROPERTY(qint32 ptsCount READ ptsCount WRITE setPtsCount NOTIFY ptsCountChanged)
     Q_PROPERTY(MessagesAffectedMessages core READ core WRITE setCore NOTIFY coreChanged)
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum MessagesAffectedMessagesType {
+    enum MessagesAffectedMessagesClassType {
         TypeMessagesAffectedMessages
     };
 

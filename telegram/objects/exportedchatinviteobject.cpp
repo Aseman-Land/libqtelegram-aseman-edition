@@ -44,7 +44,7 @@ bool ExportedChatInviteObject::operator ==(const ExportedChatInvite &b) const {
 }
 
 void ExportedChatInviteObject::setClassType(quint32 classType) {
-    ExportedChatInvite::ExportedChatInviteType result;
+    ExportedChatInvite::ExportedChatInviteClassType result;
     switch(classType) {
     case TypeChatInviteEmpty:
         result = ExportedChatInvite::typeChatInviteEmpty;

@@ -11,15 +11,18 @@
 #include "sendmessageaction.h"
 #include <QtGlobal>
 #include "encryptedchat.h"
+#include <QByteArray>
 #include <QList>
 #include "dcoption.h"
 #include <QString>
 #include "contactlink.h"
+#include "geopoint.h"
 #include "messagegroup.h"
 #include "privacykey.h"
 #include "messagemedia.h"
 #include "encryptedmessage.h"
 #include "message.h"
+#include "inputbotinlinemessageid.h"
 #include "peernotifysettings.h"
 #include "chatparticipants.h"
 #include "notifypeer.h"
@@ -33,7 +36,7 @@
 class LIBQTELEGRAMSHARED_EXPORT Update : public TelegramTypeObject
 {
 public:
-    enum UpdateType {
+    enum UpdateClassType {
         typeUpdateNewMessage = 0x1f2b0afd,
         typeUpdateMessageID = 0x4e90bfd6,
         typeUpdateDeleteMessages = 0xa20db0e5,
@@ -75,13 +78,16 @@ public:
         typeUpdateStickerSetsOrder = 0xf0dfb451,
         typeUpdateStickerSets = 0x43ae3dec,
         typeUpdateSavedGifs = 0x9375341e,
-        typeUpdateBotInlineQuery = 0xc01eea08,
-        typeUpdateBotInlineSend = 0xf69e113,
+        typeUpdateBotInlineQuery = 0x54826690,
+        typeUpdateBotInlineSend = 0xe48f964,
         typeUpdateEditChannelMessage = 0x1b3f4df7,
-        typeUpdateChannelPinnedMessage = 0x98592475
+        typeUpdateChannelPinnedMessage = 0x98592475,
+        typeUpdateBotCallbackQuery = 0xa68c688c,
+        typeUpdateEditMessage = 0xe40370a3,
+        typeUpdateInlineBotCallbackQuery = 0x2cbd95af
     };
 
-    Update(UpdateType classType = typeUpdateNewMessage, InboundPkt *in = 0);
+    Update(UpdateClassType classType = typeUpdateNewMessage, InboundPkt *in = 0);
     Update(InboundPkt *in);
     Update(const Null&);
     virtual ~Update();
@@ -104,6 +110,9 @@ public:
     void setChatId(qint32 chatId);
     qint32 chatId() const;
 
+    void setData(const QByteArray &data);
+    QByteArray data() const;
+
     void setDate(qint32 date);
     qint32 date() const;
 
@@ -124,6 +133,9 @@ public:
 
     void setForeignLink(const ContactLink &foreignLink);
     ContactLink foreignLink() const;
+
+    void setGeo(const GeoPoint &geo);
+    GeoPoint geo() const;
 
     void setGroup(const MessageGroup &group);
     MessageGroup group() const;
@@ -169,6 +181,12 @@ public:
 
     void setMessages(const QList<qint32> &messages);
     QList<qint32> messages() const;
+
+    void setMsgIdInputBotInlineMessageID(const InputBotInlineMessageID &msgIdInputBotInlineMessageID);
+    InputBotInlineMessageID msgIdInputBotInlineMessageID() const;
+
+    void setMsgIdInt(qint32 msgIdInt);
+    qint32 msgIdInt() const;
 
     void setMyLink(const ContactLink &myLink);
     ContactLink myLink() const;
@@ -248,8 +266,8 @@ public:
     void setWebpage(const WebPage &webpage);
     WebPage webpage() const;
 
-    void setClassType(UpdateType classType);
-    UpdateType classType() const;
+    void setClassType(UpdateClassType classType);
+    UpdateClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -268,6 +286,7 @@ private:
     qint32 m_channelId;
     EncryptedChat m_chat;
     qint32 m_chatId;
+    QByteArray m_data;
     qint32 m_date;
     QList<DcOption> m_dcOptions;
     QString m_device;
@@ -275,6 +294,7 @@ private:
     QString m_firstName;
     qint32 m_flags;
     ContactLink m_foreignLink;
+    GeoPoint m_geo;
     MessageGroup m_group;
     QString m_idString;
     qint32 m_idInt;
@@ -290,6 +310,8 @@ private:
     Message m_message;
     QString m_messageString;
     QList<qint32> m_messages;
+    InputBotInlineMessageID m_msgIdInputBotInlineMessageID;
+    qint32 m_msgIdInt;
     ContactLink m_myLink;
     PeerNotifySettings m_notifySettings;
     QString m_offset;
@@ -316,7 +338,7 @@ private:
     qint32 m_version;
     qint32 m_views;
     WebPage m_webpage;
-    UpdateType m_classType;
+    UpdateClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(Update)

@@ -44,7 +44,7 @@ bool HelpAppChangelogObject::operator ==(const HelpAppChangelog &b) const {
 }
 
 void HelpAppChangelogObject::setClassType(quint32 classType) {
-    HelpAppChangelog::HelpAppChangelogType result;
+    HelpAppChangelog::HelpAppChangelogClassType result;
     switch(classType) {
     case TypeHelpAppChangelogEmpty:
         result = HelpAppChangelog::typeHelpAppChangelogEmpty;

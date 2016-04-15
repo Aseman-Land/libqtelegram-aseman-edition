@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-BotInlineResult::BotInlineResult(BotInlineResultType classType, InboundPkt *in) :
+BotInlineResult::BotInlineResult(BotInlineResultClassType classType, InboundPkt *in) :
     m_duration(0),
     m_flags(0),
     m_h(0),
@@ -24,7 +24,7 @@ BotInlineResult::BotInlineResult(InboundPkt *in) :
     m_flags(0),
     m_h(0),
     m_w(0),
-    m_classType(typeBotInlineMediaResultDocument)
+    m_classType(typeBotInlineResult)
 {
     fetch(in);
 }
@@ -35,7 +35,7 @@ BotInlineResult::BotInlineResult(const Null &null) :
     m_flags(0),
     m_h(0),
     m_w(0),
-    m_classType(typeBotInlineMediaResultDocument)
+    m_classType(typeBotInlineResult)
 {
 }
 
@@ -181,11 +181,11 @@ bool BotInlineResult::operator ==(const BotInlineResult &b) const {
            m_w == b.m_w;
 }
 
-void BotInlineResult::setClassType(BotInlineResult::BotInlineResultType classType) {
+void BotInlineResult::setClassType(BotInlineResult::BotInlineResultClassType classType) {
     m_classType = classType;
 }
 
-BotInlineResult::BotInlineResultType BotInlineResult::classType() const {
+BotInlineResult::BotInlineResultClassType BotInlineResult::classType() const {
     return m_classType;
 }
 
@@ -193,26 +193,6 @@ bool BotInlineResult::fetch(InboundPkt *in) {
     LQTG_FETCH_LOG;
     int x = in->fetchInt();
     switch(x) {
-    case typeBotInlineMediaResultDocument: {
-        m_id = in->fetchQString();
-        m_type = in->fetchQString();
-        m_document.fetch(in);
-        m_sendMessage.fetch(in);
-        m_classType = static_cast<BotInlineResultType>(x);
-        return true;
-    }
-        break;
-    
-    case typeBotInlineMediaResultPhoto: {
-        m_id = in->fetchQString();
-        m_type = in->fetchQString();
-        m_photo.fetch(in);
-        m_sendMessage.fetch(in);
-        m_classType = static_cast<BotInlineResultType>(x);
-        return true;
-    }
-        break;
-    
     case typeBotInlineResult: {
         m_flags = in->fetchInt();
         m_id = in->fetchQString();
@@ -245,7 +225,29 @@ bool BotInlineResult::fetch(InboundPkt *in) {
             m_duration = in->fetchInt();
         }
         m_sendMessage.fetch(in);
-        m_classType = static_cast<BotInlineResultType>(x);
+        m_classType = static_cast<BotInlineResultClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeBotInlineMediaResult: {
+        m_flags = in->fetchInt();
+        m_id = in->fetchQString();
+        m_type = in->fetchQString();
+        if(m_flags & 1<<0) {
+            m_photo.fetch(in);
+        }
+        if(m_flags & 1<<1) {
+            m_document.fetch(in);
+        }
+        if(m_flags & 1<<2) {
+            m_title = in->fetchQString();
+        }
+        if(m_flags & 1<<3) {
+            m_description = in->fetchQString();
+        }
+        m_sendMessage.fetch(in);
+        m_classType = static_cast<BotInlineResultClassType>(x);
         return true;
     }
         break;
@@ -259,24 +261,6 @@ bool BotInlineResult::fetch(InboundPkt *in) {
 bool BotInlineResult::push(OutboundPkt *out) const {
     out->appendInt(m_classType);
     switch(m_classType) {
-    case typeBotInlineMediaResultDocument: {
-        out->appendQString(m_id);
-        out->appendQString(m_type);
-        m_document.push(out);
-        m_sendMessage.push(out);
-        return true;
-    }
-        break;
-    
-    case typeBotInlineMediaResultPhoto: {
-        out->appendQString(m_id);
-        out->appendQString(m_type);
-        m_photo.push(out);
-        m_sendMessage.push(out);
-        return true;
-    }
-        break;
-    
     case typeBotInlineResult: {
         out->appendInt(m_flags);
         out->appendQString(m_id);
@@ -290,6 +274,19 @@ bool BotInlineResult::push(OutboundPkt *out) const {
         out->appendInt(m_w);
         out->appendInt(m_h);
         out->appendInt(m_duration);
+        m_sendMessage.push(out);
+        return true;
+    }
+        break;
+    
+    case typeBotInlineMediaResult: {
+        out->appendInt(m_flags);
+        out->appendQString(m_id);
+        out->appendQString(m_type);
+        m_photo.push(out);
+        m_document.push(out);
+        out->appendQString(m_title);
+        out->appendQString(m_description);
         m_sendMessage.push(out);
         return true;
     }
@@ -310,18 +307,6 @@ QByteArray BotInlineResult::getHash(QCryptographicHash::Algorithm alg) const {
 QDataStream &operator<<(QDataStream &stream, const BotInlineResult &item) {
     stream << static_cast<uint>(item.classType());
     switch(item.classType()) {
-    case BotInlineResult::typeBotInlineMediaResultDocument:
-        stream << item.id();
-        stream << item.type();
-        stream << item.document();
-        stream << item.sendMessage();
-        break;
-    case BotInlineResult::typeBotInlineMediaResultPhoto:
-        stream << item.id();
-        stream << item.type();
-        stream << item.photo();
-        stream << item.sendMessage();
-        break;
     case BotInlineResult::typeBotInlineResult:
         stream << item.flags();
         stream << item.id();
@@ -337,6 +322,16 @@ QDataStream &operator<<(QDataStream &stream, const BotInlineResult &item) {
         stream << item.duration();
         stream << item.sendMessage();
         break;
+    case BotInlineResult::typeBotInlineMediaResult:
+        stream << item.flags();
+        stream << item.id();
+        stream << item.type();
+        stream << item.photo();
+        stream << item.document();
+        stream << item.title();
+        stream << item.description();
+        stream << item.sendMessage();
+        break;
     }
     return stream;
 }
@@ -344,38 +339,8 @@ QDataStream &operator<<(QDataStream &stream, const BotInlineResult &item) {
 QDataStream &operator>>(QDataStream &stream, BotInlineResult &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<BotInlineResult::BotInlineResultType>(type));
+    item.setClassType(static_cast<BotInlineResult::BotInlineResultClassType>(type));
     switch(type) {
-    case BotInlineResult::typeBotInlineMediaResultDocument: {
-        QString m_id;
-        stream >> m_id;
-        item.setId(m_id);
-        QString m_type;
-        stream >> m_type;
-        item.setType(m_type);
-        Document m_document;
-        stream >> m_document;
-        item.setDocument(m_document);
-        BotInlineMessage m_send_message;
-        stream >> m_send_message;
-        item.setSendMessage(m_send_message);
-    }
-        break;
-    case BotInlineResult::typeBotInlineMediaResultPhoto: {
-        QString m_id;
-        stream >> m_id;
-        item.setId(m_id);
-        QString m_type;
-        stream >> m_type;
-        item.setType(m_type);
-        Photo m_photo;
-        stream >> m_photo;
-        item.setPhoto(m_photo);
-        BotInlineMessage m_send_message;
-        stream >> m_send_message;
-        item.setSendMessage(m_send_message);
-    }
-        break;
     case BotInlineResult::typeBotInlineResult: {
         qint32 m_flags;
         stream >> m_flags;
@@ -413,6 +378,33 @@ QDataStream &operator>>(QDataStream &stream, BotInlineResult &item) {
         qint32 m_duration;
         stream >> m_duration;
         item.setDuration(m_duration);
+        BotInlineMessage m_send_message;
+        stream >> m_send_message;
+        item.setSendMessage(m_send_message);
+    }
+        break;
+    case BotInlineResult::typeBotInlineMediaResult: {
+        qint32 m_flags;
+        stream >> m_flags;
+        item.setFlags(m_flags);
+        QString m_id;
+        stream >> m_id;
+        item.setId(m_id);
+        QString m_type;
+        stream >> m_type;
+        item.setType(m_type);
+        Photo m_photo;
+        stream >> m_photo;
+        item.setPhoto(m_photo);
+        Document m_document;
+        stream >> m_document;
+        item.setDocument(m_document);
+        QString m_title;
+        stream >> m_title;
+        item.setTitle(m_title);
+        QString m_description;
+        stream >> m_description;
+        item.setDescription(m_description);
         BotInlineMessage m_send_message;
         stream >> m_send_message;
         item.setSendMessage(m_send_message);

@@ -12,11 +12,11 @@
 class LIBQTELEGRAMSHARED_EXPORT AuthCheckedPhone : public TelegramTypeObject
 {
 public:
-    enum AuthCheckedPhoneType {
+    enum AuthCheckedPhoneClassType {
         typeAuthCheckedPhone = 0x811ea28e
     };
 
-    AuthCheckedPhone(AuthCheckedPhoneType classType = typeAuthCheckedPhone, InboundPkt *in = 0);
+    AuthCheckedPhone(AuthCheckedPhoneClassType classType = typeAuthCheckedPhone, InboundPkt *in = 0);
     AuthCheckedPhone(InboundPkt *in);
     AuthCheckedPhone(const Null&);
     virtual ~AuthCheckedPhone();
@@ -24,8 +24,8 @@ public:
     void setPhoneRegistered(bool phoneRegistered);
     bool phoneRegistered() const;
 
-    void setClassType(AuthCheckedPhoneType classType);
-    AuthCheckedPhoneType classType() const;
+    void setClassType(AuthCheckedPhoneClassType classType);
+    AuthCheckedPhoneClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -39,7 +39,7 @@ public:
 
 private:
     bool m_phoneRegistered;
-    AuthCheckedPhoneType m_classType;
+    AuthCheckedPhoneClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(AuthCheckedPhone)

@@ -13,13 +13,13 @@
 class LIBQTELEGRAMSHARED_EXPORT AuthPasswordRecoveryObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(AuthPasswordRecoveryType)
+    Q_ENUMS(AuthPasswordRecoveryClassType)
     Q_PROPERTY(QString emailPattern READ emailPattern WRITE setEmailPattern NOTIFY emailPatternChanged)
     Q_PROPERTY(AuthPasswordRecovery core READ core WRITE setCore NOTIFY coreChanged)
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum AuthPasswordRecoveryType {
+    enum AuthPasswordRecoveryClassType {
         TypeAuthPasswordRecovery
     };
 

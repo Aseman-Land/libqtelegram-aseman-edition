@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-MessagesBotResults::MessagesBotResults(MessagesBotResultsType classType, InboundPkt *in) :
+MessagesBotResults::MessagesBotResults(MessagesBotResultsClassType classType, InboundPkt *in) :
     m_flags(0),
     m_queryId(0),
     m_classType(classType)
@@ -77,19 +77,28 @@ QList<BotInlineResult> MessagesBotResults::results() const {
     return m_results;
 }
 
+void MessagesBotResults::setSwitchPm(const InlineBotSwitchPM &switchPm) {
+    m_switchPm = switchPm;
+}
+
+InlineBotSwitchPM MessagesBotResults::switchPm() const {
+    return m_switchPm;
+}
+
 bool MessagesBotResults::operator ==(const MessagesBotResults &b) const {
     return m_classType == b.m_classType &&
            m_flags == b.m_flags &&
            m_nextOffset == b.m_nextOffset &&
            m_queryId == b.m_queryId &&
-           m_results == b.m_results;
+           m_results == b.m_results &&
+           m_switchPm == b.m_switchPm;
 }
 
-void MessagesBotResults::setClassType(MessagesBotResults::MessagesBotResultsType classType) {
+void MessagesBotResults::setClassType(MessagesBotResults::MessagesBotResultsClassType classType) {
     m_classType = classType;
 }
 
-MessagesBotResults::MessagesBotResultsType MessagesBotResults::classType() const {
+MessagesBotResults::MessagesBotResultsClassType MessagesBotResults::classType() const {
     return m_classType;
 }
 
@@ -103,6 +112,9 @@ bool MessagesBotResults::fetch(InboundPkt *in) {
         if(m_flags & 1<<1) {
             m_nextOffset = in->fetchQString();
         }
+        if(m_flags & 1<<2) {
+            m_switchPm.fetch(in);
+        }
         if(in->fetchInt() != (qint32)CoreTypes::typeVector) return false;
         qint32 m_results_length = in->fetchInt();
         m_results.clear();
@@ -111,7 +123,7 @@ bool MessagesBotResults::fetch(InboundPkt *in) {
             type.fetch(in);
             m_results.append(type);
         }
-        m_classType = static_cast<MessagesBotResultsType>(x);
+        m_classType = static_cast<MessagesBotResultsClassType>(x);
         return true;
     }
         break;
@@ -129,6 +141,7 @@ bool MessagesBotResults::push(OutboundPkt *out) const {
         out->appendInt(m_flags);
         out->appendLong(m_queryId);
         out->appendQString(m_nextOffset);
+        m_switchPm.push(out);
         out->appendInt(CoreTypes::typeVector);
         out->appendInt(m_results.count());
         for (qint32 i = 0; i < m_results.count(); i++) {
@@ -157,6 +170,7 @@ QDataStream &operator<<(QDataStream &stream, const MessagesBotResults &item) {
         stream << item.flags();
         stream << item.queryId();
         stream << item.nextOffset();
+        stream << item.switchPm();
         stream << item.results();
         break;
     }
@@ -166,7 +180,7 @@ QDataStream &operator<<(QDataStream &stream, const MessagesBotResults &item) {
 QDataStream &operator>>(QDataStream &stream, MessagesBotResults &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<MessagesBotResults::MessagesBotResultsType>(type));
+    item.setClassType(static_cast<MessagesBotResults::MessagesBotResultsClassType>(type));
     switch(type) {
     case MessagesBotResults::typeMessagesBotResults: {
         qint32 m_flags;
@@ -178,6 +192,9 @@ QDataStream &operator>>(QDataStream &stream, MessagesBotResults &item) {
         QString m_next_offset;
         stream >> m_next_offset;
         item.setNextOffset(m_next_offset);
+        InlineBotSwitchPM m_switch_pm;
+        stream >> m_switch_pm;
+        item.setSwitchPm(m_switch_pm);
         QList<BotInlineResult> m_results;
         stream >> m_results;
         item.setResults(m_results);

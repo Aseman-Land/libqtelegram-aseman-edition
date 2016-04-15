@@ -13,13 +13,13 @@
 class LIBQTELEGRAMSHARED_EXPORT HelpInviteTextObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(HelpInviteTextType)
+    Q_ENUMS(HelpInviteTextClassType)
     Q_PROPERTY(QString message READ message WRITE setMessage NOTIFY messageChanged)
     Q_PROPERTY(HelpInviteText core READ core WRITE setCore NOTIFY coreChanged)
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum HelpInviteTextType {
+    enum HelpInviteTextClassType {
         TypeHelpInviteText
     };
 

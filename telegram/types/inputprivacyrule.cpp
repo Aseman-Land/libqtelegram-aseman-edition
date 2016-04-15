@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-InputPrivacyRule::InputPrivacyRule(InputPrivacyRuleType classType, InboundPkt *in) :
+InputPrivacyRule::InputPrivacyRule(InputPrivacyRuleClassType classType, InboundPkt *in) :
     m_classType(classType)
 {
     if(in) fetch(in);
@@ -43,11 +43,11 @@ bool InputPrivacyRule::operator ==(const InputPrivacyRule &b) const {
            m_users == b.m_users;
 }
 
-void InputPrivacyRule::setClassType(InputPrivacyRule::InputPrivacyRuleType classType) {
+void InputPrivacyRule::setClassType(InputPrivacyRule::InputPrivacyRuleClassType classType) {
     m_classType = classType;
 }
 
-InputPrivacyRule::InputPrivacyRuleType InputPrivacyRule::classType() const {
+InputPrivacyRule::InputPrivacyRuleClassType InputPrivacyRule::classType() const {
     return m_classType;
 }
 
@@ -56,13 +56,13 @@ bool InputPrivacyRule::fetch(InboundPkt *in) {
     int x = in->fetchInt();
     switch(x) {
     case typeInputPrivacyValueAllowContacts: {
-        m_classType = static_cast<InputPrivacyRuleType>(x);
+        m_classType = static_cast<InputPrivacyRuleClassType>(x);
         return true;
     }
         break;
     
     case typeInputPrivacyValueAllowAll: {
-        m_classType = static_cast<InputPrivacyRuleType>(x);
+        m_classType = static_cast<InputPrivacyRuleClassType>(x);
         return true;
     }
         break;
@@ -76,19 +76,19 @@ bool InputPrivacyRule::fetch(InboundPkt *in) {
             type.fetch(in);
             m_users.append(type);
         }
-        m_classType = static_cast<InputPrivacyRuleType>(x);
+        m_classType = static_cast<InputPrivacyRuleClassType>(x);
         return true;
     }
         break;
     
     case typeInputPrivacyValueDisallowContacts: {
-        m_classType = static_cast<InputPrivacyRuleType>(x);
+        m_classType = static_cast<InputPrivacyRuleClassType>(x);
         return true;
     }
         break;
     
     case typeInputPrivacyValueDisallowAll: {
-        m_classType = static_cast<InputPrivacyRuleType>(x);
+        m_classType = static_cast<InputPrivacyRuleClassType>(x);
         return true;
     }
         break;
@@ -102,7 +102,7 @@ bool InputPrivacyRule::fetch(InboundPkt *in) {
             type.fetch(in);
             m_users.append(type);
         }
-        m_classType = static_cast<InputPrivacyRuleType>(x);
+        m_classType = static_cast<InputPrivacyRuleClassType>(x);
         return true;
     }
         break;
@@ -196,7 +196,7 @@ QDataStream &operator<<(QDataStream &stream, const InputPrivacyRule &item) {
 QDataStream &operator>>(QDataStream &stream, InputPrivacyRule &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<InputPrivacyRule::InputPrivacyRuleType>(type));
+    item.setClassType(static_cast<InputPrivacyRule::InputPrivacyRuleClassType>(type));
     switch(type) {
     case InputPrivacyRule::typeInputPrivacyValueAllowContacts: {
         

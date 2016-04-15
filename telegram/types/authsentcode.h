@@ -8,24 +8,28 @@
 #include "telegramtypeobject.h"
 
 #include <QMetaType>
-#include <QString>
 #include <QtGlobal>
+#include "authcodetype.h"
+#include <QString>
+#include "authsentcodetype.h"
 
 class LIBQTELEGRAMSHARED_EXPORT AuthSentCode : public TelegramTypeObject
 {
 public:
-    enum AuthSentCodeType {
-        typeAuthSentCode = 0xefed51d9,
-        typeAuthSentAppCode = 0xe325edcf
+    enum AuthSentCodeClassType {
+        typeAuthSentCode = 0x5e002502
     };
 
-    AuthSentCode(AuthSentCodeType classType = typeAuthSentCode, InboundPkt *in = 0);
+    AuthSentCode(AuthSentCodeClassType classType = typeAuthSentCode, InboundPkt *in = 0);
     AuthSentCode(InboundPkt *in);
     AuthSentCode(const Null&);
     virtual ~AuthSentCode();
 
-    void setIsPassword(bool isPassword);
-    bool isPassword() const;
+    void setFlags(qint32 flags);
+    qint32 flags() const;
+
+    void setNextType(const AuthCodeType &nextType);
+    AuthCodeType nextType() const;
 
     void setPhoneCodeHash(const QString &phoneCodeHash);
     QString phoneCodeHash() const;
@@ -33,11 +37,14 @@ public:
     void setPhoneRegistered(bool phoneRegistered);
     bool phoneRegistered() const;
 
-    void setSendCallTimeout(qint32 sendCallTimeout);
-    qint32 sendCallTimeout() const;
+    void setTimeout(qint32 timeout);
+    qint32 timeout() const;
 
-    void setClassType(AuthSentCodeType classType);
-    AuthSentCodeType classType() const;
+    void setType(const AuthSentCodeType &type);
+    AuthSentCodeType type() const;
+
+    void setClassType(AuthSentCodeClassType classType);
+    AuthSentCodeClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -50,11 +57,12 @@ public:
     QByteArray getHash(QCryptographicHash::Algorithm alg = QCryptographicHash::Md5) const;
 
 private:
-    bool m_isPassword;
+    qint32 m_flags;
+    AuthCodeType m_nextType;
     QString m_phoneCodeHash;
-    bool m_phoneRegistered;
-    qint32 m_sendCallTimeout;
-    AuthSentCodeType m_classType;
+    qint32 m_timeout;
+    AuthSentCodeType m_type;
+    AuthSentCodeClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(AuthSentCode)

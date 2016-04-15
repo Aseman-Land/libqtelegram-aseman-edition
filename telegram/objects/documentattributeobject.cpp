@@ -177,7 +177,7 @@ bool DocumentAttributeObject::operator ==(const DocumentAttribute &b) const {
 }
 
 void DocumentAttributeObject::setClassType(quint32 classType) {
-    DocumentAttribute::DocumentAttributeType result;
+    DocumentAttribute::DocumentAttributeClassType result;
     switch(classType) {
     case TypeDocumentAttributeImageSize:
         result = DocumentAttribute::typeDocumentAttributeImageSize;

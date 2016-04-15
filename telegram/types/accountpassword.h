@@ -14,12 +14,12 @@
 class LIBQTELEGRAMSHARED_EXPORT AccountPassword : public TelegramTypeObject
 {
 public:
-    enum AccountPasswordType {
+    enum AccountPasswordClassType {
         typeAccountNoPassword = 0x96dabc18,
         typeAccountPassword = 0x7c18141c
     };
 
-    AccountPassword(AccountPasswordType classType = typeAccountNoPassword, InboundPkt *in = 0);
+    AccountPassword(AccountPasswordClassType classType = typeAccountNoPassword, InboundPkt *in = 0);
     AccountPassword(InboundPkt *in);
     AccountPassword(const Null&);
     virtual ~AccountPassword();
@@ -39,8 +39,8 @@ public:
     void setNewSalt(const QByteArray &newSalt);
     QByteArray newSalt() const;
 
-    void setClassType(AccountPasswordType classType);
-    AccountPasswordType classType() const;
+    void setClassType(AccountPasswordClassType classType);
+    AccountPasswordClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -58,7 +58,7 @@ private:
     bool m_hasRecovery;
     QString m_hint;
     QByteArray m_newSalt;
-    AccountPasswordType m_classType;
+    AccountPasswordClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(AccountPassword)

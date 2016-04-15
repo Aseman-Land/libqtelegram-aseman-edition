@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-InputNotifyPeer::InputNotifyPeer(InputNotifyPeerType classType, InboundPkt *in) :
+InputNotifyPeer::InputNotifyPeer(InputNotifyPeerClassType classType, InboundPkt *in) :
     m_classType(classType)
 {
     if(in) fetch(in);
@@ -43,11 +43,11 @@ bool InputNotifyPeer::operator ==(const InputNotifyPeer &b) const {
            m_peer == b.m_peer;
 }
 
-void InputNotifyPeer::setClassType(InputNotifyPeer::InputNotifyPeerType classType) {
+void InputNotifyPeer::setClassType(InputNotifyPeer::InputNotifyPeerClassType classType) {
     m_classType = classType;
 }
 
-InputNotifyPeer::InputNotifyPeerType InputNotifyPeer::classType() const {
+InputNotifyPeer::InputNotifyPeerClassType InputNotifyPeer::classType() const {
     return m_classType;
 }
 
@@ -57,25 +57,25 @@ bool InputNotifyPeer::fetch(InboundPkt *in) {
     switch(x) {
     case typeInputNotifyPeer: {
         m_peer.fetch(in);
-        m_classType = static_cast<InputNotifyPeerType>(x);
+        m_classType = static_cast<InputNotifyPeerClassType>(x);
         return true;
     }
         break;
     
     case typeInputNotifyUsers: {
-        m_classType = static_cast<InputNotifyPeerType>(x);
+        m_classType = static_cast<InputNotifyPeerClassType>(x);
         return true;
     }
         break;
     
     case typeInputNotifyChats: {
-        m_classType = static_cast<InputNotifyPeerType>(x);
+        m_classType = static_cast<InputNotifyPeerClassType>(x);
         return true;
     }
         break;
     
     case typeInputNotifyAll: {
-        m_classType = static_cast<InputNotifyPeerType>(x);
+        m_classType = static_cast<InputNotifyPeerClassType>(x);
         return true;
     }
         break;
@@ -144,7 +144,7 @@ QDataStream &operator<<(QDataStream &stream, const InputNotifyPeer &item) {
 QDataStream &operator>>(QDataStream &stream, InputNotifyPeer &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<InputNotifyPeer::InputNotifyPeerType>(type));
+    item.setClassType(static_cast<InputNotifyPeer::InputNotifyPeerClassType>(type));
     switch(type) {
     case InputNotifyPeer::typeInputNotifyPeer: {
         InputPeer m_peer;

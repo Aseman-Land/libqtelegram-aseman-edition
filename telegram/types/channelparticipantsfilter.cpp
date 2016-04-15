@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-ChannelParticipantsFilter::ChannelParticipantsFilter(ChannelParticipantsFilterType classType, InboundPkt *in) :
+ChannelParticipantsFilter::ChannelParticipantsFilter(ChannelParticipantsFilterClassType classType, InboundPkt *in) :
     m_classType(classType)
 {
     if(in) fetch(in);
@@ -34,11 +34,11 @@ bool ChannelParticipantsFilter::operator ==(const ChannelParticipantsFilter &b) 
     return m_classType == b.m_classType;
 }
 
-void ChannelParticipantsFilter::setClassType(ChannelParticipantsFilter::ChannelParticipantsFilterType classType) {
+void ChannelParticipantsFilter::setClassType(ChannelParticipantsFilter::ChannelParticipantsFilterClassType classType) {
     m_classType = classType;
 }
 
-ChannelParticipantsFilter::ChannelParticipantsFilterType ChannelParticipantsFilter::classType() const {
+ChannelParticipantsFilter::ChannelParticipantsFilterClassType ChannelParticipantsFilter::classType() const {
     return m_classType;
 }
 
@@ -47,25 +47,25 @@ bool ChannelParticipantsFilter::fetch(InboundPkt *in) {
     int x = in->fetchInt();
     switch(x) {
     case typeChannelParticipantsRecent: {
-        m_classType = static_cast<ChannelParticipantsFilterType>(x);
+        m_classType = static_cast<ChannelParticipantsFilterClassType>(x);
         return true;
     }
         break;
     
     case typeChannelParticipantsAdmins: {
-        m_classType = static_cast<ChannelParticipantsFilterType>(x);
+        m_classType = static_cast<ChannelParticipantsFilterClassType>(x);
         return true;
     }
         break;
     
     case typeChannelParticipantsKicked: {
-        m_classType = static_cast<ChannelParticipantsFilterType>(x);
+        m_classType = static_cast<ChannelParticipantsFilterClassType>(x);
         return true;
     }
         break;
     
     case typeChannelParticipantsBots: {
-        m_classType = static_cast<ChannelParticipantsFilterType>(x);
+        m_classType = static_cast<ChannelParticipantsFilterClassType>(x);
         return true;
     }
         break;
@@ -133,7 +133,7 @@ QDataStream &operator<<(QDataStream &stream, const ChannelParticipantsFilter &it
 QDataStream &operator>>(QDataStream &stream, ChannelParticipantsFilter &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<ChannelParticipantsFilter::ChannelParticipantsFilterType>(type));
+    item.setClassType(static_cast<ChannelParticipantsFilter::ChannelParticipantsFilterClassType>(type));
     switch(type) {
     case ChannelParticipantsFilter::typeChannelParticipantsRecent: {
         

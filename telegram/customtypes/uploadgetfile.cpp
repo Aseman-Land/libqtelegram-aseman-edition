@@ -5,7 +5,7 @@
 #include "uploadgetfile.h"
 #include "../coretypes.h"
 
-UploadGetFile::UploadGetFile(UploadGetFileType classType) :
+UploadGetFile::UploadGetFile(UploadGetFileClassType classType) :
     m_downloaded(0),
     m_mtime(0),
     m_partId(0),
@@ -85,11 +85,11 @@ bool UploadGetFile::operator ==(const UploadGetFile &b) const {
            m_type == b.m_type;
 }
 
-void UploadGetFile::setClassType(UploadGetFile::UploadGetFileType classType) {
+void UploadGetFile::setClassType(UploadGetFile::UploadGetFileClassType classType) {
     m_classType = classType;
 }
 
-UploadGetFile::UploadGetFileType UploadGetFile::classType() const {
+UploadGetFile::UploadGetFileClassType UploadGetFile::classType() const {
     return m_classType;
 }
 

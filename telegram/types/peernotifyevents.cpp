@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-PeerNotifyEvents::PeerNotifyEvents(PeerNotifyEventsType classType, InboundPkt *in) :
+PeerNotifyEvents::PeerNotifyEvents(PeerNotifyEventsClassType classType, InboundPkt *in) :
     m_classType(classType)
 {
     if(in) fetch(in);
@@ -34,11 +34,11 @@ bool PeerNotifyEvents::operator ==(const PeerNotifyEvents &b) const {
     return m_classType == b.m_classType;
 }
 
-void PeerNotifyEvents::setClassType(PeerNotifyEvents::PeerNotifyEventsType classType) {
+void PeerNotifyEvents::setClassType(PeerNotifyEvents::PeerNotifyEventsClassType classType) {
     m_classType = classType;
 }
 
-PeerNotifyEvents::PeerNotifyEventsType PeerNotifyEvents::classType() const {
+PeerNotifyEvents::PeerNotifyEventsClassType PeerNotifyEvents::classType() const {
     return m_classType;
 }
 
@@ -47,13 +47,13 @@ bool PeerNotifyEvents::fetch(InboundPkt *in) {
     int x = in->fetchInt();
     switch(x) {
     case typePeerNotifyEventsEmpty: {
-        m_classType = static_cast<PeerNotifyEventsType>(x);
+        m_classType = static_cast<PeerNotifyEventsClassType>(x);
         return true;
     }
         break;
     
     case typePeerNotifyEventsAll: {
-        m_classType = static_cast<PeerNotifyEventsType>(x);
+        m_classType = static_cast<PeerNotifyEventsClassType>(x);
         return true;
     }
         break;
@@ -105,7 +105,7 @@ QDataStream &operator<<(QDataStream &stream, const PeerNotifyEvents &item) {
 QDataStream &operator>>(QDataStream &stream, PeerNotifyEvents &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<PeerNotifyEvents::PeerNotifyEventsType>(type));
+    item.setClassType(static_cast<PeerNotifyEvents::PeerNotifyEventsClassType>(type));
     switch(type) {
     case PeerNotifyEvents::typePeerNotifyEventsEmpty: {
         

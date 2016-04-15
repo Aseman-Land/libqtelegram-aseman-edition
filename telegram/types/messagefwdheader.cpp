@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-MessageFwdHeader::MessageFwdHeader(MessageFwdHeaderType classType, InboundPkt *in) :
+MessageFwdHeader::MessageFwdHeader(MessageFwdHeaderClassType classType, InboundPkt *in) :
     m_channelId(0),
     m_channelPost(0),
     m_date(0),
@@ -94,11 +94,11 @@ bool MessageFwdHeader::operator ==(const MessageFwdHeader &b) const {
            m_fromId == b.m_fromId;
 }
 
-void MessageFwdHeader::setClassType(MessageFwdHeader::MessageFwdHeaderType classType) {
+void MessageFwdHeader::setClassType(MessageFwdHeader::MessageFwdHeaderClassType classType) {
     m_classType = classType;
 }
 
-MessageFwdHeader::MessageFwdHeaderType MessageFwdHeader::classType() const {
+MessageFwdHeader::MessageFwdHeaderClassType MessageFwdHeader::classType() const {
     return m_classType;
 }
 
@@ -118,7 +118,7 @@ bool MessageFwdHeader::fetch(InboundPkt *in) {
         if(m_flags & 1<<2) {
             m_channelPost = in->fetchInt();
         }
-        m_classType = static_cast<MessageFwdHeaderType>(x);
+        m_classType = static_cast<MessageFwdHeaderClassType>(x);
         return true;
     }
         break;
@@ -171,7 +171,7 @@ QDataStream &operator<<(QDataStream &stream, const MessageFwdHeader &item) {
 QDataStream &operator>>(QDataStream &stream, MessageFwdHeader &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<MessageFwdHeader::MessageFwdHeaderType>(type));
+    item.setClassType(static_cast<MessageFwdHeader::MessageFwdHeaderClassType>(type));
     switch(type) {
     case MessageFwdHeader::typeMessageFwdHeader: {
         qint32 m_flags;

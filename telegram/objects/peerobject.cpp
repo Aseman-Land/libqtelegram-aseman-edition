@@ -68,7 +68,7 @@ bool PeerObject::operator ==(const Peer &b) const {
 }
 
 void PeerObject::setClassType(quint32 classType) {
-    Peer::PeerType result;
+    Peer::PeerClassType result;
     switch(classType) {
     case TypePeerUser:
         result = Peer::typePeerUser;

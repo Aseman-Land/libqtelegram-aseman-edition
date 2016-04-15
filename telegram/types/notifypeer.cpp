@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-NotifyPeer::NotifyPeer(NotifyPeerType classType, InboundPkt *in) :
+NotifyPeer::NotifyPeer(NotifyPeerClassType classType, InboundPkt *in) :
     m_classType(classType)
 {
     if(in) fetch(in);
@@ -43,11 +43,11 @@ bool NotifyPeer::operator ==(const NotifyPeer &b) const {
            m_peer == b.m_peer;
 }
 
-void NotifyPeer::setClassType(NotifyPeer::NotifyPeerType classType) {
+void NotifyPeer::setClassType(NotifyPeer::NotifyPeerClassType classType) {
     m_classType = classType;
 }
 
-NotifyPeer::NotifyPeerType NotifyPeer::classType() const {
+NotifyPeer::NotifyPeerClassType NotifyPeer::classType() const {
     return m_classType;
 }
 
@@ -57,25 +57,25 @@ bool NotifyPeer::fetch(InboundPkt *in) {
     switch(x) {
     case typeNotifyPeer: {
         m_peer.fetch(in);
-        m_classType = static_cast<NotifyPeerType>(x);
+        m_classType = static_cast<NotifyPeerClassType>(x);
         return true;
     }
         break;
     
     case typeNotifyUsers: {
-        m_classType = static_cast<NotifyPeerType>(x);
+        m_classType = static_cast<NotifyPeerClassType>(x);
         return true;
     }
         break;
     
     case typeNotifyChats: {
-        m_classType = static_cast<NotifyPeerType>(x);
+        m_classType = static_cast<NotifyPeerClassType>(x);
         return true;
     }
         break;
     
     case typeNotifyAll: {
-        m_classType = static_cast<NotifyPeerType>(x);
+        m_classType = static_cast<NotifyPeerClassType>(x);
         return true;
     }
         break;
@@ -144,7 +144,7 @@ QDataStream &operator<<(QDataStream &stream, const NotifyPeer &item) {
 QDataStream &operator>>(QDataStream &stream, NotifyPeer &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<NotifyPeer::NotifyPeerType>(type));
+    item.setClassType(static_cast<NotifyPeer::NotifyPeerClassType>(type));
     switch(type) {
     case NotifyPeer::typeNotifyPeer: {
         Peer m_peer;

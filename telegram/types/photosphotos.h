@@ -16,12 +16,12 @@
 class LIBQTELEGRAMSHARED_EXPORT PhotosPhotos : public TelegramTypeObject
 {
 public:
-    enum PhotosPhotosType {
+    enum PhotosPhotosClassType {
         typePhotosPhotos = 0x8dca6aa5,
         typePhotosPhotosSlice = 0x15051f54
     };
 
-    PhotosPhotos(PhotosPhotosType classType = typePhotosPhotos, InboundPkt *in = 0);
+    PhotosPhotos(PhotosPhotosClassType classType = typePhotosPhotos, InboundPkt *in = 0);
     PhotosPhotos(InboundPkt *in);
     PhotosPhotos(const Null&);
     virtual ~PhotosPhotos();
@@ -35,8 +35,8 @@ public:
     void setUsers(const QList<User> &users);
     QList<User> users() const;
 
-    void setClassType(PhotosPhotosType classType);
-    PhotosPhotosType classType() const;
+    void setClassType(PhotosPhotosClassType classType);
+    PhotosPhotosClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -52,7 +52,7 @@ private:
     qint32 m_count;
     QList<Photo> m_photos;
     QList<User> m_users;
-    PhotosPhotosType m_classType;
+    PhotosPhotosClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(PhotosPhotos)

@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-MessagesMessages::MessagesMessages(MessagesMessagesType classType, InboundPkt *in) :
+MessagesMessages::MessagesMessages(MessagesMessagesClassType classType, InboundPkt *in) :
     m_count(0),
     m_flags(0),
     m_pts(0),
@@ -106,11 +106,11 @@ bool MessagesMessages::operator ==(const MessagesMessages &b) const {
            m_users == b.m_users;
 }
 
-void MessagesMessages::setClassType(MessagesMessages::MessagesMessagesType classType) {
+void MessagesMessages::setClassType(MessagesMessages::MessagesMessagesClassType classType) {
     m_classType = classType;
 }
 
-MessagesMessages::MessagesMessagesType MessagesMessages::classType() const {
+MessagesMessages::MessagesMessagesClassType MessagesMessages::classType() const {
     return m_classType;
 }
 
@@ -143,7 +143,7 @@ bool MessagesMessages::fetch(InboundPkt *in) {
             type.fetch(in);
             m_users.append(type);
         }
-        m_classType = static_cast<MessagesMessagesType>(x);
+        m_classType = static_cast<MessagesMessagesClassType>(x);
         return true;
     }
         break;
@@ -174,7 +174,7 @@ bool MessagesMessages::fetch(InboundPkt *in) {
             type.fetch(in);
             m_users.append(type);
         }
-        m_classType = static_cast<MessagesMessagesType>(x);
+        m_classType = static_cast<MessagesMessagesClassType>(x);
         return true;
     }
         break;
@@ -219,7 +219,7 @@ bool MessagesMessages::fetch(InboundPkt *in) {
             type.fetch(in);
             m_users.append(type);
         }
-        m_classType = static_cast<MessagesMessagesType>(x);
+        m_classType = static_cast<MessagesMessagesClassType>(x);
         return true;
     }
         break;
@@ -344,7 +344,7 @@ QDataStream &operator<<(QDataStream &stream, const MessagesMessages &item) {
 QDataStream &operator>>(QDataStream &stream, MessagesMessages &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<MessagesMessages::MessagesMessagesType>(type));
+    item.setClassType(static_cast<MessagesMessages::MessagesMessagesClassType>(type));
     switch(type) {
     case MessagesMessages::typeMessagesMessages: {
         QList<Message> m_messages;

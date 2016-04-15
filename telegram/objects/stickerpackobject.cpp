@@ -56,7 +56,7 @@ bool StickerPackObject::operator ==(const StickerPack &b) const {
 }
 
 void StickerPackObject::setClassType(quint32 classType) {
-    StickerPack::StickerPackType result;
+    StickerPack::StickerPackClassType result;
     switch(classType) {
     case TypeStickerPack:
         result = StickerPack::typeStickerPack;

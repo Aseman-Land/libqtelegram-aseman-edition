@@ -32,7 +32,7 @@ bool ContactLinkObject::operator ==(const ContactLink &b) const {
 }
 
 void ContactLinkObject::setClassType(quint32 classType) {
-    ContactLink::ContactLinkType result;
+    ContactLink::ContactLinkClassType result;
     switch(classType) {
     case TypeContactLinkUnknown:
         result = ContactLink::typeContactLinkUnknown;

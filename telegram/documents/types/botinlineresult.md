@@ -2,43 +2,8 @@
 
 ## Types
 
-* [typeBotInlineMediaResultDocument](#botinlineresulttypebotinlinemediaresultdocument)
-* [typeBotInlineMediaResultPhoto](#botinlineresulttypebotinlinemediaresultphoto)
 * [typeBotInlineResult](#botinlineresulttypebotinlineresult)
-
-## BotInlineResult::typeBotInlineMediaResultDocument
-
-#### Schema:
-
-```c++
-botInlineMediaResultDocument#f897d33e id:string type:string document:Document send_message:BotInlineMessage = BotInlineResult;
-```
-
-#### Parameters:
-
-|Name|Type|
-|----|----|
-|id|QString|
-|type|QString|
-|document|[Document](document.md)|
-|sendMessage|[BotInlineMessage](botinlinemessage.md)|
-
-## BotInlineResult::typeBotInlineMediaResultPhoto
-
-#### Schema:
-
-```c++
-botInlineMediaResultPhoto#c5528587 id:string type:string photo:Photo send_message:BotInlineMessage = BotInlineResult;
-```
-
-#### Parameters:
-
-|Name|Type|
-|----|----|
-|id|QString|
-|type|QString|
-|photo|[Photo](photo.md)|
-|sendMessage|[BotInlineMessage](botinlinemessage.md)|
+* [typeBotInlineMediaResult](#botinlineresulttypebotinlinemediaresult)
 
 ## BotInlineResult::typeBotInlineResult
 
@@ -63,5 +28,25 @@ botInlineResult#9bebaeb9 flags:# id:string type:string title:flags.1?string desc
 |w|qint32|
 |h|qint32|
 |duration|qint32|
+|sendMessage|[BotInlineMessage](botinlinemessage.md)|
+
+## BotInlineResult::typeBotInlineMediaResult
+
+#### Schema:
+
+```c++
+botInlineMediaResult#17db940b flags:# id:string type:string photo:flags.0?Photo document:flags.1?Document title:flags.2?string description:flags.3?string send_message:BotInlineMessage = BotInlineResult;
+```
+
+#### Parameters:
+
+|Name|Type|
+|----|----|
+|id|QString|
+|type|QString|
+|photo|[Photo](photo.md)|
+|document|[Document](document.md)|
+|title|QString|
+|description|QString|
 |sendMessage|[BotInlineMessage](botinlinemessage.md)|
 

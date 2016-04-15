@@ -56,7 +56,7 @@ bool InputChannelObject::operator ==(const InputChannel &b) const {
 }
 
 void InputChannelObject::setClassType(quint32 classType) {
-    InputChannel::InputChannelType result;
+    InputChannel::InputChannelClassType result;
     switch(classType) {
     case TypeInputChannelEmpty:
         result = InputChannel::typeInputChannelEmpty;

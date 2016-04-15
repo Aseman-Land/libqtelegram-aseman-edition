@@ -56,7 +56,7 @@ bool MessageRangeObject::operator ==(const MessageRange &b) const {
 }
 
 void MessageRangeObject::setClassType(quint32 classType) {
-    MessageRange::MessageRangeType result;
+    MessageRange::MessageRangeClassType result;
     switch(classType) {
     case TypeMessageRange:
         result = MessageRange::typeMessageRange;

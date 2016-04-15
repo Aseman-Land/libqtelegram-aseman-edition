@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-PeerSettings::PeerSettings(PeerSettingsType classType, InboundPkt *in) :
+PeerSettings::PeerSettings(PeerSettingsClassType classType, InboundPkt *in) :
     m_flags(0),
     m_classType(classType)
 {
@@ -55,11 +55,11 @@ bool PeerSettings::operator ==(const PeerSettings &b) const {
            m_flags == b.m_flags;
 }
 
-void PeerSettings::setClassType(PeerSettings::PeerSettingsType classType) {
+void PeerSettings::setClassType(PeerSettings::PeerSettingsClassType classType) {
     m_classType = classType;
 }
 
-PeerSettings::PeerSettingsType PeerSettings::classType() const {
+PeerSettings::PeerSettingsClassType PeerSettings::classType() const {
     return m_classType;
 }
 
@@ -69,7 +69,7 @@ bool PeerSettings::fetch(InboundPkt *in) {
     switch(x) {
     case typePeerSettings: {
         m_flags = in->fetchInt();
-        m_classType = static_cast<PeerSettingsType>(x);
+        m_classType = static_cast<PeerSettingsClassType>(x);
         return true;
     }
         break;
@@ -114,7 +114,7 @@ QDataStream &operator<<(QDataStream &stream, const PeerSettings &item) {
 QDataStream &operator>>(QDataStream &stream, PeerSettings &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<PeerSettings::PeerSettingsType>(type));
+    item.setClassType(static_cast<PeerSettings::PeerSettingsClassType>(type));
     switch(type) {
     case PeerSettings::typePeerSettings: {
         qint32 m_flags;

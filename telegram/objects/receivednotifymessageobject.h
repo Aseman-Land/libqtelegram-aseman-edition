@@ -13,14 +13,14 @@
 class LIBQTELEGRAMSHARED_EXPORT ReceivedNotifyMessageObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(ReceivedNotifyMessageType)
+    Q_ENUMS(ReceivedNotifyMessageClassType)
     Q_PROPERTY(qint32 flags READ flags WRITE setFlags NOTIFY flagsChanged)
     Q_PROPERTY(qint32 id READ id WRITE setId NOTIFY idChanged)
     Q_PROPERTY(ReceivedNotifyMessage core READ core WRITE setCore NOTIFY coreChanged)
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum ReceivedNotifyMessageType {
+    enum ReceivedNotifyMessageClassType {
         TypeReceivedNotifyMessage
     };
 

@@ -3,14 +3,13 @@
 ## Types
 
 * [typeAuthSentCode](#authsentcodetypeauthsentcode)
-* [typeAuthSentAppCode](#authsentcodetypeauthsentappcode)
 
 ## AuthSentCode::typeAuthSentCode
 
 #### Schema:
 
 ```c++
-auth.sentCode#efed51d9 phone_registered:Bool phone_code_hash:string send_call_timeout:int is_password:Bool = auth.SentCode;
+auth.sentCode#5e002502 flags:# phone_registered:flags.0?true type:auth.SentCodeType phone_code_hash:string next_type:flags.1?auth.CodeType timeout:flags.2?int = auth.SentCode;
 ```
 
 #### Parameters:
@@ -18,24 +17,8 @@ auth.sentCode#efed51d9 phone_registered:Bool phone_code_hash:string send_call_ti
 |Name|Type|
 |----|----|
 |phoneRegistered|bool|
+|type|[AuthSentCodeType](authsentcodetype.md)|
 |phoneCodeHash|QString|
-|sendCallTimeout|qint32|
-|isPassword|bool|
-
-## AuthSentCode::typeAuthSentAppCode
-
-#### Schema:
-
-```c++
-auth.sentAppCode#e325edcf phone_registered:Bool phone_code_hash:string send_call_timeout:int is_password:Bool = auth.SentCode;
-```
-
-#### Parameters:
-
-|Name|Type|
-|----|----|
-|phoneRegistered|bool|
-|phoneCodeHash|QString|
-|sendCallTimeout|qint32|
-|isPassword|bool|
+|nextType|[AuthCodeType](authcodetype.md)|
+|timeout|qint32|
 

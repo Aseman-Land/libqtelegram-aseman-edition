@@ -80,7 +80,7 @@ bool MessageGroupObject::operator ==(const MessageGroup &b) const {
 }
 
 void MessageGroupObject::setClassType(quint32 classType) {
-    MessageGroup::MessageGroupType result;
+    MessageGroup::MessageGroupClassType result;
     switch(classType) {
     case TypeMessageGroup:
         result = MessageGroup::typeMessageGroup;

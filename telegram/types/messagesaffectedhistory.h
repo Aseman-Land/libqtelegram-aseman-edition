@@ -13,11 +13,11 @@
 class LIBQTELEGRAMSHARED_EXPORT MessagesAffectedHistory : public TelegramTypeObject
 {
 public:
-    enum MessagesAffectedHistoryType {
+    enum MessagesAffectedHistoryClassType {
         typeMessagesAffectedHistory = 0xb45c69d1
     };
 
-    MessagesAffectedHistory(MessagesAffectedHistoryType classType = typeMessagesAffectedHistory, InboundPkt *in = 0);
+    MessagesAffectedHistory(MessagesAffectedHistoryClassType classType = typeMessagesAffectedHistory, InboundPkt *in = 0);
     MessagesAffectedHistory(InboundPkt *in);
     MessagesAffectedHistory(const Null&);
     virtual ~MessagesAffectedHistory();
@@ -31,8 +31,8 @@ public:
     void setPtsCount(qint32 ptsCount);
     qint32 ptsCount() const;
 
-    void setClassType(MessagesAffectedHistoryType classType);
-    MessagesAffectedHistoryType classType() const;
+    void setClassType(MessagesAffectedHistoryClassType classType);
+    MessagesAffectedHistoryClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -48,7 +48,7 @@ private:
     qint32 m_offset;
     qint32 m_pts;
     qint32 m_ptsCount;
-    MessagesAffectedHistoryType m_classType;
+    MessagesAffectedHistoryClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(MessagesAffectedHistory)

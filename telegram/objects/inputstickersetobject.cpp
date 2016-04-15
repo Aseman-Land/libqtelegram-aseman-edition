@@ -68,7 +68,7 @@ bool InputStickerSetObject::operator ==(const InputStickerSet &b) const {
 }
 
 void InputStickerSetObject::setClassType(quint32 classType) {
-    InputStickerSet::InputStickerSetType result;
+    InputStickerSet::InputStickerSetClassType result;
     switch(classType) {
     case TypeInputStickerSetEmpty:
         result = InputStickerSet::typeInputStickerSetEmpty;

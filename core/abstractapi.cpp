@@ -32,11 +32,6 @@ AbstractApi::~AbstractApi() {
 }
 
 void AbstractApi::connectUpdatesSignals(Session *session) {
-    connect(session, &Session::updatesTooLong, this, &AbstractApi::updatesTooLong);
-    connect(session, &Session::updateShortMessage, this, &AbstractApi::updateShortMessage);
-    connect(session, &Session::updateShortChatMessage, this, &AbstractApi::updateShortChatMessage);
-    connect(session, &Session::updateShort, this, &AbstractApi::updateShort);
-    connect(session, &Session::updatesCombined, this, &AbstractApi::updatesCombined);
     connect(session, &Session::updates, this, &AbstractApi::updates);
 }
 

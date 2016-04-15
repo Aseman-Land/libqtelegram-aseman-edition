@@ -13,11 +13,11 @@
 class LIBQTELEGRAMSHARED_EXPORT AuthPasswordRecovery : public TelegramTypeObject
 {
 public:
-    enum AuthPasswordRecoveryType {
+    enum AuthPasswordRecoveryClassType {
         typeAuthPasswordRecovery = 0x137948a5
     };
 
-    AuthPasswordRecovery(AuthPasswordRecoveryType classType = typeAuthPasswordRecovery, InboundPkt *in = 0);
+    AuthPasswordRecovery(AuthPasswordRecoveryClassType classType = typeAuthPasswordRecovery, InboundPkt *in = 0);
     AuthPasswordRecovery(InboundPkt *in);
     AuthPasswordRecovery(const Null&);
     virtual ~AuthPasswordRecovery();
@@ -25,8 +25,8 @@ public:
     void setEmailPattern(const QString &emailPattern);
     QString emailPattern() const;
 
-    void setClassType(AuthPasswordRecoveryType classType);
-    AuthPasswordRecoveryType classType() const;
+    void setClassType(AuthPasswordRecoveryClassType classType);
+    AuthPasswordRecoveryClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -40,7 +40,7 @@ public:
 
 private:
     QString m_emailPattern;
-    AuthPasswordRecoveryType m_classType;
+    AuthPasswordRecoveryClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(AuthPasswordRecovery)

@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-ContactBlocked::ContactBlocked(ContactBlockedType classType, InboundPkt *in) :
+ContactBlocked::ContactBlocked(ContactBlockedClassType classType, InboundPkt *in) :
     m_date(0),
     m_userId(0),
     m_classType(classType)
@@ -58,11 +58,11 @@ bool ContactBlocked::operator ==(const ContactBlocked &b) const {
            m_userId == b.m_userId;
 }
 
-void ContactBlocked::setClassType(ContactBlocked::ContactBlockedType classType) {
+void ContactBlocked::setClassType(ContactBlocked::ContactBlockedClassType classType) {
     m_classType = classType;
 }
 
-ContactBlocked::ContactBlockedType ContactBlocked::classType() const {
+ContactBlocked::ContactBlockedClassType ContactBlocked::classType() const {
     return m_classType;
 }
 
@@ -73,7 +73,7 @@ bool ContactBlocked::fetch(InboundPkt *in) {
     case typeContactBlocked: {
         m_userId = in->fetchInt();
         m_date = in->fetchInt();
-        m_classType = static_cast<ContactBlockedType>(x);
+        m_classType = static_cast<ContactBlockedClassType>(x);
         return true;
     }
         break;
@@ -120,7 +120,7 @@ QDataStream &operator<<(QDataStream &stream, const ContactBlocked &item) {
 QDataStream &operator>>(QDataStream &stream, ContactBlocked &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<ContactBlocked::ContactBlockedType>(type));
+    item.setClassType(static_cast<ContactBlocked::ContactBlockedClassType>(type));
     switch(type) {
     case ContactBlocked::typeContactBlocked: {
         qint32 m_user_id;

@@ -14,7 +14,7 @@
 class LIBQTELEGRAMSHARED_EXPORT MessageEntity : public TelegramTypeObject
 {
 public:
-    enum MessageEntityType {
+    enum MessageEntityClassType {
         typeMessageEntityUnknown = 0xbb92ba95,
         typeMessageEntityMention = 0xfa04579d,
         typeMessageEntityHashtag = 0x6f635b0d,
@@ -28,7 +28,7 @@ public:
         typeMessageEntityTextUrl = 0x76a6d327
     };
 
-    MessageEntity(MessageEntityType classType = typeMessageEntityUnknown, InboundPkt *in = 0);
+    MessageEntity(MessageEntityClassType classType = typeMessageEntityUnknown, InboundPkt *in = 0);
     MessageEntity(InboundPkt *in);
     MessageEntity(const Null&);
     virtual ~MessageEntity();
@@ -45,8 +45,8 @@ public:
     void setUrl(const QString &url);
     QString url() const;
 
-    void setClassType(MessageEntityType classType);
-    MessageEntityType classType() const;
+    void setClassType(MessageEntityClassType classType);
+    MessageEntityClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -63,7 +63,7 @@ private:
     qint32 m_length;
     qint32 m_offset;
     QString m_url;
-    MessageEntityType m_classType;
+    MessageEntityClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(MessageEntity)

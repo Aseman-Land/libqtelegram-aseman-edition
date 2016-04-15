@@ -56,7 +56,7 @@ bool PeerSettingsObject::operator ==(const PeerSettings &b) const {
 }
 
 void PeerSettingsObject::setClassType(quint32 classType) {
-    PeerSettings::PeerSettingsType result;
+    PeerSettings::PeerSettingsClassType result;
     switch(classType) {
     case TypePeerSettings:
         result = PeerSettings::typePeerSettings;

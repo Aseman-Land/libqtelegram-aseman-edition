@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-ChannelsChannelParticipant::ChannelsChannelParticipant(ChannelsChannelParticipantType classType, InboundPkt *in) :
+ChannelsChannelParticipant::ChannelsChannelParticipant(ChannelsChannelParticipantClassType classType, InboundPkt *in) :
     m_classType(classType)
 {
     if(in) fetch(in);
@@ -52,11 +52,11 @@ bool ChannelsChannelParticipant::operator ==(const ChannelsChannelParticipant &b
            m_users == b.m_users;
 }
 
-void ChannelsChannelParticipant::setClassType(ChannelsChannelParticipant::ChannelsChannelParticipantType classType) {
+void ChannelsChannelParticipant::setClassType(ChannelsChannelParticipant::ChannelsChannelParticipantClassType classType) {
     m_classType = classType;
 }
 
-ChannelsChannelParticipant::ChannelsChannelParticipantType ChannelsChannelParticipant::classType() const {
+ChannelsChannelParticipant::ChannelsChannelParticipantClassType ChannelsChannelParticipant::classType() const {
     return m_classType;
 }
 
@@ -74,7 +74,7 @@ bool ChannelsChannelParticipant::fetch(InboundPkt *in) {
             type.fetch(in);
             m_users.append(type);
         }
-        m_classType = static_cast<ChannelsChannelParticipantType>(x);
+        m_classType = static_cast<ChannelsChannelParticipantClassType>(x);
         return true;
     }
         break;
@@ -125,7 +125,7 @@ QDataStream &operator<<(QDataStream &stream, const ChannelsChannelParticipant &i
 QDataStream &operator>>(QDataStream &stream, ChannelsChannelParticipant &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<ChannelsChannelParticipant::ChannelsChannelParticipantType>(type));
+    item.setClassType(static_cast<ChannelsChannelParticipant::ChannelsChannelParticipantClassType>(type));
     switch(type) {
     case ChannelsChannelParticipant::typeChannelsChannelParticipant: {
         ChannelParticipant m_participant;

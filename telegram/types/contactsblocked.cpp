@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-ContactsBlocked::ContactsBlocked(ContactsBlockedType classType, InboundPkt *in) :
+ContactsBlocked::ContactsBlocked(ContactsBlockedClassType classType, InboundPkt *in) :
     m_count(0),
     m_classType(classType)
 {
@@ -64,11 +64,11 @@ bool ContactsBlocked::operator ==(const ContactsBlocked &b) const {
            m_users == b.m_users;
 }
 
-void ContactsBlocked::setClassType(ContactsBlocked::ContactsBlockedType classType) {
+void ContactsBlocked::setClassType(ContactsBlocked::ContactsBlockedClassType classType) {
     m_classType = classType;
 }
 
-ContactsBlocked::ContactsBlockedType ContactsBlocked::classType() const {
+ContactsBlocked::ContactsBlockedClassType ContactsBlocked::classType() const {
     return m_classType;
 }
 
@@ -93,7 +93,7 @@ bool ContactsBlocked::fetch(InboundPkt *in) {
             type.fetch(in);
             m_users.append(type);
         }
-        m_classType = static_cast<ContactsBlockedType>(x);
+        m_classType = static_cast<ContactsBlockedClassType>(x);
         return true;
     }
         break;
@@ -116,7 +116,7 @@ bool ContactsBlocked::fetch(InboundPkt *in) {
             type.fetch(in);
             m_users.append(type);
         }
-        m_classType = static_cast<ContactsBlockedType>(x);
+        m_classType = static_cast<ContactsBlockedClassType>(x);
         return true;
     }
         break;
@@ -192,7 +192,7 @@ QDataStream &operator<<(QDataStream &stream, const ContactsBlocked &item) {
 QDataStream &operator>>(QDataStream &stream, ContactsBlocked &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<ContactsBlocked::ContactsBlockedType>(type));
+    item.setClassType(static_cast<ContactsBlocked::ContactsBlockedClassType>(type));
     switch(type) {
     case ContactsBlocked::typeContactsBlocked: {
         QList<ContactBlocked> m_blocked;

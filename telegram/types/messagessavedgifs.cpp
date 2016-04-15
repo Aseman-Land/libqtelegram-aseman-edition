@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-MessagesSavedGifs::MessagesSavedGifs(MessagesSavedGifsType classType, InboundPkt *in) :
+MessagesSavedGifs::MessagesSavedGifs(MessagesSavedGifsClassType classType, InboundPkt *in) :
     m_hash(0),
     m_classType(classType)
 {
@@ -55,11 +55,11 @@ bool MessagesSavedGifs::operator ==(const MessagesSavedGifs &b) const {
            m_hash == b.m_hash;
 }
 
-void MessagesSavedGifs::setClassType(MessagesSavedGifs::MessagesSavedGifsType classType) {
+void MessagesSavedGifs::setClassType(MessagesSavedGifs::MessagesSavedGifsClassType classType) {
     m_classType = classType;
 }
 
-MessagesSavedGifs::MessagesSavedGifsType MessagesSavedGifs::classType() const {
+MessagesSavedGifs::MessagesSavedGifsClassType MessagesSavedGifs::classType() const {
     return m_classType;
 }
 
@@ -68,7 +68,7 @@ bool MessagesSavedGifs::fetch(InboundPkt *in) {
     int x = in->fetchInt();
     switch(x) {
     case typeMessagesSavedGifsNotModified: {
-        m_classType = static_cast<MessagesSavedGifsType>(x);
+        m_classType = static_cast<MessagesSavedGifsClassType>(x);
         return true;
     }
         break;
@@ -83,7 +83,7 @@ bool MessagesSavedGifs::fetch(InboundPkt *in) {
             type.fetch(in);
             m_gifs.append(type);
         }
-        m_classType = static_cast<MessagesSavedGifsType>(x);
+        m_classType = static_cast<MessagesSavedGifsClassType>(x);
         return true;
     }
         break;
@@ -142,7 +142,7 @@ QDataStream &operator<<(QDataStream &stream, const MessagesSavedGifs &item) {
 QDataStream &operator>>(QDataStream &stream, MessagesSavedGifs &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<MessagesSavedGifs::MessagesSavedGifsType>(type));
+    item.setClassType(static_cast<MessagesSavedGifs::MessagesSavedGifsClassType>(type));
     switch(type) {
     case MessagesSavedGifs::typeMessagesSavedGifsNotModified: {
         

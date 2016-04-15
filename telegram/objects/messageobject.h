@@ -18,7 +18,7 @@
 class LIBQTELEGRAMSHARED_EXPORT MessageObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(MessageType)
+    Q_ENUMS(MessageClassType)
     Q_PROPERTY(MessageActionObject* action READ action WRITE setAction NOTIFY actionChanged)
     Q_PROPERTY(qint32 date READ date WRITE setDate NOTIFY dateChanged)
     Q_PROPERTY(qint32 editDate READ editDate WRITE setEditDate NOTIFY editDateChanged)
@@ -44,7 +44,7 @@ class LIBQTELEGRAMSHARED_EXPORT MessageObject : public TelegramTypeQObject
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum MessageType {
+    enum MessageClassType {
         TypeMessageEmpty,
         TypeMessage,
         TypeMessageService

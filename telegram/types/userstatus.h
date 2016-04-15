@@ -13,7 +13,7 @@
 class LIBQTELEGRAMSHARED_EXPORT UserStatus : public TelegramTypeObject
 {
 public:
-    enum UserStatusType {
+    enum UserStatusClassType {
         typeUserStatusEmpty = 0x9d05049,
         typeUserStatusOnline = 0xedb93949,
         typeUserStatusOffline = 0x8c703f,
@@ -22,7 +22,7 @@ public:
         typeUserStatusLastMonth = 0x77ebc742
     };
 
-    UserStatus(UserStatusType classType = typeUserStatusEmpty, InboundPkt *in = 0);
+    UserStatus(UserStatusClassType classType = typeUserStatusEmpty, InboundPkt *in = 0);
     UserStatus(InboundPkt *in);
     UserStatus(const Null&);
     virtual ~UserStatus();
@@ -33,8 +33,8 @@ public:
     void setWasOnline(qint32 wasOnline);
     qint32 wasOnline() const;
 
-    void setClassType(UserStatusType classType);
-    UserStatusType classType() const;
+    void setClassType(UserStatusClassType classType);
+    UserStatusClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -49,7 +49,7 @@ public:
 private:
     qint32 m_expires;
     qint32 m_wasOnline;
-    UserStatusType m_classType;
+    UserStatusClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(UserStatus)

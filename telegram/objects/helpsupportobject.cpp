@@ -69,7 +69,7 @@ bool HelpSupportObject::operator ==(const HelpSupport &b) const {
 }
 
 void HelpSupportObject::setClassType(quint32 classType) {
-    HelpSupport::HelpSupportType result;
+    HelpSupport::HelpSupportClassType result;
     switch(classType) {
     case TypeHelpSupport:
         result = HelpSupport::typeHelpSupport;

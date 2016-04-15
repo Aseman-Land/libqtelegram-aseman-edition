@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-MessagesStickerSet::MessagesStickerSet(MessagesStickerSetType classType, InboundPkt *in) :
+MessagesStickerSet::MessagesStickerSet(MessagesStickerSetClassType classType, InboundPkt *in) :
     m_classType(classType)
 {
     if(in) fetch(in);
@@ -61,11 +61,11 @@ bool MessagesStickerSet::operator ==(const MessagesStickerSet &b) const {
            m_set == b.m_set;
 }
 
-void MessagesStickerSet::setClassType(MessagesStickerSet::MessagesStickerSetType classType) {
+void MessagesStickerSet::setClassType(MessagesStickerSet::MessagesStickerSetClassType classType) {
     m_classType = classType;
 }
 
-MessagesStickerSet::MessagesStickerSetType MessagesStickerSet::classType() const {
+MessagesStickerSet::MessagesStickerSetClassType MessagesStickerSet::classType() const {
     return m_classType;
 }
 
@@ -91,7 +91,7 @@ bool MessagesStickerSet::fetch(InboundPkt *in) {
             type.fetch(in);
             m_documents.append(type);
         }
-        m_classType = static_cast<MessagesStickerSetType>(x);
+        m_classType = static_cast<MessagesStickerSetClassType>(x);
         return true;
     }
         break;
@@ -148,7 +148,7 @@ QDataStream &operator<<(QDataStream &stream, const MessagesStickerSet &item) {
 QDataStream &operator>>(QDataStream &stream, MessagesStickerSet &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<MessagesStickerSet::MessagesStickerSetType>(type));
+    item.setClassType(static_cast<MessagesStickerSet::MessagesStickerSetClassType>(type));
     switch(type) {
     case MessagesStickerSet::typeMessagesStickerSet: {
         StickerSet m_set;

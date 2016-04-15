@@ -80,7 +80,7 @@ bool MessagesDhConfigObject::operator ==(const MessagesDhConfig &b) const {
 }
 
 void MessagesDhConfigObject::setClassType(quint32 classType) {
-    MessagesDhConfig::MessagesDhConfigType result;
+    MessagesDhConfig::MessagesDhConfigClassType result;
     switch(classType) {
     case TypeMessagesDhConfigNotModified:
         result = MessagesDhConfig::typeMessagesDhConfigNotModified;

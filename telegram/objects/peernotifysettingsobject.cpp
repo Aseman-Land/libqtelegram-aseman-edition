@@ -92,7 +92,7 @@ bool PeerNotifySettingsObject::operator ==(const PeerNotifySettings &b) const {
 }
 
 void PeerNotifySettingsObject::setClassType(quint32 classType) {
-    PeerNotifySettings::PeerNotifySettingsType result;
+    PeerNotifySettings::PeerNotifySettingsClassType result;
     switch(classType) {
     case TypePeerNotifySettingsEmpty:
         result = PeerNotifySettings::typePeerNotifySettingsEmpty;

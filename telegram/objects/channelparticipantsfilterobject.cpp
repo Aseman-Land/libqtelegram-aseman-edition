@@ -32,7 +32,7 @@ bool ChannelParticipantsFilterObject::operator ==(const ChannelParticipantsFilte
 }
 
 void ChannelParticipantsFilterObject::setClassType(quint32 classType) {
-    ChannelParticipantsFilter::ChannelParticipantsFilterType result;
+    ChannelParticipantsFilter::ChannelParticipantsFilterClassType result;
     switch(classType) {
     case TypeChannelParticipantsRecent:
         result = ChannelParticipantsFilter::typeChannelParticipantsRecent;

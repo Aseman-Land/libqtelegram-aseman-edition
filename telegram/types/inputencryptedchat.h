@@ -13,11 +13,11 @@
 class LIBQTELEGRAMSHARED_EXPORT InputEncryptedChat : public TelegramTypeObject
 {
 public:
-    enum InputEncryptedChatType {
+    enum InputEncryptedChatClassType {
         typeInputEncryptedChat = 0xf141b5e1
     };
 
-    InputEncryptedChat(InputEncryptedChatType classType = typeInputEncryptedChat, InboundPkt *in = 0);
+    InputEncryptedChat(InputEncryptedChatClassType classType = typeInputEncryptedChat, InboundPkt *in = 0);
     InputEncryptedChat(InboundPkt *in);
     InputEncryptedChat(const Null&);
     virtual ~InputEncryptedChat();
@@ -28,8 +28,8 @@ public:
     void setChatId(qint32 chatId);
     qint32 chatId() const;
 
-    void setClassType(InputEncryptedChatType classType);
-    InputEncryptedChatType classType() const;
+    void setClassType(InputEncryptedChatClassType classType);
+    InputEncryptedChatClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -44,7 +44,7 @@ public:
 private:
     qint64 m_accessHash;
     qint32 m_chatId;
-    InputEncryptedChatType m_classType;
+    InputEncryptedChatClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(InputEncryptedChat)

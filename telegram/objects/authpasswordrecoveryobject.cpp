@@ -44,7 +44,7 @@ bool AuthPasswordRecoveryObject::operator ==(const AuthPasswordRecovery &b) cons
 }
 
 void AuthPasswordRecoveryObject::setClassType(quint32 classType) {
-    AuthPasswordRecovery::AuthPasswordRecoveryType result;
+    AuthPasswordRecovery::AuthPasswordRecoveryClassType result;
     switch(classType) {
     case TypeAuthPasswordRecovery:
         result = AuthPasswordRecovery::typeAuthPasswordRecovery;

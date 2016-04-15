@@ -92,7 +92,7 @@ bool WallPaperObject::operator ==(const WallPaper &b) const {
 }
 
 void WallPaperObject::setClassType(quint32 classType) {
-    WallPaper::WallPaperType result;
+    WallPaper::WallPaperClassType result;
     switch(classType) {
     case TypeWallPaper:
         result = WallPaper::typeWallPaper;

@@ -32,7 +32,7 @@ bool MessagesFilterObject::operator ==(const MessagesFilter &b) const {
 }
 
 void MessagesFilterObject::setClassType(quint32 classType) {
-    MessagesFilter::MessagesFilterType result;
+    MessagesFilter::MessagesFilterClassType result;
     switch(classType) {
     case TypeInputMessagesFilterEmpty:
         result = MessagesFilter::typeInputMessagesFilterEmpty;

@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-HelpInviteText::HelpInviteText(HelpInviteTextType classType, InboundPkt *in) :
+HelpInviteText::HelpInviteText(HelpInviteTextClassType classType, InboundPkt *in) :
     m_classType(classType)
 {
     if(in) fetch(in);
@@ -43,11 +43,11 @@ bool HelpInviteText::operator ==(const HelpInviteText &b) const {
            m_message == b.m_message;
 }
 
-void HelpInviteText::setClassType(HelpInviteText::HelpInviteTextType classType) {
+void HelpInviteText::setClassType(HelpInviteText::HelpInviteTextClassType classType) {
     m_classType = classType;
 }
 
-HelpInviteText::HelpInviteTextType HelpInviteText::classType() const {
+HelpInviteText::HelpInviteTextClassType HelpInviteText::classType() const {
     return m_classType;
 }
 
@@ -57,7 +57,7 @@ bool HelpInviteText::fetch(InboundPkt *in) {
     switch(x) {
     case typeHelpInviteText: {
         m_message = in->fetchQString();
-        m_classType = static_cast<HelpInviteTextType>(x);
+        m_classType = static_cast<HelpInviteTextClassType>(x);
         return true;
     }
         break;
@@ -102,7 +102,7 @@ QDataStream &operator<<(QDataStream &stream, const HelpInviteText &item) {
 QDataStream &operator>>(QDataStream &stream, HelpInviteText &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<HelpInviteText::HelpInviteTextType>(type));
+    item.setClassType(static_cast<HelpInviteText::HelpInviteTextClassType>(type));
     switch(type) {
     case HelpInviteText::typeHelpInviteText: {
         QString m_message;

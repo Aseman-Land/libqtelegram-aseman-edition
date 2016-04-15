@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-ChatInvite::ChatInvite(ChatInviteType classType, InboundPkt *in) :
+ChatInvite::ChatInvite(ChatInviteClassType classType, InboundPkt *in) :
     m_flags(0),
     m_classType(classType)
 {
@@ -100,11 +100,11 @@ bool ChatInvite::operator ==(const ChatInvite &b) const {
            m_title == b.m_title;
 }
 
-void ChatInvite::setClassType(ChatInvite::ChatInviteType classType) {
+void ChatInvite::setClassType(ChatInvite::ChatInviteClassType classType) {
     m_classType = classType;
 }
 
-ChatInvite::ChatInviteType ChatInvite::classType() const {
+ChatInvite::ChatInviteClassType ChatInvite::classType() const {
     return m_classType;
 }
 
@@ -114,7 +114,7 @@ bool ChatInvite::fetch(InboundPkt *in) {
     switch(x) {
     case typeChatInviteAlready: {
         m_chat.fetch(in);
-        m_classType = static_cast<ChatInviteType>(x);
+        m_classType = static_cast<ChatInviteClassType>(x);
         return true;
     }
         break;
@@ -122,7 +122,7 @@ bool ChatInvite::fetch(InboundPkt *in) {
     case typeChatInvite: {
         m_flags = in->fetchInt();
         m_title = in->fetchQString();
-        m_classType = static_cast<ChatInviteType>(x);
+        m_classType = static_cast<ChatInviteClassType>(x);
         return true;
     }
         break;
@@ -178,7 +178,7 @@ QDataStream &operator<<(QDataStream &stream, const ChatInvite &item) {
 QDataStream &operator>>(QDataStream &stream, ChatInvite &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<ChatInvite::ChatInviteType>(type));
+    item.setClassType(static_cast<ChatInvite::ChatInviteClassType>(type));
     switch(type) {
     case ChatInvite::typeChatInviteAlready: {
         Chat m_chat;

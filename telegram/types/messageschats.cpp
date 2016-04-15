@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-MessagesChats::MessagesChats(MessagesChatsType classType, InboundPkt *in) :
+MessagesChats::MessagesChats(MessagesChatsClassType classType, InboundPkt *in) :
     m_classType(classType)
 {
     if(in) fetch(in);
@@ -43,11 +43,11 @@ bool MessagesChats::operator ==(const MessagesChats &b) const {
            m_chats == b.m_chats;
 }
 
-void MessagesChats::setClassType(MessagesChats::MessagesChatsType classType) {
+void MessagesChats::setClassType(MessagesChats::MessagesChatsClassType classType) {
     m_classType = classType;
 }
 
-MessagesChats::MessagesChatsType MessagesChats::classType() const {
+MessagesChats::MessagesChatsClassType MessagesChats::classType() const {
     return m_classType;
 }
 
@@ -64,7 +64,7 @@ bool MessagesChats::fetch(InboundPkt *in) {
             type.fetch(in);
             m_chats.append(type);
         }
-        m_classType = static_cast<MessagesChatsType>(x);
+        m_classType = static_cast<MessagesChatsClassType>(x);
         return true;
     }
         break;
@@ -113,7 +113,7 @@ QDataStream &operator<<(QDataStream &stream, const MessagesChats &item) {
 QDataStream &operator>>(QDataStream &stream, MessagesChats &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<MessagesChats::MessagesChatsType>(type));
+    item.setClassType(static_cast<MessagesChats::MessagesChatsClassType>(type));
     switch(type) {
     case MessagesChats::typeMessagesChats: {
         QList<Chat> m_chats;

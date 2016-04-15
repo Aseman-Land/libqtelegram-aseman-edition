@@ -13,14 +13,14 @@
 class LIBQTELEGRAMSHARED_EXPORT UserStatusObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(UserStatusType)
+    Q_ENUMS(UserStatusClassType)
     Q_PROPERTY(qint32 expires READ expires WRITE setExpires NOTIFY expiresChanged)
     Q_PROPERTY(qint32 wasOnline READ wasOnline WRITE setWasOnline NOTIFY wasOnlineChanged)
     Q_PROPERTY(UserStatus core READ core WRITE setCore NOTIFY coreChanged)
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum UserStatusType {
+    enum UserStatusClassType {
         TypeUserStatusEmpty,
         TypeUserStatusOnline,
         TypeUserStatusOffline,

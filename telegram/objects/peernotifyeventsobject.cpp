@@ -32,7 +32,7 @@ bool PeerNotifyEventsObject::operator ==(const PeerNotifyEvents &b) const {
 }
 
 void PeerNotifyEventsObject::setClassType(quint32 classType) {
-    PeerNotifyEvents::PeerNotifyEventsType result;
+    PeerNotifyEvents::PeerNotifyEventsClassType result;
     switch(classType) {
     case TypePeerNotifyEventsEmpty:
         result = PeerNotifyEvents::typePeerNotifyEventsEmpty;

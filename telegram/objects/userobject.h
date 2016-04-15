@@ -15,11 +15,12 @@
 class LIBQTELEGRAMSHARED_EXPORT UserObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(UserType)
+    Q_ENUMS(UserClassType)
     Q_PROPERTY(qint64 accessHash READ accessHash WRITE setAccessHash NOTIFY accessHashChanged)
     Q_PROPERTY(bool bot READ bot WRITE setBot NOTIFY botChanged)
     Q_PROPERTY(bool botChatHistory READ botChatHistory WRITE setBotChatHistory NOTIFY botChatHistoryChanged)
     Q_PROPERTY(qint32 botInfoVersion READ botInfoVersion WRITE setBotInfoVersion NOTIFY botInfoVersionChanged)
+    Q_PROPERTY(bool botInlineGeo READ botInlineGeo WRITE setBotInlineGeo NOTIFY botInlineGeoChanged)
     Q_PROPERTY(QString botInlinePlaceholder READ botInlinePlaceholder WRITE setBotInlinePlaceholder NOTIFY botInlinePlaceholderChanged)
     Q_PROPERTY(bool botNochats READ botNochats WRITE setBotNochats NOTIFY botNochatsChanged)
     Q_PROPERTY(bool contact READ contact WRITE setContact NOTIFY contactChanged)
@@ -42,7 +43,7 @@ class LIBQTELEGRAMSHARED_EXPORT UserObject : public TelegramTypeQObject
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum UserType {
+    enum UserClassType {
         TypeUserEmpty,
         TypeUser
     };
@@ -62,6 +63,9 @@ public:
 
     void setBotInfoVersion(qint32 botInfoVersion);
     qint32 botInfoVersion() const;
+
+    void setBotInlineGeo(bool botInlineGeo);
+    bool botInlineGeo() const;
 
     void setBotInlinePlaceholder(const QString &botInlinePlaceholder);
     QString botInlinePlaceholder() const;
@@ -133,6 +137,7 @@ Q_SIGNALS:
     void botChanged();
     void botChatHistoryChanged();
     void botInfoVersionChanged();
+    void botInlineGeoChanged();
     void botInlinePlaceholderChanged();
     void botNochatsChanged();
     void contactChanged();

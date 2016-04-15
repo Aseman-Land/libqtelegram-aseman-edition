@@ -14,7 +14,7 @@
 class LIBQTELEGRAMSHARED_EXPORT DocumentObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(DocumentType)
+    Q_ENUMS(DocumentClassType)
     Q_PROPERTY(qint64 accessHash READ accessHash WRITE setAccessHash NOTIFY accessHashChanged)
     Q_PROPERTY(QList<DocumentAttribute> attributes READ attributes WRITE setAttributes NOTIFY attributesChanged)
     Q_PROPERTY(qint32 date READ date WRITE setDate NOTIFY dateChanged)
@@ -27,7 +27,7 @@ class LIBQTELEGRAMSHARED_EXPORT DocumentObject : public TelegramTypeQObject
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum DocumentType {
+    enum DocumentClassType {
         TypeDocumentEmpty,
         TypeDocument
     };

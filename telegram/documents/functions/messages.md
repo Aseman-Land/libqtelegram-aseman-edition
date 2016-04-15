@@ -118,3 +118,13 @@
 
 * **Send inline bot result** - [TelegramCore::messagesSendInlineBotResult](methods/sendinlinebotresult.md)
 
+* **Get message edit data** - [TelegramCore::messagesGetMessageEditData](methods/getmessageeditdata.md)
+
+* **Edit message** - [TelegramCore::messagesEditMessage](methods/editmessage.md)
+
+* **Edit inline bot message** - [TelegramCore::messagesEditInlineBotMessage](methods/editinlinebotmessage.md)
+
+* **Get bot callback answer** - [TelegramCore::messagesGetBotCallbackAnswer](methods/getbotcallbackanswer.md)
+
+* **Set bot callback answer** - [TelegramCore::messagesSetBotCallbackAnswer](methods/setbotcallbackanswer.md)
+

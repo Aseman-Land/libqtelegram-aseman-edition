@@ -56,7 +56,7 @@ bool AccountPrivacyRulesObject::operator ==(const AccountPrivacyRules &b) const 
 }
 
 void AccountPrivacyRulesObject::setClassType(quint32 classType) {
-    AccountPrivacyRules::AccountPrivacyRulesType result;
+    AccountPrivacyRules::AccountPrivacyRulesClassType result;
     switch(classType) {
     case TypeAccountPrivacyRules:
         result = AccountPrivacyRules::typeAccountPrivacyRules;

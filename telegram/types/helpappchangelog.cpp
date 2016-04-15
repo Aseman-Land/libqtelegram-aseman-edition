@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-HelpAppChangelog::HelpAppChangelog(HelpAppChangelogType classType, InboundPkt *in) :
+HelpAppChangelog::HelpAppChangelog(HelpAppChangelogClassType classType, InboundPkt *in) :
     m_classType(classType)
 {
     if(in) fetch(in);
@@ -43,11 +43,11 @@ bool HelpAppChangelog::operator ==(const HelpAppChangelog &b) const {
            m_text == b.m_text;
 }
 
-void HelpAppChangelog::setClassType(HelpAppChangelog::HelpAppChangelogType classType) {
+void HelpAppChangelog::setClassType(HelpAppChangelog::HelpAppChangelogClassType classType) {
     m_classType = classType;
 }
 
-HelpAppChangelog::HelpAppChangelogType HelpAppChangelog::classType() const {
+HelpAppChangelog::HelpAppChangelogClassType HelpAppChangelog::classType() const {
     return m_classType;
 }
 
@@ -56,14 +56,14 @@ bool HelpAppChangelog::fetch(InboundPkt *in) {
     int x = in->fetchInt();
     switch(x) {
     case typeHelpAppChangelogEmpty: {
-        m_classType = static_cast<HelpAppChangelogType>(x);
+        m_classType = static_cast<HelpAppChangelogClassType>(x);
         return true;
     }
         break;
     
     case typeHelpAppChangelog: {
         m_text = in->fetchQString();
-        m_classType = static_cast<HelpAppChangelogType>(x);
+        m_classType = static_cast<HelpAppChangelogClassType>(x);
         return true;
     }
         break;
@@ -116,7 +116,7 @@ QDataStream &operator<<(QDataStream &stream, const HelpAppChangelog &item) {
 QDataStream &operator>>(QDataStream &stream, HelpAppChangelog &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<HelpAppChangelog::HelpAppChangelogType>(type));
+    item.setClassType(static_cast<HelpAppChangelog::HelpAppChangelogClassType>(type));
     switch(type) {
     case HelpAppChangelog::typeHelpAppChangelogEmpty: {
         

@@ -12,19 +12,27 @@
 #include <QList>
 #include "messageentity.h"
 #include <QtGlobal>
+#include "inputgeopoint.h"
+#include "replymarkup.h"
 
 class LIBQTELEGRAMSHARED_EXPORT InputBotInlineMessage : public TelegramTypeObject
 {
 public:
-    enum InputBotInlineMessageType {
-        typeInputBotInlineMessageMediaAuto = 0x2e43e587,
-        typeInputBotInlineMessageText = 0xadf0df71
+    enum InputBotInlineMessageClassType {
+        typeInputBotInlineMessageMediaAuto = 0x292fed13,
+        typeInputBotInlineMessageText = 0x3dcd7a87,
+        typeInputBotInlineMessageMediaGeo = 0xf4a59de1,
+        typeInputBotInlineMessageMediaVenue = 0xaaafadc8,
+        typeInputBotInlineMessageMediaContact = 0x2daf01a7
     };
 
-    InputBotInlineMessage(InputBotInlineMessageType classType = typeInputBotInlineMessageMediaAuto, InboundPkt *in = 0);
+    InputBotInlineMessage(InputBotInlineMessageClassType classType = typeInputBotInlineMessageMediaAuto, InboundPkt *in = 0);
     InputBotInlineMessage(InboundPkt *in);
     InputBotInlineMessage(const Null&);
     virtual ~InputBotInlineMessage();
+
+    void setAddress(const QString &address);
+    QString address() const;
 
     void setCaption(const QString &caption);
     QString caption() const;
@@ -32,8 +40,17 @@ public:
     void setEntities(const QList<MessageEntity> &entities);
     QList<MessageEntity> entities() const;
 
+    void setFirstName(const QString &firstName);
+    QString firstName() const;
+
     void setFlags(qint32 flags);
     qint32 flags() const;
+
+    void setGeoPoint(const InputGeoPoint &geoPoint);
+    InputGeoPoint geoPoint() const;
+
+    void setLastName(const QString &lastName);
+    QString lastName() const;
 
     void setMessage(const QString &message);
     QString message() const;
@@ -41,8 +58,23 @@ public:
     void setNoWebpage(bool noWebpage);
     bool noWebpage() const;
 
-    void setClassType(InputBotInlineMessageType classType);
-    InputBotInlineMessageType classType() const;
+    void setPhoneNumber(const QString &phoneNumber);
+    QString phoneNumber() const;
+
+    void setProvider(const QString &provider);
+    QString provider() const;
+
+    void setReplyMarkup(const ReplyMarkup &replyMarkup);
+    ReplyMarkup replyMarkup() const;
+
+    void setTitle(const QString &title);
+    QString title() const;
+
+    void setVenueId(const QString &venueId);
+    QString venueId() const;
+
+    void setClassType(InputBotInlineMessageClassType classType);
+    InputBotInlineMessageClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -55,11 +87,20 @@ public:
     QByteArray getHash(QCryptographicHash::Algorithm alg = QCryptographicHash::Md5) const;
 
 private:
+    QString m_address;
     QString m_caption;
     QList<MessageEntity> m_entities;
+    QString m_firstName;
     qint32 m_flags;
+    InputGeoPoint m_geoPoint;
+    QString m_lastName;
     QString m_message;
-    InputBotInlineMessageType m_classType;
+    QString m_phoneNumber;
+    QString m_provider;
+    ReplyMarkup m_replyMarkup;
+    QString m_title;
+    QString m_venueId;
+    InputBotInlineMessageClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(InputBotInlineMessage)

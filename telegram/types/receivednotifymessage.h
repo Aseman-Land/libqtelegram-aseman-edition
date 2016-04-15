@@ -13,11 +13,11 @@
 class LIBQTELEGRAMSHARED_EXPORT ReceivedNotifyMessage : public TelegramTypeObject
 {
 public:
-    enum ReceivedNotifyMessageType {
+    enum ReceivedNotifyMessageClassType {
         typeReceivedNotifyMessage = 0xa384b779
     };
 
-    ReceivedNotifyMessage(ReceivedNotifyMessageType classType = typeReceivedNotifyMessage, InboundPkt *in = 0);
+    ReceivedNotifyMessage(ReceivedNotifyMessageClassType classType = typeReceivedNotifyMessage, InboundPkt *in = 0);
     ReceivedNotifyMessage(InboundPkt *in);
     ReceivedNotifyMessage(const Null&);
     virtual ~ReceivedNotifyMessage();
@@ -28,8 +28,8 @@ public:
     void setId(qint32 id);
     qint32 id() const;
 
-    void setClassType(ReceivedNotifyMessageType classType);
-    ReceivedNotifyMessageType classType() const;
+    void setClassType(ReceivedNotifyMessageClassType classType);
+    ReceivedNotifyMessageClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -44,7 +44,7 @@ public:
 private:
     qint32 m_flags;
     qint32 m_id;
-    ReceivedNotifyMessageType m_classType;
+    ReceivedNotifyMessageClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(ReceivedNotifyMessage)

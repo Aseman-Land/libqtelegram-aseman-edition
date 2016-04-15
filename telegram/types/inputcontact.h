@@ -14,11 +14,11 @@
 class LIBQTELEGRAMSHARED_EXPORT InputContact : public TelegramTypeObject
 {
 public:
-    enum InputContactType {
+    enum InputContactClassType {
         typeInputPhoneContact = 0xf392b7f4
     };
 
-    InputContact(InputContactType classType = typeInputPhoneContact, InboundPkt *in = 0);
+    InputContact(InputContactClassType classType = typeInputPhoneContact, InboundPkt *in = 0);
     InputContact(InboundPkt *in);
     InputContact(const Null&);
     virtual ~InputContact();
@@ -35,8 +35,8 @@ public:
     void setPhone(const QString &phone);
     QString phone() const;
 
-    void setClassType(InputContactType classType);
-    InputContactType classType() const;
+    void setClassType(InputContactClassType classType);
+    InputContactClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -53,7 +53,7 @@ private:
     QString m_firstName;
     QString m_lastName;
     QString m_phone;
-    InputContactType m_classType;
+    InputContactClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(InputContact)

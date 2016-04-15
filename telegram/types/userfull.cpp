@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-UserFull::UserFull(UserFullType classType, InboundPkt *in) :
+UserFull::UserFull(UserFullClassType classType, InboundPkt *in) :
     m_flags(0),
     m_classType(classType)
 {
@@ -109,11 +109,11 @@ bool UserFull::operator ==(const UserFull &b) const {
            m_user == b.m_user;
 }
 
-void UserFull::setClassType(UserFull::UserFullType classType) {
+void UserFull::setClassType(UserFull::UserFullClassType classType) {
     m_classType = classType;
 }
 
-UserFull::UserFullType UserFull::classType() const {
+UserFull::UserFullClassType UserFull::classType() const {
     return m_classType;
 }
 
@@ -135,7 +135,7 @@ bool UserFull::fetch(InboundPkt *in) {
         if(m_flags & 1<<3) {
             m_botInfo.fetch(in);
         }
-        m_classType = static_cast<UserFullType>(x);
+        m_classType = static_cast<UserFullClassType>(x);
         return true;
     }
         break;
@@ -192,7 +192,7 @@ QDataStream &operator<<(QDataStream &stream, const UserFull &item) {
 QDataStream &operator>>(QDataStream &stream, UserFull &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<UserFull::UserFullType>(type));
+    item.setClassType(static_cast<UserFull::UserFullClassType>(type));
     switch(type) {
     case UserFull::typeUserFull: {
         qint32 m_flags;

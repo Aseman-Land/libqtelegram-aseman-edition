@@ -13,7 +13,7 @@
 class LIBQTELEGRAMSHARED_EXPORT FileLocationObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(FileLocationType)
+    Q_ENUMS(FileLocationClassType)
     Q_PROPERTY(qint32 dcId READ dcId WRITE setDcId NOTIFY dcIdChanged)
     Q_PROPERTY(qint32 localId READ localId WRITE setLocalId NOTIFY localIdChanged)
     Q_PROPERTY(qint64 secret READ secret WRITE setSecret NOTIFY secretChanged)
@@ -22,7 +22,7 @@ class LIBQTELEGRAMSHARED_EXPORT FileLocationObject : public TelegramTypeQObject
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum FileLocationType {
+    enum FileLocationClassType {
         TypeFileLocationUnavailable,
         TypeFileLocation
     };

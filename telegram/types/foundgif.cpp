@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-FoundGif::FoundGif(FoundGifType classType, InboundPkt *in) :
+FoundGif::FoundGif(FoundGifClassType classType, InboundPkt *in) :
     m_h(0),
     m_w(0),
     m_classType(classType)
@@ -112,11 +112,11 @@ bool FoundGif::operator ==(const FoundGif &b) const {
            m_w == b.m_w;
 }
 
-void FoundGif::setClassType(FoundGif::FoundGifType classType) {
+void FoundGif::setClassType(FoundGif::FoundGifClassType classType) {
     m_classType = classType;
 }
 
-FoundGif::FoundGifType FoundGif::classType() const {
+FoundGif::FoundGifClassType FoundGif::classType() const {
     return m_classType;
 }
 
@@ -131,7 +131,7 @@ bool FoundGif::fetch(InboundPkt *in) {
         m_contentType = in->fetchQString();
         m_w = in->fetchInt();
         m_h = in->fetchInt();
-        m_classType = static_cast<FoundGifType>(x);
+        m_classType = static_cast<FoundGifClassType>(x);
         return true;
     }
         break;
@@ -140,7 +140,7 @@ bool FoundGif::fetch(InboundPkt *in) {
         m_url = in->fetchQString();
         m_photo.fetch(in);
         m_document.fetch(in);
-        m_classType = static_cast<FoundGifType>(x);
+        m_classType = static_cast<FoundGifClassType>(x);
         return true;
     }
         break;
@@ -208,7 +208,7 @@ QDataStream &operator<<(QDataStream &stream, const FoundGif &item) {
 QDataStream &operator>>(QDataStream &stream, FoundGif &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<FoundGif::FoundGifType>(type));
+    item.setClassType(static_cast<FoundGif::FoundGifClassType>(type));
     switch(type) {
     case FoundGif::typeFoundGif: {
         QString m_url;

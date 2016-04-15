@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-ContactsFound::ContactsFound(ContactsFoundType classType, InboundPkt *in) :
+ContactsFound::ContactsFound(ContactsFoundClassType classType, InboundPkt *in) :
     m_classType(classType)
 {
     if(in) fetch(in);
@@ -61,11 +61,11 @@ bool ContactsFound::operator ==(const ContactsFound &b) const {
            m_users == b.m_users;
 }
 
-void ContactsFound::setClassType(ContactsFound::ContactsFoundType classType) {
+void ContactsFound::setClassType(ContactsFound::ContactsFoundClassType classType) {
     m_classType = classType;
 }
 
-ContactsFound::ContactsFoundType ContactsFound::classType() const {
+ContactsFound::ContactsFoundClassType ContactsFound::classType() const {
     return m_classType;
 }
 
@@ -98,7 +98,7 @@ bool ContactsFound::fetch(InboundPkt *in) {
             type.fetch(in);
             m_users.append(type);
         }
-        m_classType = static_cast<ContactsFoundType>(x);
+        m_classType = static_cast<ContactsFoundClassType>(x);
         return true;
     }
         break;
@@ -159,7 +159,7 @@ QDataStream &operator<<(QDataStream &stream, const ContactsFound &item) {
 QDataStream &operator>>(QDataStream &stream, ContactsFound &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<ContactsFound::ContactsFoundType>(type));
+    item.setClassType(static_cast<ContactsFound::ContactsFoundClassType>(type));
     switch(type) {
     case ContactsFound::typeContactsFound: {
         QList<Peer> m_results;

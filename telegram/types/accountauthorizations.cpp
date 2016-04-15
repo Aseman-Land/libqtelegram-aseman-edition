@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-AccountAuthorizations::AccountAuthorizations(AccountAuthorizationsType classType, InboundPkt *in) :
+AccountAuthorizations::AccountAuthorizations(AccountAuthorizationsClassType classType, InboundPkt *in) :
     m_classType(classType)
 {
     if(in) fetch(in);
@@ -43,11 +43,11 @@ bool AccountAuthorizations::operator ==(const AccountAuthorizations &b) const {
            m_authorizations == b.m_authorizations;
 }
 
-void AccountAuthorizations::setClassType(AccountAuthorizations::AccountAuthorizationsType classType) {
+void AccountAuthorizations::setClassType(AccountAuthorizations::AccountAuthorizationsClassType classType) {
     m_classType = classType;
 }
 
-AccountAuthorizations::AccountAuthorizationsType AccountAuthorizations::classType() const {
+AccountAuthorizations::AccountAuthorizationsClassType AccountAuthorizations::classType() const {
     return m_classType;
 }
 
@@ -64,7 +64,7 @@ bool AccountAuthorizations::fetch(InboundPkt *in) {
             type.fetch(in);
             m_authorizations.append(type);
         }
-        m_classType = static_cast<AccountAuthorizationsType>(x);
+        m_classType = static_cast<AccountAuthorizationsClassType>(x);
         return true;
     }
         break;
@@ -113,7 +113,7 @@ QDataStream &operator<<(QDataStream &stream, const AccountAuthorizations &item) 
 QDataStream &operator>>(QDataStream &stream, AccountAuthorizations &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<AccountAuthorizations::AccountAuthorizationsType>(type));
+    item.setClassType(static_cast<AccountAuthorizations::AccountAuthorizationsClassType>(type));
     switch(type) {
     case AccountAuthorizations::typeAccountAuthorizations: {
         QList<Authorization> m_authorizations;

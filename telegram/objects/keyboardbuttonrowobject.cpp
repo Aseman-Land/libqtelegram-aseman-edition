@@ -44,7 +44,7 @@ bool KeyboardButtonRowObject::operator ==(const KeyboardButtonRow &b) const {
 }
 
 void KeyboardButtonRowObject::setClassType(quint32 classType) {
-    KeyboardButtonRow::KeyboardButtonRowType result;
+    KeyboardButtonRow::KeyboardButtonRowClassType result;
     switch(classType) {
     case TypeKeyboardButtonRow:
         result = KeyboardButtonRow::typeKeyboardButtonRow;

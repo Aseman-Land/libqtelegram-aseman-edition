@@ -16,11 +16,11 @@
 class LIBQTELEGRAMSHARED_EXPORT ContactsFound : public TelegramTypeObject
 {
 public:
-    enum ContactsFoundType {
+    enum ContactsFoundClassType {
         typeContactsFound = 0x1aa1f784
     };
 
-    ContactsFound(ContactsFoundType classType = typeContactsFound, InboundPkt *in = 0);
+    ContactsFound(ContactsFoundClassType classType = typeContactsFound, InboundPkt *in = 0);
     ContactsFound(InboundPkt *in);
     ContactsFound(const Null&);
     virtual ~ContactsFound();
@@ -34,8 +34,8 @@ public:
     void setUsers(const QList<User> &users);
     QList<User> users() const;
 
-    void setClassType(ContactsFoundType classType);
-    ContactsFoundType classType() const;
+    void setClassType(ContactsFoundClassType classType);
+    ContactsFoundClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -51,7 +51,7 @@ private:
     QList<Chat> m_chats;
     QList<Peer> m_results;
     QList<User> m_users;
-    ContactsFoundType m_classType;
+    ContactsFoundClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(ContactsFound)

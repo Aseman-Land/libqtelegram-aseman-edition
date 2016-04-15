@@ -14,7 +14,7 @@
 class LIBQTELEGRAMSHARED_EXPORT InputPrivacyRule : public TelegramTypeObject
 {
 public:
-    enum InputPrivacyRuleType {
+    enum InputPrivacyRuleClassType {
         typeInputPrivacyValueAllowContacts = 0xd09e07b,
         typeInputPrivacyValueAllowAll = 0x184b35ce,
         typeInputPrivacyValueAllowUsers = 0x131cc67f,
@@ -23,7 +23,7 @@ public:
         typeInputPrivacyValueDisallowUsers = 0x90110467
     };
 
-    InputPrivacyRule(InputPrivacyRuleType classType = typeInputPrivacyValueAllowContacts, InboundPkt *in = 0);
+    InputPrivacyRule(InputPrivacyRuleClassType classType = typeInputPrivacyValueAllowContacts, InboundPkt *in = 0);
     InputPrivacyRule(InboundPkt *in);
     InputPrivacyRule(const Null&);
     virtual ~InputPrivacyRule();
@@ -31,8 +31,8 @@ public:
     void setUsers(const QList<InputUser> &users);
     QList<InputUser> users() const;
 
-    void setClassType(InputPrivacyRuleType classType);
-    InputPrivacyRuleType classType() const;
+    void setClassType(InputPrivacyRuleClassType classType);
+    InputPrivacyRuleClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -46,7 +46,7 @@ public:
 
 private:
     QList<InputUser> m_users;
-    InputPrivacyRuleType m_classType;
+    InputPrivacyRuleClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(InputPrivacyRule)

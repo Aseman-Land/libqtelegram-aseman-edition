@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-MessagesFoundGifs::MessagesFoundGifs(MessagesFoundGifsType classType, InboundPkt *in) :
+MessagesFoundGifs::MessagesFoundGifs(MessagesFoundGifsClassType classType, InboundPkt *in) :
     m_nextOffset(0),
     m_classType(classType)
 {
@@ -55,11 +55,11 @@ bool MessagesFoundGifs::operator ==(const MessagesFoundGifs &b) const {
            m_results == b.m_results;
 }
 
-void MessagesFoundGifs::setClassType(MessagesFoundGifs::MessagesFoundGifsType classType) {
+void MessagesFoundGifs::setClassType(MessagesFoundGifs::MessagesFoundGifsClassType classType) {
     m_classType = classType;
 }
 
-MessagesFoundGifs::MessagesFoundGifsType MessagesFoundGifs::classType() const {
+MessagesFoundGifs::MessagesFoundGifsClassType MessagesFoundGifs::classType() const {
     return m_classType;
 }
 
@@ -77,7 +77,7 @@ bool MessagesFoundGifs::fetch(InboundPkt *in) {
             type.fetch(in);
             m_results.append(type);
         }
-        m_classType = static_cast<MessagesFoundGifsType>(x);
+        m_classType = static_cast<MessagesFoundGifsClassType>(x);
         return true;
     }
         break;
@@ -128,7 +128,7 @@ QDataStream &operator<<(QDataStream &stream, const MessagesFoundGifs &item) {
 QDataStream &operator>>(QDataStream &stream, MessagesFoundGifs &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<MessagesFoundGifs::MessagesFoundGifsType>(type));
+    item.setClassType(static_cast<MessagesFoundGifs::MessagesFoundGifsClassType>(type));
     switch(type) {
     case MessagesFoundGifs::typeMessagesFoundGifs: {
         qint32 m_next_offset;

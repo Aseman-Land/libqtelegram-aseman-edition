@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-UploadFile::UploadFile(UploadFileType classType, InboundPkt *in) :
+UploadFile::UploadFile(UploadFileClassType classType, InboundPkt *in) :
     m_mtime(0),
     m_classType(classType)
 {
@@ -64,11 +64,11 @@ bool UploadFile::operator ==(const UploadFile &b) const {
            m_type == b.m_type;
 }
 
-void UploadFile::setClassType(UploadFile::UploadFileType classType) {
+void UploadFile::setClassType(UploadFile::UploadFileClassType classType) {
     m_classType = classType;
 }
 
-UploadFile::UploadFileType UploadFile::classType() const {
+UploadFile::UploadFileClassType UploadFile::classType() const {
     return m_classType;
 }
 
@@ -80,7 +80,7 @@ bool UploadFile::fetch(InboundPkt *in) {
         m_type.fetch(in);
         m_mtime = in->fetchInt();
         m_bytes = in->fetchBytes();
-        m_classType = static_cast<UploadFileType>(x);
+        m_classType = static_cast<UploadFileClassType>(x);
         return true;
     }
         break;
@@ -129,7 +129,7 @@ QDataStream &operator<<(QDataStream &stream, const UploadFile &item) {
 QDataStream &operator>>(QDataStream &stream, UploadFile &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<UploadFile::UploadFileType>(type));
+    item.setClassType(static_cast<UploadFile::UploadFileClassType>(type));
     switch(type) {
     case UploadFile::typeUploadFile: {
         StorageFileType m_type;

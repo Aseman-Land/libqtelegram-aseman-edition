@@ -14,7 +14,7 @@
 class LIBQTELEGRAMSHARED_EXPORT DocumentAttributeObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(DocumentAttributeType)
+    Q_ENUMS(DocumentAttributeClassType)
     Q_PROPERTY(QString alt READ alt WRITE setAlt NOTIFY altChanged)
     Q_PROPERTY(qint32 duration READ duration WRITE setDuration NOTIFY durationChanged)
     Q_PROPERTY(QString fileName READ fileName WRITE setFileName NOTIFY fileNameChanged)
@@ -30,7 +30,7 @@ class LIBQTELEGRAMSHARED_EXPORT DocumentAttributeObject : public TelegramTypeQOb
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum DocumentAttributeType {
+    enum DocumentAttributeClassType {
         TypeDocumentAttributeImageSize,
         TypeDocumentAttributeAnimated,
         TypeDocumentAttributeSticker,

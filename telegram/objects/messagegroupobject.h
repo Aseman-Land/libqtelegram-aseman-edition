@@ -13,7 +13,7 @@
 class LIBQTELEGRAMSHARED_EXPORT MessageGroupObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(MessageGroupType)
+    Q_ENUMS(MessageGroupClassType)
     Q_PROPERTY(qint32 count READ count WRITE setCount NOTIFY countChanged)
     Q_PROPERTY(qint32 date READ date WRITE setDate NOTIFY dateChanged)
     Q_PROPERTY(qint32 maxId READ maxId WRITE setMaxId NOTIFY maxIdChanged)
@@ -22,7 +22,7 @@ class LIBQTELEGRAMSHARED_EXPORT MessageGroupObject : public TelegramTypeQObject
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum MessageGroupType {
+    enum MessageGroupClassType {
         TypeMessageGroup
     };
 

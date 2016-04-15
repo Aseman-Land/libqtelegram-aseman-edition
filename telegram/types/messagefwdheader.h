@@ -13,11 +13,11 @@
 class LIBQTELEGRAMSHARED_EXPORT MessageFwdHeader : public TelegramTypeObject
 {
 public:
-    enum MessageFwdHeaderType {
+    enum MessageFwdHeaderClassType {
         typeMessageFwdHeader = 0xc786ddcb
     };
 
-    MessageFwdHeader(MessageFwdHeaderType classType = typeMessageFwdHeader, InboundPkt *in = 0);
+    MessageFwdHeader(MessageFwdHeaderClassType classType = typeMessageFwdHeader, InboundPkt *in = 0);
     MessageFwdHeader(InboundPkt *in);
     MessageFwdHeader(const Null&);
     virtual ~MessageFwdHeader();
@@ -37,8 +37,8 @@ public:
     void setFromId(qint32 fromId);
     qint32 fromId() const;
 
-    void setClassType(MessageFwdHeaderType classType);
-    MessageFwdHeaderType classType() const;
+    void setClassType(MessageFwdHeaderClassType classType);
+    MessageFwdHeaderClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -56,7 +56,7 @@ private:
     qint32 m_date;
     qint32 m_flags;
     qint32 m_fromId;
-    MessageFwdHeaderType m_classType;
+    MessageFwdHeaderClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(MessageFwdHeader)

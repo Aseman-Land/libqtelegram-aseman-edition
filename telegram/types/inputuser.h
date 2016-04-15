@@ -13,13 +13,13 @@
 class LIBQTELEGRAMSHARED_EXPORT InputUser : public TelegramTypeObject
 {
 public:
-    enum InputUserType {
+    enum InputUserClassType {
         typeInputUserEmpty = 0xb98886cf,
         typeInputUserSelf = 0xf7c1b13f,
         typeInputUser = 0xd8292816
     };
 
-    InputUser(InputUserType classType = typeInputUserEmpty, InboundPkt *in = 0);
+    InputUser(InputUserClassType classType = typeInputUserEmpty, InboundPkt *in = 0);
     InputUser(InboundPkt *in);
     InputUser(const Null&);
     virtual ~InputUser();
@@ -30,8 +30,8 @@ public:
     void setUserId(qint32 userId);
     qint32 userId() const;
 
-    void setClassType(InputUserType classType);
-    InputUserType classType() const;
+    void setClassType(InputUserClassType classType);
+    InputUserClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -46,7 +46,7 @@ public:
 private:
     qint64 m_accessHash;
     qint32 m_userId;
-    InputUserType m_classType;
+    InputUserClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(InputUser)

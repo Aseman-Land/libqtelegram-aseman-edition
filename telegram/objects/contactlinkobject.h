@@ -13,12 +13,12 @@
 class LIBQTELEGRAMSHARED_EXPORT ContactLinkObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(ContactLinkType)
+    Q_ENUMS(ContactLinkClassType)
     Q_PROPERTY(ContactLink core READ core WRITE setCore NOTIFY coreChanged)
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum ContactLinkType {
+    enum ContactLinkClassType {
         TypeContactLinkUnknown,
         TypeContactLinkNone,
         TypeContactLinkHasPhone,

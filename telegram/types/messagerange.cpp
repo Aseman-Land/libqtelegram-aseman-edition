@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-MessageRange::MessageRange(MessageRangeType classType, InboundPkt *in) :
+MessageRange::MessageRange(MessageRangeClassType classType, InboundPkt *in) :
     m_maxId(0),
     m_minId(0),
     m_classType(classType)
@@ -58,11 +58,11 @@ bool MessageRange::operator ==(const MessageRange &b) const {
            m_minId == b.m_minId;
 }
 
-void MessageRange::setClassType(MessageRange::MessageRangeType classType) {
+void MessageRange::setClassType(MessageRange::MessageRangeClassType classType) {
     m_classType = classType;
 }
 
-MessageRange::MessageRangeType MessageRange::classType() const {
+MessageRange::MessageRangeClassType MessageRange::classType() const {
     return m_classType;
 }
 
@@ -73,7 +73,7 @@ bool MessageRange::fetch(InboundPkt *in) {
     case typeMessageRange: {
         m_minId = in->fetchInt();
         m_maxId = in->fetchInt();
-        m_classType = static_cast<MessageRangeType>(x);
+        m_classType = static_cast<MessageRangeClassType>(x);
         return true;
     }
         break;
@@ -120,7 +120,7 @@ QDataStream &operator<<(QDataStream &stream, const MessageRange &item) {
 QDataStream &operator>>(QDataStream &stream, MessageRange &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<MessageRange::MessageRangeType>(type));
+    item.setClassType(static_cast<MessageRange::MessageRangeClassType>(type));
     switch(type) {
     case MessageRange::typeMessageRange: {
         qint32 m_min_id;

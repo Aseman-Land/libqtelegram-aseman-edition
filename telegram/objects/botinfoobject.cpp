@@ -68,7 +68,7 @@ bool BotInfoObject::operator ==(const BotInfo &b) const {
 }
 
 void BotInfoObject::setClassType(quint32 classType) {
-    BotInfo::BotInfoType result;
+    BotInfo::BotInfoClassType result;
     switch(classType) {
     case TypeBotInfo:
         result = BotInfo::typeBotInfo;

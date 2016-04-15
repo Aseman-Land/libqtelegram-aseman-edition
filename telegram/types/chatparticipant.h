@@ -13,13 +13,13 @@
 class LIBQTELEGRAMSHARED_EXPORT ChatParticipant : public TelegramTypeObject
 {
 public:
-    enum ChatParticipantType {
+    enum ChatParticipantClassType {
         typeChatParticipant = 0xc8d7493e,
         typeChatParticipantCreator = 0xda13538a,
         typeChatParticipantAdmin = 0xe2d6e436
     };
 
-    ChatParticipant(ChatParticipantType classType = typeChatParticipant, InboundPkt *in = 0);
+    ChatParticipant(ChatParticipantClassType classType = typeChatParticipant, InboundPkt *in = 0);
     ChatParticipant(InboundPkt *in);
     ChatParticipant(const Null&);
     virtual ~ChatParticipant();
@@ -33,8 +33,8 @@ public:
     void setUserId(qint32 userId);
     qint32 userId() const;
 
-    void setClassType(ChatParticipantType classType);
-    ChatParticipantType classType() const;
+    void setClassType(ChatParticipantClassType classType);
+    ChatParticipantClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -50,7 +50,7 @@ private:
     qint32 m_date;
     qint32 m_inviterId;
     qint32 m_userId;
-    ChatParticipantType m_classType;
+    ChatParticipantClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(ChatParticipant)

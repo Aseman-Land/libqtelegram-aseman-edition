@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-MessagesAffectedHistory::MessagesAffectedHistory(MessagesAffectedHistoryType classType, InboundPkt *in) :
+MessagesAffectedHistory::MessagesAffectedHistory(MessagesAffectedHistoryClassType classType, InboundPkt *in) :
     m_offset(0),
     m_pts(0),
     m_ptsCount(0),
@@ -70,11 +70,11 @@ bool MessagesAffectedHistory::operator ==(const MessagesAffectedHistory &b) cons
            m_ptsCount == b.m_ptsCount;
 }
 
-void MessagesAffectedHistory::setClassType(MessagesAffectedHistory::MessagesAffectedHistoryType classType) {
+void MessagesAffectedHistory::setClassType(MessagesAffectedHistory::MessagesAffectedHistoryClassType classType) {
     m_classType = classType;
 }
 
-MessagesAffectedHistory::MessagesAffectedHistoryType MessagesAffectedHistory::classType() const {
+MessagesAffectedHistory::MessagesAffectedHistoryClassType MessagesAffectedHistory::classType() const {
     return m_classType;
 }
 
@@ -86,7 +86,7 @@ bool MessagesAffectedHistory::fetch(InboundPkt *in) {
         m_pts = in->fetchInt();
         m_ptsCount = in->fetchInt();
         m_offset = in->fetchInt();
-        m_classType = static_cast<MessagesAffectedHistoryType>(x);
+        m_classType = static_cast<MessagesAffectedHistoryClassType>(x);
         return true;
     }
         break;
@@ -135,7 +135,7 @@ QDataStream &operator<<(QDataStream &stream, const MessagesAffectedHistory &item
 QDataStream &operator>>(QDataStream &stream, MessagesAffectedHistory &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<MessagesAffectedHistory::MessagesAffectedHistoryType>(type));
+    item.setClassType(static_cast<MessagesAffectedHistory::MessagesAffectedHistoryClassType>(type));
     switch(type) {
     case MessagesAffectedHistory::typeMessagesAffectedHistory: {
         qint32 m_pts;

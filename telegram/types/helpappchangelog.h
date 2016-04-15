@@ -13,12 +13,12 @@
 class LIBQTELEGRAMSHARED_EXPORT HelpAppChangelog : public TelegramTypeObject
 {
 public:
-    enum HelpAppChangelogType {
+    enum HelpAppChangelogClassType {
         typeHelpAppChangelogEmpty = 0xaf7e0394,
         typeHelpAppChangelog = 0x4668e6bd
     };
 
-    HelpAppChangelog(HelpAppChangelogType classType = typeHelpAppChangelogEmpty, InboundPkt *in = 0);
+    HelpAppChangelog(HelpAppChangelogClassType classType = typeHelpAppChangelogEmpty, InboundPkt *in = 0);
     HelpAppChangelog(InboundPkt *in);
     HelpAppChangelog(const Null&);
     virtual ~HelpAppChangelog();
@@ -26,8 +26,8 @@ public:
     void setText(const QString &text);
     QString text() const;
 
-    void setClassType(HelpAppChangelogType classType);
-    HelpAppChangelogType classType() const;
+    void setClassType(HelpAppChangelogClassType classType);
+    HelpAppChangelogClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -41,7 +41,7 @@ public:
 
 private:
     QString m_text;
-    HelpAppChangelogType m_classType;
+    HelpAppChangelogClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(HelpAppChangelog)

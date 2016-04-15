@@ -80,7 +80,7 @@ bool InputFileObject::operator ==(const InputFile &b) const {
 }
 
 void InputFileObject::setClassType(quint32 classType) {
-    InputFile::InputFileType result;
+    InputFile::InputFileClassType result;
     switch(classType) {
     case TypeInputFile:
         result = InputFile::typeInputFile;

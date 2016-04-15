@@ -141,7 +141,7 @@ bool DocumentObject::operator ==(const Document &b) const {
 }
 
 void DocumentObject::setClassType(quint32 classType) {
-    Document::DocumentType result;
+    Document::DocumentClassType result;
     switch(classType) {
     case TypeDocumentEmpty:
         result = Document::typeDocumentEmpty;

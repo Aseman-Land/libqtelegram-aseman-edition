@@ -13,7 +13,7 @@
 class LIBQTELEGRAMSHARED_EXPORT HelpAppUpdateObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(HelpAppUpdateType)
+    Q_ENUMS(HelpAppUpdateClassType)
     Q_PROPERTY(bool critical READ critical WRITE setCritical NOTIFY criticalChanged)
     Q_PROPERTY(qint32 id READ id WRITE setId NOTIFY idChanged)
     Q_PROPERTY(QString text READ text WRITE setText NOTIFY textChanged)
@@ -22,7 +22,7 @@ class LIBQTELEGRAMSHARED_EXPORT HelpAppUpdateObject : public TelegramTypeQObject
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum HelpAppUpdateType {
+    enum HelpAppUpdateClassType {
         TypeHelpAppUpdate,
         TypeHelpNoAppUpdate
     };

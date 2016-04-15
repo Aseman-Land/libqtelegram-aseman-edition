@@ -16,11 +16,11 @@
 class LIBQTELEGRAMSHARED_EXPORT ChannelsChannelParticipants : public TelegramTypeObject
 {
 public:
-    enum ChannelsChannelParticipantsType {
+    enum ChannelsChannelParticipantsClassType {
         typeChannelsChannelParticipants = 0xf56ee2a8
     };
 
-    ChannelsChannelParticipants(ChannelsChannelParticipantsType classType = typeChannelsChannelParticipants, InboundPkt *in = 0);
+    ChannelsChannelParticipants(ChannelsChannelParticipantsClassType classType = typeChannelsChannelParticipants, InboundPkt *in = 0);
     ChannelsChannelParticipants(InboundPkt *in);
     ChannelsChannelParticipants(const Null&);
     virtual ~ChannelsChannelParticipants();
@@ -34,8 +34,8 @@ public:
     void setUsers(const QList<User> &users);
     QList<User> users() const;
 
-    void setClassType(ChannelsChannelParticipantsType classType);
-    ChannelsChannelParticipantsType classType() const;
+    void setClassType(ChannelsChannelParticipantsClassType classType);
+    ChannelsChannelParticipantsClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -51,7 +51,7 @@ private:
     qint32 m_count;
     QList<ChannelParticipant> m_participants;
     QList<User> m_users;
-    ChannelsChannelParticipantsType m_classType;
+    ChannelsChannelParticipantsClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(ChannelsChannelParticipants)

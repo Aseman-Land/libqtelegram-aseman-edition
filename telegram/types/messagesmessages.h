@@ -18,13 +18,13 @@
 class LIBQTELEGRAMSHARED_EXPORT MessagesMessages : public TelegramTypeObject
 {
 public:
-    enum MessagesMessagesType {
+    enum MessagesMessagesClassType {
         typeMessagesMessages = 0x8c718e87,
         typeMessagesMessagesSlice = 0xb446ae3,
         typeMessagesChannelMessages = 0xbc0f17bc
     };
 
-    MessagesMessages(MessagesMessagesType classType = typeMessagesMessages, InboundPkt *in = 0);
+    MessagesMessages(MessagesMessagesClassType classType = typeMessagesMessages, InboundPkt *in = 0);
     MessagesMessages(InboundPkt *in);
     MessagesMessages(const Null&);
     virtual ~MessagesMessages();
@@ -50,8 +50,8 @@ public:
     void setUsers(const QList<User> &users);
     QList<User> users() const;
 
-    void setClassType(MessagesMessagesType classType);
-    MessagesMessagesType classType() const;
+    void setClassType(MessagesMessagesClassType classType);
+    MessagesMessagesClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -71,7 +71,7 @@ private:
     QList<Message> m_messages;
     qint32 m_pts;
     QList<User> m_users;
-    MessagesMessagesType m_classType;
+    MessagesMessagesClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(MessagesMessages)

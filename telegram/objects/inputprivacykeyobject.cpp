@@ -32,7 +32,7 @@ bool InputPrivacyKeyObject::operator ==(const InputPrivacyKey &b) const {
 }
 
 void InputPrivacyKeyObject::setClassType(quint32 classType) {
-    InputPrivacyKey::InputPrivacyKeyType result;
+    InputPrivacyKey::InputPrivacyKeyClassType result;
     switch(classType) {
     case TypeInputPrivacyKeyStatusTimestamp:
         result = InputPrivacyKey::typeInputPrivacyKeyStatusTimestamp;

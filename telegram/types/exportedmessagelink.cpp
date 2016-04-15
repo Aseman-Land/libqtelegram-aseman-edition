@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-ExportedMessageLink::ExportedMessageLink(ExportedMessageLinkType classType, InboundPkt *in) :
+ExportedMessageLink::ExportedMessageLink(ExportedMessageLinkClassType classType, InboundPkt *in) :
     m_classType(classType)
 {
     if(in) fetch(in);
@@ -43,11 +43,11 @@ bool ExportedMessageLink::operator ==(const ExportedMessageLink &b) const {
            m_link == b.m_link;
 }
 
-void ExportedMessageLink::setClassType(ExportedMessageLink::ExportedMessageLinkType classType) {
+void ExportedMessageLink::setClassType(ExportedMessageLink::ExportedMessageLinkClassType classType) {
     m_classType = classType;
 }
 
-ExportedMessageLink::ExportedMessageLinkType ExportedMessageLink::classType() const {
+ExportedMessageLink::ExportedMessageLinkClassType ExportedMessageLink::classType() const {
     return m_classType;
 }
 
@@ -57,7 +57,7 @@ bool ExportedMessageLink::fetch(InboundPkt *in) {
     switch(x) {
     case typeExportedMessageLink: {
         m_link = in->fetchQString();
-        m_classType = static_cast<ExportedMessageLinkType>(x);
+        m_classType = static_cast<ExportedMessageLinkClassType>(x);
         return true;
     }
         break;
@@ -102,7 +102,7 @@ QDataStream &operator<<(QDataStream &stream, const ExportedMessageLink &item) {
 QDataStream &operator>>(QDataStream &stream, ExportedMessageLink &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<ExportedMessageLink::ExportedMessageLinkType>(type));
+    item.setClassType(static_cast<ExportedMessageLink::ExportedMessageLinkClassType>(type));
     switch(type) {
     case ExportedMessageLink::typeExportedMessageLink: {
         QString m_link;

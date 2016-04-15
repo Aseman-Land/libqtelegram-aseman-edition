@@ -16,7 +16,7 @@
 class LIBQTELEGRAMSHARED_EXPORT UpdatesTypeObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(UpdatesTypeType)
+    Q_ENUMS(UpdatesTypeClassType)
     Q_PROPERTY(qint32 chatId READ chatId WRITE setChatId NOTIFY chatIdChanged)
     Q_PROPERTY(QList<Chat> chats READ chats WRITE setChats NOTIFY chatsChanged)
     Q_PROPERTY(qint32 date READ date WRITE setDate NOTIFY dateChanged)
@@ -46,7 +46,7 @@ class LIBQTELEGRAMSHARED_EXPORT UpdatesTypeObject : public TelegramTypeQObject
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum UpdatesTypeType {
+    enum UpdatesTypeClassType {
         TypeUpdatesTooLong,
         TypeUpdateShortMessage,
         TypeUpdateShortChatMessage,

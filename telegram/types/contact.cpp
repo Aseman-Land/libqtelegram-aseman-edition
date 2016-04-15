@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-Contact::Contact(ContactType classType, InboundPkt *in) :
+Contact::Contact(ContactClassType classType, InboundPkt *in) :
     m_mutual(false),
     m_userId(0),
     m_classType(classType)
@@ -58,11 +58,11 @@ bool Contact::operator ==(const Contact &b) const {
            m_userId == b.m_userId;
 }
 
-void Contact::setClassType(Contact::ContactType classType) {
+void Contact::setClassType(Contact::ContactClassType classType) {
     m_classType = classType;
 }
 
-Contact::ContactType Contact::classType() const {
+Contact::ContactClassType Contact::classType() const {
     return m_classType;
 }
 
@@ -73,7 +73,7 @@ bool Contact::fetch(InboundPkt *in) {
     case typeContact: {
         m_userId = in->fetchInt();
         m_mutual = in->fetchBool();
-        m_classType = static_cast<ContactType>(x);
+        m_classType = static_cast<ContactClassType>(x);
         return true;
     }
         break;
@@ -120,7 +120,7 @@ QDataStream &operator<<(QDataStream &stream, const Contact &item) {
 QDataStream &operator>>(QDataStream &stream, Contact &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<Contact::ContactType>(type));
+    item.setClassType(static_cast<Contact::ContactClassType>(type));
     switch(type) {
     case Contact::typeContact: {
         qint32 m_user_id;

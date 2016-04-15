@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-InputMedia::InputMedia(InputMediaType classType, InboundPkt *in) :
+InputMedia::InputMedia(InputMediaClassType classType, InboundPkt *in) :
     m_classType(classType)
 {
     if(in) fetch(in);
@@ -187,11 +187,11 @@ bool InputMedia::operator ==(const InputMedia &b) const {
            m_venueId == b.m_venueId;
 }
 
-void InputMedia::setClassType(InputMedia::InputMediaType classType) {
+void InputMedia::setClassType(InputMedia::InputMediaClassType classType) {
     m_classType = classType;
 }
 
-InputMedia::InputMediaType InputMedia::classType() const {
+InputMedia::InputMediaClassType InputMedia::classType() const {
     return m_classType;
 }
 
@@ -200,7 +200,7 @@ bool InputMedia::fetch(InboundPkt *in) {
     int x = in->fetchInt();
     switch(x) {
     case typeInputMediaEmpty: {
-        m_classType = static_cast<InputMediaType>(x);
+        m_classType = static_cast<InputMediaClassType>(x);
         return true;
     }
         break;
@@ -208,7 +208,7 @@ bool InputMedia::fetch(InboundPkt *in) {
     case typeInputMediaUploadedPhoto: {
         m_file.fetch(in);
         m_caption = in->fetchQString();
-        m_classType = static_cast<InputMediaType>(x);
+        m_classType = static_cast<InputMediaClassType>(x);
         return true;
     }
         break;
@@ -216,14 +216,14 @@ bool InputMedia::fetch(InboundPkt *in) {
     case typeInputMediaPhoto: {
         m_idInputPhoto.fetch(in);
         m_caption = in->fetchQString();
-        m_classType = static_cast<InputMediaType>(x);
+        m_classType = static_cast<InputMediaClassType>(x);
         return true;
     }
         break;
     
     case typeInputMediaGeoPoint: {
         m_geoPoint.fetch(in);
-        m_classType = static_cast<InputMediaType>(x);
+        m_classType = static_cast<InputMediaClassType>(x);
         return true;
     }
         break;
@@ -232,7 +232,7 @@ bool InputMedia::fetch(InboundPkt *in) {
         m_phoneNumber = in->fetchQString();
         m_firstName = in->fetchQString();
         m_lastName = in->fetchQString();
-        m_classType = static_cast<InputMediaType>(x);
+        m_classType = static_cast<InputMediaClassType>(x);
         return true;
     }
         break;
@@ -249,7 +249,7 @@ bool InputMedia::fetch(InboundPkt *in) {
             m_attributes.append(type);
         }
         m_caption = in->fetchQString();
-        m_classType = static_cast<InputMediaType>(x);
+        m_classType = static_cast<InputMediaClassType>(x);
         return true;
     }
         break;
@@ -267,7 +267,7 @@ bool InputMedia::fetch(InboundPkt *in) {
             m_attributes.append(type);
         }
         m_caption = in->fetchQString();
-        m_classType = static_cast<InputMediaType>(x);
+        m_classType = static_cast<InputMediaClassType>(x);
         return true;
     }
         break;
@@ -275,7 +275,7 @@ bool InputMedia::fetch(InboundPkt *in) {
     case typeInputMediaDocument: {
         m_idInputDocument.fetch(in);
         m_caption = in->fetchQString();
-        m_classType = static_cast<InputMediaType>(x);
+        m_classType = static_cast<InputMediaClassType>(x);
         return true;
     }
         break;
@@ -286,7 +286,7 @@ bool InputMedia::fetch(InboundPkt *in) {
         m_address = in->fetchQString();
         m_provider = in->fetchQString();
         m_venueId = in->fetchQString();
-        m_classType = static_cast<InputMediaType>(x);
+        m_classType = static_cast<InputMediaClassType>(x);
         return true;
     }
         break;
@@ -294,7 +294,7 @@ bool InputMedia::fetch(InboundPkt *in) {
     case typeInputMediaGifExternal: {
         m_url = in->fetchQString();
         m_q = in->fetchQString();
-        m_classType = static_cast<InputMediaType>(x);
+        m_classType = static_cast<InputMediaClassType>(x);
         return true;
     }
         break;
@@ -461,7 +461,7 @@ QDataStream &operator<<(QDataStream &stream, const InputMedia &item) {
 QDataStream &operator>>(QDataStream &stream, InputMedia &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<InputMedia::InputMediaType>(type));
+    item.setClassType(static_cast<InputMedia::InputMediaClassType>(type));
     switch(type) {
     case InputMedia::typeInputMediaEmpty: {
         

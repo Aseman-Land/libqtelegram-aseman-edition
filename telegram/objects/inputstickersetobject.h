@@ -13,7 +13,7 @@
 class LIBQTELEGRAMSHARED_EXPORT InputStickerSetObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(InputStickerSetType)
+    Q_ENUMS(InputStickerSetClassType)
     Q_PROPERTY(qint64 accessHash READ accessHash WRITE setAccessHash NOTIFY accessHashChanged)
     Q_PROPERTY(qint64 id READ id WRITE setId NOTIFY idChanged)
     Q_PROPERTY(QString shortName READ shortName WRITE setShortName NOTIFY shortNameChanged)
@@ -21,7 +21,7 @@ class LIBQTELEGRAMSHARED_EXPORT InputStickerSetObject : public TelegramTypeQObje
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum InputStickerSetType {
+    enum InputStickerSetClassType {
         TypeInputStickerSetEmpty,
         TypeInputStickerSetID,
         TypeInputStickerSetShortName

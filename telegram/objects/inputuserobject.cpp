@@ -56,7 +56,7 @@ bool InputUserObject::operator ==(const InputUser &b) const {
 }
 
 void InputUserObject::setClassType(quint32 classType) {
-    InputUser::InputUserType result;
+    InputUser::InputUserClassType result;
     switch(classType) {
     case TypeInputUserEmpty:
         result = InputUser::typeInputUserEmpty;

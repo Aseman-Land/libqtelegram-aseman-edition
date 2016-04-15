@@ -14,11 +14,11 @@
 class LIBQTELEGRAMSHARED_EXPORT KeyboardButtonRow : public TelegramTypeObject
 {
 public:
-    enum KeyboardButtonRowType {
+    enum KeyboardButtonRowClassType {
         typeKeyboardButtonRow = 0x77608b83
     };
 
-    KeyboardButtonRow(KeyboardButtonRowType classType = typeKeyboardButtonRow, InboundPkt *in = 0);
+    KeyboardButtonRow(KeyboardButtonRowClassType classType = typeKeyboardButtonRow, InboundPkt *in = 0);
     KeyboardButtonRow(InboundPkt *in);
     KeyboardButtonRow(const Null&);
     virtual ~KeyboardButtonRow();
@@ -26,8 +26,8 @@ public:
     void setButtons(const QList<KeyboardButton> &buttons);
     QList<KeyboardButton> buttons() const;
 
-    void setClassType(KeyboardButtonRowType classType);
-    KeyboardButtonRowType classType() const;
+    void setClassType(KeyboardButtonRowClassType classType);
+    KeyboardButtonRowClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -41,7 +41,7 @@ public:
 
 private:
     QList<KeyboardButton> m_buttons;
-    KeyboardButtonRowType m_classType;
+    KeyboardButtonRowClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(KeyboardButtonRow)

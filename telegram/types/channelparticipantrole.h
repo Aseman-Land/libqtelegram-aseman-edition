@@ -12,19 +12,19 @@
 class LIBQTELEGRAMSHARED_EXPORT ChannelParticipantRole : public TelegramTypeObject
 {
 public:
-    enum ChannelParticipantRoleType {
+    enum ChannelParticipantRoleClassType {
         typeChannelRoleEmpty = 0xb285a0c6,
         typeChannelRoleModerator = 0x9618d975,
         typeChannelRoleEditor = 0x820bfe8c
     };
 
-    ChannelParticipantRole(ChannelParticipantRoleType classType = typeChannelRoleEmpty, InboundPkt *in = 0);
+    ChannelParticipantRole(ChannelParticipantRoleClassType classType = typeChannelRoleEmpty, InboundPkt *in = 0);
     ChannelParticipantRole(InboundPkt *in);
     ChannelParticipantRole(const Null&);
     virtual ~ChannelParticipantRole();
 
-    void setClassType(ChannelParticipantRoleType classType);
-    ChannelParticipantRoleType classType() const;
+    void setClassType(ChannelParticipantRoleClassType classType);
+    ChannelParticipantRoleClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -37,7 +37,7 @@ public:
     QByteArray getHash(QCryptographicHash::Algorithm alg = QCryptographicHash::Md5) const;
 
 private:
-    ChannelParticipantRoleType m_classType;
+    ChannelParticipantRoleClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(ChannelParticipantRole)

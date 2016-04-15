@@ -13,13 +13,13 @@
 class LIBQTELEGRAMSHARED_EXPORT Peer : public TelegramTypeObject
 {
 public:
-    enum PeerType {
+    enum PeerClassType {
         typePeerUser = 0x9db1bc6d,
         typePeerChat = 0xbad0e5bb,
         typePeerChannel = 0xbddde532
     };
 
-    Peer(PeerType classType = typePeerUser, InboundPkt *in = 0);
+    Peer(PeerClassType classType = typePeerUser, InboundPkt *in = 0);
     Peer(InboundPkt *in);
     Peer(const Null&);
     virtual ~Peer();
@@ -33,8 +33,8 @@ public:
     void setUserId(qint32 userId);
     qint32 userId() const;
 
-    void setClassType(PeerType classType);
-    PeerType classType() const;
+    void setClassType(PeerClassType classType);
+    PeerClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -50,7 +50,7 @@ private:
     qint32 m_channelId;
     qint32 m_chatId;
     qint32 m_userId;
-    PeerType m_classType;
+    PeerClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(Peer)

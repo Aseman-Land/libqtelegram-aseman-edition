@@ -14,14 +14,14 @@
 class LIBQTELEGRAMSHARED_EXPORT HelpSupportObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(HelpSupportType)
+    Q_ENUMS(HelpSupportClassType)
     Q_PROPERTY(QString phoneNumber READ phoneNumber WRITE setPhoneNumber NOTIFY phoneNumberChanged)
     Q_PROPERTY(UserObject* user READ user WRITE setUser NOTIFY userChanged)
     Q_PROPERTY(HelpSupport core READ core WRITE setCore NOTIFY coreChanged)
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum HelpSupportType {
+    enum HelpSupportClassType {
         TypeHelpSupport
     };
 

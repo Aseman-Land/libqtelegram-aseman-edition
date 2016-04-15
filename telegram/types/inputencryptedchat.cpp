@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-InputEncryptedChat::InputEncryptedChat(InputEncryptedChatType classType, InboundPkt *in) :
+InputEncryptedChat::InputEncryptedChat(InputEncryptedChatClassType classType, InboundPkt *in) :
     m_accessHash(0),
     m_chatId(0),
     m_classType(classType)
@@ -58,11 +58,11 @@ bool InputEncryptedChat::operator ==(const InputEncryptedChat &b) const {
            m_chatId == b.m_chatId;
 }
 
-void InputEncryptedChat::setClassType(InputEncryptedChat::InputEncryptedChatType classType) {
+void InputEncryptedChat::setClassType(InputEncryptedChat::InputEncryptedChatClassType classType) {
     m_classType = classType;
 }
 
-InputEncryptedChat::InputEncryptedChatType InputEncryptedChat::classType() const {
+InputEncryptedChat::InputEncryptedChatClassType InputEncryptedChat::classType() const {
     return m_classType;
 }
 
@@ -73,7 +73,7 @@ bool InputEncryptedChat::fetch(InboundPkt *in) {
     case typeInputEncryptedChat: {
         m_chatId = in->fetchInt();
         m_accessHash = in->fetchLong();
-        m_classType = static_cast<InputEncryptedChatType>(x);
+        m_classType = static_cast<InputEncryptedChatClassType>(x);
         return true;
     }
         break;
@@ -120,7 +120,7 @@ QDataStream &operator<<(QDataStream &stream, const InputEncryptedChat &item) {
 QDataStream &operator>>(QDataStream &stream, InputEncryptedChat &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<InputEncryptedChat::InputEncryptedChatType>(type));
+    item.setClassType(static_cast<InputEncryptedChat::InputEncryptedChatClassType>(type));
     switch(type) {
     case InputEncryptedChat::typeInputEncryptedChat: {
         qint32 m_chat_id;

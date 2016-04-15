@@ -68,7 +68,7 @@ bool NearestDcObject::operator ==(const NearestDc &b) const {
 }
 
 void NearestDcObject::setClassType(quint32 classType) {
-    NearestDc::NearestDcType result;
+    NearestDc::NearestDcClassType result;
     switch(classType) {
     case TypeNearestDc:
         result = NearestDc::typeNearestDc;

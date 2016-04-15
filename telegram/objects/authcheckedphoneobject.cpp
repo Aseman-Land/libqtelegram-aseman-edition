@@ -44,7 +44,7 @@ bool AuthCheckedPhoneObject::operator ==(const AuthCheckedPhone &b) const {
 }
 
 void AuthCheckedPhoneObject::setClassType(quint32 classType) {
-    AuthCheckedPhone::AuthCheckedPhoneType result;
+    AuthCheckedPhone::AuthCheckedPhoneClassType result;
     switch(classType) {
     case TypeAuthCheckedPhone:
         result = AuthCheckedPhone::typeAuthCheckedPhone;

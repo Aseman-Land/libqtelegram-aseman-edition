@@ -16,13 +16,13 @@
 class LIBQTELEGRAMSHARED_EXPORT PhotoSize : public TelegramTypeObject
 {
 public:
-    enum PhotoSizeType {
+    enum PhotoSizeClassType {
         typePhotoSizeEmpty = 0xe17e23c,
         typePhotoSize = 0x77bfb61b,
         typePhotoCachedSize = 0xe9a734fa
     };
 
-    PhotoSize(PhotoSizeType classType = typePhotoSizeEmpty, InboundPkt *in = 0);
+    PhotoSize(PhotoSizeClassType classType = typePhotoSizeEmpty, InboundPkt *in = 0);
     PhotoSize(InboundPkt *in);
     PhotoSize(const Null&);
     virtual ~PhotoSize();
@@ -45,8 +45,8 @@ public:
     void setW(qint32 w);
     qint32 w() const;
 
-    void setClassType(PhotoSizeType classType);
-    PhotoSizeType classType() const;
+    void setClassType(PhotoSizeClassType classType);
+    PhotoSizeClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -65,7 +65,7 @@ private:
     qint32 m_size;
     QString m_type;
     qint32 m_w;
-    PhotoSizeType m_classType;
+    PhotoSizeClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(PhotoSize)

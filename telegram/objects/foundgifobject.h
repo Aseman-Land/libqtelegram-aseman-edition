@@ -15,7 +15,7 @@
 class LIBQTELEGRAMSHARED_EXPORT FoundGifObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(FoundGifType)
+    Q_ENUMS(FoundGifClassType)
     Q_PROPERTY(QString contentType READ contentType WRITE setContentType NOTIFY contentTypeChanged)
     Q_PROPERTY(QString contentUrl READ contentUrl WRITE setContentUrl NOTIFY contentUrlChanged)
     Q_PROPERTY(DocumentObject* document READ document WRITE setDocument NOTIFY documentChanged)
@@ -28,7 +28,7 @@ class LIBQTELEGRAMSHARED_EXPORT FoundGifObject : public TelegramTypeQObject
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum FoundGifType {
+    enum FoundGifClassType {
         TypeFoundGif,
         TypeFoundGifCached
     };

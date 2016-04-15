@@ -13,13 +13,13 @@
 class LIBQTELEGRAMSHARED_EXPORT ExportedChatInviteObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(ExportedChatInviteType)
+    Q_ENUMS(ExportedChatInviteClassType)
     Q_PROPERTY(QString link READ link WRITE setLink NOTIFY linkChanged)
     Q_PROPERTY(ExportedChatInvite core READ core WRITE setCore NOTIFY coreChanged)
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum ExportedChatInviteType {
+    enum ExportedChatInviteClassType {
         TypeChatInviteEmpty,
         TypeChatInviteExported
     };

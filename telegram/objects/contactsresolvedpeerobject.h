@@ -14,7 +14,7 @@
 class LIBQTELEGRAMSHARED_EXPORT ContactsResolvedPeerObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(ContactsResolvedPeerType)
+    Q_ENUMS(ContactsResolvedPeerClassType)
     Q_PROPERTY(QList<Chat> chats READ chats WRITE setChats NOTIFY chatsChanged)
     Q_PROPERTY(PeerObject* peer READ peer WRITE setPeer NOTIFY peerChanged)
     Q_PROPERTY(QList<User> users READ users WRITE setUsers NOTIFY usersChanged)
@@ -22,7 +22,7 @@ class LIBQTELEGRAMSHARED_EXPORT ContactsResolvedPeerObject : public TelegramType
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum ContactsResolvedPeerType {
+    enum ContactsResolvedPeerClassType {
         TypeContactsResolvedPeer
     };
 

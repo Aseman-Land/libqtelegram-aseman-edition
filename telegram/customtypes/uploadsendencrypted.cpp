@@ -5,7 +5,7 @@
 #include "uploadsendencrypted.h"
 #include "../coretypes.h"
 
-UploadSendEncrypted::UploadSendEncrypted(UploadSendEncryptedType classType) :
+UploadSendEncrypted::UploadSendEncrypted(UploadSendEncryptedClassType classType) :
     m_partId(0),
     m_totalSize(0),
     m_uploaded(0),
@@ -65,11 +65,11 @@ bool UploadSendEncrypted::operator ==(const UploadSendEncrypted &b) const {
            m_uploaded == b.m_uploaded;
 }
 
-void UploadSendEncrypted::setClassType(UploadSendEncrypted::UploadSendEncryptedType classType) {
+void UploadSendEncrypted::setClassType(UploadSendEncrypted::UploadSendEncryptedClassType classType) {
     m_classType = classType;
 }
 
-UploadSendEncrypted::UploadSendEncryptedType UploadSendEncrypted::classType() const {
+UploadSendEncrypted::UploadSendEncryptedClassType UploadSendEncrypted::classType() const {
     return m_classType;
 }
 

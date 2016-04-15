@@ -200,7 +200,7 @@ bool UpdatesChannelDifferenceObject::operator ==(const UpdatesChannelDifference 
 }
 
 void UpdatesChannelDifferenceObject::setClassType(quint32 classType) {
-    UpdatesChannelDifference::UpdatesChannelDifferenceType result;
+    UpdatesChannelDifference::UpdatesChannelDifferenceClassType result;
     switch(classType) {
     case TypeUpdatesChannelDifferenceEmpty:
         result = UpdatesChannelDifference::typeUpdatesChannelDifferenceEmpty;

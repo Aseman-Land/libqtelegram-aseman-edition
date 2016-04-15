@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-DisabledFeature::DisabledFeature(DisabledFeatureType classType, InboundPkt *in) :
+DisabledFeature::DisabledFeature(DisabledFeatureClassType classType, InboundPkt *in) :
     m_classType(classType)
 {
     if(in) fetch(in);
@@ -52,11 +52,11 @@ bool DisabledFeature::operator ==(const DisabledFeature &b) const {
            m_feature == b.m_feature;
 }
 
-void DisabledFeature::setClassType(DisabledFeature::DisabledFeatureType classType) {
+void DisabledFeature::setClassType(DisabledFeature::DisabledFeatureClassType classType) {
     m_classType = classType;
 }
 
-DisabledFeature::DisabledFeatureType DisabledFeature::classType() const {
+DisabledFeature::DisabledFeatureClassType DisabledFeature::classType() const {
     return m_classType;
 }
 
@@ -67,7 +67,7 @@ bool DisabledFeature::fetch(InboundPkt *in) {
     case typeDisabledFeature: {
         m_feature = in->fetchQString();
         m_description = in->fetchQString();
-        m_classType = static_cast<DisabledFeatureType>(x);
+        m_classType = static_cast<DisabledFeatureClassType>(x);
         return true;
     }
         break;
@@ -114,7 +114,7 @@ QDataStream &operator<<(QDataStream &stream, const DisabledFeature &item) {
 QDataStream &operator>>(QDataStream &stream, DisabledFeature &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<DisabledFeature::DisabledFeatureType>(type));
+    item.setClassType(static_cast<DisabledFeature::DisabledFeatureClassType>(type));
     switch(type) {
     case DisabledFeature::typeDisabledFeature: {
         QString m_feature;

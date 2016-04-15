@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-HelpTermsOfService::HelpTermsOfService(HelpTermsOfServiceType classType, InboundPkt *in) :
+HelpTermsOfService::HelpTermsOfService(HelpTermsOfServiceClassType classType, InboundPkt *in) :
     m_classType(classType)
 {
     if(in) fetch(in);
@@ -43,11 +43,11 @@ bool HelpTermsOfService::operator ==(const HelpTermsOfService &b) const {
            m_text == b.m_text;
 }
 
-void HelpTermsOfService::setClassType(HelpTermsOfService::HelpTermsOfServiceType classType) {
+void HelpTermsOfService::setClassType(HelpTermsOfService::HelpTermsOfServiceClassType classType) {
     m_classType = classType;
 }
 
-HelpTermsOfService::HelpTermsOfServiceType HelpTermsOfService::classType() const {
+HelpTermsOfService::HelpTermsOfServiceClassType HelpTermsOfService::classType() const {
     return m_classType;
 }
 
@@ -57,7 +57,7 @@ bool HelpTermsOfService::fetch(InboundPkt *in) {
     switch(x) {
     case typeHelpTermsOfService: {
         m_text = in->fetchQString();
-        m_classType = static_cast<HelpTermsOfServiceType>(x);
+        m_classType = static_cast<HelpTermsOfServiceClassType>(x);
         return true;
     }
         break;
@@ -102,7 +102,7 @@ QDataStream &operator<<(QDataStream &stream, const HelpTermsOfService &item) {
 QDataStream &operator>>(QDataStream &stream, HelpTermsOfService &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<HelpTermsOfService::HelpTermsOfServiceType>(type));
+    item.setClassType(static_cast<HelpTermsOfService::HelpTermsOfServiceClassType>(type));
     switch(type) {
     case HelpTermsOfService::typeHelpTermsOfService: {
         QString m_text;

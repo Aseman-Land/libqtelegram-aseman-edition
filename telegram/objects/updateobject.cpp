@@ -9,11 +9,13 @@ UpdateObject::UpdateObject(const Update &core, QObject *parent) :
     m_action(0),
     m_chat(0),
     m_foreignLink(0),
+    m_geo(0),
     m_group(0),
     m_key(0),
     m_media(0),
     m_messageEncrypted(0),
     m_message(0),
+    m_msgIdInputBotInlineMessageID(0),
     m_myLink(0),
     m_notifySettings(0),
     m_participants(0),
@@ -31,6 +33,8 @@ UpdateObject::UpdateObject(const Update &core, QObject *parent) :
     connect(m_chat.data(), &EncryptedChatObject::coreChanged, this, &UpdateObject::coreChatChanged);
     m_foreignLink = new ContactLinkObject(m_core.foreignLink(), this);
     connect(m_foreignLink.data(), &ContactLinkObject::coreChanged, this, &UpdateObject::coreForeignLinkChanged);
+    m_geo = new GeoPointObject(m_core.geo(), this);
+    connect(m_geo.data(), &GeoPointObject::coreChanged, this, &UpdateObject::coreGeoChanged);
     m_group = new MessageGroupObject(m_core.group(), this);
     connect(m_group.data(), &MessageGroupObject::coreChanged, this, &UpdateObject::coreGroupChanged);
     m_key = new PrivacyKeyObject(m_core.key(), this);
@@ -41,6 +45,8 @@ UpdateObject::UpdateObject(const Update &core, QObject *parent) :
     connect(m_messageEncrypted.data(), &EncryptedMessageObject::coreChanged, this, &UpdateObject::coreMessageEncryptedChanged);
     m_message = new MessageObject(m_core.message(), this);
     connect(m_message.data(), &MessageObject::coreChanged, this, &UpdateObject::coreMessageChanged);
+    m_msgIdInputBotInlineMessageID = new InputBotInlineMessageIDObject(m_core.msgIdInputBotInlineMessageID(), this);
+    connect(m_msgIdInputBotInlineMessageID.data(), &InputBotInlineMessageIDObject::coreChanged, this, &UpdateObject::coreMsgIdInputBotInlineMessageIDChanged);
     m_myLink = new ContactLinkObject(m_core.myLink(), this);
     connect(m_myLink.data(), &ContactLinkObject::coreChanged, this, &UpdateObject::coreMyLinkChanged);
     m_notifySettings = new PeerNotifySettingsObject(m_core.notifySettings(), this);
@@ -66,11 +72,13 @@ UpdateObject::UpdateObject(QObject *parent) :
     m_action(0),
     m_chat(0),
     m_foreignLink(0),
+    m_geo(0),
     m_group(0),
     m_key(0),
     m_media(0),
     m_messageEncrypted(0),
     m_message(0),
+    m_msgIdInputBotInlineMessageID(0),
     m_myLink(0),
     m_notifySettings(0),
     m_participants(0),
@@ -88,6 +96,8 @@ UpdateObject::UpdateObject(QObject *parent) :
     connect(m_chat.data(), &EncryptedChatObject::coreChanged, this, &UpdateObject::coreChatChanged);
     m_foreignLink = new ContactLinkObject(m_core.foreignLink(), this);
     connect(m_foreignLink.data(), &ContactLinkObject::coreChanged, this, &UpdateObject::coreForeignLinkChanged);
+    m_geo = new GeoPointObject(m_core.geo(), this);
+    connect(m_geo.data(), &GeoPointObject::coreChanged, this, &UpdateObject::coreGeoChanged);
     m_group = new MessageGroupObject(m_core.group(), this);
     connect(m_group.data(), &MessageGroupObject::coreChanged, this, &UpdateObject::coreGroupChanged);
     m_key = new PrivacyKeyObject(m_core.key(), this);
@@ -98,6 +108,8 @@ UpdateObject::UpdateObject(QObject *parent) :
     connect(m_messageEncrypted.data(), &EncryptedMessageObject::coreChanged, this, &UpdateObject::coreMessageEncryptedChanged);
     m_message = new MessageObject(m_core.message(), this);
     connect(m_message.data(), &MessageObject::coreChanged, this, &UpdateObject::coreMessageChanged);
+    m_msgIdInputBotInlineMessageID = new InputBotInlineMessageIDObject(m_core.msgIdInputBotInlineMessageID(), this);
+    connect(m_msgIdInputBotInlineMessageID.data(), &InputBotInlineMessageIDObject::coreChanged, this, &UpdateObject::coreMsgIdInputBotInlineMessageIDChanged);
     m_myLink = new ContactLinkObject(m_core.myLink(), this);
     connect(m_myLink.data(), &ContactLinkObject::coreChanged, this, &UpdateObject::coreMyLinkChanged);
     m_notifySettings = new PeerNotifySettingsObject(m_core.notifySettings(), this);
@@ -199,6 +211,17 @@ qint32 UpdateObject::chatId() const {
     return m_core.chatId();
 }
 
+void UpdateObject::setData(const QByteArray &data) {
+    if(m_core.data() == data) return;
+    m_core.setData(data);
+    Q_EMIT dataChanged();
+    Q_EMIT coreChanged();
+}
+
+QByteArray UpdateObject::data() const {
+    return m_core.data();
+}
+
 void UpdateObject::setDate(qint32 date) {
     if(m_core.date() == date) return;
     m_core.setDate(date);
@@ -280,6 +303,23 @@ void UpdateObject::setForeignLink(ContactLinkObject* foreignLink) {
 
 ContactLinkObject*  UpdateObject::foreignLink() const {
     return m_foreignLink;
+}
+
+void UpdateObject::setGeo(GeoPointObject* geo) {
+    if(m_geo == geo) return;
+    if(m_geo) delete m_geo;
+    m_geo = geo;
+    if(m_geo) {
+        m_geo->setParent(this);
+        m_core.setGeo(m_geo->core());
+        connect(m_geo.data(), &GeoPointObject::coreChanged, this, &UpdateObject::coreGeoChanged);
+    }
+    Q_EMIT geoChanged();
+    Q_EMIT coreChanged();
+}
+
+GeoPointObject*  UpdateObject::geo() const {
+    return m_geo;
 }
 
 void UpdateObject::setGroup(MessageGroupObject* group) {
@@ -475,6 +515,34 @@ void UpdateObject::setMessages(const QList<qint32> &messages) {
 
 QList<qint32> UpdateObject::messages() const {
     return m_core.messages();
+}
+
+void UpdateObject::setMsgIdInputBotInlineMessageID(InputBotInlineMessageIDObject* msgIdInputBotInlineMessageID) {
+    if(m_msgIdInputBotInlineMessageID == msgIdInputBotInlineMessageID) return;
+    if(m_msgIdInputBotInlineMessageID) delete m_msgIdInputBotInlineMessageID;
+    m_msgIdInputBotInlineMessageID = msgIdInputBotInlineMessageID;
+    if(m_msgIdInputBotInlineMessageID) {
+        m_msgIdInputBotInlineMessageID->setParent(this);
+        m_core.setMsgIdInputBotInlineMessageID(m_msgIdInputBotInlineMessageID->core());
+        connect(m_msgIdInputBotInlineMessageID.data(), &InputBotInlineMessageIDObject::coreChanged, this, &UpdateObject::coreMsgIdInputBotInlineMessageIDChanged);
+    }
+    Q_EMIT msgIdInputBotInlineMessageIDChanged();
+    Q_EMIT coreChanged();
+}
+
+InputBotInlineMessageIDObject*  UpdateObject::msgIdInputBotInlineMessageID() const {
+    return m_msgIdInputBotInlineMessageID;
+}
+
+void UpdateObject::setMsgIdInt(qint32 msgIdInt) {
+    if(m_core.msgIdInt() == msgIdInt) return;
+    m_core.setMsgIdInt(msgIdInt);
+    Q_EMIT msgIdIntChanged();
+    Q_EMIT coreChanged();
+}
+
+qint32 UpdateObject::msgIdInt() const {
+    return m_core.msgIdInt();
 }
 
 void UpdateObject::setMyLink(ContactLinkObject* myLink) {
@@ -823,11 +891,13 @@ UpdateObject &UpdateObject::operator =(const Update &b) {
     m_action->setCore(b.action());
     m_chat->setCore(b.chat());
     m_foreignLink->setCore(b.foreignLink());
+    m_geo->setCore(b.geo());
     m_group->setCore(b.group());
     m_key->setCore(b.key());
     m_media->setCore(b.media());
     m_messageEncrypted->setCore(b.messageEncrypted());
     m_message->setCore(b.message());
+    m_msgIdInputBotInlineMessageID->setCore(b.msgIdInputBotInlineMessageID());
     m_myLink->setCore(b.myLink());
     m_notifySettings->setCore(b.notifySettings());
     m_participants->setCore(b.participants());
@@ -844,6 +914,7 @@ UpdateObject &UpdateObject::operator =(const Update &b) {
     Q_EMIT channelIdChanged();
     Q_EMIT chatChanged();
     Q_EMIT chatIdChanged();
+    Q_EMIT dataChanged();
     Q_EMIT dateChanged();
     Q_EMIT dcOptionsChanged();
     Q_EMIT deviceChanged();
@@ -851,6 +922,7 @@ UpdateObject &UpdateObject::operator =(const Update &b) {
     Q_EMIT firstNameChanged();
     Q_EMIT flagsChanged();
     Q_EMIT foreignLinkChanged();
+    Q_EMIT geoChanged();
     Q_EMIT groupChanged();
     Q_EMIT idStringChanged();
     Q_EMIT idIntChanged();
@@ -866,6 +938,8 @@ UpdateObject &UpdateObject::operator =(const Update &b) {
     Q_EMIT messageChanged();
     Q_EMIT messageStringChanged();
     Q_EMIT messagesChanged();
+    Q_EMIT msgIdInputBotInlineMessageIDChanged();
+    Q_EMIT msgIdIntChanged();
     Q_EMIT myLinkChanged();
     Q_EMIT notifySettingsChanged();
     Q_EMIT offsetChanged();
@@ -901,7 +975,7 @@ bool UpdateObject::operator ==(const Update &b) const {
 }
 
 void UpdateObject::setClassType(quint32 classType) {
-    Update::UpdateType result;
+    Update::UpdateClassType result;
     switch(classType) {
     case TypeUpdateNewMessage:
         result = Update::typeUpdateNewMessage;
@@ -1037,6 +1111,15 @@ void UpdateObject::setClassType(quint32 classType) {
         break;
     case TypeUpdateChannelPinnedMessage:
         result = Update::typeUpdateChannelPinnedMessage;
+        break;
+    case TypeUpdateBotCallbackQuery:
+        result = Update::typeUpdateBotCallbackQuery;
+        break;
+    case TypeUpdateEditMessage:
+        result = Update::typeUpdateEditMessage;
+        break;
+    case TypeUpdateInlineBotCallbackQuery:
+        result = Update::typeUpdateInlineBotCallbackQuery;
         break;
     default:
         result = Update::typeUpdateNewMessage;
@@ -1187,6 +1270,15 @@ quint32 UpdateObject::classType() const {
     case Update::typeUpdateChannelPinnedMessage:
         result = TypeUpdateChannelPinnedMessage;
         break;
+    case Update::typeUpdateBotCallbackQuery:
+        result = TypeUpdateBotCallbackQuery;
+        break;
+    case Update::typeUpdateEditMessage:
+        result = TypeUpdateEditMessage;
+        break;
+    case Update::typeUpdateInlineBotCallbackQuery:
+        result = TypeUpdateInlineBotCallbackQuery;
+        break;
     default:
         result = TypeUpdateNewMessage;
         break;
@@ -1224,6 +1316,13 @@ void UpdateObject::coreForeignLinkChanged() {
     Q_EMIT coreChanged();
 }
 
+void UpdateObject::coreGeoChanged() {
+    if(m_core.geo() == m_geo->core()) return;
+    m_core.setGeo(m_geo->core());
+    Q_EMIT geoChanged();
+    Q_EMIT coreChanged();
+}
+
 void UpdateObject::coreGroupChanged() {
     if(m_core.group() == m_group->core()) return;
     m_core.setGroup(m_group->core());
@@ -1256,6 +1355,13 @@ void UpdateObject::coreMessageChanged() {
     if(m_core.message() == m_message->core()) return;
     m_core.setMessage(m_message->core());
     Q_EMIT messageChanged();
+    Q_EMIT coreChanged();
+}
+
+void UpdateObject::coreMsgIdInputBotInlineMessageIDChanged() {
+    if(m_core.msgIdInputBotInlineMessageID() == m_msgIdInputBotInlineMessageID->core()) return;
+    m_core.setMsgIdInputBotInlineMessageID(m_msgIdInputBotInlineMessageID->core());
+    Q_EMIT msgIdInputBotInlineMessageIDChanged();
     Q_EMIT coreChanged();
 }
 

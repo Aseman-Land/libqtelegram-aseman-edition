@@ -15,7 +15,7 @@
 class LIBQTELEGRAMSHARED_EXPORT ChatObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(ChatType)
+    Q_ENUMS(ChatClassType)
     Q_PROPERTY(qint64 accessHash READ accessHash WRITE setAccessHash NOTIFY accessHashChanged)
     Q_PROPERTY(bool admin READ admin WRITE setAdmin NOTIFY adminChanged)
     Q_PROPERTY(bool adminsEnabled READ adminsEnabled WRITE setAdminsEnabled NOTIFY adminsEnabledChanged)
@@ -46,7 +46,7 @@ class LIBQTELEGRAMSHARED_EXPORT ChatObject : public TelegramTypeQObject
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum ChatType {
+    enum ChatClassType {
         TypeChatEmpty,
         TypeChat,
         TypeChatForbidden,

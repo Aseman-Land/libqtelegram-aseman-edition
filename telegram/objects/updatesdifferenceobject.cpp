@@ -166,7 +166,7 @@ bool UpdatesDifferenceObject::operator ==(const UpdatesDifference &b) const {
 }
 
 void UpdatesDifferenceObject::setClassType(quint32 classType) {
-    UpdatesDifference::UpdatesDifferenceType result;
+    UpdatesDifference::UpdatesDifferenceClassType result;
     switch(classType) {
     case TypeUpdatesDifferenceEmpty:
         result = UpdatesDifference::typeUpdatesDifferenceEmpty;

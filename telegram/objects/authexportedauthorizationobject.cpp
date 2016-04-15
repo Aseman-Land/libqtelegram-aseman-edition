@@ -56,7 +56,7 @@ bool AuthExportedAuthorizationObject::operator ==(const AuthExportedAuthorizatio
 }
 
 void AuthExportedAuthorizationObject::setClassType(quint32 classType) {
-    AuthExportedAuthorization::AuthExportedAuthorizationType result;
+    AuthExportedAuthorization::AuthExportedAuthorizationClassType result;
     switch(classType) {
     case TypeAuthExportedAuthorization:
         result = AuthExportedAuthorization::typeAuthExportedAuthorization;

@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-PeerNotifySettings::PeerNotifySettings(PeerNotifySettingsType classType, InboundPkt *in) :
+PeerNotifySettings::PeerNotifySettings(PeerNotifySettingsClassType classType, InboundPkt *in) :
     m_flags(0),
     m_muteUntil(0),
     m_classType(classType)
@@ -85,11 +85,11 @@ bool PeerNotifySettings::operator ==(const PeerNotifySettings &b) const {
            m_sound == b.m_sound;
 }
 
-void PeerNotifySettings::setClassType(PeerNotifySettings::PeerNotifySettingsType classType) {
+void PeerNotifySettings::setClassType(PeerNotifySettings::PeerNotifySettingsClassType classType) {
     m_classType = classType;
 }
 
-PeerNotifySettings::PeerNotifySettingsType PeerNotifySettings::classType() const {
+PeerNotifySettings::PeerNotifySettingsClassType PeerNotifySettings::classType() const {
     return m_classType;
 }
 
@@ -98,7 +98,7 @@ bool PeerNotifySettings::fetch(InboundPkt *in) {
     int x = in->fetchInt();
     switch(x) {
     case typePeerNotifySettingsEmpty: {
-        m_classType = static_cast<PeerNotifySettingsType>(x);
+        m_classType = static_cast<PeerNotifySettingsClassType>(x);
         return true;
     }
         break;
@@ -107,7 +107,7 @@ bool PeerNotifySettings::fetch(InboundPkt *in) {
         m_flags = in->fetchInt();
         m_muteUntil = in->fetchInt();
         m_sound = in->fetchQString();
-        m_classType = static_cast<PeerNotifySettingsType>(x);
+        m_classType = static_cast<PeerNotifySettingsClassType>(x);
         return true;
     }
         break;
@@ -164,7 +164,7 @@ QDataStream &operator<<(QDataStream &stream, const PeerNotifySettings &item) {
 QDataStream &operator>>(QDataStream &stream, PeerNotifySettings &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<PeerNotifySettings::PeerNotifySettingsType>(type));
+    item.setClassType(static_cast<PeerNotifySettings::PeerNotifySettingsClassType>(type));
     switch(type) {
     case PeerNotifySettings::typePeerNotifySettingsEmpty: {
         

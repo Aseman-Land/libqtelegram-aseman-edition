@@ -371,7 +371,7 @@ bool UpdatesTypeObject::operator ==(const UpdatesType &b) const {
 }
 
 void UpdatesTypeObject::setClassType(quint32 classType) {
-    UpdatesType::UpdatesTypeType result;
+    UpdatesType::UpdatesTypeClassType result;
     switch(classType) {
     case TypeUpdatesTooLong:
         result = UpdatesType::typeUpdatesTooLong;

@@ -14,13 +14,13 @@
 class LIBQTELEGRAMSHARED_EXPORT InputStickerSet : public TelegramTypeObject
 {
 public:
-    enum InputStickerSetType {
+    enum InputStickerSetClassType {
         typeInputStickerSetEmpty = 0xffb62b95,
         typeInputStickerSetID = 0x9de7a269,
         typeInputStickerSetShortName = 0x861cc8a0
     };
 
-    InputStickerSet(InputStickerSetType classType = typeInputStickerSetEmpty, InboundPkt *in = 0);
+    InputStickerSet(InputStickerSetClassType classType = typeInputStickerSetEmpty, InboundPkt *in = 0);
     InputStickerSet(InboundPkt *in);
     InputStickerSet(const Null&);
     virtual ~InputStickerSet();
@@ -34,8 +34,8 @@ public:
     void setShortName(const QString &shortName);
     QString shortName() const;
 
-    void setClassType(InputStickerSetType classType);
-    InputStickerSetType classType() const;
+    void setClassType(InputStickerSetClassType classType);
+    InputStickerSetClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -51,7 +51,7 @@ private:
     qint64 m_accessHash;
     qint64 m_id;
     QString m_shortName;
-    InputStickerSetType m_classType;
+    InputStickerSetClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(InputStickerSet)

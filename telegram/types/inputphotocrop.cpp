@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-InputPhotoCrop::InputPhotoCrop(InputPhotoCropType classType, InboundPkt *in) :
+InputPhotoCrop::InputPhotoCrop(InputPhotoCropClassType classType, InboundPkt *in) :
     m_cropLeft(0),
     m_cropTop(0),
     m_cropWidth(0),
@@ -70,11 +70,11 @@ bool InputPhotoCrop::operator ==(const InputPhotoCrop &b) const {
            m_cropWidth == b.m_cropWidth;
 }
 
-void InputPhotoCrop::setClassType(InputPhotoCrop::InputPhotoCropType classType) {
+void InputPhotoCrop::setClassType(InputPhotoCrop::InputPhotoCropClassType classType) {
     m_classType = classType;
 }
 
-InputPhotoCrop::InputPhotoCropType InputPhotoCrop::classType() const {
+InputPhotoCrop::InputPhotoCropClassType InputPhotoCrop::classType() const {
     return m_classType;
 }
 
@@ -83,7 +83,7 @@ bool InputPhotoCrop::fetch(InboundPkt *in) {
     int x = in->fetchInt();
     switch(x) {
     case typeInputPhotoCropAuto: {
-        m_classType = static_cast<InputPhotoCropType>(x);
+        m_classType = static_cast<InputPhotoCropClassType>(x);
         return true;
     }
         break;
@@ -92,7 +92,7 @@ bool InputPhotoCrop::fetch(InboundPkt *in) {
         m_cropLeft = in->fetchDouble();
         m_cropTop = in->fetchDouble();
         m_cropWidth = in->fetchDouble();
-        m_classType = static_cast<InputPhotoCropType>(x);
+        m_classType = static_cast<InputPhotoCropClassType>(x);
         return true;
     }
         break;
@@ -149,7 +149,7 @@ QDataStream &operator<<(QDataStream &stream, const InputPhotoCrop &item) {
 QDataStream &operator>>(QDataStream &stream, InputPhotoCrop &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<InputPhotoCrop::InputPhotoCropType>(type));
+    item.setClassType(static_cast<InputPhotoCrop::InputPhotoCropClassType>(type));
     switch(type) {
     case InputPhotoCrop::typeInputPhotoCropAuto: {
         

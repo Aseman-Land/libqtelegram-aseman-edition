@@ -13,7 +13,7 @@
 class LIBQTELEGRAMSHARED_EXPORT InputAppEventObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(InputAppEventType)
+    Q_ENUMS(InputAppEventClassType)
     Q_PROPERTY(QString data READ data WRITE setData NOTIFY dataChanged)
     Q_PROPERTY(qint64 peer READ peer WRITE setPeer NOTIFY peerChanged)
     Q_PROPERTY(qreal time READ time WRITE setTime NOTIFY timeChanged)
@@ -22,7 +22,7 @@ class LIBQTELEGRAMSHARED_EXPORT InputAppEventObject : public TelegramTypeQObject
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum InputAppEventType {
+    enum InputAppEventClassType {
         TypeInputAppEvent
     };
 

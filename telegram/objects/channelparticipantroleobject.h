@@ -13,12 +13,12 @@
 class LIBQTELEGRAMSHARED_EXPORT ChannelParticipantRoleObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(ChannelParticipantRoleType)
+    Q_ENUMS(ChannelParticipantRoleClassType)
     Q_PROPERTY(ChannelParticipantRole core READ core WRITE setCore NOTIFY coreChanged)
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum ChannelParticipantRoleType {
+    enum ChannelParticipantRoleClassType {
         TypeChannelRoleEmpty,
         TypeChannelRoleModerator,
         TypeChannelRoleEditor

@@ -13,13 +13,13 @@
 class LIBQTELEGRAMSHARED_EXPORT HelpAppChangelogObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(HelpAppChangelogType)
+    Q_ENUMS(HelpAppChangelogClassType)
     Q_PROPERTY(QString text READ text WRITE setText NOTIFY textChanged)
     Q_PROPERTY(HelpAppChangelog core READ core WRITE setCore NOTIFY coreChanged)
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum HelpAppChangelogType {
+    enum HelpAppChangelogClassType {
         TypeHelpAppChangelogEmpty,
         TypeHelpAppChangelog
     };

@@ -14,7 +14,7 @@
 class LIBQTELEGRAMSHARED_EXPORT ChatInviteObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(ChatInviteType)
+    Q_ENUMS(ChatInviteClassType)
     Q_PROPERTY(bool broadcast READ broadcast WRITE setBroadcast NOTIFY broadcastChanged)
     Q_PROPERTY(bool channel READ channel WRITE setChannel NOTIFY channelChanged)
     Q_PROPERTY(ChatObject* chat READ chat WRITE setChat NOTIFY chatChanged)
@@ -26,7 +26,7 @@ class LIBQTELEGRAMSHARED_EXPORT ChatInviteObject : public TelegramTypeQObject
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum ChatInviteType {
+    enum ChatInviteClassType {
         TypeChatInviteAlready,
         TypeChatInvite
     };

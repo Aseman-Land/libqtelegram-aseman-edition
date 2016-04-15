@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-ContactsResolvedPeer::ContactsResolvedPeer(ContactsResolvedPeerType classType, InboundPkt *in) :
+ContactsResolvedPeer::ContactsResolvedPeer(ContactsResolvedPeerClassType classType, InboundPkt *in) :
     m_classType(classType)
 {
     if(in) fetch(in);
@@ -61,11 +61,11 @@ bool ContactsResolvedPeer::operator ==(const ContactsResolvedPeer &b) const {
            m_users == b.m_users;
 }
 
-void ContactsResolvedPeer::setClassType(ContactsResolvedPeer::ContactsResolvedPeerType classType) {
+void ContactsResolvedPeer::setClassType(ContactsResolvedPeer::ContactsResolvedPeerClassType classType) {
     m_classType = classType;
 }
 
-ContactsResolvedPeer::ContactsResolvedPeerType ContactsResolvedPeer::classType() const {
+ContactsResolvedPeer::ContactsResolvedPeerClassType ContactsResolvedPeer::classType() const {
     return m_classType;
 }
 
@@ -91,7 +91,7 @@ bool ContactsResolvedPeer::fetch(InboundPkt *in) {
             type.fetch(in);
             m_users.append(type);
         }
-        m_classType = static_cast<ContactsResolvedPeerType>(x);
+        m_classType = static_cast<ContactsResolvedPeerClassType>(x);
         return true;
     }
         break;
@@ -148,7 +148,7 @@ QDataStream &operator<<(QDataStream &stream, const ContactsResolvedPeer &item) {
 QDataStream &operator>>(QDataStream &stream, ContactsResolvedPeer &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<ContactsResolvedPeer::ContactsResolvedPeerType>(type));
+    item.setClassType(static_cast<ContactsResolvedPeer::ContactsResolvedPeerClassType>(type));
     switch(type) {
     case ContactsResolvedPeer::typeContactsResolvedPeer: {
         Peer m_peer;

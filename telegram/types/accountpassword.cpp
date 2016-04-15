@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-AccountPassword::AccountPassword(AccountPasswordType classType, InboundPkt *in) :
+AccountPassword::AccountPassword(AccountPasswordClassType classType, InboundPkt *in) :
     m_hasRecovery(false),
     m_classType(classType)
 {
@@ -82,11 +82,11 @@ bool AccountPassword::operator ==(const AccountPassword &b) const {
            m_newSalt == b.m_newSalt;
 }
 
-void AccountPassword::setClassType(AccountPassword::AccountPasswordType classType) {
+void AccountPassword::setClassType(AccountPassword::AccountPasswordClassType classType) {
     m_classType = classType;
 }
 
-AccountPassword::AccountPasswordType AccountPassword::classType() const {
+AccountPassword::AccountPasswordClassType AccountPassword::classType() const {
     return m_classType;
 }
 
@@ -97,7 +97,7 @@ bool AccountPassword::fetch(InboundPkt *in) {
     case typeAccountNoPassword: {
         m_newSalt = in->fetchBytes();
         m_emailUnconfirmedPattern = in->fetchQString();
-        m_classType = static_cast<AccountPasswordType>(x);
+        m_classType = static_cast<AccountPasswordClassType>(x);
         return true;
     }
         break;
@@ -108,7 +108,7 @@ bool AccountPassword::fetch(InboundPkt *in) {
         m_hint = in->fetchQString();
         m_hasRecovery = in->fetchBool();
         m_emailUnconfirmedPattern = in->fetchQString();
-        m_classType = static_cast<AccountPasswordType>(x);
+        m_classType = static_cast<AccountPasswordClassType>(x);
         return true;
     }
         break;
@@ -172,7 +172,7 @@ QDataStream &operator<<(QDataStream &stream, const AccountPassword &item) {
 QDataStream &operator>>(QDataStream &stream, AccountPassword &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<AccountPassword::AccountPasswordType>(type));
+    item.setClassType(static_cast<AccountPassword::AccountPasswordClassType>(type));
     switch(type) {
     case AccountPassword::typeAccountNoPassword: {
         QByteArray m_new_salt;

@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-FileLocation::FileLocation(FileLocationType classType, InboundPkt *in) :
+FileLocation::FileLocation(FileLocationClassType classType, InboundPkt *in) :
     m_dcId(0),
     m_localId(0),
     m_secret(0),
@@ -82,11 +82,11 @@ bool FileLocation::operator ==(const FileLocation &b) const {
            m_volumeId == b.m_volumeId;
 }
 
-void FileLocation::setClassType(FileLocation::FileLocationType classType) {
+void FileLocation::setClassType(FileLocation::FileLocationClassType classType) {
     m_classType = classType;
 }
 
-FileLocation::FileLocationType FileLocation::classType() const {
+FileLocation::FileLocationClassType FileLocation::classType() const {
     return m_classType;
 }
 
@@ -98,7 +98,7 @@ bool FileLocation::fetch(InboundPkt *in) {
         m_volumeId = in->fetchLong();
         m_localId = in->fetchInt();
         m_secret = in->fetchLong();
-        m_classType = static_cast<FileLocationType>(x);
+        m_classType = static_cast<FileLocationClassType>(x);
         return true;
     }
         break;
@@ -108,7 +108,7 @@ bool FileLocation::fetch(InboundPkt *in) {
         m_volumeId = in->fetchLong();
         m_localId = in->fetchInt();
         m_secret = in->fetchLong();
-        m_classType = static_cast<FileLocationType>(x);
+        m_classType = static_cast<FileLocationClassType>(x);
         return true;
     }
         break;
@@ -172,7 +172,7 @@ QDataStream &operator<<(QDataStream &stream, const FileLocation &item) {
 QDataStream &operator>>(QDataStream &stream, FileLocation &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<FileLocation::FileLocationType>(type));
+    item.setClassType(static_cast<FileLocation::FileLocationClassType>(type));
     switch(type) {
     case FileLocation::typeFileLocationUnavailable: {
         qint64 m_volume_id;

@@ -9,7 +9,7 @@
 
 #include <QDataStream>
 
-AccountPasswordInputSettings::AccountPasswordInputSettings(AccountPasswordInputSettingsType classType, InboundPkt *in) :
+AccountPasswordInputSettings::AccountPasswordInputSettings(AccountPasswordInputSettingsClassType classType, InboundPkt *in) :
     m_flags(0),
     m_classType(classType)
 {
@@ -82,11 +82,11 @@ bool AccountPasswordInputSettings::operator ==(const AccountPasswordInputSetting
            m_newSalt == b.m_newSalt;
 }
 
-void AccountPasswordInputSettings::setClassType(AccountPasswordInputSettings::AccountPasswordInputSettingsType classType) {
+void AccountPasswordInputSettings::setClassType(AccountPasswordInputSettings::AccountPasswordInputSettingsClassType classType) {
     m_classType = classType;
 }
 
-AccountPasswordInputSettings::AccountPasswordInputSettingsType AccountPasswordInputSettings::classType() const {
+AccountPasswordInputSettings::AccountPasswordInputSettingsClassType AccountPasswordInputSettings::classType() const {
     return m_classType;
 }
 
@@ -108,7 +108,7 @@ bool AccountPasswordInputSettings::fetch(InboundPkt *in) {
         if(m_flags & 1<<1) {
             m_email = in->fetchQString();
         }
-        m_classType = static_cast<AccountPasswordInputSettingsType>(x);
+        m_classType = static_cast<AccountPasswordInputSettingsClassType>(x);
         return true;
     }
         break;
@@ -161,7 +161,7 @@ QDataStream &operator<<(QDataStream &stream, const AccountPasswordInputSettings 
 QDataStream &operator>>(QDataStream &stream, AccountPasswordInputSettings &item) {
     uint type = 0;
     stream >> type;
-    item.setClassType(static_cast<AccountPasswordInputSettings::AccountPasswordInputSettingsType>(type));
+    item.setClassType(static_cast<AccountPasswordInputSettings::AccountPasswordInputSettingsClassType>(type));
     switch(type) {
     case AccountPasswordInputSettings::typeAccountPasswordInputSettings: {
         qint32 m_flags;

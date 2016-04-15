@@ -18,13 +18,13 @@
 class LIBQTELEGRAMSHARED_EXPORT UpdatesChannelDifference : public TelegramTypeObject
 {
 public:
-    enum UpdatesChannelDifferenceType {
+    enum UpdatesChannelDifferenceClassType {
         typeUpdatesChannelDifferenceEmpty = 0x3e11affb,
         typeUpdatesChannelDifferenceTooLong = 0x5e167646,
         typeUpdatesChannelDifference = 0x2064674e
     };
 
-    UpdatesChannelDifference(UpdatesChannelDifferenceType classType = typeUpdatesChannelDifferenceEmpty, InboundPkt *in = 0);
+    UpdatesChannelDifference(UpdatesChannelDifferenceClassType classType = typeUpdatesChannelDifferenceEmpty, InboundPkt *in = 0);
     UpdatesChannelDifference(InboundPkt *in);
     UpdatesChannelDifference(const Null&);
     virtual ~UpdatesChannelDifference();
@@ -71,8 +71,8 @@ public:
     void setUsers(const QList<User> &users);
     QList<User> users() const;
 
-    void setClassType(UpdatesChannelDifferenceType classType);
-    UpdatesChannelDifferenceType classType() const;
+    void setClassType(UpdatesChannelDifferenceClassType classType);
+    UpdatesChannelDifferenceClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -98,7 +98,7 @@ private:
     qint32 m_unreadCount;
     qint32 m_unreadImportantCount;
     QList<User> m_users;
-    UpdatesChannelDifferenceType m_classType;
+    UpdatesChannelDifferenceClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(UpdatesChannelDifference)

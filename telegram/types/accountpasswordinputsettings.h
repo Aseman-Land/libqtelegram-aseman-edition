@@ -15,11 +15,11 @@
 class LIBQTELEGRAMSHARED_EXPORT AccountPasswordInputSettings : public TelegramTypeObject
 {
 public:
-    enum AccountPasswordInputSettingsType {
+    enum AccountPasswordInputSettingsClassType {
         typeAccountPasswordInputSettings = 0x86916deb
     };
 
-    AccountPasswordInputSettings(AccountPasswordInputSettingsType classType = typeAccountPasswordInputSettings, InboundPkt *in = 0);
+    AccountPasswordInputSettings(AccountPasswordInputSettingsClassType classType = typeAccountPasswordInputSettings, InboundPkt *in = 0);
     AccountPasswordInputSettings(InboundPkt *in);
     AccountPasswordInputSettings(const Null&);
     virtual ~AccountPasswordInputSettings();
@@ -39,8 +39,8 @@ public:
     void setNewSalt(const QByteArray &newSalt);
     QByteArray newSalt() const;
 
-    void setClassType(AccountPasswordInputSettingsType classType);
-    AccountPasswordInputSettingsType classType() const;
+    void setClassType(AccountPasswordInputSettingsClassType classType);
+    AccountPasswordInputSettingsClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -58,7 +58,7 @@ private:
     QString m_hint;
     QByteArray m_newPasswordHash;
     QByteArray m_newSalt;
-    AccountPasswordInputSettingsType m_classType;
+    AccountPasswordInputSettingsClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(AccountPasswordInputSettings)

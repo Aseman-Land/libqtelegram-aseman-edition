@@ -17,7 +17,7 @@
 class LIBQTELEGRAMSHARED_EXPORT InputMediaObject : public TelegramTypeQObject
 {
     Q_OBJECT
-    Q_ENUMS(InputMediaType)
+    Q_ENUMS(InputMediaClassType)
     Q_PROPERTY(QString address READ address WRITE setAddress NOTIFY addressChanged)
     Q_PROPERTY(QList<DocumentAttribute> attributes READ attributes WRITE setAttributes NOTIFY attributesChanged)
     Q_PROPERTY(QString caption READ caption WRITE setCaption NOTIFY captionChanged)
@@ -39,7 +39,7 @@ class LIBQTELEGRAMSHARED_EXPORT InputMediaObject : public TelegramTypeQObject
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
-    enum InputMediaType {
+    enum InputMediaClassType {
         TypeInputMediaEmpty,
         TypeInputMediaUploadedPhoto,
         TypeInputMediaPhoto,

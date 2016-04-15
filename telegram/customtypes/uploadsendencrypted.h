@@ -14,14 +14,14 @@
 class LIBQTELEGRAMSHARED_EXPORT UploadSendEncrypted : public TelegramCustomTypeObject
 {
 public:
-    enum UploadSendEncryptedType {
+    enum UploadSendEncryptedClassType {
         typeUploadSendEncryptedEmpty = 0x312c140,
         typeUploadSendEncryptedFinished = 0x312c140,
         typeUploadSendEncryptedCanceled = 0x4de1fad,
         typeUploadSendEncryptedProgress = 0xb7bd8ce
     };
 
-    UploadSendEncrypted(UploadSendEncryptedType classType = typeUploadSendEncryptedEmpty);
+    UploadSendEncrypted(UploadSendEncryptedClassType classType = typeUploadSendEncryptedEmpty);
     UploadSendEncrypted(const Null&);
     virtual ~UploadSendEncrypted();
 
@@ -37,8 +37,8 @@ public:
     void setUploaded(qint32 uploaded);
     qint32 uploaded() const;
 
-    void setClassType(UploadSendEncryptedType classType);
-    UploadSendEncryptedType classType() const;
+    void setClassType(UploadSendEncryptedClassType classType);
+    UploadSendEncryptedClassType classType() const;
 
     bool operator ==(const UploadSendEncrypted &b) const;
 
@@ -50,7 +50,7 @@ private:
     qint32 m_partId;
     qint32 m_totalSize;
     qint32 m_uploaded;
-    UploadSendEncryptedType m_classType;
+    UploadSendEncryptedClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(UploadSendEncrypted)

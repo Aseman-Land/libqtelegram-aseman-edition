@@ -13,12 +13,12 @@
 class LIBQTELEGRAMSHARED_EXPORT InputChannel : public TelegramTypeObject
 {
 public:
-    enum InputChannelType {
+    enum InputChannelClassType {
         typeInputChannelEmpty = 0xee8c1e86,
         typeInputChannel = 0xafeb712e
     };
 
-    InputChannel(InputChannelType classType = typeInputChannelEmpty, InboundPkt *in = 0);
+    InputChannel(InputChannelClassType classType = typeInputChannelEmpty, InboundPkt *in = 0);
     InputChannel(InboundPkt *in);
     InputChannel(const Null&);
     virtual ~InputChannel();
@@ -29,8 +29,8 @@ public:
     void setChannelId(qint32 channelId);
     qint32 channelId() const;
 
-    void setClassType(InputChannelType classType);
-    InputChannelType classType() const;
+    void setClassType(InputChannelClassType classType);
+    InputChannelClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
@@ -45,7 +45,7 @@ public:
 private:
     qint64 m_accessHash;
     qint32 m_channelId;
-    InputChannelType m_classType;
+    InputChannelClassType m_classType;
 };
 
 Q_DECLARE_METATYPE(InputChannel)
