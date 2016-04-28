@@ -79,7 +79,7 @@ Settings::Settings() :
     m_defaultHostPort(0),
     m_defaultHostDcId(0),
     m_appId(0),
-    m_workingDcConfigAvailabe(false),
+    m_workingDcConfigAvailable(false),
     m_pubKey(0),
     m_phoneNumber(""),
     m_baseConfigDirectory("") {
@@ -257,7 +257,7 @@ void Settings::readAuthFile() {
 
     m_workingDcNum = map.value(pre+ST_WORKING_DC_NUM, defaultDcId).toInt();
     m_ourId = map.value(pre+ST_OUR_ID).toInt();
-    m_workingDcConfigAvailabe = map.contains(pre+ST_WORKING_DC_NUM);
+    m_workingDcConfigAvailable = map.contains(pre+ST_WORKING_DC_NUM);
     qCDebug(TG_CORE_SETTINGS) << "workingDcNum:" << m_workingDcNum;
     qCDebug(TG_CORE_SETTINGS) << "ourId:" << m_ourId;
 

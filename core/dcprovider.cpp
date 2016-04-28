@@ -99,52 +99,59 @@ void DcProvider::initialize() {
         mDcs.insert(dc->id(), dc);
     }
 
-    qint32 defaultDcId = mSettings->testMode() ? TEST_DEFAULT_DC_ID : mSettings->defaultHostDcId();
-
     // 2.- connect to working DC
-    if (!mSettings->workingDcConfigAvailabe()) {
-        // If dcId == defaultDcId, it's the default one, so call default host and port
+    DC* workingDc;
+    if (mSettings->workingDcConfigAvailable()) {
+        // The host and port have been retrieved from auth file settings and the DC object is already created
+        workingDc = mDcs[mSettings->workingDcNum()];
+    } else {
+        // If not working DC configured in settings, create the default one
+        qint32 defaultDcId = mSettings->testMode() ? TEST_DEFAULT_DC_ID : mSettings->defaultHostDcId();
+
+        // If not having DC object created in the list of dcs for the default Id, create it
         if (!mDcs.value(defaultDcId, 0)) {
             mDcs[defaultDcId] = new DC(defaultDcId);
-        }
-        // if dc hasn't key created, create it
-        if (mDcs[defaultDcId]->state() < DC::authKeyCreated) {
+            // populate default host and port
             QString defaultDcHost = mSettings->defaultHostAddress();
             qint32 defaultDcPort = mSettings->defaultHostPort();
             if (mSettings->testMode()) {
                 defaultDcHost = TEST_DEFAULT_DC_HOST;
                 defaultDcPort = TEST_DEFAULT_DC_PORT;
             }
-
-            // create a dc authenticator based in dc info
             mDcs[defaultDcId]->setHost(defaultDcHost);
             mDcs[defaultDcId]->setPort(defaultDcPort);
-            DCAuth *dcAuth = new DCAuth(mDcs[defaultDcId], mSettings, mCrypto, this);
-            mDcAuths.insert(defaultDcId, dcAuth);
-            connect(dcAuth, SIGNAL(fatalError()), this, SLOT(logOut()));
-            connect(dcAuth, SIGNAL(fatalError()), this, SIGNAL(fatalError()));
-            connect(dcAuth, SIGNAL(dcReady(DC*)), this, SLOT(onDcReady(DC*)));
-            dcAuth->createAuthKey();
-        } else {
-            onDcReady(mDcs[defaultDcId]);
         }
 
-    } else {
-        // In any other case, the host and port have been retrieved from auth file settings and the DC object is already created
-        if (mDcs[mSettings->workingDcNum()]->state() < DC::authKeyCreated) {
-            // create a dc authenticator based in dc info
-            DCAuth *dcAuth = new DCAuth(mDcs[mSettings->workingDcNum()], mSettings, mCrypto);
-            mDcAuths.insert(mSettings->workingDcNum(), dcAuth);
-            connect(dcAuth, SIGNAL(fatalError()), this, SLOT(logOut()));
-            connect(dcAuth, SIGNAL(fatalError()), this, SIGNAL(fatalError()));
-            connect(dcAuth, SIGNAL(dcReady(DC*)), this, SLOT(onDcReady(DC*)));
-            dcAuth->createAuthKey();
-        } else {
-            onDcReady(mDcs[mSettings->workingDcNum()]);
-        }
+        workingDc = mDcs[defaultDcId];
+    }
+
+    // Create auth key if needed. Process DC results otherwise
+    workingDc->state() < DC::authKeyCreated ? createAuthKeyForDc(workingDc) : processDc(workingDc);
+}
+
+
+void DcProvider::createAuthKeyForDc(DC* dc)
+{
+    // create a dc authenticator based in dc info
+    DCAuth* dcAuth = new DCAuth(dc, mSettings, mCrypto);
+    mDcAuths.insert(dc->id(), dcAuth);
+    connect(dcAuth, SIGNAL(fatalError()), this, SLOT(logOut()));
+    connect(dcAuth, SIGNAL(fatalError()), this, SIGNAL(fatalError()));
+    connect(dcAuth, SIGNAL(dcReady(DC*)), this, SLOT(onDcReady(DC*)));
+    dcAuth->createAuthKey();
+}
+
+void DcProvider::onDcReady(DC *dc) {
+    qCDebug(TG_CORE_DCPROVIDER) << "DC" << dc->id() << "ready";
+    // disconnect dcAuth to avoid consuming bandwidth with unnecessary connections
+    DCAuth* dcAuth = qobject_cast<DCAuth*>(sender());
+    if (dcAuth && dcAuth->state() != QAbstractSocket::UnconnectedState) {
+        connect(dcAuth, SIGNAL(disconnected()), this, SLOT(onDcAuthDisconnected()));
+        dcAuth->disconnectFromHost();
     }
 }
 
+/*
 void DcProvider::onDcReady(DC *dc) {
     qCDebug(TG_CORE_DCPROVIDER) << "DC" << dc->id() << "ready";
     // disconnect dcAuth to avoid consuming bandwidth with unnecessary connections
@@ -160,17 +167,23 @@ void DcProvider::onDcReady(DC *dc) {
         processDcReady(dc);
     }
 }
+*/
 
 void DcProvider::onDcAuthDisconnected() {
     DCAuth *dcAuth = qobject_cast<DCAuth *>(sender());
-    processDcReady(dcAuth->dc());
+    processDc(dcAuth->dc());
     mDcAuths.remove(dcAuth->dc()->id());
     dcAuth->deleteLater();
 }
 
-void DcProvider::processDcReady(DC *dc) {
+void DcProvider::processDc(DC *dc) {
     // create api object if dc is workingDc, and get configuration
     if ((!mApi) && (dc->id() == mSettings->workingDcNum())) {
+
+
+        //TODO IMPLEMENT
+        // Before getting config from server, emit loggedIn()
+
         Session *session = new Session(dc, mSettings, mCrypto, this);
         mApi = new Api(session, mSettings, mCrypto, this);
         connect(session, SIGNAL(sessionReady(DC*)), this, SLOT(onApiReady(DC*)));
@@ -241,9 +254,6 @@ void DcProvider::onApiReady(DC*) {
     Session *session = qobject_cast<Session *>(sender());
     qCDebug(TG_CORE_DCPROVIDER) << "Api connected to server and ready";
 
-    // after emitting the api startup signals, we don't want to do it again when session gets connected, so disconnect signal-slot
-    disconnect(session, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(onApiError()));
-
     // get the config
     connect(mApi, SIGNAL(config(qint64,const Config&)), this, SLOT(onConfigReceived(qint64,const Config&)), Qt::UniqueConnection );
 
@@ -259,8 +269,11 @@ void DcProvider::onConfigReceived(qint64 msgId, const Config &config) {
     qCDebug(TG_CORE_DCPROVIDER) << "thisDc =" << config.thisDc();
 
     Session *session = mGetConfigRequests.take(msgId);
-    if(session)
+    if(session) {
+        // after emitting the api startup signals, we don't want to do it again when session gets connected, so disconnect signal-slot
         disconnect(session, SIGNAL(sessionReady(DC*)), this, SLOT(onApiReady(DC*)));
+        disconnect(session, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(onApiError()));
+    }
 
     if(mConfigReceived)
         return;

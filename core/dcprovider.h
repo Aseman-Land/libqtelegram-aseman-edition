@@ -59,8 +59,10 @@ public Q_SLOTS:
     void logOut();
 
 private:
-    void processDcReady(DC *dc);
+
     void clean();
+    void createAuthKeyForDc(DC* dc);
+    void processDc(DC *dc);
 
     QMap<qint32, DC *> mDcs;
     QMap<qint32, DCAuth *> mDcAuths;

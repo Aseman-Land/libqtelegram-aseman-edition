@@ -107,7 +107,7 @@ public:
     bool loadSettings(const QString &phoneNumber, const QString &configPath = DEFAULT_CONFIG_PATH, const QString &publicKeyFile = DEFAULT_PUBLIC_KEY_FILE);
     void writeAuthFile();
     void writeSecretFile();
-    bool workingDcConfigAvailabe() const {return  m_workingDcConfigAvailabe;}
+    bool workingDcConfigAvailable() const {return  m_workingDcConfigAvailable;}
 
     qint64 pkFingerprint() const { return m_pkFingerprint; }
     RSA* pubKey() { return m_pubKey; }
@@ -123,7 +123,7 @@ public:
     qint32 g() const { return mG; }
     QByteArray p() const { return mP; }
     QList<SecretChat *> &secretChats() { return mSecretChats; }
-    void setWorkingDcNum(qint32 workingDcNum) { m_workingDcNum = workingDcNum; m_workingDcConfigAvailabe = true; }
+    void setWorkingDcNum(qint32 workingDcNum) { m_workingDcNum = workingDcNum; m_workingDcConfigAvailable = true; }
     void setOurId(qint32 ourId) { m_ourId = ourId; }
     void setDcsList(const QList<DC *> &dcsList) { m_dcsList = dcsList; }
     void setVersion(qint32 version) { mVersion = version; }
@@ -150,7 +150,7 @@ private:
     qint32 m_appId;
     QString m_appHash;
 
-    bool m_workingDcConfigAvailabe;
+    bool m_workingDcConfigAvailable;
     qint64 m_pkFingerprint;
     RSA *m_pubKey;
     QString m_authFilename;
