@@ -40,17 +40,22 @@ public:
     DC *getDc(qint32 dcNum) const;
     DC *getWorkingDc() const;
     QList<DC *> getDcs() const;
-    Api *getApi() const;
     void transferAuth();
 
 Q_SIGNALS:
+    /*
     // emitted when provider has shared key created, now or previously, for all DCs
     void dcProviderReady();
+    */
     // emitted when provider detects there is a shared key for working dc but user is not yet authenticated in it
     void authNeeded();
     // emitted when provider finish transfering the user authentication data to all DCs. At this point the api
     // is ready for using any of its methods in any DC
     void authTransferCompleted();
+    // as soon as we know we are logged in, even without connection reading auth file, this signal is emitted
+    void loggedIn();
+    // as soon as api object is built (not needed lib is connected) this signal is emitted
+    void apiReady(Api *api);
 
     void error(qint64 id, qint32 errorCode, const QString &errorText);
     void fatalError();
@@ -59,8 +64,8 @@ public Q_SLOTS:
     void logOut();
 
 private:
-
     void clean();
+    void notifyEarlyLoggedIn();
     void createAuthKeyForDc(DC* dc);
     void processDc(DC *dc);
 
@@ -91,6 +96,8 @@ private:
     // In order to map getConfigRequests and sessions
     QMap<qint64, Session*> mGetConfigRequests;
     bool mConfigReceived;
+
+    bool mLoggedInAlreadyEmitted;
 
 
 private Q_SLOTS:

@@ -30,7 +30,8 @@ DcProvider::DcProvider(Settings *settings, CryptoUtils *crypto) :
     mPendingDcs(0),
     mPendingTransferSessions(0),
     mWorkingDcSession(0),
-    mConfigReceived(0) {
+    mConfigReceived(false),
+    mLoggedInAlreadyEmitted(false) {
 }
 
 DcProvider::~DcProvider() {
@@ -69,6 +70,9 @@ void DcProvider::clean() {
     mPendingDcs = 0;
     mPendingTransferSessions = 0;
     mWorkingDcSession = 0;
+
+    mConfigReceived = false;
+    mLoggedInAlreadyEmitted = false;
 }
 
 DC *DcProvider::getDc(qint32 dcNum) const {
@@ -99,7 +103,10 @@ void DcProvider::initialize() {
         mDcs.insert(dc->id(), dc);
     }
 
-    // 2.- connect to working DC
+    // 2.- emit loggedIn signal if all DCs in settings are in that state
+    notifyEarlyLoggedIn();
+
+    // 3.- connect to working DC
     DC* workingDc;
     if (mSettings->workingDcConfigAvailable()) {
         // The host and port have been retrieved from auth file settings and the DC object is already created
@@ -129,10 +136,29 @@ void DcProvider::initialize() {
     workingDc->state() < DC::authKeyCreated ? createAuthKeyForDc(workingDc) : processDc(workingDc);
 }
 
+void DcProvider::notifyEarlyLoggedIn()
+{
+    if (!mSettings->workingDcConfigAvailable()) {
+        return;
+    }
+
+    if (mDcs.size() == 0) {
+        return;
+    }
+
+    Q_FOREACH (DC *dc, mDcs) {
+        if (dc->state() < DC::userSignedIn) {
+            return;
+        }
+    }
+
+    mLoggedInAlreadyEmitted = true;
+    qCDebug(TG_CORE_DCPROVIDER) << "logged in";
+    Q_EMIT loggedIn();
+}
 
 void DcProvider::createAuthKeyForDc(DC* dc)
 {
-    // create a dc authenticator based in dc info
     DCAuth* dcAuth = new DCAuth(dc, mSettings, mCrypto);
     mDcAuths.insert(dc->id(), dcAuth);
     connect(dcAuth, SIGNAL(fatalError()), this, SLOT(logOut()));
@@ -151,24 +177,6 @@ void DcProvider::onDcReady(DC *dc) {
     }
 }
 
-/*
-void DcProvider::onDcReady(DC *dc) {
-    qCDebug(TG_CORE_DCPROVIDER) << "DC" << dc->id() << "ready";
-    // disconnect dcAuth to avoid consuming bandwidth with unnecessary connections
-    DCAuth *dcAuth = mDcAuths.value(dc->id());
-    if (dcAuth) {
-        if (dcAuth->state() != QAbstractSocket::UnconnectedState) {
-            connect(dcAuth, SIGNAL(disconnected()), this, SLOT(onDcAuthDisconnected()));
-            dcAuth->disconnectFromHost();
-        } else {
-            processDcReady(dc);
-        }
-    } else {
-        processDcReady(dc);
-    }
-}
-*/
-
 void DcProvider::onDcAuthDisconnected() {
     DCAuth *dcAuth = qobject_cast<DCAuth *>(sender());
     processDc(dcAuth->dc());
@@ -180,38 +188,38 @@ void DcProvider::processDc(DC *dc) {
     // create api object if dc is workingDc, and get configuration
     if ((!mApi) && (dc->id() == mSettings->workingDcNum())) {
 
-
-        //TODO IMPLEMENT
-        // Before getting config from server, emit loggedIn()
-
         Session *session = new Session(dc, mSettings, mCrypto, this);
         mApi = new Api(session, mSettings, mCrypto, this);
+
+        // emit api is ready as soon as object is built
+        qCDebug(TG_CORE_DCPROVIDER) << "api ready";
+        Q_EMIT apiReady(mApi);
+
+        // connect api session and start updating from server
         connect(session, SIGNAL(sessionReady(DC*)), this, SLOT(onApiReady(DC*)));
         connect(session, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(onApiError()));
         session->connectToServer();
+
     } else if (--mPendingDcs == 0) { // if all dcs are authorized, emit provider ready signal
         // save the settings here, after all dcs are ready
         mSettings->setDcsList(mDcs.values());
         mSettings->writeAuthFile();
-
-        qCDebug(TG_CORE_DCPROVIDER) << "DcProvider ready";
-        Q_EMIT dcProviderReady();
 
         // if current dc is in "authKeyCreated" state, authNeeded signal must be emitted for user to sign in.
         // if current dc is in "userSignedIn" state, check that all dcs are in that state or export/import auth.
         // If they aren't, transfer auth from workingDc to workingDc+1, from workingDc+1 to workingDc+2...etc until completed all.
         switch (mDcs.value(mSettings->workingDcNum())->state()) {
         case DC::authKeyCreated:
+            qCDebug(TG_CORE_DCPROVIDER) << "auth needed";
             Q_EMIT authNeeded();
             break;
         case DC::userSignedIn:
             transferAuth();
             break;
         default:
-//            Q_ASSERT(0); // it's impossible getting here. This is done to avoid warning when compilation
+        // it's impossible getting here. This is done to avoid warning when compilation
             break;
         }
-
     }
 }
 
@@ -219,11 +227,6 @@ void DcProvider::onApiError() {
 
     Session *session = qobject_cast<Session *>(sender());
     qCWarning(TG_CORE_DCPROVIDER) << "Api init error when connecting session to server:" << session->errorString();
-
-    // after emitting these startup offline signals, we don't want to do it again when session gets connected, so disconnect signal-slot
-    disconnect(session, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(onApiError()));
-    // also disconnect the signal-slot to query for current server config when connected (once logged in that info is irrelevant)
-    disconnect(session, SIGNAL(sessionReady(DC*)), this, SLOT(onApiReady(DC*)));
 
     bool userSignedInAllDCs = true;
     // because we haven't connection, we assume the available DCs have not changed since last startup.
@@ -241,12 +244,12 @@ void DcProvider::onApiError() {
         }
     }
 
-    Q_EMIT dcProviderReady();
-
-    if (userSignedInAllDCs) {
-        Q_EMIT authTransferCompleted();
-    } else {
+    if (!userSignedInAllDCs) {
+        qCDebug(TG_CORE_DCPROVIDER) << "auth needed";
         Q_EMIT authNeeded();
+    } else if (!mLoggedInAlreadyEmitted) {
+        qCDebug(TG_CORE_DCPROVIDER) << "logged in";
+        Q_EMIT loggedIn();
     }
 }
 
@@ -255,7 +258,7 @@ void DcProvider::onApiReady(DC*) {
     qCDebug(TG_CORE_DCPROVIDER) << "Api connected to server and ready";
 
     // get the config
-    connect(mApi, SIGNAL(config(qint64,const Config&)), this, SLOT(onConfigReceived(qint64,const Config&)), Qt::UniqueConnection );
+    connect(mApi, SIGNAL(config(qint64,const Config&)), this, SLOT(onConfigReceived(qint64,const Config&)), Qt::UniqueConnection);
 
     qint64 rid = mApi->helpGetConfig();
     mGetConfigRequests[rid] = session;
@@ -291,10 +294,13 @@ void DcProvider::onConfigReceived(qint64 msgId, const Config &config) {
         // for every new DC or not authenticated DC, insert into m_dcs and authenticate
         DC *dc = mDcs.value(dcOption.id());
 
-        // check if dc is not null or if received host and port are not equals than settings ones
-//        if ((!dc) || ((dc->host() != dcOption.ipAddress()) || (dc->port() != dcOption.port()))) {
-        if ((!dc) || (dc->state() < DC::authKeyCreated && ((dc->host() != dcOption.ipAddress()) || (dc->port() != dcOption.port()))) ) {
-            // if not exists dc or host and port different, create a new dc object for this dcId and add it to m_dcs map
+        // if received host and port are not equals than the settings ones, delete existing not valid yet entry
+        if (dc && (dc->host() != dcOption.ipAddress() || dc->port() != dcOption.port())) {
+            delete dc;
+            dc = 0;
+        }
+
+        if (!dc) {
             dc = new DC(dcOption.id());
             dc->setHost(dcOption.ipAddress());
             dc->setPort(dcOption.port());
@@ -304,25 +310,16 @@ void DcProvider::onConfigReceived(qint64 msgId, const Config &config) {
         // let's see if needed to create shared key for it
         // In any other case, the host and port have been retrieved from auth file settings and the DC object is already created
         if (dc->state() < DC::authKeyCreated) {
-            // create a dc authenticator based in dc info
-            DCAuth *dcAuth = new DCAuth(dc, mSettings, mCrypto, this);
-            mDcAuths.insert(dcOption.id(), dcAuth);
-            connect(dcAuth, SIGNAL(fatalError()), this, SLOT(logOut()));
-            connect(dcAuth, SIGNAL(fatalError()), this, SIGNAL(fatalError()));
-            connect(dcAuth, SIGNAL(dcReady(DC*)), this, SLOT(onDcReady(DC*)));
-            dcAuth->createAuthKey();
+            mDcs.insert(dcOption.id(), dc);
+            createAuthKeyForDc(dc);
         } else if (dcOption.id() != config.thisDc()) {
-            // if authorized and not working dc emit dcReady signal directly
-            onDcReady(dc);
+            // if authorized and not working dc process the dc
+            processDc(dc);
         }
     }
 
     qCDebug(TG_CORE_DCPROVIDER) << "chatMaxSize =" << config.chatSizeMax();
     qCDebug(TG_CORE_DCPROVIDER) << "broadcastMaxSize =" << config.broadcastSizeMax();
-}
-
-Api *DcProvider::getApi() const {
-    return mApi;
 }
 
 QList<DC *> DcProvider::getDcs() const {
@@ -350,7 +347,12 @@ void DcProvider::transferAuth() {
         }
     }
     if (!hasTransferSessions) {
+        qCDebug(TG_CORE_DCPROVIDER) << "auth transfer completed";
         Q_EMIT authTransferCompleted();
+        if (!mLoggedInAlreadyEmitted) {
+            qCDebug(TG_CORE_DCPROVIDER) << "logged in";
+            Q_EMIT loggedIn();
+        }
     }
 }
 
@@ -383,7 +385,12 @@ void DcProvider::onAuthImportedAuthorization(qint64, qint32 expires, const User 
     if (mTransferSessions.isEmpty()) {
         mSettings->setDcsList(mDcs.values());
         mSettings->writeAuthFile();
+        qCDebug(TG_CORE_DCPROVIDER) << "auth transfer completed";
         Q_EMIT authTransferCompleted();
+        if (!mLoggedInAlreadyEmitted) {
+            qCDebug(TG_CORE_DCPROVIDER) << "logged in";
+            Q_EMIT loggedIn();
+        }
     } else {
         mApi->authExportAuthorization(mTransferSessions.first()->dc()->id());
     }

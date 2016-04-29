@@ -60,13 +60,13 @@ class TelegramPrivate
 {
 public:
     TelegramPrivate() :
-        mLibraryState(Telegram::LoggedOut),
         mLastRetryType(Telegram::NotRetry),
         mSlept(false),
         mApi(0),
-        mSecretState(0) {}
+        mSecretState(0),
+        mLibIsReady(false),
+        mLoggedIn(false) {}
 
-    Telegram::LibraryState mLibraryState;
     Telegram::LastRetryType mLastRetryType;
 
     bool mSlept;
@@ -92,8 +92,8 @@ public:
     Encrypter *mEncrypter;
     Decrypter *mDecrypter;
 
+    bool mLibIsReady;
     bool mLoggedIn;
-    bool mCreatedSharedKeys;
 
     //info for retries
     QString mLastPhoneChecked;
@@ -139,137 +139,37 @@ Telegram::Telegram(const QString &defaultHostAddress, qint16 defaultHostPort, qi
     prv->mSecretState.load();
 
     connect(prv->mDcProvider, SIGNAL(fatalError()), this, SIGNAL(fatalError()));
-    // activate dc provider ready signal
-    connect(prv->mDcProvider, SIGNAL(dcProviderReady()), this, SLOT(onDcProviderReady()));
-    // activate rest of dc provider signal connections
-    connect(prv->mDcProvider, SIGNAL(authNeeded()), this, SIGNAL(authNeeded()));
-    connect(prv->mDcProvider, SIGNAL(authTransferCompleted()), this, SLOT(onAuthLoggedIn()));
     connect(prv->mDcProvider, SIGNAL(error(qint64,qint32,const QString&)), this, SIGNAL(error(qint64,qint32,const QString&)));
+    connect(prv->mDcProvider, SIGNAL(authNeeded()), this, SIGNAL(authNeeded()));
+    connect(prv->mDcProvider, SIGNAL(loggedIn()), SLOT(onAuthLoggedIn()));
+    connect(prv->mDcProvider, SIGNAL(apiReady(Api*)), SLOT(connectSignalsAndSlots(Api*)));
+    connect(prv->mDcProvider, SIGNAL(authTransferCompleted()), SLOT(setLibIsReady()));
 }
 
-bool Telegram::sleep() {
-    // sleep only if not slept and library already logged in. Returns true if sleep operations completes
-    if (!prv->mSlept && prv->mLibraryState >= LoggedIn) {
-        if (prv->mApi && prv->mApi->mainSession()) {
-            prv->mApi->mainSession()->close();
-        }
-        prv->mSlept = true;
-        return true;
+void Telegram::setLibIsReady() {
+    // this means the lib has performed all the steps needed to ensure connection to the server. Though main session is in
+    // connected state, the lib shouldn't be taken as connected until libIsReady flag is set to true besides the
+    // main session connected state.
+    prv->mLibIsReady = true;
+    // At this point we should test the main session state and emit by hand signals of connected/disconnected
+    // depending on the connection state of the session. This is so because first main session connection, if done,
+    // is performed before we could connect the signal-slots to advise about it;
+    if (prv->mApi->mainSession()->state() == QAbstractSocket::ConnectedState) {
+        Q_EMIT connected();
+    } else {
+        Q_EMIT disconnected();
     }
-    return false;
 }
 
-bool Telegram::wake() {
-    // wake only if slept and library already logged in. Returns true if wake operation completes
-    if (prv->mSlept && prv->mLibraryState >= LoggedIn) {
-        CHECK_API;
-        connect(prv->mApi, SIGNAL(mainSessionReady()), this, SIGNAL(woken()), Qt::UniqueConnection);
-        DC *dc = prv->mDcProvider->getWorkingDc();
-        prv->mApi->createMainSessionToDc(dc);
-        prv->mSlept = false;
-        return true;
+void Telegram::connectSignalsAndSlots(Api* api) {
+
+    if (!api) {
+        qCCritical(TG_TELEGRAM) << "Trying to connect signal and slots for a null api";
+        Q_EMIT fatalError();
     }
-    return false;
-}
 
-bool Telegram::isSlept() const
-{
-    return prv->mSlept;
-}
+    prv->mApi = api;
 
-void Telegram::setPhoneNumber(const QString &phoneNumber) {
-    if (!prv->mSettings->loadSettings(phoneNumber)) {
-        throw std::runtime_error("setPhoneNumber: could not load settings");
-    }
-    prv->mSecretState.load();
-}
-
-void Telegram::init() {
-    // check the auth values stored in settings, check the available DCs config data if there is
-    // connection to servers, and emit signals depending on user authenticated or not.
-    prv->mDcProvider->initialize();
-}
-
-Telegram::~Telegram() {
-    delete prv->mDcProvider;
-    delete prv->mSettings;
-    delete prv;
-}
-
-QString Telegram::defaultHostAddress()
-{
-    return prv->mSettings->defaultHostAddress();
-}
-
-qint16 Telegram::defaultHostPort()
-{
-    return prv->mSettings->defaultHostPort();
-}
-
-qint16 Telegram::defaultHostDcId()
-{
-    return prv->mSettings->defaultHostDcId();
-}
-
-qint32 Telegram::appId()
-{
-    return prv->mSettings->appId();
-}
-
-QString Telegram::appHash()
-{
-    return prv->mSettings->appHash();
-}
-
-Settings *Telegram::settings() const
-{
-    return prv->mSettings;
-}
-
-CryptoUtils *Telegram::crypto() const
-{
-    return prv->mCrypto;
-}
-
-void Telegram::setDefaultSettingsFormat(const QSettings::Format &format)
-{
-    qtelegram_default_settings_format = format;
-}
-
-QSettings::Format Telegram::defaultSettingsFormat()
-{
-    return qtelegram_default_settings_format;
-}
-
-bool Telegram::isConnected() {
-    if (prv->mApi && prv->mApi->mainSession()) {
-        return prv->mApi->mainSession()->state() == QAbstractSocket::ConnectedState;
-    }
-    return false;
-}
-
-bool Telegram::isLoggedIn() {
-    return prv->mLibraryState == LoggedIn;
-}
-
-void Telegram::onAuthLoggedIn() {
-    prv->mLibraryState = LoggedIn;
-    Q_EMIT authLoggedIn();
-}
-
-void Telegram::onAuthLogOutAnswer(qint64 id, bool ok) {
-    prv->mDcProvider->logOut();
-    prv->mLibraryState = LoggedOut;
-    Q_EMIT authLogOutAnswer(id,ok);
-}
-
-qint32 Telegram::ourId() {
-    return prv->mSettings->ourId();
-}
-
-void Telegram::onDcProviderReady() {
-    prv->mLibraryState = CreatedSharedKeys;
-    prv->mApi = prv->mDcProvider->getApi();
     // api signal-signal and signal-slot connections
     // updates
     connect(prv->mApi, SIGNAL(updatesTooLong()), this, SIGNAL(updatesTooLong()));
@@ -413,15 +313,128 @@ void Telegram::onDcProviderReady() {
     connect(prv->mFileHandler.data(), SIGNAL(error(qint64,qint32,const QString&)), SIGNAL(error(qint64,qint32,const QString&)));
     connect(prv->mFileHandler.data(), SIGNAL(messagesSentMedia(qint64,const UpdatesType&)), SLOT(onMessagesSendMediaAnswer(qint64,const UpdatesType&)));
     connect(prv->mFileHandler.data(), SIGNAL(messagesSendEncryptedFileAnswer(qint64,qint32,const EncryptedFile&)), SIGNAL(messagesSendEncryptedFileAnswer(qint64,qint32,const EncryptedFile&)));
+}
 
-    // At this point we should test the main session state and emit by hand signals of connected/disconnected
-    // depending on the connection state of the session. This is so because first main session connection, if done,
-    // is performed before we could connect the signal-slots to advise about it;
-    if (prv->mApi->mainSession()->state() == QAbstractSocket::ConnectedState) {
-        Q_EMIT connected();
-    } else {
-        Q_EMIT disconnected();
+
+bool Telegram::sleep() {
+    // sleep only if not slept and library already logged in. Returns true if sleep operations completes
+    if (!prv->mSlept && prv->mLoggedIn) {
+        if (prv->mApi && prv->mApi->mainSession()) {
+            prv->mApi->mainSession()->close();
+        }
+        prv->mSlept = true;
+        return true;
     }
+    return false;
+}
+
+bool Telegram::wake() {
+    // wake only if slept and library already logged in. Returns true if wake operation completes
+    if (prv->mSlept && prv->mLoggedIn) {
+        CHECK_API;
+        connect(prv->mApi, SIGNAL(mainSessionReady()), this, SIGNAL(woken()), Qt::UniqueConnection);
+        DC *dc = prv->mDcProvider->getWorkingDc();
+        prv->mApi->createMainSessionToDc(dc);
+        prv->mSlept = false;
+        return true;
+    }
+    return false;
+}
+
+bool Telegram::isSlept() const
+{
+    return prv->mSlept;
+}
+
+void Telegram::setPhoneNumber(const QString &phoneNumber) {
+    if (!prv->mSettings->loadSettings(phoneNumber)) {
+        throw std::runtime_error("setPhoneNumber: could not load settings");
+    }
+    prv->mSecretState.load();
+}
+
+void Telegram::init() {
+    // check the auth values stored in settings, check the available DCs config data if there is
+    // connection to servers, and emit signals depending on user authenticated or not.
+    prv->mDcProvider->initialize();
+}
+
+Telegram::~Telegram() {
+    delete prv->mDcProvider;
+    delete prv->mSettings;
+    delete prv;
+}
+
+QString Telegram::defaultHostAddress()
+{
+    return prv->mSettings->defaultHostAddress();
+}
+
+qint16 Telegram::defaultHostPort()
+{
+    return prv->mSettings->defaultHostPort();
+}
+
+qint16 Telegram::defaultHostDcId()
+{
+    return prv->mSettings->defaultHostDcId();
+}
+
+qint32 Telegram::appId()
+{
+    return prv->mSettings->appId();
+}
+
+QString Telegram::appHash()
+{
+    return prv->mSettings->appHash();
+}
+
+Settings *Telegram::settings() const
+{
+    return prv->mSettings;
+}
+
+CryptoUtils *Telegram::crypto() const
+{
+    return prv->mCrypto;
+}
+
+void Telegram::setDefaultSettingsFormat(const QSettings::Format &format)
+{
+    qtelegram_default_settings_format = format;
+}
+
+QSettings::Format Telegram::defaultSettingsFormat()
+{
+    return qtelegram_default_settings_format;
+}
+
+bool Telegram::isConnected() {
+    if (prv->mApi && prv->mApi->mainSession()) {
+        // Library is taken as connected only if main session is in connected state + library is ready
+        return prv->mApi->mainSession()->state() == QAbstractSocket::ConnectedState && prv->mLibIsReady;
+    }
+    return false;
+}
+
+bool Telegram::isLoggedIn() {
+    return prv->mLoggedIn;
+}
+
+void Telegram::onAuthLoggedIn() {
+    prv->mLoggedIn = true;
+    Q_EMIT authLoggedIn();
+}
+
+void Telegram::onAuthLogOutAnswer(qint64 id, bool ok) {
+    prv->mDcProvider->logOut();
+    prv->mLoggedIn = false;
+    Q_EMIT authLogOutAnswer(id,ok);
+}
+
+qint32 Telegram::ourId() {
+    return prv->mSettings->ourId();
 }
 
 qint64 Telegram::messagesCreateEncryptedChat(const InputUser &user) {

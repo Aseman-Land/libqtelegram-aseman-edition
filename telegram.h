@@ -36,11 +36,12 @@ Q_DECLARE_LOGGING_CATEGORY(TG_LIB_API)
 Q_DECLARE_LOGGING_CATEGORY(TG_LIB_SECRET)
 
 
-
 class Settings;
 class CryptoUtils;
 class TelegramPrivate;
 class FileOperation;
+class Api;
+
 class LIBQTELEGRAMSHARED_EXPORT Telegram : public QObject
 {
     Q_OBJECT
@@ -412,12 +413,6 @@ Q_SIGNALS:
     void fatalError();
 
 protected:
-    enum LibraryState {
-        LoggedOut,
-        CreatedSharedKeys,
-        LoggedIn
-    };
-
     enum LastRetryType {
         PhoneCheck,
         GetInviteText,
@@ -436,8 +431,10 @@ private:
     void processDifferences(qint64 id, const QList<Message> &messages, const QList<EncryptedMessage> &newEncryptedMessages, const QList<Update> &otherUpdates, const QList<Chat> &chats, const QList<User> &users, const UpdatesState &state, bool isIntermediateState);
 
 private Q_SLOTS:
-    void onDcProviderReady();
+    void setLibIsReady();
+    void connectSignalsAndSlots(Api* api);
     void onAuthLoggedIn();
+
     void onError(qint64 id, qint32 errorCode, const QString &errorText, const QString &functionName = QString());
     void onErrorRetry(qint64 id, qint32 errorCode, const QString &errorText);
     void onAuthCheckPhoneDcChanged();
