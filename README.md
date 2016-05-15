@@ -40,6 +40,10 @@ And:
     mkdir build && cd build
     qmake -r PREFIX=/usr  ..
     
+You can also use below flag to qmake to make qt-objects type available:
+
+    qmake -r PREFIX=/usr CONFIG+=typeobjects ..
+    
 And then start building:
 
     make
