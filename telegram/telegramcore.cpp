@@ -262,6 +262,12 @@ void TelegramCore::setApi(TelegramApi *api)
     connect(api, &TelegramApi::contactsResolveUsernameAnswer, this, &TelegramCore::onContactsResolveUsernameAnswer);
     connect(api, &TelegramApi::contactsResolveUsernameError, this, &TelegramCore::onContactsResolveUsernameError);
     
+    connect(api, &TelegramApi::contactsGetTopPeersAnswer, this, &TelegramCore::onContactsGetTopPeersAnswer);
+    connect(api, &TelegramApi::contactsGetTopPeersError, this, &TelegramCore::onContactsGetTopPeersError);
+    
+    connect(api, &TelegramApi::contactsResetTopPeerRatingAnswer, this, &TelegramCore::onContactsResetTopPeerRatingAnswer);
+    connect(api, &TelegramApi::contactsResetTopPeerRatingError, this, &TelegramCore::onContactsResetTopPeerRatingError);
+    
     
     connect(api, &TelegramApi::helpGetConfigAnswer, this, &TelegramCore::onHelpGetConfigAnswer);
     connect(api, &TelegramApi::helpGetConfigError, this, &TelegramCore::onHelpGetConfigError);
@@ -476,6 +482,9 @@ void TelegramCore::setApi(TelegramApi *api)
     
     connect(api, &TelegramApi::messagesSetBotCallbackAnswerAnswer, this, &TelegramCore::onMessagesSetBotCallbackAnswerAnswer);
     connect(api, &TelegramApi::messagesSetBotCallbackAnswerError, this, &TelegramCore::onMessagesSetBotCallbackAnswerError);
+    
+    connect(api, &TelegramApi::messagesGetPeerDialogsAnswer, this, &TelegramCore::onMessagesGetPeerDialogsAnswer);
+    connect(api, &TelegramApi::messagesGetPeerDialogsError, this, &TelegramCore::onMessagesGetPeerDialogsError);
     
     
     connect(api, &TelegramApi::photosUpdateProfilePhotoAnswer, this, &TelegramCore::onPhotosUpdateProfilePhotoAnswer);
@@ -3992,6 +4001,98 @@ void TelegramCore::onContactsResolveUsernameError(qint64 msgId, qint32 errorCode
     Q_EMIT contactsResolveUsernameError(msgId, errorCode, errorText);
 }
 
+qint64 TelegramCore::contactsGetTopPeers(bool correspondents, bool bots_pm, bool bots_inline, bool groups, bool channels, qint32 offset, qint32 limit, qint32 hash, Callback<ContactsTopPeers > callBack, qint32 timeout) {
+    if(!mApi) {
+        const ContactsTopPeers &result = ContactsTopPeers();
+        if(callBack)
+            callBack(0, result, apiError());
+        return 0;
+    }
+    qint64 msgId = mApi->contactsGetTopPeers(correspondents, bots_pm, bots_inline, groups, channels, offset, limit, hash);
+    if(msgId) {
+        callBackPush<ContactsTopPeers >(msgId, callBack);
+        startTimeOut(msgId, timeout);
+        mRecallArgs[msgId][""] = "contactsGetTopPeers";
+        mRecallArgs[msgId]["correspondents"] = QVariant::fromValue<bool>(correspondents);
+        mRecallArgs[msgId]["bots_pm"] = QVariant::fromValue<bool>(bots_pm);
+        mRecallArgs[msgId]["bots_inline"] = QVariant::fromValue<bool>(bots_inline);
+        mRecallArgs[msgId]["groups"] = QVariant::fromValue<bool>(groups);
+        mRecallArgs[msgId]["channels"] = QVariant::fromValue<bool>(channels);
+        mRecallArgs[msgId]["offset"] = QVariant::fromValue<qint32>(offset);
+        mRecallArgs[msgId]["limit"] = QVariant::fromValue<qint32>(limit);
+        mRecallArgs[msgId]["hash"] = QVariant::fromValue<qint32>(hash);
+    } else {
+        const ContactsTopPeers &result = ContactsTopPeers();
+        if(callBack)
+            callBack(0, result, apiError());
+    }
+    return msgId;
+}
+
+void TelegramCore::onContactsGetTopPeersAnswer(qint64 msgId, const ContactsTopPeers &result, const QVariant &attachedData) {
+    Q_UNUSED(attachedData);
+    mRecallArgs.remove(msgId);
+    callBackCall<ContactsTopPeers >(msgId, result);
+    stopTimeOut(msgId);
+    Q_EMIT contactsGetTopPeersAnswer(msgId, result);
+}
+
+void TelegramCore::onContactsGetTopPeersError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData) {
+    Q_UNUSED(attachedData);
+    mRecallArgs.remove(msgId);
+    const ContactsTopPeers &result = ContactsTopPeers();
+    CallbackError error;
+    error.errorCode = errorCode;
+    error.errorText = errorText;
+    error.null = false;
+    callBackCall<ContactsTopPeers >(msgId, result, error);
+    stopTimeOut(msgId);
+    Q_EMIT contactsGetTopPeersError(msgId, errorCode, errorText);
+}
+
+qint64 TelegramCore::contactsResetTopPeerRating(const TopPeerCategory &category, const InputPeer &peer, Callback<bool > callBack, qint32 timeout) {
+    if(!mApi) {
+        bool result = 0;
+        if(callBack)
+            callBack(0, result, apiError());
+        return 0;
+    }
+    qint64 msgId = mApi->contactsResetTopPeerRating(category, peer);
+    if(msgId) {
+        callBackPush<bool >(msgId, callBack);
+        startTimeOut(msgId, timeout);
+        mRecallArgs[msgId][""] = "contactsResetTopPeerRating";
+        mRecallArgs[msgId]["category"] = QVariant::fromValue<TopPeerCategory>(category);
+        mRecallArgs[msgId]["peer"] = QVariant::fromValue<InputPeer>(peer);
+    } else {
+        bool result = 0;
+        if(callBack)
+            callBack(0, result, apiError());
+    }
+    return msgId;
+}
+
+void TelegramCore::onContactsResetTopPeerRatingAnswer(qint64 msgId, bool result, const QVariant &attachedData) {
+    Q_UNUSED(attachedData);
+    mRecallArgs.remove(msgId);
+    callBackCall<bool >(msgId, result);
+    stopTimeOut(msgId);
+    Q_EMIT contactsResetTopPeerRatingAnswer(msgId, result);
+}
+
+void TelegramCore::onContactsResetTopPeerRatingError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData) {
+    Q_UNUSED(attachedData);
+    mRecallArgs.remove(msgId);
+    bool result = 0;
+    CallbackError error;
+    error.errorCode = errorCode;
+    error.errorText = errorText;
+    error.null = false;
+    callBackCall<bool >(msgId, result, error);
+    stopTimeOut(msgId);
+    Q_EMIT contactsResetTopPeerRatingError(msgId, errorCode, errorText);
+}
+
 
 qint64 TelegramCore::helpGetConfig(Callback<Config > callBack, qint32 timeout) {
     if(!mApi) {
@@ -7095,6 +7196,48 @@ void TelegramCore::onMessagesSetBotCallbackAnswerError(qint64 msgId, qint32 erro
     Q_EMIT messagesSetBotCallbackAnswerError(msgId, errorCode, errorText);
 }
 
+qint64 TelegramCore::messagesGetPeerDialogs(const QList<InputPeer> &peer, Callback<MessagesPeerDialogs > callBack, qint32 timeout) {
+    if(!mApi) {
+        const MessagesPeerDialogs &result = MessagesPeerDialogs();
+        if(callBack)
+            callBack(0, result, apiError());
+        return 0;
+    }
+    qint64 msgId = mApi->messagesGetPeerDialogs(peer);
+    if(msgId) {
+        callBackPush<MessagesPeerDialogs >(msgId, callBack);
+        startTimeOut(msgId, timeout);
+        mRecallArgs[msgId][""] = "messagesGetPeerDialogs";
+        mRecallArgs[msgId]["peer"] = QVariant::fromValue<QList<InputPeer>>(peer);
+    } else {
+        const MessagesPeerDialogs &result = MessagesPeerDialogs();
+        if(callBack)
+            callBack(0, result, apiError());
+    }
+    return msgId;
+}
+
+void TelegramCore::onMessagesGetPeerDialogsAnswer(qint64 msgId, const MessagesPeerDialogs &result, const QVariant &attachedData) {
+    Q_UNUSED(attachedData);
+    mRecallArgs.remove(msgId);
+    callBackCall<MessagesPeerDialogs >(msgId, result);
+    stopTimeOut(msgId);
+    Q_EMIT messagesGetPeerDialogsAnswer(msgId, result);
+}
+
+void TelegramCore::onMessagesGetPeerDialogsError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData) {
+    Q_UNUSED(attachedData);
+    mRecallArgs.remove(msgId);
+    const MessagesPeerDialogs &result = MessagesPeerDialogs();
+    CallbackError error;
+    error.errorCode = errorCode;
+    error.errorText = errorText;
+    error.null = false;
+    callBackCall<MessagesPeerDialogs >(msgId, result, error);
+    stopTimeOut(msgId);
+    Q_EMIT messagesGetPeerDialogsError(msgId, errorCode, errorText);
+}
+
 
 qint64 TelegramCore::photosUpdateProfilePhoto(const InputPhoto &id, const InputPhotoCrop &crop, Callback<UserProfilePhoto > callBack, qint32 timeout) {
     if(!mApi) {
@@ -7800,6 +7943,10 @@ qint64 TelegramCore::retry(qint64 mid)
         result = contactsSearch(args["q"].value<QString>(), args["limit"].value<qint32>(), [this, mid](TG_CALLBACK_SIGNATURE(ContactsFound)){ Q_UNUSED(msgId); callBackCall<ContactsFound>(mid, result, error); } );
     } else if(functionName == "contactsResolveUsername") {
         result = contactsResolveUsername(args["username"].value<QString>(), [this, mid](TG_CALLBACK_SIGNATURE(ContactsResolvedPeer)){ Q_UNUSED(msgId); callBackCall<ContactsResolvedPeer>(mid, result, error); } );
+    } else if(functionName == "contactsGetTopPeers") {
+        result = contactsGetTopPeers(args["correspondents"].value<bool>(), args["bots_pm"].value<bool>(), args["bots_inline"].value<bool>(), args["groups"].value<bool>(), args["channels"].value<bool>(), args["offset"].value<qint32>(), args["limit"].value<qint32>(), args["hash"].value<qint32>(), [this, mid](TG_CALLBACK_SIGNATURE(ContactsTopPeers)){ Q_UNUSED(msgId); callBackCall<ContactsTopPeers>(mid, result, error); } );
+    } else if(functionName == "contactsResetTopPeerRating") {
+        result = contactsResetTopPeerRating(args["category"].value<TopPeerCategory>(), args["peer"].value<InputPeer>(), [this, mid](TG_CALLBACK_SIGNATURE(bool)){ Q_UNUSED(msgId); callBackCall<bool>(mid, result, error); } );
     } else if(functionName == "helpGetConfig") {
         result = helpGetConfig([this, mid](TG_CALLBACK_SIGNATURE(Config)){ Q_UNUSED(msgId); callBackCall<Config>(mid, result, error); } );
     } else if(functionName == "helpGetNearestDc") {
@@ -7942,6 +8089,8 @@ qint64 TelegramCore::retry(qint64 mid)
         result = messagesGetBotCallbackAnswer(args["peer"].value<InputPeer>(), args["msg_id"].value<qint32>(), args["data"].value<QByteArray>(), [this, mid](TG_CALLBACK_SIGNATURE(MessagesBotCallbackAnswer)){ Q_UNUSED(msgId); callBackCall<MessagesBotCallbackAnswer>(mid, result, error); } );
     } else if(functionName == "messagesSetBotCallbackAnswer") {
         result = messagesSetBotCallbackAnswer(args["alert"].value<bool>(), args["query_id"].value<qint64>(), args["message"].value<QString>(), [this, mid](TG_CALLBACK_SIGNATURE(bool)){ Q_UNUSED(msgId); callBackCall<bool>(mid, result, error); } );
+    } else if(functionName == "messagesGetPeerDialogs") {
+        result = messagesGetPeerDialogs(args["peer"].value<QList<InputPeer>>(), [this, mid](TG_CALLBACK_SIGNATURE(MessagesPeerDialogs)){ Q_UNUSED(msgId); callBackCall<MessagesPeerDialogs>(mid, result, error); } );
     } else if(functionName == "photosUpdateProfilePhoto") {
         result = photosUpdateProfilePhoto(args["id"].value<InputPhoto>(), args["crop"].value<InputPhotoCrop>(), [this, mid](TG_CALLBACK_SIGNATURE(UserProfilePhoto)){ Q_UNUSED(msgId); callBackCall<UserProfilePhoto>(mid, result, error); } );
     } else if(functionName == "photosUploadProfilePhoto") {

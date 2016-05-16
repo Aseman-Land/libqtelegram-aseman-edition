@@ -94,6 +94,9 @@ void qtelegramRegisterQmlTypes(const char *uri, int major, int minor) {
     qmlRegisterType<SendMessageActionObject>(uri, major, minor, "SendMessageAction");
     qmlRegisterType<StickerPackObject>(uri, major, minor, "StickerPack");
     qmlRegisterType<StickerSetObject>(uri, major, minor, "StickerSet");
+    qmlRegisterType<TopPeerObject>(uri, major, minor, "TopPeer");
+    qmlRegisterType<TopPeerCategoryObject>(uri, major, minor, "TopPeerCategory");
+    qmlRegisterType<TopPeerCategoryPeersObject>(uri, major, minor, "TopPeerCategoryPeers");
     qmlRegisterType<UpdateObject>(uri, major, minor, "Update");
     qmlRegisterType<UpdatesTypeObject>(uri, major, minor, "UpdatesType");
     qmlRegisterType<UserObject>(uri, major, minor, "User");
@@ -122,6 +125,7 @@ void qtelegramRegisterQmlTypes(const char *uri, int major, int minor) {
     qmlRegisterType<ContactsImportedContactsObject>(uri, major, minor, "ContactsImportedContacts");
     qmlRegisterType<ContactsLinkObject>(uri, major, minor, "ContactsLink");
     qmlRegisterType<ContactsResolvedPeerObject>(uri, major, minor, "ContactsResolvedPeer");
+    qmlRegisterType<ContactsTopPeersObject>(uri, major, minor, "ContactsTopPeers");
     qmlRegisterType<HelpAppChangelogObject>(uri, major, minor, "HelpAppChangelog");
     qmlRegisterType<HelpAppUpdateObject>(uri, major, minor, "HelpAppUpdate");
     qmlRegisterType<HelpInviteTextObject>(uri, major, minor, "HelpInviteText");
@@ -139,6 +143,7 @@ void qtelegramRegisterQmlTypes(const char *uri, int major, int minor) {
     qmlRegisterType<MessagesFoundGifsObject>(uri, major, minor, "MessagesFoundGifs");
     qmlRegisterType<MessagesMessageEditDataObject>(uri, major, minor, "MessagesMessageEditData");
     qmlRegisterType<MessagesMessagesObject>(uri, major, minor, "MessagesMessages");
+    qmlRegisterType<MessagesPeerDialogsObject>(uri, major, minor, "MessagesPeerDialogs");
     qmlRegisterType<MessagesSavedGifsObject>(uri, major, minor, "MessagesSavedGifs");
     qmlRegisterType<MessagesSentEncryptedMessageObject>(uri, major, minor, "MessagesSentEncryptedMessage");
     qmlRegisterType<MessagesStickerSetObject>(uri, major, minor, "MessagesStickerSet");

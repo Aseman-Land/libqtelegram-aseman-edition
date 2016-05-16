@@ -10,6 +10,7 @@
 #include <QMetaType>
 #include <QString>
 #include <QtGlobal>
+#include "inputuser.h"
 
 class LIBQTELEGRAMSHARED_EXPORT MessageEntity : public TelegramTypeObject
 {
@@ -25,7 +26,9 @@ public:
         typeMessageEntityItalic = 0x826f8b60,
         typeMessageEntityCode = 0x28a20571,
         typeMessageEntityPre = 0x73924be0,
-        typeMessageEntityTextUrl = 0x76a6d327
+        typeMessageEntityTextUrl = 0x76a6d327,
+        typeMessageEntityMentionName = 0x352dca58,
+        typeInputMessageEntityMentionName = 0x208e68c9
     };
 
     MessageEntity(MessageEntityClassType classType = typeMessageEntityUnknown, InboundPkt *in = 0);
@@ -45,6 +48,12 @@ public:
     void setUrl(const QString &url);
     QString url() const;
 
+    void setUserIdInputUser(const InputUser &userIdInputUser);
+    InputUser userIdInputUser() const;
+
+    void setUserIdInt(qint32 userIdInt);
+    qint32 userIdInt() const;
+
     void setClassType(MessageEntityClassType classType);
     MessageEntityClassType classType() const;
 
@@ -63,6 +72,8 @@ private:
     qint32 m_length;
     qint32 m_offset;
     QString m_url;
+    InputUser m_userIdInputUser;
+    qint32 m_userIdInt;
     MessageEntityClassType m_classType;
 };
 

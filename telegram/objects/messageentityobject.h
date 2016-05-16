@@ -9,6 +9,7 @@
 #include "telegram/types/messageentity.h"
 
 #include <QPointer>
+#include "inputuserobject.h"
 
 class LIBQTELEGRAMSHARED_EXPORT MessageEntityObject : public TelegramTypeQObject
 {
@@ -18,6 +19,8 @@ class LIBQTELEGRAMSHARED_EXPORT MessageEntityObject : public TelegramTypeQObject
     Q_PROPERTY(qint32 length READ length WRITE setLength NOTIFY lengthChanged)
     Q_PROPERTY(qint32 offset READ offset WRITE setOffset NOTIFY offsetChanged)
     Q_PROPERTY(QString url READ url WRITE setUrl NOTIFY urlChanged)
+    Q_PROPERTY(InputUserObject* userIdInputUser READ userIdInputUser WRITE setUserIdInputUser NOTIFY userIdInputUserChanged)
+    Q_PROPERTY(qint32 userIdInt READ userIdInt WRITE setUserIdInt NOTIFY userIdIntChanged)
     Q_PROPERTY(MessageEntity core READ core WRITE setCore NOTIFY coreChanged)
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
@@ -33,7 +36,9 @@ public:
         TypeMessageEntityItalic,
         TypeMessageEntityCode,
         TypeMessageEntityPre,
-        TypeMessageEntityTextUrl
+        TypeMessageEntityTextUrl,
+        TypeMessageEntityMentionName,
+        TypeInputMessageEntityMentionName
     };
 
     MessageEntityObject(const MessageEntity &core, QObject *parent = 0);
@@ -52,6 +57,12 @@ public:
     void setUrl(const QString &url);
     QString url() const;
 
+    void setUserIdInputUser(InputUserObject* userIdInputUser);
+    InputUserObject* userIdInputUser() const;
+
+    void setUserIdInt(qint32 userIdInt);
+    qint32 userIdInt() const;
+
     void setClassType(quint32 classType);
     quint32 classType() const;
 
@@ -68,10 +79,14 @@ Q_SIGNALS:
     void lengthChanged();
     void offsetChanged();
     void urlChanged();
+    void userIdInputUserChanged();
+    void userIdIntChanged();
 
 private Q_SLOTS:
+    void coreUserIdInputUserChanged();
 
 private:
+    QPointer<InputUserObject> m_userIdInputUser;
     MessageEntity m_core;
 };
 

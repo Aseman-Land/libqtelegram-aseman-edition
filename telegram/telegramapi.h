@@ -104,6 +104,8 @@ public:
     qint64 contactsImportCard(const QList<qint32> &export_card, const QVariant &attachedData = QVariant(), Session *session = 0);
     qint64 contactsSearch(const QString &q, qint32 limit, const QVariant &attachedData = QVariant(), Session *session = 0);
     qint64 contactsResolveUsername(const QString &username, const QVariant &attachedData = QVariant(), Session *session = 0);
+    qint64 contactsGetTopPeers(bool correspondents, bool bots_pm, bool bots_inline, bool groups, bool channels, qint32 offset, qint32 limit, qint32 hash, const QVariant &attachedData = QVariant(), Session *session = 0);
+    qint64 contactsResetTopPeerRating(const TopPeerCategory &category, const InputPeer &peer, const QVariant &attachedData = QVariant(), Session *session = 0);
     
     qint64 helpGetConfig(const QVariant &attachedData = QVariant(), Session *session = 0);
     qint64 helpGetNearestDc(const QVariant &attachedData = QVariant(), Session *session = 0);
@@ -177,6 +179,7 @@ public:
     qint64 messagesEditInlineBotMessage(bool no_webpage, const InputBotInlineMessageID &id, const QString &message, const ReplyMarkup &reply_markup, const QList<MessageEntity> &entities, const QVariant &attachedData = QVariant(), Session *session = 0);
     qint64 messagesGetBotCallbackAnswer(const InputPeer &peer, qint32 msg_id, const QByteArray &data, const QVariant &attachedData = QVariant(), Session *session = 0);
     qint64 messagesSetBotCallbackAnswer(bool alert, qint64 query_id, const QString &message, const QVariant &attachedData = QVariant(), Session *session = 0);
+    qint64 messagesGetPeerDialogs(const QList<InputPeer> &peer, const QVariant &attachedData = QVariant(), Session *session = 0);
     
     qint64 photosUpdateProfilePhoto(const InputPhoto &id, const InputPhotoCrop &crop, const QVariant &attachedData = QVariant(), Session *session = 0);
     qint64 photosUploadProfilePhoto(const InputFile &file, const QString &caption, const InputGeoPoint &geo_point, const InputPhotoCrop &crop, const QVariant &attachedData = QVariant(), Session *session = 0);
@@ -279,6 +282,8 @@ Q_SIGNALS:
     void contactsImportCardAnswer(qint64 msgId, const User &result, const QVariant &attachedData);
     void contactsSearchAnswer(qint64 msgId, const ContactsFound &result, const QVariant &attachedData);
     void contactsResolveUsernameAnswer(qint64 msgId, const ContactsResolvedPeer &result, const QVariant &attachedData);
+    void contactsGetTopPeersAnswer(qint64 msgId, const ContactsTopPeers &result, const QVariant &attachedData);
+    void contactsResetTopPeerRatingAnswer(qint64 msgId, bool result, const QVariant &attachedData);
     
     void helpGetConfigAnswer(qint64 msgId, const Config &result, const QVariant &attachedData);
     void helpGetNearestDcAnswer(qint64 msgId, const NearestDc &result, const QVariant &attachedData);
@@ -352,6 +357,7 @@ Q_SIGNALS:
     void messagesEditInlineBotMessageAnswer(qint64 msgId, bool result, const QVariant &attachedData);
     void messagesGetBotCallbackAnswerAnswer(qint64 msgId, const MessagesBotCallbackAnswer &result, const QVariant &attachedData);
     void messagesSetBotCallbackAnswerAnswer(qint64 msgId, bool result, const QVariant &attachedData);
+    void messagesGetPeerDialogsAnswer(qint64 msgId, const MessagesPeerDialogs &result, const QVariant &attachedData);
     
     void photosUpdateProfilePhotoAnswer(qint64 msgId, const UserProfilePhoto &result, const QVariant &attachedData);
     void photosUploadProfilePhotoAnswer(qint64 msgId, const PhotosPhoto &result, const QVariant &attachedData);
@@ -454,6 +460,8 @@ Q_SIGNALS:
     void contactsImportCardError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     void contactsSearchError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     void contactsResolveUsernameError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
+    void contactsGetTopPeersError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
+    void contactsResetTopPeerRatingError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     
     void helpGetConfigError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     void helpGetNearestDcError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
@@ -527,6 +535,7 @@ Q_SIGNALS:
     void messagesEditInlineBotMessageError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     void messagesGetBotCallbackAnswerError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     void messagesSetBotCallbackAnswerError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
+    void messagesGetPeerDialogsError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     
     void photosUpdateProfilePhotoError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     void photosUploadProfilePhotoError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
@@ -634,6 +643,8 @@ private:
     QueryMethods contactsImportCardMethods;
     QueryMethods contactsSearchMethods;
     QueryMethods contactsResolveUsernameMethods;
+    QueryMethods contactsGetTopPeersMethods;
+    QueryMethods contactsResetTopPeerRatingMethods;
     
     QueryMethods helpGetConfigMethods;
     QueryMethods helpGetNearestDcMethods;
@@ -707,6 +718,7 @@ private:
     QueryMethods messagesEditInlineBotMessageMethods;
     QueryMethods messagesGetBotCallbackAnswerMethods;
     QueryMethods messagesSetBotCallbackAnswerMethods;
+    QueryMethods messagesGetPeerDialogsMethods;
     
     QueryMethods photosUpdateProfilePhotoMethods;
     QueryMethods photosUploadProfilePhotoMethods;
@@ -809,6 +821,8 @@ private:
     void onContactsImportCardAnswer(Query *q, InboundPkt &inboundPkt);
     void onContactsSearchAnswer(Query *q, InboundPkt &inboundPkt);
     void onContactsResolveUsernameAnswer(Query *q, InboundPkt &inboundPkt);
+    void onContactsGetTopPeersAnswer(Query *q, InboundPkt &inboundPkt);
+    void onContactsResetTopPeerRatingAnswer(Query *q, InboundPkt &inboundPkt);
     
     void onHelpGetConfigAnswer(Query *q, InboundPkt &inboundPkt);
     void onHelpGetNearestDcAnswer(Query *q, InboundPkt &inboundPkt);
@@ -882,6 +896,7 @@ private:
     void onMessagesEditInlineBotMessageAnswer(Query *q, InboundPkt &inboundPkt);
     void onMessagesGetBotCallbackAnswerAnswer(Query *q, InboundPkt &inboundPkt);
     void onMessagesSetBotCallbackAnswerAnswer(Query *q, InboundPkt &inboundPkt);
+    void onMessagesGetPeerDialogsAnswer(Query *q, InboundPkt &inboundPkt);
     
     void onPhotosUpdateProfilePhotoAnswer(Query *q, InboundPkt &inboundPkt);
     void onPhotosUploadProfilePhotoAnswer(Query *q, InboundPkt &inboundPkt);
@@ -984,6 +999,8 @@ private:
     void onContactsImportCardError(Query *q, qint32 errorCode, const QString &errorText);
     void onContactsSearchError(Query *q, qint32 errorCode, const QString &errorText);
     void onContactsResolveUsernameError(Query *q, qint32 errorCode, const QString &errorText);
+    void onContactsGetTopPeersError(Query *q, qint32 errorCode, const QString &errorText);
+    void onContactsResetTopPeerRatingError(Query *q, qint32 errorCode, const QString &errorText);
     
     void onHelpGetConfigError(Query *q, qint32 errorCode, const QString &errorText);
     void onHelpGetNearestDcError(Query *q, qint32 errorCode, const QString &errorText);
@@ -1057,6 +1074,7 @@ private:
     void onMessagesEditInlineBotMessageError(Query *q, qint32 errorCode, const QString &errorText);
     void onMessagesGetBotCallbackAnswerError(Query *q, qint32 errorCode, const QString &errorText);
     void onMessagesSetBotCallbackAnswerError(Query *q, qint32 errorCode, const QString &errorText);
+    void onMessagesGetPeerDialogsError(Query *q, qint32 errorCode, const QString &errorText);
     
     void onPhotosUpdateProfilePhotoError(Query *q, qint32 errorCode, const QString &errorText);
     void onPhotosUploadProfilePhotoError(Query *q, qint32 errorCode, const QString &errorText);

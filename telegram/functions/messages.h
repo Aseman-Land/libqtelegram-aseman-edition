@@ -50,6 +50,7 @@
 #include "telegram/types/messagesmessageeditdata.h"
 #include "telegram/types/inputbotinlinemessageid.h"
 #include "telegram/types/messagesbotcallbackanswer.h"
+#include "telegram/types/messagespeerdialogs.h"
 
 namespace Tg {
 namespace Functions {
@@ -120,7 +121,8 @@ public:
         fncMessagesEditMessage = 0xce91e4ca,
         fncMessagesEditInlineBotMessage = 0x130c2c85,
         fncMessagesGetBotCallbackAnswer = 0xa6e94f04,
-        fncMessagesSetBotCallbackAnswer = 0x481c591a
+        fncMessagesSetBotCallbackAnswer = 0x481c591a,
+        fncMessagesGetPeerDialogs = 0x19250887
     };
 
     Messages();
@@ -314,6 +316,9 @@ public:
 
     static bool setBotCallbackAnswer(OutboundPkt *out, bool alert, qint64 queryId, const QString &message);
     static bool setBotCallbackAnswerResult(InboundPkt *in);
+
+    static bool getPeerDialogs(OutboundPkt *out, const QList<InputPeer> &peer);
+    static MessagesPeerDialogs getPeerDialogsResult(InboundPkt *in);
 
 };
 

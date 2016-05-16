@@ -6,14 +6,20 @@
 
 MessageEntityObject::MessageEntityObject(const MessageEntity &core, QObject *parent) :
     TelegramTypeQObject(parent),
+    m_userIdInputUser(0),
     m_core(core)
 {
+    m_userIdInputUser = new InputUserObject(m_core.userIdInputUser(), this);
+    connect(m_userIdInputUser.data(), &InputUserObject::coreChanged, this, &MessageEntityObject::coreUserIdInputUserChanged);
 }
 
 MessageEntityObject::MessageEntityObject(QObject *parent) :
     TelegramTypeQObject(parent),
+    m_userIdInputUser(0),
     m_core()
 {
+    m_userIdInputUser = new InputUserObject(m_core.userIdInputUser(), this);
+    connect(m_userIdInputUser.data(), &InputUserObject::coreChanged, this, &MessageEntityObject::coreUserIdInputUserChanged);
 }
 
 MessageEntityObject::~MessageEntityObject() {
@@ -63,14 +69,45 @@ QString MessageEntityObject::url() const {
     return m_core.url();
 }
 
+void MessageEntityObject::setUserIdInputUser(InputUserObject* userIdInputUser) {
+    if(m_userIdInputUser == userIdInputUser) return;
+    if(m_userIdInputUser) delete m_userIdInputUser;
+    m_userIdInputUser = userIdInputUser;
+    if(m_userIdInputUser) {
+        m_userIdInputUser->setParent(this);
+        m_core.setUserIdInputUser(m_userIdInputUser->core());
+        connect(m_userIdInputUser.data(), &InputUserObject::coreChanged, this, &MessageEntityObject::coreUserIdInputUserChanged);
+    }
+    Q_EMIT userIdInputUserChanged();
+    Q_EMIT coreChanged();
+}
+
+InputUserObject*  MessageEntityObject::userIdInputUser() const {
+    return m_userIdInputUser;
+}
+
+void MessageEntityObject::setUserIdInt(qint32 userIdInt) {
+    if(m_core.userIdInt() == userIdInt) return;
+    m_core.setUserIdInt(userIdInt);
+    Q_EMIT userIdIntChanged();
+    Q_EMIT coreChanged();
+}
+
+qint32 MessageEntityObject::userIdInt() const {
+    return m_core.userIdInt();
+}
+
 MessageEntityObject &MessageEntityObject::operator =(const MessageEntity &b) {
     if(m_core == b) return *this;
     m_core = b;
+    m_userIdInputUser->setCore(b.userIdInputUser());
 
     Q_EMIT languageChanged();
     Q_EMIT lengthChanged();
     Q_EMIT offsetChanged();
     Q_EMIT urlChanged();
+    Q_EMIT userIdInputUserChanged();
+    Q_EMIT userIdIntChanged();
     Q_EMIT coreChanged();
     return *this;
 }
@@ -114,6 +151,12 @@ void MessageEntityObject::setClassType(quint32 classType) {
         break;
     case TypeMessageEntityTextUrl:
         result = MessageEntity::typeMessageEntityTextUrl;
+        break;
+    case TypeMessageEntityMentionName:
+        result = MessageEntity::typeMessageEntityMentionName;
+        break;
+    case TypeInputMessageEntityMentionName:
+        result = MessageEntity::typeInputMessageEntityMentionName;
         break;
     default:
         result = MessageEntity::typeMessageEntityUnknown;
@@ -162,6 +205,12 @@ quint32 MessageEntityObject::classType() const {
     case MessageEntity::typeMessageEntityTextUrl:
         result = TypeMessageEntityTextUrl;
         break;
+    case MessageEntity::typeMessageEntityMentionName:
+        result = TypeMessageEntityMentionName;
+        break;
+    case MessageEntity::typeInputMessageEntityMentionName:
+        result = TypeInputMessageEntityMentionName;
+        break;
     default:
         result = TypeMessageEntityUnknown;
         break;
@@ -176,5 +225,12 @@ void MessageEntityObject::setCore(const MessageEntity &core) {
 
 MessageEntity MessageEntityObject::core() const {
     return m_core;
+}
+
+void MessageEntityObject::coreUserIdInputUserChanged() {
+    if(m_core.userIdInputUser() == m_userIdInputUser->core()) return;
+    m_core.setUserIdInputUser(m_userIdInputUser->core());
+    Q_EMIT userIdInputUserChanged();
+    Q_EMIT coreChanged();
 }
 

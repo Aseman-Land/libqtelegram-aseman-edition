@@ -186,3 +186,39 @@ ContactsResolvedPeer Functions::Contacts::resolveUsernameResult(InboundPkt *in) 
     return result;
 }
 
+bool Functions::Contacts::getTopPeers(OutboundPkt *out, bool correspondents, bool botsPm, bool botsInline, bool groups, bool channels, qint32 offset, qint32 limit, qint32 hash) {
+    out->appendInt(fncContactsGetTopPeers);
+    
+    qint32 flags = 0;
+    if(correspondents != 0) flags = (1<<0 | flags);
+    if(botsPm != 0) flags = (1<<1 | flags);
+    if(botsInline != 0) flags = (1<<2 | flags);
+    if(groups != 0) flags = (1<<10 | flags);
+    if(channels != 0) flags = (1<<15 | flags);
+    
+    out->appendInt(flags);
+    out->appendInt(offset);
+    out->appendInt(limit);
+    out->appendInt(hash);
+    return true;
+}
+
+ContactsTopPeers Functions::Contacts::getTopPeersResult(InboundPkt *in) {
+    ContactsTopPeers result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+bool Functions::Contacts::resetTopPeerRating(OutboundPkt *out, const TopPeerCategory &category, const InputPeer &peer) {
+    out->appendInt(fncContactsResetTopPeerRating);
+    if(!category.push(out)) return false;
+    if(!peer.push(out)) return false;
+    return true;
+}
+
+bool Functions::Contacts::resetTopPeerRatingResult(InboundPkt *in) {
+    bool result;
+    result = in->fetchBool();
+    return result;
+}
+

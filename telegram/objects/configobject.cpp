@@ -206,6 +206,17 @@ qint32 ConfigObject::pushChatPeriodMs() const {
     return m_core.pushChatPeriodMs();
 }
 
+void ConfigObject::setRatingEDecay(qint32 ratingEDecay) {
+    if(m_core.ratingEDecay() == ratingEDecay) return;
+    m_core.setRatingEDecay(ratingEDecay);
+    Q_EMIT ratingEDecayChanged();
+    Q_EMIT coreChanged();
+}
+
+qint32 ConfigObject::ratingEDecay() const {
+    return m_core.ratingEDecay();
+}
+
 void ConfigObject::setSavedGifsLimit(qint32 savedGifsLimit) {
     if(m_core.savedGifsLimit() == savedGifsLimit) return;
     m_core.setSavedGifsLimit(savedGifsLimit);
@@ -260,6 +271,7 @@ ConfigObject &ConfigObject::operator =(const Config &b) {
     Q_EMIT onlineUpdatePeriodMsChanged();
     Q_EMIT pushChatLimitChanged();
     Q_EMIT pushChatPeriodMsChanged();
+    Q_EMIT ratingEDecayChanged();
     Q_EMIT savedGifsLimitChanged();
     Q_EMIT testModeChanged();
     Q_EMIT thisDcChanged();

@@ -12,6 +12,7 @@
 MessageEntity::MessageEntity(MessageEntityClassType classType, InboundPkt *in) :
     m_length(0),
     m_offset(0),
+    m_userIdInt(0),
     m_classType(classType)
 {
     if(in) fetch(in);
@@ -20,6 +21,7 @@ MessageEntity::MessageEntity(MessageEntityClassType classType, InboundPkt *in) :
 MessageEntity::MessageEntity(InboundPkt *in) :
     m_length(0),
     m_offset(0),
+    m_userIdInt(0),
     m_classType(typeMessageEntityUnknown)
 {
     fetch(in);
@@ -29,6 +31,7 @@ MessageEntity::MessageEntity(const Null &null) :
     TelegramTypeObject(null),
     m_length(0),
     m_offset(0),
+    m_userIdInt(0),
     m_classType(typeMessageEntityUnknown)
 {
 }
@@ -68,12 +71,30 @@ QString MessageEntity::url() const {
     return m_url;
 }
 
+void MessageEntity::setUserIdInputUser(const InputUser &userIdInputUser) {
+    m_userIdInputUser = userIdInputUser;
+}
+
+InputUser MessageEntity::userIdInputUser() const {
+    return m_userIdInputUser;
+}
+
+void MessageEntity::setUserIdInt(qint32 userIdInt) {
+    m_userIdInt = userIdInt;
+}
+
+qint32 MessageEntity::userIdInt() const {
+    return m_userIdInt;
+}
+
 bool MessageEntity::operator ==(const MessageEntity &b) const {
     return m_classType == b.m_classType &&
            m_language == b.m_language &&
            m_length == b.m_length &&
            m_offset == b.m_offset &&
-           m_url == b.m_url;
+           m_url == b.m_url &&
+           m_userIdInputUser == b.m_userIdInputUser &&
+           m_userIdInt == b.m_userIdInt;
 }
 
 void MessageEntity::setClassType(MessageEntity::MessageEntityClassType classType) {
@@ -178,6 +199,24 @@ bool MessageEntity::fetch(InboundPkt *in) {
     }
         break;
     
+    case typeMessageEntityMentionName: {
+        m_offset = in->fetchInt();
+        m_length = in->fetchInt();
+        m_userIdInt = in->fetchInt();
+        m_classType = static_cast<MessageEntityClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeInputMessageEntityMentionName: {
+        m_offset = in->fetchInt();
+        m_length = in->fetchInt();
+        m_userIdInputUser.fetch(in);
+        m_classType = static_cast<MessageEntityClassType>(x);
+        return true;
+    }
+        break;
+    
     default:
         LQTG_FETCH_ASSERT;
         return false;
@@ -266,6 +305,22 @@ bool MessageEntity::push(OutboundPkt *out) const {
     }
         break;
     
+    case typeMessageEntityMentionName: {
+        out->appendInt(m_offset);
+        out->appendInt(m_length);
+        out->appendInt(m_userIdInt);
+        return true;
+    }
+        break;
+    
+    case typeInputMessageEntityMentionName: {
+        out->appendInt(m_offset);
+        out->appendInt(m_length);
+        m_userIdInputUser.push(out);
+        return true;
+    }
+        break;
+    
     default:
         return false;
     }
@@ -326,6 +381,16 @@ QDataStream &operator<<(QDataStream &stream, const MessageEntity &item) {
         stream << item.offset();
         stream << item.length();
         stream << item.url();
+        break;
+    case MessageEntity::typeMessageEntityMentionName:
+        stream << item.offset();
+        stream << item.length();
+        stream << item.userIdInt();
+        break;
+    case MessageEntity::typeInputMessageEntityMentionName:
+        stream << item.offset();
+        stream << item.length();
+        stream << item.userIdInputUser();
         break;
     }
     return stream;
@@ -439,6 +504,30 @@ QDataStream &operator>>(QDataStream &stream, MessageEntity &item) {
         QString m_url;
         stream >> m_url;
         item.setUrl(m_url);
+    }
+        break;
+    case MessageEntity::typeMessageEntityMentionName: {
+        qint32 m_offset;
+        stream >> m_offset;
+        item.setOffset(m_offset);
+        qint32 m_length;
+        stream >> m_length;
+        item.setLength(m_length);
+        qint32 m_user_id_int;
+        stream >> m_user_id_int;
+        item.setUserIdInt(m_user_id_int);
+    }
+        break;
+    case MessageEntity::typeInputMessageEntityMentionName: {
+        qint32 m_offset;
+        stream >> m_offset;
+        item.setOffset(m_offset);
+        qint32 m_length;
+        stream >> m_length;
+        item.setLength(m_length);
+        InputUser m_user_id_InputUser;
+        stream >> m_user_id_InputUser;
+        item.setUserIdInputUser(m_user_id_InputUser);
     }
         break;
     }

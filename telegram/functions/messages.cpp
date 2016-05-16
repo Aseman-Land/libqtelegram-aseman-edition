@@ -1030,3 +1030,19 @@ bool Functions::Messages::setBotCallbackAnswerResult(InboundPkt *in) {
     return result;
 }
 
+bool Functions::Messages::getPeerDialogs(OutboundPkt *out, const QList<InputPeer> &peer) {
+    out->appendInt(fncMessagesGetPeerDialogs);
+    out->appendInt(CoreTypes::typeVector);
+    out->appendInt(peer.count());
+    for (qint32 i = 0; i < peer.count(); i++) {
+        if(!peer[i].push(out)) return false;
+    }
+    return true;
+}
+
+MessagesPeerDialogs Functions::Messages::getPeerDialogsResult(InboundPkt *in) {
+    MessagesPeerDialogs result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+

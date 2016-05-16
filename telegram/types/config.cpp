@@ -25,6 +25,7 @@ Config::Config(ConfigClassType classType, InboundPkt *in) :
     m_onlineUpdatePeriodMs(0),
     m_pushChatLimit(0),
     m_pushChatPeriodMs(0),
+    m_ratingEDecay(0),
     m_savedGifsLimit(0),
     m_testMode(false),
     m_thisDc(0),
@@ -49,6 +50,7 @@ Config::Config(InboundPkt *in) :
     m_onlineUpdatePeriodMs(0),
     m_pushChatLimit(0),
     m_pushChatPeriodMs(0),
+    m_ratingEDecay(0),
     m_savedGifsLimit(0),
     m_testMode(false),
     m_thisDc(0),
@@ -74,6 +76,7 @@ Config::Config(const Null &null) :
     m_onlineUpdatePeriodMs(0),
     m_pushChatLimit(0),
     m_pushChatPeriodMs(0),
+    m_ratingEDecay(0),
     m_savedGifsLimit(0),
     m_testMode(false),
     m_thisDc(0),
@@ -220,6 +223,14 @@ qint32 Config::pushChatPeriodMs() const {
     return m_pushChatPeriodMs;
 }
 
+void Config::setRatingEDecay(qint32 ratingEDecay) {
+    m_ratingEDecay = ratingEDecay;
+}
+
+qint32 Config::ratingEDecay() const {
+    return m_ratingEDecay;
+}
+
 void Config::setSavedGifsLimit(qint32 savedGifsLimit) {
     m_savedGifsLimit = savedGifsLimit;
 }
@@ -263,6 +274,7 @@ bool Config::operator ==(const Config &b) const {
            m_onlineUpdatePeriodMs == b.m_onlineUpdatePeriodMs &&
            m_pushChatLimit == b.m_pushChatLimit &&
            m_pushChatPeriodMs == b.m_pushChatPeriodMs &&
+           m_ratingEDecay == b.m_ratingEDecay &&
            m_savedGifsLimit == b.m_savedGifsLimit &&
            m_testMode == b.m_testMode &&
            m_thisDc == b.m_thisDc;
@@ -307,6 +319,7 @@ bool Config::fetch(InboundPkt *in) {
         m_pushChatLimit = in->fetchInt();
         m_savedGifsLimit = in->fetchInt();
         m_editTimeLimit = in->fetchInt();
+        m_ratingEDecay = in->fetchInt();
         if(in->fetchInt() != (qint32)CoreTypes::typeVector) return false;
         qint32 m_disabledFeatures_length = in->fetchInt();
         m_disabledFeatures.clear();
@@ -353,6 +366,7 @@ bool Config::push(OutboundPkt *out) const {
         out->appendInt(m_pushChatLimit);
         out->appendInt(m_savedGifsLimit);
         out->appendInt(m_editTimeLimit);
+        out->appendInt(m_ratingEDecay);
         out->appendInt(CoreTypes::typeVector);
         out->appendInt(m_disabledFeatures.count());
         for (qint32 i = 0; i < m_disabledFeatures.count(); i++) {
@@ -397,6 +411,7 @@ QDataStream &operator<<(QDataStream &stream, const Config &item) {
         stream << item.pushChatLimit();
         stream << item.savedGifsLimit();
         stream << item.editTimeLimit();
+        stream << item.ratingEDecay();
         stream << item.disabledFeatures();
         break;
     }
@@ -466,6 +481,9 @@ QDataStream &operator>>(QDataStream &stream, Config &item) {
         qint32 m_edit_time_limit;
         stream >> m_edit_time_limit;
         item.setEditTimeLimit(m_edit_time_limit);
+        qint32 m_rating_e_decay;
+        stream >> m_rating_e_decay;
+        item.setRatingEDecay(m_rating_e_decay);
         QList<DisabledFeature> m_disabled_features;
         stream >> m_disabled_features;
         item.setDisabledFeatures(m_disabled_features);

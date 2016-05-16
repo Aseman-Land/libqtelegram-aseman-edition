@@ -13,6 +13,8 @@
 * [typeMessageEntityCode](#messageentitytypemessageentitycode)
 * [typeMessageEntityPre](#messageentitytypemessageentitypre)
 * [typeMessageEntityTextUrl](#messageentitytypemessageentitytexturl)
+* [typeMessageEntityMentionName](#messageentitytypemessageentitymentionname)
+* [typeInputMessageEntityMentionName](#messageentitytypeinputmessageentitymentionname)
 
 ## MessageEntity::typeMessageEntityUnknown
 
@@ -180,4 +182,36 @@ messageEntityTextUrl#76a6d327 offset:int length:int url:string = MessageEntity;
 |offset|qint32|
 |length|qint32|
 |url|QString|
+
+## MessageEntity::typeMessageEntityMentionName
+
+#### Schema:
+
+```c++
+messageEntityMentionName#352dca58 offset:int length:int user_id:int = MessageEntity;
+```
+
+#### Parameters:
+
+|Name|Type|
+|----|----|
+|offset|qint32|
+|length|qint32|
+|userId|qint32|
+
+## MessageEntity::typeInputMessageEntityMentionName
+
+#### Schema:
+
+```c++
+inputMessageEntityMentionName#208e68c9 offset:int length:int user_id:InputUser = MessageEntity;
+```
+
+#### Parameters:
+
+|Name|Type|
+|----|----|
+|offset|qint32|
+|length|qint32|
+|userId|[InputUser](inputuser.md)|
 

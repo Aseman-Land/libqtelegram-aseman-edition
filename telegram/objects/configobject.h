@@ -31,6 +31,7 @@ class LIBQTELEGRAMSHARED_EXPORT ConfigObject : public TelegramTypeQObject
     Q_PROPERTY(qint32 onlineUpdatePeriodMs READ onlineUpdatePeriodMs WRITE setOnlineUpdatePeriodMs NOTIFY onlineUpdatePeriodMsChanged)
     Q_PROPERTY(qint32 pushChatLimit READ pushChatLimit WRITE setPushChatLimit NOTIFY pushChatLimitChanged)
     Q_PROPERTY(qint32 pushChatPeriodMs READ pushChatPeriodMs WRITE setPushChatPeriodMs NOTIFY pushChatPeriodMsChanged)
+    Q_PROPERTY(qint32 ratingEDecay READ ratingEDecay WRITE setRatingEDecay NOTIFY ratingEDecayChanged)
     Q_PROPERTY(qint32 savedGifsLimit READ savedGifsLimit WRITE setSavedGifsLimit NOTIFY savedGifsLimitChanged)
     Q_PROPERTY(bool testMode READ testMode WRITE setTestMode NOTIFY testModeChanged)
     Q_PROPERTY(qint32 thisDc READ thisDc WRITE setThisDc NOTIFY thisDcChanged)
@@ -97,6 +98,9 @@ public:
     void setPushChatPeriodMs(qint32 pushChatPeriodMs);
     qint32 pushChatPeriodMs() const;
 
+    void setRatingEDecay(qint32 ratingEDecay);
+    qint32 ratingEDecay() const;
+
     void setSavedGifsLimit(qint32 savedGifsLimit);
     qint32 savedGifsLimit() const;
 
@@ -135,6 +139,7 @@ Q_SIGNALS:
     void onlineUpdatePeriodMsChanged();
     void pushChatLimitChanged();
     void pushChatPeriodMsChanged();
+    void ratingEDecayChanged();
     void savedGifsLimitChanged();
     void testModeChanged();
     void thisDcChanged();

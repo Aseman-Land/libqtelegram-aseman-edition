@@ -19,6 +19,9 @@
 #include "telegram/types/user.h"
 #include "telegram/types/contactsfound.h"
 #include "telegram/types/contactsresolvedpeer.h"
+#include "telegram/types/contactstoppeers.h"
+#include "telegram/types/toppeercategory.h"
+#include "telegram/types/inputpeer.h"
 
 namespace Tg {
 namespace Functions {
@@ -38,7 +41,9 @@ public:
         fncContactsExportCard = 0x84e53737,
         fncContactsImportCard = 0x4fe196fe,
         fncContactsSearch = 0x11f812d8,
-        fncContactsResolveUsername = 0xf93ccba3
+        fncContactsResolveUsername = 0xf93ccba3,
+        fncContactsGetTopPeers = 0xd4982db5,
+        fncContactsResetTopPeerRating = 0x1ae373ac
     };
 
     Contacts();
@@ -79,6 +84,12 @@ public:
 
     static bool resolveUsername(OutboundPkt *out, const QString &username);
     static ContactsResolvedPeer resolveUsernameResult(InboundPkt *in);
+
+    static bool getTopPeers(OutboundPkt *out, bool correspondents, bool botsPm, bool botsInline, bool groups, bool channels, qint32 offset, qint32 limit, qint32 hash);
+    static ContactsTopPeers getTopPeersResult(InboundPkt *in);
+
+    static bool resetTopPeerRating(OutboundPkt *out, const TopPeerCategory &category, const InputPeer &peer);
+    static bool resetTopPeerRatingResult(InboundPkt *in);
 
 };
 

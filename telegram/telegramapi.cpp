@@ -194,6 +194,10 @@ TelegramApi::TelegramApi(Session *session, Settings *settings, CryptoUtils *cryp
     contactsSearchMethods.onError = &TelegramApi::onContactsSearchError;
     contactsResolveUsernameMethods.onAnswer = &TelegramApi::onContactsResolveUsernameAnswer;
     contactsResolveUsernameMethods.onError = &TelegramApi::onContactsResolveUsernameError;
+    contactsGetTopPeersMethods.onAnswer = &TelegramApi::onContactsGetTopPeersAnswer;
+    contactsGetTopPeersMethods.onError = &TelegramApi::onContactsGetTopPeersError;
+    contactsResetTopPeerRatingMethods.onAnswer = &TelegramApi::onContactsResetTopPeerRatingAnswer;
+    contactsResetTopPeerRatingMethods.onError = &TelegramApi::onContactsResetTopPeerRatingError;
     
     helpGetConfigMethods.onAnswer = &TelegramApi::onHelpGetConfigAnswer;
     helpGetConfigMethods.onError = &TelegramApi::onHelpGetConfigError;
@@ -338,6 +342,8 @@ TelegramApi::TelegramApi(Session *session, Settings *settings, CryptoUtils *cryp
     messagesGetBotCallbackAnswerMethods.onError = &TelegramApi::onMessagesGetBotCallbackAnswerError;
     messagesSetBotCallbackAnswerMethods.onAnswer = &TelegramApi::onMessagesSetBotCallbackAnswerAnswer;
     messagesSetBotCallbackAnswerMethods.onError = &TelegramApi::onMessagesSetBotCallbackAnswerError;
+    messagesGetPeerDialogsMethods.onAnswer = &TelegramApi::onMessagesGetPeerDialogsAnswer;
+    messagesGetPeerDialogsMethods.onError = &TelegramApi::onMessagesGetPeerDialogsError;
     
     photosUpdateProfilePhotoMethods.onAnswer = &TelegramApi::onPhotosUpdateProfilePhotoAnswer;
     photosUpdateProfilePhotoMethods.onError = &TelegramApi::onPhotosUpdateProfilePhotoError;
@@ -2316,6 +2322,53 @@ void TelegramApi::onContactsResolveUsernameError(Query *q, qint32 errorCode, con
         Q_EMIT contactsResolveUsernameError(q->mainMsgId(), errorCode, errorText, q->extra());
 }
 
+qint64 TelegramApi::contactsGetTopPeers(bool correspondents, bool bots_pm, bool bots_inline, bool groups, bool channels, qint32 offset, qint32 limit, qint32 hash, const QVariant &attachedData, Session *session) {
+    if(!session) session = mMainSession;
+    CHECK_SESSION(session)
+    DEBUG_FUNCTION
+    OutboundPkt p(mSettings);
+    INIT_MAIN_CONNECTION(session)
+    Functions::Contacts::getTopPeers(&p, correspondents, bots_pm, bots_inline, groups, channels, offset, limit, hash);
+    return session->sendQuery(p, &contactsGetTopPeersMethods, attachedData, "Contacts->getTopPeers" );
+}
+
+void TelegramApi::onContactsGetTopPeersAnswer(Query *q, InboundPkt &inboundPkt) {
+    const ContactsTopPeers &result = Functions::Contacts::getTopPeersResult(&inboundPkt);
+    if(result.error())
+        onContactsGetTopPeersError(q, -1, "LIBQTELEGRAM_INTERNAL_ERROR");
+    else
+        Q_EMIT contactsGetTopPeersAnswer(q->mainMsgId(), result, q->extra());
+}
+
+void TelegramApi::onContactsGetTopPeersError(Query *q, qint32 errorCode, const QString &errorText) {
+    bool accepted = false;
+    onError(q, errorCode, errorText, q->extra(), accepted);
+    if(!accepted)
+        Q_EMIT contactsGetTopPeersError(q->mainMsgId(), errorCode, errorText, q->extra());
+}
+
+qint64 TelegramApi::contactsResetTopPeerRating(const TopPeerCategory &category, const InputPeer &peer, const QVariant &attachedData, Session *session) {
+    if(!session) session = mMainSession;
+    CHECK_SESSION(session)
+    DEBUG_FUNCTION
+    OutboundPkt p(mSettings);
+    INIT_MAIN_CONNECTION(session)
+    Functions::Contacts::resetTopPeerRating(&p, category, peer);
+    return session->sendQuery(p, &contactsResetTopPeerRatingMethods, attachedData, "Contacts->resetTopPeerRating" );
+}
+
+void TelegramApi::onContactsResetTopPeerRatingAnswer(Query *q, InboundPkt &inboundPkt) {
+    const bool result = Functions::Contacts::resetTopPeerRatingResult(&inboundPkt);
+    Q_EMIT contactsResetTopPeerRatingAnswer(q->mainMsgId(), result, q->extra());
+}
+
+void TelegramApi::onContactsResetTopPeerRatingError(Query *q, qint32 errorCode, const QString &errorText) {
+    bool accepted = false;
+    onError(q, errorCode, errorText, q->extra(), accepted);
+    if(!accepted)
+        Q_EMIT contactsResetTopPeerRatingError(q->mainMsgId(), errorCode, errorText, q->extra());
+}
+
 
 qint64 TelegramApi::helpGetConfig(const QVariant &attachedData, Session *session) {
     if(!session) session = mMainSession;
@@ -4037,6 +4090,31 @@ void TelegramApi::onMessagesSetBotCallbackAnswerError(Query *q, qint32 errorCode
     onError(q, errorCode, errorText, q->extra(), accepted);
     if(!accepted)
         Q_EMIT messagesSetBotCallbackAnswerError(q->mainMsgId(), errorCode, errorText, q->extra());
+}
+
+qint64 TelegramApi::messagesGetPeerDialogs(const QList<InputPeer> &peer, const QVariant &attachedData, Session *session) {
+    if(!session) session = mMainSession;
+    CHECK_SESSION(session)
+    DEBUG_FUNCTION
+    OutboundPkt p(mSettings);
+    INIT_MAIN_CONNECTION(session)
+    Functions::Messages::getPeerDialogs(&p, peer);
+    return session->sendQuery(p, &messagesGetPeerDialogsMethods, attachedData, "Messages->getPeerDialogs" );
+}
+
+void TelegramApi::onMessagesGetPeerDialogsAnswer(Query *q, InboundPkt &inboundPkt) {
+    const MessagesPeerDialogs &result = Functions::Messages::getPeerDialogsResult(&inboundPkt);
+    if(result.error())
+        onMessagesGetPeerDialogsError(q, -1, "LIBQTELEGRAM_INTERNAL_ERROR");
+    else
+        Q_EMIT messagesGetPeerDialogsAnswer(q->mainMsgId(), result, q->extra());
+}
+
+void TelegramApi::onMessagesGetPeerDialogsError(Query *q, qint32 errorCode, const QString &errorText) {
+    bool accepted = false;
+    onError(q, errorCode, errorText, q->extra(), accepted);
+    if(!accepted)
+        Q_EMIT messagesGetPeerDialogsError(q->mainMsgId(), errorCode, errorText, q->extra());
 }
 
 

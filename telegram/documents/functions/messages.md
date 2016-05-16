@@ -128,3 +128,5 @@
 
 * **Set bot callback answer** - [TelegramCore::messagesSetBotCallbackAnswer](methods/setbotcallbackanswer.md)
 
+* **Get peer dialogs** - [TelegramCore::messagesGetPeerDialogs](methods/getpeerdialogs.md)
+

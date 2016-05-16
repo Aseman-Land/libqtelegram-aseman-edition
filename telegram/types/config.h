@@ -17,7 +17,7 @@ class LIBQTELEGRAMSHARED_EXPORT Config : public TelegramTypeObject
 {
 public:
     enum ConfigClassType {
-        typeConfig = 0x317ceef4
+        typeConfig = 0xc9411388
     };
 
     Config(ConfigClassType classType = typeConfig, InboundPkt *in = 0);
@@ -76,6 +76,9 @@ public:
     void setPushChatPeriodMs(qint32 pushChatPeriodMs);
     qint32 pushChatPeriodMs() const;
 
+    void setRatingEDecay(qint32 ratingEDecay);
+    qint32 ratingEDecay() const;
+
     void setSavedGifsLimit(qint32 savedGifsLimit);
     qint32 savedGifsLimit() const;
 
@@ -116,6 +119,7 @@ private:
     qint32 m_onlineUpdatePeriodMs;
     qint32 m_pushChatLimit;
     qint32 m_pushChatPeriodMs;
+    qint32 m_ratingEDecay;
     qint32 m_savedGifsLimit;
     bool m_testMode;
     qint32 m_thisDc;

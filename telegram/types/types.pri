@@ -92,6 +92,9 @@ HEADERS += \
     $$PWD/sendmessageaction.h \
     $$PWD/stickerpack.h \
     $$PWD/stickerset.h \
+    $$PWD/toppeer.h \
+    $$PWD/toppeercategory.h \
+    $$PWD/toppeercategorypeers.h \
     $$PWD/update.h \
     $$PWD/updatestype.h \
     $$PWD/user.h \
@@ -120,6 +123,7 @@ HEADERS += \
     $$PWD/contactsimportedcontacts.h \
     $$PWD/contactslink.h \
     $$PWD/contactsresolvedpeer.h \
+    $$PWD/contactstoppeers.h \
     $$PWD/helpappchangelog.h \
     $$PWD/helpappupdate.h \
     $$PWD/helpinvitetext.h \
@@ -137,6 +141,7 @@ HEADERS += \
     $$PWD/messagesfoundgifs.h \
     $$PWD/messagesmessageeditdata.h \
     $$PWD/messagesmessages.h \
+    $$PWD/messagespeerdialogs.h \
     $$PWD/messagessavedgifs.h \
     $$PWD/messagessentencryptedmessage.h \
     $$PWD/messagesstickerset.h \
@@ -237,6 +242,9 @@ SOURCES += \
     $$PWD/sendmessageaction.cpp \
     $$PWD/stickerpack.cpp \
     $$PWD/stickerset.cpp \
+    $$PWD/toppeer.cpp \
+    $$PWD/toppeercategory.cpp \
+    $$PWD/toppeercategorypeers.cpp \
     $$PWD/update.cpp \
     $$PWD/updatestype.cpp \
     $$PWD/user.cpp \
@@ -265,6 +273,7 @@ SOURCES += \
     $$PWD/contactsimportedcontacts.cpp \
     $$PWD/contactslink.cpp \
     $$PWD/contactsresolvedpeer.cpp \
+    $$PWD/contactstoppeers.cpp \
     $$PWD/helpappchangelog.cpp \
     $$PWD/helpappupdate.cpp \
     $$PWD/helpinvitetext.cpp \
@@ -282,6 +291,7 @@ SOURCES += \
     $$PWD/messagesfoundgifs.cpp \
     $$PWD/messagesmessageeditdata.cpp \
     $$PWD/messagesmessages.cpp \
+    $$PWD/messagespeerdialogs.cpp \
     $$PWD/messagessavedgifs.cpp \
     $$PWD/messagessentencryptedmessage.cpp \
     $$PWD/messagesstickerset.cpp \

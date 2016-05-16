@@ -172,6 +172,12 @@
 
 * [StickerSet](stickerset.md)
 
+* [TopPeer](toppeer.md)
+
+* [TopPeerCategory](toppeercategory.md)
+
+* [TopPeerCategoryPeers](toppeercategorypeers.md)
+
 * [Update](update.md)
 
 * [UpdatesType](updatestype.md)
@@ -228,6 +234,8 @@
 
 * [ContactsResolvedPeer](contactsresolvedpeer.md)
 
+* [ContactsTopPeers](contactstoppeers.md)
+
 * [HelpAppChangelog](helpappchangelog.md)
 
 * [HelpAppUpdate](helpappupdate.md)
@@ -261,6 +269,8 @@
 * [MessagesMessageEditData](messagesmessageeditdata.md)
 
 * [MessagesMessages](messagesmessages.md)
+
+* [MessagesPeerDialogs](messagespeerdialogs.md)
 
 * [MessagesSavedGifs](messagessavedgifs.md)
 
