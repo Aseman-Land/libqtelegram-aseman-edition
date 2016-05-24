@@ -93,6 +93,33 @@ bool DisabledFeature::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> DisabledFeature::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeDisabledFeature: {
+        result["classType"] = "DisabledFeature::typeDisabledFeature";
+        result["feature"] = QVariant::fromValue<QString>(feature());
+        result["description"] = QVariant::fromValue<QString>(description());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+DisabledFeature DisabledFeature::fromMap(const QMap<QString, QVariant> &map) {
+    DisabledFeature result;
+    if(map.value("classType").toString() == "DisabledFeature::typeDisabledFeature") {
+        result.setClassType(typeDisabledFeature);
+        result.setFeature( map.value("feature").value<QString>() );
+        result.setDescription( map.value("description").value<QString>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray DisabledFeature::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

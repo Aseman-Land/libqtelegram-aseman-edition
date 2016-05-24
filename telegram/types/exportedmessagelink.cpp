@@ -82,6 +82,31 @@ bool ExportedMessageLink::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> ExportedMessageLink::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeExportedMessageLink: {
+        result["classType"] = "ExportedMessageLink::typeExportedMessageLink";
+        result["link"] = QVariant::fromValue<QString>(link());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+ExportedMessageLink ExportedMessageLink::fromMap(const QMap<QString, QVariant> &map) {
+    ExportedMessageLink result;
+    if(map.value("classType").toString() == "ExportedMessageLink::typeExportedMessageLink") {
+        result.setClassType(typeExportedMessageLink);
+        result.setLink( map.value("link").value<QString>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray ExportedMessageLink::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

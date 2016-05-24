@@ -144,6 +144,53 @@ bool FileLocation::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> FileLocation::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeFileLocationUnavailable: {
+        result["classType"] = "FileLocation::typeFileLocationUnavailable";
+        result["volumeId"] = QVariant::fromValue<qint64>(volumeId());
+        result["localId"] = QVariant::fromValue<qint32>(localId());
+        result["secret"] = QVariant::fromValue<qint64>(secret());
+        return result;
+    }
+        break;
+    
+    case typeFileLocation: {
+        result["classType"] = "FileLocation::typeFileLocation";
+        result["dcId"] = QVariant::fromValue<qint32>(dcId());
+        result["volumeId"] = QVariant::fromValue<qint64>(volumeId());
+        result["localId"] = QVariant::fromValue<qint32>(localId());
+        result["secret"] = QVariant::fromValue<qint64>(secret());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+FileLocation FileLocation::fromMap(const QMap<QString, QVariant> &map) {
+    FileLocation result;
+    if(map.value("classType").toString() == "FileLocation::typeFileLocationUnavailable") {
+        result.setClassType(typeFileLocationUnavailable);
+        result.setVolumeId( map.value("volumeId").value<qint64>() );
+        result.setLocalId( map.value("localId").value<qint32>() );
+        result.setSecret( map.value("secret").value<qint64>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "FileLocation::typeFileLocation") {
+        result.setClassType(typeFileLocation);
+        result.setDcId( map.value("dcId").value<qint32>() );
+        result.setVolumeId( map.value("volumeId").value<qint64>() );
+        result.setLocalId( map.value("localId").value<qint32>() );
+        result.setSecret( map.value("secret").value<qint64>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray FileLocation::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

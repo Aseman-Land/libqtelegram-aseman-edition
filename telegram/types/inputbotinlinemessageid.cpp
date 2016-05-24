@@ -113,6 +113,35 @@ bool InputBotInlineMessageID::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> InputBotInlineMessageID::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeInputBotInlineMessageID: {
+        result["classType"] = "InputBotInlineMessageID::typeInputBotInlineMessageID";
+        result["dcId"] = QVariant::fromValue<qint32>(dcId());
+        result["id"] = QVariant::fromValue<qint64>(id());
+        result["accessHash"] = QVariant::fromValue<qint64>(accessHash());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+InputBotInlineMessageID InputBotInlineMessageID::fromMap(const QMap<QString, QVariant> &map) {
+    InputBotInlineMessageID result;
+    if(map.value("classType").toString() == "InputBotInlineMessageID::typeInputBotInlineMessageID") {
+        result.setClassType(typeInputBotInlineMessageID);
+        result.setDcId( map.value("dcId").value<qint32>() );
+        result.setId( map.value("id").value<qint64>() );
+        result.setAccessHash( map.value("accessHash").value<qint64>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray InputBotInlineMessageID::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

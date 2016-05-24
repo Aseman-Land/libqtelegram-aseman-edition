@@ -104,6 +104,35 @@ bool ContactsLink::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> ContactsLink::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeContactsLink: {
+        result["classType"] = "ContactsLink::typeContactsLink";
+        result["myLink"] = m_myLink.toMap();
+        result["foreignLink"] = m_foreignLink.toMap();
+        result["user"] = m_user.toMap();
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+ContactsLink ContactsLink::fromMap(const QMap<QString, QVariant> &map) {
+    ContactsLink result;
+    if(map.value("classType").toString() == "ContactsLink::typeContactsLink") {
+        result.setClassType(typeContactsLink);
+        result.setMyLink( ContactLink::fromMap(map.value("myLink").toMap()) );
+        result.setForeignLink( ContactLink::fromMap(map.value("foreignLink").toMap()) );
+        result.setUser( User::fromMap(map.value("user").toMap()) );
+        return result;
+    }
+    return result;
+}
+
 QByteArray ContactsLink::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

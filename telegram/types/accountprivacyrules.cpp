@@ -115,6 +115,47 @@ bool AccountPrivacyRules::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> AccountPrivacyRules::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeAccountPrivacyRules: {
+        result["classType"] = "AccountPrivacyRules::typeAccountPrivacyRules";
+        QList<QVariant> _rules;
+        Q_FOREACH(const PrivacyRule &m__type, m_rules)
+            _rules << m__type.toMap();
+        result["rules"] = _rules;
+        QList<QVariant> _users;
+        Q_FOREACH(const User &m__type, m_users)
+            _users << m__type.toMap();
+        result["users"] = _users;
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+AccountPrivacyRules AccountPrivacyRules::fromMap(const QMap<QString, QVariant> &map) {
+    AccountPrivacyRules result;
+    if(map.value("classType").toString() == "AccountPrivacyRules::typeAccountPrivacyRules") {
+        result.setClassType(typeAccountPrivacyRules);
+        QList<QVariant> map_rules = map["rules"].toList();
+        QList<PrivacyRule> _rules;
+        Q_FOREACH(const QVariant &var, map_rules)
+            _rules << PrivacyRule::fromMap(var.toMap());
+        result.setRules(_rules);
+        QList<QVariant> map_users = map["users"].toList();
+        QList<User> _users;
+        Q_FOREACH(const QVariant &var, map_users)
+            _users << User::fromMap(var.toMap());
+        result.setUsers(_users);
+        return result;
+    }
+    return result;
+}
+
 QByteArray AccountPrivacyRules::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

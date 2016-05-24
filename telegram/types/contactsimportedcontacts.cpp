@@ -137,6 +137,56 @@ bool ContactsImportedContacts::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> ContactsImportedContacts::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeContactsImportedContacts: {
+        result["classType"] = "ContactsImportedContacts::typeContactsImportedContacts";
+        QList<QVariant> _imported;
+        Q_FOREACH(const ImportedContact &m__type, m_imported)
+            _imported << m__type.toMap();
+        result["imported"] = _imported;
+        QList<QVariant> _retryContacts;
+        Q_FOREACH(const qint64 &m__type, m_retryContacts)
+            _retryContacts << QVariant::fromValue<qint64>(m__type);
+        result["retryContacts"] = _retryContacts;
+        QList<QVariant> _users;
+        Q_FOREACH(const User &m__type, m_users)
+            _users << m__type.toMap();
+        result["users"] = _users;
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+ContactsImportedContacts ContactsImportedContacts::fromMap(const QMap<QString, QVariant> &map) {
+    ContactsImportedContacts result;
+    if(map.value("classType").toString() == "ContactsImportedContacts::typeContactsImportedContacts") {
+        result.setClassType(typeContactsImportedContacts);
+        QList<QVariant> map_imported = map["imported"].toList();
+        QList<ImportedContact> _imported;
+        Q_FOREACH(const QVariant &var, map_imported)
+            _imported << ImportedContact::fromMap(var.toMap());
+        result.setImported(_imported);
+        QList<QVariant> map_retryContacts = map["retryContacts"].toList();
+        QList<qint64> _retryContacts;
+        Q_FOREACH(const QVariant &var, map_retryContacts)
+            _retryContacts << var.value<qint64>();;
+        result.setRetryContacts(_retryContacts);
+        QList<QVariant> map_users = map["users"].toList();
+        QList<User> _users;
+        Q_FOREACH(const QVariant &var, map_users)
+            _users << User::fromMap(var.toMap());
+        result.setUsers(_users);
+        return result;
+    }
+    return result;
+}
+
 QByteArray ContactsImportedContacts::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

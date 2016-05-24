@@ -297,6 +297,79 @@ bool BotInlineResult::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> BotInlineResult::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeBotInlineResult: {
+        result["classType"] = "BotInlineResult::typeBotInlineResult";
+        result["flags"] = QVariant::fromValue<qint32>(flags());
+        result["id"] = QVariant::fromValue<QString>(id());
+        result["type"] = QVariant::fromValue<QString>(type());
+        result["title"] = QVariant::fromValue<QString>(title());
+        result["description"] = QVariant::fromValue<QString>(description());
+        result["url"] = QVariant::fromValue<QString>(url());
+        result["thumbUrl"] = QVariant::fromValue<QString>(thumbUrl());
+        result["contentUrl"] = QVariant::fromValue<QString>(contentUrl());
+        result["contentType"] = QVariant::fromValue<QString>(contentType());
+        result["w"] = QVariant::fromValue<qint32>(w());
+        result["h"] = QVariant::fromValue<qint32>(h());
+        result["duration"] = QVariant::fromValue<qint32>(duration());
+        result["sendMessage"] = m_sendMessage.toMap();
+        return result;
+    }
+        break;
+    
+    case typeBotInlineMediaResult: {
+        result["classType"] = "BotInlineResult::typeBotInlineMediaResult";
+        result["flags"] = QVariant::fromValue<qint32>(flags());
+        result["id"] = QVariant::fromValue<QString>(id());
+        result["type"] = QVariant::fromValue<QString>(type());
+        result["photo"] = m_photo.toMap();
+        result["document"] = m_document.toMap();
+        result["title"] = QVariant::fromValue<QString>(title());
+        result["description"] = QVariant::fromValue<QString>(description());
+        result["sendMessage"] = m_sendMessage.toMap();
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+BotInlineResult BotInlineResult::fromMap(const QMap<QString, QVariant> &map) {
+    BotInlineResult result;
+    if(map.value("classType").toString() == "BotInlineResult::typeBotInlineResult") {
+        result.setClassType(typeBotInlineResult);
+        result.setId( map.value("id").value<QString>() );
+        result.setType( map.value("type").value<QString>() );
+        result.setTitle( map.value("title").value<QString>() );
+        result.setDescription( map.value("description").value<QString>() );
+        result.setUrl( map.value("url").value<QString>() );
+        result.setThumbUrl( map.value("thumbUrl").value<QString>() );
+        result.setContentUrl( map.value("contentUrl").value<QString>() );
+        result.setContentType( map.value("contentType").value<QString>() );
+        result.setW( map.value("w").value<qint32>() );
+        result.setH( map.value("h").value<qint32>() );
+        result.setDuration( map.value("duration").value<qint32>() );
+        result.setSendMessage( BotInlineMessage::fromMap(map.value("sendMessage").toMap()) );
+        return result;
+    }
+    if(map.value("classType").toString() == "BotInlineResult::typeBotInlineMediaResult") {
+        result.setClassType(typeBotInlineMediaResult);
+        result.setId( map.value("id").value<QString>() );
+        result.setType( map.value("type").value<QString>() );
+        result.setPhoto( Photo::fromMap(map.value("photo").toMap()) );
+        result.setDocument( Document::fromMap(map.value("document").toMap()) );
+        result.setTitle( map.value("title").value<QString>() );
+        result.setDescription( map.value("description").value<QString>() );
+        result.setSendMessage( BotInlineMessage::fromMap(map.value("sendMessage").toMap()) );
+        return result;
+    }
+    return result;
+}
+
 QByteArray BotInlineResult::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

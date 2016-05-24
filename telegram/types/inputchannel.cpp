@@ -110,6 +110,43 @@ bool InputChannel::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> InputChannel::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeInputChannelEmpty: {
+        result["classType"] = "InputChannel::typeInputChannelEmpty";
+        return result;
+    }
+        break;
+    
+    case typeInputChannel: {
+        result["classType"] = "InputChannel::typeInputChannel";
+        result["channelId"] = QVariant::fromValue<qint32>(channelId());
+        result["accessHash"] = QVariant::fromValue<qint64>(accessHash());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+InputChannel InputChannel::fromMap(const QMap<QString, QVariant> &map) {
+    InputChannel result;
+    if(map.value("classType").toString() == "InputChannel::typeInputChannelEmpty") {
+        result.setClassType(typeInputChannelEmpty);
+        return result;
+    }
+    if(map.value("classType").toString() == "InputChannel::typeInputChannel") {
+        result.setClassType(typeInputChannel);
+        result.setChannelId( map.value("channelId").value<qint32>() );
+        result.setAccessHash( map.value("accessHash").value<qint64>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray InputChannel::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

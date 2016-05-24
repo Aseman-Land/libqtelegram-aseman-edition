@@ -311,6 +311,175 @@ bool MessageAction::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> MessageAction::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeMessageActionEmpty: {
+        result["classType"] = "MessageAction::typeMessageActionEmpty";
+        return result;
+    }
+        break;
+    
+    case typeMessageActionChatCreate: {
+        result["classType"] = "MessageAction::typeMessageActionChatCreate";
+        result["title"] = QVariant::fromValue<QString>(title());
+        QList<QVariant> _users;
+        Q_FOREACH(const qint32 &m__type, m_users)
+            _users << QVariant::fromValue<qint32>(m__type);
+        result["users"] = _users;
+        return result;
+    }
+        break;
+    
+    case typeMessageActionChatEditTitle: {
+        result["classType"] = "MessageAction::typeMessageActionChatEditTitle";
+        result["title"] = QVariant::fromValue<QString>(title());
+        return result;
+    }
+        break;
+    
+    case typeMessageActionChatEditPhoto: {
+        result["classType"] = "MessageAction::typeMessageActionChatEditPhoto";
+        result["photo"] = m_photo.toMap();
+        return result;
+    }
+        break;
+    
+    case typeMessageActionChatDeletePhoto: {
+        result["classType"] = "MessageAction::typeMessageActionChatDeletePhoto";
+        return result;
+    }
+        break;
+    
+    case typeMessageActionChatAddUser: {
+        result["classType"] = "MessageAction::typeMessageActionChatAddUser";
+        QList<QVariant> _users;
+        Q_FOREACH(const qint32 &m__type, m_users)
+            _users << QVariant::fromValue<qint32>(m__type);
+        result["users"] = _users;
+        return result;
+    }
+        break;
+    
+    case typeMessageActionChatDeleteUser: {
+        result["classType"] = "MessageAction::typeMessageActionChatDeleteUser";
+        result["userId"] = QVariant::fromValue<qint32>(userId());
+        return result;
+    }
+        break;
+    
+    case typeMessageActionChatJoinedByLink: {
+        result["classType"] = "MessageAction::typeMessageActionChatJoinedByLink";
+        result["inviterId"] = QVariant::fromValue<qint32>(inviterId());
+        return result;
+    }
+        break;
+    
+    case typeMessageActionChannelCreate: {
+        result["classType"] = "MessageAction::typeMessageActionChannelCreate";
+        result["title"] = QVariant::fromValue<QString>(title());
+        return result;
+    }
+        break;
+    
+    case typeMessageActionChatMigrateTo: {
+        result["classType"] = "MessageAction::typeMessageActionChatMigrateTo";
+        result["channelId"] = QVariant::fromValue<qint32>(channelId());
+        return result;
+    }
+        break;
+    
+    case typeMessageActionChannelMigrateFrom: {
+        result["classType"] = "MessageAction::typeMessageActionChannelMigrateFrom";
+        result["title"] = QVariant::fromValue<QString>(title());
+        result["chatId"] = QVariant::fromValue<qint32>(chatId());
+        return result;
+    }
+        break;
+    
+    case typeMessageActionPinMessage: {
+        result["classType"] = "MessageAction::typeMessageActionPinMessage";
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+MessageAction MessageAction::fromMap(const QMap<QString, QVariant> &map) {
+    MessageAction result;
+    if(map.value("classType").toString() == "MessageAction::typeMessageActionEmpty") {
+        result.setClassType(typeMessageActionEmpty);
+        return result;
+    }
+    if(map.value("classType").toString() == "MessageAction::typeMessageActionChatCreate") {
+        result.setClassType(typeMessageActionChatCreate);
+        result.setTitle( map.value("title").value<QString>() );
+        QList<QVariant> map_users = map["users"].toList();
+        QList<qint32> _users;
+        Q_FOREACH(const QVariant &var, map_users)
+            _users << var.value<qint32>();;
+        result.setUsers(_users);
+        return result;
+    }
+    if(map.value("classType").toString() == "MessageAction::typeMessageActionChatEditTitle") {
+        result.setClassType(typeMessageActionChatEditTitle);
+        result.setTitle( map.value("title").value<QString>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "MessageAction::typeMessageActionChatEditPhoto") {
+        result.setClassType(typeMessageActionChatEditPhoto);
+        result.setPhoto( Photo::fromMap(map.value("photo").toMap()) );
+        return result;
+    }
+    if(map.value("classType").toString() == "MessageAction::typeMessageActionChatDeletePhoto") {
+        result.setClassType(typeMessageActionChatDeletePhoto);
+        return result;
+    }
+    if(map.value("classType").toString() == "MessageAction::typeMessageActionChatAddUser") {
+        result.setClassType(typeMessageActionChatAddUser);
+        QList<QVariant> map_users = map["users"].toList();
+        QList<qint32> _users;
+        Q_FOREACH(const QVariant &var, map_users)
+            _users << var.value<qint32>();;
+        result.setUsers(_users);
+        return result;
+    }
+    if(map.value("classType").toString() == "MessageAction::typeMessageActionChatDeleteUser") {
+        result.setClassType(typeMessageActionChatDeleteUser);
+        result.setUserId( map.value("userId").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "MessageAction::typeMessageActionChatJoinedByLink") {
+        result.setClassType(typeMessageActionChatJoinedByLink);
+        result.setInviterId( map.value("inviterId").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "MessageAction::typeMessageActionChannelCreate") {
+        result.setClassType(typeMessageActionChannelCreate);
+        result.setTitle( map.value("title").value<QString>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "MessageAction::typeMessageActionChatMigrateTo") {
+        result.setClassType(typeMessageActionChatMigrateTo);
+        result.setChannelId( map.value("channelId").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "MessageAction::typeMessageActionChannelMigrateFrom") {
+        result.setClassType(typeMessageActionChannelMigrateFrom);
+        result.setTitle( map.value("title").value<QString>() );
+        result.setChatId( map.value("chatId").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "MessageAction::typeMessageActionPinMessage") {
+        result.setClassType(typeMessageActionPinMessage);
+        return result;
+    }
+    return result;
+}
+
 QByteArray MessageAction::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

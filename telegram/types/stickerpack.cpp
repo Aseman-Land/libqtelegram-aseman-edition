@@ -104,6 +104,40 @@ bool StickerPack::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> StickerPack::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeStickerPack: {
+        result["classType"] = "StickerPack::typeStickerPack";
+        result["emoticon"] = QVariant::fromValue<QString>(emoticon());
+        QList<QVariant> _documents;
+        Q_FOREACH(const qint64 &m__type, m_documents)
+            _documents << QVariant::fromValue<qint64>(m__type);
+        result["documents"] = _documents;
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+StickerPack StickerPack::fromMap(const QMap<QString, QVariant> &map) {
+    StickerPack result;
+    if(map.value("classType").toString() == "StickerPack::typeStickerPack") {
+        result.setClassType(typeStickerPack);
+        result.setEmoticon( map.value("emoticon").value<QString>() );
+        QList<QVariant> map_documents = map["documents"].toList();
+        QList<qint64> _documents;
+        Q_FOREACH(const QVariant &var, map_documents)
+            _documents << var.value<qint64>();;
+        result.setDocuments(_documents);
+        return result;
+    }
+    return result;
+}
+
 QByteArray StickerPack::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

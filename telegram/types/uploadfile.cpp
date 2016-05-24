@@ -107,6 +107,35 @@ bool UploadFile::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> UploadFile::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeUploadFile: {
+        result["classType"] = "UploadFile::typeUploadFile";
+        result["type"] = m_type.toMap();
+        result["mtime"] = QVariant::fromValue<qint32>(mtime());
+        result["bytes"] = QVariant::fromValue<QByteArray>(bytes());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+UploadFile UploadFile::fromMap(const QMap<QString, QVariant> &map) {
+    UploadFile result;
+    if(map.value("classType").toString() == "UploadFile::typeUploadFile") {
+        result.setClassType(typeUploadFile);
+        result.setType( StorageFileType::fromMap(map.value("type").toMap()) );
+        result.setMtime( map.value("mtime").value<qint32>() );
+        result.setBytes( map.value("bytes").value<QByteArray>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray UploadFile::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

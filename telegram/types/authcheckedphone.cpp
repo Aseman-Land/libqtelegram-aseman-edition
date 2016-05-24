@@ -85,6 +85,31 @@ bool AuthCheckedPhone::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> AuthCheckedPhone::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeAuthCheckedPhone: {
+        result["classType"] = "AuthCheckedPhone::typeAuthCheckedPhone";
+        result["phoneRegistered"] = QVariant::fromValue<bool>(phoneRegistered());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+AuthCheckedPhone AuthCheckedPhone::fromMap(const QMap<QString, QVariant> &map) {
+    AuthCheckedPhone result;
+    if(map.value("classType").toString() == "AuthCheckedPhone::typeAuthCheckedPhone") {
+        result.setClassType(typeAuthCheckedPhone);
+        result.setPhoneRegistered( map.value("phoneRegistered").value<bool>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray AuthCheckedPhone::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

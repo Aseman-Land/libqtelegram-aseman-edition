@@ -99,6 +99,33 @@ bool ContactBlocked::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> ContactBlocked::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeContactBlocked: {
+        result["classType"] = "ContactBlocked::typeContactBlocked";
+        result["userId"] = QVariant::fromValue<qint32>(userId());
+        result["date"] = QVariant::fromValue<qint32>(date());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+ContactBlocked ContactBlocked::fromMap(const QMap<QString, QVariant> &map) {
+    ContactBlocked result;
+    if(map.value("classType").toString() == "ContactBlocked::typeContactBlocked") {
+        result.setClassType(typeContactBlocked);
+        result.setUserId( map.value("userId").value<qint32>() );
+        result.setDate( map.value("date").value<qint32>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray ContactBlocked::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

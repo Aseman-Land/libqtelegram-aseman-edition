@@ -113,6 +113,35 @@ bool MessagesAffectedHistory::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> MessagesAffectedHistory::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeMessagesAffectedHistory: {
+        result["classType"] = "MessagesAffectedHistory::typeMessagesAffectedHistory";
+        result["pts"] = QVariant::fromValue<qint32>(pts());
+        result["ptsCount"] = QVariant::fromValue<qint32>(ptsCount());
+        result["offset"] = QVariant::fromValue<qint32>(offset());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+MessagesAffectedHistory MessagesAffectedHistory::fromMap(const QMap<QString, QVariant> &map) {
+    MessagesAffectedHistory result;
+    if(map.value("classType").toString() == "MessagesAffectedHistory::typeMessagesAffectedHistory") {
+        result.setClassType(typeMessagesAffectedHistory);
+        result.setPts( map.value("pts").value<qint32>() );
+        result.setPtsCount( map.value("ptsCount").value<qint32>() );
+        result.setOffset( map.value("offset").value<qint32>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray MessagesAffectedHistory::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

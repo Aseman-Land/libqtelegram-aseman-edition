@@ -126,6 +126,57 @@ bool ContactsContacts::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> ContactsContacts::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeContactsContactsNotModified: {
+        result["classType"] = "ContactsContacts::typeContactsContactsNotModified";
+        return result;
+    }
+        break;
+    
+    case typeContactsContacts: {
+        result["classType"] = "ContactsContacts::typeContactsContacts";
+        QList<QVariant> _contacts;
+        Q_FOREACH(const Contact &m__type, m_contacts)
+            _contacts << m__type.toMap();
+        result["contacts"] = _contacts;
+        QList<QVariant> _users;
+        Q_FOREACH(const User &m__type, m_users)
+            _users << m__type.toMap();
+        result["users"] = _users;
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+ContactsContacts ContactsContacts::fromMap(const QMap<QString, QVariant> &map) {
+    ContactsContacts result;
+    if(map.value("classType").toString() == "ContactsContacts::typeContactsContactsNotModified") {
+        result.setClassType(typeContactsContactsNotModified);
+        return result;
+    }
+    if(map.value("classType").toString() == "ContactsContacts::typeContactsContacts") {
+        result.setClassType(typeContactsContacts);
+        QList<QVariant> map_contacts = map["contacts"].toList();
+        QList<Contact> _contacts;
+        Q_FOREACH(const QVariant &var, map_contacts)
+            _contacts << Contact::fromMap(var.toMap());
+        result.setContacts(_contacts);
+        QList<QVariant> map_users = map["users"].toList();
+        QList<User> _users;
+        Q_FOREACH(const QVariant &var, map_users)
+            _users << User::fromMap(var.toMap());
+        result.setUsers(_users);
+        return result;
+    }
+    return result;
+}
+
 QByteArray ContactsContacts::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

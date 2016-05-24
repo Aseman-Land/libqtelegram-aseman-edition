@@ -368,6 +368,140 @@ bool UpdatesChannelDifference::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> UpdatesChannelDifference::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeUpdatesChannelDifferenceEmpty: {
+        result["classType"] = "UpdatesChannelDifference::typeUpdatesChannelDifferenceEmpty";
+        result["flags"] = QVariant::fromValue<qint32>(flags());
+        result["pts"] = QVariant::fromValue<qint32>(pts());
+        result["timeout"] = QVariant::fromValue<qint32>(timeout());
+        return result;
+    }
+        break;
+    
+    case typeUpdatesChannelDifferenceTooLong: {
+        result["classType"] = "UpdatesChannelDifference::typeUpdatesChannelDifferenceTooLong";
+        result["flags"] = QVariant::fromValue<qint32>(flags());
+        result["pts"] = QVariant::fromValue<qint32>(pts());
+        result["timeout"] = QVariant::fromValue<qint32>(timeout());
+        result["topMessage"] = QVariant::fromValue<qint32>(topMessage());
+        result["topImportantMessage"] = QVariant::fromValue<qint32>(topImportantMessage());
+        result["readInboxMaxId"] = QVariant::fromValue<qint32>(readInboxMaxId());
+        result["unreadCount"] = QVariant::fromValue<qint32>(unreadCount());
+        result["unreadImportantCount"] = QVariant::fromValue<qint32>(unreadImportantCount());
+        QList<QVariant> _messages;
+        Q_FOREACH(const Message &m__type, m_messages)
+            _messages << m__type.toMap();
+        result["messages"] = _messages;
+        QList<QVariant> _chats;
+        Q_FOREACH(const Chat &m__type, m_chats)
+            _chats << m__type.toMap();
+        result["chats"] = _chats;
+        QList<QVariant> _users;
+        Q_FOREACH(const User &m__type, m_users)
+            _users << m__type.toMap();
+        result["users"] = _users;
+        return result;
+    }
+        break;
+    
+    case typeUpdatesChannelDifference: {
+        result["classType"] = "UpdatesChannelDifference::typeUpdatesChannelDifference";
+        result["flags"] = QVariant::fromValue<qint32>(flags());
+        result["pts"] = QVariant::fromValue<qint32>(pts());
+        result["timeout"] = QVariant::fromValue<qint32>(timeout());
+        QList<QVariant> _newMessages;
+        Q_FOREACH(const Message &m__type, m_newMessages)
+            _newMessages << m__type.toMap();
+        result["newMessages"] = _newMessages;
+        QList<QVariant> _otherUpdates;
+        Q_FOREACH(const Update &m__type, m_otherUpdates)
+            _otherUpdates << m__type.toMap();
+        result["otherUpdates"] = _otherUpdates;
+        QList<QVariant> _chats;
+        Q_FOREACH(const Chat &m__type, m_chats)
+            _chats << m__type.toMap();
+        result["chats"] = _chats;
+        QList<QVariant> _users;
+        Q_FOREACH(const User &m__type, m_users)
+            _users << m__type.toMap();
+        result["users"] = _users;
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+UpdatesChannelDifference UpdatesChannelDifference::fromMap(const QMap<QString, QVariant> &map) {
+    UpdatesChannelDifference result;
+    if(map.value("classType").toString() == "UpdatesChannelDifference::typeUpdatesChannelDifferenceEmpty") {
+        result.setClassType(typeUpdatesChannelDifferenceEmpty);
+        result.setFinal( map.value("final").value<bool>() );
+        result.setPts( map.value("pts").value<qint32>() );
+        result.setTimeout( map.value("timeout").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "UpdatesChannelDifference::typeUpdatesChannelDifferenceTooLong") {
+        result.setClassType(typeUpdatesChannelDifferenceTooLong);
+        result.setFinal( map.value("final").value<bool>() );
+        result.setPts( map.value("pts").value<qint32>() );
+        result.setTimeout( map.value("timeout").value<qint32>() );
+        result.setTopMessage( map.value("topMessage").value<qint32>() );
+        result.setTopImportantMessage( map.value("topImportantMessage").value<qint32>() );
+        result.setReadInboxMaxId( map.value("readInboxMaxId").value<qint32>() );
+        result.setUnreadCount( map.value("unreadCount").value<qint32>() );
+        result.setUnreadImportantCount( map.value("unreadImportantCount").value<qint32>() );
+        QList<QVariant> map_messages = map["messages"].toList();
+        QList<Message> _messages;
+        Q_FOREACH(const QVariant &var, map_messages)
+            _messages << Message::fromMap(var.toMap());
+        result.setMessages(_messages);
+        QList<QVariant> map_chats = map["chats"].toList();
+        QList<Chat> _chats;
+        Q_FOREACH(const QVariant &var, map_chats)
+            _chats << Chat::fromMap(var.toMap());
+        result.setChats(_chats);
+        QList<QVariant> map_users = map["users"].toList();
+        QList<User> _users;
+        Q_FOREACH(const QVariant &var, map_users)
+            _users << User::fromMap(var.toMap());
+        result.setUsers(_users);
+        return result;
+    }
+    if(map.value("classType").toString() == "UpdatesChannelDifference::typeUpdatesChannelDifference") {
+        result.setClassType(typeUpdatesChannelDifference);
+        result.setFinal( map.value("final").value<bool>() );
+        result.setPts( map.value("pts").value<qint32>() );
+        result.setTimeout( map.value("timeout").value<qint32>() );
+        QList<QVariant> map_newMessages = map["newMessages"].toList();
+        QList<Message> _newMessages;
+        Q_FOREACH(const QVariant &var, map_newMessages)
+            _newMessages << Message::fromMap(var.toMap());
+        result.setNewMessages(_newMessages);
+        QList<QVariant> map_otherUpdates = map["otherUpdates"].toList();
+        QList<Update> _otherUpdates;
+        Q_FOREACH(const QVariant &var, map_otherUpdates)
+            _otherUpdates << Update::fromMap(var.toMap());
+        result.setOtherUpdates(_otherUpdates);
+        QList<QVariant> map_chats = map["chats"].toList();
+        QList<Chat> _chats;
+        Q_FOREACH(const QVariant &var, map_chats)
+            _chats << Chat::fromMap(var.toMap());
+        result.setChats(_chats);
+        QList<QVariant> map_users = map["users"].toList();
+        QList<User> _users;
+        Q_FOREACH(const QVariant &var, map_users)
+            _users << User::fromMap(var.toMap());
+        result.setUsers(_users);
+        return result;
+    }
+    return result;
+}
+
 QByteArray UpdatesChannelDifference::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

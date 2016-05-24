@@ -93,6 +93,49 @@ bool AuthCodeType::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> AuthCodeType::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeAuthCodeTypeSms: {
+        result["classType"] = "AuthCodeType::typeAuthCodeTypeSms";
+        return result;
+    }
+        break;
+    
+    case typeAuthCodeTypeCall: {
+        result["classType"] = "AuthCodeType::typeAuthCodeTypeCall";
+        return result;
+    }
+        break;
+    
+    case typeAuthCodeTypeFlashCall: {
+        result["classType"] = "AuthCodeType::typeAuthCodeTypeFlashCall";
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+AuthCodeType AuthCodeType::fromMap(const QMap<QString, QVariant> &map) {
+    AuthCodeType result;
+    if(map.value("classType").toString() == "AuthCodeType::typeAuthCodeTypeSms") {
+        result.setClassType(typeAuthCodeTypeSms);
+        return result;
+    }
+    if(map.value("classType").toString() == "AuthCodeType::typeAuthCodeTypeCall") {
+        result.setClassType(typeAuthCodeTypeCall);
+        return result;
+    }
+    if(map.value("classType").toString() == "AuthCodeType::typeAuthCodeTypeFlashCall") {
+        result.setClassType(typeAuthCodeTypeFlashCall);
+        return result;
+    }
+    return result;
+}
+
 QByteArray AuthCodeType::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

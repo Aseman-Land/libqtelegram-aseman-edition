@@ -178,6 +178,71 @@ bool PhotoSize::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> PhotoSize::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typePhotoSizeEmpty: {
+        result["classType"] = "PhotoSize::typePhotoSizeEmpty";
+        result["type"] = QVariant::fromValue<QString>(type());
+        return result;
+    }
+        break;
+    
+    case typePhotoSize: {
+        result["classType"] = "PhotoSize::typePhotoSize";
+        result["type"] = QVariant::fromValue<QString>(type());
+        result["location"] = m_location.toMap();
+        result["w"] = QVariant::fromValue<qint32>(w());
+        result["h"] = QVariant::fromValue<qint32>(h());
+        result["size"] = QVariant::fromValue<qint32>(size());
+        return result;
+    }
+        break;
+    
+    case typePhotoCachedSize: {
+        result["classType"] = "PhotoSize::typePhotoCachedSize";
+        result["type"] = QVariant::fromValue<QString>(type());
+        result["location"] = m_location.toMap();
+        result["w"] = QVariant::fromValue<qint32>(w());
+        result["h"] = QVariant::fromValue<qint32>(h());
+        result["bytes"] = QVariant::fromValue<QByteArray>(bytes());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+PhotoSize PhotoSize::fromMap(const QMap<QString, QVariant> &map) {
+    PhotoSize result;
+    if(map.value("classType").toString() == "PhotoSize::typePhotoSizeEmpty") {
+        result.setClassType(typePhotoSizeEmpty);
+        result.setType( map.value("type").value<QString>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "PhotoSize::typePhotoSize") {
+        result.setClassType(typePhotoSize);
+        result.setType( map.value("type").value<QString>() );
+        result.setLocation( FileLocation::fromMap(map.value("location").toMap()) );
+        result.setW( map.value("w").value<qint32>() );
+        result.setH( map.value("h").value<qint32>() );
+        result.setSize( map.value("size").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "PhotoSize::typePhotoCachedSize") {
+        result.setClassType(typePhotoCachedSize);
+        result.setType( map.value("type").value<QString>() );
+        result.setLocation( FileLocation::fromMap(map.value("location").toMap()) );
+        result.setW( map.value("w").value<qint32>() );
+        result.setH( map.value("h").value<qint32>() );
+        result.setBytes( map.value("bytes").value<QByteArray>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray PhotoSize::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

@@ -161,6 +161,97 @@ bool PrivacyRule::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> PrivacyRule::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typePrivacyValueAllowContacts: {
+        result["classType"] = "PrivacyRule::typePrivacyValueAllowContacts";
+        return result;
+    }
+        break;
+    
+    case typePrivacyValueAllowAll: {
+        result["classType"] = "PrivacyRule::typePrivacyValueAllowAll";
+        return result;
+    }
+        break;
+    
+    case typePrivacyValueAllowUsers: {
+        result["classType"] = "PrivacyRule::typePrivacyValueAllowUsers";
+        QList<QVariant> _users;
+        Q_FOREACH(const qint32 &m__type, m_users)
+            _users << QVariant::fromValue<qint32>(m__type);
+        result["users"] = _users;
+        return result;
+    }
+        break;
+    
+    case typePrivacyValueDisallowContacts: {
+        result["classType"] = "PrivacyRule::typePrivacyValueDisallowContacts";
+        return result;
+    }
+        break;
+    
+    case typePrivacyValueDisallowAll: {
+        result["classType"] = "PrivacyRule::typePrivacyValueDisallowAll";
+        return result;
+    }
+        break;
+    
+    case typePrivacyValueDisallowUsers: {
+        result["classType"] = "PrivacyRule::typePrivacyValueDisallowUsers";
+        QList<QVariant> _users;
+        Q_FOREACH(const qint32 &m__type, m_users)
+            _users << QVariant::fromValue<qint32>(m__type);
+        result["users"] = _users;
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+PrivacyRule PrivacyRule::fromMap(const QMap<QString, QVariant> &map) {
+    PrivacyRule result;
+    if(map.value("classType").toString() == "PrivacyRule::typePrivacyValueAllowContacts") {
+        result.setClassType(typePrivacyValueAllowContacts);
+        return result;
+    }
+    if(map.value("classType").toString() == "PrivacyRule::typePrivacyValueAllowAll") {
+        result.setClassType(typePrivacyValueAllowAll);
+        return result;
+    }
+    if(map.value("classType").toString() == "PrivacyRule::typePrivacyValueAllowUsers") {
+        result.setClassType(typePrivacyValueAllowUsers);
+        QList<QVariant> map_users = map["users"].toList();
+        QList<qint32> _users;
+        Q_FOREACH(const QVariant &var, map_users)
+            _users << var.value<qint32>();;
+        result.setUsers(_users);
+        return result;
+    }
+    if(map.value("classType").toString() == "PrivacyRule::typePrivacyValueDisallowContacts") {
+        result.setClassType(typePrivacyValueDisallowContacts);
+        return result;
+    }
+    if(map.value("classType").toString() == "PrivacyRule::typePrivacyValueDisallowAll") {
+        result.setClassType(typePrivacyValueDisallowAll);
+        return result;
+    }
+    if(map.value("classType").toString() == "PrivacyRule::typePrivacyValueDisallowUsers") {
+        result.setClassType(typePrivacyValueDisallowUsers);
+        QList<QVariant> map_users = map["users"].toList();
+        QList<qint32> _users;
+        Q_FOREACH(const QVariant &var, map_users)
+            _users << var.value<qint32>();;
+        result.setUsers(_users);
+        return result;
+    }
+    return result;
+}
+
 QByteArray PrivacyRule::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

@@ -99,6 +99,33 @@ bool MessageRange::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> MessageRange::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeMessageRange: {
+        result["classType"] = "MessageRange::typeMessageRange";
+        result["minId"] = QVariant::fromValue<qint32>(minId());
+        result["maxId"] = QVariant::fromValue<qint32>(maxId());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+MessageRange MessageRange::fromMap(const QMap<QString, QVariant> &map) {
+    MessageRange result;
+    if(map.value("classType").toString() == "MessageRange::typeMessageRange") {
+        result.setClassType(typeMessageRange);
+        result.setMinId( map.value("minId").value<qint32>() );
+        result.setMaxId( map.value("maxId").value<qint32>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray MessageRange::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

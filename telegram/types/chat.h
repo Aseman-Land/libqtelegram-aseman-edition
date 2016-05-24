@@ -8,6 +8,7 @@
 #include "telegramtypeobject.h"
 
 #include <QMetaType>
+#include <QVariant>
 #include <QtGlobal>
 #include "inputchannel.h"
 #include "chatphoto.h"
@@ -112,6 +113,9 @@ public:
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
+
+    QMap<QString, QVariant> toMap() const;
+    static Chat fromMap(const QMap<QString, QVariant> &map);
 
     bool operator ==(const Chat &b) const;
 

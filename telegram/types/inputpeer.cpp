@@ -173,6 +173,79 @@ bool InputPeer::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> InputPeer::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeInputPeerEmpty: {
+        result["classType"] = "InputPeer::typeInputPeerEmpty";
+        return result;
+    }
+        break;
+    
+    case typeInputPeerSelf: {
+        result["classType"] = "InputPeer::typeInputPeerSelf";
+        return result;
+    }
+        break;
+    
+    case typeInputPeerChat: {
+        result["classType"] = "InputPeer::typeInputPeerChat";
+        result["chatId"] = QVariant::fromValue<qint32>(chatId());
+        return result;
+    }
+        break;
+    
+    case typeInputPeerUser: {
+        result["classType"] = "InputPeer::typeInputPeerUser";
+        result["userId"] = QVariant::fromValue<qint32>(userId());
+        result["accessHash"] = QVariant::fromValue<qint64>(accessHash());
+        return result;
+    }
+        break;
+    
+    case typeInputPeerChannel: {
+        result["classType"] = "InputPeer::typeInputPeerChannel";
+        result["channelId"] = QVariant::fromValue<qint32>(channelId());
+        result["accessHash"] = QVariant::fromValue<qint64>(accessHash());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+InputPeer InputPeer::fromMap(const QMap<QString, QVariant> &map) {
+    InputPeer result;
+    if(map.value("classType").toString() == "InputPeer::typeInputPeerEmpty") {
+        result.setClassType(typeInputPeerEmpty);
+        return result;
+    }
+    if(map.value("classType").toString() == "InputPeer::typeInputPeerSelf") {
+        result.setClassType(typeInputPeerSelf);
+        return result;
+    }
+    if(map.value("classType").toString() == "InputPeer::typeInputPeerChat") {
+        result.setClassType(typeInputPeerChat);
+        result.setChatId( map.value("chatId").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "InputPeer::typeInputPeerUser") {
+        result.setClassType(typeInputPeerUser);
+        result.setUserId( map.value("userId").value<qint32>() );
+        result.setAccessHash( map.value("accessHash").value<qint64>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "InputPeer::typeInputPeerChannel") {
+        result.setClassType(typeInputPeerChannel);
+        result.setChannelId( map.value("channelId").value<qint32>() );
+        result.setAccessHash( map.value("accessHash").value<qint64>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray InputPeer::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

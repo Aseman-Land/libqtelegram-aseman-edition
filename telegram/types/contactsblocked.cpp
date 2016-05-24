@@ -166,6 +166,77 @@ bool ContactsBlocked::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> ContactsBlocked::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeContactsBlocked: {
+        result["classType"] = "ContactsBlocked::typeContactsBlocked";
+        QList<QVariant> _blocked;
+        Q_FOREACH(const ContactBlocked &m__type, m_blocked)
+            _blocked << m__type.toMap();
+        result["blocked"] = _blocked;
+        QList<QVariant> _users;
+        Q_FOREACH(const User &m__type, m_users)
+            _users << m__type.toMap();
+        result["users"] = _users;
+        return result;
+    }
+        break;
+    
+    case typeContactsBlockedSlice: {
+        result["classType"] = "ContactsBlocked::typeContactsBlockedSlice";
+        result["count"] = QVariant::fromValue<qint32>(count());
+        QList<QVariant> _blocked;
+        Q_FOREACH(const ContactBlocked &m__type, m_blocked)
+            _blocked << m__type.toMap();
+        result["blocked"] = _blocked;
+        QList<QVariant> _users;
+        Q_FOREACH(const User &m__type, m_users)
+            _users << m__type.toMap();
+        result["users"] = _users;
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+ContactsBlocked ContactsBlocked::fromMap(const QMap<QString, QVariant> &map) {
+    ContactsBlocked result;
+    if(map.value("classType").toString() == "ContactsBlocked::typeContactsBlocked") {
+        result.setClassType(typeContactsBlocked);
+        QList<QVariant> map_blocked = map["blocked"].toList();
+        QList<ContactBlocked> _blocked;
+        Q_FOREACH(const QVariant &var, map_blocked)
+            _blocked << ContactBlocked::fromMap(var.toMap());
+        result.setBlocked(_blocked);
+        QList<QVariant> map_users = map["users"].toList();
+        QList<User> _users;
+        Q_FOREACH(const QVariant &var, map_users)
+            _users << User::fromMap(var.toMap());
+        result.setUsers(_users);
+        return result;
+    }
+    if(map.value("classType").toString() == "ContactsBlocked::typeContactsBlockedSlice") {
+        result.setClassType(typeContactsBlockedSlice);
+        result.setCount( map.value("count").value<qint32>() );
+        QList<QVariant> map_blocked = map["blocked"].toList();
+        QList<ContactBlocked> _blocked;
+        Q_FOREACH(const QVariant &var, map_blocked)
+            _blocked << ContactBlocked::fromMap(var.toMap());
+        result.setBlocked(_blocked);
+        QList<QVariant> map_users = map["users"].toList();
+        QList<User> _users;
+        Q_FOREACH(const QVariant &var, map_users)
+            _users << User::fromMap(var.toMap());
+        result.setUsers(_users);
+        return result;
+    }
+    return result;
+}
+
 QByteArray ContactsBlocked::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

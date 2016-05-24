@@ -156,6 +156,46 @@ bool MessagesBotResults::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> MessagesBotResults::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeMessagesBotResults: {
+        result["classType"] = "MessagesBotResults::typeMessagesBotResults";
+        result["flags"] = QVariant::fromValue<qint32>(flags());
+        result["queryId"] = QVariant::fromValue<qint64>(queryId());
+        result["nextOffset"] = QVariant::fromValue<QString>(nextOffset());
+        result["switchPm"] = m_switchPm.toMap();
+        QList<QVariant> _results;
+        Q_FOREACH(const BotInlineResult &m__type, m_results)
+            _results << m__type.toMap();
+        result["results"] = _results;
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+MessagesBotResults MessagesBotResults::fromMap(const QMap<QString, QVariant> &map) {
+    MessagesBotResults result;
+    if(map.value("classType").toString() == "MessagesBotResults::typeMessagesBotResults") {
+        result.setClassType(typeMessagesBotResults);
+        result.setGallery( map.value("gallery").value<bool>() );
+        result.setQueryId( map.value("queryId").value<qint64>() );
+        result.setNextOffset( map.value("nextOffset").value<QString>() );
+        result.setSwitchPm( InlineBotSwitchPM::fromMap(map.value("switchPm").toMap()) );
+        QList<QVariant> map_results = map["results"].toList();
+        QList<BotInlineResult> _results;
+        Q_FOREACH(const QVariant &var, map_results)
+            _results << BotInlineResult::fromMap(var.toMap());
+        result.setResults(_results);
+        return result;
+    }
+    return result;
+}
+
 QByteArray MessagesBotResults::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

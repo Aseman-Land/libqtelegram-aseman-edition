@@ -8,6 +8,7 @@
 #include "telegramtypeobject.h"
 
 #include <QMetaType>
+#include <QVariant>
 
 class LIBQTELEGRAMSHARED_EXPORT PrivacyKey : public TelegramTypeObject
 {
@@ -27,6 +28,9 @@ public:
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
+
+    QMap<QString, QVariant> toMap() const;
+    static PrivacyKey fromMap(const QMap<QString, QVariant> &map);
 
     bool operator ==(const PrivacyKey &b) const;
 

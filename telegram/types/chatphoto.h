@@ -8,6 +8,7 @@
 #include "telegramtypeobject.h"
 
 #include <QMetaType>
+#include <QVariant>
 #include "filelocation.h"
 
 class LIBQTELEGRAMSHARED_EXPORT ChatPhoto : public TelegramTypeObject
@@ -34,6 +35,9 @@ public:
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
+
+    QMap<QString, QVariant> toMap() const;
+    static ChatPhoto fromMap(const QMap<QString, QVariant> &map);
 
     bool operator ==(const ChatPhoto &b) const;
 

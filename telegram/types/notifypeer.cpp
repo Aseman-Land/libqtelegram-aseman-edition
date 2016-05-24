@@ -115,6 +115,61 @@ bool NotifyPeer::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> NotifyPeer::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeNotifyPeer: {
+        result["classType"] = "NotifyPeer::typeNotifyPeer";
+        result["peer"] = m_peer.toMap();
+        return result;
+    }
+        break;
+    
+    case typeNotifyUsers: {
+        result["classType"] = "NotifyPeer::typeNotifyUsers";
+        return result;
+    }
+        break;
+    
+    case typeNotifyChats: {
+        result["classType"] = "NotifyPeer::typeNotifyChats";
+        return result;
+    }
+        break;
+    
+    case typeNotifyAll: {
+        result["classType"] = "NotifyPeer::typeNotifyAll";
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+NotifyPeer NotifyPeer::fromMap(const QMap<QString, QVariant> &map) {
+    NotifyPeer result;
+    if(map.value("classType").toString() == "NotifyPeer::typeNotifyPeer") {
+        result.setClassType(typeNotifyPeer);
+        result.setPeer( Peer::fromMap(map.value("peer").toMap()) );
+        return result;
+    }
+    if(map.value("classType").toString() == "NotifyPeer::typeNotifyUsers") {
+        result.setClassType(typeNotifyUsers);
+        return result;
+    }
+    if(map.value("classType").toString() == "NotifyPeer::typeNotifyChats") {
+        result.setClassType(typeNotifyChats);
+        return result;
+    }
+    if(map.value("classType").toString() == "NotifyPeer::typeNotifyAll") {
+        result.setClassType(typeNotifyAll);
+        return result;
+    }
+    return result;
+}
+
 QByteArray NotifyPeer::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

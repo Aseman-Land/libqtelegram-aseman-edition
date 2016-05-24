@@ -110,6 +110,43 @@ bool InputPhoto::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> InputPhoto::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeInputPhotoEmpty: {
+        result["classType"] = "InputPhoto::typeInputPhotoEmpty";
+        return result;
+    }
+        break;
+    
+    case typeInputPhoto: {
+        result["classType"] = "InputPhoto::typeInputPhoto";
+        result["id"] = QVariant::fromValue<qint64>(id());
+        result["accessHash"] = QVariant::fromValue<qint64>(accessHash());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+InputPhoto InputPhoto::fromMap(const QMap<QString, QVariant> &map) {
+    InputPhoto result;
+    if(map.value("classType").toString() == "InputPhoto::typeInputPhotoEmpty") {
+        result.setClassType(typeInputPhotoEmpty);
+        return result;
+    }
+    if(map.value("classType").toString() == "InputPhoto::typeInputPhoto") {
+        result.setClassType(typeInputPhoto);
+        result.setId( map.value("id").value<qint64>() );
+        result.setAccessHash( map.value("accessHash").value<qint64>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray InputPhoto::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

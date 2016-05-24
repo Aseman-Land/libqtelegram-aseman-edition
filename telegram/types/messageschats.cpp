@@ -93,6 +93,38 @@ bool MessagesChats::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> MessagesChats::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeMessagesChats: {
+        result["classType"] = "MessagesChats::typeMessagesChats";
+        QList<QVariant> _chats;
+        Q_FOREACH(const Chat &m__type, m_chats)
+            _chats << m__type.toMap();
+        result["chats"] = _chats;
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+MessagesChats MessagesChats::fromMap(const QMap<QString, QVariant> &map) {
+    MessagesChats result;
+    if(map.value("classType").toString() == "MessagesChats::typeMessagesChats") {
+        result.setClassType(typeMessagesChats);
+        QList<QVariant> map_chats = map["chats"].toList();
+        QList<Chat> _chats;
+        Q_FOREACH(const QVariant &var, map_chats)
+            _chats << Chat::fromMap(var.toMap());
+        result.setChats(_chats);
+        return result;
+    }
+    return result;
+}
+
 QByteArray MessagesChats::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

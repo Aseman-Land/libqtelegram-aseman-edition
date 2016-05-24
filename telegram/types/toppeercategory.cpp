@@ -115,6 +115,69 @@ bool TopPeerCategory::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> TopPeerCategory::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeTopPeerCategoryBotsPM: {
+        result["classType"] = "TopPeerCategory::typeTopPeerCategoryBotsPM";
+        return result;
+    }
+        break;
+    
+    case typeTopPeerCategoryBotsInline: {
+        result["classType"] = "TopPeerCategory::typeTopPeerCategoryBotsInline";
+        return result;
+    }
+        break;
+    
+    case typeTopPeerCategoryCorrespondents: {
+        result["classType"] = "TopPeerCategory::typeTopPeerCategoryCorrespondents";
+        return result;
+    }
+        break;
+    
+    case typeTopPeerCategoryGroups: {
+        result["classType"] = "TopPeerCategory::typeTopPeerCategoryGroups";
+        return result;
+    }
+        break;
+    
+    case typeTopPeerCategoryChannels: {
+        result["classType"] = "TopPeerCategory::typeTopPeerCategoryChannels";
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+TopPeerCategory TopPeerCategory::fromMap(const QMap<QString, QVariant> &map) {
+    TopPeerCategory result;
+    if(map.value("classType").toString() == "TopPeerCategory::typeTopPeerCategoryBotsPM") {
+        result.setClassType(typeTopPeerCategoryBotsPM);
+        return result;
+    }
+    if(map.value("classType").toString() == "TopPeerCategory::typeTopPeerCategoryBotsInline") {
+        result.setClassType(typeTopPeerCategoryBotsInline);
+        return result;
+    }
+    if(map.value("classType").toString() == "TopPeerCategory::typeTopPeerCategoryCorrespondents") {
+        result.setClassType(typeTopPeerCategoryCorrespondents);
+        return result;
+    }
+    if(map.value("classType").toString() == "TopPeerCategory::typeTopPeerCategoryGroups") {
+        result.setClassType(typeTopPeerCategoryGroups);
+        return result;
+    }
+    if(map.value("classType").toString() == "TopPeerCategory::typeTopPeerCategoryChannels") {
+        result.setClassType(typeTopPeerCategoryChannels);
+        return result;
+    }
+    return result;
+}
+
 QByteArray TopPeerCategory::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

@@ -109,6 +109,45 @@ bool MessagesSentEncryptedMessage::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> MessagesSentEncryptedMessage::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeMessagesSentEncryptedMessage: {
+        result["classType"] = "MessagesSentEncryptedMessage::typeMessagesSentEncryptedMessage";
+        result["date"] = QVariant::fromValue<qint32>(date());
+        return result;
+    }
+        break;
+    
+    case typeMessagesSentEncryptedFile: {
+        result["classType"] = "MessagesSentEncryptedMessage::typeMessagesSentEncryptedFile";
+        result["date"] = QVariant::fromValue<qint32>(date());
+        result["file"] = m_file.toMap();
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+MessagesSentEncryptedMessage MessagesSentEncryptedMessage::fromMap(const QMap<QString, QVariant> &map) {
+    MessagesSentEncryptedMessage result;
+    if(map.value("classType").toString() == "MessagesSentEncryptedMessage::typeMessagesSentEncryptedMessage") {
+        result.setClassType(typeMessagesSentEncryptedMessage);
+        result.setDate( map.value("date").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "MessagesSentEncryptedMessage::typeMessagesSentEncryptedFile") {
+        result.setClassType(typeMessagesSentEncryptedFile);
+        result.setDate( map.value("date").value<qint32>() );
+        result.setFile( EncryptedFile::fromMap(map.value("file").toMap()) );
+        return result;
+    }
+    return result;
+}
+
 QByteArray MessagesSentEncryptedMessage::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

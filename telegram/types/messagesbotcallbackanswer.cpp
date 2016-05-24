@@ -107,6 +107,33 @@ bool MessagesBotCallbackAnswer::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> MessagesBotCallbackAnswer::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeMessagesBotCallbackAnswer: {
+        result["classType"] = "MessagesBotCallbackAnswer::typeMessagesBotCallbackAnswer";
+        result["flags"] = QVariant::fromValue<qint32>(flags());
+        result["message"] = QVariant::fromValue<QString>(message());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+MessagesBotCallbackAnswer MessagesBotCallbackAnswer::fromMap(const QMap<QString, QVariant> &map) {
+    MessagesBotCallbackAnswer result;
+    if(map.value("classType").toString() == "MessagesBotCallbackAnswer::typeMessagesBotCallbackAnswer") {
+        result.setClassType(typeMessagesBotCallbackAnswer);
+        result.setAlert( map.value("alert").value<bool>() );
+        result.setMessage( map.value("message").value<QString>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray MessagesBotCallbackAnswer::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

@@ -144,6 +144,53 @@ bool AccountPassword::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> AccountPassword::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeAccountNoPassword: {
+        result["classType"] = "AccountPassword::typeAccountNoPassword";
+        result["newSalt"] = QVariant::fromValue<QByteArray>(newSalt());
+        result["emailUnconfirmedPattern"] = QVariant::fromValue<QString>(emailUnconfirmedPattern());
+        return result;
+    }
+        break;
+    
+    case typeAccountPassword: {
+        result["classType"] = "AccountPassword::typeAccountPassword";
+        result["currentSalt"] = QVariant::fromValue<QByteArray>(currentSalt());
+        result["newSalt"] = QVariant::fromValue<QByteArray>(newSalt());
+        result["hint"] = QVariant::fromValue<QString>(hint());
+        result["hasRecovery"] = QVariant::fromValue<bool>(hasRecovery());
+        result["emailUnconfirmedPattern"] = QVariant::fromValue<QString>(emailUnconfirmedPattern());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+AccountPassword AccountPassword::fromMap(const QMap<QString, QVariant> &map) {
+    AccountPassword result;
+    if(map.value("classType").toString() == "AccountPassword::typeAccountNoPassword") {
+        result.setClassType(typeAccountNoPassword);
+        result.setNewSalt( map.value("newSalt").value<QByteArray>() );
+        result.setEmailUnconfirmedPattern( map.value("emailUnconfirmedPattern").value<QString>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "AccountPassword::typeAccountPassword") {
+        result.setClassType(typeAccountPassword);
+        result.setCurrentSalt( map.value("currentSalt").value<QByteArray>() );
+        result.setNewSalt( map.value("newSalt").value<QByteArray>() );
+        result.setHint( map.value("hint").value<QString>() );
+        result.setHasRecovery( map.value("hasRecovery").value<bool>() );
+        result.setEmailUnconfirmedPattern( map.value("emailUnconfirmedPattern").value<QString>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray AccountPassword::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

@@ -269,6 +269,105 @@ bool DocumentAttribute::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> DocumentAttribute::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeDocumentAttributeImageSize: {
+        result["classType"] = "DocumentAttribute::typeDocumentAttributeImageSize";
+        result["w"] = QVariant::fromValue<qint32>(w());
+        result["h"] = QVariant::fromValue<qint32>(h());
+        return result;
+    }
+        break;
+    
+    case typeDocumentAttributeAnimated: {
+        result["classType"] = "DocumentAttribute::typeDocumentAttributeAnimated";
+        return result;
+    }
+        break;
+    
+    case typeDocumentAttributeSticker: {
+        result["classType"] = "DocumentAttribute::typeDocumentAttributeSticker";
+        result["alt"] = QVariant::fromValue<QString>(alt());
+        result["stickerset"] = m_stickerset.toMap();
+        return result;
+    }
+        break;
+    
+    case typeDocumentAttributeVideo: {
+        result["classType"] = "DocumentAttribute::typeDocumentAttributeVideo";
+        result["duration"] = QVariant::fromValue<qint32>(duration());
+        result["w"] = QVariant::fromValue<qint32>(w());
+        result["h"] = QVariant::fromValue<qint32>(h());
+        return result;
+    }
+        break;
+    
+    case typeDocumentAttributeAudio: {
+        result["classType"] = "DocumentAttribute::typeDocumentAttributeAudio";
+        result["flags"] = QVariant::fromValue<qint32>(flags());
+        result["duration"] = QVariant::fromValue<qint32>(duration());
+        result["title"] = QVariant::fromValue<QString>(title());
+        result["performer"] = QVariant::fromValue<QString>(performer());
+        result["waveform"] = QVariant::fromValue<QByteArray>(waveform());
+        return result;
+    }
+        break;
+    
+    case typeDocumentAttributeFilename: {
+        result["classType"] = "DocumentAttribute::typeDocumentAttributeFilename";
+        result["fileName"] = QVariant::fromValue<QString>(fileName());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+DocumentAttribute DocumentAttribute::fromMap(const QMap<QString, QVariant> &map) {
+    DocumentAttribute result;
+    if(map.value("classType").toString() == "DocumentAttribute::typeDocumentAttributeImageSize") {
+        result.setClassType(typeDocumentAttributeImageSize);
+        result.setW( map.value("w").value<qint32>() );
+        result.setH( map.value("h").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "DocumentAttribute::typeDocumentAttributeAnimated") {
+        result.setClassType(typeDocumentAttributeAnimated);
+        return result;
+    }
+    if(map.value("classType").toString() == "DocumentAttribute::typeDocumentAttributeSticker") {
+        result.setClassType(typeDocumentAttributeSticker);
+        result.setAlt( map.value("alt").value<QString>() );
+        result.setStickerset( InputStickerSet::fromMap(map.value("stickerset").toMap()) );
+        return result;
+    }
+    if(map.value("classType").toString() == "DocumentAttribute::typeDocumentAttributeVideo") {
+        result.setClassType(typeDocumentAttributeVideo);
+        result.setDuration( map.value("duration").value<qint32>() );
+        result.setW( map.value("w").value<qint32>() );
+        result.setH( map.value("h").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "DocumentAttribute::typeDocumentAttributeAudio") {
+        result.setClassType(typeDocumentAttributeAudio);
+        result.setVoice( map.value("voice").value<bool>() );
+        result.setDuration( map.value("duration").value<qint32>() );
+        result.setTitle( map.value("title").value<QString>() );
+        result.setPerformer( map.value("performer").value<QString>() );
+        result.setWaveform( map.value("waveform").value<QByteArray>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "DocumentAttribute::typeDocumentAttributeFilename") {
+        result.setClassType(typeDocumentAttributeFilename);
+        result.setFileName( map.value("fileName").value<QString>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray DocumentAttribute::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

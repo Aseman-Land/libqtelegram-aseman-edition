@@ -121,6 +121,37 @@ bool InputAppEvent::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> InputAppEvent::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeInputAppEvent: {
+        result["classType"] = "InputAppEvent::typeInputAppEvent";
+        result["time"] = QVariant::fromValue<qreal>(time());
+        result["type"] = QVariant::fromValue<QString>(type());
+        result["peer"] = QVariant::fromValue<qint64>(peer());
+        result["data"] = QVariant::fromValue<QString>(data());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+InputAppEvent InputAppEvent::fromMap(const QMap<QString, QVariant> &map) {
+    InputAppEvent result;
+    if(map.value("classType").toString() == "InputAppEvent::typeInputAppEvent") {
+        result.setClassType(typeInputAppEvent);
+        result.setTime( map.value("time").value<qreal>() );
+        result.setType( map.value("type").value<QString>() );
+        result.setPeer( map.value("peer").value<qint64>() );
+        result.setData( map.value("data").value<QString>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray InputAppEvent::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

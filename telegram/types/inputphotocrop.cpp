@@ -124,6 +124,45 @@ bool InputPhotoCrop::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> InputPhotoCrop::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeInputPhotoCropAuto: {
+        result["classType"] = "InputPhotoCrop::typeInputPhotoCropAuto";
+        return result;
+    }
+        break;
+    
+    case typeInputPhotoCrop: {
+        result["classType"] = "InputPhotoCrop::typeInputPhotoCrop";
+        result["cropLeft"] = QVariant::fromValue<qreal>(cropLeft());
+        result["cropTop"] = QVariant::fromValue<qreal>(cropTop());
+        result["cropWidth"] = QVariant::fromValue<qreal>(cropWidth());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+InputPhotoCrop InputPhotoCrop::fromMap(const QMap<QString, QVariant> &map) {
+    InputPhotoCrop result;
+    if(map.value("classType").toString() == "InputPhotoCrop::typeInputPhotoCropAuto") {
+        result.setClassType(typeInputPhotoCropAuto);
+        return result;
+    }
+    if(map.value("classType").toString() == "InputPhotoCrop::typeInputPhotoCrop") {
+        result.setClassType(typeInputPhotoCrop);
+        result.setCropLeft( map.value("cropLeft").value<qreal>() );
+        result.setCropTop( map.value("cropTop").value<qreal>() );
+        result.setCropWidth( map.value("cropWidth").value<qreal>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray InputPhotoCrop::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

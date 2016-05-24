@@ -190,6 +190,45 @@ bool StickerSet::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> StickerSet::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeStickerSet: {
+        result["classType"] = "StickerSet::typeStickerSet";
+        result["flags"] = QVariant::fromValue<qint32>(flags());
+        result["id"] = QVariant::fromValue<qint64>(id());
+        result["accessHash"] = QVariant::fromValue<qint64>(accessHash());
+        result["title"] = QVariant::fromValue<QString>(title());
+        result["shortName"] = QVariant::fromValue<QString>(shortName());
+        result["count"] = QVariant::fromValue<qint32>(count());
+        result["hash"] = QVariant::fromValue<qint32>(hash());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+StickerSet StickerSet::fromMap(const QMap<QString, QVariant> &map) {
+    StickerSet result;
+    if(map.value("classType").toString() == "StickerSet::typeStickerSet") {
+        result.setClassType(typeStickerSet);
+        result.setInstalled( map.value("installed").value<bool>() );
+        result.setDisabled( map.value("disabled").value<bool>() );
+        result.setOfficial( map.value("official").value<bool>() );
+        result.setId( map.value("id").value<qint64>() );
+        result.setAccessHash( map.value("accessHash").value<qint64>() );
+        result.setTitle( map.value("title").value<QString>() );
+        result.setShortName( map.value("shortName").value<QString>() );
+        result.setCount( map.value("count").value<qint32>() );
+        result.setHash( map.value("hash").value<qint32>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray StickerSet::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

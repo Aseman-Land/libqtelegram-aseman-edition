@@ -8,6 +8,7 @@
 #include "telegramtypeobject.h"
 
 #include <QMetaType>
+#include <QVariant>
 #include "user.h"
 
 class LIBQTELEGRAMSHARED_EXPORT AuthAuthorization : public TelegramTypeObject
@@ -30,6 +31,9 @@ public:
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
+
+    QMap<QString, QVariant> toMap() const;
+    static AuthAuthorization fromMap(const QMap<QString, QVariant> &map);
 
     bool operator ==(const AuthAuthorization &b) const;
 

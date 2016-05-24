@@ -318,6 +318,147 @@ bool UpdatesDifference::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> UpdatesDifference::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeUpdatesDifferenceEmpty: {
+        result["classType"] = "UpdatesDifference::typeUpdatesDifferenceEmpty";
+        result["date"] = QVariant::fromValue<qint32>(date());
+        result["seq"] = QVariant::fromValue<qint32>(seq());
+        return result;
+    }
+        break;
+    
+    case typeUpdatesDifference: {
+        result["classType"] = "UpdatesDifference::typeUpdatesDifference";
+        QList<QVariant> _newMessages;
+        Q_FOREACH(const Message &m__type, m_newMessages)
+            _newMessages << m__type.toMap();
+        result["newMessages"] = _newMessages;
+        QList<QVariant> _newEncryptedMessages;
+        Q_FOREACH(const EncryptedMessage &m__type, m_newEncryptedMessages)
+            _newEncryptedMessages << m__type.toMap();
+        result["newEncryptedMessages"] = _newEncryptedMessages;
+        QList<QVariant> _otherUpdates;
+        Q_FOREACH(const Update &m__type, m_otherUpdates)
+            _otherUpdates << m__type.toMap();
+        result["otherUpdates"] = _otherUpdates;
+        QList<QVariant> _chats;
+        Q_FOREACH(const Chat &m__type, m_chats)
+            _chats << m__type.toMap();
+        result["chats"] = _chats;
+        QList<QVariant> _users;
+        Q_FOREACH(const User &m__type, m_users)
+            _users << m__type.toMap();
+        result["users"] = _users;
+        result["state"] = m_state.toMap();
+        return result;
+    }
+        break;
+    
+    case typeUpdatesDifferenceSlice: {
+        result["classType"] = "UpdatesDifference::typeUpdatesDifferenceSlice";
+        QList<QVariant> _newMessages;
+        Q_FOREACH(const Message &m__type, m_newMessages)
+            _newMessages << m__type.toMap();
+        result["newMessages"] = _newMessages;
+        QList<QVariant> _newEncryptedMessages;
+        Q_FOREACH(const EncryptedMessage &m__type, m_newEncryptedMessages)
+            _newEncryptedMessages << m__type.toMap();
+        result["newEncryptedMessages"] = _newEncryptedMessages;
+        QList<QVariant> _otherUpdates;
+        Q_FOREACH(const Update &m__type, m_otherUpdates)
+            _otherUpdates << m__type.toMap();
+        result["otherUpdates"] = _otherUpdates;
+        QList<QVariant> _chats;
+        Q_FOREACH(const Chat &m__type, m_chats)
+            _chats << m__type.toMap();
+        result["chats"] = _chats;
+        QList<QVariant> _users;
+        Q_FOREACH(const User &m__type, m_users)
+            _users << m__type.toMap();
+        result["users"] = _users;
+        result["intermediateState"] = m_intermediateState.toMap();
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+UpdatesDifference UpdatesDifference::fromMap(const QMap<QString, QVariant> &map) {
+    UpdatesDifference result;
+    if(map.value("classType").toString() == "UpdatesDifference::typeUpdatesDifferenceEmpty") {
+        result.setClassType(typeUpdatesDifferenceEmpty);
+        result.setDate( map.value("date").value<qint32>() );
+        result.setSeq( map.value("seq").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "UpdatesDifference::typeUpdatesDifference") {
+        result.setClassType(typeUpdatesDifference);
+        QList<QVariant> map_newMessages = map["newMessages"].toList();
+        QList<Message> _newMessages;
+        Q_FOREACH(const QVariant &var, map_newMessages)
+            _newMessages << Message::fromMap(var.toMap());
+        result.setNewMessages(_newMessages);
+        QList<QVariant> map_newEncryptedMessages = map["newEncryptedMessages"].toList();
+        QList<EncryptedMessage> _newEncryptedMessages;
+        Q_FOREACH(const QVariant &var, map_newEncryptedMessages)
+            _newEncryptedMessages << EncryptedMessage::fromMap(var.toMap());
+        result.setNewEncryptedMessages(_newEncryptedMessages);
+        QList<QVariant> map_otherUpdates = map["otherUpdates"].toList();
+        QList<Update> _otherUpdates;
+        Q_FOREACH(const QVariant &var, map_otherUpdates)
+            _otherUpdates << Update::fromMap(var.toMap());
+        result.setOtherUpdates(_otherUpdates);
+        QList<QVariant> map_chats = map["chats"].toList();
+        QList<Chat> _chats;
+        Q_FOREACH(const QVariant &var, map_chats)
+            _chats << Chat::fromMap(var.toMap());
+        result.setChats(_chats);
+        QList<QVariant> map_users = map["users"].toList();
+        QList<User> _users;
+        Q_FOREACH(const QVariant &var, map_users)
+            _users << User::fromMap(var.toMap());
+        result.setUsers(_users);
+        result.setState( UpdatesState::fromMap(map.value("state").toMap()) );
+        return result;
+    }
+    if(map.value("classType").toString() == "UpdatesDifference::typeUpdatesDifferenceSlice") {
+        result.setClassType(typeUpdatesDifferenceSlice);
+        QList<QVariant> map_newMessages = map["newMessages"].toList();
+        QList<Message> _newMessages;
+        Q_FOREACH(const QVariant &var, map_newMessages)
+            _newMessages << Message::fromMap(var.toMap());
+        result.setNewMessages(_newMessages);
+        QList<QVariant> map_newEncryptedMessages = map["newEncryptedMessages"].toList();
+        QList<EncryptedMessage> _newEncryptedMessages;
+        Q_FOREACH(const QVariant &var, map_newEncryptedMessages)
+            _newEncryptedMessages << EncryptedMessage::fromMap(var.toMap());
+        result.setNewEncryptedMessages(_newEncryptedMessages);
+        QList<QVariant> map_otherUpdates = map["otherUpdates"].toList();
+        QList<Update> _otherUpdates;
+        Q_FOREACH(const QVariant &var, map_otherUpdates)
+            _otherUpdates << Update::fromMap(var.toMap());
+        result.setOtherUpdates(_otherUpdates);
+        QList<QVariant> map_chats = map["chats"].toList();
+        QList<Chat> _chats;
+        Q_FOREACH(const QVariant &var, map_chats)
+            _chats << Chat::fromMap(var.toMap());
+        result.setChats(_chats);
+        QList<QVariant> map_users = map["users"].toList();
+        QList<User> _users;
+        Q_FOREACH(const QVariant &var, map_users)
+            _users << User::fromMap(var.toMap());
+        result.setUsers(_users);
+        result.setIntermediateState( UpdatesState::fromMap(map.value("intermediateState").toMap()) );
+        return result;
+    }
+    return result;
+}
+
 QByteArray UpdatesDifference::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

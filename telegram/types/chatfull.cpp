@@ -364,6 +364,98 @@ bool ChatFull::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> ChatFull::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeChatFull: {
+        result["classType"] = "ChatFull::typeChatFull";
+        result["id"] = QVariant::fromValue<qint32>(id());
+        result["participants"] = m_participants.toMap();
+        result["chatPhoto"] = m_chatPhoto.toMap();
+        result["notifySettings"] = m_notifySettings.toMap();
+        result["exportedInvite"] = m_exportedInvite.toMap();
+        QList<QVariant> _botInfo;
+        Q_FOREACH(const BotInfo &m__type, m_botInfo)
+            _botInfo << m__type.toMap();
+        result["botInfo"] = _botInfo;
+        return result;
+    }
+        break;
+    
+    case typeChannelFull: {
+        result["classType"] = "ChatFull::typeChannelFull";
+        result["flags"] = QVariant::fromValue<qint32>(flags());
+        result["id"] = QVariant::fromValue<qint32>(id());
+        result["about"] = QVariant::fromValue<QString>(about());
+        result["participantsCount"] = QVariant::fromValue<qint32>(participantsCount());
+        result["adminsCount"] = QVariant::fromValue<qint32>(adminsCount());
+        result["kickedCount"] = QVariant::fromValue<qint32>(kickedCount());
+        result["readInboxMaxId"] = QVariant::fromValue<qint32>(readInboxMaxId());
+        result["unreadCount"] = QVariant::fromValue<qint32>(unreadCount());
+        result["unreadImportantCount"] = QVariant::fromValue<qint32>(unreadImportantCount());
+        result["chatPhoto"] = m_chatPhoto.toMap();
+        result["notifySettings"] = m_notifySettings.toMap();
+        result["exportedInvite"] = m_exportedInvite.toMap();
+        QList<QVariant> _botInfo;
+        Q_FOREACH(const BotInfo &m__type, m_botInfo)
+            _botInfo << m__type.toMap();
+        result["botInfo"] = _botInfo;
+        result["migratedFromChatId"] = QVariant::fromValue<qint32>(migratedFromChatId());
+        result["migratedFromMaxId"] = QVariant::fromValue<qint32>(migratedFromMaxId());
+        result["pinnedMsgId"] = QVariant::fromValue<qint32>(pinnedMsgId());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+ChatFull ChatFull::fromMap(const QMap<QString, QVariant> &map) {
+    ChatFull result;
+    if(map.value("classType").toString() == "ChatFull::typeChatFull") {
+        result.setClassType(typeChatFull);
+        result.setId( map.value("id").value<qint32>() );
+        result.setParticipants( ChatParticipants::fromMap(map.value("participants").toMap()) );
+        result.setChatPhoto( Photo::fromMap(map.value("chatPhoto").toMap()) );
+        result.setNotifySettings( PeerNotifySettings::fromMap(map.value("notifySettings").toMap()) );
+        result.setExportedInvite( ExportedChatInvite::fromMap(map.value("exportedInvite").toMap()) );
+        QList<QVariant> map_botInfo = map["botInfo"].toList();
+        QList<BotInfo> _botInfo;
+        Q_FOREACH(const QVariant &var, map_botInfo)
+            _botInfo << BotInfo::fromMap(var.toMap());
+        result.setBotInfo(_botInfo);
+        return result;
+    }
+    if(map.value("classType").toString() == "ChatFull::typeChannelFull") {
+        result.setClassType(typeChannelFull);
+        result.setCanViewParticipants( map.value("canViewParticipants").value<bool>() );
+        result.setCanSetUsername( map.value("canSetUsername").value<bool>() );
+        result.setId( map.value("id").value<qint32>() );
+        result.setAbout( map.value("about").value<QString>() );
+        result.setParticipantsCount( map.value("participantsCount").value<qint32>() );
+        result.setAdminsCount( map.value("adminsCount").value<qint32>() );
+        result.setKickedCount( map.value("kickedCount").value<qint32>() );
+        result.setReadInboxMaxId( map.value("readInboxMaxId").value<qint32>() );
+        result.setUnreadCount( map.value("unreadCount").value<qint32>() );
+        result.setUnreadImportantCount( map.value("unreadImportantCount").value<qint32>() );
+        result.setChatPhoto( Photo::fromMap(map.value("chatPhoto").toMap()) );
+        result.setNotifySettings( PeerNotifySettings::fromMap(map.value("notifySettings").toMap()) );
+        result.setExportedInvite( ExportedChatInvite::fromMap(map.value("exportedInvite").toMap()) );
+        QList<QVariant> map_botInfo = map["botInfo"].toList();
+        QList<BotInfo> _botInfo;
+        Q_FOREACH(const QVariant &var, map_botInfo)
+            _botInfo << BotInfo::fromMap(var.toMap());
+        result.setBotInfo(_botInfo);
+        result.setMigratedFromChatId( map.value("migratedFromChatId").value<qint32>() );
+        result.setMigratedFromMaxId( map.value("migratedFromMaxId").value<qint32>() );
+        result.setPinnedMsgId( map.value("pinnedMsgId").value<qint32>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray ChatFull::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

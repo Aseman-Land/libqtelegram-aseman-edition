@@ -198,6 +198,65 @@ bool Dialog::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> Dialog::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeDialog: {
+        result["classType"] = "Dialog::typeDialog";
+        result["peer"] = m_peer.toMap();
+        result["topMessage"] = QVariant::fromValue<qint32>(topMessage());
+        result["readInboxMaxId"] = QVariant::fromValue<qint32>(readInboxMaxId());
+        result["unreadCount"] = QVariant::fromValue<qint32>(unreadCount());
+        result["notifySettings"] = m_notifySettings.toMap();
+        return result;
+    }
+        break;
+    
+    case typeDialogChannel: {
+        result["classType"] = "Dialog::typeDialogChannel";
+        result["peer"] = m_peer.toMap();
+        result["topMessage"] = QVariant::fromValue<qint32>(topMessage());
+        result["topImportantMessage"] = QVariant::fromValue<qint32>(topImportantMessage());
+        result["readInboxMaxId"] = QVariant::fromValue<qint32>(readInboxMaxId());
+        result["unreadCount"] = QVariant::fromValue<qint32>(unreadCount());
+        result["unreadImportantCount"] = QVariant::fromValue<qint32>(unreadImportantCount());
+        result["notifySettings"] = m_notifySettings.toMap();
+        result["pts"] = QVariant::fromValue<qint32>(pts());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+Dialog Dialog::fromMap(const QMap<QString, QVariant> &map) {
+    Dialog result;
+    if(map.value("classType").toString() == "Dialog::typeDialog") {
+        result.setClassType(typeDialog);
+        result.setPeer( Peer::fromMap(map.value("peer").toMap()) );
+        result.setTopMessage( map.value("topMessage").value<qint32>() );
+        result.setReadInboxMaxId( map.value("readInboxMaxId").value<qint32>() );
+        result.setUnreadCount( map.value("unreadCount").value<qint32>() );
+        result.setNotifySettings( PeerNotifySettings::fromMap(map.value("notifySettings").toMap()) );
+        return result;
+    }
+    if(map.value("classType").toString() == "Dialog::typeDialogChannel") {
+        result.setClassType(typeDialogChannel);
+        result.setPeer( Peer::fromMap(map.value("peer").toMap()) );
+        result.setTopMessage( map.value("topMessage").value<qint32>() );
+        result.setTopImportantMessage( map.value("topImportantMessage").value<qint32>() );
+        result.setReadInboxMaxId( map.value("readInboxMaxId").value<qint32>() );
+        result.setUnreadCount( map.value("unreadCount").value<qint32>() );
+        result.setUnreadImportantCount( map.value("unreadImportantCount").value<qint32>() );
+        result.setNotifySettings( PeerNotifySettings::fromMap(map.value("notifySettings").toMap()) );
+        result.setPts( map.value("pts").value<qint32>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray Dialog::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

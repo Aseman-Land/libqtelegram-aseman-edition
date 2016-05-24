@@ -143,6 +143,63 @@ bool ChatParticipant::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> ChatParticipant::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeChatParticipant: {
+        result["classType"] = "ChatParticipant::typeChatParticipant";
+        result["userId"] = QVariant::fromValue<qint32>(userId());
+        result["inviterId"] = QVariant::fromValue<qint32>(inviterId());
+        result["date"] = QVariant::fromValue<qint32>(date());
+        return result;
+    }
+        break;
+    
+    case typeChatParticipantCreator: {
+        result["classType"] = "ChatParticipant::typeChatParticipantCreator";
+        result["userId"] = QVariant::fromValue<qint32>(userId());
+        return result;
+    }
+        break;
+    
+    case typeChatParticipantAdmin: {
+        result["classType"] = "ChatParticipant::typeChatParticipantAdmin";
+        result["userId"] = QVariant::fromValue<qint32>(userId());
+        result["inviterId"] = QVariant::fromValue<qint32>(inviterId());
+        result["date"] = QVariant::fromValue<qint32>(date());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+ChatParticipant ChatParticipant::fromMap(const QMap<QString, QVariant> &map) {
+    ChatParticipant result;
+    if(map.value("classType").toString() == "ChatParticipant::typeChatParticipant") {
+        result.setClassType(typeChatParticipant);
+        result.setUserId( map.value("userId").value<qint32>() );
+        result.setInviterId( map.value("inviterId").value<qint32>() );
+        result.setDate( map.value("date").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "ChatParticipant::typeChatParticipantCreator") {
+        result.setClassType(typeChatParticipantCreator);
+        result.setUserId( map.value("userId").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "ChatParticipant::typeChatParticipantAdmin") {
+        result.setClassType(typeChatParticipantAdmin);
+        result.setUserId( map.value("userId").value<qint32>() );
+        result.setInviterId( map.value("inviterId").value<qint32>() );
+        result.setDate( map.value("date").value<qint32>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray ChatParticipant::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

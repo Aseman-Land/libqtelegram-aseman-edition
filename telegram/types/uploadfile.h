@@ -8,6 +8,7 @@
 #include "telegramtypeobject.h"
 
 #include <QMetaType>
+#include <QVariant>
 #include <QByteArray>
 #include <QtGlobal>
 #include "storagefiletype.h"
@@ -38,6 +39,9 @@ public:
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
+
+    QMap<QString, QVariant> toMap() const;
+    static UploadFile fromMap(const QMap<QString, QVariant> &map);
 
     bool operator ==(const UploadFile &b) const;
 

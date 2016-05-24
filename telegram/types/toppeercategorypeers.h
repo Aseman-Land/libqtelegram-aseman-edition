@@ -8,6 +8,7 @@
 #include "telegramtypeobject.h"
 
 #include <QMetaType>
+#include <QVariant>
 #include "toppeercategory.h"
 #include <QtGlobal>
 #include <QList>
@@ -39,6 +40,9 @@ public:
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
+
+    QMap<QString, QVariant> toMap() const;
+    static TopPeerCategoryPeers fromMap(const QMap<QString, QVariant> &map);
 
     bool operator ==(const TopPeerCategoryPeers &b) const;
 

@@ -127,6 +127,37 @@ bool MessageGroup::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> MessageGroup::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeMessageGroup: {
+        result["classType"] = "MessageGroup::typeMessageGroup";
+        result["minId"] = QVariant::fromValue<qint32>(minId());
+        result["maxId"] = QVariant::fromValue<qint32>(maxId());
+        result["count"] = QVariant::fromValue<qint32>(count());
+        result["date"] = QVariant::fromValue<qint32>(date());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+MessageGroup MessageGroup::fromMap(const QMap<QString, QVariant> &map) {
+    MessageGroup result;
+    if(map.value("classType").toString() == "MessageGroup::typeMessageGroup") {
+        result.setClassType(typeMessageGroup);
+        result.setMinId( map.value("minId").value<qint32>() );
+        result.setMaxId( map.value("maxId").value<qint32>() );
+        result.setCount( map.value("count").value<qint32>() );
+        result.setDate( map.value("date").value<qint32>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray MessageGroup::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

@@ -115,6 +115,50 @@ bool MessagesStickers::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> MessagesStickers::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeMessagesStickersNotModified: {
+        result["classType"] = "MessagesStickers::typeMessagesStickersNotModified";
+        return result;
+    }
+        break;
+    
+    case typeMessagesStickers: {
+        result["classType"] = "MessagesStickers::typeMessagesStickers";
+        result["hash"] = QVariant::fromValue<QString>(hash());
+        QList<QVariant> _stickers;
+        Q_FOREACH(const Document &m__type, m_stickers)
+            _stickers << m__type.toMap();
+        result["stickers"] = _stickers;
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+MessagesStickers MessagesStickers::fromMap(const QMap<QString, QVariant> &map) {
+    MessagesStickers result;
+    if(map.value("classType").toString() == "MessagesStickers::typeMessagesStickersNotModified") {
+        result.setClassType(typeMessagesStickersNotModified);
+        return result;
+    }
+    if(map.value("classType").toString() == "MessagesStickers::typeMessagesStickers") {
+        result.setClassType(typeMessagesStickers);
+        result.setHash( map.value("hash").value<QString>() );
+        QList<QVariant> map_stickers = map["stickers"].toList();
+        QList<Document> _stickers;
+        Q_FOREACH(const QVariant &var, map_stickers)
+            _stickers << Document::fromMap(var.toMap());
+        result.setStickers(_stickers);
+        return result;
+    }
+    return result;
+}
+
 QByteArray MessagesStickers::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

@@ -104,6 +104,40 @@ bool PhotosPhoto::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> PhotosPhoto::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typePhotosPhoto: {
+        result["classType"] = "PhotosPhoto::typePhotosPhoto";
+        result["photo"] = m_photo.toMap();
+        QList<QVariant> _users;
+        Q_FOREACH(const User &m__type, m_users)
+            _users << m__type.toMap();
+        result["users"] = _users;
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+PhotosPhoto PhotosPhoto::fromMap(const QMap<QString, QVariant> &map) {
+    PhotosPhoto result;
+    if(map.value("classType").toString() == "PhotosPhoto::typePhotosPhoto") {
+        result.setClassType(typePhotosPhoto);
+        result.setPhoto( Photo::fromMap(map.value("photo").toMap()) );
+        QList<QVariant> map_users = map["users"].toList();
+        QList<User> _users;
+        Q_FOREACH(const QVariant &var, map_users)
+            _users << User::fromMap(var.toMap());
+        result.setUsers(_users);
+        return result;
+    }
+    return result;
+}
+
 QByteArray PhotosPhoto::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

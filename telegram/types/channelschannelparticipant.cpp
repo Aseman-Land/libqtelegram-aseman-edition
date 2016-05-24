@@ -104,6 +104,40 @@ bool ChannelsChannelParticipant::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> ChannelsChannelParticipant::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeChannelsChannelParticipant: {
+        result["classType"] = "ChannelsChannelParticipant::typeChannelsChannelParticipant";
+        result["participant"] = m_participant.toMap();
+        QList<QVariant> _users;
+        Q_FOREACH(const User &m__type, m_users)
+            _users << m__type.toMap();
+        result["users"] = _users;
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+ChannelsChannelParticipant ChannelsChannelParticipant::fromMap(const QMap<QString, QVariant> &map) {
+    ChannelsChannelParticipant result;
+    if(map.value("classType").toString() == "ChannelsChannelParticipant::typeChannelsChannelParticipant") {
+        result.setClassType(typeChannelsChannelParticipant);
+        result.setParticipant( ChannelParticipant::fromMap(map.value("participant").toMap()) );
+        QList<QVariant> map_users = map["users"].toList();
+        QList<User> _users;
+        Q_FOREACH(const QVariant &var, map_users)
+            _users << User::fromMap(var.toMap());
+        result.setUsers(_users);
+        return result;
+    }
+    return result;
+}
+
 QByteArray ChannelsChannelParticipant::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

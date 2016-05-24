@@ -313,6 +313,116 @@ bool BotInlineMessage::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> BotInlineMessage::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeBotInlineMessageMediaAuto: {
+        result["classType"] = "BotInlineMessage::typeBotInlineMessageMediaAuto";
+        result["flags"] = QVariant::fromValue<qint32>(flags());
+        result["caption"] = QVariant::fromValue<QString>(caption());
+        result["replyMarkup"] = m_replyMarkup.toMap();
+        return result;
+    }
+        break;
+    
+    case typeBotInlineMessageText: {
+        result["classType"] = "BotInlineMessage::typeBotInlineMessageText";
+        result["flags"] = QVariant::fromValue<qint32>(flags());
+        result["message"] = QVariant::fromValue<QString>(message());
+        QList<QVariant> _entities;
+        Q_FOREACH(const MessageEntity &m__type, m_entities)
+            _entities << m__type.toMap();
+        result["entities"] = _entities;
+        result["replyMarkup"] = m_replyMarkup.toMap();
+        return result;
+    }
+        break;
+    
+    case typeBotInlineMessageMediaGeo: {
+        result["classType"] = "BotInlineMessage::typeBotInlineMessageMediaGeo";
+        result["flags"] = QVariant::fromValue<qint32>(flags());
+        result["geo"] = m_geo.toMap();
+        result["replyMarkup"] = m_replyMarkup.toMap();
+        return result;
+    }
+        break;
+    
+    case typeBotInlineMessageMediaVenue: {
+        result["classType"] = "BotInlineMessage::typeBotInlineMessageMediaVenue";
+        result["flags"] = QVariant::fromValue<qint32>(flags());
+        result["geo"] = m_geo.toMap();
+        result["title"] = QVariant::fromValue<QString>(title());
+        result["address"] = QVariant::fromValue<QString>(address());
+        result["provider"] = QVariant::fromValue<QString>(provider());
+        result["venueId"] = QVariant::fromValue<QString>(venueId());
+        result["replyMarkup"] = m_replyMarkup.toMap();
+        return result;
+    }
+        break;
+    
+    case typeBotInlineMessageMediaContact: {
+        result["classType"] = "BotInlineMessage::typeBotInlineMessageMediaContact";
+        result["flags"] = QVariant::fromValue<qint32>(flags());
+        result["phoneNumber"] = QVariant::fromValue<QString>(phoneNumber());
+        result["firstName"] = QVariant::fromValue<QString>(firstName());
+        result["lastName"] = QVariant::fromValue<QString>(lastName());
+        result["replyMarkup"] = m_replyMarkup.toMap();
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+BotInlineMessage BotInlineMessage::fromMap(const QMap<QString, QVariant> &map) {
+    BotInlineMessage result;
+    if(map.value("classType").toString() == "BotInlineMessage::typeBotInlineMessageMediaAuto") {
+        result.setClassType(typeBotInlineMessageMediaAuto);
+        result.setCaption( map.value("caption").value<QString>() );
+        result.setReplyMarkup( ReplyMarkup::fromMap(map.value("replyMarkup").toMap()) );
+        return result;
+    }
+    if(map.value("classType").toString() == "BotInlineMessage::typeBotInlineMessageText") {
+        result.setClassType(typeBotInlineMessageText);
+        result.setNoWebpage( map.value("noWebpage").value<bool>() );
+        result.setMessage( map.value("message").value<QString>() );
+        QList<QVariant> map_entities = map["entities"].toList();
+        QList<MessageEntity> _entities;
+        Q_FOREACH(const QVariant &var, map_entities)
+            _entities << MessageEntity::fromMap(var.toMap());
+        result.setEntities(_entities);
+        result.setReplyMarkup( ReplyMarkup::fromMap(map.value("replyMarkup").toMap()) );
+        return result;
+    }
+    if(map.value("classType").toString() == "BotInlineMessage::typeBotInlineMessageMediaGeo") {
+        result.setClassType(typeBotInlineMessageMediaGeo);
+        result.setGeo( GeoPoint::fromMap(map.value("geo").toMap()) );
+        result.setReplyMarkup( ReplyMarkup::fromMap(map.value("replyMarkup").toMap()) );
+        return result;
+    }
+    if(map.value("classType").toString() == "BotInlineMessage::typeBotInlineMessageMediaVenue") {
+        result.setClassType(typeBotInlineMessageMediaVenue);
+        result.setGeo( GeoPoint::fromMap(map.value("geo").toMap()) );
+        result.setTitle( map.value("title").value<QString>() );
+        result.setAddress( map.value("address").value<QString>() );
+        result.setProvider( map.value("provider").value<QString>() );
+        result.setVenueId( map.value("venueId").value<QString>() );
+        result.setReplyMarkup( ReplyMarkup::fromMap(map.value("replyMarkup").toMap()) );
+        return result;
+    }
+    if(map.value("classType").toString() == "BotInlineMessage::typeBotInlineMessageMediaContact") {
+        result.setClassType(typeBotInlineMessageMediaContact);
+        result.setPhoneNumber( map.value("phoneNumber").value<QString>() );
+        result.setFirstName( map.value("firstName").value<QString>() );
+        result.setLastName( map.value("lastName").value<QString>() );
+        result.setReplyMarkup( ReplyMarkup::fromMap(map.value("replyMarkup").toMap()) );
+        return result;
+    }
+    return result;
+}
+
 QByteArray BotInlineMessage::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

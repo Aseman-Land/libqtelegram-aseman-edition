@@ -96,6 +96,33 @@ bool AuthExportedAuthorization::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> AuthExportedAuthorization::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeAuthExportedAuthorization: {
+        result["classType"] = "AuthExportedAuthorization::typeAuthExportedAuthorization";
+        result["id"] = QVariant::fromValue<qint32>(id());
+        result["bytes"] = QVariant::fromValue<QByteArray>(bytes());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+AuthExportedAuthorization AuthExportedAuthorization::fromMap(const QMap<QString, QVariant> &map) {
+    AuthExportedAuthorization result;
+    if(map.value("classType").toString() == "AuthExportedAuthorization::typeAuthExportedAuthorization") {
+        result.setClassType(typeAuthExportedAuthorization);
+        result.setId( map.value("id").value<qint32>() );
+        result.setBytes( map.value("bytes").value<QByteArray>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray AuthExportedAuthorization::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

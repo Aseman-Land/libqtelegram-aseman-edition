@@ -147,6 +147,61 @@ bool ChannelMessagesFilter::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> ChannelMessagesFilter::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeChannelMessagesFilterEmpty: {
+        result["classType"] = "ChannelMessagesFilter::typeChannelMessagesFilterEmpty";
+        return result;
+    }
+        break;
+    
+    case typeChannelMessagesFilter: {
+        result["classType"] = "ChannelMessagesFilter::typeChannelMessagesFilter";
+        result["flags"] = QVariant::fromValue<qint32>(flags());
+        QList<QVariant> _ranges;
+        Q_FOREACH(const MessageRange &m__type, m_ranges)
+            _ranges << m__type.toMap();
+        result["ranges"] = _ranges;
+        return result;
+    }
+        break;
+    
+    case typeChannelMessagesFilterCollapsed: {
+        result["classType"] = "ChannelMessagesFilter::typeChannelMessagesFilterCollapsed";
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+ChannelMessagesFilter ChannelMessagesFilter::fromMap(const QMap<QString, QVariant> &map) {
+    ChannelMessagesFilter result;
+    if(map.value("classType").toString() == "ChannelMessagesFilter::typeChannelMessagesFilterEmpty") {
+        result.setClassType(typeChannelMessagesFilterEmpty);
+        return result;
+    }
+    if(map.value("classType").toString() == "ChannelMessagesFilter::typeChannelMessagesFilter") {
+        result.setClassType(typeChannelMessagesFilter);
+        result.setImportantOnly( map.value("importantOnly").value<bool>() );
+        result.setExcludeNewMessages( map.value("excludeNewMessages").value<bool>() );
+        QList<QVariant> map_ranges = map["ranges"].toList();
+        QList<MessageRange> _ranges;
+        Q_FOREACH(const QVariant &var, map_ranges)
+            _ranges << MessageRange::fromMap(var.toMap());
+        result.setRanges(_ranges);
+        return result;
+    }
+    if(map.value("classType").toString() == "ChannelMessagesFilter::typeChannelMessagesFilterCollapsed") {
+        result.setClassType(typeChannelMessagesFilterCollapsed);
+        return result;
+    }
+    return result;
+}
+
 QByteArray ChannelMessagesFilter::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

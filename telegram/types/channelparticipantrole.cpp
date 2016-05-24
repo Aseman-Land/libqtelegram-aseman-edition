@@ -93,6 +93,49 @@ bool ChannelParticipantRole::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> ChannelParticipantRole::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeChannelRoleEmpty: {
+        result["classType"] = "ChannelParticipantRole::typeChannelRoleEmpty";
+        return result;
+    }
+        break;
+    
+    case typeChannelRoleModerator: {
+        result["classType"] = "ChannelParticipantRole::typeChannelRoleModerator";
+        return result;
+    }
+        break;
+    
+    case typeChannelRoleEditor: {
+        result["classType"] = "ChannelParticipantRole::typeChannelRoleEditor";
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+ChannelParticipantRole ChannelParticipantRole::fromMap(const QMap<QString, QVariant> &map) {
+    ChannelParticipantRole result;
+    if(map.value("classType").toString() == "ChannelParticipantRole::typeChannelRoleEmpty") {
+        result.setClassType(typeChannelRoleEmpty);
+        return result;
+    }
+    if(map.value("classType").toString() == "ChannelParticipantRole::typeChannelRoleModerator") {
+        result.setClassType(typeChannelRoleModerator);
+        return result;
+    }
+    if(map.value("classType").toString() == "ChannelParticipantRole::typeChannelRoleEditor") {
+        result.setClassType(typeChannelRoleEditor);
+        return result;
+    }
+    return result;
+}
+
 QByteArray ChannelParticipantRole::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

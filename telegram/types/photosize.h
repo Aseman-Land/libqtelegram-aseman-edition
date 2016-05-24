@@ -8,6 +8,7 @@
 #include "telegramtypeobject.h"
 
 #include <QMetaType>
+#include <QVariant>
 #include <QByteArray>
 #include <QtGlobal>
 #include "filelocation.h"
@@ -50,6 +51,9 @@ public:
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
+
+    QMap<QString, QVariant> toMap() const;
+    static PhotoSize fromMap(const QMap<QString, QVariant> &map);
 
     bool operator ==(const PhotoSize &b) const;
 

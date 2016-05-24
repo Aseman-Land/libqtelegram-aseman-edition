@@ -82,6 +82,39 @@ bool PeerNotifyEvents::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> PeerNotifyEvents::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typePeerNotifyEventsEmpty: {
+        result["classType"] = "PeerNotifyEvents::typePeerNotifyEventsEmpty";
+        return result;
+    }
+        break;
+    
+    case typePeerNotifyEventsAll: {
+        result["classType"] = "PeerNotifyEvents::typePeerNotifyEventsAll";
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+PeerNotifyEvents PeerNotifyEvents::fromMap(const QMap<QString, QVariant> &map) {
+    PeerNotifyEvents result;
+    if(map.value("classType").toString() == "PeerNotifyEvents::typePeerNotifyEventsEmpty") {
+        result.setClassType(typePeerNotifyEventsEmpty);
+        return result;
+    }
+    if(map.value("classType").toString() == "PeerNotifyEvents::typePeerNotifyEventsAll") {
+        result.setClassType(typePeerNotifyEventsAll);
+        return result;
+    }
+    return result;
+}
+
 QByteArray PeerNotifyEvents::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

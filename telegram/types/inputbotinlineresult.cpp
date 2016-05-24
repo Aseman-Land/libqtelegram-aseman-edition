@@ -310,6 +310,95 @@ bool InputBotInlineResult::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> InputBotInlineResult::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeInputBotInlineResult: {
+        result["classType"] = "InputBotInlineResult::typeInputBotInlineResult";
+        result["flags"] = QVariant::fromValue<qint32>(flags());
+        result["id"] = QVariant::fromValue<QString>(id());
+        result["type"] = QVariant::fromValue<QString>(type());
+        result["title"] = QVariant::fromValue<QString>(title());
+        result["description"] = QVariant::fromValue<QString>(description());
+        result["url"] = QVariant::fromValue<QString>(url());
+        result["thumbUrl"] = QVariant::fromValue<QString>(thumbUrl());
+        result["contentUrl"] = QVariant::fromValue<QString>(contentUrl());
+        result["contentType"] = QVariant::fromValue<QString>(contentType());
+        result["w"] = QVariant::fromValue<qint32>(w());
+        result["h"] = QVariant::fromValue<qint32>(h());
+        result["duration"] = QVariant::fromValue<qint32>(duration());
+        result["sendMessage"] = m_sendMessage.toMap();
+        return result;
+    }
+        break;
+    
+    case typeInputBotInlineResultPhoto: {
+        result["classType"] = "InputBotInlineResult::typeInputBotInlineResultPhoto";
+        result["id"] = QVariant::fromValue<QString>(id());
+        result["type"] = QVariant::fromValue<QString>(type());
+        result["photo"] = m_photo.toMap();
+        result["sendMessage"] = m_sendMessage.toMap();
+        return result;
+    }
+        break;
+    
+    case typeInputBotInlineResultDocument: {
+        result["classType"] = "InputBotInlineResult::typeInputBotInlineResultDocument";
+        result["flags"] = QVariant::fromValue<qint32>(flags());
+        result["id"] = QVariant::fromValue<QString>(id());
+        result["type"] = QVariant::fromValue<QString>(type());
+        result["title"] = QVariant::fromValue<QString>(title());
+        result["description"] = QVariant::fromValue<QString>(description());
+        result["document"] = m_document.toMap();
+        result["sendMessage"] = m_sendMessage.toMap();
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+InputBotInlineResult InputBotInlineResult::fromMap(const QMap<QString, QVariant> &map) {
+    InputBotInlineResult result;
+    if(map.value("classType").toString() == "InputBotInlineResult::typeInputBotInlineResult") {
+        result.setClassType(typeInputBotInlineResult);
+        result.setId( map.value("id").value<QString>() );
+        result.setType( map.value("type").value<QString>() );
+        result.setTitle( map.value("title").value<QString>() );
+        result.setDescription( map.value("description").value<QString>() );
+        result.setUrl( map.value("url").value<QString>() );
+        result.setThumbUrl( map.value("thumbUrl").value<QString>() );
+        result.setContentUrl( map.value("contentUrl").value<QString>() );
+        result.setContentType( map.value("contentType").value<QString>() );
+        result.setW( map.value("w").value<qint32>() );
+        result.setH( map.value("h").value<qint32>() );
+        result.setDuration( map.value("duration").value<qint32>() );
+        result.setSendMessage( InputBotInlineMessage::fromMap(map.value("sendMessage").toMap()) );
+        return result;
+    }
+    if(map.value("classType").toString() == "InputBotInlineResult::typeInputBotInlineResultPhoto") {
+        result.setClassType(typeInputBotInlineResultPhoto);
+        result.setId( map.value("id").value<QString>() );
+        result.setType( map.value("type").value<QString>() );
+        result.setPhoto( InputPhoto::fromMap(map.value("photo").toMap()) );
+        result.setSendMessage( InputBotInlineMessage::fromMap(map.value("sendMessage").toMap()) );
+        return result;
+    }
+    if(map.value("classType").toString() == "InputBotInlineResult::typeInputBotInlineResultDocument") {
+        result.setClassType(typeInputBotInlineResultDocument);
+        result.setId( map.value("id").value<QString>() );
+        result.setType( map.value("type").value<QString>() );
+        result.setTitle( map.value("title").value<QString>() );
+        result.setDescription( map.value("description").value<QString>() );
+        result.setDocument( InputDocument::fromMap(map.value("document").toMap()) );
+        result.setSendMessage( InputBotInlineMessage::fromMap(map.value("sendMessage").toMap()) );
+        return result;
+    }
+    return result;
+}
+
 QByteArray InputBotInlineResult::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

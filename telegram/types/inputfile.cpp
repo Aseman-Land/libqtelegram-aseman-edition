@@ -138,6 +138,53 @@ bool InputFile::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> InputFile::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeInputFile: {
+        result["classType"] = "InputFile::typeInputFile";
+        result["id"] = QVariant::fromValue<qint64>(id());
+        result["parts"] = QVariant::fromValue<qint32>(parts());
+        result["name"] = QVariant::fromValue<QString>(name());
+        result["md5Checksum"] = QVariant::fromValue<QString>(md5Checksum());
+        return result;
+    }
+        break;
+    
+    case typeInputFileBig: {
+        result["classType"] = "InputFile::typeInputFileBig";
+        result["id"] = QVariant::fromValue<qint64>(id());
+        result["parts"] = QVariant::fromValue<qint32>(parts());
+        result["name"] = QVariant::fromValue<QString>(name());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+InputFile InputFile::fromMap(const QMap<QString, QVariant> &map) {
+    InputFile result;
+    if(map.value("classType").toString() == "InputFile::typeInputFile") {
+        result.setClassType(typeInputFile);
+        result.setId( map.value("id").value<qint64>() );
+        result.setParts( map.value("parts").value<qint32>() );
+        result.setName( map.value("name").value<QString>() );
+        result.setMd5Checksum( map.value("md5Checksum").value<QString>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "InputFile::typeInputFileBig") {
+        result.setClassType(typeInputFileBig);
+        result.setId( map.value("id").value<qint64>() );
+        result.setParts( map.value("parts").value<qint32>() );
+        result.setName( map.value("name").value<QString>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray InputFile::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

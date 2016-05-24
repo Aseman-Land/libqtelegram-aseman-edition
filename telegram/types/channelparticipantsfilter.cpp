@@ -104,6 +104,59 @@ bool ChannelParticipantsFilter::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> ChannelParticipantsFilter::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeChannelParticipantsRecent: {
+        result["classType"] = "ChannelParticipantsFilter::typeChannelParticipantsRecent";
+        return result;
+    }
+        break;
+    
+    case typeChannelParticipantsAdmins: {
+        result["classType"] = "ChannelParticipantsFilter::typeChannelParticipantsAdmins";
+        return result;
+    }
+        break;
+    
+    case typeChannelParticipantsKicked: {
+        result["classType"] = "ChannelParticipantsFilter::typeChannelParticipantsKicked";
+        return result;
+    }
+        break;
+    
+    case typeChannelParticipantsBots: {
+        result["classType"] = "ChannelParticipantsFilter::typeChannelParticipantsBots";
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+ChannelParticipantsFilter ChannelParticipantsFilter::fromMap(const QMap<QString, QVariant> &map) {
+    ChannelParticipantsFilter result;
+    if(map.value("classType").toString() == "ChannelParticipantsFilter::typeChannelParticipantsRecent") {
+        result.setClassType(typeChannelParticipantsRecent);
+        return result;
+    }
+    if(map.value("classType").toString() == "ChannelParticipantsFilter::typeChannelParticipantsAdmins") {
+        result.setClassType(typeChannelParticipantsAdmins);
+        return result;
+    }
+    if(map.value("classType").toString() == "ChannelParticipantsFilter::typeChannelParticipantsKicked") {
+        result.setClassType(typeChannelParticipantsKicked);
+        return result;
+    }
+    if(map.value("classType").toString() == "ChannelParticipantsFilter::typeChannelParticipantsBots") {
+        result.setClassType(typeChannelParticipantsBots);
+        return result;
+    }
+    return result;
+}
+
 QByteArray ChannelParticipantsFilter::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

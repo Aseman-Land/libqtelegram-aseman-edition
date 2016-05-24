@@ -1000,7 +1000,10 @@ void Telegram::onError(qint64 id, qint32 errorCode, const QString &errorText, co
     else
     if (errorCode == 401)
     {
-        onAuthLogOutAnswer(id, false, attachedData);
+        if(errorText == "SESSION_PASSWORD_NEEDED")
+            ; // Nothing to do
+        else
+            onAuthLogOutAnswer(id, false, attachedData);
     }
 
     TelegramCore::onError(id, errorCode, errorText, functionName, attachedData, accepted);

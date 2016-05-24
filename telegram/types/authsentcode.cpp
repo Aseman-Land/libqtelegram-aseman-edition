@@ -145,6 +145,39 @@ bool AuthSentCode::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> AuthSentCode::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeAuthSentCode: {
+        result["classType"] = "AuthSentCode::typeAuthSentCode";
+        result["flags"] = QVariant::fromValue<qint32>(flags());
+        result["type"] = m_type.toMap();
+        result["phoneCodeHash"] = QVariant::fromValue<QString>(phoneCodeHash());
+        result["nextType"] = m_nextType.toMap();
+        result["timeout"] = QVariant::fromValue<qint32>(timeout());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+AuthSentCode AuthSentCode::fromMap(const QMap<QString, QVariant> &map) {
+    AuthSentCode result;
+    if(map.value("classType").toString() == "AuthSentCode::typeAuthSentCode") {
+        result.setClassType(typeAuthSentCode);
+        result.setPhoneRegistered( map.value("phoneRegistered").value<bool>() );
+        result.setType( AuthSentCodeType::fromMap(map.value("type").toMap()) );
+        result.setPhoneCodeHash( map.value("phoneCodeHash").value<QString>() );
+        result.setNextType( AuthCodeType::fromMap(map.value("nextType").toMap()) );
+        result.setTimeout( map.value("timeout").value<qint32>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray AuthSentCode::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

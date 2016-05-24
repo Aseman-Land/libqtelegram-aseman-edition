@@ -8,6 +8,7 @@
 #include "telegramtypeobject.h"
 
 #include <QMetaType>
+#include <QVariant>
 #include <QString>
 
 class LIBQTELEGRAMSHARED_EXPORT AuthPasswordRecovery : public TelegramTypeObject
@@ -30,6 +31,9 @@ public:
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
+
+    QMap<QString, QVariant> toMap() const;
+    static AuthPasswordRecovery fromMap(const QMap<QString, QVariant> &map);
 
     bool operator ==(const AuthPasswordRecovery &b) const;
 

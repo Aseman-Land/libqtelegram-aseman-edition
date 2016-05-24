@@ -99,6 +99,33 @@ bool ImportedContact::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> ImportedContact::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeImportedContact: {
+        result["classType"] = "ImportedContact::typeImportedContact";
+        result["userId"] = QVariant::fromValue<qint32>(userId());
+        result["clientId"] = QVariant::fromValue<qint64>(clientId());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+ImportedContact ImportedContact::fromMap(const QMap<QString, QVariant> &map) {
+    ImportedContact result;
+    if(map.value("classType").toString() == "ImportedContact::typeImportedContact") {
+        result.setClassType(typeImportedContact);
+        result.setUserId( map.value("userId").value<qint32>() );
+        result.setClientId( map.value("clientId").value<qint64>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray ImportedContact::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

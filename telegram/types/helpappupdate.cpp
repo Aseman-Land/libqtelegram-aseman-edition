@@ -132,6 +132,47 @@ bool HelpAppUpdate::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> HelpAppUpdate::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeHelpAppUpdate: {
+        result["classType"] = "HelpAppUpdate::typeHelpAppUpdate";
+        result["id"] = QVariant::fromValue<qint32>(id());
+        result["critical"] = QVariant::fromValue<bool>(critical());
+        result["url"] = QVariant::fromValue<QString>(url());
+        result["text"] = QVariant::fromValue<QString>(text());
+        return result;
+    }
+        break;
+    
+    case typeHelpNoAppUpdate: {
+        result["classType"] = "HelpAppUpdate::typeHelpNoAppUpdate";
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+HelpAppUpdate HelpAppUpdate::fromMap(const QMap<QString, QVariant> &map) {
+    HelpAppUpdate result;
+    if(map.value("classType").toString() == "HelpAppUpdate::typeHelpAppUpdate") {
+        result.setClassType(typeHelpAppUpdate);
+        result.setId( map.value("id").value<qint32>() );
+        result.setCritical( map.value("critical").value<bool>() );
+        result.setUrl( map.value("url").value<QString>() );
+        result.setText( map.value("text").value<QString>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "HelpAppUpdate::typeHelpNoAppUpdate") {
+        result.setClassType(typeHelpNoAppUpdate);
+        return result;
+    }
+    return result;
+}
+
 QByteArray HelpAppUpdate::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

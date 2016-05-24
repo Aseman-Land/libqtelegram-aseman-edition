@@ -93,6 +93,33 @@ bool InlineBotSwitchPM::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> InlineBotSwitchPM::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeInlineBotSwitchPM: {
+        result["classType"] = "InlineBotSwitchPM::typeInlineBotSwitchPM";
+        result["text"] = QVariant::fromValue<QString>(text());
+        result["startParam"] = QVariant::fromValue<QString>(startParam());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+InlineBotSwitchPM InlineBotSwitchPM::fromMap(const QMap<QString, QVariant> &map) {
+    InlineBotSwitchPM result;
+    if(map.value("classType").toString() == "InlineBotSwitchPM::typeInlineBotSwitchPM") {
+        result.setClassType(typeInlineBotSwitchPM);
+        result.setText( map.value("text").value<QString>() );
+        result.setStartParam( map.value("startParam").value<QString>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray InlineBotSwitchPM::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

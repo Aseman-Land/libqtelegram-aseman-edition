@@ -180,6 +180,97 @@ bool KeyboardButton::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> KeyboardButton::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeKeyboardButton: {
+        result["classType"] = "KeyboardButton::typeKeyboardButton";
+        result["text"] = QVariant::fromValue<QString>(text());
+        return result;
+    }
+        break;
+    
+    case typeKeyboardButtonUrl: {
+        result["classType"] = "KeyboardButton::typeKeyboardButtonUrl";
+        result["text"] = QVariant::fromValue<QString>(text());
+        result["url"] = QVariant::fromValue<QString>(url());
+        return result;
+    }
+        break;
+    
+    case typeKeyboardButtonCallback: {
+        result["classType"] = "KeyboardButton::typeKeyboardButtonCallback";
+        result["text"] = QVariant::fromValue<QString>(text());
+        result["data"] = QVariant::fromValue<QByteArray>(data());
+        return result;
+    }
+        break;
+    
+    case typeKeyboardButtonRequestPhone: {
+        result["classType"] = "KeyboardButton::typeKeyboardButtonRequestPhone";
+        result["text"] = QVariant::fromValue<QString>(text());
+        return result;
+    }
+        break;
+    
+    case typeKeyboardButtonRequestGeoLocation: {
+        result["classType"] = "KeyboardButton::typeKeyboardButtonRequestGeoLocation";
+        result["text"] = QVariant::fromValue<QString>(text());
+        return result;
+    }
+        break;
+    
+    case typeKeyboardButtonSwitchInline: {
+        result["classType"] = "KeyboardButton::typeKeyboardButtonSwitchInline";
+        result["text"] = QVariant::fromValue<QString>(text());
+        result["query"] = QVariant::fromValue<QString>(query());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+KeyboardButton KeyboardButton::fromMap(const QMap<QString, QVariant> &map) {
+    KeyboardButton result;
+    if(map.value("classType").toString() == "KeyboardButton::typeKeyboardButton") {
+        result.setClassType(typeKeyboardButton);
+        result.setText( map.value("text").value<QString>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "KeyboardButton::typeKeyboardButtonUrl") {
+        result.setClassType(typeKeyboardButtonUrl);
+        result.setText( map.value("text").value<QString>() );
+        result.setUrl( map.value("url").value<QString>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "KeyboardButton::typeKeyboardButtonCallback") {
+        result.setClassType(typeKeyboardButtonCallback);
+        result.setText( map.value("text").value<QString>() );
+        result.setData( map.value("data").value<QByteArray>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "KeyboardButton::typeKeyboardButtonRequestPhone") {
+        result.setClassType(typeKeyboardButtonRequestPhone);
+        result.setText( map.value("text").value<QString>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "KeyboardButton::typeKeyboardButtonRequestGeoLocation") {
+        result.setClassType(typeKeyboardButtonRequestGeoLocation);
+        result.setText( map.value("text").value<QString>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "KeyboardButton::typeKeyboardButtonSwitchInline") {
+        result.setClassType(typeKeyboardButtonSwitchInline);
+        result.setText( map.value("text").value<QString>() );
+        result.setQuery( map.value("query").value<QString>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray KeyboardButton::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

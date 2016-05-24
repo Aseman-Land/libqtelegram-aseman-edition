@@ -170,6 +170,67 @@ bool MessagesPeerDialogs::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> MessagesPeerDialogs::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeMessagesPeerDialogs: {
+        result["classType"] = "MessagesPeerDialogs::typeMessagesPeerDialogs";
+        QList<QVariant> _dialogs;
+        Q_FOREACH(const Dialog &m__type, m_dialogs)
+            _dialogs << m__type.toMap();
+        result["dialogs"] = _dialogs;
+        QList<QVariant> _messages;
+        Q_FOREACH(const Message &m__type, m_messages)
+            _messages << m__type.toMap();
+        result["messages"] = _messages;
+        QList<QVariant> _chats;
+        Q_FOREACH(const Chat &m__type, m_chats)
+            _chats << m__type.toMap();
+        result["chats"] = _chats;
+        QList<QVariant> _users;
+        Q_FOREACH(const User &m__type, m_users)
+            _users << m__type.toMap();
+        result["users"] = _users;
+        result["state"] = m_state.toMap();
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+MessagesPeerDialogs MessagesPeerDialogs::fromMap(const QMap<QString, QVariant> &map) {
+    MessagesPeerDialogs result;
+    if(map.value("classType").toString() == "MessagesPeerDialogs::typeMessagesPeerDialogs") {
+        result.setClassType(typeMessagesPeerDialogs);
+        QList<QVariant> map_dialogs = map["dialogs"].toList();
+        QList<Dialog> _dialogs;
+        Q_FOREACH(const QVariant &var, map_dialogs)
+            _dialogs << Dialog::fromMap(var.toMap());
+        result.setDialogs(_dialogs);
+        QList<QVariant> map_messages = map["messages"].toList();
+        QList<Message> _messages;
+        Q_FOREACH(const QVariant &var, map_messages)
+            _messages << Message::fromMap(var.toMap());
+        result.setMessages(_messages);
+        QList<QVariant> map_chats = map["chats"].toList();
+        QList<Chat> _chats;
+        Q_FOREACH(const QVariant &var, map_chats)
+            _chats << Chat::fromMap(var.toMap());
+        result.setChats(_chats);
+        QList<QVariant> map_users = map["users"].toList();
+        QList<User> _users;
+        Q_FOREACH(const QVariant &var, map_users)
+            _users << User::fromMap(var.toMap());
+        result.setUsers(_users);
+        result.setState( UpdatesState::fromMap(map.value("state").toMap()) );
+        return result;
+    }
+    return result;
+}
+
 QByteArray MessagesPeerDialogs::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

@@ -118,6 +118,45 @@ bool UserProfilePhoto::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> UserProfilePhoto::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeUserProfilePhotoEmpty: {
+        result["classType"] = "UserProfilePhoto::typeUserProfilePhotoEmpty";
+        return result;
+    }
+        break;
+    
+    case typeUserProfilePhoto: {
+        result["classType"] = "UserProfilePhoto::typeUserProfilePhoto";
+        result["photoId"] = QVariant::fromValue<qint64>(photoId());
+        result["photoSmall"] = m_photoSmall.toMap();
+        result["photoBig"] = m_photoBig.toMap();
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+UserProfilePhoto UserProfilePhoto::fromMap(const QMap<QString, QVariant> &map) {
+    UserProfilePhoto result;
+    if(map.value("classType").toString() == "UserProfilePhoto::typeUserProfilePhotoEmpty") {
+        result.setClassType(typeUserProfilePhotoEmpty);
+        return result;
+    }
+    if(map.value("classType").toString() == "UserProfilePhoto::typeUserProfilePhoto") {
+        result.setClassType(typeUserProfilePhoto);
+        result.setPhotoId( map.value("photoId").value<qint64>() );
+        result.setPhotoSmall( FileLocation::fromMap(map.value("photoSmall").toMap()) );
+        result.setPhotoBig( FileLocation::fromMap(map.value("photoBig").toMap()) );
+        return result;
+    }
+    return result;
+}
+
 QByteArray UserProfilePhoto::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

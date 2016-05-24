@@ -229,6 +229,55 @@ bool Authorization::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> Authorization::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeAuthorization: {
+        result["classType"] = "Authorization::typeAuthorization";
+        result["hash"] = QVariant::fromValue<qint64>(hash());
+        result["flags"] = QVariant::fromValue<qint32>(flags());
+        result["deviceModel"] = QVariant::fromValue<QString>(deviceModel());
+        result["platform"] = QVariant::fromValue<QString>(platform());
+        result["systemVersion"] = QVariant::fromValue<QString>(systemVersion());
+        result["apiId"] = QVariant::fromValue<qint32>(apiId());
+        result["appName"] = QVariant::fromValue<QString>(appName());
+        result["appVersion"] = QVariant::fromValue<QString>(appVersion());
+        result["dateCreated"] = QVariant::fromValue<qint32>(dateCreated());
+        result["dateActive"] = QVariant::fromValue<qint32>(dateActive());
+        result["ip"] = QVariant::fromValue<QString>(ip());
+        result["country"] = QVariant::fromValue<QString>(country());
+        result["region"] = QVariant::fromValue<QString>(region());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+Authorization Authorization::fromMap(const QMap<QString, QVariant> &map) {
+    Authorization result;
+    if(map.value("classType").toString() == "Authorization::typeAuthorization") {
+        result.setClassType(typeAuthorization);
+        result.setHash( map.value("hash").value<qint64>() );
+        result.setFlags( map.value("flags").value<qint32>() );
+        result.setDeviceModel( map.value("deviceModel").value<QString>() );
+        result.setPlatform( map.value("platform").value<QString>() );
+        result.setSystemVersion( map.value("systemVersion").value<QString>() );
+        result.setApiId( map.value("apiId").value<qint32>() );
+        result.setAppName( map.value("appName").value<QString>() );
+        result.setAppVersion( map.value("appVersion").value<QString>() );
+        result.setDateCreated( map.value("dateCreated").value<qint32>() );
+        result.setDateActive( map.value("dateActive").value<qint32>() );
+        result.setIp( map.value("ip").value<QString>() );
+        result.setCountry( map.value("country").value<QString>() );
+        result.setRegion( map.value("region").value<QString>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray Authorization::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

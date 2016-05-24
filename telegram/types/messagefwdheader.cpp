@@ -147,6 +147,38 @@ bool MessageFwdHeader::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> MessageFwdHeader::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeMessageFwdHeader: {
+        result["classType"] = "MessageFwdHeader::typeMessageFwdHeader";
+        result["flags"] = QVariant::fromValue<qint32>(flags());
+        result["fromId"] = QVariant::fromValue<qint32>(fromId());
+        result["date"] = QVariant::fromValue<qint32>(date());
+        result["channelId"] = QVariant::fromValue<qint32>(channelId());
+        result["channelPost"] = QVariant::fromValue<qint32>(channelPost());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+MessageFwdHeader MessageFwdHeader::fromMap(const QMap<QString, QVariant> &map) {
+    MessageFwdHeader result;
+    if(map.value("classType").toString() == "MessageFwdHeader::typeMessageFwdHeader") {
+        result.setClassType(typeMessageFwdHeader);
+        result.setFromId( map.value("fromId").value<qint32>() );
+        result.setDate( map.value("date").value<qint32>() );
+        result.setChannelId( map.value("channelId").value<qint32>() );
+        result.setChannelPost( map.value("channelPost").value<qint32>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray MessageFwdHeader::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

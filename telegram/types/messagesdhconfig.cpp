@@ -134,6 +134,49 @@ bool MessagesDhConfig::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> MessagesDhConfig::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeMessagesDhConfigNotModified: {
+        result["classType"] = "MessagesDhConfig::typeMessagesDhConfigNotModified";
+        result["random"] = QVariant::fromValue<QByteArray>(random());
+        return result;
+    }
+        break;
+    
+    case typeMessagesDhConfig: {
+        result["classType"] = "MessagesDhConfig::typeMessagesDhConfig";
+        result["g"] = QVariant::fromValue<qint32>(g());
+        result["p"] = QVariant::fromValue<QByteArray>(p());
+        result["version"] = QVariant::fromValue<qint32>(version());
+        result["random"] = QVariant::fromValue<QByteArray>(random());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+MessagesDhConfig MessagesDhConfig::fromMap(const QMap<QString, QVariant> &map) {
+    MessagesDhConfig result;
+    if(map.value("classType").toString() == "MessagesDhConfig::typeMessagesDhConfigNotModified") {
+        result.setClassType(typeMessagesDhConfigNotModified);
+        result.setRandom( map.value("random").value<QByteArray>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "MessagesDhConfig::typeMessagesDhConfig") {
+        result.setClassType(typeMessagesDhConfig);
+        result.setG( map.value("g").value<qint32>() );
+        result.setP( map.value("p").value<QByteArray>() );
+        result.setVersion( map.value("version").value<qint32>() );
+        result.setRandom( map.value("random").value<QByteArray>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray MessagesDhConfig::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

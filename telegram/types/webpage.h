@@ -8,6 +8,7 @@
 #include "telegramtypeobject.h"
 
 #include <QMetaType>
+#include <QVariant>
 #include <QString>
 #include <QtGlobal>
 #include "document.h"
@@ -83,6 +84,9 @@ public:
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
+
+    QMap<QString, QVariant> toMap() const;
+    static WebPage fromMap(const QMap<QString, QVariant> &map);
 
     bool operator ==(const WebPage &b) const;
 

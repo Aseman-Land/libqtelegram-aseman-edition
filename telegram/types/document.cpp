@@ -198,6 +198,64 @@ bool Document::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> Document::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeDocumentEmpty: {
+        result["classType"] = "Document::typeDocumentEmpty";
+        result["id"] = QVariant::fromValue<qint64>(id());
+        return result;
+    }
+        break;
+    
+    case typeDocument: {
+        result["classType"] = "Document::typeDocument";
+        result["id"] = QVariant::fromValue<qint64>(id());
+        result["accessHash"] = QVariant::fromValue<qint64>(accessHash());
+        result["date"] = QVariant::fromValue<qint32>(date());
+        result["mimeType"] = QVariant::fromValue<QString>(mimeType());
+        result["size"] = QVariant::fromValue<qint32>(size());
+        result["thumb"] = m_thumb.toMap();
+        result["dcId"] = QVariant::fromValue<qint32>(dcId());
+        QList<QVariant> _attributes;
+        Q_FOREACH(const DocumentAttribute &m__type, m_attributes)
+            _attributes << m__type.toMap();
+        result["attributes"] = _attributes;
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+Document Document::fromMap(const QMap<QString, QVariant> &map) {
+    Document result;
+    if(map.value("classType").toString() == "Document::typeDocumentEmpty") {
+        result.setClassType(typeDocumentEmpty);
+        result.setId( map.value("id").value<qint64>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "Document::typeDocument") {
+        result.setClassType(typeDocument);
+        result.setId( map.value("id").value<qint64>() );
+        result.setAccessHash( map.value("accessHash").value<qint64>() );
+        result.setDate( map.value("date").value<qint32>() );
+        result.setMimeType( map.value("mimeType").value<QString>() );
+        result.setSize( map.value("size").value<qint32>() );
+        result.setThumb( PhotoSize::fromMap(map.value("thumb").toMap()) );
+        result.setDcId( map.value("dcId").value<qint32>() );
+        QList<QVariant> map_attributes = map["attributes"].toList();
+        QList<DocumentAttribute> _attributes;
+        Q_FOREACH(const QVariant &var, map_attributes)
+            _attributes << DocumentAttribute::fromMap(var.toMap());
+        result.setAttributes(_attributes);
+        return result;
+    }
+    return result;
+}
+
 QByteArray Document::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

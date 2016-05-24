@@ -8,6 +8,7 @@
 #include "telegramtypeobject.h"
 
 #include <QMetaType>
+#include <QVariant>
 #include <QtGlobal>
 #include <QList>
 #include "keyboardbuttonrow.h"
@@ -47,6 +48,9 @@ public:
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
+
+    QMap<QString, QVariant> toMap() const;
+    static ReplyMarkup fromMap(const QMap<QString, QVariant> &map);
 
     bool operator ==(const ReplyMarkup &b) const;
 

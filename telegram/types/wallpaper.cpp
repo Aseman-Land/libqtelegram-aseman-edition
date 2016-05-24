@@ -163,6 +163,62 @@ bool WallPaper::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> WallPaper::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeWallPaper: {
+        result["classType"] = "WallPaper::typeWallPaper";
+        result["id"] = QVariant::fromValue<qint32>(id());
+        result["title"] = QVariant::fromValue<QString>(title());
+        QList<QVariant> _sizes;
+        Q_FOREACH(const PhotoSize &m__type, m_sizes)
+            _sizes << m__type.toMap();
+        result["sizes"] = _sizes;
+        result["color"] = QVariant::fromValue<qint32>(color());
+        return result;
+    }
+        break;
+    
+    case typeWallPaperSolid: {
+        result["classType"] = "WallPaper::typeWallPaperSolid";
+        result["id"] = QVariant::fromValue<qint32>(id());
+        result["title"] = QVariant::fromValue<QString>(title());
+        result["bgColor"] = QVariant::fromValue<qint32>(bgColor());
+        result["color"] = QVariant::fromValue<qint32>(color());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+WallPaper WallPaper::fromMap(const QMap<QString, QVariant> &map) {
+    WallPaper result;
+    if(map.value("classType").toString() == "WallPaper::typeWallPaper") {
+        result.setClassType(typeWallPaper);
+        result.setId( map.value("id").value<qint32>() );
+        result.setTitle( map.value("title").value<QString>() );
+        QList<QVariant> map_sizes = map["sizes"].toList();
+        QList<PhotoSize> _sizes;
+        Q_FOREACH(const QVariant &var, map_sizes)
+            _sizes << PhotoSize::fromMap(var.toMap());
+        result.setSizes(_sizes);
+        result.setColor( map.value("color").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "WallPaper::typeWallPaperSolid") {
+        result.setClassType(typeWallPaperSolid);
+        result.setId( map.value("id").value<qint32>() );
+        result.setTitle( map.value("title").value<QString>() );
+        result.setBgColor( map.value("bgColor").value<qint32>() );
+        result.setColor( map.value("color").value<qint32>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray WallPaper::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

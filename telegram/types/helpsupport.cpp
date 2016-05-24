@@ -93,6 +93,33 @@ bool HelpSupport::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> HelpSupport::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeHelpSupport: {
+        result["classType"] = "HelpSupport::typeHelpSupport";
+        result["phoneNumber"] = QVariant::fromValue<QString>(phoneNumber());
+        result["user"] = m_user.toMap();
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+HelpSupport HelpSupport::fromMap(const QMap<QString, QVariant> &map) {
+    HelpSupport result;
+    if(map.value("classType").toString() == "HelpSupport::typeHelpSupport") {
+        result.setClassType(typeHelpSupport);
+        result.setPhoneNumber( map.value("phoneNumber").value<QString>() );
+        result.setUser( User::fromMap(map.value("user").toMap()) );
+        return result;
+    }
+    return result;
+}
+
 QByteArray HelpSupport::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

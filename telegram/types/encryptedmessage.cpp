@@ -154,6 +154,57 @@ bool EncryptedMessage::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> EncryptedMessage::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeEncryptedMessage: {
+        result["classType"] = "EncryptedMessage::typeEncryptedMessage";
+        result["randomId"] = QVariant::fromValue<qint64>(randomId());
+        result["chatId"] = QVariant::fromValue<qint32>(chatId());
+        result["date"] = QVariant::fromValue<qint32>(date());
+        result["bytes"] = QVariant::fromValue<QByteArray>(bytes());
+        result["file"] = m_file.toMap();
+        return result;
+    }
+        break;
+    
+    case typeEncryptedMessageService: {
+        result["classType"] = "EncryptedMessage::typeEncryptedMessageService";
+        result["randomId"] = QVariant::fromValue<qint64>(randomId());
+        result["chatId"] = QVariant::fromValue<qint32>(chatId());
+        result["date"] = QVariant::fromValue<qint32>(date());
+        result["bytes"] = QVariant::fromValue<QByteArray>(bytes());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+EncryptedMessage EncryptedMessage::fromMap(const QMap<QString, QVariant> &map) {
+    EncryptedMessage result;
+    if(map.value("classType").toString() == "EncryptedMessage::typeEncryptedMessage") {
+        result.setClassType(typeEncryptedMessage);
+        result.setRandomId( map.value("randomId").value<qint64>() );
+        result.setChatId( map.value("chatId").value<qint32>() );
+        result.setDate( map.value("date").value<qint32>() );
+        result.setBytes( map.value("bytes").value<QByteArray>() );
+        result.setFile( EncryptedFile::fromMap(map.value("file").toMap()) );
+        return result;
+    }
+    if(map.value("classType").toString() == "EncryptedMessage::typeEncryptedMessageService") {
+        result.setClassType(typeEncryptedMessageService);
+        result.setRandomId( map.value("randomId").value<qint64>() );
+        result.setChatId( map.value("chatId").value<qint32>() );
+        result.setDate( map.value("date").value<qint32>() );
+        result.setBytes( map.value("bytes").value<QByteArray>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray EncryptedMessage::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

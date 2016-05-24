@@ -110,6 +110,35 @@ bool NearestDc::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> NearestDc::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeNearestDc: {
+        result["classType"] = "NearestDc::typeNearestDc";
+        result["country"] = QVariant::fromValue<QString>(country());
+        result["thisDc"] = QVariant::fromValue<qint32>(thisDc());
+        result["nearestDc"] = QVariant::fromValue<qint32>(nearestDc());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+NearestDc NearestDc::fromMap(const QMap<QString, QVariant> &map) {
+    NearestDc result;
+    if(map.value("classType").toString() == "NearestDc::typeNearestDc") {
+        result.setClassType(typeNearestDc);
+        result.setCountry( map.value("country").value<QString>() );
+        result.setThisDc( map.value("thisDc").value<qint32>() );
+        result.setNearestDc( map.value("nearestDc").value<qint32>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray NearestDc::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

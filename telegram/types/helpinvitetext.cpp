@@ -82,6 +82,31 @@ bool HelpInviteText::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> HelpInviteText::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeHelpInviteText: {
+        result["classType"] = "HelpInviteText::typeHelpInviteText";
+        result["message"] = QVariant::fromValue<QString>(message());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+HelpInviteText HelpInviteText::fromMap(const QMap<QString, QVariant> &map) {
+    HelpInviteText result;
+    if(map.value("classType").toString() == "HelpInviteText::typeHelpInviteText") {
+        result.setClassType(typeHelpInviteText);
+        result.setMessage( map.value("message").value<QString>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray HelpInviteText::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

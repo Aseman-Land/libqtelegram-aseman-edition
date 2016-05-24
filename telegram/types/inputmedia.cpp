@@ -397,6 +397,185 @@ bool InputMedia::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> InputMedia::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeInputMediaEmpty: {
+        result["classType"] = "InputMedia::typeInputMediaEmpty";
+        return result;
+    }
+        break;
+    
+    case typeInputMediaUploadedPhoto: {
+        result["classType"] = "InputMedia::typeInputMediaUploadedPhoto";
+        result["file"] = m_file.toMap();
+        result["caption"] = QVariant::fromValue<QString>(caption());
+        return result;
+    }
+        break;
+    
+    case typeInputMediaPhoto: {
+        result["classType"] = "InputMedia::typeInputMediaPhoto";
+        result["idInputPhoto"] = m_idInputPhoto.toMap();
+        result["caption"] = QVariant::fromValue<QString>(caption());
+        return result;
+    }
+        break;
+    
+    case typeInputMediaGeoPoint: {
+        result["classType"] = "InputMedia::typeInputMediaGeoPoint";
+        result["geoPoint"] = m_geoPoint.toMap();
+        return result;
+    }
+        break;
+    
+    case typeInputMediaContact: {
+        result["classType"] = "InputMedia::typeInputMediaContact";
+        result["phoneNumber"] = QVariant::fromValue<QString>(phoneNumber());
+        result["firstName"] = QVariant::fromValue<QString>(firstName());
+        result["lastName"] = QVariant::fromValue<QString>(lastName());
+        return result;
+    }
+        break;
+    
+    case typeInputMediaUploadedDocument: {
+        result["classType"] = "InputMedia::typeInputMediaUploadedDocument";
+        result["file"] = m_file.toMap();
+        result["mimeType"] = QVariant::fromValue<QString>(mimeType());
+        QList<QVariant> _attributes;
+        Q_FOREACH(const DocumentAttribute &m__type, m_attributes)
+            _attributes << m__type.toMap();
+        result["attributes"] = _attributes;
+        result["caption"] = QVariant::fromValue<QString>(caption());
+        return result;
+    }
+        break;
+    
+    case typeInputMediaUploadedThumbDocument: {
+        result["classType"] = "InputMedia::typeInputMediaUploadedThumbDocument";
+        result["file"] = m_file.toMap();
+        result["thumb"] = m_thumb.toMap();
+        result["mimeType"] = QVariant::fromValue<QString>(mimeType());
+        QList<QVariant> _attributes;
+        Q_FOREACH(const DocumentAttribute &m__type, m_attributes)
+            _attributes << m__type.toMap();
+        result["attributes"] = _attributes;
+        result["caption"] = QVariant::fromValue<QString>(caption());
+        return result;
+    }
+        break;
+    
+    case typeInputMediaDocument: {
+        result["classType"] = "InputMedia::typeInputMediaDocument";
+        result["idInputDocument"] = m_idInputDocument.toMap();
+        result["caption"] = QVariant::fromValue<QString>(caption());
+        return result;
+    }
+        break;
+    
+    case typeInputMediaVenue: {
+        result["classType"] = "InputMedia::typeInputMediaVenue";
+        result["geoPoint"] = m_geoPoint.toMap();
+        result["title"] = QVariant::fromValue<QString>(title());
+        result["address"] = QVariant::fromValue<QString>(address());
+        result["provider"] = QVariant::fromValue<QString>(provider());
+        result["venueId"] = QVariant::fromValue<QString>(venueId());
+        return result;
+    }
+        break;
+    
+    case typeInputMediaGifExternal: {
+        result["classType"] = "InputMedia::typeInputMediaGifExternal";
+        result["url"] = QVariant::fromValue<QString>(url());
+        result["q"] = QVariant::fromValue<QString>(q());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+InputMedia InputMedia::fromMap(const QMap<QString, QVariant> &map) {
+    InputMedia result;
+    if(map.value("classType").toString() == "InputMedia::typeInputMediaEmpty") {
+        result.setClassType(typeInputMediaEmpty);
+        return result;
+    }
+    if(map.value("classType").toString() == "InputMedia::typeInputMediaUploadedPhoto") {
+        result.setClassType(typeInputMediaUploadedPhoto);
+        result.setFile( InputFile::fromMap(map.value("file").toMap()) );
+        result.setCaption( map.value("caption").value<QString>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "InputMedia::typeInputMediaPhoto") {
+        result.setClassType(typeInputMediaPhoto);
+        result.setIdInputPhoto( InputPhoto::fromMap(map.value("idInputPhoto").toMap()) );
+        result.setCaption( map.value("caption").value<QString>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "InputMedia::typeInputMediaGeoPoint") {
+        result.setClassType(typeInputMediaGeoPoint);
+        result.setGeoPoint( InputGeoPoint::fromMap(map.value("geoPoint").toMap()) );
+        return result;
+    }
+    if(map.value("classType").toString() == "InputMedia::typeInputMediaContact") {
+        result.setClassType(typeInputMediaContact);
+        result.setPhoneNumber( map.value("phoneNumber").value<QString>() );
+        result.setFirstName( map.value("firstName").value<QString>() );
+        result.setLastName( map.value("lastName").value<QString>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "InputMedia::typeInputMediaUploadedDocument") {
+        result.setClassType(typeInputMediaUploadedDocument);
+        result.setFile( InputFile::fromMap(map.value("file").toMap()) );
+        result.setMimeType( map.value("mimeType").value<QString>() );
+        QList<QVariant> map_attributes = map["attributes"].toList();
+        QList<DocumentAttribute> _attributes;
+        Q_FOREACH(const QVariant &var, map_attributes)
+            _attributes << DocumentAttribute::fromMap(var.toMap());
+        result.setAttributes(_attributes);
+        result.setCaption( map.value("caption").value<QString>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "InputMedia::typeInputMediaUploadedThumbDocument") {
+        result.setClassType(typeInputMediaUploadedThumbDocument);
+        result.setFile( InputFile::fromMap(map.value("file").toMap()) );
+        result.setThumb( InputFile::fromMap(map.value("thumb").toMap()) );
+        result.setMimeType( map.value("mimeType").value<QString>() );
+        QList<QVariant> map_attributes = map["attributes"].toList();
+        QList<DocumentAttribute> _attributes;
+        Q_FOREACH(const QVariant &var, map_attributes)
+            _attributes << DocumentAttribute::fromMap(var.toMap());
+        result.setAttributes(_attributes);
+        result.setCaption( map.value("caption").value<QString>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "InputMedia::typeInputMediaDocument") {
+        result.setClassType(typeInputMediaDocument);
+        result.setIdInputDocument( InputDocument::fromMap(map.value("idInputDocument").toMap()) );
+        result.setCaption( map.value("caption").value<QString>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "InputMedia::typeInputMediaVenue") {
+        result.setClassType(typeInputMediaVenue);
+        result.setGeoPoint( InputGeoPoint::fromMap(map.value("geoPoint").toMap()) );
+        result.setTitle( map.value("title").value<QString>() );
+        result.setAddress( map.value("address").value<QString>() );
+        result.setProvider( map.value("provider").value<QString>() );
+        result.setVenueId( map.value("venueId").value<QString>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "InputMedia::typeInputMediaGifExternal") {
+        result.setClassType(typeInputMediaGifExternal);
+        result.setUrl( map.value("url").value<QString>() );
+        result.setQ( map.value("q").value<QString>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray InputMedia::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

@@ -118,6 +118,50 @@ bool MessagesAllStickers::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> MessagesAllStickers::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeMessagesAllStickersNotModified: {
+        result["classType"] = "MessagesAllStickers::typeMessagesAllStickersNotModified";
+        return result;
+    }
+        break;
+    
+    case typeMessagesAllStickers: {
+        result["classType"] = "MessagesAllStickers::typeMessagesAllStickers";
+        result["hash"] = QVariant::fromValue<qint32>(hash());
+        QList<QVariant> _sets;
+        Q_FOREACH(const StickerSet &m__type, m_sets)
+            _sets << m__type.toMap();
+        result["sets"] = _sets;
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+MessagesAllStickers MessagesAllStickers::fromMap(const QMap<QString, QVariant> &map) {
+    MessagesAllStickers result;
+    if(map.value("classType").toString() == "MessagesAllStickers::typeMessagesAllStickersNotModified") {
+        result.setClassType(typeMessagesAllStickersNotModified);
+        return result;
+    }
+    if(map.value("classType").toString() == "MessagesAllStickers::typeMessagesAllStickers") {
+        result.setClassType(typeMessagesAllStickers);
+        result.setHash( map.value("hash").value<qint32>() );
+        QList<QVariant> map_sets = map["sets"].toList();
+        QList<StickerSet> _sets;
+        Q_FOREACH(const QVariant &var, map_sets)
+            _sets << StickerSet::fromMap(var.toMap());
+        result.setSets(_sets);
+        return result;
+    }
+    return result;
+}
+
 QByteArray MessagesAllStickers::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

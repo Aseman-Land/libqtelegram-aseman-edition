@@ -94,6 +94,31 @@ bool MessagesMessageEditData::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> MessagesMessageEditData::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeMessagesMessageEditData: {
+        result["classType"] = "MessagesMessageEditData::typeMessagesMessageEditData";
+        result["flags"] = QVariant::fromValue<qint32>(flags());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+MessagesMessageEditData MessagesMessageEditData::fromMap(const QMap<QString, QVariant> &map) {
+    MessagesMessageEditData result;
+    if(map.value("classType").toString() == "MessagesMessageEditData::typeMessagesMessageEditData") {
+        result.setClassType(typeMessagesMessageEditData);
+        result.setCaption( map.value("caption").value<bool>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray MessagesMessageEditData::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

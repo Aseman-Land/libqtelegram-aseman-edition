@@ -167,6 +167,63 @@ bool InputFileLocation::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> InputFileLocation::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeInputFileLocation: {
+        result["classType"] = "InputFileLocation::typeInputFileLocation";
+        result["volumeId"] = QVariant::fromValue<qint64>(volumeId());
+        result["localId"] = QVariant::fromValue<qint32>(localId());
+        result["secret"] = QVariant::fromValue<qint64>(secret());
+        return result;
+    }
+        break;
+    
+    case typeInputEncryptedFileLocation: {
+        result["classType"] = "InputFileLocation::typeInputEncryptedFileLocation";
+        result["id"] = QVariant::fromValue<qint64>(id());
+        result["accessHash"] = QVariant::fromValue<qint64>(accessHash());
+        return result;
+    }
+        break;
+    
+    case typeInputDocumentFileLocation: {
+        result["classType"] = "InputFileLocation::typeInputDocumentFileLocation";
+        result["id"] = QVariant::fromValue<qint64>(id());
+        result["accessHash"] = QVariant::fromValue<qint64>(accessHash());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+InputFileLocation InputFileLocation::fromMap(const QMap<QString, QVariant> &map) {
+    InputFileLocation result;
+    if(map.value("classType").toString() == "InputFileLocation::typeInputFileLocation") {
+        result.setClassType(typeInputFileLocation);
+        result.setVolumeId( map.value("volumeId").value<qint64>() );
+        result.setLocalId( map.value("localId").value<qint32>() );
+        result.setSecret( map.value("secret").value<qint64>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "InputFileLocation::typeInputEncryptedFileLocation") {
+        result.setClassType(typeInputEncryptedFileLocation);
+        result.setId( map.value("id").value<qint64>() );
+        result.setAccessHash( map.value("accessHash").value<qint64>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "InputFileLocation::typeInputDocumentFileLocation") {
+        result.setClassType(typeInputDocumentFileLocation);
+        result.setId( map.value("id").value<qint64>() );
+        result.setAccessHash( map.value("accessHash").value<qint64>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray InputFileLocation::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

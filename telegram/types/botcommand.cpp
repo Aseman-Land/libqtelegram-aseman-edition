@@ -93,6 +93,33 @@ bool BotCommand::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> BotCommand::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeBotCommand: {
+        result["classType"] = "BotCommand::typeBotCommand";
+        result["command"] = QVariant::fromValue<QString>(command());
+        result["description"] = QVariant::fromValue<QString>(description());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+BotCommand BotCommand::fromMap(const QMap<QString, QVariant> &map) {
+    BotCommand result;
+    if(map.value("classType").toString() == "BotCommand::typeBotCommand") {
+        result.setClassType(typeBotCommand);
+        result.setCommand( map.value("command").value<QString>() );
+        result.setDescription( map.value("description").value<QString>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray BotCommand::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

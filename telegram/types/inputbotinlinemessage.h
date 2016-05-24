@@ -8,6 +8,7 @@
 #include "telegramtypeobject.h"
 
 #include <QMetaType>
+#include <QVariant>
 #include <QString>
 #include <QList>
 #include "messageentity.h"
@@ -78,6 +79,9 @@ public:
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
+
+    QMap<QString, QVariant> toMap() const;
+    static InputBotInlineMessage fromMap(const QMap<QString, QVariant> &map);
 
     bool operator ==(const InputBotInlineMessage &b) const;
 

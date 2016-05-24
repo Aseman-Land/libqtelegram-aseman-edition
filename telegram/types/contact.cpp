@@ -99,6 +99,33 @@ bool Contact::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> Contact::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeContact: {
+        result["classType"] = "Contact::typeContact";
+        result["userId"] = QVariant::fromValue<qint32>(userId());
+        result["mutual"] = QVariant::fromValue<bool>(mutual());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+Contact Contact::fromMap(const QMap<QString, QVariant> &map) {
+    Contact result;
+    if(map.value("classType").toString() == "Contact::typeContact") {
+        result.setClassType(typeContact);
+        result.setUserId( map.value("userId").value<qint32>() );
+        result.setMutual( map.value("mutual").value<bool>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray Contact::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

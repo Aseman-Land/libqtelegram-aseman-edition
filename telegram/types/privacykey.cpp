@@ -82,6 +82,39 @@ bool PrivacyKey::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> PrivacyKey::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typePrivacyKeyStatusTimestamp: {
+        result["classType"] = "PrivacyKey::typePrivacyKeyStatusTimestamp";
+        return result;
+    }
+        break;
+    
+    case typePrivacyKeyChatInvite: {
+        result["classType"] = "PrivacyKey::typePrivacyKeyChatInvite";
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+PrivacyKey PrivacyKey::fromMap(const QMap<QString, QVariant> &map) {
+    PrivacyKey result;
+    if(map.value("classType").toString() == "PrivacyKey::typePrivacyKeyStatusTimestamp") {
+        result.setClassType(typePrivacyKeyStatusTimestamp);
+        return result;
+    }
+    if(map.value("classType").toString() == "PrivacyKey::typePrivacyKeyChatInvite") {
+        result.setClassType(typePrivacyKeyChatInvite);
+        return result;
+    }
+    return result;
+}
+
 QByteArray PrivacyKey::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

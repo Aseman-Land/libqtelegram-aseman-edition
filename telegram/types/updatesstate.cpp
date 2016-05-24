@@ -141,6 +141,39 @@ bool UpdatesState::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> UpdatesState::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeUpdatesState: {
+        result["classType"] = "UpdatesState::typeUpdatesState";
+        result["pts"] = QVariant::fromValue<qint32>(pts());
+        result["qts"] = QVariant::fromValue<qint32>(qts());
+        result["date"] = QVariant::fromValue<qint32>(date());
+        result["seq"] = QVariant::fromValue<qint32>(seq());
+        result["unreadCount"] = QVariant::fromValue<qint32>(unreadCount());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+UpdatesState UpdatesState::fromMap(const QMap<QString, QVariant> &map) {
+    UpdatesState result;
+    if(map.value("classType").toString() == "UpdatesState::typeUpdatesState") {
+        result.setClassType(typeUpdatesState);
+        result.setPts( map.value("pts").value<qint32>() );
+        result.setQts( map.value("qts").value<qint32>() );
+        result.setDate( map.value("date").value<qint32>() );
+        result.setSeq( map.value("seq").value<qint32>() );
+        result.setUnreadCount( map.value("unreadCount").value<qint32>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray UpdatesState::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

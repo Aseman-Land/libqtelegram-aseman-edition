@@ -132,6 +132,55 @@ bool InputStickerSet::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> InputStickerSet::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeInputStickerSetEmpty: {
+        result["classType"] = "InputStickerSet::typeInputStickerSetEmpty";
+        return result;
+    }
+        break;
+    
+    case typeInputStickerSetID: {
+        result["classType"] = "InputStickerSet::typeInputStickerSetID";
+        result["id"] = QVariant::fromValue<qint64>(id());
+        result["accessHash"] = QVariant::fromValue<qint64>(accessHash());
+        return result;
+    }
+        break;
+    
+    case typeInputStickerSetShortName: {
+        result["classType"] = "InputStickerSet::typeInputStickerSetShortName";
+        result["shortName"] = QVariant::fromValue<QString>(shortName());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+InputStickerSet InputStickerSet::fromMap(const QMap<QString, QVariant> &map) {
+    InputStickerSet result;
+    if(map.value("classType").toString() == "InputStickerSet::typeInputStickerSetEmpty") {
+        result.setClassType(typeInputStickerSetEmpty);
+        return result;
+    }
+    if(map.value("classType").toString() == "InputStickerSet::typeInputStickerSetID") {
+        result.setClassType(typeInputStickerSetID);
+        result.setId( map.value("id").value<qint64>() );
+        result.setAccessHash( map.value("accessHash").value<qint64>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "InputStickerSet::typeInputStickerSetShortName") {
+        result.setClassType(typeInputStickerSetShortName);
+        result.setShortName( map.value("shortName").value<QString>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray InputStickerSet::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

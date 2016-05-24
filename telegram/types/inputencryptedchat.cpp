@@ -99,6 +99,33 @@ bool InputEncryptedChat::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> InputEncryptedChat::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeInputEncryptedChat: {
+        result["classType"] = "InputEncryptedChat::typeInputEncryptedChat";
+        result["chatId"] = QVariant::fromValue<qint32>(chatId());
+        result["accessHash"] = QVariant::fromValue<qint64>(accessHash());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+InputEncryptedChat InputEncryptedChat::fromMap(const QMap<QString, QVariant> &map) {
+    InputEncryptedChat result;
+    if(map.value("classType").toString() == "InputEncryptedChat::typeInputEncryptedChat") {
+        result.setClassType(typeInputEncryptedChat);
+        result.setChatId( map.value("chatId").value<qint32>() );
+        result.setAccessHash( map.value("accessHash").value<qint64>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray InputEncryptedChat::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

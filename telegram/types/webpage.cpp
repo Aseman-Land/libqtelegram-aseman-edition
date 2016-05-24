@@ -326,6 +326,86 @@ bool WebPage::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> WebPage::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeWebPageEmpty: {
+        result["classType"] = "WebPage::typeWebPageEmpty";
+        result["id"] = QVariant::fromValue<qint64>(id());
+        return result;
+    }
+        break;
+    
+    case typeWebPagePending: {
+        result["classType"] = "WebPage::typeWebPagePending";
+        result["id"] = QVariant::fromValue<qint64>(id());
+        result["date"] = QVariant::fromValue<qint32>(date());
+        return result;
+    }
+        break;
+    
+    case typeWebPage: {
+        result["classType"] = "WebPage::typeWebPage";
+        result["flags"] = QVariant::fromValue<qint32>(flags());
+        result["id"] = QVariant::fromValue<qint64>(id());
+        result["url"] = QVariant::fromValue<QString>(url());
+        result["displayUrl"] = QVariant::fromValue<QString>(displayUrl());
+        result["type"] = QVariant::fromValue<QString>(type());
+        result["siteName"] = QVariant::fromValue<QString>(siteName());
+        result["title"] = QVariant::fromValue<QString>(title());
+        result["description"] = QVariant::fromValue<QString>(description());
+        result["photo"] = m_photo.toMap();
+        result["embedUrl"] = QVariant::fromValue<QString>(embedUrl());
+        result["embedType"] = QVariant::fromValue<QString>(embedType());
+        result["embedWidth"] = QVariant::fromValue<qint32>(embedWidth());
+        result["embedHeight"] = QVariant::fromValue<qint32>(embedHeight());
+        result["duration"] = QVariant::fromValue<qint32>(duration());
+        result["author"] = QVariant::fromValue<QString>(author());
+        result["document"] = m_document.toMap();
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+WebPage WebPage::fromMap(const QMap<QString, QVariant> &map) {
+    WebPage result;
+    if(map.value("classType").toString() == "WebPage::typeWebPageEmpty") {
+        result.setClassType(typeWebPageEmpty);
+        result.setId( map.value("id").value<qint64>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "WebPage::typeWebPagePending") {
+        result.setClassType(typeWebPagePending);
+        result.setId( map.value("id").value<qint64>() );
+        result.setDate( map.value("date").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "WebPage::typeWebPage") {
+        result.setClassType(typeWebPage);
+        result.setId( map.value("id").value<qint64>() );
+        result.setUrl( map.value("url").value<QString>() );
+        result.setDisplayUrl( map.value("displayUrl").value<QString>() );
+        result.setType( map.value("type").value<QString>() );
+        result.setSiteName( map.value("siteName").value<QString>() );
+        result.setTitle( map.value("title").value<QString>() );
+        result.setDescription( map.value("description").value<QString>() );
+        result.setPhoto( Photo::fromMap(map.value("photo").toMap()) );
+        result.setEmbedUrl( map.value("embedUrl").value<QString>() );
+        result.setEmbedType( map.value("embedType").value<QString>() );
+        result.setEmbedWidth( map.value("embedWidth").value<qint32>() );
+        result.setEmbedHeight( map.value("embedHeight").value<qint32>() );
+        result.setDuration( map.value("duration").value<qint32>() );
+        result.setAuthor( map.value("author").value<QString>() );
+        result.setDocument( Document::fromMap(map.value("document").toMap()) );
+        return result;
+    }
+    return result;
+}
+
 QByteArray WebPage::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

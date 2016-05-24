@@ -93,6 +93,38 @@ bool KeyboardButtonRow::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> KeyboardButtonRow::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeKeyboardButtonRow: {
+        result["classType"] = "KeyboardButtonRow::typeKeyboardButtonRow";
+        QList<QVariant> _buttons;
+        Q_FOREACH(const KeyboardButton &m__type, m_buttons)
+            _buttons << m__type.toMap();
+        result["buttons"] = _buttons;
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+KeyboardButtonRow KeyboardButtonRow::fromMap(const QMap<QString, QVariant> &map) {
+    KeyboardButtonRow result;
+    if(map.value("classType").toString() == "KeyboardButtonRow::typeKeyboardButtonRow") {
+        result.setClassType(typeKeyboardButtonRow);
+        QList<QVariant> map_buttons = map["buttons"].toList();
+        QList<KeyboardButton> _buttons;
+        Q_FOREACH(const QVariant &var, map_buttons)
+            _buttons << KeyboardButton::fromMap(var.toMap());
+        result.setButtons(_buttons);
+        return result;
+    }
+    return result;
+}
+
 QByteArray KeyboardButtonRow::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

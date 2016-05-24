@@ -166,6 +166,77 @@ bool PhotosPhotos::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> PhotosPhotos::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typePhotosPhotos: {
+        result["classType"] = "PhotosPhotos::typePhotosPhotos";
+        QList<QVariant> _photos;
+        Q_FOREACH(const Photo &m__type, m_photos)
+            _photos << m__type.toMap();
+        result["photos"] = _photos;
+        QList<QVariant> _users;
+        Q_FOREACH(const User &m__type, m_users)
+            _users << m__type.toMap();
+        result["users"] = _users;
+        return result;
+    }
+        break;
+    
+    case typePhotosPhotosSlice: {
+        result["classType"] = "PhotosPhotos::typePhotosPhotosSlice";
+        result["count"] = QVariant::fromValue<qint32>(count());
+        QList<QVariant> _photos;
+        Q_FOREACH(const Photo &m__type, m_photos)
+            _photos << m__type.toMap();
+        result["photos"] = _photos;
+        QList<QVariant> _users;
+        Q_FOREACH(const User &m__type, m_users)
+            _users << m__type.toMap();
+        result["users"] = _users;
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+PhotosPhotos PhotosPhotos::fromMap(const QMap<QString, QVariant> &map) {
+    PhotosPhotos result;
+    if(map.value("classType").toString() == "PhotosPhotos::typePhotosPhotos") {
+        result.setClassType(typePhotosPhotos);
+        QList<QVariant> map_photos = map["photos"].toList();
+        QList<Photo> _photos;
+        Q_FOREACH(const QVariant &var, map_photos)
+            _photos << Photo::fromMap(var.toMap());
+        result.setPhotos(_photos);
+        QList<QVariant> map_users = map["users"].toList();
+        QList<User> _users;
+        Q_FOREACH(const QVariant &var, map_users)
+            _users << User::fromMap(var.toMap());
+        result.setUsers(_users);
+        return result;
+    }
+    if(map.value("classType").toString() == "PhotosPhotos::typePhotosPhotosSlice") {
+        result.setClassType(typePhotosPhotosSlice);
+        result.setCount( map.value("count").value<qint32>() );
+        QList<QVariant> map_photos = map["photos"].toList();
+        QList<Photo> _photos;
+        Q_FOREACH(const QVariant &var, map_photos)
+            _photos << Photo::fromMap(var.toMap());
+        result.setPhotos(_photos);
+        QList<QVariant> map_users = map["users"].toList();
+        QList<User> _users;
+        Q_FOREACH(const QVariant &var, map_users)
+            _users << User::fromMap(var.toMap());
+        result.setUsers(_users);
+        return result;
+    }
+    return result;
+}
+
 QByteArray PhotosPhotos::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

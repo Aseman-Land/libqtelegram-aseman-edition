@@ -104,6 +104,59 @@ bool ContactLink::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> ContactLink::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeContactLinkUnknown: {
+        result["classType"] = "ContactLink::typeContactLinkUnknown";
+        return result;
+    }
+        break;
+    
+    case typeContactLinkNone: {
+        result["classType"] = "ContactLink::typeContactLinkNone";
+        return result;
+    }
+        break;
+    
+    case typeContactLinkHasPhone: {
+        result["classType"] = "ContactLink::typeContactLinkHasPhone";
+        return result;
+    }
+        break;
+    
+    case typeContactLinkContact: {
+        result["classType"] = "ContactLink::typeContactLinkContact";
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+ContactLink ContactLink::fromMap(const QMap<QString, QVariant> &map) {
+    ContactLink result;
+    if(map.value("classType").toString() == "ContactLink::typeContactLinkUnknown") {
+        result.setClassType(typeContactLinkUnknown);
+        return result;
+    }
+    if(map.value("classType").toString() == "ContactLink::typeContactLinkNone") {
+        result.setClassType(typeContactLinkNone);
+        return result;
+    }
+    if(map.value("classType").toString() == "ContactLink::typeContactLinkHasPhone") {
+        result.setClassType(typeContactLinkHasPhone);
+        return result;
+    }
+    if(map.value("classType").toString() == "ContactLink::typeContactLinkContact") {
+        result.setClassType(typeContactLinkContact);
+        return result;
+    }
+    return result;
+}
+
 QByteArray ContactLink::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

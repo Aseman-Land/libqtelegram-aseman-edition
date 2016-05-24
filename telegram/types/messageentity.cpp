@@ -326,6 +326,209 @@ bool MessageEntity::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> MessageEntity::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeMessageEntityUnknown: {
+        result["classType"] = "MessageEntity::typeMessageEntityUnknown";
+        result["offset"] = QVariant::fromValue<qint32>(offset());
+        result["length"] = QVariant::fromValue<qint32>(length());
+        return result;
+    }
+        break;
+    
+    case typeMessageEntityMention: {
+        result["classType"] = "MessageEntity::typeMessageEntityMention";
+        result["offset"] = QVariant::fromValue<qint32>(offset());
+        result["length"] = QVariant::fromValue<qint32>(length());
+        return result;
+    }
+        break;
+    
+    case typeMessageEntityHashtag: {
+        result["classType"] = "MessageEntity::typeMessageEntityHashtag";
+        result["offset"] = QVariant::fromValue<qint32>(offset());
+        result["length"] = QVariant::fromValue<qint32>(length());
+        return result;
+    }
+        break;
+    
+    case typeMessageEntityBotCommand: {
+        result["classType"] = "MessageEntity::typeMessageEntityBotCommand";
+        result["offset"] = QVariant::fromValue<qint32>(offset());
+        result["length"] = QVariant::fromValue<qint32>(length());
+        return result;
+    }
+        break;
+    
+    case typeMessageEntityUrl: {
+        result["classType"] = "MessageEntity::typeMessageEntityUrl";
+        result["offset"] = QVariant::fromValue<qint32>(offset());
+        result["length"] = QVariant::fromValue<qint32>(length());
+        return result;
+    }
+        break;
+    
+    case typeMessageEntityEmail: {
+        result["classType"] = "MessageEntity::typeMessageEntityEmail";
+        result["offset"] = QVariant::fromValue<qint32>(offset());
+        result["length"] = QVariant::fromValue<qint32>(length());
+        return result;
+    }
+        break;
+    
+    case typeMessageEntityBold: {
+        result["classType"] = "MessageEntity::typeMessageEntityBold";
+        result["offset"] = QVariant::fromValue<qint32>(offset());
+        result["length"] = QVariant::fromValue<qint32>(length());
+        return result;
+    }
+        break;
+    
+    case typeMessageEntityItalic: {
+        result["classType"] = "MessageEntity::typeMessageEntityItalic";
+        result["offset"] = QVariant::fromValue<qint32>(offset());
+        result["length"] = QVariant::fromValue<qint32>(length());
+        return result;
+    }
+        break;
+    
+    case typeMessageEntityCode: {
+        result["classType"] = "MessageEntity::typeMessageEntityCode";
+        result["offset"] = QVariant::fromValue<qint32>(offset());
+        result["length"] = QVariant::fromValue<qint32>(length());
+        return result;
+    }
+        break;
+    
+    case typeMessageEntityPre: {
+        result["classType"] = "MessageEntity::typeMessageEntityPre";
+        result["offset"] = QVariant::fromValue<qint32>(offset());
+        result["length"] = QVariant::fromValue<qint32>(length());
+        result["language"] = QVariant::fromValue<QString>(language());
+        return result;
+    }
+        break;
+    
+    case typeMessageEntityTextUrl: {
+        result["classType"] = "MessageEntity::typeMessageEntityTextUrl";
+        result["offset"] = QVariant::fromValue<qint32>(offset());
+        result["length"] = QVariant::fromValue<qint32>(length());
+        result["url"] = QVariant::fromValue<QString>(url());
+        return result;
+    }
+        break;
+    
+    case typeMessageEntityMentionName: {
+        result["classType"] = "MessageEntity::typeMessageEntityMentionName";
+        result["offset"] = QVariant::fromValue<qint32>(offset());
+        result["length"] = QVariant::fromValue<qint32>(length());
+        result["userIdInt"] = QVariant::fromValue<qint32>(userIdInt());
+        return result;
+    }
+        break;
+    
+    case typeInputMessageEntityMentionName: {
+        result["classType"] = "MessageEntity::typeInputMessageEntityMentionName";
+        result["offset"] = QVariant::fromValue<qint32>(offset());
+        result["length"] = QVariant::fromValue<qint32>(length());
+        result["userIdInputUser"] = m_userIdInputUser.toMap();
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+MessageEntity MessageEntity::fromMap(const QMap<QString, QVariant> &map) {
+    MessageEntity result;
+    if(map.value("classType").toString() == "MessageEntity::typeMessageEntityUnknown") {
+        result.setClassType(typeMessageEntityUnknown);
+        result.setOffset( map.value("offset").value<qint32>() );
+        result.setLength( map.value("length").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "MessageEntity::typeMessageEntityMention") {
+        result.setClassType(typeMessageEntityMention);
+        result.setOffset( map.value("offset").value<qint32>() );
+        result.setLength( map.value("length").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "MessageEntity::typeMessageEntityHashtag") {
+        result.setClassType(typeMessageEntityHashtag);
+        result.setOffset( map.value("offset").value<qint32>() );
+        result.setLength( map.value("length").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "MessageEntity::typeMessageEntityBotCommand") {
+        result.setClassType(typeMessageEntityBotCommand);
+        result.setOffset( map.value("offset").value<qint32>() );
+        result.setLength( map.value("length").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "MessageEntity::typeMessageEntityUrl") {
+        result.setClassType(typeMessageEntityUrl);
+        result.setOffset( map.value("offset").value<qint32>() );
+        result.setLength( map.value("length").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "MessageEntity::typeMessageEntityEmail") {
+        result.setClassType(typeMessageEntityEmail);
+        result.setOffset( map.value("offset").value<qint32>() );
+        result.setLength( map.value("length").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "MessageEntity::typeMessageEntityBold") {
+        result.setClassType(typeMessageEntityBold);
+        result.setOffset( map.value("offset").value<qint32>() );
+        result.setLength( map.value("length").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "MessageEntity::typeMessageEntityItalic") {
+        result.setClassType(typeMessageEntityItalic);
+        result.setOffset( map.value("offset").value<qint32>() );
+        result.setLength( map.value("length").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "MessageEntity::typeMessageEntityCode") {
+        result.setClassType(typeMessageEntityCode);
+        result.setOffset( map.value("offset").value<qint32>() );
+        result.setLength( map.value("length").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "MessageEntity::typeMessageEntityPre") {
+        result.setClassType(typeMessageEntityPre);
+        result.setOffset( map.value("offset").value<qint32>() );
+        result.setLength( map.value("length").value<qint32>() );
+        result.setLanguage( map.value("language").value<QString>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "MessageEntity::typeMessageEntityTextUrl") {
+        result.setClassType(typeMessageEntityTextUrl);
+        result.setOffset( map.value("offset").value<qint32>() );
+        result.setLength( map.value("length").value<qint32>() );
+        result.setUrl( map.value("url").value<QString>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "MessageEntity::typeMessageEntityMentionName") {
+        result.setClassType(typeMessageEntityMentionName);
+        result.setOffset( map.value("offset").value<qint32>() );
+        result.setLength( map.value("length").value<qint32>() );
+        result.setUserIdInt( map.value("userIdInt").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "MessageEntity::typeInputMessageEntityMentionName") {
+        result.setClassType(typeInputMessageEntityMentionName);
+        result.setOffset( map.value("offset").value<qint32>() );
+        result.setLength( map.value("length").value<qint32>() );
+        result.setUserIdInputUser( InputUser::fromMap(map.value("userIdInputUser").toMap()) );
+        return result;
+    }
+    return result;
+}
+
 QByteArray MessageEntity::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

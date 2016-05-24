@@ -154,6 +154,83 @@ bool UserStatus::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> UserStatus::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeUserStatusEmpty: {
+        result["classType"] = "UserStatus::typeUserStatusEmpty";
+        return result;
+    }
+        break;
+    
+    case typeUserStatusOnline: {
+        result["classType"] = "UserStatus::typeUserStatusOnline";
+        result["expires"] = QVariant::fromValue<qint32>(expires());
+        return result;
+    }
+        break;
+    
+    case typeUserStatusOffline: {
+        result["classType"] = "UserStatus::typeUserStatusOffline";
+        result["wasOnline"] = QVariant::fromValue<qint32>(wasOnline());
+        return result;
+    }
+        break;
+    
+    case typeUserStatusRecently: {
+        result["classType"] = "UserStatus::typeUserStatusRecently";
+        return result;
+    }
+        break;
+    
+    case typeUserStatusLastWeek: {
+        result["classType"] = "UserStatus::typeUserStatusLastWeek";
+        return result;
+    }
+        break;
+    
+    case typeUserStatusLastMonth: {
+        result["classType"] = "UserStatus::typeUserStatusLastMonth";
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+UserStatus UserStatus::fromMap(const QMap<QString, QVariant> &map) {
+    UserStatus result;
+    if(map.value("classType").toString() == "UserStatus::typeUserStatusEmpty") {
+        result.setClassType(typeUserStatusEmpty);
+        return result;
+    }
+    if(map.value("classType").toString() == "UserStatus::typeUserStatusOnline") {
+        result.setClassType(typeUserStatusOnline);
+        result.setExpires( map.value("expires").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "UserStatus::typeUserStatusOffline") {
+        result.setClassType(typeUserStatusOffline);
+        result.setWasOnline( map.value("wasOnline").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "UserStatus::typeUserStatusRecently") {
+        result.setClassType(typeUserStatusRecently);
+        return result;
+    }
+    if(map.value("classType").toString() == "UserStatus::typeUserStatusLastWeek") {
+        result.setClassType(typeUserStatusLastWeek);
+        return result;
+    }
+    if(map.value("classType").toString() == "UserStatus::typeUserStatusLastMonth") {
+        result.setClassType(typeUserStatusLastMonth);
+        return result;
+    }
+    return result;
+}
+
 QByteArray UserStatus::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

@@ -204,6 +204,109 @@ bool ChannelParticipant::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> ChannelParticipant::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeChannelParticipant: {
+        result["classType"] = "ChannelParticipant::typeChannelParticipant";
+        result["userId"] = QVariant::fromValue<qint32>(userId());
+        result["date"] = QVariant::fromValue<qint32>(date());
+        return result;
+    }
+        break;
+    
+    case typeChannelParticipantSelf: {
+        result["classType"] = "ChannelParticipant::typeChannelParticipantSelf";
+        result["userId"] = QVariant::fromValue<qint32>(userId());
+        result["inviterId"] = QVariant::fromValue<qint32>(inviterId());
+        result["date"] = QVariant::fromValue<qint32>(date());
+        return result;
+    }
+        break;
+    
+    case typeChannelParticipantModerator: {
+        result["classType"] = "ChannelParticipant::typeChannelParticipantModerator";
+        result["userId"] = QVariant::fromValue<qint32>(userId());
+        result["inviterId"] = QVariant::fromValue<qint32>(inviterId());
+        result["date"] = QVariant::fromValue<qint32>(date());
+        return result;
+    }
+        break;
+    
+    case typeChannelParticipantEditor: {
+        result["classType"] = "ChannelParticipant::typeChannelParticipantEditor";
+        result["userId"] = QVariant::fromValue<qint32>(userId());
+        result["inviterId"] = QVariant::fromValue<qint32>(inviterId());
+        result["date"] = QVariant::fromValue<qint32>(date());
+        return result;
+    }
+        break;
+    
+    case typeChannelParticipantKicked: {
+        result["classType"] = "ChannelParticipant::typeChannelParticipantKicked";
+        result["userId"] = QVariant::fromValue<qint32>(userId());
+        result["kickedBy"] = QVariant::fromValue<qint32>(kickedBy());
+        result["date"] = QVariant::fromValue<qint32>(date());
+        return result;
+    }
+        break;
+    
+    case typeChannelParticipantCreator: {
+        result["classType"] = "ChannelParticipant::typeChannelParticipantCreator";
+        result["userId"] = QVariant::fromValue<qint32>(userId());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+ChannelParticipant ChannelParticipant::fromMap(const QMap<QString, QVariant> &map) {
+    ChannelParticipant result;
+    if(map.value("classType").toString() == "ChannelParticipant::typeChannelParticipant") {
+        result.setClassType(typeChannelParticipant);
+        result.setUserId( map.value("userId").value<qint32>() );
+        result.setDate( map.value("date").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "ChannelParticipant::typeChannelParticipantSelf") {
+        result.setClassType(typeChannelParticipantSelf);
+        result.setUserId( map.value("userId").value<qint32>() );
+        result.setInviterId( map.value("inviterId").value<qint32>() );
+        result.setDate( map.value("date").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "ChannelParticipant::typeChannelParticipantModerator") {
+        result.setClassType(typeChannelParticipantModerator);
+        result.setUserId( map.value("userId").value<qint32>() );
+        result.setInviterId( map.value("inviterId").value<qint32>() );
+        result.setDate( map.value("date").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "ChannelParticipant::typeChannelParticipantEditor") {
+        result.setClassType(typeChannelParticipantEditor);
+        result.setUserId( map.value("userId").value<qint32>() );
+        result.setInviterId( map.value("inviterId").value<qint32>() );
+        result.setDate( map.value("date").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "ChannelParticipant::typeChannelParticipantKicked") {
+        result.setClassType(typeChannelParticipantKicked);
+        result.setUserId( map.value("userId").value<qint32>() );
+        result.setKickedBy( map.value("kickedBy").value<qint32>() );
+        result.setDate( map.value("date").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "ChannelParticipant::typeChannelParticipantCreator") {
+        result.setClassType(typeChannelParticipantCreator);
+        result.setUserId( map.value("userId").value<qint32>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray ChannelParticipant::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

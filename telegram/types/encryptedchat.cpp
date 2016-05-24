@@ -245,6 +245,109 @@ bool EncryptedChat::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> EncryptedChat::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeEncryptedChatEmpty: {
+        result["classType"] = "EncryptedChat::typeEncryptedChatEmpty";
+        result["id"] = QVariant::fromValue<qint32>(id());
+        return result;
+    }
+        break;
+    
+    case typeEncryptedChatWaiting: {
+        result["classType"] = "EncryptedChat::typeEncryptedChatWaiting";
+        result["id"] = QVariant::fromValue<qint32>(id());
+        result["accessHash"] = QVariant::fromValue<qint64>(accessHash());
+        result["date"] = QVariant::fromValue<qint32>(date());
+        result["adminId"] = QVariant::fromValue<qint32>(adminId());
+        result["participantId"] = QVariant::fromValue<qint32>(participantId());
+        return result;
+    }
+        break;
+    
+    case typeEncryptedChatRequested: {
+        result["classType"] = "EncryptedChat::typeEncryptedChatRequested";
+        result["id"] = QVariant::fromValue<qint32>(id());
+        result["accessHash"] = QVariant::fromValue<qint64>(accessHash());
+        result["date"] = QVariant::fromValue<qint32>(date());
+        result["adminId"] = QVariant::fromValue<qint32>(adminId());
+        result["participantId"] = QVariant::fromValue<qint32>(participantId());
+        result["gA"] = QVariant::fromValue<QByteArray>(gA());
+        return result;
+    }
+        break;
+    
+    case typeEncryptedChat: {
+        result["classType"] = "EncryptedChat::typeEncryptedChat";
+        result["id"] = QVariant::fromValue<qint32>(id());
+        result["accessHash"] = QVariant::fromValue<qint64>(accessHash());
+        result["date"] = QVariant::fromValue<qint32>(date());
+        result["adminId"] = QVariant::fromValue<qint32>(adminId());
+        result["participantId"] = QVariant::fromValue<qint32>(participantId());
+        result["gAOrB"] = QVariant::fromValue<QByteArray>(gAOrB());
+        result["keyFingerprint"] = QVariant::fromValue<qint64>(keyFingerprint());
+        return result;
+    }
+        break;
+    
+    case typeEncryptedChatDiscarded: {
+        result["classType"] = "EncryptedChat::typeEncryptedChatDiscarded";
+        result["id"] = QVariant::fromValue<qint32>(id());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+EncryptedChat EncryptedChat::fromMap(const QMap<QString, QVariant> &map) {
+    EncryptedChat result;
+    if(map.value("classType").toString() == "EncryptedChat::typeEncryptedChatEmpty") {
+        result.setClassType(typeEncryptedChatEmpty);
+        result.setId( map.value("id").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "EncryptedChat::typeEncryptedChatWaiting") {
+        result.setClassType(typeEncryptedChatWaiting);
+        result.setId( map.value("id").value<qint32>() );
+        result.setAccessHash( map.value("accessHash").value<qint64>() );
+        result.setDate( map.value("date").value<qint32>() );
+        result.setAdminId( map.value("adminId").value<qint32>() );
+        result.setParticipantId( map.value("participantId").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "EncryptedChat::typeEncryptedChatRequested") {
+        result.setClassType(typeEncryptedChatRequested);
+        result.setId( map.value("id").value<qint32>() );
+        result.setAccessHash( map.value("accessHash").value<qint64>() );
+        result.setDate( map.value("date").value<qint32>() );
+        result.setAdminId( map.value("adminId").value<qint32>() );
+        result.setParticipantId( map.value("participantId").value<qint32>() );
+        result.setGA( map.value("gA").value<QByteArray>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "EncryptedChat::typeEncryptedChat") {
+        result.setClassType(typeEncryptedChat);
+        result.setId( map.value("id").value<qint32>() );
+        result.setAccessHash( map.value("accessHash").value<qint64>() );
+        result.setDate( map.value("date").value<qint32>() );
+        result.setAdminId( map.value("adminId").value<qint32>() );
+        result.setParticipantId( map.value("participantId").value<qint32>() );
+        result.setGAOrB( map.value("gAOrB").value<QByteArray>() );
+        result.setKeyFingerprint( map.value("keyFingerprint").value<qint64>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "EncryptedChat::typeEncryptedChatDiscarded") {
+        result.setClassType(typeEncryptedChatDiscarded);
+        result.setId( map.value("id").value<qint32>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray EncryptedChat::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

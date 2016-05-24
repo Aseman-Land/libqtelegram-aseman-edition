@@ -8,6 +8,7 @@
 #include "telegramtypeobject.h"
 
 #include <QMetaType>
+#include <QVariant>
 #include <QList>
 #include "chat.h"
 #include "dialog.h"
@@ -47,6 +48,9 @@ public:
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
+
+    QMap<QString, QVariant> toMap() const;
+    static MessagesPeerDialogs fromMap(const QMap<QString, QVariant> &map);
 
     bool operator ==(const MessagesPeerDialogs &b) const;
 

@@ -8,6 +8,7 @@
 #include "telegramtypeobject.h"
 
 #include <QMetaType>
+#include <QVariant>
 
 class LIBQTELEGRAMSHARED_EXPORT TopPeerCategory : public TelegramTypeObject
 {
@@ -30,6 +31,9 @@ public:
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
+
+    QMap<QString, QVariant> toMap() const;
+    static TopPeerCategory fromMap(const QMap<QString, QVariant> &map);
 
     bool operator ==(const TopPeerCategory &b) const;
 

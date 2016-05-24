@@ -8,6 +8,7 @@
 #include "telegramtypeobject.h"
 
 #include <QMetaType>
+#include <QVariant>
 #include <QList>
 #include "contact.h"
 #include "user.h"
@@ -36,6 +37,9 @@ public:
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
+
+    QMap<QString, QVariant> toMap() const;
+    static ContactsContacts fromMap(const QMap<QString, QVariant> &map);
 
     bool operator ==(const ContactsContacts &b) const;
 

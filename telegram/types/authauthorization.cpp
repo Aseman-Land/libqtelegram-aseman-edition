@@ -82,6 +82,31 @@ bool AuthAuthorization::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> AuthAuthorization::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeAuthAuthorization: {
+        result["classType"] = "AuthAuthorization::typeAuthAuthorization";
+        result["user"] = m_user.toMap();
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+AuthAuthorization AuthAuthorization::fromMap(const QMap<QString, QVariant> &map) {
+    AuthAuthorization result;
+    if(map.value("classType").toString() == "AuthAuthorization::typeAuthAuthorization") {
+        result.setClassType(typeAuthAuthorization);
+        result.setUser( User::fromMap(map.value("user").toMap()) );
+        return result;
+    }
+    return result;
+}
+
 QByteArray AuthAuthorization::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

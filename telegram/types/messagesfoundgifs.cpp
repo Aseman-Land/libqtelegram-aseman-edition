@@ -107,6 +107,40 @@ bool MessagesFoundGifs::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> MessagesFoundGifs::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeMessagesFoundGifs: {
+        result["classType"] = "MessagesFoundGifs::typeMessagesFoundGifs";
+        result["nextOffset"] = QVariant::fromValue<qint32>(nextOffset());
+        QList<QVariant> _results;
+        Q_FOREACH(const FoundGif &m__type, m_results)
+            _results << m__type.toMap();
+        result["results"] = _results;
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+MessagesFoundGifs MessagesFoundGifs::fromMap(const QMap<QString, QVariant> &map) {
+    MessagesFoundGifs result;
+    if(map.value("classType").toString() == "MessagesFoundGifs::typeMessagesFoundGifs") {
+        result.setClassType(typeMessagesFoundGifs);
+        result.setNextOffset( map.value("nextOffset").value<qint32>() );
+        QList<QVariant> map_results = map["results"].toList();
+        QList<FoundGif> _results;
+        Q_FOREACH(const QVariant &var, map_results)
+            _results << FoundGif::fromMap(var.toMap());
+        result.setResults(_results);
+        return result;
+    }
+    return result;
+}
+
 QByteArray MessagesFoundGifs::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

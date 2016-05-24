@@ -190,6 +190,127 @@ bool SendMessageAction::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> SendMessageAction::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeSendMessageTypingAction: {
+        result["classType"] = "SendMessageAction::typeSendMessageTypingAction";
+        return result;
+    }
+        break;
+    
+    case typeSendMessageCancelAction: {
+        result["classType"] = "SendMessageAction::typeSendMessageCancelAction";
+        return result;
+    }
+        break;
+    
+    case typeSendMessageRecordVideoAction: {
+        result["classType"] = "SendMessageAction::typeSendMessageRecordVideoAction";
+        return result;
+    }
+        break;
+    
+    case typeSendMessageUploadVideoAction: {
+        result["classType"] = "SendMessageAction::typeSendMessageUploadVideoAction";
+        result["progress"] = QVariant::fromValue<qint32>(progress());
+        return result;
+    }
+        break;
+    
+    case typeSendMessageRecordAudioAction: {
+        result["classType"] = "SendMessageAction::typeSendMessageRecordAudioAction";
+        return result;
+    }
+        break;
+    
+    case typeSendMessageUploadAudioAction: {
+        result["classType"] = "SendMessageAction::typeSendMessageUploadAudioAction";
+        result["progress"] = QVariant::fromValue<qint32>(progress());
+        return result;
+    }
+        break;
+    
+    case typeSendMessageUploadPhotoAction: {
+        result["classType"] = "SendMessageAction::typeSendMessageUploadPhotoAction";
+        result["progress"] = QVariant::fromValue<qint32>(progress());
+        return result;
+    }
+        break;
+    
+    case typeSendMessageUploadDocumentAction: {
+        result["classType"] = "SendMessageAction::typeSendMessageUploadDocumentAction";
+        result["progress"] = QVariant::fromValue<qint32>(progress());
+        return result;
+    }
+        break;
+    
+    case typeSendMessageGeoLocationAction: {
+        result["classType"] = "SendMessageAction::typeSendMessageGeoLocationAction";
+        return result;
+    }
+        break;
+    
+    case typeSendMessageChooseContactAction: {
+        result["classType"] = "SendMessageAction::typeSendMessageChooseContactAction";
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+SendMessageAction SendMessageAction::fromMap(const QMap<QString, QVariant> &map) {
+    SendMessageAction result;
+    if(map.value("classType").toString() == "SendMessageAction::typeSendMessageTypingAction") {
+        result.setClassType(typeSendMessageTypingAction);
+        return result;
+    }
+    if(map.value("classType").toString() == "SendMessageAction::typeSendMessageCancelAction") {
+        result.setClassType(typeSendMessageCancelAction);
+        return result;
+    }
+    if(map.value("classType").toString() == "SendMessageAction::typeSendMessageRecordVideoAction") {
+        result.setClassType(typeSendMessageRecordVideoAction);
+        return result;
+    }
+    if(map.value("classType").toString() == "SendMessageAction::typeSendMessageUploadVideoAction") {
+        result.setClassType(typeSendMessageUploadVideoAction);
+        result.setProgress( map.value("progress").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "SendMessageAction::typeSendMessageRecordAudioAction") {
+        result.setClassType(typeSendMessageRecordAudioAction);
+        return result;
+    }
+    if(map.value("classType").toString() == "SendMessageAction::typeSendMessageUploadAudioAction") {
+        result.setClassType(typeSendMessageUploadAudioAction);
+        result.setProgress( map.value("progress").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "SendMessageAction::typeSendMessageUploadPhotoAction") {
+        result.setClassType(typeSendMessageUploadPhotoAction);
+        result.setProgress( map.value("progress").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "SendMessageAction::typeSendMessageUploadDocumentAction") {
+        result.setClassType(typeSendMessageUploadDocumentAction);
+        result.setProgress( map.value("progress").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "SendMessageAction::typeSendMessageGeoLocationAction") {
+        result.setClassType(typeSendMessageGeoLocationAction);
+        return result;
+    }
+    if(map.value("classType").toString() == "SendMessageAction::typeSendMessageChooseContactAction") {
+        result.setClassType(typeSendMessageChooseContactAction);
+        return result;
+    }
+    return result;
+}
+
 QByteArray SendMessageAction::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

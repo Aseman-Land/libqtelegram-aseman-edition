@@ -170,6 +170,119 @@ bool MessagesFilter::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> MessagesFilter::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeInputMessagesFilterEmpty: {
+        result["classType"] = "MessagesFilter::typeInputMessagesFilterEmpty";
+        return result;
+    }
+        break;
+    
+    case typeInputMessagesFilterPhotos: {
+        result["classType"] = "MessagesFilter::typeInputMessagesFilterPhotos";
+        return result;
+    }
+        break;
+    
+    case typeInputMessagesFilterVideo: {
+        result["classType"] = "MessagesFilter::typeInputMessagesFilterVideo";
+        return result;
+    }
+        break;
+    
+    case typeInputMessagesFilterPhotoVideo: {
+        result["classType"] = "MessagesFilter::typeInputMessagesFilterPhotoVideo";
+        return result;
+    }
+        break;
+    
+    case typeInputMessagesFilterPhotoVideoDocuments: {
+        result["classType"] = "MessagesFilter::typeInputMessagesFilterPhotoVideoDocuments";
+        return result;
+    }
+        break;
+    
+    case typeInputMessagesFilterDocument: {
+        result["classType"] = "MessagesFilter::typeInputMessagesFilterDocument";
+        return result;
+    }
+        break;
+    
+    case typeInputMessagesFilterUrl: {
+        result["classType"] = "MessagesFilter::typeInputMessagesFilterUrl";
+        return result;
+    }
+        break;
+    
+    case typeInputMessagesFilterGif: {
+        result["classType"] = "MessagesFilter::typeInputMessagesFilterGif";
+        return result;
+    }
+        break;
+    
+    case typeInputMessagesFilterVoice: {
+        result["classType"] = "MessagesFilter::typeInputMessagesFilterVoice";
+        return result;
+    }
+        break;
+    
+    case typeInputMessagesFilterMusic: {
+        result["classType"] = "MessagesFilter::typeInputMessagesFilterMusic";
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+MessagesFilter MessagesFilter::fromMap(const QMap<QString, QVariant> &map) {
+    MessagesFilter result;
+    if(map.value("classType").toString() == "MessagesFilter::typeInputMessagesFilterEmpty") {
+        result.setClassType(typeInputMessagesFilterEmpty);
+        return result;
+    }
+    if(map.value("classType").toString() == "MessagesFilter::typeInputMessagesFilterPhotos") {
+        result.setClassType(typeInputMessagesFilterPhotos);
+        return result;
+    }
+    if(map.value("classType").toString() == "MessagesFilter::typeInputMessagesFilterVideo") {
+        result.setClassType(typeInputMessagesFilterVideo);
+        return result;
+    }
+    if(map.value("classType").toString() == "MessagesFilter::typeInputMessagesFilterPhotoVideo") {
+        result.setClassType(typeInputMessagesFilterPhotoVideo);
+        return result;
+    }
+    if(map.value("classType").toString() == "MessagesFilter::typeInputMessagesFilterPhotoVideoDocuments") {
+        result.setClassType(typeInputMessagesFilterPhotoVideoDocuments);
+        return result;
+    }
+    if(map.value("classType").toString() == "MessagesFilter::typeInputMessagesFilterDocument") {
+        result.setClassType(typeInputMessagesFilterDocument);
+        return result;
+    }
+    if(map.value("classType").toString() == "MessagesFilter::typeInputMessagesFilterUrl") {
+        result.setClassType(typeInputMessagesFilterUrl);
+        return result;
+    }
+    if(map.value("classType").toString() == "MessagesFilter::typeInputMessagesFilterGif") {
+        result.setClassType(typeInputMessagesFilterGif);
+        return result;
+    }
+    if(map.value("classType").toString() == "MessagesFilter::typeInputMessagesFilterVoice") {
+        result.setClassType(typeInputMessagesFilterVoice);
+        return result;
+    }
+    if(map.value("classType").toString() == "MessagesFilter::typeInputMessagesFilterMusic") {
+        result.setClassType(typeInputMessagesFilterMusic);
+        return result;
+    }
+    return result;
+}
+
 QByteArray MessagesFilter::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

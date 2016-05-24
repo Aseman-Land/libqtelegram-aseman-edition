@@ -110,6 +110,43 @@ bool GeoPoint::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> GeoPoint::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeGeoPointEmpty: {
+        result["classType"] = "GeoPoint::typeGeoPointEmpty";
+        return result;
+    }
+        break;
+    
+    case typeGeoPoint: {
+        result["classType"] = "GeoPoint::typeGeoPoint";
+        result["longValue"] = QVariant::fromValue<qreal>(longValue());
+        result["lat"] = QVariant::fromValue<qreal>(lat());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+GeoPoint GeoPoint::fromMap(const QMap<QString, QVariant> &map) {
+    GeoPoint result;
+    if(map.value("classType").toString() == "GeoPoint::typeGeoPointEmpty") {
+        result.setClassType(typeGeoPointEmpty);
+        return result;
+    }
+    if(map.value("classType").toString() == "GeoPoint::typeGeoPoint") {
+        result.setClassType(typeGeoPoint);
+        result.setLongValue( map.value("longValue").value<qreal>() );
+        result.setLat( map.value("lat").value<qreal>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray GeoPoint::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

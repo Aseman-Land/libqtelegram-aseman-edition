@@ -137,6 +137,56 @@ bool ContactsFound::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> ContactsFound::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeContactsFound: {
+        result["classType"] = "ContactsFound::typeContactsFound";
+        QList<QVariant> _results;
+        Q_FOREACH(const Peer &m__type, m_results)
+            _results << m__type.toMap();
+        result["results"] = _results;
+        QList<QVariant> _chats;
+        Q_FOREACH(const Chat &m__type, m_chats)
+            _chats << m__type.toMap();
+        result["chats"] = _chats;
+        QList<QVariant> _users;
+        Q_FOREACH(const User &m__type, m_users)
+            _users << m__type.toMap();
+        result["users"] = _users;
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+ContactsFound ContactsFound::fromMap(const QMap<QString, QVariant> &map) {
+    ContactsFound result;
+    if(map.value("classType").toString() == "ContactsFound::typeContactsFound") {
+        result.setClassType(typeContactsFound);
+        QList<QVariant> map_results = map["results"].toList();
+        QList<Peer> _results;
+        Q_FOREACH(const QVariant &var, map_results)
+            _results << Peer::fromMap(var.toMap());
+        result.setResults(_results);
+        QList<QVariant> map_chats = map["chats"].toList();
+        QList<Chat> _chats;
+        Q_FOREACH(const QVariant &var, map_chats)
+            _chats << Chat::fromMap(var.toMap());
+        result.setChats(_chats);
+        QList<QVariant> map_users = map["users"].toList();
+        QList<User> _users;
+        Q_FOREACH(const QVariant &var, map_users)
+            _users << User::fromMap(var.toMap());
+        result.setUsers(_users);
+        return result;
+    }
+    return result;
+}
+
 QByteArray ContactsFound::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

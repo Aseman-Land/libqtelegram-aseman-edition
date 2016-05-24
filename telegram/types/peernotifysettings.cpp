@@ -139,6 +139,46 @@ bool PeerNotifySettings::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> PeerNotifySettings::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typePeerNotifySettingsEmpty: {
+        result["classType"] = "PeerNotifySettings::typePeerNotifySettingsEmpty";
+        return result;
+    }
+        break;
+    
+    case typePeerNotifySettings: {
+        result["classType"] = "PeerNotifySettings::typePeerNotifySettings";
+        result["flags"] = QVariant::fromValue<qint32>(flags());
+        result["muteUntil"] = QVariant::fromValue<qint32>(muteUntil());
+        result["sound"] = QVariant::fromValue<QString>(sound());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+PeerNotifySettings PeerNotifySettings::fromMap(const QMap<QString, QVariant> &map) {
+    PeerNotifySettings result;
+    if(map.value("classType").toString() == "PeerNotifySettings::typePeerNotifySettingsEmpty") {
+        result.setClassType(typePeerNotifySettingsEmpty);
+        return result;
+    }
+    if(map.value("classType").toString() == "PeerNotifySettings::typePeerNotifySettings") {
+        result.setClassType(typePeerNotifySettings);
+        result.setShowPreviews( map.value("showPreviews").value<bool>() );
+        result.setSilent( map.value("silent").value<bool>() );
+        result.setMuteUntil( map.value("muteUntil").value<qint32>() );
+        result.setSound( map.value("sound").value<QString>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray PeerNotifySettings::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

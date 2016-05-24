@@ -133,6 +133,67 @@ bool AuthSentCodeType::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> AuthSentCodeType::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeAuthSentCodeTypeApp: {
+        result["classType"] = "AuthSentCodeType::typeAuthSentCodeTypeApp";
+        result["length"] = QVariant::fromValue<qint32>(length());
+        return result;
+    }
+        break;
+    
+    case typeAuthSentCodeTypeSms: {
+        result["classType"] = "AuthSentCodeType::typeAuthSentCodeTypeSms";
+        result["length"] = QVariant::fromValue<qint32>(length());
+        return result;
+    }
+        break;
+    
+    case typeAuthSentCodeTypeCall: {
+        result["classType"] = "AuthSentCodeType::typeAuthSentCodeTypeCall";
+        result["length"] = QVariant::fromValue<qint32>(length());
+        return result;
+    }
+        break;
+    
+    case typeAuthSentCodeTypeFlashCall: {
+        result["classType"] = "AuthSentCodeType::typeAuthSentCodeTypeFlashCall";
+        result["pattern"] = QVariant::fromValue<QString>(pattern());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+AuthSentCodeType AuthSentCodeType::fromMap(const QMap<QString, QVariant> &map) {
+    AuthSentCodeType result;
+    if(map.value("classType").toString() == "AuthSentCodeType::typeAuthSentCodeTypeApp") {
+        result.setClassType(typeAuthSentCodeTypeApp);
+        result.setLength( map.value("length").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "AuthSentCodeType::typeAuthSentCodeTypeSms") {
+        result.setClassType(typeAuthSentCodeTypeSms);
+        result.setLength( map.value("length").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "AuthSentCodeType::typeAuthSentCodeTypeCall") {
+        result.setClassType(typeAuthSentCodeTypeCall);
+        result.setLength( map.value("length").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "AuthSentCodeType::typeAuthSentCodeTypeFlashCall") {
+        result.setClassType(typeAuthSentCodeTypeFlashCall);
+        result.setPattern( map.value("pattern").value<QString>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray AuthSentCodeType::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

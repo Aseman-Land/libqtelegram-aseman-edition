@@ -184,6 +184,86 @@ bool ReplyMarkup::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> ReplyMarkup::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeReplyKeyboardHide: {
+        result["classType"] = "ReplyMarkup::typeReplyKeyboardHide";
+        result["flags"] = QVariant::fromValue<qint32>(flags());
+        return result;
+    }
+        break;
+    
+    case typeReplyKeyboardForceReply: {
+        result["classType"] = "ReplyMarkup::typeReplyKeyboardForceReply";
+        result["flags"] = QVariant::fromValue<qint32>(flags());
+        return result;
+    }
+        break;
+    
+    case typeReplyKeyboardMarkup: {
+        result["classType"] = "ReplyMarkup::typeReplyKeyboardMarkup";
+        result["flags"] = QVariant::fromValue<qint32>(flags());
+        QList<QVariant> _rows;
+        Q_FOREACH(const KeyboardButtonRow &m__type, m_rows)
+            _rows << m__type.toMap();
+        result["rows"] = _rows;
+        return result;
+    }
+        break;
+    
+    case typeReplyInlineMarkup: {
+        result["classType"] = "ReplyMarkup::typeReplyInlineMarkup";
+        QList<QVariant> _rows;
+        Q_FOREACH(const KeyboardButtonRow &m__type, m_rows)
+            _rows << m__type.toMap();
+        result["rows"] = _rows;
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+ReplyMarkup ReplyMarkup::fromMap(const QMap<QString, QVariant> &map) {
+    ReplyMarkup result;
+    if(map.value("classType").toString() == "ReplyMarkup::typeReplyKeyboardHide") {
+        result.setClassType(typeReplyKeyboardHide);
+        result.setSelective( map.value("selective").value<bool>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "ReplyMarkup::typeReplyKeyboardForceReply") {
+        result.setClassType(typeReplyKeyboardForceReply);
+        result.setSingleUse( map.value("singleUse").value<bool>() );
+        result.setSelective( map.value("selective").value<bool>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "ReplyMarkup::typeReplyKeyboardMarkup") {
+        result.setClassType(typeReplyKeyboardMarkup);
+        result.setResize( map.value("resize").value<bool>() );
+        result.setSingleUse( map.value("singleUse").value<bool>() );
+        result.setSelective( map.value("selective").value<bool>() );
+        QList<QVariant> map_rows = map["rows"].toList();
+        QList<KeyboardButtonRow> _rows;
+        Q_FOREACH(const QVariant &var, map_rows)
+            _rows << KeyboardButtonRow::fromMap(var.toMap());
+        result.setRows(_rows);
+        return result;
+    }
+    if(map.value("classType").toString() == "ReplyMarkup::typeReplyInlineMarkup") {
+        result.setClassType(typeReplyInlineMarkup);
+        QList<QVariant> map_rows = map["rows"].toList();
+        QList<KeyboardButtonRow> _rows;
+        Q_FOREACH(const QVariant &var, map_rows)
+            _rows << KeyboardButtonRow::fromMap(var.toMap());
+        result.setRows(_rows);
+        return result;
+    }
+    return result;
+}
+
 QByteArray ReplyMarkup::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

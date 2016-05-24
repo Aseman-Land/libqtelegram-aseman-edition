@@ -93,6 +93,41 @@ bool ExportedChatInvite::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> ExportedChatInvite::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeChatInviteEmpty: {
+        result["classType"] = "ExportedChatInvite::typeChatInviteEmpty";
+        return result;
+    }
+        break;
+    
+    case typeChatInviteExported: {
+        result["classType"] = "ExportedChatInvite::typeChatInviteExported";
+        result["link"] = QVariant::fromValue<QString>(link());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+ExportedChatInvite ExportedChatInvite::fromMap(const QMap<QString, QVariant> &map) {
+    ExportedChatInvite result;
+    if(map.value("classType").toString() == "ExportedChatInvite::typeChatInviteEmpty") {
+        result.setClassType(typeChatInviteEmpty);
+        return result;
+    }
+    if(map.value("classType").toString() == "ExportedChatInvite::typeChatInviteExported") {
+        result.setClassType(typeChatInviteExported);
+        result.setLink( map.value("link").value<QString>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray ExportedChatInvite::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

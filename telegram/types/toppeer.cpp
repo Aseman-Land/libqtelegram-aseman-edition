@@ -96,6 +96,33 @@ bool TopPeer::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> TopPeer::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeTopPeer: {
+        result["classType"] = "TopPeer::typeTopPeer";
+        result["peer"] = m_peer.toMap();
+        result["rating"] = QVariant::fromValue<qreal>(rating());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+TopPeer TopPeer::fromMap(const QMap<QString, QVariant> &map) {
+    TopPeer result;
+    if(map.value("classType").toString() == "TopPeer::typeTopPeer") {
+        result.setClassType(typeTopPeer);
+        result.setPeer( Peer::fromMap(map.value("peer").toMap()) );
+        result.setRating( map.value("rating").value<qreal>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray TopPeer::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

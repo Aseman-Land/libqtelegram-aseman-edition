@@ -118,6 +118,42 @@ bool TopPeerCategoryPeers::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> TopPeerCategoryPeers::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeTopPeerCategoryPeers: {
+        result["classType"] = "TopPeerCategoryPeers::typeTopPeerCategoryPeers";
+        result["category"] = m_category.toMap();
+        result["count"] = QVariant::fromValue<qint32>(count());
+        QList<QVariant> _peers;
+        Q_FOREACH(const TopPeer &m__type, m_peers)
+            _peers << m__type.toMap();
+        result["peers"] = _peers;
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+TopPeerCategoryPeers TopPeerCategoryPeers::fromMap(const QMap<QString, QVariant> &map) {
+    TopPeerCategoryPeers result;
+    if(map.value("classType").toString() == "TopPeerCategoryPeers::typeTopPeerCategoryPeers") {
+        result.setClassType(typeTopPeerCategoryPeers);
+        result.setCategory( TopPeerCategory::fromMap(map.value("category").toMap()) );
+        result.setCount( map.value("count").value<qint32>() );
+        QList<QVariant> map_peers = map["peers"].toList();
+        QList<TopPeer> _peers;
+        Q_FOREACH(const QVariant &var, map_peers)
+            _peers << TopPeer::fromMap(var.toMap());
+        result.setPeers(_peers);
+        return result;
+    }
+    return result;
+}
+
 QByteArray TopPeerCategoryPeers::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

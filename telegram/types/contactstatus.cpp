@@ -96,6 +96,33 @@ bool ContactStatus::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> ContactStatus::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeContactStatus: {
+        result["classType"] = "ContactStatus::typeContactStatus";
+        result["userId"] = QVariant::fromValue<qint32>(userId());
+        result["status"] = m_status.toMap();
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+ContactStatus ContactStatus::fromMap(const QMap<QString, QVariant> &map) {
+    ContactStatus result;
+    if(map.value("classType").toString() == "ContactStatus::typeContactStatus") {
+        result.setClassType(typeContactStatus);
+        result.setUserId( map.value("userId").value<qint32>() );
+        result.setStatus( UserStatus::fromMap(map.value("status").toMap()) );
+        return result;
+    }
+    return result;
+}
+
 QByteArray ContactStatus::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

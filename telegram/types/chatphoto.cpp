@@ -104,6 +104,43 @@ bool ChatPhoto::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> ChatPhoto::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeChatPhotoEmpty: {
+        result["classType"] = "ChatPhoto::typeChatPhotoEmpty";
+        return result;
+    }
+        break;
+    
+    case typeChatPhoto: {
+        result["classType"] = "ChatPhoto::typeChatPhoto";
+        result["photoSmall"] = m_photoSmall.toMap();
+        result["photoBig"] = m_photoBig.toMap();
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+ChatPhoto ChatPhoto::fromMap(const QMap<QString, QVariant> &map) {
+    ChatPhoto result;
+    if(map.value("classType").toString() == "ChatPhoto::typeChatPhotoEmpty") {
+        result.setClassType(typeChatPhotoEmpty);
+        return result;
+    }
+    if(map.value("classType").toString() == "ChatPhoto::typeChatPhoto") {
+        result.setClassType(typeChatPhoto);
+        result.setPhotoSmall( FileLocation::fromMap(map.value("photoSmall").toMap()) );
+        result.setPhotoBig( FileLocation::fromMap(map.value("photoBig").toMap()) );
+        return result;
+    }
+    return result;
+}
+
 QByteArray ChatPhoto::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

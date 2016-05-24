@@ -298,6 +298,129 @@ bool MessageMedia::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> MessageMedia::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeMessageMediaEmpty: {
+        result["classType"] = "MessageMedia::typeMessageMediaEmpty";
+        return result;
+    }
+        break;
+    
+    case typeMessageMediaPhoto: {
+        result["classType"] = "MessageMedia::typeMessageMediaPhoto";
+        result["photo"] = m_photo.toMap();
+        result["caption"] = QVariant::fromValue<QString>(caption());
+        return result;
+    }
+        break;
+    
+    case typeMessageMediaGeo: {
+        result["classType"] = "MessageMedia::typeMessageMediaGeo";
+        result["geo"] = m_geo.toMap();
+        return result;
+    }
+        break;
+    
+    case typeMessageMediaContact: {
+        result["classType"] = "MessageMedia::typeMessageMediaContact";
+        result["phoneNumber"] = QVariant::fromValue<QString>(phoneNumber());
+        result["firstName"] = QVariant::fromValue<QString>(firstName());
+        result["lastName"] = QVariant::fromValue<QString>(lastName());
+        result["userId"] = QVariant::fromValue<qint32>(userId());
+        return result;
+    }
+        break;
+    
+    case typeMessageMediaUnsupported: {
+        result["classType"] = "MessageMedia::typeMessageMediaUnsupported";
+        return result;
+    }
+        break;
+    
+    case typeMessageMediaDocument: {
+        result["classType"] = "MessageMedia::typeMessageMediaDocument";
+        result["document"] = m_document.toMap();
+        result["caption"] = QVariant::fromValue<QString>(caption());
+        return result;
+    }
+        break;
+    
+    case typeMessageMediaWebPage: {
+        result["classType"] = "MessageMedia::typeMessageMediaWebPage";
+        result["webpage"] = m_webpage.toMap();
+        return result;
+    }
+        break;
+    
+    case typeMessageMediaVenue: {
+        result["classType"] = "MessageMedia::typeMessageMediaVenue";
+        result["geo"] = m_geo.toMap();
+        result["title"] = QVariant::fromValue<QString>(title());
+        result["address"] = QVariant::fromValue<QString>(address());
+        result["provider"] = QVariant::fromValue<QString>(provider());
+        result["venueId"] = QVariant::fromValue<QString>(venueId());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+MessageMedia MessageMedia::fromMap(const QMap<QString, QVariant> &map) {
+    MessageMedia result;
+    if(map.value("classType").toString() == "MessageMedia::typeMessageMediaEmpty") {
+        result.setClassType(typeMessageMediaEmpty);
+        return result;
+    }
+    if(map.value("classType").toString() == "MessageMedia::typeMessageMediaPhoto") {
+        result.setClassType(typeMessageMediaPhoto);
+        result.setPhoto( Photo::fromMap(map.value("photo").toMap()) );
+        result.setCaption( map.value("caption").value<QString>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "MessageMedia::typeMessageMediaGeo") {
+        result.setClassType(typeMessageMediaGeo);
+        result.setGeo( GeoPoint::fromMap(map.value("geo").toMap()) );
+        return result;
+    }
+    if(map.value("classType").toString() == "MessageMedia::typeMessageMediaContact") {
+        result.setClassType(typeMessageMediaContact);
+        result.setPhoneNumber( map.value("phoneNumber").value<QString>() );
+        result.setFirstName( map.value("firstName").value<QString>() );
+        result.setLastName( map.value("lastName").value<QString>() );
+        result.setUserId( map.value("userId").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "MessageMedia::typeMessageMediaUnsupported") {
+        result.setClassType(typeMessageMediaUnsupported);
+        return result;
+    }
+    if(map.value("classType").toString() == "MessageMedia::typeMessageMediaDocument") {
+        result.setClassType(typeMessageMediaDocument);
+        result.setDocument( Document::fromMap(map.value("document").toMap()) );
+        result.setCaption( map.value("caption").value<QString>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "MessageMedia::typeMessageMediaWebPage") {
+        result.setClassType(typeMessageMediaWebPage);
+        result.setWebpage( WebPage::fromMap(map.value("webpage").toMap()) );
+        return result;
+    }
+    if(map.value("classType").toString() == "MessageMedia::typeMessageMediaVenue") {
+        result.setClassType(typeMessageMediaVenue);
+        result.setGeo( GeoPoint::fromMap(map.value("geo").toMap()) );
+        result.setTitle( map.value("title").value<QString>() );
+        result.setAddress( map.value("address").value<QString>() );
+        result.setProvider( map.value("provider").value<QString>() );
+        result.setVenueId( map.value("venueId").value<QString>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray MessageMedia::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

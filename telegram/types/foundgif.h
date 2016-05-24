@@ -8,6 +8,7 @@
 #include "telegramtypeobject.h"
 
 #include <QMetaType>
+#include <QVariant>
 #include <QString>
 #include "document.h"
 #include <QtGlobal>
@@ -55,6 +56,9 @@ public:
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
+
+    QMap<QString, QVariant> toMap() const;
+    static FoundGif fromMap(const QMap<QString, QVariant> &map);
 
     bool operator ==(const FoundGif &b) const;
 

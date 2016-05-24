@@ -99,6 +99,33 @@ bool ReceivedNotifyMessage::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> ReceivedNotifyMessage::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeReceivedNotifyMessage: {
+        result["classType"] = "ReceivedNotifyMessage::typeReceivedNotifyMessage";
+        result["id"] = QVariant::fromValue<qint32>(id());
+        result["flags"] = QVariant::fromValue<qint32>(flags());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+ReceivedNotifyMessage ReceivedNotifyMessage::fromMap(const QMap<QString, QVariant> &map) {
+    ReceivedNotifyMessage result;
+    if(map.value("classType").toString() == "ReceivedNotifyMessage::typeReceivedNotifyMessage") {
+        result.setClassType(typeReceivedNotifyMessage);
+        result.setId( map.value("id").value<qint32>() );
+        result.setFlags( map.value("flags").value<qint32>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray ReceivedNotifyMessage::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

@@ -110,6 +110,43 @@ bool InputDocument::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> InputDocument::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeInputDocumentEmpty: {
+        result["classType"] = "InputDocument::typeInputDocumentEmpty";
+        return result;
+    }
+        break;
+    
+    case typeInputDocument: {
+        result["classType"] = "InputDocument::typeInputDocument";
+        result["id"] = QVariant::fromValue<qint64>(id());
+        result["accessHash"] = QVariant::fromValue<qint64>(accessHash());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+InputDocument InputDocument::fromMap(const QMap<QString, QVariant> &map) {
+    InputDocument result;
+    if(map.value("classType").toString() == "InputDocument::typeInputDocumentEmpty") {
+        result.setClassType(typeInputDocumentEmpty);
+        return result;
+    }
+    if(map.value("classType").toString() == "InputDocument::typeInputDocument") {
+        result.setClassType(typeInputDocument);
+        result.setId( map.value("id").value<qint64>() );
+        result.setAccessHash( map.value("accessHash").value<qint64>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray InputDocument::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

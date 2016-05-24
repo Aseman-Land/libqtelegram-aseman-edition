@@ -166,6 +166,43 @@ bool UserFull::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> UserFull::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeUserFull: {
+        result["classType"] = "UserFull::typeUserFull";
+        result["flags"] = QVariant::fromValue<qint32>(flags());
+        result["user"] = m_user.toMap();
+        result["about"] = QVariant::fromValue<QString>(about());
+        result["link"] = m_link.toMap();
+        result["profilePhoto"] = m_profilePhoto.toMap();
+        result["notifySettings"] = m_notifySettings.toMap();
+        result["botInfo"] = m_botInfo.toMap();
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+UserFull UserFull::fromMap(const QMap<QString, QVariant> &map) {
+    UserFull result;
+    if(map.value("classType").toString() == "UserFull::typeUserFull") {
+        result.setClassType(typeUserFull);
+        result.setBlocked( map.value("blocked").value<bool>() );
+        result.setUser( User::fromMap(map.value("user").toMap()) );
+        result.setAbout( map.value("about").value<QString>() );
+        result.setLink( ContactsLink::fromMap(map.value("link").toMap()) );
+        result.setProfilePhoto( Photo::fromMap(map.value("profilePhoto").toMap()) );
+        result.setNotifySettings( PeerNotifySettings::fromMap(map.value("notifySettings").toMap()) );
+        result.setBotInfo( BotInfo::fromMap(map.value("botInfo").toMap()) );
+        return result;
+    }
+    return result;
+}
+
 QByteArray UserFull::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

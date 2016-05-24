@@ -137,6 +137,38 @@ bool AccountPasswordInputSettings::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> AccountPasswordInputSettings::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeAccountPasswordInputSettings: {
+        result["classType"] = "AccountPasswordInputSettings::typeAccountPasswordInputSettings";
+        result["flags"] = QVariant::fromValue<qint32>(flags());
+        result["newSalt"] = QVariant::fromValue<QByteArray>(newSalt());
+        result["newPasswordHash"] = QVariant::fromValue<QByteArray>(newPasswordHash());
+        result["hint"] = QVariant::fromValue<QString>(hint());
+        result["email"] = QVariant::fromValue<QString>(email());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+AccountPasswordInputSettings AccountPasswordInputSettings::fromMap(const QMap<QString, QVariant> &map) {
+    AccountPasswordInputSettings result;
+    if(map.value("classType").toString() == "AccountPasswordInputSettings::typeAccountPasswordInputSettings") {
+        result.setClassType(typeAccountPasswordInputSettings);
+        result.setNewSalt( map.value("newSalt").value<QByteArray>() );
+        result.setNewPasswordHash( map.value("newPasswordHash").value<QByteArray>() );
+        result.setHint( map.value("hint").value<QString>() );
+        result.setEmail( map.value("email").value<QString>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray AccountPasswordInputSettings::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

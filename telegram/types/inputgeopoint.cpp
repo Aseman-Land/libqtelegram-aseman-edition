@@ -110,6 +110,43 @@ bool InputGeoPoint::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> InputGeoPoint::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeInputGeoPointEmpty: {
+        result["classType"] = "InputGeoPoint::typeInputGeoPointEmpty";
+        return result;
+    }
+        break;
+    
+    case typeInputGeoPoint: {
+        result["classType"] = "InputGeoPoint::typeInputGeoPoint";
+        result["lat"] = QVariant::fromValue<qreal>(lat());
+        result["longValue"] = QVariant::fromValue<qreal>(longValue());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+InputGeoPoint InputGeoPoint::fromMap(const QMap<QString, QVariant> &map) {
+    InputGeoPoint result;
+    if(map.value("classType").toString() == "InputGeoPoint::typeInputGeoPointEmpty") {
+        result.setClassType(typeInputGeoPointEmpty);
+        return result;
+    }
+    if(map.value("classType").toString() == "InputGeoPoint::typeInputGeoPoint") {
+        result.setClassType(typeInputGeoPoint);
+        result.setLat( map.value("lat").value<qreal>() );
+        result.setLongValue( map.value("longValue").value<qreal>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray InputGeoPoint::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

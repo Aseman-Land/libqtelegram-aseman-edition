@@ -99,6 +99,33 @@ bool MessagesAffectedMessages::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> MessagesAffectedMessages::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeMessagesAffectedMessages: {
+        result["classType"] = "MessagesAffectedMessages::typeMessagesAffectedMessages";
+        result["pts"] = QVariant::fromValue<qint32>(pts());
+        result["ptsCount"] = QVariant::fromValue<qint32>(ptsCount());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+MessagesAffectedMessages MessagesAffectedMessages::fromMap(const QMap<QString, QVariant> &map) {
+    MessagesAffectedMessages result;
+    if(map.value("classType").toString() == "MessagesAffectedMessages::typeMessagesAffectedMessages") {
+        result.setClassType(typeMessagesAffectedMessages);
+        result.setPts( map.value("pts").value<qint32>() );
+        result.setPtsCount( map.value("ptsCount").value<qint32>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray MessagesAffectedMessages::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

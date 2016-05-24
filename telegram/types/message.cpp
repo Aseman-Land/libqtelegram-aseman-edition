@@ -385,6 +385,110 @@ bool Message::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> Message::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeMessageEmpty: {
+        result["classType"] = "Message::typeMessageEmpty";
+        result["id"] = QVariant::fromValue<qint32>(id());
+        return result;
+    }
+        break;
+    
+    case typeMessage: {
+        result["classType"] = "Message::typeMessage";
+        result["flags"] = QVariant::fromValue<qint32>(flags());
+        result["id"] = QVariant::fromValue<qint32>(id());
+        result["fromId"] = QVariant::fromValue<qint32>(fromId());
+        result["toId"] = m_toId.toMap();
+        result["fwdFrom"] = m_fwdFrom.toMap();
+        result["viaBotId"] = QVariant::fromValue<qint32>(viaBotId());
+        result["replyToMsgId"] = QVariant::fromValue<qint32>(replyToMsgId());
+        result["date"] = QVariant::fromValue<qint32>(date());
+        result["message"] = QVariant::fromValue<QString>(message());
+        result["media"] = m_media.toMap();
+        result["replyMarkup"] = m_replyMarkup.toMap();
+        QList<QVariant> _entities;
+        Q_FOREACH(const MessageEntity &m__type, m_entities)
+            _entities << m__type.toMap();
+        result["entities"] = _entities;
+        result["views"] = QVariant::fromValue<qint32>(views());
+        result["editDate"] = QVariant::fromValue<qint32>(editDate());
+        return result;
+    }
+        break;
+    
+    case typeMessageService: {
+        result["classType"] = "Message::typeMessageService";
+        result["flags"] = QVariant::fromValue<qint32>(flags());
+        result["id"] = QVariant::fromValue<qint32>(id());
+        result["fromId"] = QVariant::fromValue<qint32>(fromId());
+        result["toId"] = m_toId.toMap();
+        result["replyToMsgId"] = QVariant::fromValue<qint32>(replyToMsgId());
+        result["date"] = QVariant::fromValue<qint32>(date());
+        result["action"] = m_action.toMap();
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+Message Message::fromMap(const QMap<QString, QVariant> &map) {
+    Message result;
+    if(map.value("classType").toString() == "Message::typeMessageEmpty") {
+        result.setClassType(typeMessageEmpty);
+        result.setId( map.value("id").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "Message::typeMessage") {
+        result.setClassType(typeMessage);
+        result.setUnread( map.value("unread").value<bool>() );
+        result.setOut( map.value("out").value<bool>() );
+        result.setMentioned( map.value("mentioned").value<bool>() );
+        result.setMediaUnread( map.value("mediaUnread").value<bool>() );
+        result.setSilent( map.value("silent").value<bool>() );
+        result.setPost( map.value("post").value<bool>() );
+        result.setId( map.value("id").value<qint32>() );
+        result.setFromId( map.value("fromId").value<qint32>() );
+        result.setToId( Peer::fromMap(map.value("toId").toMap()) );
+        result.setFwdFrom( MessageFwdHeader::fromMap(map.value("fwdFrom").toMap()) );
+        result.setViaBotId( map.value("viaBotId").value<qint32>() );
+        result.setReplyToMsgId( map.value("replyToMsgId").value<qint32>() );
+        result.setDate( map.value("date").value<qint32>() );
+        result.setMessage( map.value("message").value<QString>() );
+        result.setMedia( MessageMedia::fromMap(map.value("media").toMap()) );
+        result.setReplyMarkup( ReplyMarkup::fromMap(map.value("replyMarkup").toMap()) );
+        QList<QVariant> map_entities = map["entities"].toList();
+        QList<MessageEntity> _entities;
+        Q_FOREACH(const QVariant &var, map_entities)
+            _entities << MessageEntity::fromMap(var.toMap());
+        result.setEntities(_entities);
+        result.setViews( map.value("views").value<qint32>() );
+        result.setEditDate( map.value("editDate").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "Message::typeMessageService") {
+        result.setClassType(typeMessageService);
+        result.setUnread( map.value("unread").value<bool>() );
+        result.setOut( map.value("out").value<bool>() );
+        result.setMentioned( map.value("mentioned").value<bool>() );
+        result.setMediaUnread( map.value("mediaUnread").value<bool>() );
+        result.setSilent( map.value("silent").value<bool>() );
+        result.setPost( map.value("post").value<bool>() );
+        result.setId( map.value("id").value<qint32>() );
+        result.setFromId( map.value("fromId").value<qint32>() );
+        result.setToId( Peer::fromMap(map.value("toId").toMap()) );
+        result.setReplyToMsgId( map.value("replyToMsgId").value<qint32>() );
+        result.setDate( map.value("date").value<qint32>() );
+        result.setAction( MessageAction::fromMap(map.value("action").toMap()) );
+        return result;
+    }
+    return result;
+}
+
 QByteArray Message::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

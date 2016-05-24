@@ -161,6 +161,57 @@ bool ChatParticipants::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> ChatParticipants::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeChatParticipantsForbidden: {
+        result["classType"] = "ChatParticipants::typeChatParticipantsForbidden";
+        result["flags"] = QVariant::fromValue<qint32>(flags());
+        result["chatId"] = QVariant::fromValue<qint32>(chatId());
+        result["selfParticipant"] = m_selfParticipant.toMap();
+        return result;
+    }
+        break;
+    
+    case typeChatParticipants: {
+        result["classType"] = "ChatParticipants::typeChatParticipants";
+        result["chatId"] = QVariant::fromValue<qint32>(chatId());
+        QList<QVariant> _participants;
+        Q_FOREACH(const ChatParticipant &m__type, m_participants)
+            _participants << m__type.toMap();
+        result["participants"] = _participants;
+        result["version"] = QVariant::fromValue<qint32>(version());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+ChatParticipants ChatParticipants::fromMap(const QMap<QString, QVariant> &map) {
+    ChatParticipants result;
+    if(map.value("classType").toString() == "ChatParticipants::typeChatParticipantsForbidden") {
+        result.setClassType(typeChatParticipantsForbidden);
+        result.setChatId( map.value("chatId").value<qint32>() );
+        result.setSelfParticipant( ChatParticipant::fromMap(map.value("selfParticipant").toMap()) );
+        return result;
+    }
+    if(map.value("classType").toString() == "ChatParticipants::typeChatParticipants") {
+        result.setClassType(typeChatParticipants);
+        result.setChatId( map.value("chatId").value<qint32>() );
+        QList<QVariant> map_participants = map["participants"].toList();
+        QList<ChatParticipant> _participants;
+        Q_FOREACH(const QVariant &var, map_participants)
+            _participants << ChatParticipant::fromMap(var.toMap());
+        result.setParticipants(_participants);
+        result.setVersion( map.value("version").value<qint32>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray ChatParticipants::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

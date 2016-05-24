@@ -8,6 +8,7 @@
 #include "telegramtypeobject.h"
 
 #include <QMetaType>
+#include <QVariant>
 #include "sendmessageaction.h"
 #include <QtGlobal>
 #include "encryptedchat.h"
@@ -271,6 +272,9 @@ public:
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
+
+    QMap<QString, QVariant> toMap() const;
+    static Update fromMap(const QMap<QString, QVariant> &map);
 
     bool operator ==(const Update &b) const;
 

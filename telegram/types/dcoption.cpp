@@ -151,6 +151,39 @@ bool DcOption::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> DcOption::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeDcOption: {
+        result["classType"] = "DcOption::typeDcOption";
+        result["flags"] = QVariant::fromValue<qint32>(flags());
+        result["id"] = QVariant::fromValue<qint32>(id());
+        result["ipAddress"] = QVariant::fromValue<QString>(ipAddress());
+        result["port"] = QVariant::fromValue<qint32>(port());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+DcOption DcOption::fromMap(const QMap<QString, QVariant> &map) {
+    DcOption result;
+    if(map.value("classType").toString() == "DcOption::typeDcOption") {
+        result.setClassType(typeDcOption);
+        result.setIpv6( map.value("ipv6").value<bool>() );
+        result.setMediaOnly( map.value("mediaOnly").value<bool>() );
+        result.setTcpoOnly( map.value("tcpoOnly").value<bool>() );
+        result.setId( map.value("id").value<qint32>() );
+        result.setIpAddress( map.value("ipAddress").value<QString>() );
+        result.setPort( map.value("port").value<qint32>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray DcOption::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

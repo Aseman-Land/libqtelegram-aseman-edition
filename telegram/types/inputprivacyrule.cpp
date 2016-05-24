@@ -161,6 +161,97 @@ bool InputPrivacyRule::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> InputPrivacyRule::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeInputPrivacyValueAllowContacts: {
+        result["classType"] = "InputPrivacyRule::typeInputPrivacyValueAllowContacts";
+        return result;
+    }
+        break;
+    
+    case typeInputPrivacyValueAllowAll: {
+        result["classType"] = "InputPrivacyRule::typeInputPrivacyValueAllowAll";
+        return result;
+    }
+        break;
+    
+    case typeInputPrivacyValueAllowUsers: {
+        result["classType"] = "InputPrivacyRule::typeInputPrivacyValueAllowUsers";
+        QList<QVariant> _users;
+        Q_FOREACH(const InputUser &m__type, m_users)
+            _users << m__type.toMap();
+        result["users"] = _users;
+        return result;
+    }
+        break;
+    
+    case typeInputPrivacyValueDisallowContacts: {
+        result["classType"] = "InputPrivacyRule::typeInputPrivacyValueDisallowContacts";
+        return result;
+    }
+        break;
+    
+    case typeInputPrivacyValueDisallowAll: {
+        result["classType"] = "InputPrivacyRule::typeInputPrivacyValueDisallowAll";
+        return result;
+    }
+        break;
+    
+    case typeInputPrivacyValueDisallowUsers: {
+        result["classType"] = "InputPrivacyRule::typeInputPrivacyValueDisallowUsers";
+        QList<QVariant> _users;
+        Q_FOREACH(const InputUser &m__type, m_users)
+            _users << m__type.toMap();
+        result["users"] = _users;
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+InputPrivacyRule InputPrivacyRule::fromMap(const QMap<QString, QVariant> &map) {
+    InputPrivacyRule result;
+    if(map.value("classType").toString() == "InputPrivacyRule::typeInputPrivacyValueAllowContacts") {
+        result.setClassType(typeInputPrivacyValueAllowContacts);
+        return result;
+    }
+    if(map.value("classType").toString() == "InputPrivacyRule::typeInputPrivacyValueAllowAll") {
+        result.setClassType(typeInputPrivacyValueAllowAll);
+        return result;
+    }
+    if(map.value("classType").toString() == "InputPrivacyRule::typeInputPrivacyValueAllowUsers") {
+        result.setClassType(typeInputPrivacyValueAllowUsers);
+        QList<QVariant> map_users = map["users"].toList();
+        QList<InputUser> _users;
+        Q_FOREACH(const QVariant &var, map_users)
+            _users << InputUser::fromMap(var.toMap());
+        result.setUsers(_users);
+        return result;
+    }
+    if(map.value("classType").toString() == "InputPrivacyRule::typeInputPrivacyValueDisallowContacts") {
+        result.setClassType(typeInputPrivacyValueDisallowContacts);
+        return result;
+    }
+    if(map.value("classType").toString() == "InputPrivacyRule::typeInputPrivacyValueDisallowAll") {
+        result.setClassType(typeInputPrivacyValueDisallowAll);
+        return result;
+    }
+    if(map.value("classType").toString() == "InputPrivacyRule::typeInputPrivacyValueDisallowUsers") {
+        result.setClassType(typeInputPrivacyValueDisallowUsers);
+        QList<QVariant> map_users = map["users"].toList();
+        QList<InputUser> _users;
+        Q_FOREACH(const QVariant &var, map_users)
+            _users << InputUser::fromMap(var.toMap());
+        result.setUsers(_users);
+        return result;
+    }
+    return result;
+}
+
 QByteArray InputPrivacyRule::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

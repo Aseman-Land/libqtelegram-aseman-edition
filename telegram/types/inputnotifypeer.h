@@ -8,6 +8,7 @@
 #include "telegramtypeobject.h"
 
 #include <QMetaType>
+#include <QVariant>
 #include "inputpeer.h"
 
 class LIBQTELEGRAMSHARED_EXPORT InputNotifyPeer : public TelegramTypeObject
@@ -33,6 +34,9 @@ public:
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
+
+    QMap<QString, QVariant> toMap() const;
+    static InputNotifyPeer fromMap(const QMap<QString, QVariant> &map);
 
     bool operator ==(const InputNotifyPeer &b) const;
 

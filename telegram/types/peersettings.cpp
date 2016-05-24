@@ -94,6 +94,31 @@ bool PeerSettings::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> PeerSettings::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typePeerSettings: {
+        result["classType"] = "PeerSettings::typePeerSettings";
+        result["flags"] = QVariant::fromValue<qint32>(flags());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+PeerSettings PeerSettings::fromMap(const QMap<QString, QVariant> &map) {
+    PeerSettings result;
+    if(map.value("classType").toString() == "PeerSettings::typePeerSettings") {
+        result.setClassType(typePeerSettings);
+        result.setReportSpam( map.value("reportSpam").value<bool>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray PeerSettings::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

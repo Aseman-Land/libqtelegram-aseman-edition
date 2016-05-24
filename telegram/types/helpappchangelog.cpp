@@ -93,6 +93,41 @@ bool HelpAppChangelog::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> HelpAppChangelog::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeHelpAppChangelogEmpty: {
+        result["classType"] = "HelpAppChangelog::typeHelpAppChangelogEmpty";
+        return result;
+    }
+        break;
+    
+    case typeHelpAppChangelog: {
+        result["classType"] = "HelpAppChangelog::typeHelpAppChangelog";
+        result["text"] = QVariant::fromValue<QString>(text());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+HelpAppChangelog HelpAppChangelog::fromMap(const QMap<QString, QVariant> &map) {
+    HelpAppChangelog result;
+    if(map.value("classType").toString() == "HelpAppChangelog::typeHelpAppChangelogEmpty") {
+        result.setClassType(typeHelpAppChangelogEmpty);
+        return result;
+    }
+    if(map.value("classType").toString() == "HelpAppChangelog::typeHelpAppChangelog") {
+        result.setClassType(typeHelpAppChangelog);
+        result.setText( map.value("text").value<QString>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray HelpAppChangelog::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

@@ -8,6 +8,7 @@
 #include "telegramtypeobject.h"
 
 #include <QMetaType>
+#include <QVariant>
 #include <QtGlobal>
 #include <QList>
 #include "documentattribute.h"
@@ -56,6 +57,9 @@ public:
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
+
+    QMap<QString, QVariant> toMap() const;
+    static Document fromMap(const QMap<QString, QVariant> &map);
 
     bool operator ==(const Document &b) const;
 

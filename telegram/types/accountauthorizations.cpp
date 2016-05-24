@@ -93,6 +93,38 @@ bool AccountAuthorizations::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> AccountAuthorizations::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeAccountAuthorizations: {
+        result["classType"] = "AccountAuthorizations::typeAccountAuthorizations";
+        QList<QVariant> _authorizations;
+        Q_FOREACH(const Authorization &m__type, m_authorizations)
+            _authorizations << m__type.toMap();
+        result["authorizations"] = _authorizations;
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+AccountAuthorizations AccountAuthorizations::fromMap(const QMap<QString, QVariant> &map) {
+    AccountAuthorizations result;
+    if(map.value("classType").toString() == "AccountAuthorizations::typeAccountAuthorizations") {
+        result.setClassType(typeAccountAuthorizations);
+        QList<QVariant> map_authorizations = map["authorizations"].toList();
+        QList<Authorization> _authorizations;
+        Q_FOREACH(const QVariant &var, map_authorizations)
+            _authorizations << Authorization::fromMap(var.toMap());
+        result.setAuthorizations(_authorizations);
+        return result;
+    }
+    return result;
+}
+
 QByteArray AccountAuthorizations::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

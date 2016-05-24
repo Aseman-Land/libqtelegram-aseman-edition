@@ -152,6 +152,49 @@ bool EncryptedFile::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> EncryptedFile::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeEncryptedFileEmpty: {
+        result["classType"] = "EncryptedFile::typeEncryptedFileEmpty";
+        return result;
+    }
+        break;
+    
+    case typeEncryptedFile: {
+        result["classType"] = "EncryptedFile::typeEncryptedFile";
+        result["id"] = QVariant::fromValue<qint64>(id());
+        result["accessHash"] = QVariant::fromValue<qint64>(accessHash());
+        result["size"] = QVariant::fromValue<qint32>(size());
+        result["dcId"] = QVariant::fromValue<qint32>(dcId());
+        result["keyFingerprint"] = QVariant::fromValue<qint32>(keyFingerprint());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+EncryptedFile EncryptedFile::fromMap(const QMap<QString, QVariant> &map) {
+    EncryptedFile result;
+    if(map.value("classType").toString() == "EncryptedFile::typeEncryptedFileEmpty") {
+        result.setClassType(typeEncryptedFileEmpty);
+        return result;
+    }
+    if(map.value("classType").toString() == "EncryptedFile::typeEncryptedFile") {
+        result.setClassType(typeEncryptedFile);
+        result.setId( map.value("id").value<qint64>() );
+        result.setAccessHash( map.value("accessHash").value<qint64>() );
+        result.setSize( map.value("size").value<qint32>() );
+        result.setDcId( map.value("dcId").value<qint32>() );
+        result.setKeyFingerprint( map.value("keyFingerprint").value<qint32>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray EncryptedFile::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

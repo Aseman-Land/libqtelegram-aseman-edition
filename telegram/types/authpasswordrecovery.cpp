@@ -82,6 +82,31 @@ bool AuthPasswordRecovery::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> AuthPasswordRecovery::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeAuthPasswordRecovery: {
+        result["classType"] = "AuthPasswordRecovery::typeAuthPasswordRecovery";
+        result["emailPattern"] = QVariant::fromValue<QString>(emailPattern());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+AuthPasswordRecovery AuthPasswordRecovery::fromMap(const QMap<QString, QVariant> &map) {
+    AuthPasswordRecovery result;
+    if(map.value("classType").toString() == "AuthPasswordRecovery::typeAuthPasswordRecovery") {
+        result.setClassType(typeAuthPasswordRecovery);
+        result.setEmailPattern( map.value("emailPattern").value<QString>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray AuthPasswordRecovery::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

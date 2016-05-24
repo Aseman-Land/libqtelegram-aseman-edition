@@ -148,6 +148,56 @@ bool Photo::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> Photo::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typePhotoEmpty: {
+        result["classType"] = "Photo::typePhotoEmpty";
+        result["id"] = QVariant::fromValue<qint64>(id());
+        return result;
+    }
+        break;
+    
+    case typePhoto: {
+        result["classType"] = "Photo::typePhoto";
+        result["id"] = QVariant::fromValue<qint64>(id());
+        result["accessHash"] = QVariant::fromValue<qint64>(accessHash());
+        result["date"] = QVariant::fromValue<qint32>(date());
+        QList<QVariant> _sizes;
+        Q_FOREACH(const PhotoSize &m__type, m_sizes)
+            _sizes << m__type.toMap();
+        result["sizes"] = _sizes;
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+Photo Photo::fromMap(const QMap<QString, QVariant> &map) {
+    Photo result;
+    if(map.value("classType").toString() == "Photo::typePhotoEmpty") {
+        result.setClassType(typePhotoEmpty);
+        result.setId( map.value("id").value<qint64>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "Photo::typePhoto") {
+        result.setClassType(typePhoto);
+        result.setId( map.value("id").value<qint64>() );
+        result.setAccessHash( map.value("accessHash").value<qint64>() );
+        result.setDate( map.value("date").value<qint32>() );
+        QList<QVariant> map_sizes = map["sizes"].toList();
+        QList<PhotoSize> _sizes;
+        Q_FOREACH(const QVariant &var, map_sizes)
+            _sizes << PhotoSize::fromMap(var.toMap());
+        result.setSizes(_sizes);
+        return result;
+    }
+    return result;
+}
+
 QByteArray Photo::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

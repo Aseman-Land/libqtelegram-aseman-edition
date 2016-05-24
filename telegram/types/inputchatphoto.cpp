@@ -128,6 +128,57 @@ bool InputChatPhoto::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> InputChatPhoto::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeInputChatPhotoEmpty: {
+        result["classType"] = "InputChatPhoto::typeInputChatPhotoEmpty";
+        return result;
+    }
+        break;
+    
+    case typeInputChatUploadedPhoto: {
+        result["classType"] = "InputChatPhoto::typeInputChatUploadedPhoto";
+        result["file"] = m_file.toMap();
+        result["crop"] = m_crop.toMap();
+        return result;
+    }
+        break;
+    
+    case typeInputChatPhoto: {
+        result["classType"] = "InputChatPhoto::typeInputChatPhoto";
+        result["id"] = m_id.toMap();
+        result["crop"] = m_crop.toMap();
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+InputChatPhoto InputChatPhoto::fromMap(const QMap<QString, QVariant> &map) {
+    InputChatPhoto result;
+    if(map.value("classType").toString() == "InputChatPhoto::typeInputChatPhotoEmpty") {
+        result.setClassType(typeInputChatPhotoEmpty);
+        return result;
+    }
+    if(map.value("classType").toString() == "InputChatPhoto::typeInputChatUploadedPhoto") {
+        result.setClassType(typeInputChatUploadedPhoto);
+        result.setFile( InputFile::fromMap(map.value("file").toMap()) );
+        result.setCrop( InputPhotoCrop::fromMap(map.value("crop").toMap()) );
+        return result;
+    }
+    if(map.value("classType").toString() == "InputChatPhoto::typeInputChatPhoto") {
+        result.setClassType(typeInputChatPhoto);
+        result.setId( InputPhoto::fromMap(map.value("id").toMap()) );
+        result.setCrop( InputPhotoCrop::fromMap(map.value("crop").toMap()) );
+        return result;
+    }
+    return result;
+}
+
 QByteArray InputChatPhoto::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

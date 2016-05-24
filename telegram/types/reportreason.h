@@ -8,6 +8,7 @@
 #include "telegramtypeobject.h"
 
 #include <QMetaType>
+#include <QVariant>
 #include <QString>
 
 class LIBQTELEGRAMSHARED_EXPORT ReportReason : public TelegramTypeObject
@@ -33,6 +34,9 @@ public:
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
+
+    QMap<QString, QVariant> toMap() const;
+    static ReportReason fromMap(const QMap<QString, QVariant> &map);
 
     bool operator ==(const ReportReason &b) const;
 

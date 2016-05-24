@@ -135,6 +135,55 @@ bool Peer::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> Peer::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typePeerUser: {
+        result["classType"] = "Peer::typePeerUser";
+        result["userId"] = QVariant::fromValue<qint32>(userId());
+        return result;
+    }
+        break;
+    
+    case typePeerChat: {
+        result["classType"] = "Peer::typePeerChat";
+        result["chatId"] = QVariant::fromValue<qint32>(chatId());
+        return result;
+    }
+        break;
+    
+    case typePeerChannel: {
+        result["classType"] = "Peer::typePeerChannel";
+        result["channelId"] = QVariant::fromValue<qint32>(channelId());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+Peer Peer::fromMap(const QMap<QString, QVariant> &map) {
+    Peer result;
+    if(map.value("classType").toString() == "Peer::typePeerUser") {
+        result.setClassType(typePeerUser);
+        result.setUserId( map.value("userId").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "Peer::typePeerChat") {
+        result.setClassType(typePeerChat);
+        result.setChatId( map.value("chatId").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "Peer::typePeerChannel") {
+        result.setClassType(typePeerChannel);
+        result.setChannelId( map.value("channelId").value<qint32>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray Peer::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

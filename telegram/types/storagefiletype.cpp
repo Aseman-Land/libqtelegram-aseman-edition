@@ -170,6 +170,119 @@ bool StorageFileType::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> StorageFileType::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeStorageFileUnknown: {
+        result["classType"] = "StorageFileType::typeStorageFileUnknown";
+        return result;
+    }
+        break;
+    
+    case typeStorageFileJpeg: {
+        result["classType"] = "StorageFileType::typeStorageFileJpeg";
+        return result;
+    }
+        break;
+    
+    case typeStorageFileGif: {
+        result["classType"] = "StorageFileType::typeStorageFileGif";
+        return result;
+    }
+        break;
+    
+    case typeStorageFilePng: {
+        result["classType"] = "StorageFileType::typeStorageFilePng";
+        return result;
+    }
+        break;
+    
+    case typeStorageFilePdf: {
+        result["classType"] = "StorageFileType::typeStorageFilePdf";
+        return result;
+    }
+        break;
+    
+    case typeStorageFileMp3: {
+        result["classType"] = "StorageFileType::typeStorageFileMp3";
+        return result;
+    }
+        break;
+    
+    case typeStorageFileMov: {
+        result["classType"] = "StorageFileType::typeStorageFileMov";
+        return result;
+    }
+        break;
+    
+    case typeStorageFilePartial: {
+        result["classType"] = "StorageFileType::typeStorageFilePartial";
+        return result;
+    }
+        break;
+    
+    case typeStorageFileMp4: {
+        result["classType"] = "StorageFileType::typeStorageFileMp4";
+        return result;
+    }
+        break;
+    
+    case typeStorageFileWebp: {
+        result["classType"] = "StorageFileType::typeStorageFileWebp";
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+StorageFileType StorageFileType::fromMap(const QMap<QString, QVariant> &map) {
+    StorageFileType result;
+    if(map.value("classType").toString() == "StorageFileType::typeStorageFileUnknown") {
+        result.setClassType(typeStorageFileUnknown);
+        return result;
+    }
+    if(map.value("classType").toString() == "StorageFileType::typeStorageFileJpeg") {
+        result.setClassType(typeStorageFileJpeg);
+        return result;
+    }
+    if(map.value("classType").toString() == "StorageFileType::typeStorageFileGif") {
+        result.setClassType(typeStorageFileGif);
+        return result;
+    }
+    if(map.value("classType").toString() == "StorageFileType::typeStorageFilePng") {
+        result.setClassType(typeStorageFilePng);
+        return result;
+    }
+    if(map.value("classType").toString() == "StorageFileType::typeStorageFilePdf") {
+        result.setClassType(typeStorageFilePdf);
+        return result;
+    }
+    if(map.value("classType").toString() == "StorageFileType::typeStorageFileMp3") {
+        result.setClassType(typeStorageFileMp3);
+        return result;
+    }
+    if(map.value("classType").toString() == "StorageFileType::typeStorageFileMov") {
+        result.setClassType(typeStorageFileMov);
+        return result;
+    }
+    if(map.value("classType").toString() == "StorageFileType::typeStorageFilePartial") {
+        result.setClassType(typeStorageFilePartial);
+        return result;
+    }
+    if(map.value("classType").toString() == "StorageFileType::typeStorageFileMp4") {
+        result.setClassType(typeStorageFileMp4);
+        return result;
+    }
+    if(map.value("classType").toString() == "StorageFileType::typeStorageFileWebp") {
+        result.setClassType(typeStorageFileWebp);
+        return result;
+    }
+    return result;
+}
+
 QByteArray StorageFileType::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

@@ -8,6 +8,7 @@
 #include "telegramtypeobject.h"
 
 #include <QMetaType>
+#include <QVariant>
 
 class LIBQTELEGRAMSHARED_EXPORT MessagesFilter : public TelegramTypeObject
 {
@@ -35,6 +36,9 @@ public:
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
+
+    QMap<QString, QVariant> toMap() const;
+    static MessagesFilter fromMap(const QMap<QString, QVariant> &map);
 
     bool operator ==(const MessagesFilter &b) const;
 

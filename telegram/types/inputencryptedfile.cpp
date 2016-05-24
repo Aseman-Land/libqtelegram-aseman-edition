@@ -179,6 +179,77 @@ bool InputEncryptedFile::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> InputEncryptedFile::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeInputEncryptedFileEmpty: {
+        result["classType"] = "InputEncryptedFile::typeInputEncryptedFileEmpty";
+        return result;
+    }
+        break;
+    
+    case typeInputEncryptedFileUploaded: {
+        result["classType"] = "InputEncryptedFile::typeInputEncryptedFileUploaded";
+        result["id"] = QVariant::fromValue<qint64>(id());
+        result["parts"] = QVariant::fromValue<qint32>(parts());
+        result["md5Checksum"] = QVariant::fromValue<QString>(md5Checksum());
+        result["keyFingerprint"] = QVariant::fromValue<qint32>(keyFingerprint());
+        return result;
+    }
+        break;
+    
+    case typeInputEncryptedFile: {
+        result["classType"] = "InputEncryptedFile::typeInputEncryptedFile";
+        result["id"] = QVariant::fromValue<qint64>(id());
+        result["accessHash"] = QVariant::fromValue<qint64>(accessHash());
+        return result;
+    }
+        break;
+    
+    case typeInputEncryptedFileBigUploaded: {
+        result["classType"] = "InputEncryptedFile::typeInputEncryptedFileBigUploaded";
+        result["id"] = QVariant::fromValue<qint64>(id());
+        result["parts"] = QVariant::fromValue<qint32>(parts());
+        result["keyFingerprint"] = QVariant::fromValue<qint32>(keyFingerprint());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+InputEncryptedFile InputEncryptedFile::fromMap(const QMap<QString, QVariant> &map) {
+    InputEncryptedFile result;
+    if(map.value("classType").toString() == "InputEncryptedFile::typeInputEncryptedFileEmpty") {
+        result.setClassType(typeInputEncryptedFileEmpty);
+        return result;
+    }
+    if(map.value("classType").toString() == "InputEncryptedFile::typeInputEncryptedFileUploaded") {
+        result.setClassType(typeInputEncryptedFileUploaded);
+        result.setId( map.value("id").value<qint64>() );
+        result.setParts( map.value("parts").value<qint32>() );
+        result.setMd5Checksum( map.value("md5Checksum").value<QString>() );
+        result.setKeyFingerprint( map.value("keyFingerprint").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "InputEncryptedFile::typeInputEncryptedFile") {
+        result.setClassType(typeInputEncryptedFile);
+        result.setId( map.value("id").value<qint64>() );
+        result.setAccessHash( map.value("accessHash").value<qint64>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "InputEncryptedFile::typeInputEncryptedFileBigUploaded") {
+        result.setClassType(typeInputEncryptedFileBigUploaded);
+        result.setId( map.value("id").value<qint64>() );
+        result.setParts( map.value("parts").value<qint32>() );
+        result.setKeyFingerprint( map.value("keyFingerprint").value<qint32>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray InputEncryptedFile::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

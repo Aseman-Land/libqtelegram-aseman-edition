@@ -118,6 +118,42 @@ bool BotInfo::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> BotInfo::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeBotInfo: {
+        result["classType"] = "BotInfo::typeBotInfo";
+        result["userId"] = QVariant::fromValue<qint32>(userId());
+        result["description"] = QVariant::fromValue<QString>(description());
+        QList<QVariant> _commands;
+        Q_FOREACH(const BotCommand &m__type, m_commands)
+            _commands << m__type.toMap();
+        result["commands"] = _commands;
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+BotInfo BotInfo::fromMap(const QMap<QString, QVariant> &map) {
+    BotInfo result;
+    if(map.value("classType").toString() == "BotInfo::typeBotInfo") {
+        result.setClassType(typeBotInfo);
+        result.setUserId( map.value("userId").value<qint32>() );
+        result.setDescription( map.value("description").value<QString>() );
+        QList<QVariant> map_commands = map["commands"].toList();
+        QList<BotCommand> _commands;
+        Q_FOREACH(const QVariant &var, map_commands)
+            _commands << BotCommand::fromMap(var.toMap());
+        result.setCommands(_commands);
+        return result;
+    }
+    return result;
+}
+
 QByteArray BotInfo::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

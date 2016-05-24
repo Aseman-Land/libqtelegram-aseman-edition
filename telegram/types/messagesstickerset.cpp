@@ -126,6 +126,49 @@ bool MessagesStickerSet::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> MessagesStickerSet::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeMessagesStickerSet: {
+        result["classType"] = "MessagesStickerSet::typeMessagesStickerSet";
+        result["set"] = m_set.toMap();
+        QList<QVariant> _packs;
+        Q_FOREACH(const StickerPack &m__type, m_packs)
+            _packs << m__type.toMap();
+        result["packs"] = _packs;
+        QList<QVariant> _documents;
+        Q_FOREACH(const Document &m__type, m_documents)
+            _documents << m__type.toMap();
+        result["documents"] = _documents;
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+MessagesStickerSet MessagesStickerSet::fromMap(const QMap<QString, QVariant> &map) {
+    MessagesStickerSet result;
+    if(map.value("classType").toString() == "MessagesStickerSet::typeMessagesStickerSet") {
+        result.setClassType(typeMessagesStickerSet);
+        result.setSet( StickerSet::fromMap(map.value("set").toMap()) );
+        QList<QVariant> map_packs = map["packs"].toList();
+        QList<StickerPack> _packs;
+        Q_FOREACH(const QVariant &var, map_packs)
+            _packs << StickerPack::fromMap(var.toMap());
+        result.setPacks(_packs);
+        QList<QVariant> map_documents = map["documents"].toList();
+        QList<Document> _documents;
+        Q_FOREACH(const QVariant &var, map_documents)
+            _documents << Document::fromMap(var.toMap());
+        result.setDocuments(_documents);
+        return result;
+    }
+    return result;
+}
+
 QByteArray MessagesStickerSet::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

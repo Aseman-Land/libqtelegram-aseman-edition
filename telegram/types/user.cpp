@@ -347,6 +347,75 @@ bool User::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> User::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeUserEmpty: {
+        result["classType"] = "User::typeUserEmpty";
+        result["id"] = QVariant::fromValue<qint32>(id());
+        return result;
+    }
+        break;
+    
+    case typeUser: {
+        result["classType"] = "User::typeUser";
+        result["flags"] = QVariant::fromValue<qint32>(flags());
+        result["id"] = QVariant::fromValue<qint32>(id());
+        result["accessHash"] = QVariant::fromValue<qint64>(accessHash());
+        result["firstName"] = QVariant::fromValue<QString>(firstName());
+        result["lastName"] = QVariant::fromValue<QString>(lastName());
+        result["username"] = QVariant::fromValue<QString>(username());
+        result["phone"] = QVariant::fromValue<QString>(phone());
+        result["photo"] = m_photo.toMap();
+        result["status"] = m_status.toMap();
+        result["botInfoVersion"] = QVariant::fromValue<qint32>(botInfoVersion());
+        result["restrictionReason"] = QVariant::fromValue<QString>(restrictionReason());
+        result["botInlinePlaceholder"] = QVariant::fromValue<QString>(botInlinePlaceholder());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+User User::fromMap(const QMap<QString, QVariant> &map) {
+    User result;
+    if(map.value("classType").toString() == "User::typeUserEmpty") {
+        result.setClassType(typeUserEmpty);
+        result.setId( map.value("id").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "User::typeUser") {
+        result.setClassType(typeUser);
+        result.setSelf( map.value("self").value<bool>() );
+        result.setContact( map.value("contact").value<bool>() );
+        result.setMutualContact( map.value("mutualContact").value<bool>() );
+        result.setDeleted( map.value("deleted").value<bool>() );
+        result.setBot( map.value("bot").value<bool>() );
+        result.setBotChatHistory( map.value("botChatHistory").value<bool>() );
+        result.setBotNochats( map.value("botNochats").value<bool>() );
+        result.setVerified( map.value("verified").value<bool>() );
+        result.setRestricted( map.value("restricted").value<bool>() );
+        result.setMin( map.value("min").value<bool>() );
+        result.setBotInlineGeo( map.value("botInlineGeo").value<bool>() );
+        result.setId( map.value("id").value<qint32>() );
+        result.setAccessHash( map.value("accessHash").value<qint64>() );
+        result.setFirstName( map.value("firstName").value<QString>() );
+        result.setLastName( map.value("lastName").value<QString>() );
+        result.setUsername( map.value("username").value<QString>() );
+        result.setPhone( map.value("phone").value<QString>() );
+        result.setPhoto( UserProfilePhoto::fromMap(map.value("photo").toMap()) );
+        result.setStatus( UserStatus::fromMap(map.value("status").toMap()) );
+        result.setBotInfoVersion( map.value("botInfoVersion").value<qint32>() );
+        result.setRestrictionReason( map.value("restrictionReason").value<QString>() );
+        result.setBotInlinePlaceholder( map.value("botInlinePlaceholder").value<QString>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray User::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

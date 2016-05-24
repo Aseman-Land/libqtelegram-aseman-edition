@@ -381,6 +381,85 @@ bool Config::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> Config::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeConfig: {
+        result["classType"] = "Config::typeConfig";
+        result["date"] = QVariant::fromValue<qint32>(date());
+        result["expires"] = QVariant::fromValue<qint32>(expires());
+        result["testMode"] = QVariant::fromValue<bool>(testMode());
+        result["thisDc"] = QVariant::fromValue<qint32>(thisDc());
+        QList<QVariant> _dcOptions;
+        Q_FOREACH(const DcOption &m__type, m_dcOptions)
+            _dcOptions << m__type.toMap();
+        result["dcOptions"] = _dcOptions;
+        result["chatSizeMax"] = QVariant::fromValue<qint32>(chatSizeMax());
+        result["megagroupSizeMax"] = QVariant::fromValue<qint32>(megagroupSizeMax());
+        result["forwardedCountMax"] = QVariant::fromValue<qint32>(forwardedCountMax());
+        result["onlineUpdatePeriodMs"] = QVariant::fromValue<qint32>(onlineUpdatePeriodMs());
+        result["offlineBlurTimeoutMs"] = QVariant::fromValue<qint32>(offlineBlurTimeoutMs());
+        result["offlineIdleTimeoutMs"] = QVariant::fromValue<qint32>(offlineIdleTimeoutMs());
+        result["onlineCloudTimeoutMs"] = QVariant::fromValue<qint32>(onlineCloudTimeoutMs());
+        result["notifyCloudDelayMs"] = QVariant::fromValue<qint32>(notifyCloudDelayMs());
+        result["notifyDefaultDelayMs"] = QVariant::fromValue<qint32>(notifyDefaultDelayMs());
+        result["chatBigSize"] = QVariant::fromValue<qint32>(chatBigSize());
+        result["pushChatPeriodMs"] = QVariant::fromValue<qint32>(pushChatPeriodMs());
+        result["pushChatLimit"] = QVariant::fromValue<qint32>(pushChatLimit());
+        result["savedGifsLimit"] = QVariant::fromValue<qint32>(savedGifsLimit());
+        result["editTimeLimit"] = QVariant::fromValue<qint32>(editTimeLimit());
+        result["ratingEDecay"] = QVariant::fromValue<qint32>(ratingEDecay());
+        QList<QVariant> _disabledFeatures;
+        Q_FOREACH(const DisabledFeature &m__type, m_disabledFeatures)
+            _disabledFeatures << m__type.toMap();
+        result["disabledFeatures"] = _disabledFeatures;
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+Config Config::fromMap(const QMap<QString, QVariant> &map) {
+    Config result;
+    if(map.value("classType").toString() == "Config::typeConfig") {
+        result.setClassType(typeConfig);
+        result.setDate( map.value("date").value<qint32>() );
+        result.setExpires( map.value("expires").value<qint32>() );
+        result.setTestMode( map.value("testMode").value<bool>() );
+        result.setThisDc( map.value("thisDc").value<qint32>() );
+        QList<QVariant> map_dcOptions = map["dcOptions"].toList();
+        QList<DcOption> _dcOptions;
+        Q_FOREACH(const QVariant &var, map_dcOptions)
+            _dcOptions << DcOption::fromMap(var.toMap());
+        result.setDcOptions(_dcOptions);
+        result.setChatSizeMax( map.value("chatSizeMax").value<qint32>() );
+        result.setMegagroupSizeMax( map.value("megagroupSizeMax").value<qint32>() );
+        result.setForwardedCountMax( map.value("forwardedCountMax").value<qint32>() );
+        result.setOnlineUpdatePeriodMs( map.value("onlineUpdatePeriodMs").value<qint32>() );
+        result.setOfflineBlurTimeoutMs( map.value("offlineBlurTimeoutMs").value<qint32>() );
+        result.setOfflineIdleTimeoutMs( map.value("offlineIdleTimeoutMs").value<qint32>() );
+        result.setOnlineCloudTimeoutMs( map.value("onlineCloudTimeoutMs").value<qint32>() );
+        result.setNotifyCloudDelayMs( map.value("notifyCloudDelayMs").value<qint32>() );
+        result.setNotifyDefaultDelayMs( map.value("notifyDefaultDelayMs").value<qint32>() );
+        result.setChatBigSize( map.value("chatBigSize").value<qint32>() );
+        result.setPushChatPeriodMs( map.value("pushChatPeriodMs").value<qint32>() );
+        result.setPushChatLimit( map.value("pushChatLimit").value<qint32>() );
+        result.setSavedGifsLimit( map.value("savedGifsLimit").value<qint32>() );
+        result.setEditTimeLimit( map.value("editTimeLimit").value<qint32>() );
+        result.setRatingEDecay( map.value("ratingEDecay").value<qint32>() );
+        QList<QVariant> map_disabledFeatures = map["disabledFeatures"].toList();
+        QList<DisabledFeature> _disabledFeatures;
+        Q_FOREACH(const QVariant &var, map_disabledFeatures)
+            _disabledFeatures << DisabledFeature::fromMap(var.toMap());
+        result.setDisabledFeatures(_disabledFeatures);
+        return result;
+    }
+    return result;
+}
+
 QByteArray Config::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

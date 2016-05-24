@@ -118,6 +118,50 @@ bool MessagesSavedGifs::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> MessagesSavedGifs::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeMessagesSavedGifsNotModified: {
+        result["classType"] = "MessagesSavedGifs::typeMessagesSavedGifsNotModified";
+        return result;
+    }
+        break;
+    
+    case typeMessagesSavedGifs: {
+        result["classType"] = "MessagesSavedGifs::typeMessagesSavedGifs";
+        result["hash"] = QVariant::fromValue<qint32>(hash());
+        QList<QVariant> _gifs;
+        Q_FOREACH(const Document &m__type, m_gifs)
+            _gifs << m__type.toMap();
+        result["gifs"] = _gifs;
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+MessagesSavedGifs MessagesSavedGifs::fromMap(const QMap<QString, QVariant> &map) {
+    MessagesSavedGifs result;
+    if(map.value("classType").toString() == "MessagesSavedGifs::typeMessagesSavedGifsNotModified") {
+        result.setClassType(typeMessagesSavedGifsNotModified);
+        return result;
+    }
+    if(map.value("classType").toString() == "MessagesSavedGifs::typeMessagesSavedGifs") {
+        result.setClassType(typeMessagesSavedGifs);
+        result.setHash( map.value("hash").value<qint32>() );
+        QList<QVariant> map_gifs = map["gifs"].toList();
+        QList<Document> _gifs;
+        Q_FOREACH(const QVariant &var, map_gifs)
+            _gifs << Document::fromMap(var.toMap());
+        result.setGifs(_gifs);
+        return result;
+    }
+    return result;
+}
+
 QByteArray MessagesSavedGifs::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

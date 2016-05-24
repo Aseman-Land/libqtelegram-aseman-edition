@@ -307,6 +307,146 @@ bool MessagesMessages::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> MessagesMessages::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeMessagesMessages: {
+        result["classType"] = "MessagesMessages::typeMessagesMessages";
+        QList<QVariant> _messages;
+        Q_FOREACH(const Message &m__type, m_messages)
+            _messages << m__type.toMap();
+        result["messages"] = _messages;
+        QList<QVariant> _chats;
+        Q_FOREACH(const Chat &m__type, m_chats)
+            _chats << m__type.toMap();
+        result["chats"] = _chats;
+        QList<QVariant> _users;
+        Q_FOREACH(const User &m__type, m_users)
+            _users << m__type.toMap();
+        result["users"] = _users;
+        return result;
+    }
+        break;
+    
+    case typeMessagesMessagesSlice: {
+        result["classType"] = "MessagesMessages::typeMessagesMessagesSlice";
+        result["count"] = QVariant::fromValue<qint32>(count());
+        QList<QVariant> _messages;
+        Q_FOREACH(const Message &m__type, m_messages)
+            _messages << m__type.toMap();
+        result["messages"] = _messages;
+        QList<QVariant> _chats;
+        Q_FOREACH(const Chat &m__type, m_chats)
+            _chats << m__type.toMap();
+        result["chats"] = _chats;
+        QList<QVariant> _users;
+        Q_FOREACH(const User &m__type, m_users)
+            _users << m__type.toMap();
+        result["users"] = _users;
+        return result;
+    }
+        break;
+    
+    case typeMessagesChannelMessages: {
+        result["classType"] = "MessagesMessages::typeMessagesChannelMessages";
+        result["flags"] = QVariant::fromValue<qint32>(flags());
+        result["pts"] = QVariant::fromValue<qint32>(pts());
+        result["count"] = QVariant::fromValue<qint32>(count());
+        QList<QVariant> _messages;
+        Q_FOREACH(const Message &m__type, m_messages)
+            _messages << m__type.toMap();
+        result["messages"] = _messages;
+        QList<QVariant> _collapsed;
+        Q_FOREACH(const MessageGroup &m__type, m_collapsed)
+            _collapsed << m__type.toMap();
+        result["collapsed"] = _collapsed;
+        QList<QVariant> _chats;
+        Q_FOREACH(const Chat &m__type, m_chats)
+            _chats << m__type.toMap();
+        result["chats"] = _chats;
+        QList<QVariant> _users;
+        Q_FOREACH(const User &m__type, m_users)
+            _users << m__type.toMap();
+        result["users"] = _users;
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+MessagesMessages MessagesMessages::fromMap(const QMap<QString, QVariant> &map) {
+    MessagesMessages result;
+    if(map.value("classType").toString() == "MessagesMessages::typeMessagesMessages") {
+        result.setClassType(typeMessagesMessages);
+        QList<QVariant> map_messages = map["messages"].toList();
+        QList<Message> _messages;
+        Q_FOREACH(const QVariant &var, map_messages)
+            _messages << Message::fromMap(var.toMap());
+        result.setMessages(_messages);
+        QList<QVariant> map_chats = map["chats"].toList();
+        QList<Chat> _chats;
+        Q_FOREACH(const QVariant &var, map_chats)
+            _chats << Chat::fromMap(var.toMap());
+        result.setChats(_chats);
+        QList<QVariant> map_users = map["users"].toList();
+        QList<User> _users;
+        Q_FOREACH(const QVariant &var, map_users)
+            _users << User::fromMap(var.toMap());
+        result.setUsers(_users);
+        return result;
+    }
+    if(map.value("classType").toString() == "MessagesMessages::typeMessagesMessagesSlice") {
+        result.setClassType(typeMessagesMessagesSlice);
+        result.setCount( map.value("count").value<qint32>() );
+        QList<QVariant> map_messages = map["messages"].toList();
+        QList<Message> _messages;
+        Q_FOREACH(const QVariant &var, map_messages)
+            _messages << Message::fromMap(var.toMap());
+        result.setMessages(_messages);
+        QList<QVariant> map_chats = map["chats"].toList();
+        QList<Chat> _chats;
+        Q_FOREACH(const QVariant &var, map_chats)
+            _chats << Chat::fromMap(var.toMap());
+        result.setChats(_chats);
+        QList<QVariant> map_users = map["users"].toList();
+        QList<User> _users;
+        Q_FOREACH(const QVariant &var, map_users)
+            _users << User::fromMap(var.toMap());
+        result.setUsers(_users);
+        return result;
+    }
+    if(map.value("classType").toString() == "MessagesMessages::typeMessagesChannelMessages") {
+        result.setClassType(typeMessagesChannelMessages);
+        result.setPts( map.value("pts").value<qint32>() );
+        result.setCount( map.value("count").value<qint32>() );
+        QList<QVariant> map_messages = map["messages"].toList();
+        QList<Message> _messages;
+        Q_FOREACH(const QVariant &var, map_messages)
+            _messages << Message::fromMap(var.toMap());
+        result.setMessages(_messages);
+        QList<QVariant> map_collapsed = map["collapsed"].toList();
+        QList<MessageGroup> _collapsed;
+        Q_FOREACH(const QVariant &var, map_collapsed)
+            _collapsed << MessageGroup::fromMap(var.toMap());
+        result.setCollapsed(_collapsed);
+        QList<QVariant> map_chats = map["chats"].toList();
+        QList<Chat> _chats;
+        Q_FOREACH(const QVariant &var, map_chats)
+            _chats << Chat::fromMap(var.toMap());
+        result.setChats(_chats);
+        QList<QVariant> map_users = map["users"].toList();
+        QList<User> _users;
+        Q_FOREACH(const QVariant &var, map_users)
+            _users << User::fromMap(var.toMap());
+        result.setUsers(_users);
+        return result;
+    }
+    return result;
+}
+
 QByteArray MessagesMessages::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

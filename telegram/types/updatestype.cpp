@@ -609,6 +609,247 @@ bool UpdatesType::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> UpdatesType::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeUpdatesTooLong: {
+        result["classType"] = "UpdatesType::typeUpdatesTooLong";
+        return result;
+    }
+        break;
+    
+    case typeUpdateShortMessage: {
+        result["classType"] = "UpdatesType::typeUpdateShortMessage";
+        result["flags"] = QVariant::fromValue<qint32>(flags());
+        result["id"] = QVariant::fromValue<qint32>(id());
+        result["userId"] = QVariant::fromValue<qint32>(userId());
+        result["message"] = QVariant::fromValue<QString>(message());
+        result["pts"] = QVariant::fromValue<qint32>(pts());
+        result["ptsCount"] = QVariant::fromValue<qint32>(ptsCount());
+        result["date"] = QVariant::fromValue<qint32>(date());
+        result["fwdFrom"] = m_fwdFrom.toMap();
+        result["viaBotId"] = QVariant::fromValue<qint32>(viaBotId());
+        result["replyToMsgId"] = QVariant::fromValue<qint32>(replyToMsgId());
+        QList<QVariant> _entities;
+        Q_FOREACH(const MessageEntity &m__type, m_entities)
+            _entities << m__type.toMap();
+        result["entities"] = _entities;
+        return result;
+    }
+        break;
+    
+    case typeUpdateShortChatMessage: {
+        result["classType"] = "UpdatesType::typeUpdateShortChatMessage";
+        result["flags"] = QVariant::fromValue<qint32>(flags());
+        result["id"] = QVariant::fromValue<qint32>(id());
+        result["fromId"] = QVariant::fromValue<qint32>(fromId());
+        result["chatId"] = QVariant::fromValue<qint32>(chatId());
+        result["message"] = QVariant::fromValue<QString>(message());
+        result["pts"] = QVariant::fromValue<qint32>(pts());
+        result["ptsCount"] = QVariant::fromValue<qint32>(ptsCount());
+        result["date"] = QVariant::fromValue<qint32>(date());
+        result["fwdFrom"] = m_fwdFrom.toMap();
+        result["viaBotId"] = QVariant::fromValue<qint32>(viaBotId());
+        result["replyToMsgId"] = QVariant::fromValue<qint32>(replyToMsgId());
+        QList<QVariant> _entities;
+        Q_FOREACH(const MessageEntity &m__type, m_entities)
+            _entities << m__type.toMap();
+        result["entities"] = _entities;
+        return result;
+    }
+        break;
+    
+    case typeUpdateShort: {
+        result["classType"] = "UpdatesType::typeUpdateShort";
+        result["update"] = m_update.toMap();
+        result["date"] = QVariant::fromValue<qint32>(date());
+        return result;
+    }
+        break;
+    
+    case typeUpdatesCombined: {
+        result["classType"] = "UpdatesType::typeUpdatesCombined";
+        QList<QVariant> _updates;
+        Q_FOREACH(const Update &m__type, m_updates)
+            _updates << m__type.toMap();
+        result["updates"] = _updates;
+        QList<QVariant> _users;
+        Q_FOREACH(const User &m__type, m_users)
+            _users << m__type.toMap();
+        result["users"] = _users;
+        QList<QVariant> _chats;
+        Q_FOREACH(const Chat &m__type, m_chats)
+            _chats << m__type.toMap();
+        result["chats"] = _chats;
+        result["date"] = QVariant::fromValue<qint32>(date());
+        result["seqStart"] = QVariant::fromValue<qint32>(seqStart());
+        result["seq"] = QVariant::fromValue<qint32>(seq());
+        return result;
+    }
+        break;
+    
+    case typeUpdates: {
+        result["classType"] = "UpdatesType::typeUpdates";
+        QList<QVariant> _updates;
+        Q_FOREACH(const Update &m__type, m_updates)
+            _updates << m__type.toMap();
+        result["updates"] = _updates;
+        QList<QVariant> _users;
+        Q_FOREACH(const User &m__type, m_users)
+            _users << m__type.toMap();
+        result["users"] = _users;
+        QList<QVariant> _chats;
+        Q_FOREACH(const Chat &m__type, m_chats)
+            _chats << m__type.toMap();
+        result["chats"] = _chats;
+        result["date"] = QVariant::fromValue<qint32>(date());
+        result["seq"] = QVariant::fromValue<qint32>(seq());
+        return result;
+    }
+        break;
+    
+    case typeUpdateShortSentMessage: {
+        result["classType"] = "UpdatesType::typeUpdateShortSentMessage";
+        result["flags"] = QVariant::fromValue<qint32>(flags());
+        result["id"] = QVariant::fromValue<qint32>(id());
+        result["pts"] = QVariant::fromValue<qint32>(pts());
+        result["ptsCount"] = QVariant::fromValue<qint32>(ptsCount());
+        result["date"] = QVariant::fromValue<qint32>(date());
+        result["media"] = m_media.toMap();
+        QList<QVariant> _entities;
+        Q_FOREACH(const MessageEntity &m__type, m_entities)
+            _entities << m__type.toMap();
+        result["entities"] = _entities;
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+UpdatesType UpdatesType::fromMap(const QMap<QString, QVariant> &map) {
+    UpdatesType result;
+    if(map.value("classType").toString() == "UpdatesType::typeUpdatesTooLong") {
+        result.setClassType(typeUpdatesTooLong);
+        return result;
+    }
+    if(map.value("classType").toString() == "UpdatesType::typeUpdateShortMessage") {
+        result.setClassType(typeUpdateShortMessage);
+        result.setUnread( map.value("unread").value<bool>() );
+        result.setOut( map.value("out").value<bool>() );
+        result.setMentioned( map.value("mentioned").value<bool>() );
+        result.setMediaUnread( map.value("mediaUnread").value<bool>() );
+        result.setSilent( map.value("silent").value<bool>() );
+        result.setId( map.value("id").value<qint32>() );
+        result.setUserId( map.value("userId").value<qint32>() );
+        result.setMessage( map.value("message").value<QString>() );
+        result.setPts( map.value("pts").value<qint32>() );
+        result.setPtsCount( map.value("ptsCount").value<qint32>() );
+        result.setDate( map.value("date").value<qint32>() );
+        result.setFwdFrom( MessageFwdHeader::fromMap(map.value("fwdFrom").toMap()) );
+        result.setViaBotId( map.value("viaBotId").value<qint32>() );
+        result.setReplyToMsgId( map.value("replyToMsgId").value<qint32>() );
+        QList<QVariant> map_entities = map["entities"].toList();
+        QList<MessageEntity> _entities;
+        Q_FOREACH(const QVariant &var, map_entities)
+            _entities << MessageEntity::fromMap(var.toMap());
+        result.setEntities(_entities);
+        return result;
+    }
+    if(map.value("classType").toString() == "UpdatesType::typeUpdateShortChatMessage") {
+        result.setClassType(typeUpdateShortChatMessage);
+        result.setUnread( map.value("unread").value<bool>() );
+        result.setOut( map.value("out").value<bool>() );
+        result.setMentioned( map.value("mentioned").value<bool>() );
+        result.setMediaUnread( map.value("mediaUnread").value<bool>() );
+        result.setSilent( map.value("silent").value<bool>() );
+        result.setId( map.value("id").value<qint32>() );
+        result.setFromId( map.value("fromId").value<qint32>() );
+        result.setChatId( map.value("chatId").value<qint32>() );
+        result.setMessage( map.value("message").value<QString>() );
+        result.setPts( map.value("pts").value<qint32>() );
+        result.setPtsCount( map.value("ptsCount").value<qint32>() );
+        result.setDate( map.value("date").value<qint32>() );
+        result.setFwdFrom( MessageFwdHeader::fromMap(map.value("fwdFrom").toMap()) );
+        result.setViaBotId( map.value("viaBotId").value<qint32>() );
+        result.setReplyToMsgId( map.value("replyToMsgId").value<qint32>() );
+        QList<QVariant> map_entities = map["entities"].toList();
+        QList<MessageEntity> _entities;
+        Q_FOREACH(const QVariant &var, map_entities)
+            _entities << MessageEntity::fromMap(var.toMap());
+        result.setEntities(_entities);
+        return result;
+    }
+    if(map.value("classType").toString() == "UpdatesType::typeUpdateShort") {
+        result.setClassType(typeUpdateShort);
+        result.setUpdate( Update::fromMap(map.value("update").toMap()) );
+        result.setDate( map.value("date").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "UpdatesType::typeUpdatesCombined") {
+        result.setClassType(typeUpdatesCombined);
+        QList<QVariant> map_updates = map["updates"].toList();
+        QList<Update> _updates;
+        Q_FOREACH(const QVariant &var, map_updates)
+            _updates << Update::fromMap(var.toMap());
+        result.setUpdates(_updates);
+        QList<QVariant> map_users = map["users"].toList();
+        QList<User> _users;
+        Q_FOREACH(const QVariant &var, map_users)
+            _users << User::fromMap(var.toMap());
+        result.setUsers(_users);
+        QList<QVariant> map_chats = map["chats"].toList();
+        QList<Chat> _chats;
+        Q_FOREACH(const QVariant &var, map_chats)
+            _chats << Chat::fromMap(var.toMap());
+        result.setChats(_chats);
+        result.setDate( map.value("date").value<qint32>() );
+        result.setSeqStart( map.value("seqStart").value<qint32>() );
+        result.setSeq( map.value("seq").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "UpdatesType::typeUpdates") {
+        result.setClassType(typeUpdates);
+        QList<QVariant> map_updates = map["updates"].toList();
+        QList<Update> _updates;
+        Q_FOREACH(const QVariant &var, map_updates)
+            _updates << Update::fromMap(var.toMap());
+        result.setUpdates(_updates);
+        QList<QVariant> map_users = map["users"].toList();
+        QList<User> _users;
+        Q_FOREACH(const QVariant &var, map_users)
+            _users << User::fromMap(var.toMap());
+        result.setUsers(_users);
+        QList<QVariant> map_chats = map["chats"].toList();
+        QList<Chat> _chats;
+        Q_FOREACH(const QVariant &var, map_chats)
+            _chats << Chat::fromMap(var.toMap());
+        result.setChats(_chats);
+        result.setDate( map.value("date").value<qint32>() );
+        result.setSeq( map.value("seq").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "UpdatesType::typeUpdateShortSentMessage") {
+        result.setClassType(typeUpdateShortSentMessage);
+        result.setUnread( map.value("unread").value<bool>() );
+        result.setOut( map.value("out").value<bool>() );
+        result.setId( map.value("id").value<qint32>() );
+        result.setPts( map.value("pts").value<qint32>() );
+        result.setPtsCount( map.value("ptsCount").value<qint32>() );
+        result.setDate( map.value("date").value<qint32>() );
+        result.setMedia( MessageMedia::fromMap(map.value("media").toMap()) );
+        QList<QVariant> map_entities = map["entities"].toList();
+        QList<MessageEntity> _entities;
+        Q_FOREACH(const QVariant &var, map_entities)
+            _entities << MessageEntity::fromMap(var.toMap());
+        result.setEntities(_entities);
+        return result;
+    }
+    return result;
+}
+
 QByteArray UpdatesType::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

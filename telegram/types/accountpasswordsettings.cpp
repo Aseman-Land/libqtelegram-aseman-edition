@@ -82,6 +82,31 @@ bool AccountPasswordSettings::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> AccountPasswordSettings::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeAccountPasswordSettings: {
+        result["classType"] = "AccountPasswordSettings::typeAccountPasswordSettings";
+        result["email"] = QVariant::fromValue<QString>(email());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+AccountPasswordSettings AccountPasswordSettings::fromMap(const QMap<QString, QVariant> &map) {
+    AccountPasswordSettings result;
+    if(map.value("classType").toString() == "AccountPasswordSettings::typeAccountPasswordSettings") {
+        result.setClassType(typeAccountPasswordSettings);
+        result.setEmail( map.value("email").value<QString>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray AccountPasswordSettings::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

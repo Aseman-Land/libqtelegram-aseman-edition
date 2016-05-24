@@ -8,6 +8,7 @@
 #include "telegramtypeobject.h"
 
 #include <QMetaType>
+#include <QVariant>
 #include <QtGlobal>
 
 class LIBQTELEGRAMSHARED_EXPORT ContactBlocked : public TelegramTypeObject
@@ -33,6 +34,9 @@ public:
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
+
+    QMap<QString, QVariant> toMap() const;
+    static ContactBlocked fromMap(const QMap<QString, QVariant> &map);
 
     bool operator ==(const ContactBlocked &b) const;
 

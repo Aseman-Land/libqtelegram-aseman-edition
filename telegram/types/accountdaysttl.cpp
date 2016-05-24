@@ -85,6 +85,31 @@ bool AccountDaysTTL::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> AccountDaysTTL::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeAccountDaysTTL: {
+        result["classType"] = "AccountDaysTTL::typeAccountDaysTTL";
+        result["days"] = QVariant::fromValue<qint32>(days());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+AccountDaysTTL AccountDaysTTL::fromMap(const QMap<QString, QVariant> &map) {
+    AccountDaysTTL result;
+    if(map.value("classType").toString() == "AccountDaysTTL::typeAccountDaysTTL") {
+        result.setClassType(typeAccountDaysTTL);
+        result.setDays( map.value("days").value<qint32>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray AccountDaysTTL::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

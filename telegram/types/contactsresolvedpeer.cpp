@@ -126,6 +126,49 @@ bool ContactsResolvedPeer::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> ContactsResolvedPeer::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeContactsResolvedPeer: {
+        result["classType"] = "ContactsResolvedPeer::typeContactsResolvedPeer";
+        result["peer"] = m_peer.toMap();
+        QList<QVariant> _chats;
+        Q_FOREACH(const Chat &m__type, m_chats)
+            _chats << m__type.toMap();
+        result["chats"] = _chats;
+        QList<QVariant> _users;
+        Q_FOREACH(const User &m__type, m_users)
+            _users << m__type.toMap();
+        result["users"] = _users;
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+ContactsResolvedPeer ContactsResolvedPeer::fromMap(const QMap<QString, QVariant> &map) {
+    ContactsResolvedPeer result;
+    if(map.value("classType").toString() == "ContactsResolvedPeer::typeContactsResolvedPeer") {
+        result.setClassType(typeContactsResolvedPeer);
+        result.setPeer( Peer::fromMap(map.value("peer").toMap()) );
+        QList<QVariant> map_chats = map["chats"].toList();
+        QList<Chat> _chats;
+        Q_FOREACH(const QVariant &var, map_chats)
+            _chats << Chat::fromMap(var.toMap());
+        result.setChats(_chats);
+        QList<QVariant> map_users = map["users"].toList();
+        QList<User> _users;
+        Q_FOREACH(const QVariant &var, map_users)
+            _users << User::fromMap(var.toMap());
+        result.setUsers(_users);
+        return result;
+    }
+    return result;
+}
+
 QByteArray ContactsResolvedPeer::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

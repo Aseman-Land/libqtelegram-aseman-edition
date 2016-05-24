@@ -8,6 +8,7 @@
 #include "telegramtypeobject.h"
 
 #include <QMetaType>
+#include <QVariant>
 #include <QtGlobal>
 #include <QString>
 
@@ -58,6 +59,9 @@ public:
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
+
+    QMap<QString, QVariant> toMap() const;
+    static StickerSet fromMap(const QMap<QString, QVariant> &map);
 
     bool operator ==(const StickerSet &b) const;
 

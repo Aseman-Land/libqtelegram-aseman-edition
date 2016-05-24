@@ -178,6 +178,57 @@ bool FoundGif::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> FoundGif::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeFoundGif: {
+        result["classType"] = "FoundGif::typeFoundGif";
+        result["url"] = QVariant::fromValue<QString>(url());
+        result["thumbUrl"] = QVariant::fromValue<QString>(thumbUrl());
+        result["contentUrl"] = QVariant::fromValue<QString>(contentUrl());
+        result["contentType"] = QVariant::fromValue<QString>(contentType());
+        result["w"] = QVariant::fromValue<qint32>(w());
+        result["h"] = QVariant::fromValue<qint32>(h());
+        return result;
+    }
+        break;
+    
+    case typeFoundGifCached: {
+        result["classType"] = "FoundGif::typeFoundGifCached";
+        result["url"] = QVariant::fromValue<QString>(url());
+        result["photo"] = m_photo.toMap();
+        result["document"] = m_document.toMap();
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+FoundGif FoundGif::fromMap(const QMap<QString, QVariant> &map) {
+    FoundGif result;
+    if(map.value("classType").toString() == "FoundGif::typeFoundGif") {
+        result.setClassType(typeFoundGif);
+        result.setUrl( map.value("url").value<QString>() );
+        result.setThumbUrl( map.value("thumbUrl").value<QString>() );
+        result.setContentUrl( map.value("contentUrl").value<QString>() );
+        result.setContentType( map.value("contentType").value<QString>() );
+        result.setW( map.value("w").value<qint32>() );
+        result.setH( map.value("h").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "FoundGif::typeFoundGifCached") {
+        result.setClassType(typeFoundGifCached);
+        result.setUrl( map.value("url").value<QString>() );
+        result.setPhoto( Photo::fromMap(map.value("photo").toMap()) );
+        result.setDocument( Document::fromMap(map.value("document").toMap()) );
+        return result;
+    }
+    return result;
+}
+
 QByteArray FoundGif::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

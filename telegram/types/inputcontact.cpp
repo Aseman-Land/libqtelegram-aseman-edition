@@ -118,6 +118,37 @@ bool InputContact::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> InputContact::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeInputPhoneContact: {
+        result["classType"] = "InputContact::typeInputPhoneContact";
+        result["clientId"] = QVariant::fromValue<qint64>(clientId());
+        result["phone"] = QVariant::fromValue<QString>(phone());
+        result["firstName"] = QVariant::fromValue<QString>(firstName());
+        result["lastName"] = QVariant::fromValue<QString>(lastName());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+InputContact InputContact::fromMap(const QMap<QString, QVariant> &map) {
+    InputContact result;
+    if(map.value("classType").toString() == "InputContact::typeInputPhoneContact") {
+        result.setClassType(typeInputPhoneContact);
+        result.setClientId( map.value("clientId").value<qint64>() );
+        result.setPhone( map.value("phone").value<QString>() );
+        result.setFirstName( map.value("firstName").value<QString>() );
+        result.setLastName( map.value("lastName").value<QString>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray InputContact::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

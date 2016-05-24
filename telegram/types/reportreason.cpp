@@ -115,6 +115,61 @@ bool ReportReason::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> ReportReason::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeInputReportReasonSpam: {
+        result["classType"] = "ReportReason::typeInputReportReasonSpam";
+        return result;
+    }
+        break;
+    
+    case typeInputReportReasonViolence: {
+        result["classType"] = "ReportReason::typeInputReportReasonViolence";
+        return result;
+    }
+        break;
+    
+    case typeInputReportReasonPornography: {
+        result["classType"] = "ReportReason::typeInputReportReasonPornography";
+        return result;
+    }
+        break;
+    
+    case typeInputReportReasonOther: {
+        result["classType"] = "ReportReason::typeInputReportReasonOther";
+        result["text"] = QVariant::fromValue<QString>(text());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+ReportReason ReportReason::fromMap(const QMap<QString, QVariant> &map) {
+    ReportReason result;
+    if(map.value("classType").toString() == "ReportReason::typeInputReportReasonSpam") {
+        result.setClassType(typeInputReportReasonSpam);
+        return result;
+    }
+    if(map.value("classType").toString() == "ReportReason::typeInputReportReasonViolence") {
+        result.setClassType(typeInputReportReasonViolence);
+        return result;
+    }
+    if(map.value("classType").toString() == "ReportReason::typeInputReportReasonPornography") {
+        result.setClassType(typeInputReportReasonPornography);
+        return result;
+    }
+    if(map.value("classType").toString() == "ReportReason::typeInputReportReasonOther") {
+        result.setClassType(typeInputReportReasonOther);
+        result.setText( map.value("text").value<QString>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray ReportReason::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

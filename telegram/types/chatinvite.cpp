@@ -154,6 +154,48 @@ bool ChatInvite::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> ChatInvite::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeChatInviteAlready: {
+        result["classType"] = "ChatInvite::typeChatInviteAlready";
+        result["chat"] = m_chat.toMap();
+        return result;
+    }
+        break;
+    
+    case typeChatInvite: {
+        result["classType"] = "ChatInvite::typeChatInvite";
+        result["flags"] = QVariant::fromValue<qint32>(flags());
+        result["title"] = QVariant::fromValue<QString>(title());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+ChatInvite ChatInvite::fromMap(const QMap<QString, QVariant> &map) {
+    ChatInvite result;
+    if(map.value("classType").toString() == "ChatInvite::typeChatInviteAlready") {
+        result.setClassType(typeChatInviteAlready);
+        result.setChat( Chat::fromMap(map.value("chat").toMap()) );
+        return result;
+    }
+    if(map.value("classType").toString() == "ChatInvite::typeChatInvite") {
+        result.setClassType(typeChatInvite);
+        result.setChannel( map.value("channel").value<bool>() );
+        result.setBroadcast( map.value("broadcast").value<bool>() );
+        result.setPublicValue( map.value("publicValue").value<bool>() );
+        result.setMegagroup( map.value("megagroup").value<bool>() );
+        result.setTitle( map.value("title").value<QString>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray ChatInvite::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);

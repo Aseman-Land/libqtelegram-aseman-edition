@@ -121,6 +121,53 @@ bool InputUser::push(OutboundPkt *out) const {
     }
 }
 
+QMap<QString, QVariant> InputUser::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeInputUserEmpty: {
+        result["classType"] = "InputUser::typeInputUserEmpty";
+        return result;
+    }
+        break;
+    
+    case typeInputUserSelf: {
+        result["classType"] = "InputUser::typeInputUserSelf";
+        return result;
+    }
+        break;
+    
+    case typeInputUser: {
+        result["classType"] = "InputUser::typeInputUser";
+        result["userId"] = QVariant::fromValue<qint32>(userId());
+        result["accessHash"] = QVariant::fromValue<qint64>(accessHash());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+InputUser InputUser::fromMap(const QMap<QString, QVariant> &map) {
+    InputUser result;
+    if(map.value("classType").toString() == "InputUser::typeInputUserEmpty") {
+        result.setClassType(typeInputUserEmpty);
+        return result;
+    }
+    if(map.value("classType").toString() == "InputUser::typeInputUserSelf") {
+        result.setClassType(typeInputUserSelf);
+        return result;
+    }
+    if(map.value("classType").toString() == "InputUser::typeInputUser") {
+        result.setClassType(typeInputUser);
+        result.setUserId( map.value("userId").value<qint32>() );
+        result.setAccessHash( map.value("accessHash").value<qint64>() );
+        return result;
+    }
+    return result;
+}
+
 QByteArray InputUser::getHash(QCryptographicHash::Algorithm alg) const {
     QByteArray data;
     QDataStream str(&data, QIODevice::WriteOnly);
