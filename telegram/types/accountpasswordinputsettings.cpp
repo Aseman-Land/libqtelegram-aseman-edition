@@ -142,7 +142,6 @@ QMap<QString, QVariant> AccountPasswordInputSettings::toMap() const {
     switch(static_cast<int>(m_classType)) {
     case typeAccountPasswordInputSettings: {
         result["classType"] = "AccountPasswordInputSettings::typeAccountPasswordInputSettings";
-        result["flags"] = QVariant::fromValue<qint32>(flags());
         result["newSalt"] = QVariant::fromValue<QByteArray>(newSalt());
         result["newPasswordHash"] = QVariant::fromValue<QByteArray>(newPasswordHash());
         result["hint"] = QVariant::fromValue<QString>(hint());

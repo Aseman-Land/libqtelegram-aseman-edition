@@ -305,7 +305,7 @@ QMap<QString, QVariant> DocumentAttribute::toMap() const {
     
     case typeDocumentAttributeAudio: {
         result["classType"] = "DocumentAttribute::typeDocumentAttributeAudio";
-        result["flags"] = QVariant::fromValue<qint32>(flags());
+        result["voice"] = QVariant::fromValue<bool>(voice());
         result["duration"] = QVariant::fromValue<qint32>(duration());
         result["title"] = QVariant::fromValue<QString>(title());
         result["performer"] = QVariant::fromValue<QString>(performer());

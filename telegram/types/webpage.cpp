@@ -346,7 +346,6 @@ QMap<QString, QVariant> WebPage::toMap() const {
     
     case typeWebPage: {
         result["classType"] = "WebPage::typeWebPage";
-        result["flags"] = QVariant::fromValue<qint32>(flags());
         result["id"] = QVariant::fromValue<qint64>(id());
         result["url"] = QVariant::fromValue<QString>(url());
         result["displayUrl"] = QVariant::fromValue<QString>(displayUrl());

@@ -150,7 +150,8 @@ QMap<QString, QVariant> PeerNotifySettings::toMap() const {
     
     case typePeerNotifySettings: {
         result["classType"] = "PeerNotifySettings::typePeerNotifySettings";
-        result["flags"] = QVariant::fromValue<qint32>(flags());
+        result["showPreviews"] = QVariant::fromValue<bool>(showPreviews());
+        result["silent"] = QVariant::fromValue<bool>(silent());
         result["muteUntil"] = QVariant::fromValue<qint32>(muteUntil());
         result["sound"] = QVariant::fromValue<QString>(sound());
         return result;

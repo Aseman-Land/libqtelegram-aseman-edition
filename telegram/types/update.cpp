@@ -1778,7 +1778,6 @@ QMap<QString, QVariant> Update::toMap() const {
     
     case typeUpdateChannelTooLong: {
         result["classType"] = "Update::typeUpdateChannelTooLong";
-        result["flags"] = QVariant::fromValue<qint32>(flags());
         result["channelId"] = QVariant::fromValue<qint32>(channelId());
         result["pts"] = QVariant::fromValue<qint32>(pts());
         return result;
@@ -1889,7 +1888,6 @@ QMap<QString, QVariant> Update::toMap() const {
     
     case typeUpdateBotInlineQuery: {
         result["classType"] = "Update::typeUpdateBotInlineQuery";
-        result["flags"] = QVariant::fromValue<qint32>(flags());
         result["queryId"] = QVariant::fromValue<qint64>(queryId());
         result["userId"] = QVariant::fromValue<qint32>(userId());
         result["query"] = QVariant::fromValue<QString>(query());
@@ -1901,7 +1899,6 @@ QMap<QString, QVariant> Update::toMap() const {
     
     case typeUpdateBotInlineSend: {
         result["classType"] = "Update::typeUpdateBotInlineSend";
-        result["flags"] = QVariant::fromValue<qint32>(flags());
         result["userId"] = QVariant::fromValue<qint32>(userId());
         result["query"] = QVariant::fromValue<QString>(query());
         result["geo"] = m_geo.toMap();

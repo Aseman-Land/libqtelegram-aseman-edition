@@ -302,7 +302,6 @@ QMap<QString, QVariant> BotInlineResult::toMap() const {
     switch(static_cast<int>(m_classType)) {
     case typeBotInlineResult: {
         result["classType"] = "BotInlineResult::typeBotInlineResult";
-        result["flags"] = QVariant::fromValue<qint32>(flags());
         result["id"] = QVariant::fromValue<QString>(id());
         result["type"] = QVariant::fromValue<QString>(type());
         result["title"] = QVariant::fromValue<QString>(title());
@@ -321,7 +320,6 @@ QMap<QString, QVariant> BotInlineResult::toMap() const {
     
     case typeBotInlineMediaResult: {
         result["classType"] = "BotInlineResult::typeBotInlineMediaResult";
-        result["flags"] = QVariant::fromValue<qint32>(flags());
         result["id"] = QVariant::fromValue<QString>(id());
         result["type"] = QVariant::fromValue<QString>(type());
         result["photo"] = m_photo.toMap();

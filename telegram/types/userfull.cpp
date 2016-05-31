@@ -171,7 +171,7 @@ QMap<QString, QVariant> UserFull::toMap() const {
     switch(static_cast<int>(m_classType)) {
     case typeUserFull: {
         result["classType"] = "UserFull::typeUserFull";
-        result["flags"] = QVariant::fromValue<qint32>(flags());
+        result["blocked"] = QVariant::fromValue<bool>(blocked());
         result["user"] = m_user.toMap();
         result["about"] = QVariant::fromValue<QString>(about());
         result["link"] = m_link.toMap();

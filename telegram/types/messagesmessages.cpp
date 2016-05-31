@@ -349,7 +349,6 @@ QMap<QString, QVariant> MessagesMessages::toMap() const {
     
     case typeMessagesChannelMessages: {
         result["classType"] = "MessagesMessages::typeMessagesChannelMessages";
-        result["flags"] = QVariant::fromValue<qint32>(flags());
         result["pts"] = QVariant::fromValue<qint32>(pts());
         result["count"] = QVariant::fromValue<qint32>(count());
         QList<QVariant> _messages;

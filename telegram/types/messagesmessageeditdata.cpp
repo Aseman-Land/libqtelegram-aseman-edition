@@ -99,7 +99,7 @@ QMap<QString, QVariant> MessagesMessageEditData::toMap() const {
     switch(static_cast<int>(m_classType)) {
     case typeMessagesMessageEditData: {
         result["classType"] = "MessagesMessageEditData::typeMessagesMessageEditData";
-        result["flags"] = QVariant::fromValue<qint32>(flags());
+        result["caption"] = QVariant::fromValue<bool>(caption());
         return result;
     }
         break;

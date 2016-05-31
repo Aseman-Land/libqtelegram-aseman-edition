@@ -318,7 +318,6 @@ QMap<QString, QVariant> BotInlineMessage::toMap() const {
     switch(static_cast<int>(m_classType)) {
     case typeBotInlineMessageMediaAuto: {
         result["classType"] = "BotInlineMessage::typeBotInlineMessageMediaAuto";
-        result["flags"] = QVariant::fromValue<qint32>(flags());
         result["caption"] = QVariant::fromValue<QString>(caption());
         result["replyMarkup"] = m_replyMarkup.toMap();
         return result;
@@ -327,7 +326,7 @@ QMap<QString, QVariant> BotInlineMessage::toMap() const {
     
     case typeBotInlineMessageText: {
         result["classType"] = "BotInlineMessage::typeBotInlineMessageText";
-        result["flags"] = QVariant::fromValue<qint32>(flags());
+        result["noWebpage"] = QVariant::fromValue<bool>(noWebpage());
         result["message"] = QVariant::fromValue<QString>(message());
         QList<QVariant> _entities;
         Q_FOREACH(const MessageEntity &m__type, m_entities)
@@ -340,7 +339,6 @@ QMap<QString, QVariant> BotInlineMessage::toMap() const {
     
     case typeBotInlineMessageMediaGeo: {
         result["classType"] = "BotInlineMessage::typeBotInlineMessageMediaGeo";
-        result["flags"] = QVariant::fromValue<qint32>(flags());
         result["geo"] = m_geo.toMap();
         result["replyMarkup"] = m_replyMarkup.toMap();
         return result;
@@ -349,7 +347,6 @@ QMap<QString, QVariant> BotInlineMessage::toMap() const {
     
     case typeBotInlineMessageMediaVenue: {
         result["classType"] = "BotInlineMessage::typeBotInlineMessageMediaVenue";
-        result["flags"] = QVariant::fromValue<qint32>(flags());
         result["geo"] = m_geo.toMap();
         result["title"] = QVariant::fromValue<QString>(title());
         result["address"] = QVariant::fromValue<QString>(address());
@@ -362,7 +359,6 @@ QMap<QString, QVariant> BotInlineMessage::toMap() const {
     
     case typeBotInlineMessageMediaContact: {
         result["classType"] = "BotInlineMessage::typeBotInlineMessageMediaContact";
-        result["flags"] = QVariant::fromValue<qint32>(flags());
         result["phoneNumber"] = QVariant::fromValue<QString>(phoneNumber());
         result["firstName"] = QVariant::fromValue<QString>(firstName());
         result["lastName"] = QVariant::fromValue<QString>(lastName());

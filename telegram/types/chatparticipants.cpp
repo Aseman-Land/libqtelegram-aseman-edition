@@ -166,7 +166,6 @@ QMap<QString, QVariant> ChatParticipants::toMap() const {
     switch(static_cast<int>(m_classType)) {
     case typeChatParticipantsForbidden: {
         result["classType"] = "ChatParticipants::typeChatParticipantsForbidden";
-        result["flags"] = QVariant::fromValue<qint32>(flags());
         result["chatId"] = QVariant::fromValue<qint32>(chatId());
         result["selfParticipant"] = m_selfParticipant.toMap();
         return result;

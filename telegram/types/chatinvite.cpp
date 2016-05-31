@@ -166,7 +166,10 @@ QMap<QString, QVariant> ChatInvite::toMap() const {
     
     case typeChatInvite: {
         result["classType"] = "ChatInvite::typeChatInvite";
-        result["flags"] = QVariant::fromValue<qint32>(flags());
+        result["channel"] = QVariant::fromValue<bool>(channel());
+        result["broadcast"] = QVariant::fromValue<bool>(broadcast());
+        result["publicValue"] = QVariant::fromValue<bool>(publicValue());
+        result["megagroup"] = QVariant::fromValue<bool>(megagroup());
         result["title"] = QVariant::fromValue<QString>(title());
         return result;
     }

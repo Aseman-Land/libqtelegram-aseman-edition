@@ -112,7 +112,7 @@ QMap<QString, QVariant> MessagesBotCallbackAnswer::toMap() const {
     switch(static_cast<int>(m_classType)) {
     case typeMessagesBotCallbackAnswer: {
         result["classType"] = "MessagesBotCallbackAnswer::typeMessagesBotCallbackAnswer";
-        result["flags"] = QVariant::fromValue<qint32>(flags());
+        result["alert"] = QVariant::fromValue<bool>(alert());
         result["message"] = QVariant::fromValue<QString>(message());
         return result;
     }

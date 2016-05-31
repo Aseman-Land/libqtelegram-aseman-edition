@@ -433,7 +433,12 @@ QMap<QString, QVariant> Chat::toMap() const {
     
     case typeChat: {
         result["classType"] = "Chat::typeChat";
-        result["flags"] = QVariant::fromValue<qint32>(flags());
+        result["creator"] = QVariant::fromValue<bool>(creator());
+        result["kicked"] = QVariant::fromValue<bool>(kicked());
+        result["left"] = QVariant::fromValue<bool>(left());
+        result["adminsEnabled"] = QVariant::fromValue<bool>(adminsEnabled());
+        result["admin"] = QVariant::fromValue<bool>(admin());
+        result["deactivated"] = QVariant::fromValue<bool>(deactivated());
         result["id"] = QVariant::fromValue<qint32>(id());
         result["title"] = QVariant::fromValue<QString>(title());
         result["photo"] = m_photo.toMap();
@@ -455,7 +460,18 @@ QMap<QString, QVariant> Chat::toMap() const {
     
     case typeChannel: {
         result["classType"] = "Chat::typeChannel";
-        result["flags"] = QVariant::fromValue<qint32>(flags());
+        result["creator"] = QVariant::fromValue<bool>(creator());
+        result["kicked"] = QVariant::fromValue<bool>(kicked());
+        result["left"] = QVariant::fromValue<bool>(left());
+        result["editor"] = QVariant::fromValue<bool>(editor());
+        result["moderator"] = QVariant::fromValue<bool>(moderator());
+        result["broadcast"] = QVariant::fromValue<bool>(broadcast());
+        result["verified"] = QVariant::fromValue<bool>(verified());
+        result["megagroup"] = QVariant::fromValue<bool>(megagroup());
+        result["restricted"] = QVariant::fromValue<bool>(restricted());
+        result["democracy"] = QVariant::fromValue<bool>(democracy());
+        result["signatures"] = QVariant::fromValue<bool>(signatures());
+        result["min"] = QVariant::fromValue<bool>(min());
         result["id"] = QVariant::fromValue<qint32>(id());
         result["accessHash"] = QVariant::fromValue<qint64>(accessHash());
         result["title"] = QVariant::fromValue<QString>(title());

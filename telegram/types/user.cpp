@@ -359,7 +359,17 @@ QMap<QString, QVariant> User::toMap() const {
     
     case typeUser: {
         result["classType"] = "User::typeUser";
-        result["flags"] = QVariant::fromValue<qint32>(flags());
+        result["self"] = QVariant::fromValue<bool>(self());
+        result["contact"] = QVariant::fromValue<bool>(contact());
+        result["mutualContact"] = QVariant::fromValue<bool>(mutualContact());
+        result["deleted"] = QVariant::fromValue<bool>(deleted());
+        result["bot"] = QVariant::fromValue<bool>(bot());
+        result["botChatHistory"] = QVariant::fromValue<bool>(botChatHistory());
+        result["botNochats"] = QVariant::fromValue<bool>(botNochats());
+        result["verified"] = QVariant::fromValue<bool>(verified());
+        result["restricted"] = QVariant::fromValue<bool>(restricted());
+        result["min"] = QVariant::fromValue<bool>(min());
+        result["botInlineGeo"] = QVariant::fromValue<bool>(botInlineGeo());
         result["id"] = QVariant::fromValue<qint32>(id());
         result["accessHash"] = QVariant::fromValue<qint64>(accessHash());
         result["firstName"] = QVariant::fromValue<QString>(firstName());

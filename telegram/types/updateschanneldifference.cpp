@@ -373,7 +373,7 @@ QMap<QString, QVariant> UpdatesChannelDifference::toMap() const {
     switch(static_cast<int>(m_classType)) {
     case typeUpdatesChannelDifferenceEmpty: {
         result["classType"] = "UpdatesChannelDifference::typeUpdatesChannelDifferenceEmpty";
-        result["flags"] = QVariant::fromValue<qint32>(flags());
+        result["final"] = QVariant::fromValue<bool>(final());
         result["pts"] = QVariant::fromValue<qint32>(pts());
         result["timeout"] = QVariant::fromValue<qint32>(timeout());
         return result;
@@ -382,7 +382,7 @@ QMap<QString, QVariant> UpdatesChannelDifference::toMap() const {
     
     case typeUpdatesChannelDifferenceTooLong: {
         result["classType"] = "UpdatesChannelDifference::typeUpdatesChannelDifferenceTooLong";
-        result["flags"] = QVariant::fromValue<qint32>(flags());
+        result["final"] = QVariant::fromValue<bool>(final());
         result["pts"] = QVariant::fromValue<qint32>(pts());
         result["timeout"] = QVariant::fromValue<qint32>(timeout());
         result["topMessage"] = QVariant::fromValue<qint32>(topMessage());
@@ -408,7 +408,7 @@ QMap<QString, QVariant> UpdatesChannelDifference::toMap() const {
     
     case typeUpdatesChannelDifference: {
         result["classType"] = "UpdatesChannelDifference::typeUpdatesChannelDifference";
-        result["flags"] = QVariant::fromValue<qint32>(flags());
+        result["final"] = QVariant::fromValue<bool>(final());
         result["pts"] = QVariant::fromValue<qint32>(pts());
         result["timeout"] = QVariant::fromValue<qint32>(timeout());
         QList<QVariant> _newMessages;

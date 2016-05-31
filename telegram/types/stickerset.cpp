@@ -195,7 +195,9 @@ QMap<QString, QVariant> StickerSet::toMap() const {
     switch(static_cast<int>(m_classType)) {
     case typeStickerSet: {
         result["classType"] = "StickerSet::typeStickerSet";
-        result["flags"] = QVariant::fromValue<qint32>(flags());
+        result["installed"] = QVariant::fromValue<bool>(installed());
+        result["disabled"] = QVariant::fromValue<bool>(disabled());
+        result["official"] = QVariant::fromValue<bool>(official());
         result["id"] = QVariant::fromValue<qint64>(id());
         result["accessHash"] = QVariant::fromValue<qint64>(accessHash());
         result["title"] = QVariant::fromValue<QString>(title());

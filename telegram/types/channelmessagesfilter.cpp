@@ -158,7 +158,8 @@ QMap<QString, QVariant> ChannelMessagesFilter::toMap() const {
     
     case typeChannelMessagesFilter: {
         result["classType"] = "ChannelMessagesFilter::typeChannelMessagesFilter";
-        result["flags"] = QVariant::fromValue<qint32>(flags());
+        result["importantOnly"] = QVariant::fromValue<bool>(importantOnly());
+        result["excludeNewMessages"] = QVariant::fromValue<bool>(excludeNewMessages());
         QList<QVariant> _ranges;
         Q_FOREACH(const MessageRange &m__type, m_ranges)
             _ranges << m__type.toMap();

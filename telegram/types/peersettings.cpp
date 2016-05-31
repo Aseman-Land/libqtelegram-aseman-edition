@@ -99,7 +99,7 @@ QMap<QString, QVariant> PeerSettings::toMap() const {
     switch(static_cast<int>(m_classType)) {
     case typePeerSettings: {
         result["classType"] = "PeerSettings::typePeerSettings";
-        result["flags"] = QVariant::fromValue<qint32>(flags());
+        result["reportSpam"] = QVariant::fromValue<bool>(reportSpam());
         return result;
     }
         break;

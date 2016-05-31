@@ -318,7 +318,6 @@ QMap<QString, QVariant> InputBotInlineMessage::toMap() const {
     switch(static_cast<int>(m_classType)) {
     case typeInputBotInlineMessageMediaAuto: {
         result["classType"] = "InputBotInlineMessage::typeInputBotInlineMessageMediaAuto";
-        result["flags"] = QVariant::fromValue<qint32>(flags());
         result["caption"] = QVariant::fromValue<QString>(caption());
         result["replyMarkup"] = m_replyMarkup.toMap();
         return result;
@@ -327,7 +326,7 @@ QMap<QString, QVariant> InputBotInlineMessage::toMap() const {
     
     case typeInputBotInlineMessageText: {
         result["classType"] = "InputBotInlineMessage::typeInputBotInlineMessageText";
-        result["flags"] = QVariant::fromValue<qint32>(flags());
+        result["noWebpage"] = QVariant::fromValue<bool>(noWebpage());
         result["message"] = QVariant::fromValue<QString>(message());
         QList<QVariant> _entities;
         Q_FOREACH(const MessageEntity &m__type, m_entities)
@@ -340,7 +339,6 @@ QMap<QString, QVariant> InputBotInlineMessage::toMap() const {
     
     case typeInputBotInlineMessageMediaGeo: {
         result["classType"] = "InputBotInlineMessage::typeInputBotInlineMessageMediaGeo";
-        result["flags"] = QVariant::fromValue<qint32>(flags());
         result["geoPoint"] = m_geoPoint.toMap();
         result["replyMarkup"] = m_replyMarkup.toMap();
         return result;
@@ -349,7 +347,6 @@ QMap<QString, QVariant> InputBotInlineMessage::toMap() const {
     
     case typeInputBotInlineMessageMediaVenue: {
         result["classType"] = "InputBotInlineMessage::typeInputBotInlineMessageMediaVenue";
-        result["flags"] = QVariant::fromValue<qint32>(flags());
         result["geoPoint"] = m_geoPoint.toMap();
         result["title"] = QVariant::fromValue<QString>(title());
         result["address"] = QVariant::fromValue<QString>(address());
@@ -362,7 +359,6 @@ QMap<QString, QVariant> InputBotInlineMessage::toMap() const {
     
     case typeInputBotInlineMessageMediaContact: {
         result["classType"] = "InputBotInlineMessage::typeInputBotInlineMessageMediaContact";
-        result["flags"] = QVariant::fromValue<qint32>(flags());
         result["phoneNumber"] = QVariant::fromValue<QString>(phoneNumber());
         result["firstName"] = QVariant::fromValue<QString>(firstName());
         result["lastName"] = QVariant::fromValue<QString>(lastName());

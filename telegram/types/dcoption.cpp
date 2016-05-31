@@ -156,7 +156,9 @@ QMap<QString, QVariant> DcOption::toMap() const {
     switch(static_cast<int>(m_classType)) {
     case typeDcOption: {
         result["classType"] = "DcOption::typeDcOption";
-        result["flags"] = QVariant::fromValue<qint32>(flags());
+        result["ipv6"] = QVariant::fromValue<bool>(ipv6());
+        result["mediaOnly"] = QVariant::fromValue<bool>(mediaOnly());
+        result["tcpoOnly"] = QVariant::fromValue<bool>(tcpoOnly());
         result["id"] = QVariant::fromValue<qint32>(id());
         result["ipAddress"] = QVariant::fromValue<QString>(ipAddress());
         result["port"] = QVariant::fromValue<qint32>(port());

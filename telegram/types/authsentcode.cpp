@@ -150,7 +150,7 @@ QMap<QString, QVariant> AuthSentCode::toMap() const {
     switch(static_cast<int>(m_classType)) {
     case typeAuthSentCode: {
         result["classType"] = "AuthSentCode::typeAuthSentCode";
-        result["flags"] = QVariant::fromValue<qint32>(flags());
+        result["phoneRegistered"] = QVariant::fromValue<bool>(phoneRegistered());
         result["type"] = m_type.toMap();
         result["phoneCodeHash"] = QVariant::fromValue<QString>(phoneCodeHash());
         result["nextType"] = m_nextType.toMap();

@@ -161,7 +161,7 @@ QMap<QString, QVariant> MessagesBotResults::toMap() const {
     switch(static_cast<int>(m_classType)) {
     case typeMessagesBotResults: {
         result["classType"] = "MessagesBotResults::typeMessagesBotResults";
-        result["flags"] = QVariant::fromValue<qint32>(flags());
+        result["gallery"] = QVariant::fromValue<bool>(gallery());
         result["queryId"] = QVariant::fromValue<qint64>(queryId());
         result["nextOffset"] = QVariant::fromValue<QString>(nextOffset());
         result["switchPm"] = m_switchPm.toMap();

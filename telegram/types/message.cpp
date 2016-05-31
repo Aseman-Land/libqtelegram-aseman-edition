@@ -397,7 +397,12 @@ QMap<QString, QVariant> Message::toMap() const {
     
     case typeMessage: {
         result["classType"] = "Message::typeMessage";
-        result["flags"] = QVariant::fromValue<qint32>(flags());
+        result["unread"] = QVariant::fromValue<bool>(unread());
+        result["out"] = QVariant::fromValue<bool>(out());
+        result["mentioned"] = QVariant::fromValue<bool>(mentioned());
+        result["mediaUnread"] = QVariant::fromValue<bool>(mediaUnread());
+        result["silent"] = QVariant::fromValue<bool>(silent());
+        result["post"] = QVariant::fromValue<bool>(post());
         result["id"] = QVariant::fromValue<qint32>(id());
         result["fromId"] = QVariant::fromValue<qint32>(fromId());
         result["toId"] = m_toId.toMap();
@@ -420,7 +425,12 @@ QMap<QString, QVariant> Message::toMap() const {
     
     case typeMessageService: {
         result["classType"] = "Message::typeMessageService";
-        result["flags"] = QVariant::fromValue<qint32>(flags());
+        result["unread"] = QVariant::fromValue<bool>(unread());
+        result["out"] = QVariant::fromValue<bool>(out());
+        result["mentioned"] = QVariant::fromValue<bool>(mentioned());
+        result["mediaUnread"] = QVariant::fromValue<bool>(mediaUnread());
+        result["silent"] = QVariant::fromValue<bool>(silent());
+        result["post"] = QVariant::fromValue<bool>(post());
         result["id"] = QVariant::fromValue<qint32>(id());
         result["fromId"] = QVariant::fromValue<qint32>(fromId());
         result["toId"] = m_toId.toMap();

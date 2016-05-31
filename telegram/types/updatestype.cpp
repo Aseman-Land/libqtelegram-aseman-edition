@@ -620,7 +620,11 @@ QMap<QString, QVariant> UpdatesType::toMap() const {
     
     case typeUpdateShortMessage: {
         result["classType"] = "UpdatesType::typeUpdateShortMessage";
-        result["flags"] = QVariant::fromValue<qint32>(flags());
+        result["unread"] = QVariant::fromValue<bool>(unread());
+        result["out"] = QVariant::fromValue<bool>(out());
+        result["mentioned"] = QVariant::fromValue<bool>(mentioned());
+        result["mediaUnread"] = QVariant::fromValue<bool>(mediaUnread());
+        result["silent"] = QVariant::fromValue<bool>(silent());
         result["id"] = QVariant::fromValue<qint32>(id());
         result["userId"] = QVariant::fromValue<qint32>(userId());
         result["message"] = QVariant::fromValue<QString>(message());
@@ -640,7 +644,11 @@ QMap<QString, QVariant> UpdatesType::toMap() const {
     
     case typeUpdateShortChatMessage: {
         result["classType"] = "UpdatesType::typeUpdateShortChatMessage";
-        result["flags"] = QVariant::fromValue<qint32>(flags());
+        result["unread"] = QVariant::fromValue<bool>(unread());
+        result["out"] = QVariant::fromValue<bool>(out());
+        result["mentioned"] = QVariant::fromValue<bool>(mentioned());
+        result["mediaUnread"] = QVariant::fromValue<bool>(mediaUnread());
+        result["silent"] = QVariant::fromValue<bool>(silent());
         result["id"] = QVariant::fromValue<qint32>(id());
         result["fromId"] = QVariant::fromValue<qint32>(fromId());
         result["chatId"] = QVariant::fromValue<qint32>(chatId());
@@ -710,7 +718,8 @@ QMap<QString, QVariant> UpdatesType::toMap() const {
     
     case typeUpdateShortSentMessage: {
         result["classType"] = "UpdatesType::typeUpdateShortSentMessage";
-        result["flags"] = QVariant::fromValue<qint32>(flags());
+        result["unread"] = QVariant::fromValue<bool>(unread());
+        result["out"] = QVariant::fromValue<bool>(out());
         result["id"] = QVariant::fromValue<qint32>(id());
         result["pts"] = QVariant::fromValue<qint32>(pts());
         result["ptsCount"] = QVariant::fromValue<qint32>(ptsCount());

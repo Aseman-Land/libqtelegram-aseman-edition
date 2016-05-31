@@ -315,7 +315,6 @@ QMap<QString, QVariant> InputBotInlineResult::toMap() const {
     switch(static_cast<int>(m_classType)) {
     case typeInputBotInlineResult: {
         result["classType"] = "InputBotInlineResult::typeInputBotInlineResult";
-        result["flags"] = QVariant::fromValue<qint32>(flags());
         result["id"] = QVariant::fromValue<QString>(id());
         result["type"] = QVariant::fromValue<QString>(type());
         result["title"] = QVariant::fromValue<QString>(title());
@@ -344,7 +343,6 @@ QMap<QString, QVariant> InputBotInlineResult::toMap() const {
     
     case typeInputBotInlineResultDocument: {
         result["classType"] = "InputBotInlineResult::typeInputBotInlineResultDocument";
-        result["flags"] = QVariant::fromValue<qint32>(flags());
         result["id"] = QVariant::fromValue<QString>(id());
         result["type"] = QVariant::fromValue<QString>(type());
         result["title"] = QVariant::fromValue<QString>(title());

@@ -189,21 +189,24 @@ QMap<QString, QVariant> ReplyMarkup::toMap() const {
     switch(static_cast<int>(m_classType)) {
     case typeReplyKeyboardHide: {
         result["classType"] = "ReplyMarkup::typeReplyKeyboardHide";
-        result["flags"] = QVariant::fromValue<qint32>(flags());
+        result["selective"] = QVariant::fromValue<bool>(selective());
         return result;
     }
         break;
     
     case typeReplyKeyboardForceReply: {
         result["classType"] = "ReplyMarkup::typeReplyKeyboardForceReply";
-        result["flags"] = QVariant::fromValue<qint32>(flags());
+        result["singleUse"] = QVariant::fromValue<bool>(singleUse());
+        result["selective"] = QVariant::fromValue<bool>(selective());
         return result;
     }
         break;
     
     case typeReplyKeyboardMarkup: {
         result["classType"] = "ReplyMarkup::typeReplyKeyboardMarkup";
-        result["flags"] = QVariant::fromValue<qint32>(flags());
+        result["resize"] = QVariant::fromValue<bool>(resize());
+        result["singleUse"] = QVariant::fromValue<bool>(singleUse());
+        result["selective"] = QVariant::fromValue<bool>(selective());
         QList<QVariant> _rows;
         Q_FOREACH(const KeyboardButtonRow &m__type, m_rows)
             _rows << m__type.toMap();

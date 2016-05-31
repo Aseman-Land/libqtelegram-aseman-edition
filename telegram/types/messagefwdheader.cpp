@@ -152,7 +152,6 @@ QMap<QString, QVariant> MessageFwdHeader::toMap() const {
     switch(static_cast<int>(m_classType)) {
     case typeMessageFwdHeader: {
         result["classType"] = "MessageFwdHeader::typeMessageFwdHeader";
-        result["flags"] = QVariant::fromValue<qint32>(flags());
         result["fromId"] = QVariant::fromValue<qint32>(fromId());
         result["date"] = QVariant::fromValue<qint32>(date());
         result["channelId"] = QVariant::fromValue<qint32>(channelId());

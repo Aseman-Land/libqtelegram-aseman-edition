@@ -384,7 +384,8 @@ QMap<QString, QVariant> ChatFull::toMap() const {
     
     case typeChannelFull: {
         result["classType"] = "ChatFull::typeChannelFull";
-        result["flags"] = QVariant::fromValue<qint32>(flags());
+        result["canViewParticipants"] = QVariant::fromValue<bool>(canViewParticipants());
+        result["canSetUsername"] = QVariant::fromValue<bool>(canSetUsername());
         result["id"] = QVariant::fromValue<qint32>(id());
         result["about"] = QVariant::fromValue<QString>(about());
         result["participantsCount"] = QVariant::fromValue<qint32>(participantsCount());
