@@ -84,4 +84,180 @@ private:
     ChatInvite m_core;
 };
 
+inline ChatInviteObject::ChatInviteObject(const ChatInvite &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_chat(0),
+    m_core(core)
+{
+    m_chat = new ChatObject(m_core.chat(), this);
+    connect(m_chat.data(), &ChatObject::coreChanged, this, &ChatInviteObject::coreChatChanged);
+}
+
+inline ChatInviteObject::ChatInviteObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_chat(0),
+    m_core()
+{
+    m_chat = new ChatObject(m_core.chat(), this);
+    connect(m_chat.data(), &ChatObject::coreChanged, this, &ChatInviteObject::coreChatChanged);
+}
+
+inline ChatInviteObject::~ChatInviteObject() {
+}
+
+inline void ChatInviteObject::setBroadcast(bool broadcast) {
+    if(m_core.broadcast() == broadcast) return;
+    m_core.setBroadcast(broadcast);
+    Q_EMIT broadcastChanged();
+    Q_EMIT coreChanged();
+}
+
+inline bool ChatInviteObject::broadcast() const {
+    return m_core.broadcast();
+}
+
+inline void ChatInviteObject::setChannel(bool channel) {
+    if(m_core.channel() == channel) return;
+    m_core.setChannel(channel);
+    Q_EMIT channelChanged();
+    Q_EMIT coreChanged();
+}
+
+inline bool ChatInviteObject::channel() const {
+    return m_core.channel();
+}
+
+inline void ChatInviteObject::setChat(ChatObject* chat) {
+    if(m_chat == chat) return;
+    if(m_chat) delete m_chat;
+    m_chat = chat;
+    if(m_chat) {
+        m_chat->setParent(this);
+        m_core.setChat(m_chat->core());
+        connect(m_chat.data(), &ChatObject::coreChanged, this, &ChatInviteObject::coreChatChanged);
+    }
+    Q_EMIT chatChanged();
+    Q_EMIT coreChanged();
+}
+
+inline ChatObject*  ChatInviteObject::chat() const {
+    return m_chat;
+}
+
+inline void ChatInviteObject::setFlags(qint32 flags) {
+    if(m_core.flags() == flags) return;
+    m_core.setFlags(flags);
+    Q_EMIT flagsChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 ChatInviteObject::flags() const {
+    return m_core.flags();
+}
+
+inline void ChatInviteObject::setMegagroup(bool megagroup) {
+    if(m_core.megagroup() == megagroup) return;
+    m_core.setMegagroup(megagroup);
+    Q_EMIT megagroupChanged();
+    Q_EMIT coreChanged();
+}
+
+inline bool ChatInviteObject::megagroup() const {
+    return m_core.megagroup();
+}
+
+inline void ChatInviteObject::setPublicValue(bool publicValue) {
+    if(m_core.publicValue() == publicValue) return;
+    m_core.setPublicValue(publicValue);
+    Q_EMIT publicValueChanged();
+    Q_EMIT coreChanged();
+}
+
+inline bool ChatInviteObject::publicValue() const {
+    return m_core.publicValue();
+}
+
+inline void ChatInviteObject::setTitle(const QString &title) {
+    if(m_core.title() == title) return;
+    m_core.setTitle(title);
+    Q_EMIT titleChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QString ChatInviteObject::title() const {
+    return m_core.title();
+}
+
+inline ChatInviteObject &ChatInviteObject::operator =(const ChatInvite &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+    m_chat->setCore(b.chat());
+
+    Q_EMIT broadcastChanged();
+    Q_EMIT channelChanged();
+    Q_EMIT chatChanged();
+    Q_EMIT flagsChanged();
+    Q_EMIT megagroupChanged();
+    Q_EMIT publicValueChanged();
+    Q_EMIT titleChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool ChatInviteObject::operator ==(const ChatInvite &b) const {
+    return m_core == b;
+}
+
+inline void ChatInviteObject::setClassType(quint32 classType) {
+    ChatInvite::ChatInviteClassType result;
+    switch(classType) {
+    case TypeChatInviteAlready:
+        result = ChatInvite::typeChatInviteAlready;
+        break;
+    case TypeChatInvite:
+        result = ChatInvite::typeChatInvite;
+        break;
+    default:
+        result = ChatInvite::typeChatInviteAlready;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 ChatInviteObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case ChatInvite::typeChatInviteAlready:
+        result = TypeChatInviteAlready;
+        break;
+    case ChatInvite::typeChatInvite:
+        result = TypeChatInvite;
+        break;
+    default:
+        result = TypeChatInviteAlready;
+        break;
+    }
+
+    return result;
+}
+
+inline void ChatInviteObject::setCore(const ChatInvite &core) {
+    operator =(core);
+}
+
+inline ChatInvite ChatInviteObject::core() const {
+    return m_core;
+}
+
+inline void ChatInviteObject::coreChatChanged() {
+    if(m_core.chat() == m_chat->core()) return;
+    m_core.setChat(m_chat->core());
+    Q_EMIT chatChanged();
+    Q_EMIT coreChanged();
+}
+
 #endif // LQTG_TYPE_CHATINVITE_OBJECT

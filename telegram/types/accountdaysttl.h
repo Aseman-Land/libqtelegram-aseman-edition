@@ -9,6 +9,12 @@
 
 #include <QMetaType>
 #include <QVariant>
+#include "core/inboundpkt.h"
+#include "core/outboundpkt.h"
+#include "../coretypes.h"
+
+#include <QDataStream>
+
 #include <QtGlobal>
 
 class LIBQTELEGRAMSHARED_EXPORT AccountDaysTTL : public TelegramTypeObject
@@ -51,5 +57,139 @@ Q_DECLARE_METATYPE(AccountDaysTTL)
 
 QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const AccountDaysTTL &item);
 QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, AccountDaysTTL &item);
+
+inline AccountDaysTTL::AccountDaysTTL(AccountDaysTTLClassType classType, InboundPkt *in) :
+    m_days(0),
+    m_classType(classType)
+{
+    if(in) fetch(in);
+}
+
+inline AccountDaysTTL::AccountDaysTTL(InboundPkt *in) :
+    m_days(0),
+    m_classType(typeAccountDaysTTL)
+{
+    fetch(in);
+}
+
+inline AccountDaysTTL::AccountDaysTTL(const Null &null) :
+    TelegramTypeObject(null),
+    m_days(0),
+    m_classType(typeAccountDaysTTL)
+{
+}
+
+inline AccountDaysTTL::~AccountDaysTTL() {
+}
+
+inline void AccountDaysTTL::setDays(qint32 days) {
+    m_days = days;
+}
+
+inline qint32 AccountDaysTTL::days() const {
+    return m_days;
+}
+
+inline bool AccountDaysTTL::operator ==(const AccountDaysTTL &b) const {
+    return m_classType == b.m_classType &&
+           m_days == b.m_days;
+}
+
+inline void AccountDaysTTL::setClassType(AccountDaysTTL::AccountDaysTTLClassType classType) {
+    m_classType = classType;
+}
+
+inline AccountDaysTTL::AccountDaysTTLClassType AccountDaysTTL::classType() const {
+    return m_classType;
+}
+
+inline bool AccountDaysTTL::fetch(InboundPkt *in) {
+    LQTG_FETCH_LOG;
+    int x = in->fetchInt();
+    switch(x) {
+    case typeAccountDaysTTL: {
+        m_days = in->fetchInt();
+        m_classType = static_cast<AccountDaysTTLClassType>(x);
+        return true;
+    }
+        break;
+    
+    default:
+        LQTG_FETCH_ASSERT;
+        return false;
+    }
+}
+
+inline bool AccountDaysTTL::push(OutboundPkt *out) const {
+    out->appendInt(m_classType);
+    switch(m_classType) {
+    case typeAccountDaysTTL: {
+        out->appendInt(m_days);
+        return true;
+    }
+        break;
+    
+    default:
+        return false;
+    }
+}
+
+inline QMap<QString, QVariant> AccountDaysTTL::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeAccountDaysTTL: {
+        result["classType"] = "AccountDaysTTL::typeAccountDaysTTL";
+        result["days"] = QVariant::fromValue<qint32>(days());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+inline AccountDaysTTL AccountDaysTTL::fromMap(const QMap<QString, QVariant> &map) {
+    AccountDaysTTL result;
+    if(map.value("classType").toString() == "AccountDaysTTL::typeAccountDaysTTL") {
+        result.setClassType(typeAccountDaysTTL);
+        result.setDays( map.value("days").value<qint32>() );
+        return result;
+    }
+    return result;
+}
+
+inline QByteArray AccountDaysTTL::getHash(QCryptographicHash::Algorithm alg) const {
+    QByteArray data;
+    QDataStream str(&data, QIODevice::WriteOnly);
+    str << *this;
+    return QCryptographicHash::hash(data, alg);
+}
+
+inline QDataStream &operator<<(QDataStream &stream, const AccountDaysTTL &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case AccountDaysTTL::typeAccountDaysTTL:
+        stream << item.days();
+        break;
+    }
+    return stream;
+}
+
+inline QDataStream &operator>>(QDataStream &stream, AccountDaysTTL &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<AccountDaysTTL::AccountDaysTTLClassType>(type));
+    switch(type) {
+    case AccountDaysTTL::typeAccountDaysTTL: {
+        qint32 m_days;
+        stream >> m_days;
+        item.setDays(m_days);
+    }
+        break;
+    }
+    return stream;
+}
+
 
 #endif // LQTG_TYPE_ACCOUNTDAYSTTL

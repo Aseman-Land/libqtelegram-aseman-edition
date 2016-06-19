@@ -55,4 +55,112 @@ private:
     InputPrivacyRule m_core;
 };
 
+inline InputPrivacyRuleObject::InputPrivacyRuleObject(const InputPrivacyRule &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core(core)
+{
+}
+
+inline InputPrivacyRuleObject::InputPrivacyRuleObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core()
+{
+}
+
+inline InputPrivacyRuleObject::~InputPrivacyRuleObject() {
+}
+
+inline void InputPrivacyRuleObject::setUsers(const QList<InputUser> &users) {
+    if(m_core.users() == users) return;
+    m_core.setUsers(users);
+    Q_EMIT usersChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QList<InputUser> InputPrivacyRuleObject::users() const {
+    return m_core.users();
+}
+
+inline InputPrivacyRuleObject &InputPrivacyRuleObject::operator =(const InputPrivacyRule &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+
+    Q_EMIT usersChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool InputPrivacyRuleObject::operator ==(const InputPrivacyRule &b) const {
+    return m_core == b;
+}
+
+inline void InputPrivacyRuleObject::setClassType(quint32 classType) {
+    InputPrivacyRule::InputPrivacyRuleClassType result;
+    switch(classType) {
+    case TypeInputPrivacyValueAllowContacts:
+        result = InputPrivacyRule::typeInputPrivacyValueAllowContacts;
+        break;
+    case TypeInputPrivacyValueAllowAll:
+        result = InputPrivacyRule::typeInputPrivacyValueAllowAll;
+        break;
+    case TypeInputPrivacyValueAllowUsers:
+        result = InputPrivacyRule::typeInputPrivacyValueAllowUsers;
+        break;
+    case TypeInputPrivacyValueDisallowContacts:
+        result = InputPrivacyRule::typeInputPrivacyValueDisallowContacts;
+        break;
+    case TypeInputPrivacyValueDisallowAll:
+        result = InputPrivacyRule::typeInputPrivacyValueDisallowAll;
+        break;
+    case TypeInputPrivacyValueDisallowUsers:
+        result = InputPrivacyRule::typeInputPrivacyValueDisallowUsers;
+        break;
+    default:
+        result = InputPrivacyRule::typeInputPrivacyValueAllowContacts;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 InputPrivacyRuleObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case InputPrivacyRule::typeInputPrivacyValueAllowContacts:
+        result = TypeInputPrivacyValueAllowContacts;
+        break;
+    case InputPrivacyRule::typeInputPrivacyValueAllowAll:
+        result = TypeInputPrivacyValueAllowAll;
+        break;
+    case InputPrivacyRule::typeInputPrivacyValueAllowUsers:
+        result = TypeInputPrivacyValueAllowUsers;
+        break;
+    case InputPrivacyRule::typeInputPrivacyValueDisallowContacts:
+        result = TypeInputPrivacyValueDisallowContacts;
+        break;
+    case InputPrivacyRule::typeInputPrivacyValueDisallowAll:
+        result = TypeInputPrivacyValueDisallowAll;
+        break;
+    case InputPrivacyRule::typeInputPrivacyValueDisallowUsers:
+        result = TypeInputPrivacyValueDisallowUsers;
+        break;
+    default:
+        result = TypeInputPrivacyValueAllowContacts;
+        break;
+    }
+
+    return result;
+}
+
+inline void InputPrivacyRuleObject::setCore(const InputPrivacyRule &core) {
+    operator =(core);
+}
+
+inline InputPrivacyRule InputPrivacyRuleObject::core() const {
+    return m_core;
+}
+
 #endif // LQTG_TYPE_INPUTPRIVACYRULE_OBJECT

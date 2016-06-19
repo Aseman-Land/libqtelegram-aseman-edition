@@ -46,4 +46,76 @@ private:
     PrivacyKey m_core;
 };
 
+inline PrivacyKeyObject::PrivacyKeyObject(const PrivacyKey &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core(core)
+{
+}
+
+inline PrivacyKeyObject::PrivacyKeyObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core()
+{
+}
+
+inline PrivacyKeyObject::~PrivacyKeyObject() {
+}
+
+inline PrivacyKeyObject &PrivacyKeyObject::operator =(const PrivacyKey &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool PrivacyKeyObject::operator ==(const PrivacyKey &b) const {
+    return m_core == b;
+}
+
+inline void PrivacyKeyObject::setClassType(quint32 classType) {
+    PrivacyKey::PrivacyKeyClassType result;
+    switch(classType) {
+    case TypePrivacyKeyStatusTimestamp:
+        result = PrivacyKey::typePrivacyKeyStatusTimestamp;
+        break;
+    case TypePrivacyKeyChatInvite:
+        result = PrivacyKey::typePrivacyKeyChatInvite;
+        break;
+    default:
+        result = PrivacyKey::typePrivacyKeyStatusTimestamp;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 PrivacyKeyObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case PrivacyKey::typePrivacyKeyStatusTimestamp:
+        result = TypePrivacyKeyStatusTimestamp;
+        break;
+    case PrivacyKey::typePrivacyKeyChatInvite:
+        result = TypePrivacyKeyChatInvite;
+        break;
+    default:
+        result = TypePrivacyKeyStatusTimestamp;
+        break;
+    }
+
+    return result;
+}
+
+inline void PrivacyKeyObject::setCore(const PrivacyKey &core) {
+    operator =(core);
+}
+
+inline PrivacyKey PrivacyKeyObject::core() const {
+    return m_core;
+}
+
 #endif // LQTG_TYPE_PRIVACYKEY_OBJECT

@@ -61,4 +61,140 @@ private:
     ChatPhoto m_core;
 };
 
+inline ChatPhotoObject::ChatPhotoObject(const ChatPhoto &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_photoBig(0),
+    m_photoSmall(0),
+    m_core(core)
+{
+    m_photoBig = new FileLocationObject(m_core.photoBig(), this);
+    connect(m_photoBig.data(), &FileLocationObject::coreChanged, this, &ChatPhotoObject::corePhotoBigChanged);
+    m_photoSmall = new FileLocationObject(m_core.photoSmall(), this);
+    connect(m_photoSmall.data(), &FileLocationObject::coreChanged, this, &ChatPhotoObject::corePhotoSmallChanged);
+}
+
+inline ChatPhotoObject::ChatPhotoObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_photoBig(0),
+    m_photoSmall(0),
+    m_core()
+{
+    m_photoBig = new FileLocationObject(m_core.photoBig(), this);
+    connect(m_photoBig.data(), &FileLocationObject::coreChanged, this, &ChatPhotoObject::corePhotoBigChanged);
+    m_photoSmall = new FileLocationObject(m_core.photoSmall(), this);
+    connect(m_photoSmall.data(), &FileLocationObject::coreChanged, this, &ChatPhotoObject::corePhotoSmallChanged);
+}
+
+inline ChatPhotoObject::~ChatPhotoObject() {
+}
+
+inline void ChatPhotoObject::setPhotoBig(FileLocationObject* photoBig) {
+    if(m_photoBig == photoBig) return;
+    if(m_photoBig) delete m_photoBig;
+    m_photoBig = photoBig;
+    if(m_photoBig) {
+        m_photoBig->setParent(this);
+        m_core.setPhotoBig(m_photoBig->core());
+        connect(m_photoBig.data(), &FileLocationObject::coreChanged, this, &ChatPhotoObject::corePhotoBigChanged);
+    }
+    Q_EMIT photoBigChanged();
+    Q_EMIT coreChanged();
+}
+
+inline FileLocationObject*  ChatPhotoObject::photoBig() const {
+    return m_photoBig;
+}
+
+inline void ChatPhotoObject::setPhotoSmall(FileLocationObject* photoSmall) {
+    if(m_photoSmall == photoSmall) return;
+    if(m_photoSmall) delete m_photoSmall;
+    m_photoSmall = photoSmall;
+    if(m_photoSmall) {
+        m_photoSmall->setParent(this);
+        m_core.setPhotoSmall(m_photoSmall->core());
+        connect(m_photoSmall.data(), &FileLocationObject::coreChanged, this, &ChatPhotoObject::corePhotoSmallChanged);
+    }
+    Q_EMIT photoSmallChanged();
+    Q_EMIT coreChanged();
+}
+
+inline FileLocationObject*  ChatPhotoObject::photoSmall() const {
+    return m_photoSmall;
+}
+
+inline ChatPhotoObject &ChatPhotoObject::operator =(const ChatPhoto &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+    m_photoBig->setCore(b.photoBig());
+    m_photoSmall->setCore(b.photoSmall());
+
+    Q_EMIT photoBigChanged();
+    Q_EMIT photoSmallChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool ChatPhotoObject::operator ==(const ChatPhoto &b) const {
+    return m_core == b;
+}
+
+inline void ChatPhotoObject::setClassType(quint32 classType) {
+    ChatPhoto::ChatPhotoClassType result;
+    switch(classType) {
+    case TypeChatPhotoEmpty:
+        result = ChatPhoto::typeChatPhotoEmpty;
+        break;
+    case TypeChatPhoto:
+        result = ChatPhoto::typeChatPhoto;
+        break;
+    default:
+        result = ChatPhoto::typeChatPhotoEmpty;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 ChatPhotoObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case ChatPhoto::typeChatPhotoEmpty:
+        result = TypeChatPhotoEmpty;
+        break;
+    case ChatPhoto::typeChatPhoto:
+        result = TypeChatPhoto;
+        break;
+    default:
+        result = TypeChatPhotoEmpty;
+        break;
+    }
+
+    return result;
+}
+
+inline void ChatPhotoObject::setCore(const ChatPhoto &core) {
+    operator =(core);
+}
+
+inline ChatPhoto ChatPhotoObject::core() const {
+    return m_core;
+}
+
+inline void ChatPhotoObject::corePhotoBigChanged() {
+    if(m_core.photoBig() == m_photoBig->core()) return;
+    m_core.setPhotoBig(m_photoBig->core());
+    Q_EMIT photoBigChanged();
+    Q_EMIT coreChanged();
+}
+
+inline void ChatPhotoObject::corePhotoSmallChanged() {
+    if(m_core.photoSmall() == m_photoSmall->core()) return;
+    m_core.setPhotoSmall(m_photoSmall->core());
+    Q_EMIT photoSmallChanged();
+    Q_EMIT coreChanged();
+}
+
 #endif // LQTG_TYPE_CHATPHOTO_OBJECT

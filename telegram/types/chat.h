@@ -9,6 +9,12 @@
 
 #include <QMetaType>
 #include <QVariant>
+#include "core/inboundpkt.h"
+#include "core/outboundpkt.h"
+#include "../coretypes.h"
+
+#include <QDataStream>
+
 #include <QtGlobal>
 #include "inputchannel.h"
 #include "chatphoto.h"
@@ -143,5 +149,699 @@ Q_DECLARE_METATYPE(Chat)
 
 QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const Chat &item);
 QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, Chat &item);
+
+inline Chat::Chat(ChatClassType classType, InboundPkt *in) :
+    m_accessHash(0),
+    m_date(0),
+    m_flags(0),
+    m_id(0),
+    m_participantsCount(0),
+    m_version(0),
+    m_classType(classType)
+{
+    if(in) fetch(in);
+}
+
+inline Chat::Chat(InboundPkt *in) :
+    m_accessHash(0),
+    m_date(0),
+    m_flags(0),
+    m_id(0),
+    m_participantsCount(0),
+    m_version(0),
+    m_classType(typeChatEmpty)
+{
+    fetch(in);
+}
+
+inline Chat::Chat(const Null &null) :
+    TelegramTypeObject(null),
+    m_accessHash(0),
+    m_date(0),
+    m_flags(0),
+    m_id(0),
+    m_participantsCount(0),
+    m_version(0),
+    m_classType(typeChatEmpty)
+{
+}
+
+inline Chat::~Chat() {
+}
+
+inline void Chat::setAccessHash(qint64 accessHash) {
+    m_accessHash = accessHash;
+}
+
+inline qint64 Chat::accessHash() const {
+    return m_accessHash;
+}
+
+inline void Chat::setAdmin(bool admin) {
+    if(admin) m_flags = (m_flags | (1<<4));
+    else m_flags = (m_flags & ~(1<<4));
+}
+
+inline bool Chat::admin() const {
+    return (m_flags & 1<<4);
+}
+
+inline void Chat::setAdminsEnabled(bool adminsEnabled) {
+    if(adminsEnabled) m_flags = (m_flags | (1<<3));
+    else m_flags = (m_flags & ~(1<<3));
+}
+
+inline bool Chat::adminsEnabled() const {
+    return (m_flags & 1<<3);
+}
+
+inline void Chat::setBroadcast(bool broadcast) {
+    if(broadcast) m_flags = (m_flags | (1<<5));
+    else m_flags = (m_flags & ~(1<<5));
+}
+
+inline bool Chat::broadcast() const {
+    return (m_flags & 1<<5);
+}
+
+inline void Chat::setCreator(bool creator) {
+    if(creator) m_flags = (m_flags | (1<<0));
+    else m_flags = (m_flags & ~(1<<0));
+}
+
+inline bool Chat::creator() const {
+    return (m_flags & 1<<0);
+}
+
+inline void Chat::setDate(qint32 date) {
+    m_date = date;
+}
+
+inline qint32 Chat::date() const {
+    return m_date;
+}
+
+inline void Chat::setDeactivated(bool deactivated) {
+    if(deactivated) m_flags = (m_flags | (1<<5));
+    else m_flags = (m_flags & ~(1<<5));
+}
+
+inline bool Chat::deactivated() const {
+    return (m_flags & 1<<5);
+}
+
+inline void Chat::setDemocracy(bool democracy) {
+    if(democracy) m_flags = (m_flags | (1<<10));
+    else m_flags = (m_flags & ~(1<<10));
+}
+
+inline bool Chat::democracy() const {
+    return (m_flags & 1<<10);
+}
+
+inline void Chat::setEditor(bool editor) {
+    if(editor) m_flags = (m_flags | (1<<3));
+    else m_flags = (m_flags & ~(1<<3));
+}
+
+inline bool Chat::editor() const {
+    return (m_flags & 1<<3);
+}
+
+inline void Chat::setFlags(qint32 flags) {
+    m_flags = flags;
+}
+
+inline qint32 Chat::flags() const {
+    return m_flags;
+}
+
+inline void Chat::setId(qint32 id) {
+    m_id = id;
+}
+
+inline qint32 Chat::id() const {
+    return m_id;
+}
+
+inline void Chat::setKicked(bool kicked) {
+    if(kicked) m_flags = (m_flags | (1<<1));
+    else m_flags = (m_flags & ~(1<<1));
+}
+
+inline bool Chat::kicked() const {
+    return (m_flags & 1<<1);
+}
+
+inline void Chat::setLeft(bool left) {
+    if(left) m_flags = (m_flags | (1<<2));
+    else m_flags = (m_flags & ~(1<<2));
+}
+
+inline bool Chat::left() const {
+    return (m_flags & 1<<2);
+}
+
+inline void Chat::setMegagroup(bool megagroup) {
+    if(megagroup) m_flags = (m_flags | (1<<8));
+    else m_flags = (m_flags & ~(1<<8));
+}
+
+inline bool Chat::megagroup() const {
+    return (m_flags & 1<<8);
+}
+
+inline void Chat::setMigratedTo(const InputChannel &migratedTo) {
+    m_migratedTo = migratedTo;
+}
+
+inline InputChannel Chat::migratedTo() const {
+    return m_migratedTo;
+}
+
+inline void Chat::setMin(bool min) {
+    if(min) m_flags = (m_flags | (1<<12));
+    else m_flags = (m_flags & ~(1<<12));
+}
+
+inline bool Chat::min() const {
+    return (m_flags & 1<<12);
+}
+
+inline void Chat::setModerator(bool moderator) {
+    if(moderator) m_flags = (m_flags | (1<<4));
+    else m_flags = (m_flags & ~(1<<4));
+}
+
+inline bool Chat::moderator() const {
+    return (m_flags & 1<<4);
+}
+
+inline void Chat::setParticipantsCount(qint32 participantsCount) {
+    m_participantsCount = participantsCount;
+}
+
+inline qint32 Chat::participantsCount() const {
+    return m_participantsCount;
+}
+
+inline void Chat::setPhoto(const ChatPhoto &photo) {
+    m_photo = photo;
+}
+
+inline ChatPhoto Chat::photo() const {
+    return m_photo;
+}
+
+inline void Chat::setRestricted(bool restricted) {
+    if(restricted) m_flags = (m_flags | (1<<9));
+    else m_flags = (m_flags & ~(1<<9));
+}
+
+inline bool Chat::restricted() const {
+    return (m_flags & 1<<9);
+}
+
+inline void Chat::setRestrictionReason(const QString &restrictionReason) {
+    m_restrictionReason = restrictionReason;
+}
+
+inline QString Chat::restrictionReason() const {
+    return m_restrictionReason;
+}
+
+inline void Chat::setSignatures(bool signatures) {
+    if(signatures) m_flags = (m_flags | (1<<11));
+    else m_flags = (m_flags & ~(1<<11));
+}
+
+inline bool Chat::signatures() const {
+    return (m_flags & 1<<11);
+}
+
+inline void Chat::setTitle(const QString &title) {
+    m_title = title;
+}
+
+inline QString Chat::title() const {
+    return m_title;
+}
+
+inline void Chat::setUsername(const QString &username) {
+    m_username = username;
+}
+
+inline QString Chat::username() const {
+    return m_username;
+}
+
+inline void Chat::setVerified(bool verified) {
+    if(verified) m_flags = (m_flags | (1<<7));
+    else m_flags = (m_flags & ~(1<<7));
+}
+
+inline bool Chat::verified() const {
+    return (m_flags & 1<<7);
+}
+
+inline void Chat::setVersion(qint32 version) {
+    m_version = version;
+}
+
+inline qint32 Chat::version() const {
+    return m_version;
+}
+
+inline bool Chat::operator ==(const Chat &b) const {
+    return m_classType == b.m_classType &&
+           m_accessHash == b.m_accessHash &&
+           m_date == b.m_date &&
+           m_flags == b.m_flags &&
+           m_id == b.m_id &&
+           m_migratedTo == b.m_migratedTo &&
+           m_participantsCount == b.m_participantsCount &&
+           m_photo == b.m_photo &&
+           m_restrictionReason == b.m_restrictionReason &&
+           m_title == b.m_title &&
+           m_username == b.m_username &&
+           m_version == b.m_version;
+}
+
+inline void Chat::setClassType(Chat::ChatClassType classType) {
+    m_classType = classType;
+}
+
+inline Chat::ChatClassType Chat::classType() const {
+    return m_classType;
+}
+
+inline bool Chat::fetch(InboundPkt *in) {
+    LQTG_FETCH_LOG;
+    int x = in->fetchInt();
+    switch(x) {
+    case typeChatEmpty: {
+        m_id = in->fetchInt();
+        m_classType = static_cast<ChatClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeChat: {
+        m_flags = in->fetchInt();
+        m_id = in->fetchInt();
+        m_title = in->fetchQString();
+        m_photo.fetch(in);
+        m_participantsCount = in->fetchInt();
+        m_date = in->fetchInt();
+        m_version = in->fetchInt();
+        if(m_flags & 1<<6) {
+            m_migratedTo.fetch(in);
+        }
+        m_classType = static_cast<ChatClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeChatForbidden: {
+        m_id = in->fetchInt();
+        m_title = in->fetchQString();
+        m_classType = static_cast<ChatClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeChannel: {
+        m_flags = in->fetchInt();
+        m_id = in->fetchInt();
+        if(m_flags & 1<<13) {
+            m_accessHash = in->fetchLong();
+        }
+        m_title = in->fetchQString();
+        if(m_flags & 1<<6) {
+            m_username = in->fetchQString();
+        }
+        m_photo.fetch(in);
+        m_date = in->fetchInt();
+        m_version = in->fetchInt();
+        if(m_flags & 1<<9) {
+            m_restrictionReason = in->fetchQString();
+        }
+        m_classType = static_cast<ChatClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeChannelForbidden: {
+        m_id = in->fetchInt();
+        m_accessHash = in->fetchLong();
+        m_title = in->fetchQString();
+        m_classType = static_cast<ChatClassType>(x);
+        return true;
+    }
+        break;
+    
+    default:
+        LQTG_FETCH_ASSERT;
+        return false;
+    }
+}
+
+inline bool Chat::push(OutboundPkt *out) const {
+    out->appendInt(m_classType);
+    switch(m_classType) {
+    case typeChatEmpty: {
+        out->appendInt(m_id);
+        return true;
+    }
+        break;
+    
+    case typeChat: {
+        out->appendInt(m_flags);
+        out->appendInt(m_id);
+        out->appendQString(m_title);
+        m_photo.push(out);
+        out->appendInt(m_participantsCount);
+        out->appendInt(m_date);
+        out->appendInt(m_version);
+        m_migratedTo.push(out);
+        return true;
+    }
+        break;
+    
+    case typeChatForbidden: {
+        out->appendInt(m_id);
+        out->appendQString(m_title);
+        return true;
+    }
+        break;
+    
+    case typeChannel: {
+        out->appendInt(m_flags);
+        out->appendInt(m_id);
+        out->appendLong(m_accessHash);
+        out->appendQString(m_title);
+        out->appendQString(m_username);
+        m_photo.push(out);
+        out->appendInt(m_date);
+        out->appendInt(m_version);
+        out->appendQString(m_restrictionReason);
+        return true;
+    }
+        break;
+    
+    case typeChannelForbidden: {
+        out->appendInt(m_id);
+        out->appendLong(m_accessHash);
+        out->appendQString(m_title);
+        return true;
+    }
+        break;
+    
+    default:
+        return false;
+    }
+}
+
+inline QMap<QString, QVariant> Chat::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeChatEmpty: {
+        result["classType"] = "Chat::typeChatEmpty";
+        result["id"] = QVariant::fromValue<qint32>(id());
+        return result;
+    }
+        break;
+    
+    case typeChat: {
+        result["classType"] = "Chat::typeChat";
+        result["creator"] = QVariant::fromValue<bool>(creator());
+        result["kicked"] = QVariant::fromValue<bool>(kicked());
+        result["left"] = QVariant::fromValue<bool>(left());
+        result["adminsEnabled"] = QVariant::fromValue<bool>(adminsEnabled());
+        result["admin"] = QVariant::fromValue<bool>(admin());
+        result["deactivated"] = QVariant::fromValue<bool>(deactivated());
+        result["id"] = QVariant::fromValue<qint32>(id());
+        result["title"] = QVariant::fromValue<QString>(title());
+        result["photo"] = m_photo.toMap();
+        result["participantsCount"] = QVariant::fromValue<qint32>(participantsCount());
+        result["date"] = QVariant::fromValue<qint32>(date());
+        result["version"] = QVariant::fromValue<qint32>(version());
+        result["migratedTo"] = m_migratedTo.toMap();
+        return result;
+    }
+        break;
+    
+    case typeChatForbidden: {
+        result["classType"] = "Chat::typeChatForbidden";
+        result["id"] = QVariant::fromValue<qint32>(id());
+        result["title"] = QVariant::fromValue<QString>(title());
+        return result;
+    }
+        break;
+    
+    case typeChannel: {
+        result["classType"] = "Chat::typeChannel";
+        result["creator"] = QVariant::fromValue<bool>(creator());
+        result["kicked"] = QVariant::fromValue<bool>(kicked());
+        result["left"] = QVariant::fromValue<bool>(left());
+        result["editor"] = QVariant::fromValue<bool>(editor());
+        result["moderator"] = QVariant::fromValue<bool>(moderator());
+        result["broadcast"] = QVariant::fromValue<bool>(broadcast());
+        result["verified"] = QVariant::fromValue<bool>(verified());
+        result["megagroup"] = QVariant::fromValue<bool>(megagroup());
+        result["restricted"] = QVariant::fromValue<bool>(restricted());
+        result["democracy"] = QVariant::fromValue<bool>(democracy());
+        result["signatures"] = QVariant::fromValue<bool>(signatures());
+        result["min"] = QVariant::fromValue<bool>(min());
+        result["id"] = QVariant::fromValue<qint32>(id());
+        result["accessHash"] = QVariant::fromValue<qint64>(accessHash());
+        result["title"] = QVariant::fromValue<QString>(title());
+        result["username"] = QVariant::fromValue<QString>(username());
+        result["photo"] = m_photo.toMap();
+        result["date"] = QVariant::fromValue<qint32>(date());
+        result["version"] = QVariant::fromValue<qint32>(version());
+        result["restrictionReason"] = QVariant::fromValue<QString>(restrictionReason());
+        return result;
+    }
+        break;
+    
+    case typeChannelForbidden: {
+        result["classType"] = "Chat::typeChannelForbidden";
+        result["id"] = QVariant::fromValue<qint32>(id());
+        result["accessHash"] = QVariant::fromValue<qint64>(accessHash());
+        result["title"] = QVariant::fromValue<QString>(title());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+inline Chat Chat::fromMap(const QMap<QString, QVariant> &map) {
+    Chat result;
+    if(map.value("classType").toString() == "Chat::typeChatEmpty") {
+        result.setClassType(typeChatEmpty);
+        result.setId( map.value("id").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "Chat::typeChat") {
+        result.setClassType(typeChat);
+        result.setCreator( map.value("creator").value<bool>() );
+        result.setKicked( map.value("kicked").value<bool>() );
+        result.setLeft( map.value("left").value<bool>() );
+        result.setAdminsEnabled( map.value("adminsEnabled").value<bool>() );
+        result.setAdmin( map.value("admin").value<bool>() );
+        result.setDeactivated( map.value("deactivated").value<bool>() );
+        result.setId( map.value("id").value<qint32>() );
+        result.setTitle( map.value("title").value<QString>() );
+        result.setPhoto( ChatPhoto::fromMap(map.value("photo").toMap()) );
+        result.setParticipantsCount( map.value("participantsCount").value<qint32>() );
+        result.setDate( map.value("date").value<qint32>() );
+        result.setVersion( map.value("version").value<qint32>() );
+        result.setMigratedTo( InputChannel::fromMap(map.value("migratedTo").toMap()) );
+        return result;
+    }
+    if(map.value("classType").toString() == "Chat::typeChatForbidden") {
+        result.setClassType(typeChatForbidden);
+        result.setId( map.value("id").value<qint32>() );
+        result.setTitle( map.value("title").value<QString>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "Chat::typeChannel") {
+        result.setClassType(typeChannel);
+        result.setCreator( map.value("creator").value<bool>() );
+        result.setKicked( map.value("kicked").value<bool>() );
+        result.setLeft( map.value("left").value<bool>() );
+        result.setEditor( map.value("editor").value<bool>() );
+        result.setModerator( map.value("moderator").value<bool>() );
+        result.setBroadcast( map.value("broadcast").value<bool>() );
+        result.setVerified( map.value("verified").value<bool>() );
+        result.setMegagroup( map.value("megagroup").value<bool>() );
+        result.setRestricted( map.value("restricted").value<bool>() );
+        result.setDemocracy( map.value("democracy").value<bool>() );
+        result.setSignatures( map.value("signatures").value<bool>() );
+        result.setMin( map.value("min").value<bool>() );
+        result.setId( map.value("id").value<qint32>() );
+        result.setAccessHash( map.value("accessHash").value<qint64>() );
+        result.setTitle( map.value("title").value<QString>() );
+        result.setUsername( map.value("username").value<QString>() );
+        result.setPhoto( ChatPhoto::fromMap(map.value("photo").toMap()) );
+        result.setDate( map.value("date").value<qint32>() );
+        result.setVersion( map.value("version").value<qint32>() );
+        result.setRestrictionReason( map.value("restrictionReason").value<QString>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "Chat::typeChannelForbidden") {
+        result.setClassType(typeChannelForbidden);
+        result.setId( map.value("id").value<qint32>() );
+        result.setAccessHash( map.value("accessHash").value<qint64>() );
+        result.setTitle( map.value("title").value<QString>() );
+        return result;
+    }
+    return result;
+}
+
+inline QByteArray Chat::getHash(QCryptographicHash::Algorithm alg) const {
+    QByteArray data;
+    QDataStream str(&data, QIODevice::WriteOnly);
+    str << *this;
+    return QCryptographicHash::hash(data, alg);
+}
+
+inline QDataStream &operator<<(QDataStream &stream, const Chat &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case Chat::typeChatEmpty:
+        stream << item.id();
+        break;
+    case Chat::typeChat:
+        stream << item.flags();
+        stream << item.id();
+        stream << item.title();
+        stream << item.photo();
+        stream << item.participantsCount();
+        stream << item.date();
+        stream << item.version();
+        stream << item.migratedTo();
+        break;
+    case Chat::typeChatForbidden:
+        stream << item.id();
+        stream << item.title();
+        break;
+    case Chat::typeChannel:
+        stream << item.flags();
+        stream << item.id();
+        stream << item.accessHash();
+        stream << item.title();
+        stream << item.username();
+        stream << item.photo();
+        stream << item.date();
+        stream << item.version();
+        stream << item.restrictionReason();
+        break;
+    case Chat::typeChannelForbidden:
+        stream << item.id();
+        stream << item.accessHash();
+        stream << item.title();
+        break;
+    }
+    return stream;
+}
+
+inline QDataStream &operator>>(QDataStream &stream, Chat &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<Chat::ChatClassType>(type));
+    switch(type) {
+    case Chat::typeChatEmpty: {
+        qint32 m_id;
+        stream >> m_id;
+        item.setId(m_id);
+    }
+        break;
+    case Chat::typeChat: {
+        qint32 m_flags;
+        stream >> m_flags;
+        item.setFlags(m_flags);
+        qint32 m_id;
+        stream >> m_id;
+        item.setId(m_id);
+        QString m_title;
+        stream >> m_title;
+        item.setTitle(m_title);
+        ChatPhoto m_photo;
+        stream >> m_photo;
+        item.setPhoto(m_photo);
+        qint32 m_participants_count;
+        stream >> m_participants_count;
+        item.setParticipantsCount(m_participants_count);
+        qint32 m_date;
+        stream >> m_date;
+        item.setDate(m_date);
+        qint32 m_version;
+        stream >> m_version;
+        item.setVersion(m_version);
+        InputChannel m_migrated_to;
+        stream >> m_migrated_to;
+        item.setMigratedTo(m_migrated_to);
+    }
+        break;
+    case Chat::typeChatForbidden: {
+        qint32 m_id;
+        stream >> m_id;
+        item.setId(m_id);
+        QString m_title;
+        stream >> m_title;
+        item.setTitle(m_title);
+    }
+        break;
+    case Chat::typeChannel: {
+        qint32 m_flags;
+        stream >> m_flags;
+        item.setFlags(m_flags);
+        qint32 m_id;
+        stream >> m_id;
+        item.setId(m_id);
+        qint64 m_access_hash;
+        stream >> m_access_hash;
+        item.setAccessHash(m_access_hash);
+        QString m_title;
+        stream >> m_title;
+        item.setTitle(m_title);
+        QString m_username;
+        stream >> m_username;
+        item.setUsername(m_username);
+        ChatPhoto m_photo;
+        stream >> m_photo;
+        item.setPhoto(m_photo);
+        qint32 m_date;
+        stream >> m_date;
+        item.setDate(m_date);
+        qint32 m_version;
+        stream >> m_version;
+        item.setVersion(m_version);
+        QString m_restriction_reason;
+        stream >> m_restriction_reason;
+        item.setRestrictionReason(m_restriction_reason);
+    }
+        break;
+    case Chat::typeChannelForbidden: {
+        qint32 m_id;
+        stream >> m_id;
+        item.setId(m_id);
+        qint64 m_access_hash;
+        stream >> m_access_hash;
+        item.setAccessHash(m_access_hash);
+        QString m_title;
+        stream >> m_title;
+        item.setTitle(m_title);
+    }
+        break;
+    }
+    return stream;
+}
+
 
 #endif // LQTG_TYPE_CHAT

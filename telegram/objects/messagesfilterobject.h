@@ -54,4 +54,124 @@ private:
     MessagesFilter m_core;
 };
 
+inline MessagesFilterObject::MessagesFilterObject(const MessagesFilter &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core(core)
+{
+}
+
+inline MessagesFilterObject::MessagesFilterObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core()
+{
+}
+
+inline MessagesFilterObject::~MessagesFilterObject() {
+}
+
+inline MessagesFilterObject &MessagesFilterObject::operator =(const MessagesFilter &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool MessagesFilterObject::operator ==(const MessagesFilter &b) const {
+    return m_core == b;
+}
+
+inline void MessagesFilterObject::setClassType(quint32 classType) {
+    MessagesFilter::MessagesFilterClassType result;
+    switch(classType) {
+    case TypeInputMessagesFilterEmpty:
+        result = MessagesFilter::typeInputMessagesFilterEmpty;
+        break;
+    case TypeInputMessagesFilterPhotos:
+        result = MessagesFilter::typeInputMessagesFilterPhotos;
+        break;
+    case TypeInputMessagesFilterVideo:
+        result = MessagesFilter::typeInputMessagesFilterVideo;
+        break;
+    case TypeInputMessagesFilterPhotoVideo:
+        result = MessagesFilter::typeInputMessagesFilterPhotoVideo;
+        break;
+    case TypeInputMessagesFilterPhotoVideoDocuments:
+        result = MessagesFilter::typeInputMessagesFilterPhotoVideoDocuments;
+        break;
+    case TypeInputMessagesFilterDocument:
+        result = MessagesFilter::typeInputMessagesFilterDocument;
+        break;
+    case TypeInputMessagesFilterUrl:
+        result = MessagesFilter::typeInputMessagesFilterUrl;
+        break;
+    case TypeInputMessagesFilterGif:
+        result = MessagesFilter::typeInputMessagesFilterGif;
+        break;
+    case TypeInputMessagesFilterVoice:
+        result = MessagesFilter::typeInputMessagesFilterVoice;
+        break;
+    case TypeInputMessagesFilterMusic:
+        result = MessagesFilter::typeInputMessagesFilterMusic;
+        break;
+    default:
+        result = MessagesFilter::typeInputMessagesFilterEmpty;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 MessagesFilterObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case MessagesFilter::typeInputMessagesFilterEmpty:
+        result = TypeInputMessagesFilterEmpty;
+        break;
+    case MessagesFilter::typeInputMessagesFilterPhotos:
+        result = TypeInputMessagesFilterPhotos;
+        break;
+    case MessagesFilter::typeInputMessagesFilterVideo:
+        result = TypeInputMessagesFilterVideo;
+        break;
+    case MessagesFilter::typeInputMessagesFilterPhotoVideo:
+        result = TypeInputMessagesFilterPhotoVideo;
+        break;
+    case MessagesFilter::typeInputMessagesFilterPhotoVideoDocuments:
+        result = TypeInputMessagesFilterPhotoVideoDocuments;
+        break;
+    case MessagesFilter::typeInputMessagesFilterDocument:
+        result = TypeInputMessagesFilterDocument;
+        break;
+    case MessagesFilter::typeInputMessagesFilterUrl:
+        result = TypeInputMessagesFilterUrl;
+        break;
+    case MessagesFilter::typeInputMessagesFilterGif:
+        result = TypeInputMessagesFilterGif;
+        break;
+    case MessagesFilter::typeInputMessagesFilterVoice:
+        result = TypeInputMessagesFilterVoice;
+        break;
+    case MessagesFilter::typeInputMessagesFilterMusic:
+        result = TypeInputMessagesFilterMusic;
+        break;
+    default:
+        result = TypeInputMessagesFilterEmpty;
+        break;
+    }
+
+    return result;
+}
+
+inline void MessagesFilterObject::setCore(const MessagesFilter &core) {
+    operator =(core);
+}
+
+inline MessagesFilter MessagesFilterObject::core() const {
+    return m_core;
+}
+
 #endif // LQTG_TYPE_MESSAGESFILTER_OBJECT

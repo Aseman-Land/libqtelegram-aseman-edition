@@ -55,4 +55,94 @@ private:
     InputEncryptedChat m_core;
 };
 
+inline InputEncryptedChatObject::InputEncryptedChatObject(const InputEncryptedChat &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core(core)
+{
+}
+
+inline InputEncryptedChatObject::InputEncryptedChatObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core()
+{
+}
+
+inline InputEncryptedChatObject::~InputEncryptedChatObject() {
+}
+
+inline void InputEncryptedChatObject::setAccessHash(qint64 accessHash) {
+    if(m_core.accessHash() == accessHash) return;
+    m_core.setAccessHash(accessHash);
+    Q_EMIT accessHashChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint64 InputEncryptedChatObject::accessHash() const {
+    return m_core.accessHash();
+}
+
+inline void InputEncryptedChatObject::setChatId(qint32 chatId) {
+    if(m_core.chatId() == chatId) return;
+    m_core.setChatId(chatId);
+    Q_EMIT chatIdChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 InputEncryptedChatObject::chatId() const {
+    return m_core.chatId();
+}
+
+inline InputEncryptedChatObject &InputEncryptedChatObject::operator =(const InputEncryptedChat &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+
+    Q_EMIT accessHashChanged();
+    Q_EMIT chatIdChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool InputEncryptedChatObject::operator ==(const InputEncryptedChat &b) const {
+    return m_core == b;
+}
+
+inline void InputEncryptedChatObject::setClassType(quint32 classType) {
+    InputEncryptedChat::InputEncryptedChatClassType result;
+    switch(classType) {
+    case TypeInputEncryptedChat:
+        result = InputEncryptedChat::typeInputEncryptedChat;
+        break;
+    default:
+        result = InputEncryptedChat::typeInputEncryptedChat;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 InputEncryptedChatObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case InputEncryptedChat::typeInputEncryptedChat:
+        result = TypeInputEncryptedChat;
+        break;
+    default:
+        result = TypeInputEncryptedChat;
+        break;
+    }
+
+    return result;
+}
+
+inline void InputEncryptedChatObject::setCore(const InputEncryptedChat &core) {
+    operator =(core);
+}
+
+inline InputEncryptedChat InputEncryptedChatObject::core() const {
+    return m_core;
+}
+
 #endif // LQTG_TYPE_INPUTENCRYPTEDCHAT_OBJECT

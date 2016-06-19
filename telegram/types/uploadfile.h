@@ -9,6 +9,12 @@
 
 #include <QMetaType>
 #include <QVariant>
+#include "core/inboundpkt.h"
+#include "core/outboundpkt.h"
+#include "../coretypes.h"
+
+#include <QDataStream>
+
 #include <QByteArray>
 #include <QtGlobal>
 #include "storagefiletype.h"
@@ -61,5 +67,173 @@ Q_DECLARE_METATYPE(UploadFile)
 
 QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const UploadFile &item);
 QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, UploadFile &item);
+
+inline UploadFile::UploadFile(UploadFileClassType classType, InboundPkt *in) :
+    m_mtime(0),
+    m_classType(classType)
+{
+    if(in) fetch(in);
+}
+
+inline UploadFile::UploadFile(InboundPkt *in) :
+    m_mtime(0),
+    m_classType(typeUploadFile)
+{
+    fetch(in);
+}
+
+inline UploadFile::UploadFile(const Null &null) :
+    TelegramTypeObject(null),
+    m_mtime(0),
+    m_classType(typeUploadFile)
+{
+}
+
+inline UploadFile::~UploadFile() {
+}
+
+inline void UploadFile::setBytes(const QByteArray &bytes) {
+    m_bytes = bytes;
+}
+
+inline QByteArray UploadFile::bytes() const {
+    return m_bytes;
+}
+
+inline void UploadFile::setMtime(qint32 mtime) {
+    m_mtime = mtime;
+}
+
+inline qint32 UploadFile::mtime() const {
+    return m_mtime;
+}
+
+inline void UploadFile::setType(const StorageFileType &type) {
+    m_type = type;
+}
+
+inline StorageFileType UploadFile::type() const {
+    return m_type;
+}
+
+inline bool UploadFile::operator ==(const UploadFile &b) const {
+    return m_classType == b.m_classType &&
+           m_bytes == b.m_bytes &&
+           m_mtime == b.m_mtime &&
+           m_type == b.m_type;
+}
+
+inline void UploadFile::setClassType(UploadFile::UploadFileClassType classType) {
+    m_classType = classType;
+}
+
+inline UploadFile::UploadFileClassType UploadFile::classType() const {
+    return m_classType;
+}
+
+inline bool UploadFile::fetch(InboundPkt *in) {
+    LQTG_FETCH_LOG;
+    int x = in->fetchInt();
+    switch(x) {
+    case typeUploadFile: {
+        m_type.fetch(in);
+        m_mtime = in->fetchInt();
+        m_bytes = in->fetchBytes();
+        m_classType = static_cast<UploadFileClassType>(x);
+        return true;
+    }
+        break;
+    
+    default:
+        LQTG_FETCH_ASSERT;
+        return false;
+    }
+}
+
+inline bool UploadFile::push(OutboundPkt *out) const {
+    out->appendInt(m_classType);
+    switch(m_classType) {
+    case typeUploadFile: {
+        m_type.push(out);
+        out->appendInt(m_mtime);
+        out->appendBytes(m_bytes);
+        return true;
+    }
+        break;
+    
+    default:
+        return false;
+    }
+}
+
+inline QMap<QString, QVariant> UploadFile::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeUploadFile: {
+        result["classType"] = "UploadFile::typeUploadFile";
+        result["type"] = m_type.toMap();
+        result["mtime"] = QVariant::fromValue<qint32>(mtime());
+        result["bytes"] = QVariant::fromValue<QByteArray>(bytes());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+inline UploadFile UploadFile::fromMap(const QMap<QString, QVariant> &map) {
+    UploadFile result;
+    if(map.value("classType").toString() == "UploadFile::typeUploadFile") {
+        result.setClassType(typeUploadFile);
+        result.setType( StorageFileType::fromMap(map.value("type").toMap()) );
+        result.setMtime( map.value("mtime").value<qint32>() );
+        result.setBytes( map.value("bytes").value<QByteArray>() );
+        return result;
+    }
+    return result;
+}
+
+inline QByteArray UploadFile::getHash(QCryptographicHash::Algorithm alg) const {
+    QByteArray data;
+    QDataStream str(&data, QIODevice::WriteOnly);
+    str << *this;
+    return QCryptographicHash::hash(data, alg);
+}
+
+inline QDataStream &operator<<(QDataStream &stream, const UploadFile &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case UploadFile::typeUploadFile:
+        stream << item.type();
+        stream << item.mtime();
+        stream << item.bytes();
+        break;
+    }
+    return stream;
+}
+
+inline QDataStream &operator>>(QDataStream &stream, UploadFile &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<UploadFile::UploadFileClassType>(type));
+    switch(type) {
+    case UploadFile::typeUploadFile: {
+        StorageFileType m_type;
+        stream >> m_type;
+        item.setType(m_type);
+        qint32 m_mtime;
+        stream >> m_mtime;
+        item.setMtime(m_mtime);
+        QByteArray m_bytes;
+        stream >> m_bytes;
+        item.setBytes(m_bytes);
+    }
+        break;
+    }
+    return stream;
+}
+
 
 #endif // LQTG_TYPE_UPLOADFILE

@@ -70,4 +70,130 @@ private:
     MessageFwdHeader m_core;
 };
 
+inline MessageFwdHeaderObject::MessageFwdHeaderObject(const MessageFwdHeader &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core(core)
+{
+}
+
+inline MessageFwdHeaderObject::MessageFwdHeaderObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core()
+{
+}
+
+inline MessageFwdHeaderObject::~MessageFwdHeaderObject() {
+}
+
+inline void MessageFwdHeaderObject::setChannelId(qint32 channelId) {
+    if(m_core.channelId() == channelId) return;
+    m_core.setChannelId(channelId);
+    Q_EMIT channelIdChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 MessageFwdHeaderObject::channelId() const {
+    return m_core.channelId();
+}
+
+inline void MessageFwdHeaderObject::setChannelPost(qint32 channelPost) {
+    if(m_core.channelPost() == channelPost) return;
+    m_core.setChannelPost(channelPost);
+    Q_EMIT channelPostChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 MessageFwdHeaderObject::channelPost() const {
+    return m_core.channelPost();
+}
+
+inline void MessageFwdHeaderObject::setDate(qint32 date) {
+    if(m_core.date() == date) return;
+    m_core.setDate(date);
+    Q_EMIT dateChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 MessageFwdHeaderObject::date() const {
+    return m_core.date();
+}
+
+inline void MessageFwdHeaderObject::setFlags(qint32 flags) {
+    if(m_core.flags() == flags) return;
+    m_core.setFlags(flags);
+    Q_EMIT flagsChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 MessageFwdHeaderObject::flags() const {
+    return m_core.flags();
+}
+
+inline void MessageFwdHeaderObject::setFromId(qint32 fromId) {
+    if(m_core.fromId() == fromId) return;
+    m_core.setFromId(fromId);
+    Q_EMIT fromIdChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 MessageFwdHeaderObject::fromId() const {
+    return m_core.fromId();
+}
+
+inline MessageFwdHeaderObject &MessageFwdHeaderObject::operator =(const MessageFwdHeader &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+
+    Q_EMIT channelIdChanged();
+    Q_EMIT channelPostChanged();
+    Q_EMIT dateChanged();
+    Q_EMIT flagsChanged();
+    Q_EMIT fromIdChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool MessageFwdHeaderObject::operator ==(const MessageFwdHeader &b) const {
+    return m_core == b;
+}
+
+inline void MessageFwdHeaderObject::setClassType(quint32 classType) {
+    MessageFwdHeader::MessageFwdHeaderClassType result;
+    switch(classType) {
+    case TypeMessageFwdHeader:
+        result = MessageFwdHeader::typeMessageFwdHeader;
+        break;
+    default:
+        result = MessageFwdHeader::typeMessageFwdHeader;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 MessageFwdHeaderObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case MessageFwdHeader::typeMessageFwdHeader:
+        result = TypeMessageFwdHeader;
+        break;
+    default:
+        result = TypeMessageFwdHeader;
+        break;
+    }
+
+    return result;
+}
+
+inline void MessageFwdHeaderObject::setCore(const MessageFwdHeader &core) {
+    operator =(core);
+}
+
+inline MessageFwdHeader MessageFwdHeaderObject::core() const {
+    return m_core;
+}
+
 #endif // LQTG_TYPE_MESSAGEFWDHEADER_OBJECT

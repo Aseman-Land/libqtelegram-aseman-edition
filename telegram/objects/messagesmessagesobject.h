@@ -82,4 +82,166 @@ private:
     MessagesMessages m_core;
 };
 
+inline MessagesMessagesObject::MessagesMessagesObject(const MessagesMessages &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core(core)
+{
+}
+
+inline MessagesMessagesObject::MessagesMessagesObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core()
+{
+}
+
+inline MessagesMessagesObject::~MessagesMessagesObject() {
+}
+
+inline void MessagesMessagesObject::setChats(const QList<Chat> &chats) {
+    if(m_core.chats() == chats) return;
+    m_core.setChats(chats);
+    Q_EMIT chatsChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QList<Chat> MessagesMessagesObject::chats() const {
+    return m_core.chats();
+}
+
+inline void MessagesMessagesObject::setCollapsed(const QList<MessageGroup> &collapsed) {
+    if(m_core.collapsed() == collapsed) return;
+    m_core.setCollapsed(collapsed);
+    Q_EMIT collapsedChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QList<MessageGroup> MessagesMessagesObject::collapsed() const {
+    return m_core.collapsed();
+}
+
+inline void MessagesMessagesObject::setCount(qint32 count) {
+    if(m_core.count() == count) return;
+    m_core.setCount(count);
+    Q_EMIT countChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 MessagesMessagesObject::count() const {
+    return m_core.count();
+}
+
+inline void MessagesMessagesObject::setFlags(qint32 flags) {
+    if(m_core.flags() == flags) return;
+    m_core.setFlags(flags);
+    Q_EMIT flagsChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 MessagesMessagesObject::flags() const {
+    return m_core.flags();
+}
+
+inline void MessagesMessagesObject::setMessages(const QList<Message> &messages) {
+    if(m_core.messages() == messages) return;
+    m_core.setMessages(messages);
+    Q_EMIT messagesChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QList<Message> MessagesMessagesObject::messages() const {
+    return m_core.messages();
+}
+
+inline void MessagesMessagesObject::setPts(qint32 pts) {
+    if(m_core.pts() == pts) return;
+    m_core.setPts(pts);
+    Q_EMIT ptsChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 MessagesMessagesObject::pts() const {
+    return m_core.pts();
+}
+
+inline void MessagesMessagesObject::setUsers(const QList<User> &users) {
+    if(m_core.users() == users) return;
+    m_core.setUsers(users);
+    Q_EMIT usersChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QList<User> MessagesMessagesObject::users() const {
+    return m_core.users();
+}
+
+inline MessagesMessagesObject &MessagesMessagesObject::operator =(const MessagesMessages &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+
+    Q_EMIT chatsChanged();
+    Q_EMIT collapsedChanged();
+    Q_EMIT countChanged();
+    Q_EMIT flagsChanged();
+    Q_EMIT messagesChanged();
+    Q_EMIT ptsChanged();
+    Q_EMIT usersChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool MessagesMessagesObject::operator ==(const MessagesMessages &b) const {
+    return m_core == b;
+}
+
+inline void MessagesMessagesObject::setClassType(quint32 classType) {
+    MessagesMessages::MessagesMessagesClassType result;
+    switch(classType) {
+    case TypeMessagesMessages:
+        result = MessagesMessages::typeMessagesMessages;
+        break;
+    case TypeMessagesMessagesSlice:
+        result = MessagesMessages::typeMessagesMessagesSlice;
+        break;
+    case TypeMessagesChannelMessages:
+        result = MessagesMessages::typeMessagesChannelMessages;
+        break;
+    default:
+        result = MessagesMessages::typeMessagesMessages;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 MessagesMessagesObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case MessagesMessages::typeMessagesMessages:
+        result = TypeMessagesMessages;
+        break;
+    case MessagesMessages::typeMessagesMessagesSlice:
+        result = TypeMessagesMessagesSlice;
+        break;
+    case MessagesMessages::typeMessagesChannelMessages:
+        result = TypeMessagesChannelMessages;
+        break;
+    default:
+        result = TypeMessagesMessages;
+        break;
+    }
+
+    return result;
+}
+
+inline void MessagesMessagesObject::setCore(const MessagesMessages &core) {
+    operator =(core);
+}
+
+inline MessagesMessages MessagesMessagesObject::core() const {
+    return m_core;
+}
+
 #endif // LQTG_TYPE_MESSAGESMESSAGES_OBJECT

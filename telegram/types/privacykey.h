@@ -9,6 +9,12 @@
 
 #include <QMetaType>
 #include <QVariant>
+#include "core/inboundpkt.h"
+#include "core/outboundpkt.h"
+#include "../coretypes.h"
+
+#include <QDataStream>
+
 
 class LIBQTELEGRAMSHARED_EXPORT PrivacyKey : public TelegramTypeObject
 {
@@ -47,5 +53,149 @@ Q_DECLARE_METATYPE(PrivacyKey)
 
 QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const PrivacyKey &item);
 QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, PrivacyKey &item);
+
+inline PrivacyKey::PrivacyKey(PrivacyKeyClassType classType, InboundPkt *in) :
+    m_classType(classType)
+{
+    if(in) fetch(in);
+}
+
+inline PrivacyKey::PrivacyKey(InboundPkt *in) :
+    m_classType(typePrivacyKeyStatusTimestamp)
+{
+    fetch(in);
+}
+
+inline PrivacyKey::PrivacyKey(const Null &null) :
+    TelegramTypeObject(null),
+    m_classType(typePrivacyKeyStatusTimestamp)
+{
+}
+
+inline PrivacyKey::~PrivacyKey() {
+}
+
+inline bool PrivacyKey::operator ==(const PrivacyKey &b) const {
+    return m_classType == b.m_classType;
+}
+
+inline void PrivacyKey::setClassType(PrivacyKey::PrivacyKeyClassType classType) {
+    m_classType = classType;
+}
+
+inline PrivacyKey::PrivacyKeyClassType PrivacyKey::classType() const {
+    return m_classType;
+}
+
+inline bool PrivacyKey::fetch(InboundPkt *in) {
+    LQTG_FETCH_LOG;
+    int x = in->fetchInt();
+    switch(x) {
+    case typePrivacyKeyStatusTimestamp: {
+        m_classType = static_cast<PrivacyKeyClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typePrivacyKeyChatInvite: {
+        m_classType = static_cast<PrivacyKeyClassType>(x);
+        return true;
+    }
+        break;
+    
+    default:
+        LQTG_FETCH_ASSERT;
+        return false;
+    }
+}
+
+inline bool PrivacyKey::push(OutboundPkt *out) const {
+    out->appendInt(m_classType);
+    switch(m_classType) {
+    case typePrivacyKeyStatusTimestamp: {
+        return true;
+    }
+        break;
+    
+    case typePrivacyKeyChatInvite: {
+        return true;
+    }
+        break;
+    
+    default:
+        return false;
+    }
+}
+
+inline QMap<QString, QVariant> PrivacyKey::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typePrivacyKeyStatusTimestamp: {
+        result["classType"] = "PrivacyKey::typePrivacyKeyStatusTimestamp";
+        return result;
+    }
+        break;
+    
+    case typePrivacyKeyChatInvite: {
+        result["classType"] = "PrivacyKey::typePrivacyKeyChatInvite";
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+inline PrivacyKey PrivacyKey::fromMap(const QMap<QString, QVariant> &map) {
+    PrivacyKey result;
+    if(map.value("classType").toString() == "PrivacyKey::typePrivacyKeyStatusTimestamp") {
+        result.setClassType(typePrivacyKeyStatusTimestamp);
+        return result;
+    }
+    if(map.value("classType").toString() == "PrivacyKey::typePrivacyKeyChatInvite") {
+        result.setClassType(typePrivacyKeyChatInvite);
+        return result;
+    }
+    return result;
+}
+
+inline QByteArray PrivacyKey::getHash(QCryptographicHash::Algorithm alg) const {
+    QByteArray data;
+    QDataStream str(&data, QIODevice::WriteOnly);
+    str << *this;
+    return QCryptographicHash::hash(data, alg);
+}
+
+inline QDataStream &operator<<(QDataStream &stream, const PrivacyKey &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case PrivacyKey::typePrivacyKeyStatusTimestamp:
+        
+        break;
+    case PrivacyKey::typePrivacyKeyChatInvite:
+        
+        break;
+    }
+    return stream;
+}
+
+inline QDataStream &operator>>(QDataStream &stream, PrivacyKey &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<PrivacyKey::PrivacyKeyClassType>(type));
+    switch(type) {
+    case PrivacyKey::typePrivacyKeyStatusTimestamp: {
+        
+    }
+        break;
+    case PrivacyKey::typePrivacyKeyChatInvite: {
+        
+    }
+        break;
+    }
+    return stream;
+}
+
 
 #endif // LQTG_TYPE_PRIVACYKEY

@@ -185,4 +185,446 @@ private:
     Chat m_core;
 };
 
+inline ChatObject::ChatObject(const Chat &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_migratedTo(0),
+    m_photo(0),
+    m_core(core)
+{
+    m_migratedTo = new InputChannelObject(m_core.migratedTo(), this);
+    connect(m_migratedTo.data(), &InputChannelObject::coreChanged, this, &ChatObject::coreMigratedToChanged);
+    m_photo = new ChatPhotoObject(m_core.photo(), this);
+    connect(m_photo.data(), &ChatPhotoObject::coreChanged, this, &ChatObject::corePhotoChanged);
+}
+
+inline ChatObject::ChatObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_migratedTo(0),
+    m_photo(0),
+    m_core()
+{
+    m_migratedTo = new InputChannelObject(m_core.migratedTo(), this);
+    connect(m_migratedTo.data(), &InputChannelObject::coreChanged, this, &ChatObject::coreMigratedToChanged);
+    m_photo = new ChatPhotoObject(m_core.photo(), this);
+    connect(m_photo.data(), &ChatPhotoObject::coreChanged, this, &ChatObject::corePhotoChanged);
+}
+
+inline ChatObject::~ChatObject() {
+}
+
+inline void ChatObject::setAccessHash(qint64 accessHash) {
+    if(m_core.accessHash() == accessHash) return;
+    m_core.setAccessHash(accessHash);
+    Q_EMIT accessHashChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint64 ChatObject::accessHash() const {
+    return m_core.accessHash();
+}
+
+inline void ChatObject::setAdmin(bool admin) {
+    if(m_core.admin() == admin) return;
+    m_core.setAdmin(admin);
+    Q_EMIT adminChanged();
+    Q_EMIT coreChanged();
+}
+
+inline bool ChatObject::admin() const {
+    return m_core.admin();
+}
+
+inline void ChatObject::setAdminsEnabled(bool adminsEnabled) {
+    if(m_core.adminsEnabled() == adminsEnabled) return;
+    m_core.setAdminsEnabled(adminsEnabled);
+    Q_EMIT adminsEnabledChanged();
+    Q_EMIT coreChanged();
+}
+
+inline bool ChatObject::adminsEnabled() const {
+    return m_core.adminsEnabled();
+}
+
+inline void ChatObject::setBroadcast(bool broadcast) {
+    if(m_core.broadcast() == broadcast) return;
+    m_core.setBroadcast(broadcast);
+    Q_EMIT broadcastChanged();
+    Q_EMIT coreChanged();
+}
+
+inline bool ChatObject::broadcast() const {
+    return m_core.broadcast();
+}
+
+inline void ChatObject::setCreator(bool creator) {
+    if(m_core.creator() == creator) return;
+    m_core.setCreator(creator);
+    Q_EMIT creatorChanged();
+    Q_EMIT coreChanged();
+}
+
+inline bool ChatObject::creator() const {
+    return m_core.creator();
+}
+
+inline void ChatObject::setDate(qint32 date) {
+    if(m_core.date() == date) return;
+    m_core.setDate(date);
+    Q_EMIT dateChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 ChatObject::date() const {
+    return m_core.date();
+}
+
+inline void ChatObject::setDeactivated(bool deactivated) {
+    if(m_core.deactivated() == deactivated) return;
+    m_core.setDeactivated(deactivated);
+    Q_EMIT deactivatedChanged();
+    Q_EMIT coreChanged();
+}
+
+inline bool ChatObject::deactivated() const {
+    return m_core.deactivated();
+}
+
+inline void ChatObject::setDemocracy(bool democracy) {
+    if(m_core.democracy() == democracy) return;
+    m_core.setDemocracy(democracy);
+    Q_EMIT democracyChanged();
+    Q_EMIT coreChanged();
+}
+
+inline bool ChatObject::democracy() const {
+    return m_core.democracy();
+}
+
+inline void ChatObject::setEditor(bool editor) {
+    if(m_core.editor() == editor) return;
+    m_core.setEditor(editor);
+    Q_EMIT editorChanged();
+    Q_EMIT coreChanged();
+}
+
+inline bool ChatObject::editor() const {
+    return m_core.editor();
+}
+
+inline void ChatObject::setFlags(qint32 flags) {
+    if(m_core.flags() == flags) return;
+    m_core.setFlags(flags);
+    Q_EMIT flagsChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 ChatObject::flags() const {
+    return m_core.flags();
+}
+
+inline void ChatObject::setId(qint32 id) {
+    if(m_core.id() == id) return;
+    m_core.setId(id);
+    Q_EMIT idChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 ChatObject::id() const {
+    return m_core.id();
+}
+
+inline void ChatObject::setKicked(bool kicked) {
+    if(m_core.kicked() == kicked) return;
+    m_core.setKicked(kicked);
+    Q_EMIT kickedChanged();
+    Q_EMIT coreChanged();
+}
+
+inline bool ChatObject::kicked() const {
+    return m_core.kicked();
+}
+
+inline void ChatObject::setLeft(bool left) {
+    if(m_core.left() == left) return;
+    m_core.setLeft(left);
+    Q_EMIT leftChanged();
+    Q_EMIT coreChanged();
+}
+
+inline bool ChatObject::left() const {
+    return m_core.left();
+}
+
+inline void ChatObject::setMegagroup(bool megagroup) {
+    if(m_core.megagroup() == megagroup) return;
+    m_core.setMegagroup(megagroup);
+    Q_EMIT megagroupChanged();
+    Q_EMIT coreChanged();
+}
+
+inline bool ChatObject::megagroup() const {
+    return m_core.megagroup();
+}
+
+inline void ChatObject::setMigratedTo(InputChannelObject* migratedTo) {
+    if(m_migratedTo == migratedTo) return;
+    if(m_migratedTo) delete m_migratedTo;
+    m_migratedTo = migratedTo;
+    if(m_migratedTo) {
+        m_migratedTo->setParent(this);
+        m_core.setMigratedTo(m_migratedTo->core());
+        connect(m_migratedTo.data(), &InputChannelObject::coreChanged, this, &ChatObject::coreMigratedToChanged);
+    }
+    Q_EMIT migratedToChanged();
+    Q_EMIT coreChanged();
+}
+
+inline InputChannelObject*  ChatObject::migratedTo() const {
+    return m_migratedTo;
+}
+
+inline void ChatObject::setMin(bool min) {
+    if(m_core.min() == min) return;
+    m_core.setMin(min);
+    Q_EMIT minChanged();
+    Q_EMIT coreChanged();
+}
+
+inline bool ChatObject::min() const {
+    return m_core.min();
+}
+
+inline void ChatObject::setModerator(bool moderator) {
+    if(m_core.moderator() == moderator) return;
+    m_core.setModerator(moderator);
+    Q_EMIT moderatorChanged();
+    Q_EMIT coreChanged();
+}
+
+inline bool ChatObject::moderator() const {
+    return m_core.moderator();
+}
+
+inline void ChatObject::setParticipantsCount(qint32 participantsCount) {
+    if(m_core.participantsCount() == participantsCount) return;
+    m_core.setParticipantsCount(participantsCount);
+    Q_EMIT participantsCountChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 ChatObject::participantsCount() const {
+    return m_core.participantsCount();
+}
+
+inline void ChatObject::setPhoto(ChatPhotoObject* photo) {
+    if(m_photo == photo) return;
+    if(m_photo) delete m_photo;
+    m_photo = photo;
+    if(m_photo) {
+        m_photo->setParent(this);
+        m_core.setPhoto(m_photo->core());
+        connect(m_photo.data(), &ChatPhotoObject::coreChanged, this, &ChatObject::corePhotoChanged);
+    }
+    Q_EMIT photoChanged();
+    Q_EMIT coreChanged();
+}
+
+inline ChatPhotoObject*  ChatObject::photo() const {
+    return m_photo;
+}
+
+inline void ChatObject::setRestricted(bool restricted) {
+    if(m_core.restricted() == restricted) return;
+    m_core.setRestricted(restricted);
+    Q_EMIT restrictedChanged();
+    Q_EMIT coreChanged();
+}
+
+inline bool ChatObject::restricted() const {
+    return m_core.restricted();
+}
+
+inline void ChatObject::setRestrictionReason(const QString &restrictionReason) {
+    if(m_core.restrictionReason() == restrictionReason) return;
+    m_core.setRestrictionReason(restrictionReason);
+    Q_EMIT restrictionReasonChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QString ChatObject::restrictionReason() const {
+    return m_core.restrictionReason();
+}
+
+inline void ChatObject::setSignatures(bool signatures) {
+    if(m_core.signatures() == signatures) return;
+    m_core.setSignatures(signatures);
+    Q_EMIT signaturesChanged();
+    Q_EMIT coreChanged();
+}
+
+inline bool ChatObject::signatures() const {
+    return m_core.signatures();
+}
+
+inline void ChatObject::setTitle(const QString &title) {
+    if(m_core.title() == title) return;
+    m_core.setTitle(title);
+    Q_EMIT titleChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QString ChatObject::title() const {
+    return m_core.title();
+}
+
+inline void ChatObject::setUsername(const QString &username) {
+    if(m_core.username() == username) return;
+    m_core.setUsername(username);
+    Q_EMIT usernameChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QString ChatObject::username() const {
+    return m_core.username();
+}
+
+inline void ChatObject::setVerified(bool verified) {
+    if(m_core.verified() == verified) return;
+    m_core.setVerified(verified);
+    Q_EMIT verifiedChanged();
+    Q_EMIT coreChanged();
+}
+
+inline bool ChatObject::verified() const {
+    return m_core.verified();
+}
+
+inline void ChatObject::setVersion(qint32 version) {
+    if(m_core.version() == version) return;
+    m_core.setVersion(version);
+    Q_EMIT versionChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 ChatObject::version() const {
+    return m_core.version();
+}
+
+inline ChatObject &ChatObject::operator =(const Chat &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+    m_migratedTo->setCore(b.migratedTo());
+    m_photo->setCore(b.photo());
+
+    Q_EMIT accessHashChanged();
+    Q_EMIT adminChanged();
+    Q_EMIT adminsEnabledChanged();
+    Q_EMIT broadcastChanged();
+    Q_EMIT creatorChanged();
+    Q_EMIT dateChanged();
+    Q_EMIT deactivatedChanged();
+    Q_EMIT democracyChanged();
+    Q_EMIT editorChanged();
+    Q_EMIT flagsChanged();
+    Q_EMIT idChanged();
+    Q_EMIT kickedChanged();
+    Q_EMIT leftChanged();
+    Q_EMIT megagroupChanged();
+    Q_EMIT migratedToChanged();
+    Q_EMIT minChanged();
+    Q_EMIT moderatorChanged();
+    Q_EMIT participantsCountChanged();
+    Q_EMIT photoChanged();
+    Q_EMIT restrictedChanged();
+    Q_EMIT restrictionReasonChanged();
+    Q_EMIT signaturesChanged();
+    Q_EMIT titleChanged();
+    Q_EMIT usernameChanged();
+    Q_EMIT verifiedChanged();
+    Q_EMIT versionChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool ChatObject::operator ==(const Chat &b) const {
+    return m_core == b;
+}
+
+inline void ChatObject::setClassType(quint32 classType) {
+    Chat::ChatClassType result;
+    switch(classType) {
+    case TypeChatEmpty:
+        result = Chat::typeChatEmpty;
+        break;
+    case TypeChat:
+        result = Chat::typeChat;
+        break;
+    case TypeChatForbidden:
+        result = Chat::typeChatForbidden;
+        break;
+    case TypeChannel:
+        result = Chat::typeChannel;
+        break;
+    case TypeChannelForbidden:
+        result = Chat::typeChannelForbidden;
+        break;
+    default:
+        result = Chat::typeChatEmpty;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 ChatObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case Chat::typeChatEmpty:
+        result = TypeChatEmpty;
+        break;
+    case Chat::typeChat:
+        result = TypeChat;
+        break;
+    case Chat::typeChatForbidden:
+        result = TypeChatForbidden;
+        break;
+    case Chat::typeChannel:
+        result = TypeChannel;
+        break;
+    case Chat::typeChannelForbidden:
+        result = TypeChannelForbidden;
+        break;
+    default:
+        result = TypeChatEmpty;
+        break;
+    }
+
+    return result;
+}
+
+inline void ChatObject::setCore(const Chat &core) {
+    operator =(core);
+}
+
+inline Chat ChatObject::core() const {
+    return m_core;
+}
+
+inline void ChatObject::coreMigratedToChanged() {
+    if(m_core.migratedTo() == m_migratedTo->core()) return;
+    m_core.setMigratedTo(m_migratedTo->core());
+    Q_EMIT migratedToChanged();
+    Q_EMIT coreChanged();
+}
+
+inline void ChatObject::corePhotoChanged() {
+    if(m_core.photo() == m_photo->core()) return;
+    m_core.setPhoto(m_photo->core());
+    Q_EMIT photoChanged();
+    Q_EMIT coreChanged();
+}
+
 #endif // LQTG_TYPE_CHAT_OBJECT

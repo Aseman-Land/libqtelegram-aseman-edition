@@ -48,4 +48,88 @@ private:
     ChannelParticipantsFilter m_core;
 };
 
+inline ChannelParticipantsFilterObject::ChannelParticipantsFilterObject(const ChannelParticipantsFilter &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core(core)
+{
+}
+
+inline ChannelParticipantsFilterObject::ChannelParticipantsFilterObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core()
+{
+}
+
+inline ChannelParticipantsFilterObject::~ChannelParticipantsFilterObject() {
+}
+
+inline ChannelParticipantsFilterObject &ChannelParticipantsFilterObject::operator =(const ChannelParticipantsFilter &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool ChannelParticipantsFilterObject::operator ==(const ChannelParticipantsFilter &b) const {
+    return m_core == b;
+}
+
+inline void ChannelParticipantsFilterObject::setClassType(quint32 classType) {
+    ChannelParticipantsFilter::ChannelParticipantsFilterClassType result;
+    switch(classType) {
+    case TypeChannelParticipantsRecent:
+        result = ChannelParticipantsFilter::typeChannelParticipantsRecent;
+        break;
+    case TypeChannelParticipantsAdmins:
+        result = ChannelParticipantsFilter::typeChannelParticipantsAdmins;
+        break;
+    case TypeChannelParticipantsKicked:
+        result = ChannelParticipantsFilter::typeChannelParticipantsKicked;
+        break;
+    case TypeChannelParticipantsBots:
+        result = ChannelParticipantsFilter::typeChannelParticipantsBots;
+        break;
+    default:
+        result = ChannelParticipantsFilter::typeChannelParticipantsRecent;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 ChannelParticipantsFilterObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case ChannelParticipantsFilter::typeChannelParticipantsRecent:
+        result = TypeChannelParticipantsRecent;
+        break;
+    case ChannelParticipantsFilter::typeChannelParticipantsAdmins:
+        result = TypeChannelParticipantsAdmins;
+        break;
+    case ChannelParticipantsFilter::typeChannelParticipantsKicked:
+        result = TypeChannelParticipantsKicked;
+        break;
+    case ChannelParticipantsFilter::typeChannelParticipantsBots:
+        result = TypeChannelParticipantsBots;
+        break;
+    default:
+        result = TypeChannelParticipantsRecent;
+        break;
+    }
+
+    return result;
+}
+
+inline void ChannelParticipantsFilterObject::setCore(const ChannelParticipantsFilter &core) {
+    operator =(core);
+}
+
+inline ChannelParticipantsFilter ChannelParticipantsFilterObject::core() const {
+    return m_core;
+}
+
 #endif // LQTG_TYPE_CHANNELPARTICIPANTSFILTER_OBJECT

@@ -63,4 +63,126 @@ private:
     MessagesStickerSet m_core;
 };
 
+inline MessagesStickerSetObject::MessagesStickerSetObject(const MessagesStickerSet &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_set(0),
+    m_core(core)
+{
+    m_set = new StickerSetObject(m_core.set(), this);
+    connect(m_set.data(), &StickerSetObject::coreChanged, this, &MessagesStickerSetObject::coreSetChanged);
+}
+
+inline MessagesStickerSetObject::MessagesStickerSetObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_set(0),
+    m_core()
+{
+    m_set = new StickerSetObject(m_core.set(), this);
+    connect(m_set.data(), &StickerSetObject::coreChanged, this, &MessagesStickerSetObject::coreSetChanged);
+}
+
+inline MessagesStickerSetObject::~MessagesStickerSetObject() {
+}
+
+inline void MessagesStickerSetObject::setDocuments(const QList<Document> &documents) {
+    if(m_core.documents() == documents) return;
+    m_core.setDocuments(documents);
+    Q_EMIT documentsChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QList<Document> MessagesStickerSetObject::documents() const {
+    return m_core.documents();
+}
+
+inline void MessagesStickerSetObject::setPacks(const QList<StickerPack> &packs) {
+    if(m_core.packs() == packs) return;
+    m_core.setPacks(packs);
+    Q_EMIT packsChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QList<StickerPack> MessagesStickerSetObject::packs() const {
+    return m_core.packs();
+}
+
+inline void MessagesStickerSetObject::setSet(StickerSetObject* set) {
+    if(m_set == set) return;
+    if(m_set) delete m_set;
+    m_set = set;
+    if(m_set) {
+        m_set->setParent(this);
+        m_core.setSet(m_set->core());
+        connect(m_set.data(), &StickerSetObject::coreChanged, this, &MessagesStickerSetObject::coreSetChanged);
+    }
+    Q_EMIT setChanged();
+    Q_EMIT coreChanged();
+}
+
+inline StickerSetObject*  MessagesStickerSetObject::set() const {
+    return m_set;
+}
+
+inline MessagesStickerSetObject &MessagesStickerSetObject::operator =(const MessagesStickerSet &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+    m_set->setCore(b.set());
+
+    Q_EMIT documentsChanged();
+    Q_EMIT packsChanged();
+    Q_EMIT setChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool MessagesStickerSetObject::operator ==(const MessagesStickerSet &b) const {
+    return m_core == b;
+}
+
+inline void MessagesStickerSetObject::setClassType(quint32 classType) {
+    MessagesStickerSet::MessagesStickerSetClassType result;
+    switch(classType) {
+    case TypeMessagesStickerSet:
+        result = MessagesStickerSet::typeMessagesStickerSet;
+        break;
+    default:
+        result = MessagesStickerSet::typeMessagesStickerSet;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 MessagesStickerSetObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case MessagesStickerSet::typeMessagesStickerSet:
+        result = TypeMessagesStickerSet;
+        break;
+    default:
+        result = TypeMessagesStickerSet;
+        break;
+    }
+
+    return result;
+}
+
+inline void MessagesStickerSetObject::setCore(const MessagesStickerSet &core) {
+    operator =(core);
+}
+
+inline MessagesStickerSet MessagesStickerSetObject::core() const {
+    return m_core;
+}
+
+inline void MessagesStickerSetObject::coreSetChanged() {
+    if(m_core.set() == m_set->core()) return;
+    m_core.setSet(m_set->core());
+    Q_EMIT setChanged();
+    Q_EMIT coreChanged();
+}
+
 #endif // LQTG_TYPE_MESSAGESSTICKERSET_OBJECT

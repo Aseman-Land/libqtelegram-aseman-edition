@@ -9,6 +9,12 @@
 
 #include <QMetaType>
 #include <QVariant>
+#include "core/inboundpkt.h"
+#include "core/outboundpkt.h"
+#include "../coretypes.h"
+
+#include <QDataStream>
+
 #include <QtGlobal>
 
 class LIBQTELEGRAMSHARED_EXPORT ImportedContact : public TelegramTypeObject
@@ -55,5 +61,159 @@ Q_DECLARE_METATYPE(ImportedContact)
 
 QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const ImportedContact &item);
 QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, ImportedContact &item);
+
+inline ImportedContact::ImportedContact(ImportedContactClassType classType, InboundPkt *in) :
+    m_clientId(0),
+    m_userId(0),
+    m_classType(classType)
+{
+    if(in) fetch(in);
+}
+
+inline ImportedContact::ImportedContact(InboundPkt *in) :
+    m_clientId(0),
+    m_userId(0),
+    m_classType(typeImportedContact)
+{
+    fetch(in);
+}
+
+inline ImportedContact::ImportedContact(const Null &null) :
+    TelegramTypeObject(null),
+    m_clientId(0),
+    m_userId(0),
+    m_classType(typeImportedContact)
+{
+}
+
+inline ImportedContact::~ImportedContact() {
+}
+
+inline void ImportedContact::setClientId(qint64 clientId) {
+    m_clientId = clientId;
+}
+
+inline qint64 ImportedContact::clientId() const {
+    return m_clientId;
+}
+
+inline void ImportedContact::setUserId(qint32 userId) {
+    m_userId = userId;
+}
+
+inline qint32 ImportedContact::userId() const {
+    return m_userId;
+}
+
+inline bool ImportedContact::operator ==(const ImportedContact &b) const {
+    return m_classType == b.m_classType &&
+           m_clientId == b.m_clientId &&
+           m_userId == b.m_userId;
+}
+
+inline void ImportedContact::setClassType(ImportedContact::ImportedContactClassType classType) {
+    m_classType = classType;
+}
+
+inline ImportedContact::ImportedContactClassType ImportedContact::classType() const {
+    return m_classType;
+}
+
+inline bool ImportedContact::fetch(InboundPkt *in) {
+    LQTG_FETCH_LOG;
+    int x = in->fetchInt();
+    switch(x) {
+    case typeImportedContact: {
+        m_userId = in->fetchInt();
+        m_clientId = in->fetchLong();
+        m_classType = static_cast<ImportedContactClassType>(x);
+        return true;
+    }
+        break;
+    
+    default:
+        LQTG_FETCH_ASSERT;
+        return false;
+    }
+}
+
+inline bool ImportedContact::push(OutboundPkt *out) const {
+    out->appendInt(m_classType);
+    switch(m_classType) {
+    case typeImportedContact: {
+        out->appendInt(m_userId);
+        out->appendLong(m_clientId);
+        return true;
+    }
+        break;
+    
+    default:
+        return false;
+    }
+}
+
+inline QMap<QString, QVariant> ImportedContact::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeImportedContact: {
+        result["classType"] = "ImportedContact::typeImportedContact";
+        result["userId"] = QVariant::fromValue<qint32>(userId());
+        result["clientId"] = QVariant::fromValue<qint64>(clientId());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+inline ImportedContact ImportedContact::fromMap(const QMap<QString, QVariant> &map) {
+    ImportedContact result;
+    if(map.value("classType").toString() == "ImportedContact::typeImportedContact") {
+        result.setClassType(typeImportedContact);
+        result.setUserId( map.value("userId").value<qint32>() );
+        result.setClientId( map.value("clientId").value<qint64>() );
+        return result;
+    }
+    return result;
+}
+
+inline QByteArray ImportedContact::getHash(QCryptographicHash::Algorithm alg) const {
+    QByteArray data;
+    QDataStream str(&data, QIODevice::WriteOnly);
+    str << *this;
+    return QCryptographicHash::hash(data, alg);
+}
+
+inline QDataStream &operator<<(QDataStream &stream, const ImportedContact &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case ImportedContact::typeImportedContact:
+        stream << item.userId();
+        stream << item.clientId();
+        break;
+    }
+    return stream;
+}
+
+inline QDataStream &operator>>(QDataStream &stream, ImportedContact &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<ImportedContact::ImportedContactClassType>(type));
+    switch(type) {
+    case ImportedContact::typeImportedContact: {
+        qint32 m_user_id;
+        stream >> m_user_id;
+        item.setUserId(m_user_id);
+        qint64 m_client_id;
+        stream >> m_client_id;
+        item.setClientId(m_client_id);
+    }
+        break;
+    }
+    return stream;
+}
+
 
 #endif // LQTG_TYPE_IMPORTEDCONTACT

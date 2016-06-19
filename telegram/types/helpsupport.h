@@ -9,6 +9,12 @@
 
 #include <QMetaType>
 #include <QVariant>
+#include "core/inboundpkt.h"
+#include "core/outboundpkt.h"
+#include "../coretypes.h"
+
+#include <QDataStream>
+
 #include <QString>
 #include "user.h"
 
@@ -56,5 +62,153 @@ Q_DECLARE_METATYPE(HelpSupport)
 
 QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const HelpSupport &item);
 QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, HelpSupport &item);
+
+inline HelpSupport::HelpSupport(HelpSupportClassType classType, InboundPkt *in) :
+    m_classType(classType)
+{
+    if(in) fetch(in);
+}
+
+inline HelpSupport::HelpSupport(InboundPkt *in) :
+    m_classType(typeHelpSupport)
+{
+    fetch(in);
+}
+
+inline HelpSupport::HelpSupport(const Null &null) :
+    TelegramTypeObject(null),
+    m_classType(typeHelpSupport)
+{
+}
+
+inline HelpSupport::~HelpSupport() {
+}
+
+inline void HelpSupport::setPhoneNumber(const QString &phoneNumber) {
+    m_phoneNumber = phoneNumber;
+}
+
+inline QString HelpSupport::phoneNumber() const {
+    return m_phoneNumber;
+}
+
+inline void HelpSupport::setUser(const User &user) {
+    m_user = user;
+}
+
+inline User HelpSupport::user() const {
+    return m_user;
+}
+
+inline bool HelpSupport::operator ==(const HelpSupport &b) const {
+    return m_classType == b.m_classType &&
+           m_phoneNumber == b.m_phoneNumber &&
+           m_user == b.m_user;
+}
+
+inline void HelpSupport::setClassType(HelpSupport::HelpSupportClassType classType) {
+    m_classType = classType;
+}
+
+inline HelpSupport::HelpSupportClassType HelpSupport::classType() const {
+    return m_classType;
+}
+
+inline bool HelpSupport::fetch(InboundPkt *in) {
+    LQTG_FETCH_LOG;
+    int x = in->fetchInt();
+    switch(x) {
+    case typeHelpSupport: {
+        m_phoneNumber = in->fetchQString();
+        m_user.fetch(in);
+        m_classType = static_cast<HelpSupportClassType>(x);
+        return true;
+    }
+        break;
+    
+    default:
+        LQTG_FETCH_ASSERT;
+        return false;
+    }
+}
+
+inline bool HelpSupport::push(OutboundPkt *out) const {
+    out->appendInt(m_classType);
+    switch(m_classType) {
+    case typeHelpSupport: {
+        out->appendQString(m_phoneNumber);
+        m_user.push(out);
+        return true;
+    }
+        break;
+    
+    default:
+        return false;
+    }
+}
+
+inline QMap<QString, QVariant> HelpSupport::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeHelpSupport: {
+        result["classType"] = "HelpSupport::typeHelpSupport";
+        result["phoneNumber"] = QVariant::fromValue<QString>(phoneNumber());
+        result["user"] = m_user.toMap();
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+inline HelpSupport HelpSupport::fromMap(const QMap<QString, QVariant> &map) {
+    HelpSupport result;
+    if(map.value("classType").toString() == "HelpSupport::typeHelpSupport") {
+        result.setClassType(typeHelpSupport);
+        result.setPhoneNumber( map.value("phoneNumber").value<QString>() );
+        result.setUser( User::fromMap(map.value("user").toMap()) );
+        return result;
+    }
+    return result;
+}
+
+inline QByteArray HelpSupport::getHash(QCryptographicHash::Algorithm alg) const {
+    QByteArray data;
+    QDataStream str(&data, QIODevice::WriteOnly);
+    str << *this;
+    return QCryptographicHash::hash(data, alg);
+}
+
+inline QDataStream &operator<<(QDataStream &stream, const HelpSupport &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case HelpSupport::typeHelpSupport:
+        stream << item.phoneNumber();
+        stream << item.user();
+        break;
+    }
+    return stream;
+}
+
+inline QDataStream &operator>>(QDataStream &stream, HelpSupport &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<HelpSupport::HelpSupportClassType>(type));
+    switch(type) {
+    case HelpSupport::typeHelpSupport: {
+        QString m_phone_number;
+        stream >> m_phone_number;
+        item.setPhoneNumber(m_phone_number);
+        User m_user;
+        stream >> m_user;
+        item.setUser(m_user);
+    }
+        break;
+    }
+    return stream;
+}
+
 
 #endif // LQTG_TYPE_HELPSUPPORT

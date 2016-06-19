@@ -60,4 +60,106 @@ private:
     ContactsImportedContacts m_core;
 };
 
+inline ContactsImportedContactsObject::ContactsImportedContactsObject(const ContactsImportedContacts &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core(core)
+{
+}
+
+inline ContactsImportedContactsObject::ContactsImportedContactsObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core()
+{
+}
+
+inline ContactsImportedContactsObject::~ContactsImportedContactsObject() {
+}
+
+inline void ContactsImportedContactsObject::setImported(const QList<ImportedContact> &imported) {
+    if(m_core.imported() == imported) return;
+    m_core.setImported(imported);
+    Q_EMIT importedChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QList<ImportedContact> ContactsImportedContactsObject::imported() const {
+    return m_core.imported();
+}
+
+inline void ContactsImportedContactsObject::setRetryContacts(const QList<qint64> &retryContacts) {
+    if(m_core.retryContacts() == retryContacts) return;
+    m_core.setRetryContacts(retryContacts);
+    Q_EMIT retryContactsChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QList<qint64> ContactsImportedContactsObject::retryContacts() const {
+    return m_core.retryContacts();
+}
+
+inline void ContactsImportedContactsObject::setUsers(const QList<User> &users) {
+    if(m_core.users() == users) return;
+    m_core.setUsers(users);
+    Q_EMIT usersChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QList<User> ContactsImportedContactsObject::users() const {
+    return m_core.users();
+}
+
+inline ContactsImportedContactsObject &ContactsImportedContactsObject::operator =(const ContactsImportedContacts &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+
+    Q_EMIT importedChanged();
+    Q_EMIT retryContactsChanged();
+    Q_EMIT usersChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool ContactsImportedContactsObject::operator ==(const ContactsImportedContacts &b) const {
+    return m_core == b;
+}
+
+inline void ContactsImportedContactsObject::setClassType(quint32 classType) {
+    ContactsImportedContacts::ContactsImportedContactsClassType result;
+    switch(classType) {
+    case TypeContactsImportedContacts:
+        result = ContactsImportedContacts::typeContactsImportedContacts;
+        break;
+    default:
+        result = ContactsImportedContacts::typeContactsImportedContacts;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 ContactsImportedContactsObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case ContactsImportedContacts::typeContactsImportedContacts:
+        result = TypeContactsImportedContacts;
+        break;
+    default:
+        result = TypeContactsImportedContacts;
+        break;
+    }
+
+    return result;
+}
+
+inline void ContactsImportedContactsObject::setCore(const ContactsImportedContacts &core) {
+    operator =(core);
+}
+
+inline ContactsImportedContacts ContactsImportedContactsObject::core() const {
+    return m_core;
+}
+
 #endif // LQTG_TYPE_CONTACTSIMPORTEDCONTACTS_OBJECT

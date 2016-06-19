@@ -9,6 +9,12 @@
 
 #include <QMetaType>
 #include <QVariant>
+#include "core/inboundpkt.h"
+#include "core/outboundpkt.h"
+#include "../coretypes.h"
+
+#include <QDataStream>
+
 #include <QtGlobal>
 
 class LIBQTELEGRAMSHARED_EXPORT InputFileLocation : public TelegramTypeObject
@@ -69,5 +75,287 @@ Q_DECLARE_METATYPE(InputFileLocation)
 
 QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const InputFileLocation &item);
 QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, InputFileLocation &item);
+
+inline InputFileLocation::InputFileLocation(InputFileLocationClassType classType, InboundPkt *in) :
+    m_accessHash(0),
+    m_id(0),
+    m_localId(0),
+    m_secret(0),
+    m_volumeId(0),
+    m_classType(classType)
+{
+    if(in) fetch(in);
+}
+
+inline InputFileLocation::InputFileLocation(InboundPkt *in) :
+    m_accessHash(0),
+    m_id(0),
+    m_localId(0),
+    m_secret(0),
+    m_volumeId(0),
+    m_classType(typeInputFileLocation)
+{
+    fetch(in);
+}
+
+inline InputFileLocation::InputFileLocation(const Null &null) :
+    TelegramTypeObject(null),
+    m_accessHash(0),
+    m_id(0),
+    m_localId(0),
+    m_secret(0),
+    m_volumeId(0),
+    m_classType(typeInputFileLocation)
+{
+}
+
+inline InputFileLocation::~InputFileLocation() {
+}
+
+inline void InputFileLocation::setAccessHash(qint64 accessHash) {
+    m_accessHash = accessHash;
+}
+
+inline qint64 InputFileLocation::accessHash() const {
+    return m_accessHash;
+}
+
+inline void InputFileLocation::setId(qint64 id) {
+    m_id = id;
+}
+
+inline qint64 InputFileLocation::id() const {
+    return m_id;
+}
+
+inline void InputFileLocation::setLocalId(qint32 localId) {
+    m_localId = localId;
+}
+
+inline qint32 InputFileLocation::localId() const {
+    return m_localId;
+}
+
+inline void InputFileLocation::setSecret(qint64 secret) {
+    m_secret = secret;
+}
+
+inline qint64 InputFileLocation::secret() const {
+    return m_secret;
+}
+
+inline void InputFileLocation::setVolumeId(qint64 volumeId) {
+    m_volumeId = volumeId;
+}
+
+inline qint64 InputFileLocation::volumeId() const {
+    return m_volumeId;
+}
+
+inline bool InputFileLocation::operator ==(const InputFileLocation &b) const {
+    return m_classType == b.m_classType &&
+           m_accessHash == b.m_accessHash &&
+           m_id == b.m_id &&
+           m_localId == b.m_localId &&
+           m_secret == b.m_secret &&
+           m_volumeId == b.m_volumeId;
+}
+
+inline void InputFileLocation::setClassType(InputFileLocation::InputFileLocationClassType classType) {
+    m_classType = classType;
+}
+
+inline InputFileLocation::InputFileLocationClassType InputFileLocation::classType() const {
+    return m_classType;
+}
+
+inline bool InputFileLocation::fetch(InboundPkt *in) {
+    LQTG_FETCH_LOG;
+    int x = in->fetchInt();
+    switch(x) {
+    case typeInputFileLocation: {
+        m_volumeId = in->fetchLong();
+        m_localId = in->fetchInt();
+        m_secret = in->fetchLong();
+        m_classType = static_cast<InputFileLocationClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeInputEncryptedFileLocation: {
+        m_id = in->fetchLong();
+        m_accessHash = in->fetchLong();
+        m_classType = static_cast<InputFileLocationClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeInputDocumentFileLocation: {
+        m_id = in->fetchLong();
+        m_accessHash = in->fetchLong();
+        m_classType = static_cast<InputFileLocationClassType>(x);
+        return true;
+    }
+        break;
+    
+    default:
+        LQTG_FETCH_ASSERT;
+        return false;
+    }
+}
+
+inline bool InputFileLocation::push(OutboundPkt *out) const {
+    out->appendInt(m_classType);
+    switch(m_classType) {
+    case typeInputFileLocation: {
+        out->appendLong(m_volumeId);
+        out->appendInt(m_localId);
+        out->appendLong(m_secret);
+        return true;
+    }
+        break;
+    
+    case typeInputEncryptedFileLocation: {
+        out->appendLong(m_id);
+        out->appendLong(m_accessHash);
+        return true;
+    }
+        break;
+    
+    case typeInputDocumentFileLocation: {
+        out->appendLong(m_id);
+        out->appendLong(m_accessHash);
+        return true;
+    }
+        break;
+    
+    default:
+        return false;
+    }
+}
+
+inline QMap<QString, QVariant> InputFileLocation::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeInputFileLocation: {
+        result["classType"] = "InputFileLocation::typeInputFileLocation";
+        result["volumeId"] = QVariant::fromValue<qint64>(volumeId());
+        result["localId"] = QVariant::fromValue<qint32>(localId());
+        result["secret"] = QVariant::fromValue<qint64>(secret());
+        return result;
+    }
+        break;
+    
+    case typeInputEncryptedFileLocation: {
+        result["classType"] = "InputFileLocation::typeInputEncryptedFileLocation";
+        result["id"] = QVariant::fromValue<qint64>(id());
+        result["accessHash"] = QVariant::fromValue<qint64>(accessHash());
+        return result;
+    }
+        break;
+    
+    case typeInputDocumentFileLocation: {
+        result["classType"] = "InputFileLocation::typeInputDocumentFileLocation";
+        result["id"] = QVariant::fromValue<qint64>(id());
+        result["accessHash"] = QVariant::fromValue<qint64>(accessHash());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+inline InputFileLocation InputFileLocation::fromMap(const QMap<QString, QVariant> &map) {
+    InputFileLocation result;
+    if(map.value("classType").toString() == "InputFileLocation::typeInputFileLocation") {
+        result.setClassType(typeInputFileLocation);
+        result.setVolumeId( map.value("volumeId").value<qint64>() );
+        result.setLocalId( map.value("localId").value<qint32>() );
+        result.setSecret( map.value("secret").value<qint64>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "InputFileLocation::typeInputEncryptedFileLocation") {
+        result.setClassType(typeInputEncryptedFileLocation);
+        result.setId( map.value("id").value<qint64>() );
+        result.setAccessHash( map.value("accessHash").value<qint64>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "InputFileLocation::typeInputDocumentFileLocation") {
+        result.setClassType(typeInputDocumentFileLocation);
+        result.setId( map.value("id").value<qint64>() );
+        result.setAccessHash( map.value("accessHash").value<qint64>() );
+        return result;
+    }
+    return result;
+}
+
+inline QByteArray InputFileLocation::getHash(QCryptographicHash::Algorithm alg) const {
+    QByteArray data;
+    QDataStream str(&data, QIODevice::WriteOnly);
+    str << *this;
+    return QCryptographicHash::hash(data, alg);
+}
+
+inline QDataStream &operator<<(QDataStream &stream, const InputFileLocation &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case InputFileLocation::typeInputFileLocation:
+        stream << item.volumeId();
+        stream << item.localId();
+        stream << item.secret();
+        break;
+    case InputFileLocation::typeInputEncryptedFileLocation:
+        stream << item.id();
+        stream << item.accessHash();
+        break;
+    case InputFileLocation::typeInputDocumentFileLocation:
+        stream << item.id();
+        stream << item.accessHash();
+        break;
+    }
+    return stream;
+}
+
+inline QDataStream &operator>>(QDataStream &stream, InputFileLocation &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<InputFileLocation::InputFileLocationClassType>(type));
+    switch(type) {
+    case InputFileLocation::typeInputFileLocation: {
+        qint64 m_volume_id;
+        stream >> m_volume_id;
+        item.setVolumeId(m_volume_id);
+        qint32 m_local_id;
+        stream >> m_local_id;
+        item.setLocalId(m_local_id);
+        qint64 m_secret;
+        stream >> m_secret;
+        item.setSecret(m_secret);
+    }
+        break;
+    case InputFileLocation::typeInputEncryptedFileLocation: {
+        qint64 m_id;
+        stream >> m_id;
+        item.setId(m_id);
+        qint64 m_access_hash;
+        stream >> m_access_hash;
+        item.setAccessHash(m_access_hash);
+    }
+        break;
+    case InputFileLocation::typeInputDocumentFileLocation: {
+        qint64 m_id;
+        stream >> m_id;
+        item.setId(m_id);
+        qint64 m_access_hash;
+        stream >> m_access_hash;
+        item.setAccessHash(m_access_hash);
+    }
+        break;
+    }
+    return stream;
+}
+
 
 #endif // LQTG_TYPE_INPUTFILELOCATION

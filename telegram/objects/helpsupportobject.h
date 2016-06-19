@@ -58,4 +58,114 @@ private:
     HelpSupport m_core;
 };
 
+inline HelpSupportObject::HelpSupportObject(const HelpSupport &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_user(0),
+    m_core(core)
+{
+    m_user = new UserObject(m_core.user(), this);
+    connect(m_user.data(), &UserObject::coreChanged, this, &HelpSupportObject::coreUserChanged);
+}
+
+inline HelpSupportObject::HelpSupportObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_user(0),
+    m_core()
+{
+    m_user = new UserObject(m_core.user(), this);
+    connect(m_user.data(), &UserObject::coreChanged, this, &HelpSupportObject::coreUserChanged);
+}
+
+inline HelpSupportObject::~HelpSupportObject() {
+}
+
+inline void HelpSupportObject::setPhoneNumber(const QString &phoneNumber) {
+    if(m_core.phoneNumber() == phoneNumber) return;
+    m_core.setPhoneNumber(phoneNumber);
+    Q_EMIT phoneNumberChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QString HelpSupportObject::phoneNumber() const {
+    return m_core.phoneNumber();
+}
+
+inline void HelpSupportObject::setUser(UserObject* user) {
+    if(m_user == user) return;
+    if(m_user) delete m_user;
+    m_user = user;
+    if(m_user) {
+        m_user->setParent(this);
+        m_core.setUser(m_user->core());
+        connect(m_user.data(), &UserObject::coreChanged, this, &HelpSupportObject::coreUserChanged);
+    }
+    Q_EMIT userChanged();
+    Q_EMIT coreChanged();
+}
+
+inline UserObject*  HelpSupportObject::user() const {
+    return m_user;
+}
+
+inline HelpSupportObject &HelpSupportObject::operator =(const HelpSupport &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+    m_user->setCore(b.user());
+
+    Q_EMIT phoneNumberChanged();
+    Q_EMIT userChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool HelpSupportObject::operator ==(const HelpSupport &b) const {
+    return m_core == b;
+}
+
+inline void HelpSupportObject::setClassType(quint32 classType) {
+    HelpSupport::HelpSupportClassType result;
+    switch(classType) {
+    case TypeHelpSupport:
+        result = HelpSupport::typeHelpSupport;
+        break;
+    default:
+        result = HelpSupport::typeHelpSupport;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 HelpSupportObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case HelpSupport::typeHelpSupport:
+        result = TypeHelpSupport;
+        break;
+    default:
+        result = TypeHelpSupport;
+        break;
+    }
+
+    return result;
+}
+
+inline void HelpSupportObject::setCore(const HelpSupport &core) {
+    operator =(core);
+}
+
+inline HelpSupport HelpSupportObject::core() const {
+    return m_core;
+}
+
+inline void HelpSupportObject::coreUserChanged() {
+    if(m_core.user() == m_user->core()) return;
+    m_core.setUser(m_user->core());
+    Q_EMIT userChanged();
+    Q_EMIT coreChanged();
+}
+
 #endif // LQTG_TYPE_HELPSUPPORT_OBJECT

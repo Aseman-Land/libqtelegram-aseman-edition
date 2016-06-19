@@ -56,4 +56,100 @@ private:
     MessagesAllStickers m_core;
 };
 
+inline MessagesAllStickersObject::MessagesAllStickersObject(const MessagesAllStickers &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core(core)
+{
+}
+
+inline MessagesAllStickersObject::MessagesAllStickersObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core()
+{
+}
+
+inline MessagesAllStickersObject::~MessagesAllStickersObject() {
+}
+
+inline void MessagesAllStickersObject::setHash(qint32 hash) {
+    if(m_core.hash() == hash) return;
+    m_core.setHash(hash);
+    Q_EMIT hashChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 MessagesAllStickersObject::hash() const {
+    return m_core.hash();
+}
+
+inline void MessagesAllStickersObject::setSets(const QList<StickerSet> &sets) {
+    if(m_core.sets() == sets) return;
+    m_core.setSets(sets);
+    Q_EMIT setsChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QList<StickerSet> MessagesAllStickersObject::sets() const {
+    return m_core.sets();
+}
+
+inline MessagesAllStickersObject &MessagesAllStickersObject::operator =(const MessagesAllStickers &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+
+    Q_EMIT hashChanged();
+    Q_EMIT setsChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool MessagesAllStickersObject::operator ==(const MessagesAllStickers &b) const {
+    return m_core == b;
+}
+
+inline void MessagesAllStickersObject::setClassType(quint32 classType) {
+    MessagesAllStickers::MessagesAllStickersClassType result;
+    switch(classType) {
+    case TypeMessagesAllStickersNotModified:
+        result = MessagesAllStickers::typeMessagesAllStickersNotModified;
+        break;
+    case TypeMessagesAllStickers:
+        result = MessagesAllStickers::typeMessagesAllStickers;
+        break;
+    default:
+        result = MessagesAllStickers::typeMessagesAllStickersNotModified;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 MessagesAllStickersObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case MessagesAllStickers::typeMessagesAllStickersNotModified:
+        result = TypeMessagesAllStickersNotModified;
+        break;
+    case MessagesAllStickers::typeMessagesAllStickers:
+        result = TypeMessagesAllStickers;
+        break;
+    default:
+        result = TypeMessagesAllStickersNotModified;
+        break;
+    }
+
+    return result;
+}
+
+inline void MessagesAllStickersObject::setCore(const MessagesAllStickers &core) {
+    operator =(core);
+}
+
+inline MessagesAllStickers MessagesAllStickersObject::core() const {
+    return m_core;
+}
+
 #endif // LQTG_TYPE_MESSAGESALLSTICKERS_OBJECT

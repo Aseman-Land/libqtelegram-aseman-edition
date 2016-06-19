@@ -9,6 +9,12 @@
 
 #include <QMetaType>
 #include <QVariant>
+#include "core/inboundpkt.h"
+#include "core/outboundpkt.h"
+#include "../coretypes.h"
+
+#include <QDataStream>
+
 #include <QString>
 
 class LIBQTELEGRAMSHARED_EXPORT BotCommand : public TelegramTypeObject
@@ -55,5 +61,153 @@ Q_DECLARE_METATYPE(BotCommand)
 
 QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const BotCommand &item);
 QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, BotCommand &item);
+
+inline BotCommand::BotCommand(BotCommandClassType classType, InboundPkt *in) :
+    m_classType(classType)
+{
+    if(in) fetch(in);
+}
+
+inline BotCommand::BotCommand(InboundPkt *in) :
+    m_classType(typeBotCommand)
+{
+    fetch(in);
+}
+
+inline BotCommand::BotCommand(const Null &null) :
+    TelegramTypeObject(null),
+    m_classType(typeBotCommand)
+{
+}
+
+inline BotCommand::~BotCommand() {
+}
+
+inline void BotCommand::setCommand(const QString &command) {
+    m_command = command;
+}
+
+inline QString BotCommand::command() const {
+    return m_command;
+}
+
+inline void BotCommand::setDescription(const QString &description) {
+    m_description = description;
+}
+
+inline QString BotCommand::description() const {
+    return m_description;
+}
+
+inline bool BotCommand::operator ==(const BotCommand &b) const {
+    return m_classType == b.m_classType &&
+           m_command == b.m_command &&
+           m_description == b.m_description;
+}
+
+inline void BotCommand::setClassType(BotCommand::BotCommandClassType classType) {
+    m_classType = classType;
+}
+
+inline BotCommand::BotCommandClassType BotCommand::classType() const {
+    return m_classType;
+}
+
+inline bool BotCommand::fetch(InboundPkt *in) {
+    LQTG_FETCH_LOG;
+    int x = in->fetchInt();
+    switch(x) {
+    case typeBotCommand: {
+        m_command = in->fetchQString();
+        m_description = in->fetchQString();
+        m_classType = static_cast<BotCommandClassType>(x);
+        return true;
+    }
+        break;
+    
+    default:
+        LQTG_FETCH_ASSERT;
+        return false;
+    }
+}
+
+inline bool BotCommand::push(OutboundPkt *out) const {
+    out->appendInt(m_classType);
+    switch(m_classType) {
+    case typeBotCommand: {
+        out->appendQString(m_command);
+        out->appendQString(m_description);
+        return true;
+    }
+        break;
+    
+    default:
+        return false;
+    }
+}
+
+inline QMap<QString, QVariant> BotCommand::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeBotCommand: {
+        result["classType"] = "BotCommand::typeBotCommand";
+        result["command"] = QVariant::fromValue<QString>(command());
+        result["description"] = QVariant::fromValue<QString>(description());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+inline BotCommand BotCommand::fromMap(const QMap<QString, QVariant> &map) {
+    BotCommand result;
+    if(map.value("classType").toString() == "BotCommand::typeBotCommand") {
+        result.setClassType(typeBotCommand);
+        result.setCommand( map.value("command").value<QString>() );
+        result.setDescription( map.value("description").value<QString>() );
+        return result;
+    }
+    return result;
+}
+
+inline QByteArray BotCommand::getHash(QCryptographicHash::Algorithm alg) const {
+    QByteArray data;
+    QDataStream str(&data, QIODevice::WriteOnly);
+    str << *this;
+    return QCryptographicHash::hash(data, alg);
+}
+
+inline QDataStream &operator<<(QDataStream &stream, const BotCommand &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case BotCommand::typeBotCommand:
+        stream << item.command();
+        stream << item.description();
+        break;
+    }
+    return stream;
+}
+
+inline QDataStream &operator>>(QDataStream &stream, BotCommand &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<BotCommand::BotCommandClassType>(type));
+    switch(type) {
+    case BotCommand::typeBotCommand: {
+        QString m_command;
+        stream >> m_command;
+        item.setCommand(m_command);
+        QString m_description;
+        stream >> m_description;
+        item.setDescription(m_description);
+    }
+        break;
+    }
+    return stream;
+}
+
 
 #endif // LQTG_TYPE_BOTCOMMAND

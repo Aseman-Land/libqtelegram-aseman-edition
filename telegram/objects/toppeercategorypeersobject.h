@@ -63,4 +63,126 @@ private:
     TopPeerCategoryPeers m_core;
 };
 
+inline TopPeerCategoryPeersObject::TopPeerCategoryPeersObject(const TopPeerCategoryPeers &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_category(0),
+    m_core(core)
+{
+    m_category = new TopPeerCategoryObject(m_core.category(), this);
+    connect(m_category.data(), &TopPeerCategoryObject::coreChanged, this, &TopPeerCategoryPeersObject::coreCategoryChanged);
+}
+
+inline TopPeerCategoryPeersObject::TopPeerCategoryPeersObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_category(0),
+    m_core()
+{
+    m_category = new TopPeerCategoryObject(m_core.category(), this);
+    connect(m_category.data(), &TopPeerCategoryObject::coreChanged, this, &TopPeerCategoryPeersObject::coreCategoryChanged);
+}
+
+inline TopPeerCategoryPeersObject::~TopPeerCategoryPeersObject() {
+}
+
+inline void TopPeerCategoryPeersObject::setCategory(TopPeerCategoryObject* category) {
+    if(m_category == category) return;
+    if(m_category) delete m_category;
+    m_category = category;
+    if(m_category) {
+        m_category->setParent(this);
+        m_core.setCategory(m_category->core());
+        connect(m_category.data(), &TopPeerCategoryObject::coreChanged, this, &TopPeerCategoryPeersObject::coreCategoryChanged);
+    }
+    Q_EMIT categoryChanged();
+    Q_EMIT coreChanged();
+}
+
+inline TopPeerCategoryObject*  TopPeerCategoryPeersObject::category() const {
+    return m_category;
+}
+
+inline void TopPeerCategoryPeersObject::setCount(qint32 count) {
+    if(m_core.count() == count) return;
+    m_core.setCount(count);
+    Q_EMIT countChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 TopPeerCategoryPeersObject::count() const {
+    return m_core.count();
+}
+
+inline void TopPeerCategoryPeersObject::setPeers(const QList<TopPeer> &peers) {
+    if(m_core.peers() == peers) return;
+    m_core.setPeers(peers);
+    Q_EMIT peersChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QList<TopPeer> TopPeerCategoryPeersObject::peers() const {
+    return m_core.peers();
+}
+
+inline TopPeerCategoryPeersObject &TopPeerCategoryPeersObject::operator =(const TopPeerCategoryPeers &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+    m_category->setCore(b.category());
+
+    Q_EMIT categoryChanged();
+    Q_EMIT countChanged();
+    Q_EMIT peersChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool TopPeerCategoryPeersObject::operator ==(const TopPeerCategoryPeers &b) const {
+    return m_core == b;
+}
+
+inline void TopPeerCategoryPeersObject::setClassType(quint32 classType) {
+    TopPeerCategoryPeers::TopPeerCategoryPeersClassType result;
+    switch(classType) {
+    case TypeTopPeerCategoryPeers:
+        result = TopPeerCategoryPeers::typeTopPeerCategoryPeers;
+        break;
+    default:
+        result = TopPeerCategoryPeers::typeTopPeerCategoryPeers;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 TopPeerCategoryPeersObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case TopPeerCategoryPeers::typeTopPeerCategoryPeers:
+        result = TypeTopPeerCategoryPeers;
+        break;
+    default:
+        result = TypeTopPeerCategoryPeers;
+        break;
+    }
+
+    return result;
+}
+
+inline void TopPeerCategoryPeersObject::setCore(const TopPeerCategoryPeers &core) {
+    operator =(core);
+}
+
+inline TopPeerCategoryPeers TopPeerCategoryPeersObject::core() const {
+    return m_core;
+}
+
+inline void TopPeerCategoryPeersObject::coreCategoryChanged() {
+    if(m_core.category() == m_category->core()) return;
+    m_core.setCategory(m_category->core());
+    Q_EMIT categoryChanged();
+    Q_EMIT coreChanged();
+}
+
 #endif // LQTG_TYPE_TOPPEERCATEGORYPEERS_OBJECT

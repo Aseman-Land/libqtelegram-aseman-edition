@@ -70,4 +70,130 @@ private:
     AccountPasswordInputSettings m_core;
 };
 
+inline AccountPasswordInputSettingsObject::AccountPasswordInputSettingsObject(const AccountPasswordInputSettings &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core(core)
+{
+}
+
+inline AccountPasswordInputSettingsObject::AccountPasswordInputSettingsObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core()
+{
+}
+
+inline AccountPasswordInputSettingsObject::~AccountPasswordInputSettingsObject() {
+}
+
+inline void AccountPasswordInputSettingsObject::setEmail(const QString &email) {
+    if(m_core.email() == email) return;
+    m_core.setEmail(email);
+    Q_EMIT emailChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QString AccountPasswordInputSettingsObject::email() const {
+    return m_core.email();
+}
+
+inline void AccountPasswordInputSettingsObject::setFlags(qint32 flags) {
+    if(m_core.flags() == flags) return;
+    m_core.setFlags(flags);
+    Q_EMIT flagsChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 AccountPasswordInputSettingsObject::flags() const {
+    return m_core.flags();
+}
+
+inline void AccountPasswordInputSettingsObject::setHint(const QString &hint) {
+    if(m_core.hint() == hint) return;
+    m_core.setHint(hint);
+    Q_EMIT hintChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QString AccountPasswordInputSettingsObject::hint() const {
+    return m_core.hint();
+}
+
+inline void AccountPasswordInputSettingsObject::setNewPasswordHash(const QByteArray &newPasswordHash) {
+    if(m_core.newPasswordHash() == newPasswordHash) return;
+    m_core.setNewPasswordHash(newPasswordHash);
+    Q_EMIT newPasswordHashChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QByteArray AccountPasswordInputSettingsObject::newPasswordHash() const {
+    return m_core.newPasswordHash();
+}
+
+inline void AccountPasswordInputSettingsObject::setNewSalt(const QByteArray &newSalt) {
+    if(m_core.newSalt() == newSalt) return;
+    m_core.setNewSalt(newSalt);
+    Q_EMIT newSaltChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QByteArray AccountPasswordInputSettingsObject::newSalt() const {
+    return m_core.newSalt();
+}
+
+inline AccountPasswordInputSettingsObject &AccountPasswordInputSettingsObject::operator =(const AccountPasswordInputSettings &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+
+    Q_EMIT emailChanged();
+    Q_EMIT flagsChanged();
+    Q_EMIT hintChanged();
+    Q_EMIT newPasswordHashChanged();
+    Q_EMIT newSaltChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool AccountPasswordInputSettingsObject::operator ==(const AccountPasswordInputSettings &b) const {
+    return m_core == b;
+}
+
+inline void AccountPasswordInputSettingsObject::setClassType(quint32 classType) {
+    AccountPasswordInputSettings::AccountPasswordInputSettingsClassType result;
+    switch(classType) {
+    case TypeAccountPasswordInputSettings:
+        result = AccountPasswordInputSettings::typeAccountPasswordInputSettings;
+        break;
+    default:
+        result = AccountPasswordInputSettings::typeAccountPasswordInputSettings;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 AccountPasswordInputSettingsObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case AccountPasswordInputSettings::typeAccountPasswordInputSettings:
+        result = TypeAccountPasswordInputSettings;
+        break;
+    default:
+        result = TypeAccountPasswordInputSettings;
+        break;
+    }
+
+    return result;
+}
+
+inline void AccountPasswordInputSettingsObject::setCore(const AccountPasswordInputSettings &core) {
+    operator =(core);
+}
+
+inline AccountPasswordInputSettings AccountPasswordInputSettingsObject::core() const {
+    return m_core;
+}
+
 #endif // LQTG_TYPE_ACCOUNTPASSWORDINPUTSETTINGS_OBJECT

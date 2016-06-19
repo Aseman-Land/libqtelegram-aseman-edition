@@ -19,14 +19,4 @@ HEADERS += \
 
 SOURCES += \
     $$PWD/telegramfunctionobject.cpp \
-    $$PWD/account.cpp \
-    $$PWD/auth.cpp \
-    $$PWD/channels.cpp \
-    $$PWD/contacts.cpp \
-    $$PWD/help.cpp \
-    $$PWD/messages.cpp \
-    $$PWD/photos.cpp \
-    $$PWD/updates.cpp \
-    $$PWD/upload.cpp \
-    $$PWD/users.cpp
 

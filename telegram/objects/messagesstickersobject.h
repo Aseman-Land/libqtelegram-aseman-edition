@@ -56,4 +56,100 @@ private:
     MessagesStickers m_core;
 };
 
+inline MessagesStickersObject::MessagesStickersObject(const MessagesStickers &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core(core)
+{
+}
+
+inline MessagesStickersObject::MessagesStickersObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core()
+{
+}
+
+inline MessagesStickersObject::~MessagesStickersObject() {
+}
+
+inline void MessagesStickersObject::setHash(const QString &hash) {
+    if(m_core.hash() == hash) return;
+    m_core.setHash(hash);
+    Q_EMIT hashChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QString MessagesStickersObject::hash() const {
+    return m_core.hash();
+}
+
+inline void MessagesStickersObject::setStickers(const QList<Document> &stickers) {
+    if(m_core.stickers() == stickers) return;
+    m_core.setStickers(stickers);
+    Q_EMIT stickersChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QList<Document> MessagesStickersObject::stickers() const {
+    return m_core.stickers();
+}
+
+inline MessagesStickersObject &MessagesStickersObject::operator =(const MessagesStickers &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+
+    Q_EMIT hashChanged();
+    Q_EMIT stickersChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool MessagesStickersObject::operator ==(const MessagesStickers &b) const {
+    return m_core == b;
+}
+
+inline void MessagesStickersObject::setClassType(quint32 classType) {
+    MessagesStickers::MessagesStickersClassType result;
+    switch(classType) {
+    case TypeMessagesStickersNotModified:
+        result = MessagesStickers::typeMessagesStickersNotModified;
+        break;
+    case TypeMessagesStickers:
+        result = MessagesStickers::typeMessagesStickers;
+        break;
+    default:
+        result = MessagesStickers::typeMessagesStickersNotModified;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 MessagesStickersObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case MessagesStickers::typeMessagesStickersNotModified:
+        result = TypeMessagesStickersNotModified;
+        break;
+    case MessagesStickers::typeMessagesStickers:
+        result = TypeMessagesStickers;
+        break;
+    default:
+        result = TypeMessagesStickersNotModified;
+        break;
+    }
+
+    return result;
+}
+
+inline void MessagesStickersObject::setCore(const MessagesStickers &core) {
+    operator =(core);
+}
+
+inline MessagesStickers MessagesStickersObject::core() const {
+    return m_core;
+}
+
 #endif // LQTG_TYPE_MESSAGESSTICKERS_OBJECT

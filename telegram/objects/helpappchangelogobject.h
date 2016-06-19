@@ -51,4 +51,88 @@ private:
     HelpAppChangelog m_core;
 };
 
+inline HelpAppChangelogObject::HelpAppChangelogObject(const HelpAppChangelog &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core(core)
+{
+}
+
+inline HelpAppChangelogObject::HelpAppChangelogObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core()
+{
+}
+
+inline HelpAppChangelogObject::~HelpAppChangelogObject() {
+}
+
+inline void HelpAppChangelogObject::setText(const QString &text) {
+    if(m_core.text() == text) return;
+    m_core.setText(text);
+    Q_EMIT textChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QString HelpAppChangelogObject::text() const {
+    return m_core.text();
+}
+
+inline HelpAppChangelogObject &HelpAppChangelogObject::operator =(const HelpAppChangelog &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+
+    Q_EMIT textChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool HelpAppChangelogObject::operator ==(const HelpAppChangelog &b) const {
+    return m_core == b;
+}
+
+inline void HelpAppChangelogObject::setClassType(quint32 classType) {
+    HelpAppChangelog::HelpAppChangelogClassType result;
+    switch(classType) {
+    case TypeHelpAppChangelogEmpty:
+        result = HelpAppChangelog::typeHelpAppChangelogEmpty;
+        break;
+    case TypeHelpAppChangelog:
+        result = HelpAppChangelog::typeHelpAppChangelog;
+        break;
+    default:
+        result = HelpAppChangelog::typeHelpAppChangelogEmpty;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 HelpAppChangelogObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case HelpAppChangelog::typeHelpAppChangelogEmpty:
+        result = TypeHelpAppChangelogEmpty;
+        break;
+    case HelpAppChangelog::typeHelpAppChangelog:
+        result = TypeHelpAppChangelog;
+        break;
+    default:
+        result = TypeHelpAppChangelogEmpty;
+        break;
+    }
+
+    return result;
+}
+
+inline void HelpAppChangelogObject::setCore(const HelpAppChangelog &core) {
+    operator =(core);
+}
+
+inline HelpAppChangelog HelpAppChangelogObject::core() const {
+    return m_core;
+}
+
 #endif // LQTG_TYPE_HELPAPPCHANGELOG_OBJECT

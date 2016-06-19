@@ -55,4 +55,94 @@ private:
     DisabledFeature m_core;
 };
 
+inline DisabledFeatureObject::DisabledFeatureObject(const DisabledFeature &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core(core)
+{
+}
+
+inline DisabledFeatureObject::DisabledFeatureObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core()
+{
+}
+
+inline DisabledFeatureObject::~DisabledFeatureObject() {
+}
+
+inline void DisabledFeatureObject::setDescription(const QString &description) {
+    if(m_core.description() == description) return;
+    m_core.setDescription(description);
+    Q_EMIT descriptionChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QString DisabledFeatureObject::description() const {
+    return m_core.description();
+}
+
+inline void DisabledFeatureObject::setFeature(const QString &feature) {
+    if(m_core.feature() == feature) return;
+    m_core.setFeature(feature);
+    Q_EMIT featureChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QString DisabledFeatureObject::feature() const {
+    return m_core.feature();
+}
+
+inline DisabledFeatureObject &DisabledFeatureObject::operator =(const DisabledFeature &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+
+    Q_EMIT descriptionChanged();
+    Q_EMIT featureChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool DisabledFeatureObject::operator ==(const DisabledFeature &b) const {
+    return m_core == b;
+}
+
+inline void DisabledFeatureObject::setClassType(quint32 classType) {
+    DisabledFeature::DisabledFeatureClassType result;
+    switch(classType) {
+    case TypeDisabledFeature:
+        result = DisabledFeature::typeDisabledFeature;
+        break;
+    default:
+        result = DisabledFeature::typeDisabledFeature;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 DisabledFeatureObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case DisabledFeature::typeDisabledFeature:
+        result = TypeDisabledFeature;
+        break;
+    default:
+        result = TypeDisabledFeature;
+        break;
+    }
+
+    return result;
+}
+
+inline void DisabledFeatureObject::setCore(const DisabledFeature &core) {
+    operator =(core);
+}
+
+inline DisabledFeature DisabledFeatureObject::core() const {
+    return m_core;
+}
+
 #endif // LQTG_TYPE_DISABLEDFEATURE_OBJECT

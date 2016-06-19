@@ -56,4 +56,100 @@ private:
     InputPhoto m_core;
 };
 
+inline InputPhotoObject::InputPhotoObject(const InputPhoto &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core(core)
+{
+}
+
+inline InputPhotoObject::InputPhotoObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core()
+{
+}
+
+inline InputPhotoObject::~InputPhotoObject() {
+}
+
+inline void InputPhotoObject::setAccessHash(qint64 accessHash) {
+    if(m_core.accessHash() == accessHash) return;
+    m_core.setAccessHash(accessHash);
+    Q_EMIT accessHashChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint64 InputPhotoObject::accessHash() const {
+    return m_core.accessHash();
+}
+
+inline void InputPhotoObject::setId(qint64 id) {
+    if(m_core.id() == id) return;
+    m_core.setId(id);
+    Q_EMIT idChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint64 InputPhotoObject::id() const {
+    return m_core.id();
+}
+
+inline InputPhotoObject &InputPhotoObject::operator =(const InputPhoto &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+
+    Q_EMIT accessHashChanged();
+    Q_EMIT idChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool InputPhotoObject::operator ==(const InputPhoto &b) const {
+    return m_core == b;
+}
+
+inline void InputPhotoObject::setClassType(quint32 classType) {
+    InputPhoto::InputPhotoClassType result;
+    switch(classType) {
+    case TypeInputPhotoEmpty:
+        result = InputPhoto::typeInputPhotoEmpty;
+        break;
+    case TypeInputPhoto:
+        result = InputPhoto::typeInputPhoto;
+        break;
+    default:
+        result = InputPhoto::typeInputPhotoEmpty;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 InputPhotoObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case InputPhoto::typeInputPhotoEmpty:
+        result = TypeInputPhotoEmpty;
+        break;
+    case InputPhoto::typeInputPhoto:
+        result = TypeInputPhoto;
+        break;
+    default:
+        result = TypeInputPhotoEmpty;
+        break;
+    }
+
+    return result;
+}
+
+inline void InputPhotoObject::setCore(const InputPhoto &core) {
+    operator =(core);
+}
+
+inline InputPhoto InputPhotoObject::core() const {
+    return m_core;
+}
+
 #endif // LQTG_TYPE_INPUTPHOTO_OBJECT

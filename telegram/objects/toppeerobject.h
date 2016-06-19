@@ -58,4 +58,114 @@ private:
     TopPeer m_core;
 };
 
+inline TopPeerObject::TopPeerObject(const TopPeer &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_peer(0),
+    m_core(core)
+{
+    m_peer = new PeerObject(m_core.peer(), this);
+    connect(m_peer.data(), &PeerObject::coreChanged, this, &TopPeerObject::corePeerChanged);
+}
+
+inline TopPeerObject::TopPeerObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_peer(0),
+    m_core()
+{
+    m_peer = new PeerObject(m_core.peer(), this);
+    connect(m_peer.data(), &PeerObject::coreChanged, this, &TopPeerObject::corePeerChanged);
+}
+
+inline TopPeerObject::~TopPeerObject() {
+}
+
+inline void TopPeerObject::setPeer(PeerObject* peer) {
+    if(m_peer == peer) return;
+    if(m_peer) delete m_peer;
+    m_peer = peer;
+    if(m_peer) {
+        m_peer->setParent(this);
+        m_core.setPeer(m_peer->core());
+        connect(m_peer.data(), &PeerObject::coreChanged, this, &TopPeerObject::corePeerChanged);
+    }
+    Q_EMIT peerChanged();
+    Q_EMIT coreChanged();
+}
+
+inline PeerObject*  TopPeerObject::peer() const {
+    return m_peer;
+}
+
+inline void TopPeerObject::setRating(qreal rating) {
+    if(m_core.rating() == rating) return;
+    m_core.setRating(rating);
+    Q_EMIT ratingChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qreal TopPeerObject::rating() const {
+    return m_core.rating();
+}
+
+inline TopPeerObject &TopPeerObject::operator =(const TopPeer &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+    m_peer->setCore(b.peer());
+
+    Q_EMIT peerChanged();
+    Q_EMIT ratingChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool TopPeerObject::operator ==(const TopPeer &b) const {
+    return m_core == b;
+}
+
+inline void TopPeerObject::setClassType(quint32 classType) {
+    TopPeer::TopPeerClassType result;
+    switch(classType) {
+    case TypeTopPeer:
+        result = TopPeer::typeTopPeer;
+        break;
+    default:
+        result = TopPeer::typeTopPeer;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 TopPeerObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case TopPeer::typeTopPeer:
+        result = TypeTopPeer;
+        break;
+    default:
+        result = TypeTopPeer;
+        break;
+    }
+
+    return result;
+}
+
+inline void TopPeerObject::setCore(const TopPeer &core) {
+    operator =(core);
+}
+
+inline TopPeer TopPeerObject::core() const {
+    return m_core;
+}
+
+inline void TopPeerObject::corePeerChanged() {
+    if(m_core.peer() == m_peer->core()) return;
+    m_core.setPeer(m_peer->core());
+    Q_EMIT peerChanged();
+    Q_EMIT coreChanged();
+}
+
 #endif // LQTG_TYPE_TOPPEER_OBJECT

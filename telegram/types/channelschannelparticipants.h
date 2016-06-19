@@ -9,6 +9,12 @@
 
 #include <QMetaType>
 #include <QVariant>
+#include "core/inboundpkt.h"
+#include "core/outboundpkt.h"
+#include "../coretypes.h"
+
+#include <QDataStream>
+
 #include <QtGlobal>
 #include <QList>
 #include "channelparticipant.h"
@@ -62,5 +68,209 @@ Q_DECLARE_METATYPE(ChannelsChannelParticipants)
 
 QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const ChannelsChannelParticipants &item);
 QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, ChannelsChannelParticipants &item);
+
+inline ChannelsChannelParticipants::ChannelsChannelParticipants(ChannelsChannelParticipantsClassType classType, InboundPkt *in) :
+    m_count(0),
+    m_classType(classType)
+{
+    if(in) fetch(in);
+}
+
+inline ChannelsChannelParticipants::ChannelsChannelParticipants(InboundPkt *in) :
+    m_count(0),
+    m_classType(typeChannelsChannelParticipants)
+{
+    fetch(in);
+}
+
+inline ChannelsChannelParticipants::ChannelsChannelParticipants(const Null &null) :
+    TelegramTypeObject(null),
+    m_count(0),
+    m_classType(typeChannelsChannelParticipants)
+{
+}
+
+inline ChannelsChannelParticipants::~ChannelsChannelParticipants() {
+}
+
+inline void ChannelsChannelParticipants::setCount(qint32 count) {
+    m_count = count;
+}
+
+inline qint32 ChannelsChannelParticipants::count() const {
+    return m_count;
+}
+
+inline void ChannelsChannelParticipants::setParticipants(const QList<ChannelParticipant> &participants) {
+    m_participants = participants;
+}
+
+inline QList<ChannelParticipant> ChannelsChannelParticipants::participants() const {
+    return m_participants;
+}
+
+inline void ChannelsChannelParticipants::setUsers(const QList<User> &users) {
+    m_users = users;
+}
+
+inline QList<User> ChannelsChannelParticipants::users() const {
+    return m_users;
+}
+
+inline bool ChannelsChannelParticipants::operator ==(const ChannelsChannelParticipants &b) const {
+    return m_classType == b.m_classType &&
+           m_count == b.m_count &&
+           m_participants == b.m_participants &&
+           m_users == b.m_users;
+}
+
+inline void ChannelsChannelParticipants::setClassType(ChannelsChannelParticipants::ChannelsChannelParticipantsClassType classType) {
+    m_classType = classType;
+}
+
+inline ChannelsChannelParticipants::ChannelsChannelParticipantsClassType ChannelsChannelParticipants::classType() const {
+    return m_classType;
+}
+
+inline bool ChannelsChannelParticipants::fetch(InboundPkt *in) {
+    LQTG_FETCH_LOG;
+    int x = in->fetchInt();
+    switch(x) {
+    case typeChannelsChannelParticipants: {
+        m_count = in->fetchInt();
+        if(in->fetchInt() != (qint32)CoreTypes::typeVector) return false;
+        qint32 m_participants_length = in->fetchInt();
+        m_participants.clear();
+        for (qint32 i = 0; i < m_participants_length; i++) {
+            ChannelParticipant type;
+            type.fetch(in);
+            m_participants.append(type);
+        }
+        if(in->fetchInt() != (qint32)CoreTypes::typeVector) return false;
+        qint32 m_users_length = in->fetchInt();
+        m_users.clear();
+        for (qint32 i = 0; i < m_users_length; i++) {
+            User type;
+            type.fetch(in);
+            m_users.append(type);
+        }
+        m_classType = static_cast<ChannelsChannelParticipantsClassType>(x);
+        return true;
+    }
+        break;
+    
+    default:
+        LQTG_FETCH_ASSERT;
+        return false;
+    }
+}
+
+inline bool ChannelsChannelParticipants::push(OutboundPkt *out) const {
+    out->appendInt(m_classType);
+    switch(m_classType) {
+    case typeChannelsChannelParticipants: {
+        out->appendInt(m_count);
+        out->appendInt(CoreTypes::typeVector);
+        out->appendInt(m_participants.count());
+        for (qint32 i = 0; i < m_participants.count(); i++) {
+            m_participants[i].push(out);
+        }
+        out->appendInt(CoreTypes::typeVector);
+        out->appendInt(m_users.count());
+        for (qint32 i = 0; i < m_users.count(); i++) {
+            m_users[i].push(out);
+        }
+        return true;
+    }
+        break;
+    
+    default:
+        return false;
+    }
+}
+
+inline QMap<QString, QVariant> ChannelsChannelParticipants::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeChannelsChannelParticipants: {
+        result["classType"] = "ChannelsChannelParticipants::typeChannelsChannelParticipants";
+        result["count"] = QVariant::fromValue<qint32>(count());
+        QList<QVariant> _participants;
+        Q_FOREACH(const ChannelParticipant &m__type, m_participants)
+            _participants << m__type.toMap();
+        result["participants"] = _participants;
+        QList<QVariant> _users;
+        Q_FOREACH(const User &m__type, m_users)
+            _users << m__type.toMap();
+        result["users"] = _users;
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+inline ChannelsChannelParticipants ChannelsChannelParticipants::fromMap(const QMap<QString, QVariant> &map) {
+    ChannelsChannelParticipants result;
+    if(map.value("classType").toString() == "ChannelsChannelParticipants::typeChannelsChannelParticipants") {
+        result.setClassType(typeChannelsChannelParticipants);
+        result.setCount( map.value("count").value<qint32>() );
+        QList<QVariant> map_participants = map["participants"].toList();
+        QList<ChannelParticipant> _participants;
+        Q_FOREACH(const QVariant &var, map_participants)
+            _participants << ChannelParticipant::fromMap(var.toMap());
+        result.setParticipants(_participants);
+        QList<QVariant> map_users = map["users"].toList();
+        QList<User> _users;
+        Q_FOREACH(const QVariant &var, map_users)
+            _users << User::fromMap(var.toMap());
+        result.setUsers(_users);
+        return result;
+    }
+    return result;
+}
+
+inline QByteArray ChannelsChannelParticipants::getHash(QCryptographicHash::Algorithm alg) const {
+    QByteArray data;
+    QDataStream str(&data, QIODevice::WriteOnly);
+    str << *this;
+    return QCryptographicHash::hash(data, alg);
+}
+
+inline QDataStream &operator<<(QDataStream &stream, const ChannelsChannelParticipants &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case ChannelsChannelParticipants::typeChannelsChannelParticipants:
+        stream << item.count();
+        stream << item.participants();
+        stream << item.users();
+        break;
+    }
+    return stream;
+}
+
+inline QDataStream &operator>>(QDataStream &stream, ChannelsChannelParticipants &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<ChannelsChannelParticipants::ChannelsChannelParticipantsClassType>(type));
+    switch(type) {
+    case ChannelsChannelParticipants::typeChannelsChannelParticipants: {
+        qint32 m_count;
+        stream >> m_count;
+        item.setCount(m_count);
+        QList<ChannelParticipant> m_participants;
+        stream >> m_participants;
+        item.setParticipants(m_participants);
+        QList<User> m_users;
+        stream >> m_users;
+        item.setUsers(m_users);
+    }
+        break;
+    }
+    return stream;
+}
+
 
 #endif // LQTG_TYPE_CHANNELSCHANNELPARTICIPANTS

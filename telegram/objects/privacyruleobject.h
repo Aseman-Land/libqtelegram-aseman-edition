@@ -55,4 +55,112 @@ private:
     PrivacyRule m_core;
 };
 
+inline PrivacyRuleObject::PrivacyRuleObject(const PrivacyRule &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core(core)
+{
+}
+
+inline PrivacyRuleObject::PrivacyRuleObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core()
+{
+}
+
+inline PrivacyRuleObject::~PrivacyRuleObject() {
+}
+
+inline void PrivacyRuleObject::setUsers(const QList<qint32> &users) {
+    if(m_core.users() == users) return;
+    m_core.setUsers(users);
+    Q_EMIT usersChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QList<qint32> PrivacyRuleObject::users() const {
+    return m_core.users();
+}
+
+inline PrivacyRuleObject &PrivacyRuleObject::operator =(const PrivacyRule &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+
+    Q_EMIT usersChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool PrivacyRuleObject::operator ==(const PrivacyRule &b) const {
+    return m_core == b;
+}
+
+inline void PrivacyRuleObject::setClassType(quint32 classType) {
+    PrivacyRule::PrivacyRuleClassType result;
+    switch(classType) {
+    case TypePrivacyValueAllowContacts:
+        result = PrivacyRule::typePrivacyValueAllowContacts;
+        break;
+    case TypePrivacyValueAllowAll:
+        result = PrivacyRule::typePrivacyValueAllowAll;
+        break;
+    case TypePrivacyValueAllowUsers:
+        result = PrivacyRule::typePrivacyValueAllowUsers;
+        break;
+    case TypePrivacyValueDisallowContacts:
+        result = PrivacyRule::typePrivacyValueDisallowContacts;
+        break;
+    case TypePrivacyValueDisallowAll:
+        result = PrivacyRule::typePrivacyValueDisallowAll;
+        break;
+    case TypePrivacyValueDisallowUsers:
+        result = PrivacyRule::typePrivacyValueDisallowUsers;
+        break;
+    default:
+        result = PrivacyRule::typePrivacyValueAllowContacts;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 PrivacyRuleObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case PrivacyRule::typePrivacyValueAllowContacts:
+        result = TypePrivacyValueAllowContacts;
+        break;
+    case PrivacyRule::typePrivacyValueAllowAll:
+        result = TypePrivacyValueAllowAll;
+        break;
+    case PrivacyRule::typePrivacyValueAllowUsers:
+        result = TypePrivacyValueAllowUsers;
+        break;
+    case PrivacyRule::typePrivacyValueDisallowContacts:
+        result = TypePrivacyValueDisallowContacts;
+        break;
+    case PrivacyRule::typePrivacyValueDisallowAll:
+        result = TypePrivacyValueDisallowAll;
+        break;
+    case PrivacyRule::typePrivacyValueDisallowUsers:
+        result = TypePrivacyValueDisallowUsers;
+        break;
+    default:
+        result = TypePrivacyValueAllowContacts;
+        break;
+    }
+
+    return result;
+}
+
+inline void PrivacyRuleObject::setCore(const PrivacyRule &core) {
+    operator =(core);
+}
+
+inline PrivacyRule PrivacyRuleObject::core() const {
+    return m_core;
+}
+
 #endif // LQTG_TYPE_PRIVACYRULE_OBJECT

@@ -58,4 +58,114 @@ private:
     PhotosPhoto m_core;
 };
 
+inline PhotosPhotoObject::PhotosPhotoObject(const PhotosPhoto &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_photo(0),
+    m_core(core)
+{
+    m_photo = new PhotoObject(m_core.photo(), this);
+    connect(m_photo.data(), &PhotoObject::coreChanged, this, &PhotosPhotoObject::corePhotoChanged);
+}
+
+inline PhotosPhotoObject::PhotosPhotoObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_photo(0),
+    m_core()
+{
+    m_photo = new PhotoObject(m_core.photo(), this);
+    connect(m_photo.data(), &PhotoObject::coreChanged, this, &PhotosPhotoObject::corePhotoChanged);
+}
+
+inline PhotosPhotoObject::~PhotosPhotoObject() {
+}
+
+inline void PhotosPhotoObject::setPhoto(PhotoObject* photo) {
+    if(m_photo == photo) return;
+    if(m_photo) delete m_photo;
+    m_photo = photo;
+    if(m_photo) {
+        m_photo->setParent(this);
+        m_core.setPhoto(m_photo->core());
+        connect(m_photo.data(), &PhotoObject::coreChanged, this, &PhotosPhotoObject::corePhotoChanged);
+    }
+    Q_EMIT photoChanged();
+    Q_EMIT coreChanged();
+}
+
+inline PhotoObject*  PhotosPhotoObject::photo() const {
+    return m_photo;
+}
+
+inline void PhotosPhotoObject::setUsers(const QList<User> &users) {
+    if(m_core.users() == users) return;
+    m_core.setUsers(users);
+    Q_EMIT usersChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QList<User> PhotosPhotoObject::users() const {
+    return m_core.users();
+}
+
+inline PhotosPhotoObject &PhotosPhotoObject::operator =(const PhotosPhoto &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+    m_photo->setCore(b.photo());
+
+    Q_EMIT photoChanged();
+    Q_EMIT usersChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool PhotosPhotoObject::operator ==(const PhotosPhoto &b) const {
+    return m_core == b;
+}
+
+inline void PhotosPhotoObject::setClassType(quint32 classType) {
+    PhotosPhoto::PhotosPhotoClassType result;
+    switch(classType) {
+    case TypePhotosPhoto:
+        result = PhotosPhoto::typePhotosPhoto;
+        break;
+    default:
+        result = PhotosPhoto::typePhotosPhoto;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 PhotosPhotoObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case PhotosPhoto::typePhotosPhoto:
+        result = TypePhotosPhoto;
+        break;
+    default:
+        result = TypePhotosPhoto;
+        break;
+    }
+
+    return result;
+}
+
+inline void PhotosPhotoObject::setCore(const PhotosPhoto &core) {
+    operator =(core);
+}
+
+inline PhotosPhoto PhotosPhotoObject::core() const {
+    return m_core;
+}
+
+inline void PhotosPhotoObject::corePhotoChanged() {
+    if(m_core.photo() == m_photo->core()) return;
+    m_core.setPhoto(m_photo->core());
+    Q_EMIT photoChanged();
+    Q_EMIT coreChanged();
+}
+
 #endif // LQTG_TYPE_PHOTOSPHOTO_OBJECT

@@ -78,4 +78,162 @@ private:
     MessagesBotResults m_core;
 };
 
+inline MessagesBotResultsObject::MessagesBotResultsObject(const MessagesBotResults &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_switchPm(0),
+    m_core(core)
+{
+    m_switchPm = new InlineBotSwitchPMObject(m_core.switchPm(), this);
+    connect(m_switchPm.data(), &InlineBotSwitchPMObject::coreChanged, this, &MessagesBotResultsObject::coreSwitchPmChanged);
+}
+
+inline MessagesBotResultsObject::MessagesBotResultsObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_switchPm(0),
+    m_core()
+{
+    m_switchPm = new InlineBotSwitchPMObject(m_core.switchPm(), this);
+    connect(m_switchPm.data(), &InlineBotSwitchPMObject::coreChanged, this, &MessagesBotResultsObject::coreSwitchPmChanged);
+}
+
+inline MessagesBotResultsObject::~MessagesBotResultsObject() {
+}
+
+inline void MessagesBotResultsObject::setFlags(qint32 flags) {
+    if(m_core.flags() == flags) return;
+    m_core.setFlags(flags);
+    Q_EMIT flagsChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 MessagesBotResultsObject::flags() const {
+    return m_core.flags();
+}
+
+inline void MessagesBotResultsObject::setGallery(bool gallery) {
+    if(m_core.gallery() == gallery) return;
+    m_core.setGallery(gallery);
+    Q_EMIT galleryChanged();
+    Q_EMIT coreChanged();
+}
+
+inline bool MessagesBotResultsObject::gallery() const {
+    return m_core.gallery();
+}
+
+inline void MessagesBotResultsObject::setNextOffset(const QString &nextOffset) {
+    if(m_core.nextOffset() == nextOffset) return;
+    m_core.setNextOffset(nextOffset);
+    Q_EMIT nextOffsetChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QString MessagesBotResultsObject::nextOffset() const {
+    return m_core.nextOffset();
+}
+
+inline void MessagesBotResultsObject::setQueryId(qint64 queryId) {
+    if(m_core.queryId() == queryId) return;
+    m_core.setQueryId(queryId);
+    Q_EMIT queryIdChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint64 MessagesBotResultsObject::queryId() const {
+    return m_core.queryId();
+}
+
+inline void MessagesBotResultsObject::setResults(const QList<BotInlineResult> &results) {
+    if(m_core.results() == results) return;
+    m_core.setResults(results);
+    Q_EMIT resultsChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QList<BotInlineResult> MessagesBotResultsObject::results() const {
+    return m_core.results();
+}
+
+inline void MessagesBotResultsObject::setSwitchPm(InlineBotSwitchPMObject* switchPm) {
+    if(m_switchPm == switchPm) return;
+    if(m_switchPm) delete m_switchPm;
+    m_switchPm = switchPm;
+    if(m_switchPm) {
+        m_switchPm->setParent(this);
+        m_core.setSwitchPm(m_switchPm->core());
+        connect(m_switchPm.data(), &InlineBotSwitchPMObject::coreChanged, this, &MessagesBotResultsObject::coreSwitchPmChanged);
+    }
+    Q_EMIT switchPmChanged();
+    Q_EMIT coreChanged();
+}
+
+inline InlineBotSwitchPMObject*  MessagesBotResultsObject::switchPm() const {
+    return m_switchPm;
+}
+
+inline MessagesBotResultsObject &MessagesBotResultsObject::operator =(const MessagesBotResults &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+    m_switchPm->setCore(b.switchPm());
+
+    Q_EMIT flagsChanged();
+    Q_EMIT galleryChanged();
+    Q_EMIT nextOffsetChanged();
+    Q_EMIT queryIdChanged();
+    Q_EMIT resultsChanged();
+    Q_EMIT switchPmChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool MessagesBotResultsObject::operator ==(const MessagesBotResults &b) const {
+    return m_core == b;
+}
+
+inline void MessagesBotResultsObject::setClassType(quint32 classType) {
+    MessagesBotResults::MessagesBotResultsClassType result;
+    switch(classType) {
+    case TypeMessagesBotResults:
+        result = MessagesBotResults::typeMessagesBotResults;
+        break;
+    default:
+        result = MessagesBotResults::typeMessagesBotResults;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 MessagesBotResultsObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case MessagesBotResults::typeMessagesBotResults:
+        result = TypeMessagesBotResults;
+        break;
+    default:
+        result = TypeMessagesBotResults;
+        break;
+    }
+
+    return result;
+}
+
+inline void MessagesBotResultsObject::setCore(const MessagesBotResults &core) {
+    operator =(core);
+}
+
+inline MessagesBotResults MessagesBotResultsObject::core() const {
+    return m_core;
+}
+
+inline void MessagesBotResultsObject::coreSwitchPmChanged() {
+    if(m_core.switchPm() == m_switchPm->core()) return;
+    m_core.setSwitchPm(m_switchPm->core());
+    Q_EMIT switchPmChanged();
+    Q_EMIT coreChanged();
+}
+
 #endif // LQTG_TYPE_MESSAGESBOTRESULTS_OBJECT

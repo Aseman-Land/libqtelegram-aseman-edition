@@ -117,4 +117,250 @@ private:
     UpdatesChannelDifference m_core;
 };
 
+inline UpdatesChannelDifferenceObject::UpdatesChannelDifferenceObject(const UpdatesChannelDifference &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core(core)
+{
+}
+
+inline UpdatesChannelDifferenceObject::UpdatesChannelDifferenceObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core()
+{
+}
+
+inline UpdatesChannelDifferenceObject::~UpdatesChannelDifferenceObject() {
+}
+
+inline void UpdatesChannelDifferenceObject::setChats(const QList<Chat> &chats) {
+    if(m_core.chats() == chats) return;
+    m_core.setChats(chats);
+    Q_EMIT chatsChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QList<Chat> UpdatesChannelDifferenceObject::chats() const {
+    return m_core.chats();
+}
+
+inline void UpdatesChannelDifferenceObject::setFinal(bool final) {
+    if(m_core.final() == final) return;
+    m_core.setFinal(final);
+    Q_EMIT finalChanged();
+    Q_EMIT coreChanged();
+}
+
+inline bool UpdatesChannelDifferenceObject::final() const {
+    return m_core.final();
+}
+
+inline void UpdatesChannelDifferenceObject::setFlags(qint32 flags) {
+    if(m_core.flags() == flags) return;
+    m_core.setFlags(flags);
+    Q_EMIT flagsChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 UpdatesChannelDifferenceObject::flags() const {
+    return m_core.flags();
+}
+
+inline void UpdatesChannelDifferenceObject::setMessages(const QList<Message> &messages) {
+    if(m_core.messages() == messages) return;
+    m_core.setMessages(messages);
+    Q_EMIT messagesChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QList<Message> UpdatesChannelDifferenceObject::messages() const {
+    return m_core.messages();
+}
+
+inline void UpdatesChannelDifferenceObject::setNewMessages(const QList<Message> &newMessages) {
+    if(m_core.newMessages() == newMessages) return;
+    m_core.setNewMessages(newMessages);
+    Q_EMIT newMessagesChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QList<Message> UpdatesChannelDifferenceObject::newMessages() const {
+    return m_core.newMessages();
+}
+
+inline void UpdatesChannelDifferenceObject::setOtherUpdates(const QList<Update> &otherUpdates) {
+    if(m_core.otherUpdates() == otherUpdates) return;
+    m_core.setOtherUpdates(otherUpdates);
+    Q_EMIT otherUpdatesChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QList<Update> UpdatesChannelDifferenceObject::otherUpdates() const {
+    return m_core.otherUpdates();
+}
+
+inline void UpdatesChannelDifferenceObject::setPts(qint32 pts) {
+    if(m_core.pts() == pts) return;
+    m_core.setPts(pts);
+    Q_EMIT ptsChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 UpdatesChannelDifferenceObject::pts() const {
+    return m_core.pts();
+}
+
+inline void UpdatesChannelDifferenceObject::setReadInboxMaxId(qint32 readInboxMaxId) {
+    if(m_core.readInboxMaxId() == readInboxMaxId) return;
+    m_core.setReadInboxMaxId(readInboxMaxId);
+    Q_EMIT readInboxMaxIdChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 UpdatesChannelDifferenceObject::readInboxMaxId() const {
+    return m_core.readInboxMaxId();
+}
+
+inline void UpdatesChannelDifferenceObject::setTimeout(qint32 timeout) {
+    if(m_core.timeout() == timeout) return;
+    m_core.setTimeout(timeout);
+    Q_EMIT timeoutChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 UpdatesChannelDifferenceObject::timeout() const {
+    return m_core.timeout();
+}
+
+inline void UpdatesChannelDifferenceObject::setTopImportantMessage(qint32 topImportantMessage) {
+    if(m_core.topImportantMessage() == topImportantMessage) return;
+    m_core.setTopImportantMessage(topImportantMessage);
+    Q_EMIT topImportantMessageChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 UpdatesChannelDifferenceObject::topImportantMessage() const {
+    return m_core.topImportantMessage();
+}
+
+inline void UpdatesChannelDifferenceObject::setTopMessage(qint32 topMessage) {
+    if(m_core.topMessage() == topMessage) return;
+    m_core.setTopMessage(topMessage);
+    Q_EMIT topMessageChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 UpdatesChannelDifferenceObject::topMessage() const {
+    return m_core.topMessage();
+}
+
+inline void UpdatesChannelDifferenceObject::setUnreadCount(qint32 unreadCount) {
+    if(m_core.unreadCount() == unreadCount) return;
+    m_core.setUnreadCount(unreadCount);
+    Q_EMIT unreadCountChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 UpdatesChannelDifferenceObject::unreadCount() const {
+    return m_core.unreadCount();
+}
+
+inline void UpdatesChannelDifferenceObject::setUnreadImportantCount(qint32 unreadImportantCount) {
+    if(m_core.unreadImportantCount() == unreadImportantCount) return;
+    m_core.setUnreadImportantCount(unreadImportantCount);
+    Q_EMIT unreadImportantCountChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 UpdatesChannelDifferenceObject::unreadImportantCount() const {
+    return m_core.unreadImportantCount();
+}
+
+inline void UpdatesChannelDifferenceObject::setUsers(const QList<User> &users) {
+    if(m_core.users() == users) return;
+    m_core.setUsers(users);
+    Q_EMIT usersChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QList<User> UpdatesChannelDifferenceObject::users() const {
+    return m_core.users();
+}
+
+inline UpdatesChannelDifferenceObject &UpdatesChannelDifferenceObject::operator =(const UpdatesChannelDifference &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+
+    Q_EMIT chatsChanged();
+    Q_EMIT finalChanged();
+    Q_EMIT flagsChanged();
+    Q_EMIT messagesChanged();
+    Q_EMIT newMessagesChanged();
+    Q_EMIT otherUpdatesChanged();
+    Q_EMIT ptsChanged();
+    Q_EMIT readInboxMaxIdChanged();
+    Q_EMIT timeoutChanged();
+    Q_EMIT topImportantMessageChanged();
+    Q_EMIT topMessageChanged();
+    Q_EMIT unreadCountChanged();
+    Q_EMIT unreadImportantCountChanged();
+    Q_EMIT usersChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool UpdatesChannelDifferenceObject::operator ==(const UpdatesChannelDifference &b) const {
+    return m_core == b;
+}
+
+inline void UpdatesChannelDifferenceObject::setClassType(quint32 classType) {
+    UpdatesChannelDifference::UpdatesChannelDifferenceClassType result;
+    switch(classType) {
+    case TypeUpdatesChannelDifferenceEmpty:
+        result = UpdatesChannelDifference::typeUpdatesChannelDifferenceEmpty;
+        break;
+    case TypeUpdatesChannelDifferenceTooLong:
+        result = UpdatesChannelDifference::typeUpdatesChannelDifferenceTooLong;
+        break;
+    case TypeUpdatesChannelDifference:
+        result = UpdatesChannelDifference::typeUpdatesChannelDifference;
+        break;
+    default:
+        result = UpdatesChannelDifference::typeUpdatesChannelDifferenceEmpty;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 UpdatesChannelDifferenceObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case UpdatesChannelDifference::typeUpdatesChannelDifferenceEmpty:
+        result = TypeUpdatesChannelDifferenceEmpty;
+        break;
+    case UpdatesChannelDifference::typeUpdatesChannelDifferenceTooLong:
+        result = TypeUpdatesChannelDifferenceTooLong;
+        break;
+    case UpdatesChannelDifference::typeUpdatesChannelDifference:
+        result = TypeUpdatesChannelDifference;
+        break;
+    default:
+        result = TypeUpdatesChannelDifferenceEmpty;
+        break;
+    }
+
+    return result;
+}
+
+inline void UpdatesChannelDifferenceObject::setCore(const UpdatesChannelDifference &core) {
+    operator =(core);
+}
+
+inline UpdatesChannelDifference UpdatesChannelDifferenceObject::core() const {
+    return m_core;
+}
+
 #endif // LQTG_TYPE_UPDATESCHANNELDIFFERENCE_OBJECT

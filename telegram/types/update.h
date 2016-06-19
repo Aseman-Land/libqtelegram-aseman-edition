@@ -9,6 +9,12 @@
 
 #include <QMetaType>
 #include <QVariant>
+#include "core/inboundpkt.h"
+#include "core/outboundpkt.h"
+#include "../coretypes.h"
+
+#include <QDataStream>
+
 #include "sendmessageaction.h"
 #include <QtGlobal>
 #include "encryptedchat.h"
@@ -349,5 +355,3102 @@ Q_DECLARE_METATYPE(Update)
 
 QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const Update &item);
 QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, Update &item);
+
+inline Update::Update(UpdateClassType classType, InboundPkt *in) :
+    m_authKeyId(0),
+    m_blocked(false),
+    m_channelId(0),
+    m_chatId(0),
+    m_date(0),
+    m_enabled(false),
+    m_flags(0),
+    m_idInt(0),
+    m_inviterId(0),
+    m_isAdmin(false),
+    m_maxDate(0),
+    m_maxId(0),
+    m_msgIdInt(0),
+    m_popup(false),
+    m_previous(false),
+    m_pts(0),
+    m_ptsCount(0),
+    m_qts(0),
+    m_queryId(0),
+    m_randomId(0),
+    m_userId(0),
+    m_version(0),
+    m_views(0),
+    m_classType(classType)
+{
+    if(in) fetch(in);
+}
+
+inline Update::Update(InboundPkt *in) :
+    m_authKeyId(0),
+    m_blocked(false),
+    m_channelId(0),
+    m_chatId(0),
+    m_date(0),
+    m_enabled(false),
+    m_flags(0),
+    m_idInt(0),
+    m_inviterId(0),
+    m_isAdmin(false),
+    m_maxDate(0),
+    m_maxId(0),
+    m_msgIdInt(0),
+    m_popup(false),
+    m_previous(false),
+    m_pts(0),
+    m_ptsCount(0),
+    m_qts(0),
+    m_queryId(0),
+    m_randomId(0),
+    m_userId(0),
+    m_version(0),
+    m_views(0),
+    m_classType(typeUpdateNewMessage)
+{
+    fetch(in);
+}
+
+inline Update::Update(const Null &null) :
+    TelegramTypeObject(null),
+    m_authKeyId(0),
+    m_blocked(false),
+    m_channelId(0),
+    m_chatId(0),
+    m_date(0),
+    m_enabled(false),
+    m_flags(0),
+    m_idInt(0),
+    m_inviterId(0),
+    m_isAdmin(false),
+    m_maxDate(0),
+    m_maxId(0),
+    m_msgIdInt(0),
+    m_popup(false),
+    m_previous(false),
+    m_pts(0),
+    m_ptsCount(0),
+    m_qts(0),
+    m_queryId(0),
+    m_randomId(0),
+    m_userId(0),
+    m_version(0),
+    m_views(0),
+    m_classType(typeUpdateNewMessage)
+{
+}
+
+inline Update::~Update() {
+}
+
+inline void Update::setAction(const SendMessageAction &action) {
+    m_action = action;
+}
+
+inline SendMessageAction Update::action() const {
+    return m_action;
+}
+
+inline void Update::setAuthKeyId(qint64 authKeyId) {
+    m_authKeyId = authKeyId;
+}
+
+inline qint64 Update::authKeyId() const {
+    return m_authKeyId;
+}
+
+inline void Update::setBlocked(bool blocked) {
+    m_blocked = blocked;
+}
+
+inline bool Update::blocked() const {
+    return m_blocked;
+}
+
+inline void Update::setChannelId(qint32 channelId) {
+    m_channelId = channelId;
+}
+
+inline qint32 Update::channelId() const {
+    return m_channelId;
+}
+
+inline void Update::setChat(const EncryptedChat &chat) {
+    m_chat = chat;
+}
+
+inline EncryptedChat Update::chat() const {
+    return m_chat;
+}
+
+inline void Update::setChatId(qint32 chatId) {
+    m_chatId = chatId;
+}
+
+inline qint32 Update::chatId() const {
+    return m_chatId;
+}
+
+inline void Update::setData(const QByteArray &data) {
+    m_data = data;
+}
+
+inline QByteArray Update::data() const {
+    return m_data;
+}
+
+inline void Update::setDate(qint32 date) {
+    m_date = date;
+}
+
+inline qint32 Update::date() const {
+    return m_date;
+}
+
+inline void Update::setDcOptions(const QList<DcOption> &dcOptions) {
+    m_dcOptions = dcOptions;
+}
+
+inline QList<DcOption> Update::dcOptions() const {
+    return m_dcOptions;
+}
+
+inline void Update::setDevice(const QString &device) {
+    m_device = device;
+}
+
+inline QString Update::device() const {
+    return m_device;
+}
+
+inline void Update::setEnabled(bool enabled) {
+    m_enabled = enabled;
+}
+
+inline bool Update::enabled() const {
+    return m_enabled;
+}
+
+inline void Update::setFirstName(const QString &firstName) {
+    m_firstName = firstName;
+}
+
+inline QString Update::firstName() const {
+    return m_firstName;
+}
+
+inline void Update::setFlags(qint32 flags) {
+    m_flags = flags;
+}
+
+inline qint32 Update::flags() const {
+    return m_flags;
+}
+
+inline void Update::setForeignLink(const ContactLink &foreignLink) {
+    m_foreignLink = foreignLink;
+}
+
+inline ContactLink Update::foreignLink() const {
+    return m_foreignLink;
+}
+
+inline void Update::setGeo(const GeoPoint &geo) {
+    m_geo = geo;
+}
+
+inline GeoPoint Update::geo() const {
+    return m_geo;
+}
+
+inline void Update::setGroup(const MessageGroup &group) {
+    m_group = group;
+}
+
+inline MessageGroup Update::group() const {
+    return m_group;
+}
+
+inline void Update::setIdString(const QString &idString) {
+    m_idString = idString;
+}
+
+inline QString Update::idString() const {
+    return m_idString;
+}
+
+inline void Update::setIdInt(qint32 idInt) {
+    m_idInt = idInt;
+}
+
+inline qint32 Update::idInt() const {
+    return m_idInt;
+}
+
+inline void Update::setInviterId(qint32 inviterId) {
+    m_inviterId = inviterId;
+}
+
+inline qint32 Update::inviterId() const {
+    return m_inviterId;
+}
+
+inline void Update::setIsAdmin(bool isAdmin) {
+    m_isAdmin = isAdmin;
+}
+
+inline bool Update::isAdmin() const {
+    return m_isAdmin;
+}
+
+inline void Update::setKey(const PrivacyKey &key) {
+    m_key = key;
+}
+
+inline PrivacyKey Update::key() const {
+    return m_key;
+}
+
+inline void Update::setLastName(const QString &lastName) {
+    m_lastName = lastName;
+}
+
+inline QString Update::lastName() const {
+    return m_lastName;
+}
+
+inline void Update::setLocation(const QString &location) {
+    m_location = location;
+}
+
+inline QString Update::location() const {
+    return m_location;
+}
+
+inline void Update::setMaxDate(qint32 maxDate) {
+    m_maxDate = maxDate;
+}
+
+inline qint32 Update::maxDate() const {
+    return m_maxDate;
+}
+
+inline void Update::setMaxId(qint32 maxId) {
+    m_maxId = maxId;
+}
+
+inline qint32 Update::maxId() const {
+    return m_maxId;
+}
+
+inline void Update::setMedia(const MessageMedia &media) {
+    m_media = media;
+}
+
+inline MessageMedia Update::media() const {
+    return m_media;
+}
+
+inline void Update::setMessageEncrypted(const EncryptedMessage &messageEncrypted) {
+    m_messageEncrypted = messageEncrypted;
+}
+
+inline EncryptedMessage Update::messageEncrypted() const {
+    return m_messageEncrypted;
+}
+
+inline void Update::setMessage(const Message &message) {
+    m_message = message;
+}
+
+inline Message Update::message() const {
+    return m_message;
+}
+
+inline void Update::setMessageString(const QString &messageString) {
+    m_messageString = messageString;
+}
+
+inline QString Update::messageString() const {
+    return m_messageString;
+}
+
+inline void Update::setMessages(const QList<qint32> &messages) {
+    m_messages = messages;
+}
+
+inline QList<qint32> Update::messages() const {
+    return m_messages;
+}
+
+inline void Update::setMsgIdInputBotInlineMessageID(const InputBotInlineMessageID &msgIdInputBotInlineMessageID) {
+    m_msgIdInputBotInlineMessageID = msgIdInputBotInlineMessageID;
+}
+
+inline InputBotInlineMessageID Update::msgIdInputBotInlineMessageID() const {
+    return m_msgIdInputBotInlineMessageID;
+}
+
+inline void Update::setMsgIdInt(qint32 msgIdInt) {
+    m_msgIdInt = msgIdInt;
+}
+
+inline qint32 Update::msgIdInt() const {
+    return m_msgIdInt;
+}
+
+inline void Update::setMyLink(const ContactLink &myLink) {
+    m_myLink = myLink;
+}
+
+inline ContactLink Update::myLink() const {
+    return m_myLink;
+}
+
+inline void Update::setNotifySettings(const PeerNotifySettings &notifySettings) {
+    m_notifySettings = notifySettings;
+}
+
+inline PeerNotifySettings Update::notifySettings() const {
+    return m_notifySettings;
+}
+
+inline void Update::setOffset(const QString &offset) {
+    m_offset = offset;
+}
+
+inline QString Update::offset() const {
+    return m_offset;
+}
+
+inline void Update::setOrder(const QList<qint64> &order) {
+    m_order = order;
+}
+
+inline QList<qint64> Update::order() const {
+    return m_order;
+}
+
+inline void Update::setParticipants(const ChatParticipants &participants) {
+    m_participants = participants;
+}
+
+inline ChatParticipants Update::participants() const {
+    return m_participants;
+}
+
+inline void Update::setPeerNotify(const NotifyPeer &peerNotify) {
+    m_peerNotify = peerNotify;
+}
+
+inline NotifyPeer Update::peerNotify() const {
+    return m_peerNotify;
+}
+
+inline void Update::setPeer(const Peer &peer) {
+    m_peer = peer;
+}
+
+inline Peer Update::peer() const {
+    return m_peer;
+}
+
+inline void Update::setPhone(const QString &phone) {
+    m_phone = phone;
+}
+
+inline QString Update::phone() const {
+    return m_phone;
+}
+
+inline void Update::setPhoto(const UserProfilePhoto &photo) {
+    m_photo = photo;
+}
+
+inline UserProfilePhoto Update::photo() const {
+    return m_photo;
+}
+
+inline void Update::setPopup(bool popup) {
+    m_popup = popup;
+}
+
+inline bool Update::popup() const {
+    return m_popup;
+}
+
+inline void Update::setPrevious(bool previous) {
+    m_previous = previous;
+}
+
+inline bool Update::previous() const {
+    return m_previous;
+}
+
+inline void Update::setPts(qint32 pts) {
+    m_pts = pts;
+}
+
+inline qint32 Update::pts() const {
+    return m_pts;
+}
+
+inline void Update::setPtsCount(qint32 ptsCount) {
+    m_ptsCount = ptsCount;
+}
+
+inline qint32 Update::ptsCount() const {
+    return m_ptsCount;
+}
+
+inline void Update::setQts(qint32 qts) {
+    m_qts = qts;
+}
+
+inline qint32 Update::qts() const {
+    return m_qts;
+}
+
+inline void Update::setQuery(const QString &query) {
+    m_query = query;
+}
+
+inline QString Update::query() const {
+    return m_query;
+}
+
+inline void Update::setQueryId(qint64 queryId) {
+    m_queryId = queryId;
+}
+
+inline qint64 Update::queryId() const {
+    return m_queryId;
+}
+
+inline void Update::setRandomId(qint64 randomId) {
+    m_randomId = randomId;
+}
+
+inline qint64 Update::randomId() const {
+    return m_randomId;
+}
+
+inline void Update::setRules(const QList<PrivacyRule> &rules) {
+    m_rules = rules;
+}
+
+inline QList<PrivacyRule> Update::rules() const {
+    return m_rules;
+}
+
+inline void Update::setStatus(const UserStatus &status) {
+    m_status = status;
+}
+
+inline UserStatus Update::status() const {
+    return m_status;
+}
+
+inline void Update::setStickerset(const MessagesStickerSet &stickerset) {
+    m_stickerset = stickerset;
+}
+
+inline MessagesStickerSet Update::stickerset() const {
+    return m_stickerset;
+}
+
+inline void Update::setType(const QString &type) {
+    m_type = type;
+}
+
+inline QString Update::type() const {
+    return m_type;
+}
+
+inline void Update::setUserId(qint32 userId) {
+    m_userId = userId;
+}
+
+inline qint32 Update::userId() const {
+    return m_userId;
+}
+
+inline void Update::setUsername(const QString &username) {
+    m_username = username;
+}
+
+inline QString Update::username() const {
+    return m_username;
+}
+
+inline void Update::setVersion(qint32 version) {
+    m_version = version;
+}
+
+inline qint32 Update::version() const {
+    return m_version;
+}
+
+inline void Update::setViews(qint32 views) {
+    m_views = views;
+}
+
+inline qint32 Update::views() const {
+    return m_views;
+}
+
+inline void Update::setWebpage(const WebPage &webpage) {
+    m_webpage = webpage;
+}
+
+inline WebPage Update::webpage() const {
+    return m_webpage;
+}
+
+inline bool Update::operator ==(const Update &b) const {
+    return m_classType == b.m_classType &&
+           m_action == b.m_action &&
+           m_authKeyId == b.m_authKeyId &&
+           m_blocked == b.m_blocked &&
+           m_channelId == b.m_channelId &&
+           m_chat == b.m_chat &&
+           m_chatId == b.m_chatId &&
+           m_data == b.m_data &&
+           m_date == b.m_date &&
+           m_dcOptions == b.m_dcOptions &&
+           m_device == b.m_device &&
+           m_enabled == b.m_enabled &&
+           m_firstName == b.m_firstName &&
+           m_flags == b.m_flags &&
+           m_foreignLink == b.m_foreignLink &&
+           m_geo == b.m_geo &&
+           m_group == b.m_group &&
+           m_idString == b.m_idString &&
+           m_idInt == b.m_idInt &&
+           m_inviterId == b.m_inviterId &&
+           m_isAdmin == b.m_isAdmin &&
+           m_key == b.m_key &&
+           m_lastName == b.m_lastName &&
+           m_location == b.m_location &&
+           m_maxDate == b.m_maxDate &&
+           m_maxId == b.m_maxId &&
+           m_media == b.m_media &&
+           m_messageEncrypted == b.m_messageEncrypted &&
+           m_message == b.m_message &&
+           m_messageString == b.m_messageString &&
+           m_messages == b.m_messages &&
+           m_msgIdInputBotInlineMessageID == b.m_msgIdInputBotInlineMessageID &&
+           m_msgIdInt == b.m_msgIdInt &&
+           m_myLink == b.m_myLink &&
+           m_notifySettings == b.m_notifySettings &&
+           m_offset == b.m_offset &&
+           m_order == b.m_order &&
+           m_participants == b.m_participants &&
+           m_peerNotify == b.m_peerNotify &&
+           m_peer == b.m_peer &&
+           m_phone == b.m_phone &&
+           m_photo == b.m_photo &&
+           m_popup == b.m_popup &&
+           m_previous == b.m_previous &&
+           m_pts == b.m_pts &&
+           m_ptsCount == b.m_ptsCount &&
+           m_qts == b.m_qts &&
+           m_query == b.m_query &&
+           m_queryId == b.m_queryId &&
+           m_randomId == b.m_randomId &&
+           m_rules == b.m_rules &&
+           m_status == b.m_status &&
+           m_stickerset == b.m_stickerset &&
+           m_type == b.m_type &&
+           m_userId == b.m_userId &&
+           m_username == b.m_username &&
+           m_version == b.m_version &&
+           m_views == b.m_views &&
+           m_webpage == b.m_webpage;
+}
+
+inline void Update::setClassType(Update::UpdateClassType classType) {
+    m_classType = classType;
+}
+
+inline Update::UpdateClassType Update::classType() const {
+    return m_classType;
+}
+
+inline bool Update::fetch(InboundPkt *in) {
+    LQTG_FETCH_LOG;
+    int x = in->fetchInt();
+    switch(x) {
+    case typeUpdateNewMessage: {
+        m_message.fetch(in);
+        m_pts = in->fetchInt();
+        m_ptsCount = in->fetchInt();
+        m_classType = static_cast<UpdateClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateMessageID: {
+        m_idInt = in->fetchInt();
+        m_randomId = in->fetchLong();
+        m_classType = static_cast<UpdateClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateDeleteMessages: {
+        if(in->fetchInt() != (qint32)CoreTypes::typeVector) return false;
+        qint32 m_messages_length = in->fetchInt();
+        m_messages.clear();
+        for (qint32 i = 0; i < m_messages_length; i++) {
+            qint32 type;
+            type = in->fetchInt();
+            m_messages.append(type);
+        }
+        m_pts = in->fetchInt();
+        m_ptsCount = in->fetchInt();
+        m_classType = static_cast<UpdateClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateUserTyping: {
+        m_userId = in->fetchInt();
+        m_action.fetch(in);
+        m_classType = static_cast<UpdateClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateChatUserTyping: {
+        m_chatId = in->fetchInt();
+        m_userId = in->fetchInt();
+        m_action.fetch(in);
+        m_classType = static_cast<UpdateClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateChatParticipants: {
+        m_participants.fetch(in);
+        m_classType = static_cast<UpdateClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateUserStatus: {
+        m_userId = in->fetchInt();
+        m_status.fetch(in);
+        m_classType = static_cast<UpdateClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateUserName: {
+        m_userId = in->fetchInt();
+        m_firstName = in->fetchQString();
+        m_lastName = in->fetchQString();
+        m_username = in->fetchQString();
+        m_classType = static_cast<UpdateClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateUserPhoto: {
+        m_userId = in->fetchInt();
+        m_date = in->fetchInt();
+        m_photo.fetch(in);
+        m_previous = in->fetchBool();
+        m_classType = static_cast<UpdateClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateContactRegistered: {
+        m_userId = in->fetchInt();
+        m_date = in->fetchInt();
+        m_classType = static_cast<UpdateClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateContactLink: {
+        m_userId = in->fetchInt();
+        m_myLink.fetch(in);
+        m_foreignLink.fetch(in);
+        m_classType = static_cast<UpdateClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateNewAuthorization: {
+        m_authKeyId = in->fetchLong();
+        m_date = in->fetchInt();
+        m_device = in->fetchQString();
+        m_location = in->fetchQString();
+        m_classType = static_cast<UpdateClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateNewEncryptedMessage: {
+        m_messageEncrypted.fetch(in);
+        m_qts = in->fetchInt();
+        m_classType = static_cast<UpdateClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateEncryptedChatTyping: {
+        m_chatId = in->fetchInt();
+        m_classType = static_cast<UpdateClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateEncryption: {
+        m_chat.fetch(in);
+        m_date = in->fetchInt();
+        m_classType = static_cast<UpdateClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateEncryptedMessagesRead: {
+        m_chatId = in->fetchInt();
+        m_maxDate = in->fetchInt();
+        m_date = in->fetchInt();
+        m_classType = static_cast<UpdateClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateChatParticipantAdd: {
+        m_chatId = in->fetchInt();
+        m_userId = in->fetchInt();
+        m_inviterId = in->fetchInt();
+        m_date = in->fetchInt();
+        m_version = in->fetchInt();
+        m_classType = static_cast<UpdateClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateChatParticipantDelete: {
+        m_chatId = in->fetchInt();
+        m_userId = in->fetchInt();
+        m_version = in->fetchInt();
+        m_classType = static_cast<UpdateClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateDcOptions: {
+        if(in->fetchInt() != (qint32)CoreTypes::typeVector) return false;
+        qint32 m_dcOptions_length = in->fetchInt();
+        m_dcOptions.clear();
+        for (qint32 i = 0; i < m_dcOptions_length; i++) {
+            DcOption type;
+            type.fetch(in);
+            m_dcOptions.append(type);
+        }
+        m_classType = static_cast<UpdateClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateUserBlocked: {
+        m_userId = in->fetchInt();
+        m_blocked = in->fetchBool();
+        m_classType = static_cast<UpdateClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateNotifySettings: {
+        m_peerNotify.fetch(in);
+        m_notifySettings.fetch(in);
+        m_classType = static_cast<UpdateClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateServiceNotification: {
+        m_type = in->fetchQString();
+        m_messageString = in->fetchQString();
+        m_media.fetch(in);
+        m_popup = in->fetchBool();
+        m_classType = static_cast<UpdateClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdatePrivacy: {
+        m_key.fetch(in);
+        if(in->fetchInt() != (qint32)CoreTypes::typeVector) return false;
+        qint32 m_rules_length = in->fetchInt();
+        m_rules.clear();
+        for (qint32 i = 0; i < m_rules_length; i++) {
+            PrivacyRule type;
+            type.fetch(in);
+            m_rules.append(type);
+        }
+        m_classType = static_cast<UpdateClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateUserPhone: {
+        m_userId = in->fetchInt();
+        m_phone = in->fetchQString();
+        m_classType = static_cast<UpdateClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateReadHistoryInbox: {
+        m_peer.fetch(in);
+        m_maxId = in->fetchInt();
+        m_pts = in->fetchInt();
+        m_ptsCount = in->fetchInt();
+        m_classType = static_cast<UpdateClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateReadHistoryOutbox: {
+        m_peer.fetch(in);
+        m_maxId = in->fetchInt();
+        m_pts = in->fetchInt();
+        m_ptsCount = in->fetchInt();
+        m_classType = static_cast<UpdateClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateWebPage: {
+        m_webpage.fetch(in);
+        m_pts = in->fetchInt();
+        m_ptsCount = in->fetchInt();
+        m_classType = static_cast<UpdateClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateReadMessagesContents: {
+        if(in->fetchInt() != (qint32)CoreTypes::typeVector) return false;
+        qint32 m_messages_length = in->fetchInt();
+        m_messages.clear();
+        for (qint32 i = 0; i < m_messages_length; i++) {
+            qint32 type;
+            type = in->fetchInt();
+            m_messages.append(type);
+        }
+        m_pts = in->fetchInt();
+        m_ptsCount = in->fetchInt();
+        m_classType = static_cast<UpdateClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateChannelTooLong: {
+        m_flags = in->fetchInt();
+        m_channelId = in->fetchInt();
+        if(m_flags & 1<<0) {
+            m_pts = in->fetchInt();
+        }
+        m_classType = static_cast<UpdateClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateChannel: {
+        m_channelId = in->fetchInt();
+        m_classType = static_cast<UpdateClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateChannelGroup: {
+        m_channelId = in->fetchInt();
+        m_group.fetch(in);
+        m_classType = static_cast<UpdateClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateNewChannelMessage: {
+        m_message.fetch(in);
+        m_pts = in->fetchInt();
+        m_ptsCount = in->fetchInt();
+        m_classType = static_cast<UpdateClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateReadChannelInbox: {
+        m_channelId = in->fetchInt();
+        m_maxId = in->fetchInt();
+        m_classType = static_cast<UpdateClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateDeleteChannelMessages: {
+        m_channelId = in->fetchInt();
+        if(in->fetchInt() != (qint32)CoreTypes::typeVector) return false;
+        qint32 m_messages_length = in->fetchInt();
+        m_messages.clear();
+        for (qint32 i = 0; i < m_messages_length; i++) {
+            qint32 type;
+            type = in->fetchInt();
+            m_messages.append(type);
+        }
+        m_pts = in->fetchInt();
+        m_ptsCount = in->fetchInt();
+        m_classType = static_cast<UpdateClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateChannelMessageViews: {
+        m_channelId = in->fetchInt();
+        m_idInt = in->fetchInt();
+        m_views = in->fetchInt();
+        m_classType = static_cast<UpdateClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateChatAdmins: {
+        m_chatId = in->fetchInt();
+        m_enabled = in->fetchBool();
+        m_version = in->fetchInt();
+        m_classType = static_cast<UpdateClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateChatParticipantAdmin: {
+        m_chatId = in->fetchInt();
+        m_userId = in->fetchInt();
+        m_isAdmin = in->fetchBool();
+        m_version = in->fetchInt();
+        m_classType = static_cast<UpdateClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateNewStickerSet: {
+        m_stickerset.fetch(in);
+        m_classType = static_cast<UpdateClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateStickerSetsOrder: {
+        if(in->fetchInt() != (qint32)CoreTypes::typeVector) return false;
+        qint32 m_order_length = in->fetchInt();
+        m_order.clear();
+        for (qint32 i = 0; i < m_order_length; i++) {
+            qint64 type;
+            type = in->fetchLong();
+            m_order.append(type);
+        }
+        m_classType = static_cast<UpdateClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateStickerSets: {
+        m_classType = static_cast<UpdateClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateSavedGifs: {
+        m_classType = static_cast<UpdateClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateBotInlineQuery: {
+        m_flags = in->fetchInt();
+        m_queryId = in->fetchLong();
+        m_userId = in->fetchInt();
+        m_query = in->fetchQString();
+        if(m_flags & 1<<0) {
+            m_geo.fetch(in);
+        }
+        m_offset = in->fetchQString();
+        m_classType = static_cast<UpdateClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateBotInlineSend: {
+        m_flags = in->fetchInt();
+        m_userId = in->fetchInt();
+        m_query = in->fetchQString();
+        if(m_flags & 1<<0) {
+            m_geo.fetch(in);
+        }
+        m_idString = in->fetchQString();
+        if(m_flags & 1<<1) {
+            m_msgIdInputBotInlineMessageID.fetch(in);
+        }
+        m_classType = static_cast<UpdateClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateEditChannelMessage: {
+        m_message.fetch(in);
+        m_pts = in->fetchInt();
+        m_ptsCount = in->fetchInt();
+        m_classType = static_cast<UpdateClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateChannelPinnedMessage: {
+        m_channelId = in->fetchInt();
+        m_idInt = in->fetchInt();
+        m_classType = static_cast<UpdateClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateBotCallbackQuery: {
+        m_queryId = in->fetchLong();
+        m_userId = in->fetchInt();
+        m_peer.fetch(in);
+        m_msgIdInt = in->fetchInt();
+        m_data = in->fetchBytes();
+        m_classType = static_cast<UpdateClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateEditMessage: {
+        m_message.fetch(in);
+        m_pts = in->fetchInt();
+        m_ptsCount = in->fetchInt();
+        m_classType = static_cast<UpdateClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateInlineBotCallbackQuery: {
+        m_queryId = in->fetchLong();
+        m_userId = in->fetchInt();
+        m_msgIdInputBotInlineMessageID.fetch(in);
+        m_data = in->fetchBytes();
+        m_classType = static_cast<UpdateClassType>(x);
+        return true;
+    }
+        break;
+    
+    default:
+        LQTG_FETCH_ASSERT;
+        return false;
+    }
+}
+
+inline bool Update::push(OutboundPkt *out) const {
+    out->appendInt(m_classType);
+    switch(m_classType) {
+    case typeUpdateNewMessage: {
+        m_message.push(out);
+        out->appendInt(m_pts);
+        out->appendInt(m_ptsCount);
+        return true;
+    }
+        break;
+    
+    case typeUpdateMessageID: {
+        out->appendInt(m_idInt);
+        out->appendLong(m_randomId);
+        return true;
+    }
+        break;
+    
+    case typeUpdateDeleteMessages: {
+        out->appendInt(CoreTypes::typeVector);
+        out->appendInt(m_messages.count());
+        for (qint32 i = 0; i < m_messages.count(); i++) {
+            out->appendInt(m_messages[i]);
+        }
+        out->appendInt(m_pts);
+        out->appendInt(m_ptsCount);
+        return true;
+    }
+        break;
+    
+    case typeUpdateUserTyping: {
+        out->appendInt(m_userId);
+        m_action.push(out);
+        return true;
+    }
+        break;
+    
+    case typeUpdateChatUserTyping: {
+        out->appendInt(m_chatId);
+        out->appendInt(m_userId);
+        m_action.push(out);
+        return true;
+    }
+        break;
+    
+    case typeUpdateChatParticipants: {
+        m_participants.push(out);
+        return true;
+    }
+        break;
+    
+    case typeUpdateUserStatus: {
+        out->appendInt(m_userId);
+        m_status.push(out);
+        return true;
+    }
+        break;
+    
+    case typeUpdateUserName: {
+        out->appendInt(m_userId);
+        out->appendQString(m_firstName);
+        out->appendQString(m_lastName);
+        out->appendQString(m_username);
+        return true;
+    }
+        break;
+    
+    case typeUpdateUserPhoto: {
+        out->appendInt(m_userId);
+        out->appendInt(m_date);
+        m_photo.push(out);
+        out->appendBool(m_previous);
+        return true;
+    }
+        break;
+    
+    case typeUpdateContactRegistered: {
+        out->appendInt(m_userId);
+        out->appendInt(m_date);
+        return true;
+    }
+        break;
+    
+    case typeUpdateContactLink: {
+        out->appendInt(m_userId);
+        m_myLink.push(out);
+        m_foreignLink.push(out);
+        return true;
+    }
+        break;
+    
+    case typeUpdateNewAuthorization: {
+        out->appendLong(m_authKeyId);
+        out->appendInt(m_date);
+        out->appendQString(m_device);
+        out->appendQString(m_location);
+        return true;
+    }
+        break;
+    
+    case typeUpdateNewEncryptedMessage: {
+        m_messageEncrypted.push(out);
+        out->appendInt(m_qts);
+        return true;
+    }
+        break;
+    
+    case typeUpdateEncryptedChatTyping: {
+        out->appendInt(m_chatId);
+        return true;
+    }
+        break;
+    
+    case typeUpdateEncryption: {
+        m_chat.push(out);
+        out->appendInt(m_date);
+        return true;
+    }
+        break;
+    
+    case typeUpdateEncryptedMessagesRead: {
+        out->appendInt(m_chatId);
+        out->appendInt(m_maxDate);
+        out->appendInt(m_date);
+        return true;
+    }
+        break;
+    
+    case typeUpdateChatParticipantAdd: {
+        out->appendInt(m_chatId);
+        out->appendInt(m_userId);
+        out->appendInt(m_inviterId);
+        out->appendInt(m_date);
+        out->appendInt(m_version);
+        return true;
+    }
+        break;
+    
+    case typeUpdateChatParticipantDelete: {
+        out->appendInt(m_chatId);
+        out->appendInt(m_userId);
+        out->appendInt(m_version);
+        return true;
+    }
+        break;
+    
+    case typeUpdateDcOptions: {
+        out->appendInt(CoreTypes::typeVector);
+        out->appendInt(m_dcOptions.count());
+        for (qint32 i = 0; i < m_dcOptions.count(); i++) {
+            m_dcOptions[i].push(out);
+        }
+        return true;
+    }
+        break;
+    
+    case typeUpdateUserBlocked: {
+        out->appendInt(m_userId);
+        out->appendBool(m_blocked);
+        return true;
+    }
+        break;
+    
+    case typeUpdateNotifySettings: {
+        m_peerNotify.push(out);
+        m_notifySettings.push(out);
+        return true;
+    }
+        break;
+    
+    case typeUpdateServiceNotification: {
+        out->appendQString(m_type);
+        out->appendQString(m_messageString);
+        m_media.push(out);
+        out->appendBool(m_popup);
+        return true;
+    }
+        break;
+    
+    case typeUpdatePrivacy: {
+        m_key.push(out);
+        out->appendInt(CoreTypes::typeVector);
+        out->appendInt(m_rules.count());
+        for (qint32 i = 0; i < m_rules.count(); i++) {
+            m_rules[i].push(out);
+        }
+        return true;
+    }
+        break;
+    
+    case typeUpdateUserPhone: {
+        out->appendInt(m_userId);
+        out->appendQString(m_phone);
+        return true;
+    }
+        break;
+    
+    case typeUpdateReadHistoryInbox: {
+        m_peer.push(out);
+        out->appendInt(m_maxId);
+        out->appendInt(m_pts);
+        out->appendInt(m_ptsCount);
+        return true;
+    }
+        break;
+    
+    case typeUpdateReadHistoryOutbox: {
+        m_peer.push(out);
+        out->appendInt(m_maxId);
+        out->appendInt(m_pts);
+        out->appendInt(m_ptsCount);
+        return true;
+    }
+        break;
+    
+    case typeUpdateWebPage: {
+        m_webpage.push(out);
+        out->appendInt(m_pts);
+        out->appendInt(m_ptsCount);
+        return true;
+    }
+        break;
+    
+    case typeUpdateReadMessagesContents: {
+        out->appendInt(CoreTypes::typeVector);
+        out->appendInt(m_messages.count());
+        for (qint32 i = 0; i < m_messages.count(); i++) {
+            out->appendInt(m_messages[i]);
+        }
+        out->appendInt(m_pts);
+        out->appendInt(m_ptsCount);
+        return true;
+    }
+        break;
+    
+    case typeUpdateChannelTooLong: {
+        out->appendInt(m_flags);
+        out->appendInt(m_channelId);
+        out->appendInt(m_pts);
+        return true;
+    }
+        break;
+    
+    case typeUpdateChannel: {
+        out->appendInt(m_channelId);
+        return true;
+    }
+        break;
+    
+    case typeUpdateChannelGroup: {
+        out->appendInt(m_channelId);
+        m_group.push(out);
+        return true;
+    }
+        break;
+    
+    case typeUpdateNewChannelMessage: {
+        m_message.push(out);
+        out->appendInt(m_pts);
+        out->appendInt(m_ptsCount);
+        return true;
+    }
+        break;
+    
+    case typeUpdateReadChannelInbox: {
+        out->appendInt(m_channelId);
+        out->appendInt(m_maxId);
+        return true;
+    }
+        break;
+    
+    case typeUpdateDeleteChannelMessages: {
+        out->appendInt(m_channelId);
+        out->appendInt(CoreTypes::typeVector);
+        out->appendInt(m_messages.count());
+        for (qint32 i = 0; i < m_messages.count(); i++) {
+            out->appendInt(m_messages[i]);
+        }
+        out->appendInt(m_pts);
+        out->appendInt(m_ptsCount);
+        return true;
+    }
+        break;
+    
+    case typeUpdateChannelMessageViews: {
+        out->appendInt(m_channelId);
+        out->appendInt(m_idInt);
+        out->appendInt(m_views);
+        return true;
+    }
+        break;
+    
+    case typeUpdateChatAdmins: {
+        out->appendInt(m_chatId);
+        out->appendBool(m_enabled);
+        out->appendInt(m_version);
+        return true;
+    }
+        break;
+    
+    case typeUpdateChatParticipantAdmin: {
+        out->appendInt(m_chatId);
+        out->appendInt(m_userId);
+        out->appendBool(m_isAdmin);
+        out->appendInt(m_version);
+        return true;
+    }
+        break;
+    
+    case typeUpdateNewStickerSet: {
+        m_stickerset.push(out);
+        return true;
+    }
+        break;
+    
+    case typeUpdateStickerSetsOrder: {
+        out->appendInt(CoreTypes::typeVector);
+        out->appendInt(m_order.count());
+        for (qint32 i = 0; i < m_order.count(); i++) {
+            out->appendLong(m_order[i]);
+        }
+        return true;
+    }
+        break;
+    
+    case typeUpdateStickerSets: {
+        return true;
+    }
+        break;
+    
+    case typeUpdateSavedGifs: {
+        return true;
+    }
+        break;
+    
+    case typeUpdateBotInlineQuery: {
+        out->appendInt(m_flags);
+        out->appendLong(m_queryId);
+        out->appendInt(m_userId);
+        out->appendQString(m_query);
+        m_geo.push(out);
+        out->appendQString(m_offset);
+        return true;
+    }
+        break;
+    
+    case typeUpdateBotInlineSend: {
+        out->appendInt(m_flags);
+        out->appendInt(m_userId);
+        out->appendQString(m_query);
+        m_geo.push(out);
+        out->appendQString(m_idString);
+        m_msgIdInputBotInlineMessageID.push(out);
+        return true;
+    }
+        break;
+    
+    case typeUpdateEditChannelMessage: {
+        m_message.push(out);
+        out->appendInt(m_pts);
+        out->appendInt(m_ptsCount);
+        return true;
+    }
+        break;
+    
+    case typeUpdateChannelPinnedMessage: {
+        out->appendInt(m_channelId);
+        out->appendInt(m_idInt);
+        return true;
+    }
+        break;
+    
+    case typeUpdateBotCallbackQuery: {
+        out->appendLong(m_queryId);
+        out->appendInt(m_userId);
+        m_peer.push(out);
+        out->appendInt(m_msgIdInt);
+        out->appendBytes(m_data);
+        return true;
+    }
+        break;
+    
+    case typeUpdateEditMessage: {
+        m_message.push(out);
+        out->appendInt(m_pts);
+        out->appendInt(m_ptsCount);
+        return true;
+    }
+        break;
+    
+    case typeUpdateInlineBotCallbackQuery: {
+        out->appendLong(m_queryId);
+        out->appendInt(m_userId);
+        m_msgIdInputBotInlineMessageID.push(out);
+        out->appendBytes(m_data);
+        return true;
+    }
+        break;
+    
+    default:
+        return false;
+    }
+}
+
+inline QMap<QString, QVariant> Update::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeUpdateNewMessage: {
+        result["classType"] = "Update::typeUpdateNewMessage";
+        result["message"] = m_message.toMap();
+        result["pts"] = QVariant::fromValue<qint32>(pts());
+        result["ptsCount"] = QVariant::fromValue<qint32>(ptsCount());
+        return result;
+    }
+        break;
+    
+    case typeUpdateMessageID: {
+        result["classType"] = "Update::typeUpdateMessageID";
+        result["idInt"] = QVariant::fromValue<qint32>(idInt());
+        result["randomId"] = QVariant::fromValue<qint64>(randomId());
+        return result;
+    }
+        break;
+    
+    case typeUpdateDeleteMessages: {
+        result["classType"] = "Update::typeUpdateDeleteMessages";
+        QList<QVariant> _messages;
+        Q_FOREACH(const qint32 &m__type, m_messages)
+            _messages << QVariant::fromValue<qint32>(m__type);
+        result["messages"] = _messages;
+        result["pts"] = QVariant::fromValue<qint32>(pts());
+        result["ptsCount"] = QVariant::fromValue<qint32>(ptsCount());
+        return result;
+    }
+        break;
+    
+    case typeUpdateUserTyping: {
+        result["classType"] = "Update::typeUpdateUserTyping";
+        result["userId"] = QVariant::fromValue<qint32>(userId());
+        result["action"] = m_action.toMap();
+        return result;
+    }
+        break;
+    
+    case typeUpdateChatUserTyping: {
+        result["classType"] = "Update::typeUpdateChatUserTyping";
+        result["chatId"] = QVariant::fromValue<qint32>(chatId());
+        result["userId"] = QVariant::fromValue<qint32>(userId());
+        result["action"] = m_action.toMap();
+        return result;
+    }
+        break;
+    
+    case typeUpdateChatParticipants: {
+        result["classType"] = "Update::typeUpdateChatParticipants";
+        result["participants"] = m_participants.toMap();
+        return result;
+    }
+        break;
+    
+    case typeUpdateUserStatus: {
+        result["classType"] = "Update::typeUpdateUserStatus";
+        result["userId"] = QVariant::fromValue<qint32>(userId());
+        result["status"] = m_status.toMap();
+        return result;
+    }
+        break;
+    
+    case typeUpdateUserName: {
+        result["classType"] = "Update::typeUpdateUserName";
+        result["userId"] = QVariant::fromValue<qint32>(userId());
+        result["firstName"] = QVariant::fromValue<QString>(firstName());
+        result["lastName"] = QVariant::fromValue<QString>(lastName());
+        result["username"] = QVariant::fromValue<QString>(username());
+        return result;
+    }
+        break;
+    
+    case typeUpdateUserPhoto: {
+        result["classType"] = "Update::typeUpdateUserPhoto";
+        result["userId"] = QVariant::fromValue<qint32>(userId());
+        result["date"] = QVariant::fromValue<qint32>(date());
+        result["photo"] = m_photo.toMap();
+        result["previous"] = QVariant::fromValue<bool>(previous());
+        return result;
+    }
+        break;
+    
+    case typeUpdateContactRegistered: {
+        result["classType"] = "Update::typeUpdateContactRegistered";
+        result["userId"] = QVariant::fromValue<qint32>(userId());
+        result["date"] = QVariant::fromValue<qint32>(date());
+        return result;
+    }
+        break;
+    
+    case typeUpdateContactLink: {
+        result["classType"] = "Update::typeUpdateContactLink";
+        result["userId"] = QVariant::fromValue<qint32>(userId());
+        result["myLink"] = m_myLink.toMap();
+        result["foreignLink"] = m_foreignLink.toMap();
+        return result;
+    }
+        break;
+    
+    case typeUpdateNewAuthorization: {
+        result["classType"] = "Update::typeUpdateNewAuthorization";
+        result["authKeyId"] = QVariant::fromValue<qint64>(authKeyId());
+        result["date"] = QVariant::fromValue<qint32>(date());
+        result["device"] = QVariant::fromValue<QString>(device());
+        result["location"] = QVariant::fromValue<QString>(location());
+        return result;
+    }
+        break;
+    
+    case typeUpdateNewEncryptedMessage: {
+        result["classType"] = "Update::typeUpdateNewEncryptedMessage";
+        result["messageEncrypted"] = m_messageEncrypted.toMap();
+        result["qts"] = QVariant::fromValue<qint32>(qts());
+        return result;
+    }
+        break;
+    
+    case typeUpdateEncryptedChatTyping: {
+        result["classType"] = "Update::typeUpdateEncryptedChatTyping";
+        result["chatId"] = QVariant::fromValue<qint32>(chatId());
+        return result;
+    }
+        break;
+    
+    case typeUpdateEncryption: {
+        result["classType"] = "Update::typeUpdateEncryption";
+        result["chat"] = m_chat.toMap();
+        result["date"] = QVariant::fromValue<qint32>(date());
+        return result;
+    }
+        break;
+    
+    case typeUpdateEncryptedMessagesRead: {
+        result["classType"] = "Update::typeUpdateEncryptedMessagesRead";
+        result["chatId"] = QVariant::fromValue<qint32>(chatId());
+        result["maxDate"] = QVariant::fromValue<qint32>(maxDate());
+        result["date"] = QVariant::fromValue<qint32>(date());
+        return result;
+    }
+        break;
+    
+    case typeUpdateChatParticipantAdd: {
+        result["classType"] = "Update::typeUpdateChatParticipantAdd";
+        result["chatId"] = QVariant::fromValue<qint32>(chatId());
+        result["userId"] = QVariant::fromValue<qint32>(userId());
+        result["inviterId"] = QVariant::fromValue<qint32>(inviterId());
+        result["date"] = QVariant::fromValue<qint32>(date());
+        result["version"] = QVariant::fromValue<qint32>(version());
+        return result;
+    }
+        break;
+    
+    case typeUpdateChatParticipantDelete: {
+        result["classType"] = "Update::typeUpdateChatParticipantDelete";
+        result["chatId"] = QVariant::fromValue<qint32>(chatId());
+        result["userId"] = QVariant::fromValue<qint32>(userId());
+        result["version"] = QVariant::fromValue<qint32>(version());
+        return result;
+    }
+        break;
+    
+    case typeUpdateDcOptions: {
+        result["classType"] = "Update::typeUpdateDcOptions";
+        QList<QVariant> _dcOptions;
+        Q_FOREACH(const DcOption &m__type, m_dcOptions)
+            _dcOptions << m__type.toMap();
+        result["dcOptions"] = _dcOptions;
+        return result;
+    }
+        break;
+    
+    case typeUpdateUserBlocked: {
+        result["classType"] = "Update::typeUpdateUserBlocked";
+        result["userId"] = QVariant::fromValue<qint32>(userId());
+        result["blocked"] = QVariant::fromValue<bool>(blocked());
+        return result;
+    }
+        break;
+    
+    case typeUpdateNotifySettings: {
+        result["classType"] = "Update::typeUpdateNotifySettings";
+        result["peerNotify"] = m_peerNotify.toMap();
+        result["notifySettings"] = m_notifySettings.toMap();
+        return result;
+    }
+        break;
+    
+    case typeUpdateServiceNotification: {
+        result["classType"] = "Update::typeUpdateServiceNotification";
+        result["type"] = QVariant::fromValue<QString>(type());
+        result["messageString"] = QVariant::fromValue<QString>(messageString());
+        result["media"] = m_media.toMap();
+        result["popup"] = QVariant::fromValue<bool>(popup());
+        return result;
+    }
+        break;
+    
+    case typeUpdatePrivacy: {
+        result["classType"] = "Update::typeUpdatePrivacy";
+        result["key"] = m_key.toMap();
+        QList<QVariant> _rules;
+        Q_FOREACH(const PrivacyRule &m__type, m_rules)
+            _rules << m__type.toMap();
+        result["rules"] = _rules;
+        return result;
+    }
+        break;
+    
+    case typeUpdateUserPhone: {
+        result["classType"] = "Update::typeUpdateUserPhone";
+        result["userId"] = QVariant::fromValue<qint32>(userId());
+        result["phone"] = QVariant::fromValue<QString>(phone());
+        return result;
+    }
+        break;
+    
+    case typeUpdateReadHistoryInbox: {
+        result["classType"] = "Update::typeUpdateReadHistoryInbox";
+        result["peer"] = m_peer.toMap();
+        result["maxId"] = QVariant::fromValue<qint32>(maxId());
+        result["pts"] = QVariant::fromValue<qint32>(pts());
+        result["ptsCount"] = QVariant::fromValue<qint32>(ptsCount());
+        return result;
+    }
+        break;
+    
+    case typeUpdateReadHistoryOutbox: {
+        result["classType"] = "Update::typeUpdateReadHistoryOutbox";
+        result["peer"] = m_peer.toMap();
+        result["maxId"] = QVariant::fromValue<qint32>(maxId());
+        result["pts"] = QVariant::fromValue<qint32>(pts());
+        result["ptsCount"] = QVariant::fromValue<qint32>(ptsCount());
+        return result;
+    }
+        break;
+    
+    case typeUpdateWebPage: {
+        result["classType"] = "Update::typeUpdateWebPage";
+        result["webpage"] = m_webpage.toMap();
+        result["pts"] = QVariant::fromValue<qint32>(pts());
+        result["ptsCount"] = QVariant::fromValue<qint32>(ptsCount());
+        return result;
+    }
+        break;
+    
+    case typeUpdateReadMessagesContents: {
+        result["classType"] = "Update::typeUpdateReadMessagesContents";
+        QList<QVariant> _messages;
+        Q_FOREACH(const qint32 &m__type, m_messages)
+            _messages << QVariant::fromValue<qint32>(m__type);
+        result["messages"] = _messages;
+        result["pts"] = QVariant::fromValue<qint32>(pts());
+        result["ptsCount"] = QVariant::fromValue<qint32>(ptsCount());
+        return result;
+    }
+        break;
+    
+    case typeUpdateChannelTooLong: {
+        result["classType"] = "Update::typeUpdateChannelTooLong";
+        result["channelId"] = QVariant::fromValue<qint32>(channelId());
+        result["pts"] = QVariant::fromValue<qint32>(pts());
+        return result;
+    }
+        break;
+    
+    case typeUpdateChannel: {
+        result["classType"] = "Update::typeUpdateChannel";
+        result["channelId"] = QVariant::fromValue<qint32>(channelId());
+        return result;
+    }
+        break;
+    
+    case typeUpdateChannelGroup: {
+        result["classType"] = "Update::typeUpdateChannelGroup";
+        result["channelId"] = QVariant::fromValue<qint32>(channelId());
+        result["group"] = m_group.toMap();
+        return result;
+    }
+        break;
+    
+    case typeUpdateNewChannelMessage: {
+        result["classType"] = "Update::typeUpdateNewChannelMessage";
+        result["message"] = m_message.toMap();
+        result["pts"] = QVariant::fromValue<qint32>(pts());
+        result["ptsCount"] = QVariant::fromValue<qint32>(ptsCount());
+        return result;
+    }
+        break;
+    
+    case typeUpdateReadChannelInbox: {
+        result["classType"] = "Update::typeUpdateReadChannelInbox";
+        result["channelId"] = QVariant::fromValue<qint32>(channelId());
+        result["maxId"] = QVariant::fromValue<qint32>(maxId());
+        return result;
+    }
+        break;
+    
+    case typeUpdateDeleteChannelMessages: {
+        result["classType"] = "Update::typeUpdateDeleteChannelMessages";
+        result["channelId"] = QVariant::fromValue<qint32>(channelId());
+        QList<QVariant> _messages;
+        Q_FOREACH(const qint32 &m__type, m_messages)
+            _messages << QVariant::fromValue<qint32>(m__type);
+        result["messages"] = _messages;
+        result["pts"] = QVariant::fromValue<qint32>(pts());
+        result["ptsCount"] = QVariant::fromValue<qint32>(ptsCount());
+        return result;
+    }
+        break;
+    
+    case typeUpdateChannelMessageViews: {
+        result["classType"] = "Update::typeUpdateChannelMessageViews";
+        result["channelId"] = QVariant::fromValue<qint32>(channelId());
+        result["idInt"] = QVariant::fromValue<qint32>(idInt());
+        result["views"] = QVariant::fromValue<qint32>(views());
+        return result;
+    }
+        break;
+    
+    case typeUpdateChatAdmins: {
+        result["classType"] = "Update::typeUpdateChatAdmins";
+        result["chatId"] = QVariant::fromValue<qint32>(chatId());
+        result["enabled"] = QVariant::fromValue<bool>(enabled());
+        result["version"] = QVariant::fromValue<qint32>(version());
+        return result;
+    }
+        break;
+    
+    case typeUpdateChatParticipantAdmin: {
+        result["classType"] = "Update::typeUpdateChatParticipantAdmin";
+        result["chatId"] = QVariant::fromValue<qint32>(chatId());
+        result["userId"] = QVariant::fromValue<qint32>(userId());
+        result["isAdmin"] = QVariant::fromValue<bool>(isAdmin());
+        result["version"] = QVariant::fromValue<qint32>(version());
+        return result;
+    }
+        break;
+    
+    case typeUpdateNewStickerSet: {
+        result["classType"] = "Update::typeUpdateNewStickerSet";
+        result["stickerset"] = m_stickerset.toMap();
+        return result;
+    }
+        break;
+    
+    case typeUpdateStickerSetsOrder: {
+        result["classType"] = "Update::typeUpdateStickerSetsOrder";
+        QList<QVariant> _order;
+        Q_FOREACH(const qint64 &m__type, m_order)
+            _order << QVariant::fromValue<qint64>(m__type);
+        result["order"] = _order;
+        return result;
+    }
+        break;
+    
+    case typeUpdateStickerSets: {
+        result["classType"] = "Update::typeUpdateStickerSets";
+        return result;
+    }
+        break;
+    
+    case typeUpdateSavedGifs: {
+        result["classType"] = "Update::typeUpdateSavedGifs";
+        return result;
+    }
+        break;
+    
+    case typeUpdateBotInlineQuery: {
+        result["classType"] = "Update::typeUpdateBotInlineQuery";
+        result["queryId"] = QVariant::fromValue<qint64>(queryId());
+        result["userId"] = QVariant::fromValue<qint32>(userId());
+        result["query"] = QVariant::fromValue<QString>(query());
+        result["geo"] = m_geo.toMap();
+        result["offset"] = QVariant::fromValue<QString>(offset());
+        return result;
+    }
+        break;
+    
+    case typeUpdateBotInlineSend: {
+        result["classType"] = "Update::typeUpdateBotInlineSend";
+        result["userId"] = QVariant::fromValue<qint32>(userId());
+        result["query"] = QVariant::fromValue<QString>(query());
+        result["geo"] = m_geo.toMap();
+        result["idString"] = QVariant::fromValue<QString>(idString());
+        result["msgIdInputBotInlineMessageID"] = m_msgIdInputBotInlineMessageID.toMap();
+        return result;
+    }
+        break;
+    
+    case typeUpdateEditChannelMessage: {
+        result["classType"] = "Update::typeUpdateEditChannelMessage";
+        result["message"] = m_message.toMap();
+        result["pts"] = QVariant::fromValue<qint32>(pts());
+        result["ptsCount"] = QVariant::fromValue<qint32>(ptsCount());
+        return result;
+    }
+        break;
+    
+    case typeUpdateChannelPinnedMessage: {
+        result["classType"] = "Update::typeUpdateChannelPinnedMessage";
+        result["channelId"] = QVariant::fromValue<qint32>(channelId());
+        result["idInt"] = QVariant::fromValue<qint32>(idInt());
+        return result;
+    }
+        break;
+    
+    case typeUpdateBotCallbackQuery: {
+        result["classType"] = "Update::typeUpdateBotCallbackQuery";
+        result["queryId"] = QVariant::fromValue<qint64>(queryId());
+        result["userId"] = QVariant::fromValue<qint32>(userId());
+        result["peer"] = m_peer.toMap();
+        result["msgIdInt"] = QVariant::fromValue<qint32>(msgIdInt());
+        result["data"] = QVariant::fromValue<QByteArray>(data());
+        return result;
+    }
+        break;
+    
+    case typeUpdateEditMessage: {
+        result["classType"] = "Update::typeUpdateEditMessage";
+        result["message"] = m_message.toMap();
+        result["pts"] = QVariant::fromValue<qint32>(pts());
+        result["ptsCount"] = QVariant::fromValue<qint32>(ptsCount());
+        return result;
+    }
+        break;
+    
+    case typeUpdateInlineBotCallbackQuery: {
+        result["classType"] = "Update::typeUpdateInlineBotCallbackQuery";
+        result["queryId"] = QVariant::fromValue<qint64>(queryId());
+        result["userId"] = QVariant::fromValue<qint32>(userId());
+        result["msgIdInputBotInlineMessageID"] = m_msgIdInputBotInlineMessageID.toMap();
+        result["data"] = QVariant::fromValue<QByteArray>(data());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+inline Update Update::fromMap(const QMap<QString, QVariant> &map) {
+    Update result;
+    if(map.value("classType").toString() == "Update::typeUpdateNewMessage") {
+        result.setClassType(typeUpdateNewMessage);
+        result.setMessage( Message::fromMap(map.value("message").toMap()) );
+        result.setPts( map.value("pts").value<qint32>() );
+        result.setPtsCount( map.value("ptsCount").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "Update::typeUpdateMessageID") {
+        result.setClassType(typeUpdateMessageID);
+        result.setIdInt( map.value("idInt").value<qint32>() );
+        result.setRandomId( map.value("randomId").value<qint64>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "Update::typeUpdateDeleteMessages") {
+        result.setClassType(typeUpdateDeleteMessages);
+        QList<QVariant> map_messages = map["messages"].toList();
+        QList<qint32> _messages;
+        Q_FOREACH(const QVariant &var, map_messages)
+            _messages << var.value<qint32>();;
+        result.setMessages(_messages);
+        result.setPts( map.value("pts").value<qint32>() );
+        result.setPtsCount( map.value("ptsCount").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "Update::typeUpdateUserTyping") {
+        result.setClassType(typeUpdateUserTyping);
+        result.setUserId( map.value("userId").value<qint32>() );
+        result.setAction( SendMessageAction::fromMap(map.value("action").toMap()) );
+        return result;
+    }
+    if(map.value("classType").toString() == "Update::typeUpdateChatUserTyping") {
+        result.setClassType(typeUpdateChatUserTyping);
+        result.setChatId( map.value("chatId").value<qint32>() );
+        result.setUserId( map.value("userId").value<qint32>() );
+        result.setAction( SendMessageAction::fromMap(map.value("action").toMap()) );
+        return result;
+    }
+    if(map.value("classType").toString() == "Update::typeUpdateChatParticipants") {
+        result.setClassType(typeUpdateChatParticipants);
+        result.setParticipants( ChatParticipants::fromMap(map.value("participants").toMap()) );
+        return result;
+    }
+    if(map.value("classType").toString() == "Update::typeUpdateUserStatus") {
+        result.setClassType(typeUpdateUserStatus);
+        result.setUserId( map.value("userId").value<qint32>() );
+        result.setStatus( UserStatus::fromMap(map.value("status").toMap()) );
+        return result;
+    }
+    if(map.value("classType").toString() == "Update::typeUpdateUserName") {
+        result.setClassType(typeUpdateUserName);
+        result.setUserId( map.value("userId").value<qint32>() );
+        result.setFirstName( map.value("firstName").value<QString>() );
+        result.setLastName( map.value("lastName").value<QString>() );
+        result.setUsername( map.value("username").value<QString>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "Update::typeUpdateUserPhoto") {
+        result.setClassType(typeUpdateUserPhoto);
+        result.setUserId( map.value("userId").value<qint32>() );
+        result.setDate( map.value("date").value<qint32>() );
+        result.setPhoto( UserProfilePhoto::fromMap(map.value("photo").toMap()) );
+        result.setPrevious( map.value("previous").value<bool>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "Update::typeUpdateContactRegistered") {
+        result.setClassType(typeUpdateContactRegistered);
+        result.setUserId( map.value("userId").value<qint32>() );
+        result.setDate( map.value("date").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "Update::typeUpdateContactLink") {
+        result.setClassType(typeUpdateContactLink);
+        result.setUserId( map.value("userId").value<qint32>() );
+        result.setMyLink( ContactLink::fromMap(map.value("myLink").toMap()) );
+        result.setForeignLink( ContactLink::fromMap(map.value("foreignLink").toMap()) );
+        return result;
+    }
+    if(map.value("classType").toString() == "Update::typeUpdateNewAuthorization") {
+        result.setClassType(typeUpdateNewAuthorization);
+        result.setAuthKeyId( map.value("authKeyId").value<qint64>() );
+        result.setDate( map.value("date").value<qint32>() );
+        result.setDevice( map.value("device").value<QString>() );
+        result.setLocation( map.value("location").value<QString>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "Update::typeUpdateNewEncryptedMessage") {
+        result.setClassType(typeUpdateNewEncryptedMessage);
+        result.setMessageEncrypted( EncryptedMessage::fromMap(map.value("messageEncrypted").toMap()) );
+        result.setQts( map.value("qts").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "Update::typeUpdateEncryptedChatTyping") {
+        result.setClassType(typeUpdateEncryptedChatTyping);
+        result.setChatId( map.value("chatId").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "Update::typeUpdateEncryption") {
+        result.setClassType(typeUpdateEncryption);
+        result.setChat( EncryptedChat::fromMap(map.value("chat").toMap()) );
+        result.setDate( map.value("date").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "Update::typeUpdateEncryptedMessagesRead") {
+        result.setClassType(typeUpdateEncryptedMessagesRead);
+        result.setChatId( map.value("chatId").value<qint32>() );
+        result.setMaxDate( map.value("maxDate").value<qint32>() );
+        result.setDate( map.value("date").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "Update::typeUpdateChatParticipantAdd") {
+        result.setClassType(typeUpdateChatParticipantAdd);
+        result.setChatId( map.value("chatId").value<qint32>() );
+        result.setUserId( map.value("userId").value<qint32>() );
+        result.setInviterId( map.value("inviterId").value<qint32>() );
+        result.setDate( map.value("date").value<qint32>() );
+        result.setVersion( map.value("version").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "Update::typeUpdateChatParticipantDelete") {
+        result.setClassType(typeUpdateChatParticipantDelete);
+        result.setChatId( map.value("chatId").value<qint32>() );
+        result.setUserId( map.value("userId").value<qint32>() );
+        result.setVersion( map.value("version").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "Update::typeUpdateDcOptions") {
+        result.setClassType(typeUpdateDcOptions);
+        QList<QVariant> map_dcOptions = map["dcOptions"].toList();
+        QList<DcOption> _dcOptions;
+        Q_FOREACH(const QVariant &var, map_dcOptions)
+            _dcOptions << DcOption::fromMap(var.toMap());
+        result.setDcOptions(_dcOptions);
+        return result;
+    }
+    if(map.value("classType").toString() == "Update::typeUpdateUserBlocked") {
+        result.setClassType(typeUpdateUserBlocked);
+        result.setUserId( map.value("userId").value<qint32>() );
+        result.setBlocked( map.value("blocked").value<bool>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "Update::typeUpdateNotifySettings") {
+        result.setClassType(typeUpdateNotifySettings);
+        result.setPeerNotify( NotifyPeer::fromMap(map.value("peerNotify").toMap()) );
+        result.setNotifySettings( PeerNotifySettings::fromMap(map.value("notifySettings").toMap()) );
+        return result;
+    }
+    if(map.value("classType").toString() == "Update::typeUpdateServiceNotification") {
+        result.setClassType(typeUpdateServiceNotification);
+        result.setType( map.value("type").value<QString>() );
+        result.setMessageString( map.value("messageString").value<QString>() );
+        result.setMedia( MessageMedia::fromMap(map.value("media").toMap()) );
+        result.setPopup( map.value("popup").value<bool>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "Update::typeUpdatePrivacy") {
+        result.setClassType(typeUpdatePrivacy);
+        result.setKey( PrivacyKey::fromMap(map.value("key").toMap()) );
+        QList<QVariant> map_rules = map["rules"].toList();
+        QList<PrivacyRule> _rules;
+        Q_FOREACH(const QVariant &var, map_rules)
+            _rules << PrivacyRule::fromMap(var.toMap());
+        result.setRules(_rules);
+        return result;
+    }
+    if(map.value("classType").toString() == "Update::typeUpdateUserPhone") {
+        result.setClassType(typeUpdateUserPhone);
+        result.setUserId( map.value("userId").value<qint32>() );
+        result.setPhone( map.value("phone").value<QString>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "Update::typeUpdateReadHistoryInbox") {
+        result.setClassType(typeUpdateReadHistoryInbox);
+        result.setPeer( Peer::fromMap(map.value("peer").toMap()) );
+        result.setMaxId( map.value("maxId").value<qint32>() );
+        result.setPts( map.value("pts").value<qint32>() );
+        result.setPtsCount( map.value("ptsCount").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "Update::typeUpdateReadHistoryOutbox") {
+        result.setClassType(typeUpdateReadHistoryOutbox);
+        result.setPeer( Peer::fromMap(map.value("peer").toMap()) );
+        result.setMaxId( map.value("maxId").value<qint32>() );
+        result.setPts( map.value("pts").value<qint32>() );
+        result.setPtsCount( map.value("ptsCount").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "Update::typeUpdateWebPage") {
+        result.setClassType(typeUpdateWebPage);
+        result.setWebpage( WebPage::fromMap(map.value("webpage").toMap()) );
+        result.setPts( map.value("pts").value<qint32>() );
+        result.setPtsCount( map.value("ptsCount").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "Update::typeUpdateReadMessagesContents") {
+        result.setClassType(typeUpdateReadMessagesContents);
+        QList<QVariant> map_messages = map["messages"].toList();
+        QList<qint32> _messages;
+        Q_FOREACH(const QVariant &var, map_messages)
+            _messages << var.value<qint32>();;
+        result.setMessages(_messages);
+        result.setPts( map.value("pts").value<qint32>() );
+        result.setPtsCount( map.value("ptsCount").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "Update::typeUpdateChannelTooLong") {
+        result.setClassType(typeUpdateChannelTooLong);
+        result.setChannelId( map.value("channelId").value<qint32>() );
+        result.setPts( map.value("pts").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "Update::typeUpdateChannel") {
+        result.setClassType(typeUpdateChannel);
+        result.setChannelId( map.value("channelId").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "Update::typeUpdateChannelGroup") {
+        result.setClassType(typeUpdateChannelGroup);
+        result.setChannelId( map.value("channelId").value<qint32>() );
+        result.setGroup( MessageGroup::fromMap(map.value("group").toMap()) );
+        return result;
+    }
+    if(map.value("classType").toString() == "Update::typeUpdateNewChannelMessage") {
+        result.setClassType(typeUpdateNewChannelMessage);
+        result.setMessage( Message::fromMap(map.value("message").toMap()) );
+        result.setPts( map.value("pts").value<qint32>() );
+        result.setPtsCount( map.value("ptsCount").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "Update::typeUpdateReadChannelInbox") {
+        result.setClassType(typeUpdateReadChannelInbox);
+        result.setChannelId( map.value("channelId").value<qint32>() );
+        result.setMaxId( map.value("maxId").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "Update::typeUpdateDeleteChannelMessages") {
+        result.setClassType(typeUpdateDeleteChannelMessages);
+        result.setChannelId( map.value("channelId").value<qint32>() );
+        QList<QVariant> map_messages = map["messages"].toList();
+        QList<qint32> _messages;
+        Q_FOREACH(const QVariant &var, map_messages)
+            _messages << var.value<qint32>();;
+        result.setMessages(_messages);
+        result.setPts( map.value("pts").value<qint32>() );
+        result.setPtsCount( map.value("ptsCount").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "Update::typeUpdateChannelMessageViews") {
+        result.setClassType(typeUpdateChannelMessageViews);
+        result.setChannelId( map.value("channelId").value<qint32>() );
+        result.setIdInt( map.value("idInt").value<qint32>() );
+        result.setViews( map.value("views").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "Update::typeUpdateChatAdmins") {
+        result.setClassType(typeUpdateChatAdmins);
+        result.setChatId( map.value("chatId").value<qint32>() );
+        result.setEnabled( map.value("enabled").value<bool>() );
+        result.setVersion( map.value("version").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "Update::typeUpdateChatParticipantAdmin") {
+        result.setClassType(typeUpdateChatParticipantAdmin);
+        result.setChatId( map.value("chatId").value<qint32>() );
+        result.setUserId( map.value("userId").value<qint32>() );
+        result.setIsAdmin( map.value("isAdmin").value<bool>() );
+        result.setVersion( map.value("version").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "Update::typeUpdateNewStickerSet") {
+        result.setClassType(typeUpdateNewStickerSet);
+        result.setStickerset( MessagesStickerSet::fromMap(map.value("stickerset").toMap()) );
+        return result;
+    }
+    if(map.value("classType").toString() == "Update::typeUpdateStickerSetsOrder") {
+        result.setClassType(typeUpdateStickerSetsOrder);
+        QList<QVariant> map_order = map["order"].toList();
+        QList<qint64> _order;
+        Q_FOREACH(const QVariant &var, map_order)
+            _order << var.value<qint64>();;
+        result.setOrder(_order);
+        return result;
+    }
+    if(map.value("classType").toString() == "Update::typeUpdateStickerSets") {
+        result.setClassType(typeUpdateStickerSets);
+        return result;
+    }
+    if(map.value("classType").toString() == "Update::typeUpdateSavedGifs") {
+        result.setClassType(typeUpdateSavedGifs);
+        return result;
+    }
+    if(map.value("classType").toString() == "Update::typeUpdateBotInlineQuery") {
+        result.setClassType(typeUpdateBotInlineQuery);
+        result.setQueryId( map.value("queryId").value<qint64>() );
+        result.setUserId( map.value("userId").value<qint32>() );
+        result.setQuery( map.value("query").value<QString>() );
+        result.setGeo( GeoPoint::fromMap(map.value("geo").toMap()) );
+        result.setOffset( map.value("offset").value<QString>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "Update::typeUpdateBotInlineSend") {
+        result.setClassType(typeUpdateBotInlineSend);
+        result.setUserId( map.value("userId").value<qint32>() );
+        result.setQuery( map.value("query").value<QString>() );
+        result.setGeo( GeoPoint::fromMap(map.value("geo").toMap()) );
+        result.setIdString( map.value("idString").value<QString>() );
+        result.setMsgIdInputBotInlineMessageID( InputBotInlineMessageID::fromMap(map.value("msgIdInputBotInlineMessageID").toMap()) );
+        return result;
+    }
+    if(map.value("classType").toString() == "Update::typeUpdateEditChannelMessage") {
+        result.setClassType(typeUpdateEditChannelMessage);
+        result.setMessage( Message::fromMap(map.value("message").toMap()) );
+        result.setPts( map.value("pts").value<qint32>() );
+        result.setPtsCount( map.value("ptsCount").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "Update::typeUpdateChannelPinnedMessage") {
+        result.setClassType(typeUpdateChannelPinnedMessage);
+        result.setChannelId( map.value("channelId").value<qint32>() );
+        result.setIdInt( map.value("idInt").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "Update::typeUpdateBotCallbackQuery") {
+        result.setClassType(typeUpdateBotCallbackQuery);
+        result.setQueryId( map.value("queryId").value<qint64>() );
+        result.setUserId( map.value("userId").value<qint32>() );
+        result.setPeer( Peer::fromMap(map.value("peer").toMap()) );
+        result.setMsgIdInt( map.value("msgIdInt").value<qint32>() );
+        result.setData( map.value("data").value<QByteArray>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "Update::typeUpdateEditMessage") {
+        result.setClassType(typeUpdateEditMessage);
+        result.setMessage( Message::fromMap(map.value("message").toMap()) );
+        result.setPts( map.value("pts").value<qint32>() );
+        result.setPtsCount( map.value("ptsCount").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "Update::typeUpdateInlineBotCallbackQuery") {
+        result.setClassType(typeUpdateInlineBotCallbackQuery);
+        result.setQueryId( map.value("queryId").value<qint64>() );
+        result.setUserId( map.value("userId").value<qint32>() );
+        result.setMsgIdInputBotInlineMessageID( InputBotInlineMessageID::fromMap(map.value("msgIdInputBotInlineMessageID").toMap()) );
+        result.setData( map.value("data").value<QByteArray>() );
+        return result;
+    }
+    return result;
+}
+
+inline QByteArray Update::getHash(QCryptographicHash::Algorithm alg) const {
+    QByteArray data;
+    QDataStream str(&data, QIODevice::WriteOnly);
+    str << *this;
+    return QCryptographicHash::hash(data, alg);
+}
+
+inline QDataStream &operator<<(QDataStream &stream, const Update &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case Update::typeUpdateNewMessage:
+        stream << item.message();
+        stream << item.pts();
+        stream << item.ptsCount();
+        break;
+    case Update::typeUpdateMessageID:
+        stream << item.idInt();
+        stream << item.randomId();
+        break;
+    case Update::typeUpdateDeleteMessages:
+        stream << item.messages();
+        stream << item.pts();
+        stream << item.ptsCount();
+        break;
+    case Update::typeUpdateUserTyping:
+        stream << item.userId();
+        stream << item.action();
+        break;
+    case Update::typeUpdateChatUserTyping:
+        stream << item.chatId();
+        stream << item.userId();
+        stream << item.action();
+        break;
+    case Update::typeUpdateChatParticipants:
+        stream << item.participants();
+        break;
+    case Update::typeUpdateUserStatus:
+        stream << item.userId();
+        stream << item.status();
+        break;
+    case Update::typeUpdateUserName:
+        stream << item.userId();
+        stream << item.firstName();
+        stream << item.lastName();
+        stream << item.username();
+        break;
+    case Update::typeUpdateUserPhoto:
+        stream << item.userId();
+        stream << item.date();
+        stream << item.photo();
+        stream << item.previous();
+        break;
+    case Update::typeUpdateContactRegistered:
+        stream << item.userId();
+        stream << item.date();
+        break;
+    case Update::typeUpdateContactLink:
+        stream << item.userId();
+        stream << item.myLink();
+        stream << item.foreignLink();
+        break;
+    case Update::typeUpdateNewAuthorization:
+        stream << item.authKeyId();
+        stream << item.date();
+        stream << item.device();
+        stream << item.location();
+        break;
+    case Update::typeUpdateNewEncryptedMessage:
+        stream << item.messageEncrypted();
+        stream << item.qts();
+        break;
+    case Update::typeUpdateEncryptedChatTyping:
+        stream << item.chatId();
+        break;
+    case Update::typeUpdateEncryption:
+        stream << item.chat();
+        stream << item.date();
+        break;
+    case Update::typeUpdateEncryptedMessagesRead:
+        stream << item.chatId();
+        stream << item.maxDate();
+        stream << item.date();
+        break;
+    case Update::typeUpdateChatParticipantAdd:
+        stream << item.chatId();
+        stream << item.userId();
+        stream << item.inviterId();
+        stream << item.date();
+        stream << item.version();
+        break;
+    case Update::typeUpdateChatParticipantDelete:
+        stream << item.chatId();
+        stream << item.userId();
+        stream << item.version();
+        break;
+    case Update::typeUpdateDcOptions:
+        stream << item.dcOptions();
+        break;
+    case Update::typeUpdateUserBlocked:
+        stream << item.userId();
+        stream << item.blocked();
+        break;
+    case Update::typeUpdateNotifySettings:
+        stream << item.peerNotify();
+        stream << item.notifySettings();
+        break;
+    case Update::typeUpdateServiceNotification:
+        stream << item.type();
+        stream << item.messageString();
+        stream << item.media();
+        stream << item.popup();
+        break;
+    case Update::typeUpdatePrivacy:
+        stream << item.key();
+        stream << item.rules();
+        break;
+    case Update::typeUpdateUserPhone:
+        stream << item.userId();
+        stream << item.phone();
+        break;
+    case Update::typeUpdateReadHistoryInbox:
+        stream << item.peer();
+        stream << item.maxId();
+        stream << item.pts();
+        stream << item.ptsCount();
+        break;
+    case Update::typeUpdateReadHistoryOutbox:
+        stream << item.peer();
+        stream << item.maxId();
+        stream << item.pts();
+        stream << item.ptsCount();
+        break;
+    case Update::typeUpdateWebPage:
+        stream << item.webpage();
+        stream << item.pts();
+        stream << item.ptsCount();
+        break;
+    case Update::typeUpdateReadMessagesContents:
+        stream << item.messages();
+        stream << item.pts();
+        stream << item.ptsCount();
+        break;
+    case Update::typeUpdateChannelTooLong:
+        stream << item.flags();
+        stream << item.channelId();
+        stream << item.pts();
+        break;
+    case Update::typeUpdateChannel:
+        stream << item.channelId();
+        break;
+    case Update::typeUpdateChannelGroup:
+        stream << item.channelId();
+        stream << item.group();
+        break;
+    case Update::typeUpdateNewChannelMessage:
+        stream << item.message();
+        stream << item.pts();
+        stream << item.ptsCount();
+        break;
+    case Update::typeUpdateReadChannelInbox:
+        stream << item.channelId();
+        stream << item.maxId();
+        break;
+    case Update::typeUpdateDeleteChannelMessages:
+        stream << item.channelId();
+        stream << item.messages();
+        stream << item.pts();
+        stream << item.ptsCount();
+        break;
+    case Update::typeUpdateChannelMessageViews:
+        stream << item.channelId();
+        stream << item.idInt();
+        stream << item.views();
+        break;
+    case Update::typeUpdateChatAdmins:
+        stream << item.chatId();
+        stream << item.enabled();
+        stream << item.version();
+        break;
+    case Update::typeUpdateChatParticipantAdmin:
+        stream << item.chatId();
+        stream << item.userId();
+        stream << item.isAdmin();
+        stream << item.version();
+        break;
+    case Update::typeUpdateNewStickerSet:
+        stream << item.stickerset();
+        break;
+    case Update::typeUpdateStickerSetsOrder:
+        stream << item.order();
+        break;
+    case Update::typeUpdateStickerSets:
+        
+        break;
+    case Update::typeUpdateSavedGifs:
+        
+        break;
+    case Update::typeUpdateBotInlineQuery:
+        stream << item.flags();
+        stream << item.queryId();
+        stream << item.userId();
+        stream << item.query();
+        stream << item.geo();
+        stream << item.offset();
+        break;
+    case Update::typeUpdateBotInlineSend:
+        stream << item.flags();
+        stream << item.userId();
+        stream << item.query();
+        stream << item.geo();
+        stream << item.idString();
+        stream << item.msgIdInputBotInlineMessageID();
+        break;
+    case Update::typeUpdateEditChannelMessage:
+        stream << item.message();
+        stream << item.pts();
+        stream << item.ptsCount();
+        break;
+    case Update::typeUpdateChannelPinnedMessage:
+        stream << item.channelId();
+        stream << item.idInt();
+        break;
+    case Update::typeUpdateBotCallbackQuery:
+        stream << item.queryId();
+        stream << item.userId();
+        stream << item.peer();
+        stream << item.msgIdInt();
+        stream << item.data();
+        break;
+    case Update::typeUpdateEditMessage:
+        stream << item.message();
+        stream << item.pts();
+        stream << item.ptsCount();
+        break;
+    case Update::typeUpdateInlineBotCallbackQuery:
+        stream << item.queryId();
+        stream << item.userId();
+        stream << item.msgIdInputBotInlineMessageID();
+        stream << item.data();
+        break;
+    }
+    return stream;
+}
+
+inline QDataStream &operator>>(QDataStream &stream, Update &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<Update::UpdateClassType>(type));
+    switch(type) {
+    case Update::typeUpdateNewMessage: {
+        Message m_message;
+        stream >> m_message;
+        item.setMessage(m_message);
+        qint32 m_pts;
+        stream >> m_pts;
+        item.setPts(m_pts);
+        qint32 m_pts_count;
+        stream >> m_pts_count;
+        item.setPtsCount(m_pts_count);
+    }
+        break;
+    case Update::typeUpdateMessageID: {
+        qint32 m_id_int;
+        stream >> m_id_int;
+        item.setIdInt(m_id_int);
+        qint64 m_random_id;
+        stream >> m_random_id;
+        item.setRandomId(m_random_id);
+    }
+        break;
+    case Update::typeUpdateDeleteMessages: {
+        QList<qint32> m_messages;
+        stream >> m_messages;
+        item.setMessages(m_messages);
+        qint32 m_pts;
+        stream >> m_pts;
+        item.setPts(m_pts);
+        qint32 m_pts_count;
+        stream >> m_pts_count;
+        item.setPtsCount(m_pts_count);
+    }
+        break;
+    case Update::typeUpdateUserTyping: {
+        qint32 m_user_id;
+        stream >> m_user_id;
+        item.setUserId(m_user_id);
+        SendMessageAction m_action;
+        stream >> m_action;
+        item.setAction(m_action);
+    }
+        break;
+    case Update::typeUpdateChatUserTyping: {
+        qint32 m_chat_id;
+        stream >> m_chat_id;
+        item.setChatId(m_chat_id);
+        qint32 m_user_id;
+        stream >> m_user_id;
+        item.setUserId(m_user_id);
+        SendMessageAction m_action;
+        stream >> m_action;
+        item.setAction(m_action);
+    }
+        break;
+    case Update::typeUpdateChatParticipants: {
+        ChatParticipants m_participants;
+        stream >> m_participants;
+        item.setParticipants(m_participants);
+    }
+        break;
+    case Update::typeUpdateUserStatus: {
+        qint32 m_user_id;
+        stream >> m_user_id;
+        item.setUserId(m_user_id);
+        UserStatus m_status;
+        stream >> m_status;
+        item.setStatus(m_status);
+    }
+        break;
+    case Update::typeUpdateUserName: {
+        qint32 m_user_id;
+        stream >> m_user_id;
+        item.setUserId(m_user_id);
+        QString m_first_name;
+        stream >> m_first_name;
+        item.setFirstName(m_first_name);
+        QString m_last_name;
+        stream >> m_last_name;
+        item.setLastName(m_last_name);
+        QString m_username;
+        stream >> m_username;
+        item.setUsername(m_username);
+    }
+        break;
+    case Update::typeUpdateUserPhoto: {
+        qint32 m_user_id;
+        stream >> m_user_id;
+        item.setUserId(m_user_id);
+        qint32 m_date;
+        stream >> m_date;
+        item.setDate(m_date);
+        UserProfilePhoto m_photo;
+        stream >> m_photo;
+        item.setPhoto(m_photo);
+        bool m_previous;
+        stream >> m_previous;
+        item.setPrevious(m_previous);
+    }
+        break;
+    case Update::typeUpdateContactRegistered: {
+        qint32 m_user_id;
+        stream >> m_user_id;
+        item.setUserId(m_user_id);
+        qint32 m_date;
+        stream >> m_date;
+        item.setDate(m_date);
+    }
+        break;
+    case Update::typeUpdateContactLink: {
+        qint32 m_user_id;
+        stream >> m_user_id;
+        item.setUserId(m_user_id);
+        ContactLink m_my_link;
+        stream >> m_my_link;
+        item.setMyLink(m_my_link);
+        ContactLink m_foreign_link;
+        stream >> m_foreign_link;
+        item.setForeignLink(m_foreign_link);
+    }
+        break;
+    case Update::typeUpdateNewAuthorization: {
+        qint64 m_auth_key_id;
+        stream >> m_auth_key_id;
+        item.setAuthKeyId(m_auth_key_id);
+        qint32 m_date;
+        stream >> m_date;
+        item.setDate(m_date);
+        QString m_device;
+        stream >> m_device;
+        item.setDevice(m_device);
+        QString m_location;
+        stream >> m_location;
+        item.setLocation(m_location);
+    }
+        break;
+    case Update::typeUpdateNewEncryptedMessage: {
+        EncryptedMessage m_message_Encrypted;
+        stream >> m_message_Encrypted;
+        item.setMessageEncrypted(m_message_Encrypted);
+        qint32 m_qts;
+        stream >> m_qts;
+        item.setQts(m_qts);
+    }
+        break;
+    case Update::typeUpdateEncryptedChatTyping: {
+        qint32 m_chat_id;
+        stream >> m_chat_id;
+        item.setChatId(m_chat_id);
+    }
+        break;
+    case Update::typeUpdateEncryption: {
+        EncryptedChat m_chat;
+        stream >> m_chat;
+        item.setChat(m_chat);
+        qint32 m_date;
+        stream >> m_date;
+        item.setDate(m_date);
+    }
+        break;
+    case Update::typeUpdateEncryptedMessagesRead: {
+        qint32 m_chat_id;
+        stream >> m_chat_id;
+        item.setChatId(m_chat_id);
+        qint32 m_max_date;
+        stream >> m_max_date;
+        item.setMaxDate(m_max_date);
+        qint32 m_date;
+        stream >> m_date;
+        item.setDate(m_date);
+    }
+        break;
+    case Update::typeUpdateChatParticipantAdd: {
+        qint32 m_chat_id;
+        stream >> m_chat_id;
+        item.setChatId(m_chat_id);
+        qint32 m_user_id;
+        stream >> m_user_id;
+        item.setUserId(m_user_id);
+        qint32 m_inviter_id;
+        stream >> m_inviter_id;
+        item.setInviterId(m_inviter_id);
+        qint32 m_date;
+        stream >> m_date;
+        item.setDate(m_date);
+        qint32 m_version;
+        stream >> m_version;
+        item.setVersion(m_version);
+    }
+        break;
+    case Update::typeUpdateChatParticipantDelete: {
+        qint32 m_chat_id;
+        stream >> m_chat_id;
+        item.setChatId(m_chat_id);
+        qint32 m_user_id;
+        stream >> m_user_id;
+        item.setUserId(m_user_id);
+        qint32 m_version;
+        stream >> m_version;
+        item.setVersion(m_version);
+    }
+        break;
+    case Update::typeUpdateDcOptions: {
+        QList<DcOption> m_dc_options;
+        stream >> m_dc_options;
+        item.setDcOptions(m_dc_options);
+    }
+        break;
+    case Update::typeUpdateUserBlocked: {
+        qint32 m_user_id;
+        stream >> m_user_id;
+        item.setUserId(m_user_id);
+        bool m_blocked;
+        stream >> m_blocked;
+        item.setBlocked(m_blocked);
+    }
+        break;
+    case Update::typeUpdateNotifySettings: {
+        NotifyPeer m_peer_Notify;
+        stream >> m_peer_Notify;
+        item.setPeerNotify(m_peer_Notify);
+        PeerNotifySettings m_notify_settings;
+        stream >> m_notify_settings;
+        item.setNotifySettings(m_notify_settings);
+    }
+        break;
+    case Update::typeUpdateServiceNotification: {
+        QString m_type;
+        stream >> m_type;
+        item.setType(m_type);
+        QString m_message_string;
+        stream >> m_message_string;
+        item.setMessageString(m_message_string);
+        MessageMedia m_media;
+        stream >> m_media;
+        item.setMedia(m_media);
+        bool m_popup;
+        stream >> m_popup;
+        item.setPopup(m_popup);
+    }
+        break;
+    case Update::typeUpdatePrivacy: {
+        PrivacyKey m_key;
+        stream >> m_key;
+        item.setKey(m_key);
+        QList<PrivacyRule> m_rules;
+        stream >> m_rules;
+        item.setRules(m_rules);
+    }
+        break;
+    case Update::typeUpdateUserPhone: {
+        qint32 m_user_id;
+        stream >> m_user_id;
+        item.setUserId(m_user_id);
+        QString m_phone;
+        stream >> m_phone;
+        item.setPhone(m_phone);
+    }
+        break;
+    case Update::typeUpdateReadHistoryInbox: {
+        Peer m_peer;
+        stream >> m_peer;
+        item.setPeer(m_peer);
+        qint32 m_max_id;
+        stream >> m_max_id;
+        item.setMaxId(m_max_id);
+        qint32 m_pts;
+        stream >> m_pts;
+        item.setPts(m_pts);
+        qint32 m_pts_count;
+        stream >> m_pts_count;
+        item.setPtsCount(m_pts_count);
+    }
+        break;
+    case Update::typeUpdateReadHistoryOutbox: {
+        Peer m_peer;
+        stream >> m_peer;
+        item.setPeer(m_peer);
+        qint32 m_max_id;
+        stream >> m_max_id;
+        item.setMaxId(m_max_id);
+        qint32 m_pts;
+        stream >> m_pts;
+        item.setPts(m_pts);
+        qint32 m_pts_count;
+        stream >> m_pts_count;
+        item.setPtsCount(m_pts_count);
+    }
+        break;
+    case Update::typeUpdateWebPage: {
+        WebPage m_webpage;
+        stream >> m_webpage;
+        item.setWebpage(m_webpage);
+        qint32 m_pts;
+        stream >> m_pts;
+        item.setPts(m_pts);
+        qint32 m_pts_count;
+        stream >> m_pts_count;
+        item.setPtsCount(m_pts_count);
+    }
+        break;
+    case Update::typeUpdateReadMessagesContents: {
+        QList<qint32> m_messages;
+        stream >> m_messages;
+        item.setMessages(m_messages);
+        qint32 m_pts;
+        stream >> m_pts;
+        item.setPts(m_pts);
+        qint32 m_pts_count;
+        stream >> m_pts_count;
+        item.setPtsCount(m_pts_count);
+    }
+        break;
+    case Update::typeUpdateChannelTooLong: {
+        qint32 m_flags;
+        stream >> m_flags;
+        item.setFlags(m_flags);
+        qint32 m_channel_id;
+        stream >> m_channel_id;
+        item.setChannelId(m_channel_id);
+        qint32 m_pts;
+        stream >> m_pts;
+        item.setPts(m_pts);
+    }
+        break;
+    case Update::typeUpdateChannel: {
+        qint32 m_channel_id;
+        stream >> m_channel_id;
+        item.setChannelId(m_channel_id);
+    }
+        break;
+    case Update::typeUpdateChannelGroup: {
+        qint32 m_channel_id;
+        stream >> m_channel_id;
+        item.setChannelId(m_channel_id);
+        MessageGroup m_group;
+        stream >> m_group;
+        item.setGroup(m_group);
+    }
+        break;
+    case Update::typeUpdateNewChannelMessage: {
+        Message m_message;
+        stream >> m_message;
+        item.setMessage(m_message);
+        qint32 m_pts;
+        stream >> m_pts;
+        item.setPts(m_pts);
+        qint32 m_pts_count;
+        stream >> m_pts_count;
+        item.setPtsCount(m_pts_count);
+    }
+        break;
+    case Update::typeUpdateReadChannelInbox: {
+        qint32 m_channel_id;
+        stream >> m_channel_id;
+        item.setChannelId(m_channel_id);
+        qint32 m_max_id;
+        stream >> m_max_id;
+        item.setMaxId(m_max_id);
+    }
+        break;
+    case Update::typeUpdateDeleteChannelMessages: {
+        qint32 m_channel_id;
+        stream >> m_channel_id;
+        item.setChannelId(m_channel_id);
+        QList<qint32> m_messages;
+        stream >> m_messages;
+        item.setMessages(m_messages);
+        qint32 m_pts;
+        stream >> m_pts;
+        item.setPts(m_pts);
+        qint32 m_pts_count;
+        stream >> m_pts_count;
+        item.setPtsCount(m_pts_count);
+    }
+        break;
+    case Update::typeUpdateChannelMessageViews: {
+        qint32 m_channel_id;
+        stream >> m_channel_id;
+        item.setChannelId(m_channel_id);
+        qint32 m_id_int;
+        stream >> m_id_int;
+        item.setIdInt(m_id_int);
+        qint32 m_views;
+        stream >> m_views;
+        item.setViews(m_views);
+    }
+        break;
+    case Update::typeUpdateChatAdmins: {
+        qint32 m_chat_id;
+        stream >> m_chat_id;
+        item.setChatId(m_chat_id);
+        bool m_enabled;
+        stream >> m_enabled;
+        item.setEnabled(m_enabled);
+        qint32 m_version;
+        stream >> m_version;
+        item.setVersion(m_version);
+    }
+        break;
+    case Update::typeUpdateChatParticipantAdmin: {
+        qint32 m_chat_id;
+        stream >> m_chat_id;
+        item.setChatId(m_chat_id);
+        qint32 m_user_id;
+        stream >> m_user_id;
+        item.setUserId(m_user_id);
+        bool m_is_admin;
+        stream >> m_is_admin;
+        item.setIsAdmin(m_is_admin);
+        qint32 m_version;
+        stream >> m_version;
+        item.setVersion(m_version);
+    }
+        break;
+    case Update::typeUpdateNewStickerSet: {
+        MessagesStickerSet m_stickerset;
+        stream >> m_stickerset;
+        item.setStickerset(m_stickerset);
+    }
+        break;
+    case Update::typeUpdateStickerSetsOrder: {
+        QList<qint64> m_order;
+        stream >> m_order;
+        item.setOrder(m_order);
+    }
+        break;
+    case Update::typeUpdateStickerSets: {
+        
+    }
+        break;
+    case Update::typeUpdateSavedGifs: {
+        
+    }
+        break;
+    case Update::typeUpdateBotInlineQuery: {
+        qint32 m_flags;
+        stream >> m_flags;
+        item.setFlags(m_flags);
+        qint64 m_query_id;
+        stream >> m_query_id;
+        item.setQueryId(m_query_id);
+        qint32 m_user_id;
+        stream >> m_user_id;
+        item.setUserId(m_user_id);
+        QString m_query;
+        stream >> m_query;
+        item.setQuery(m_query);
+        GeoPoint m_geo;
+        stream >> m_geo;
+        item.setGeo(m_geo);
+        QString m_offset;
+        stream >> m_offset;
+        item.setOffset(m_offset);
+    }
+        break;
+    case Update::typeUpdateBotInlineSend: {
+        qint32 m_flags;
+        stream >> m_flags;
+        item.setFlags(m_flags);
+        qint32 m_user_id;
+        stream >> m_user_id;
+        item.setUserId(m_user_id);
+        QString m_query;
+        stream >> m_query;
+        item.setQuery(m_query);
+        GeoPoint m_geo;
+        stream >> m_geo;
+        item.setGeo(m_geo);
+        QString m_id_string;
+        stream >> m_id_string;
+        item.setIdString(m_id_string);
+        InputBotInlineMessageID m_msg_id_InputBotInlineMessageID;
+        stream >> m_msg_id_InputBotInlineMessageID;
+        item.setMsgIdInputBotInlineMessageID(m_msg_id_InputBotInlineMessageID);
+    }
+        break;
+    case Update::typeUpdateEditChannelMessage: {
+        Message m_message;
+        stream >> m_message;
+        item.setMessage(m_message);
+        qint32 m_pts;
+        stream >> m_pts;
+        item.setPts(m_pts);
+        qint32 m_pts_count;
+        stream >> m_pts_count;
+        item.setPtsCount(m_pts_count);
+    }
+        break;
+    case Update::typeUpdateChannelPinnedMessage: {
+        qint32 m_channel_id;
+        stream >> m_channel_id;
+        item.setChannelId(m_channel_id);
+        qint32 m_id_int;
+        stream >> m_id_int;
+        item.setIdInt(m_id_int);
+    }
+        break;
+    case Update::typeUpdateBotCallbackQuery: {
+        qint64 m_query_id;
+        stream >> m_query_id;
+        item.setQueryId(m_query_id);
+        qint32 m_user_id;
+        stream >> m_user_id;
+        item.setUserId(m_user_id);
+        Peer m_peer;
+        stream >> m_peer;
+        item.setPeer(m_peer);
+        qint32 m_msg_id_int;
+        stream >> m_msg_id_int;
+        item.setMsgIdInt(m_msg_id_int);
+        QByteArray m_data;
+        stream >> m_data;
+        item.setData(m_data);
+    }
+        break;
+    case Update::typeUpdateEditMessage: {
+        Message m_message;
+        stream >> m_message;
+        item.setMessage(m_message);
+        qint32 m_pts;
+        stream >> m_pts;
+        item.setPts(m_pts);
+        qint32 m_pts_count;
+        stream >> m_pts_count;
+        item.setPtsCount(m_pts_count);
+    }
+        break;
+    case Update::typeUpdateInlineBotCallbackQuery: {
+        qint64 m_query_id;
+        stream >> m_query_id;
+        item.setQueryId(m_query_id);
+        qint32 m_user_id;
+        stream >> m_user_id;
+        item.setUserId(m_user_id);
+        InputBotInlineMessageID m_msg_id_InputBotInlineMessageID;
+        stream >> m_msg_id_InputBotInlineMessageID;
+        item.setMsgIdInputBotInlineMessageID(m_msg_id_InputBotInlineMessageID);
+        QByteArray m_data;
+        stream >> m_data;
+        item.setData(m_data);
+    }
+        break;
+    }
+    return stream;
+}
+
 
 #endif // LQTG_TYPE_UPDATE

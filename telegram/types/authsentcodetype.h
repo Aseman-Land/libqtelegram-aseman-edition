@@ -9,6 +9,12 @@
 
 #include <QMetaType>
 #include <QVariant>
+#include "core/inboundpkt.h"
+#include "core/outboundpkt.h"
+#include "../coretypes.h"
+
+#include <QDataStream>
+
 #include <QtGlobal>
 #include <QString>
 
@@ -59,5 +65,250 @@ Q_DECLARE_METATYPE(AuthSentCodeType)
 
 QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const AuthSentCodeType &item);
 QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, AuthSentCodeType &item);
+
+inline AuthSentCodeType::AuthSentCodeType(AuthSentCodeTypeClassType classType, InboundPkt *in) :
+    m_length(0),
+    m_classType(classType)
+{
+    if(in) fetch(in);
+}
+
+inline AuthSentCodeType::AuthSentCodeType(InboundPkt *in) :
+    m_length(0),
+    m_classType(typeAuthSentCodeTypeApp)
+{
+    fetch(in);
+}
+
+inline AuthSentCodeType::AuthSentCodeType(const Null &null) :
+    TelegramTypeObject(null),
+    m_length(0),
+    m_classType(typeAuthSentCodeTypeApp)
+{
+}
+
+inline AuthSentCodeType::~AuthSentCodeType() {
+}
+
+inline void AuthSentCodeType::setLength(qint32 length) {
+    m_length = length;
+}
+
+inline qint32 AuthSentCodeType::length() const {
+    return m_length;
+}
+
+inline void AuthSentCodeType::setPattern(const QString &pattern) {
+    m_pattern = pattern;
+}
+
+inline QString AuthSentCodeType::pattern() const {
+    return m_pattern;
+}
+
+inline bool AuthSentCodeType::operator ==(const AuthSentCodeType &b) const {
+    return m_classType == b.m_classType &&
+           m_length == b.m_length &&
+           m_pattern == b.m_pattern;
+}
+
+inline void AuthSentCodeType::setClassType(AuthSentCodeType::AuthSentCodeTypeClassType classType) {
+    m_classType = classType;
+}
+
+inline AuthSentCodeType::AuthSentCodeTypeClassType AuthSentCodeType::classType() const {
+    return m_classType;
+}
+
+inline bool AuthSentCodeType::fetch(InboundPkt *in) {
+    LQTG_FETCH_LOG;
+    int x = in->fetchInt();
+    switch(x) {
+    case typeAuthSentCodeTypeApp: {
+        m_length = in->fetchInt();
+        m_classType = static_cast<AuthSentCodeTypeClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeAuthSentCodeTypeSms: {
+        m_length = in->fetchInt();
+        m_classType = static_cast<AuthSentCodeTypeClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeAuthSentCodeTypeCall: {
+        m_length = in->fetchInt();
+        m_classType = static_cast<AuthSentCodeTypeClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeAuthSentCodeTypeFlashCall: {
+        m_pattern = in->fetchQString();
+        m_classType = static_cast<AuthSentCodeTypeClassType>(x);
+        return true;
+    }
+        break;
+    
+    default:
+        LQTG_FETCH_ASSERT;
+        return false;
+    }
+}
+
+inline bool AuthSentCodeType::push(OutboundPkt *out) const {
+    out->appendInt(m_classType);
+    switch(m_classType) {
+    case typeAuthSentCodeTypeApp: {
+        out->appendInt(m_length);
+        return true;
+    }
+        break;
+    
+    case typeAuthSentCodeTypeSms: {
+        out->appendInt(m_length);
+        return true;
+    }
+        break;
+    
+    case typeAuthSentCodeTypeCall: {
+        out->appendInt(m_length);
+        return true;
+    }
+        break;
+    
+    case typeAuthSentCodeTypeFlashCall: {
+        out->appendQString(m_pattern);
+        return true;
+    }
+        break;
+    
+    default:
+        return false;
+    }
+}
+
+inline QMap<QString, QVariant> AuthSentCodeType::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeAuthSentCodeTypeApp: {
+        result["classType"] = "AuthSentCodeType::typeAuthSentCodeTypeApp";
+        result["length"] = QVariant::fromValue<qint32>(length());
+        return result;
+    }
+        break;
+    
+    case typeAuthSentCodeTypeSms: {
+        result["classType"] = "AuthSentCodeType::typeAuthSentCodeTypeSms";
+        result["length"] = QVariant::fromValue<qint32>(length());
+        return result;
+    }
+        break;
+    
+    case typeAuthSentCodeTypeCall: {
+        result["classType"] = "AuthSentCodeType::typeAuthSentCodeTypeCall";
+        result["length"] = QVariant::fromValue<qint32>(length());
+        return result;
+    }
+        break;
+    
+    case typeAuthSentCodeTypeFlashCall: {
+        result["classType"] = "AuthSentCodeType::typeAuthSentCodeTypeFlashCall";
+        result["pattern"] = QVariant::fromValue<QString>(pattern());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+inline AuthSentCodeType AuthSentCodeType::fromMap(const QMap<QString, QVariant> &map) {
+    AuthSentCodeType result;
+    if(map.value("classType").toString() == "AuthSentCodeType::typeAuthSentCodeTypeApp") {
+        result.setClassType(typeAuthSentCodeTypeApp);
+        result.setLength( map.value("length").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "AuthSentCodeType::typeAuthSentCodeTypeSms") {
+        result.setClassType(typeAuthSentCodeTypeSms);
+        result.setLength( map.value("length").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "AuthSentCodeType::typeAuthSentCodeTypeCall") {
+        result.setClassType(typeAuthSentCodeTypeCall);
+        result.setLength( map.value("length").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "AuthSentCodeType::typeAuthSentCodeTypeFlashCall") {
+        result.setClassType(typeAuthSentCodeTypeFlashCall);
+        result.setPattern( map.value("pattern").value<QString>() );
+        return result;
+    }
+    return result;
+}
+
+inline QByteArray AuthSentCodeType::getHash(QCryptographicHash::Algorithm alg) const {
+    QByteArray data;
+    QDataStream str(&data, QIODevice::WriteOnly);
+    str << *this;
+    return QCryptographicHash::hash(data, alg);
+}
+
+inline QDataStream &operator<<(QDataStream &stream, const AuthSentCodeType &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case AuthSentCodeType::typeAuthSentCodeTypeApp:
+        stream << item.length();
+        break;
+    case AuthSentCodeType::typeAuthSentCodeTypeSms:
+        stream << item.length();
+        break;
+    case AuthSentCodeType::typeAuthSentCodeTypeCall:
+        stream << item.length();
+        break;
+    case AuthSentCodeType::typeAuthSentCodeTypeFlashCall:
+        stream << item.pattern();
+        break;
+    }
+    return stream;
+}
+
+inline QDataStream &operator>>(QDataStream &stream, AuthSentCodeType &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<AuthSentCodeType::AuthSentCodeTypeClassType>(type));
+    switch(type) {
+    case AuthSentCodeType::typeAuthSentCodeTypeApp: {
+        qint32 m_length;
+        stream >> m_length;
+        item.setLength(m_length);
+    }
+        break;
+    case AuthSentCodeType::typeAuthSentCodeTypeSms: {
+        qint32 m_length;
+        stream >> m_length;
+        item.setLength(m_length);
+    }
+        break;
+    case AuthSentCodeType::typeAuthSentCodeTypeCall: {
+        qint32 m_length;
+        stream >> m_length;
+        item.setLength(m_length);
+    }
+        break;
+    case AuthSentCodeType::typeAuthSentCodeTypeFlashCall: {
+        QString m_pattern;
+        stream >> m_pattern;
+        item.setPattern(m_pattern);
+    }
+        break;
+    }
+    return stream;
+}
+
 
 #endif // LQTG_TYPE_AUTHSENTCODETYPE

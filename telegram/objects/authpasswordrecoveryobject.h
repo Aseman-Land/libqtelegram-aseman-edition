@@ -50,4 +50,82 @@ private:
     AuthPasswordRecovery m_core;
 };
 
+inline AuthPasswordRecoveryObject::AuthPasswordRecoveryObject(const AuthPasswordRecovery &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core(core)
+{
+}
+
+inline AuthPasswordRecoveryObject::AuthPasswordRecoveryObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core()
+{
+}
+
+inline AuthPasswordRecoveryObject::~AuthPasswordRecoveryObject() {
+}
+
+inline void AuthPasswordRecoveryObject::setEmailPattern(const QString &emailPattern) {
+    if(m_core.emailPattern() == emailPattern) return;
+    m_core.setEmailPattern(emailPattern);
+    Q_EMIT emailPatternChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QString AuthPasswordRecoveryObject::emailPattern() const {
+    return m_core.emailPattern();
+}
+
+inline AuthPasswordRecoveryObject &AuthPasswordRecoveryObject::operator =(const AuthPasswordRecovery &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+
+    Q_EMIT emailPatternChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool AuthPasswordRecoveryObject::operator ==(const AuthPasswordRecovery &b) const {
+    return m_core == b;
+}
+
+inline void AuthPasswordRecoveryObject::setClassType(quint32 classType) {
+    AuthPasswordRecovery::AuthPasswordRecoveryClassType result;
+    switch(classType) {
+    case TypeAuthPasswordRecovery:
+        result = AuthPasswordRecovery::typeAuthPasswordRecovery;
+        break;
+    default:
+        result = AuthPasswordRecovery::typeAuthPasswordRecovery;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 AuthPasswordRecoveryObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case AuthPasswordRecovery::typeAuthPasswordRecovery:
+        result = TypeAuthPasswordRecovery;
+        break;
+    default:
+        result = TypeAuthPasswordRecovery;
+        break;
+    }
+
+    return result;
+}
+
+inline void AuthPasswordRecoveryObject::setCore(const AuthPasswordRecovery &core) {
+    operator =(core);
+}
+
+inline AuthPasswordRecovery AuthPasswordRecoveryObject::core() const {
+    return m_core;
+}
+
 #endif // LQTG_TYPE_AUTHPASSWORDRECOVERY_OBJECT

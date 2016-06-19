@@ -9,6 +9,12 @@
 
 #include <QMetaType>
 #include <QVariant>
+#include "core/inboundpkt.h"
+#include "core/outboundpkt.h"
+#include "../coretypes.h"
+
+#include <QDataStream>
+
 #include <QByteArray>
 #include <QString>
 
@@ -69,5 +75,249 @@ Q_DECLARE_METATYPE(AccountPassword)
 
 QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const AccountPassword &item);
 QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, AccountPassword &item);
+
+inline AccountPassword::AccountPassword(AccountPasswordClassType classType, InboundPkt *in) :
+    m_hasRecovery(false),
+    m_classType(classType)
+{
+    if(in) fetch(in);
+}
+
+inline AccountPassword::AccountPassword(InboundPkt *in) :
+    m_hasRecovery(false),
+    m_classType(typeAccountNoPassword)
+{
+    fetch(in);
+}
+
+inline AccountPassword::AccountPassword(const Null &null) :
+    TelegramTypeObject(null),
+    m_hasRecovery(false),
+    m_classType(typeAccountNoPassword)
+{
+}
+
+inline AccountPassword::~AccountPassword() {
+}
+
+inline void AccountPassword::setCurrentSalt(const QByteArray &currentSalt) {
+    m_currentSalt = currentSalt;
+}
+
+inline QByteArray AccountPassword::currentSalt() const {
+    return m_currentSalt;
+}
+
+inline void AccountPassword::setEmailUnconfirmedPattern(const QString &emailUnconfirmedPattern) {
+    m_emailUnconfirmedPattern = emailUnconfirmedPattern;
+}
+
+inline QString AccountPassword::emailUnconfirmedPattern() const {
+    return m_emailUnconfirmedPattern;
+}
+
+inline void AccountPassword::setHasRecovery(bool hasRecovery) {
+    m_hasRecovery = hasRecovery;
+}
+
+inline bool AccountPassword::hasRecovery() const {
+    return m_hasRecovery;
+}
+
+inline void AccountPassword::setHint(const QString &hint) {
+    m_hint = hint;
+}
+
+inline QString AccountPassword::hint() const {
+    return m_hint;
+}
+
+inline void AccountPassword::setNewSalt(const QByteArray &newSalt) {
+    m_newSalt = newSalt;
+}
+
+inline QByteArray AccountPassword::newSalt() const {
+    return m_newSalt;
+}
+
+inline bool AccountPassword::operator ==(const AccountPassword &b) const {
+    return m_classType == b.m_classType &&
+           m_currentSalt == b.m_currentSalt &&
+           m_emailUnconfirmedPattern == b.m_emailUnconfirmedPattern &&
+           m_hasRecovery == b.m_hasRecovery &&
+           m_hint == b.m_hint &&
+           m_newSalt == b.m_newSalt;
+}
+
+inline void AccountPassword::setClassType(AccountPassword::AccountPasswordClassType classType) {
+    m_classType = classType;
+}
+
+inline AccountPassword::AccountPasswordClassType AccountPassword::classType() const {
+    return m_classType;
+}
+
+inline bool AccountPassword::fetch(InboundPkt *in) {
+    LQTG_FETCH_LOG;
+    int x = in->fetchInt();
+    switch(x) {
+    case typeAccountNoPassword: {
+        m_newSalt = in->fetchBytes();
+        m_emailUnconfirmedPattern = in->fetchQString();
+        m_classType = static_cast<AccountPasswordClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeAccountPassword: {
+        m_currentSalt = in->fetchBytes();
+        m_newSalt = in->fetchBytes();
+        m_hint = in->fetchQString();
+        m_hasRecovery = in->fetchBool();
+        m_emailUnconfirmedPattern = in->fetchQString();
+        m_classType = static_cast<AccountPasswordClassType>(x);
+        return true;
+    }
+        break;
+    
+    default:
+        LQTG_FETCH_ASSERT;
+        return false;
+    }
+}
+
+inline bool AccountPassword::push(OutboundPkt *out) const {
+    out->appendInt(m_classType);
+    switch(m_classType) {
+    case typeAccountNoPassword: {
+        out->appendBytes(m_newSalt);
+        out->appendQString(m_emailUnconfirmedPattern);
+        return true;
+    }
+        break;
+    
+    case typeAccountPassword: {
+        out->appendBytes(m_currentSalt);
+        out->appendBytes(m_newSalt);
+        out->appendQString(m_hint);
+        out->appendBool(m_hasRecovery);
+        out->appendQString(m_emailUnconfirmedPattern);
+        return true;
+    }
+        break;
+    
+    default:
+        return false;
+    }
+}
+
+inline QMap<QString, QVariant> AccountPassword::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeAccountNoPassword: {
+        result["classType"] = "AccountPassword::typeAccountNoPassword";
+        result["newSalt"] = QVariant::fromValue<QByteArray>(newSalt());
+        result["emailUnconfirmedPattern"] = QVariant::fromValue<QString>(emailUnconfirmedPattern());
+        return result;
+    }
+        break;
+    
+    case typeAccountPassword: {
+        result["classType"] = "AccountPassword::typeAccountPassword";
+        result["currentSalt"] = QVariant::fromValue<QByteArray>(currentSalt());
+        result["newSalt"] = QVariant::fromValue<QByteArray>(newSalt());
+        result["hint"] = QVariant::fromValue<QString>(hint());
+        result["hasRecovery"] = QVariant::fromValue<bool>(hasRecovery());
+        result["emailUnconfirmedPattern"] = QVariant::fromValue<QString>(emailUnconfirmedPattern());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+inline AccountPassword AccountPassword::fromMap(const QMap<QString, QVariant> &map) {
+    AccountPassword result;
+    if(map.value("classType").toString() == "AccountPassword::typeAccountNoPassword") {
+        result.setClassType(typeAccountNoPassword);
+        result.setNewSalt( map.value("newSalt").value<QByteArray>() );
+        result.setEmailUnconfirmedPattern( map.value("emailUnconfirmedPattern").value<QString>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "AccountPassword::typeAccountPassword") {
+        result.setClassType(typeAccountPassword);
+        result.setCurrentSalt( map.value("currentSalt").value<QByteArray>() );
+        result.setNewSalt( map.value("newSalt").value<QByteArray>() );
+        result.setHint( map.value("hint").value<QString>() );
+        result.setHasRecovery( map.value("hasRecovery").value<bool>() );
+        result.setEmailUnconfirmedPattern( map.value("emailUnconfirmedPattern").value<QString>() );
+        return result;
+    }
+    return result;
+}
+
+inline QByteArray AccountPassword::getHash(QCryptographicHash::Algorithm alg) const {
+    QByteArray data;
+    QDataStream str(&data, QIODevice::WriteOnly);
+    str << *this;
+    return QCryptographicHash::hash(data, alg);
+}
+
+inline QDataStream &operator<<(QDataStream &stream, const AccountPassword &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case AccountPassword::typeAccountNoPassword:
+        stream << item.newSalt();
+        stream << item.emailUnconfirmedPattern();
+        break;
+    case AccountPassword::typeAccountPassword:
+        stream << item.currentSalt();
+        stream << item.newSalt();
+        stream << item.hint();
+        stream << item.hasRecovery();
+        stream << item.emailUnconfirmedPattern();
+        break;
+    }
+    return stream;
+}
+
+inline QDataStream &operator>>(QDataStream &stream, AccountPassword &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<AccountPassword::AccountPasswordClassType>(type));
+    switch(type) {
+    case AccountPassword::typeAccountNoPassword: {
+        QByteArray m_new_salt;
+        stream >> m_new_salt;
+        item.setNewSalt(m_new_salt);
+        QString m_email_unconfirmed_pattern;
+        stream >> m_email_unconfirmed_pattern;
+        item.setEmailUnconfirmedPattern(m_email_unconfirmed_pattern);
+    }
+        break;
+    case AccountPassword::typeAccountPassword: {
+        QByteArray m_current_salt;
+        stream >> m_current_salt;
+        item.setCurrentSalt(m_current_salt);
+        QByteArray m_new_salt;
+        stream >> m_new_salt;
+        item.setNewSalt(m_new_salt);
+        QString m_hint;
+        stream >> m_hint;
+        item.setHint(m_hint);
+        bool m_has_recovery;
+        stream >> m_has_recovery;
+        item.setHasRecovery(m_has_recovery);
+        QString m_email_unconfirmed_pattern;
+        stream >> m_email_unconfirmed_pattern;
+        item.setEmailUnconfirmedPattern(m_email_unconfirmed_pattern);
+    }
+        break;
+    }
+    return stream;
+}
+
 
 #endif // LQTG_TYPE_ACCOUNTPASSWORD

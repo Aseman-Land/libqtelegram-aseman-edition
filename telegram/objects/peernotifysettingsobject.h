@@ -71,4 +71,136 @@ private:
     PeerNotifySettings m_core;
 };
 
+inline PeerNotifySettingsObject::PeerNotifySettingsObject(const PeerNotifySettings &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core(core)
+{
+}
+
+inline PeerNotifySettingsObject::PeerNotifySettingsObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core()
+{
+}
+
+inline PeerNotifySettingsObject::~PeerNotifySettingsObject() {
+}
+
+inline void PeerNotifySettingsObject::setFlags(qint32 flags) {
+    if(m_core.flags() == flags) return;
+    m_core.setFlags(flags);
+    Q_EMIT flagsChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 PeerNotifySettingsObject::flags() const {
+    return m_core.flags();
+}
+
+inline void PeerNotifySettingsObject::setMuteUntil(qint32 muteUntil) {
+    if(m_core.muteUntil() == muteUntil) return;
+    m_core.setMuteUntil(muteUntil);
+    Q_EMIT muteUntilChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 PeerNotifySettingsObject::muteUntil() const {
+    return m_core.muteUntil();
+}
+
+inline void PeerNotifySettingsObject::setShowPreviews(bool showPreviews) {
+    if(m_core.showPreviews() == showPreviews) return;
+    m_core.setShowPreviews(showPreviews);
+    Q_EMIT showPreviewsChanged();
+    Q_EMIT coreChanged();
+}
+
+inline bool PeerNotifySettingsObject::showPreviews() const {
+    return m_core.showPreviews();
+}
+
+inline void PeerNotifySettingsObject::setSilent(bool silent) {
+    if(m_core.silent() == silent) return;
+    m_core.setSilent(silent);
+    Q_EMIT silentChanged();
+    Q_EMIT coreChanged();
+}
+
+inline bool PeerNotifySettingsObject::silent() const {
+    return m_core.silent();
+}
+
+inline void PeerNotifySettingsObject::setSound(const QString &sound) {
+    if(m_core.sound() == sound) return;
+    m_core.setSound(sound);
+    Q_EMIT soundChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QString PeerNotifySettingsObject::sound() const {
+    return m_core.sound();
+}
+
+inline PeerNotifySettingsObject &PeerNotifySettingsObject::operator =(const PeerNotifySettings &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+
+    Q_EMIT flagsChanged();
+    Q_EMIT muteUntilChanged();
+    Q_EMIT showPreviewsChanged();
+    Q_EMIT silentChanged();
+    Q_EMIT soundChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool PeerNotifySettingsObject::operator ==(const PeerNotifySettings &b) const {
+    return m_core == b;
+}
+
+inline void PeerNotifySettingsObject::setClassType(quint32 classType) {
+    PeerNotifySettings::PeerNotifySettingsClassType result;
+    switch(classType) {
+    case TypePeerNotifySettingsEmpty:
+        result = PeerNotifySettings::typePeerNotifySettingsEmpty;
+        break;
+    case TypePeerNotifySettings:
+        result = PeerNotifySettings::typePeerNotifySettings;
+        break;
+    default:
+        result = PeerNotifySettings::typePeerNotifySettingsEmpty;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 PeerNotifySettingsObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case PeerNotifySettings::typePeerNotifySettingsEmpty:
+        result = TypePeerNotifySettingsEmpty;
+        break;
+    case PeerNotifySettings::typePeerNotifySettings:
+        result = TypePeerNotifySettings;
+        break;
+    default:
+        result = TypePeerNotifySettingsEmpty;
+        break;
+    }
+
+    return result;
+}
+
+inline void PeerNotifySettingsObject::setCore(const PeerNotifySettings &core) {
+    operator =(core);
+}
+
+inline PeerNotifySettings PeerNotifySettingsObject::core() const {
+    return m_core;
+}
+
 #endif // LQTG_TYPE_PEERNOTIFYSETTINGS_OBJECT

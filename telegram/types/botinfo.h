@@ -9,6 +9,12 @@
 
 #include <QMetaType>
 #include <QVariant>
+#include "core/inboundpkt.h"
+#include "core/outboundpkt.h"
+#include "../coretypes.h"
+
+#include <QDataStream>
+
 #include <QList>
 #include "botcommand.h"
 #include <QString>
@@ -62,5 +68,191 @@ Q_DECLARE_METATYPE(BotInfo)
 
 QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const BotInfo &item);
 QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, BotInfo &item);
+
+inline BotInfo::BotInfo(BotInfoClassType classType, InboundPkt *in) :
+    m_userId(0),
+    m_classType(classType)
+{
+    if(in) fetch(in);
+}
+
+inline BotInfo::BotInfo(InboundPkt *in) :
+    m_userId(0),
+    m_classType(typeBotInfo)
+{
+    fetch(in);
+}
+
+inline BotInfo::BotInfo(const Null &null) :
+    TelegramTypeObject(null),
+    m_userId(0),
+    m_classType(typeBotInfo)
+{
+}
+
+inline BotInfo::~BotInfo() {
+}
+
+inline void BotInfo::setCommands(const QList<BotCommand> &commands) {
+    m_commands = commands;
+}
+
+inline QList<BotCommand> BotInfo::commands() const {
+    return m_commands;
+}
+
+inline void BotInfo::setDescription(const QString &description) {
+    m_description = description;
+}
+
+inline QString BotInfo::description() const {
+    return m_description;
+}
+
+inline void BotInfo::setUserId(qint32 userId) {
+    m_userId = userId;
+}
+
+inline qint32 BotInfo::userId() const {
+    return m_userId;
+}
+
+inline bool BotInfo::operator ==(const BotInfo &b) const {
+    return m_classType == b.m_classType &&
+           m_commands == b.m_commands &&
+           m_description == b.m_description &&
+           m_userId == b.m_userId;
+}
+
+inline void BotInfo::setClassType(BotInfo::BotInfoClassType classType) {
+    m_classType = classType;
+}
+
+inline BotInfo::BotInfoClassType BotInfo::classType() const {
+    return m_classType;
+}
+
+inline bool BotInfo::fetch(InboundPkt *in) {
+    LQTG_FETCH_LOG;
+    int x = in->fetchInt();
+    switch(x) {
+    case typeBotInfo: {
+        m_userId = in->fetchInt();
+        m_description = in->fetchQString();
+        if(in->fetchInt() != (qint32)CoreTypes::typeVector) return false;
+        qint32 m_commands_length = in->fetchInt();
+        m_commands.clear();
+        for (qint32 i = 0; i < m_commands_length; i++) {
+            BotCommand type;
+            type.fetch(in);
+            m_commands.append(type);
+        }
+        m_classType = static_cast<BotInfoClassType>(x);
+        return true;
+    }
+        break;
+    
+    default:
+        LQTG_FETCH_ASSERT;
+        return false;
+    }
+}
+
+inline bool BotInfo::push(OutboundPkt *out) const {
+    out->appendInt(m_classType);
+    switch(m_classType) {
+    case typeBotInfo: {
+        out->appendInt(m_userId);
+        out->appendQString(m_description);
+        out->appendInt(CoreTypes::typeVector);
+        out->appendInt(m_commands.count());
+        for (qint32 i = 0; i < m_commands.count(); i++) {
+            m_commands[i].push(out);
+        }
+        return true;
+    }
+        break;
+    
+    default:
+        return false;
+    }
+}
+
+inline QMap<QString, QVariant> BotInfo::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeBotInfo: {
+        result["classType"] = "BotInfo::typeBotInfo";
+        result["userId"] = QVariant::fromValue<qint32>(userId());
+        result["description"] = QVariant::fromValue<QString>(description());
+        QList<QVariant> _commands;
+        Q_FOREACH(const BotCommand &m__type, m_commands)
+            _commands << m__type.toMap();
+        result["commands"] = _commands;
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+inline BotInfo BotInfo::fromMap(const QMap<QString, QVariant> &map) {
+    BotInfo result;
+    if(map.value("classType").toString() == "BotInfo::typeBotInfo") {
+        result.setClassType(typeBotInfo);
+        result.setUserId( map.value("userId").value<qint32>() );
+        result.setDescription( map.value("description").value<QString>() );
+        QList<QVariant> map_commands = map["commands"].toList();
+        QList<BotCommand> _commands;
+        Q_FOREACH(const QVariant &var, map_commands)
+            _commands << BotCommand::fromMap(var.toMap());
+        result.setCommands(_commands);
+        return result;
+    }
+    return result;
+}
+
+inline QByteArray BotInfo::getHash(QCryptographicHash::Algorithm alg) const {
+    QByteArray data;
+    QDataStream str(&data, QIODevice::WriteOnly);
+    str << *this;
+    return QCryptographicHash::hash(data, alg);
+}
+
+inline QDataStream &operator<<(QDataStream &stream, const BotInfo &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case BotInfo::typeBotInfo:
+        stream << item.userId();
+        stream << item.description();
+        stream << item.commands();
+        break;
+    }
+    return stream;
+}
+
+inline QDataStream &operator>>(QDataStream &stream, BotInfo &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<BotInfo::BotInfoClassType>(type));
+    switch(type) {
+    case BotInfo::typeBotInfo: {
+        qint32 m_user_id;
+        stream >> m_user_id;
+        item.setUserId(m_user_id);
+        QString m_description;
+        stream >> m_description;
+        item.setDescription(m_description);
+        QList<BotCommand> m_commands;
+        stream >> m_commands;
+        item.setCommands(m_commands);
+    }
+        break;
+    }
+    return stream;
+}
+
 
 #endif // LQTG_TYPE_BOTINFO

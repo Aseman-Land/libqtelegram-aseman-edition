@@ -74,4 +74,156 @@ private:
     EncryptedMessage m_core;
 };
 
+inline EncryptedMessageObject::EncryptedMessageObject(const EncryptedMessage &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_file(0),
+    m_core(core)
+{
+    m_file = new EncryptedFileObject(m_core.file(), this);
+    connect(m_file.data(), &EncryptedFileObject::coreChanged, this, &EncryptedMessageObject::coreFileChanged);
+}
+
+inline EncryptedMessageObject::EncryptedMessageObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_file(0),
+    m_core()
+{
+    m_file = new EncryptedFileObject(m_core.file(), this);
+    connect(m_file.data(), &EncryptedFileObject::coreChanged, this, &EncryptedMessageObject::coreFileChanged);
+}
+
+inline EncryptedMessageObject::~EncryptedMessageObject() {
+}
+
+inline void EncryptedMessageObject::setBytes(const QByteArray &bytes) {
+    if(m_core.bytes() == bytes) return;
+    m_core.setBytes(bytes);
+    Q_EMIT bytesChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QByteArray EncryptedMessageObject::bytes() const {
+    return m_core.bytes();
+}
+
+inline void EncryptedMessageObject::setChatId(qint32 chatId) {
+    if(m_core.chatId() == chatId) return;
+    m_core.setChatId(chatId);
+    Q_EMIT chatIdChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 EncryptedMessageObject::chatId() const {
+    return m_core.chatId();
+}
+
+inline void EncryptedMessageObject::setDate(qint32 date) {
+    if(m_core.date() == date) return;
+    m_core.setDate(date);
+    Q_EMIT dateChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 EncryptedMessageObject::date() const {
+    return m_core.date();
+}
+
+inline void EncryptedMessageObject::setFile(EncryptedFileObject* file) {
+    if(m_file == file) return;
+    if(m_file) delete m_file;
+    m_file = file;
+    if(m_file) {
+        m_file->setParent(this);
+        m_core.setFile(m_file->core());
+        connect(m_file.data(), &EncryptedFileObject::coreChanged, this, &EncryptedMessageObject::coreFileChanged);
+    }
+    Q_EMIT fileChanged();
+    Q_EMIT coreChanged();
+}
+
+inline EncryptedFileObject*  EncryptedMessageObject::file() const {
+    return m_file;
+}
+
+inline void EncryptedMessageObject::setRandomId(qint64 randomId) {
+    if(m_core.randomId() == randomId) return;
+    m_core.setRandomId(randomId);
+    Q_EMIT randomIdChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint64 EncryptedMessageObject::randomId() const {
+    return m_core.randomId();
+}
+
+inline EncryptedMessageObject &EncryptedMessageObject::operator =(const EncryptedMessage &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+    m_file->setCore(b.file());
+
+    Q_EMIT bytesChanged();
+    Q_EMIT chatIdChanged();
+    Q_EMIT dateChanged();
+    Q_EMIT fileChanged();
+    Q_EMIT randomIdChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool EncryptedMessageObject::operator ==(const EncryptedMessage &b) const {
+    return m_core == b;
+}
+
+inline void EncryptedMessageObject::setClassType(quint32 classType) {
+    EncryptedMessage::EncryptedMessageClassType result;
+    switch(classType) {
+    case TypeEncryptedMessage:
+        result = EncryptedMessage::typeEncryptedMessage;
+        break;
+    case TypeEncryptedMessageService:
+        result = EncryptedMessage::typeEncryptedMessageService;
+        break;
+    default:
+        result = EncryptedMessage::typeEncryptedMessage;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 EncryptedMessageObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case EncryptedMessage::typeEncryptedMessage:
+        result = TypeEncryptedMessage;
+        break;
+    case EncryptedMessage::typeEncryptedMessageService:
+        result = TypeEncryptedMessageService;
+        break;
+    default:
+        result = TypeEncryptedMessage;
+        break;
+    }
+
+    return result;
+}
+
+inline void EncryptedMessageObject::setCore(const EncryptedMessage &core) {
+    operator =(core);
+}
+
+inline EncryptedMessage EncryptedMessageObject::core() const {
+    return m_core;
+}
+
+inline void EncryptedMessageObject::coreFileChanged() {
+    if(m_core.file() == m_file->core()) return;
+    m_core.setFile(m_file->core());
+    Q_EMIT fileChanged();
+    Q_EMIT coreChanged();
+}
+
 #endif // LQTG_TYPE_ENCRYPTEDMESSAGE_OBJECT

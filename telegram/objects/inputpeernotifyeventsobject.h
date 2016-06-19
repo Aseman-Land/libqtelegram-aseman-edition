@@ -46,4 +46,76 @@ private:
     InputPeerNotifyEvents m_core;
 };
 
+inline InputPeerNotifyEventsObject::InputPeerNotifyEventsObject(const InputPeerNotifyEvents &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core(core)
+{
+}
+
+inline InputPeerNotifyEventsObject::InputPeerNotifyEventsObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core()
+{
+}
+
+inline InputPeerNotifyEventsObject::~InputPeerNotifyEventsObject() {
+}
+
+inline InputPeerNotifyEventsObject &InputPeerNotifyEventsObject::operator =(const InputPeerNotifyEvents &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool InputPeerNotifyEventsObject::operator ==(const InputPeerNotifyEvents &b) const {
+    return m_core == b;
+}
+
+inline void InputPeerNotifyEventsObject::setClassType(quint32 classType) {
+    InputPeerNotifyEvents::InputPeerNotifyEventsClassType result;
+    switch(classType) {
+    case TypeInputPeerNotifyEventsEmpty:
+        result = InputPeerNotifyEvents::typeInputPeerNotifyEventsEmpty;
+        break;
+    case TypeInputPeerNotifyEventsAll:
+        result = InputPeerNotifyEvents::typeInputPeerNotifyEventsAll;
+        break;
+    default:
+        result = InputPeerNotifyEvents::typeInputPeerNotifyEventsEmpty;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 InputPeerNotifyEventsObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case InputPeerNotifyEvents::typeInputPeerNotifyEventsEmpty:
+        result = TypeInputPeerNotifyEventsEmpty;
+        break;
+    case InputPeerNotifyEvents::typeInputPeerNotifyEventsAll:
+        result = TypeInputPeerNotifyEventsAll;
+        break;
+    default:
+        result = TypeInputPeerNotifyEventsEmpty;
+        break;
+    }
+
+    return result;
+}
+
+inline void InputPeerNotifyEventsObject::setCore(const InputPeerNotifyEvents &core) {
+    operator =(core);
+}
+
+inline InputPeerNotifyEvents InputPeerNotifyEventsObject::core() const {
+    return m_core;
+}
+
 #endif // LQTG_TYPE_INPUTPEERNOTIFYEVENTS_OBJECT

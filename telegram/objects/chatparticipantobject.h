@@ -62,4 +62,118 @@ private:
     ChatParticipant m_core;
 };
 
+inline ChatParticipantObject::ChatParticipantObject(const ChatParticipant &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core(core)
+{
+}
+
+inline ChatParticipantObject::ChatParticipantObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core()
+{
+}
+
+inline ChatParticipantObject::~ChatParticipantObject() {
+}
+
+inline void ChatParticipantObject::setDate(qint32 date) {
+    if(m_core.date() == date) return;
+    m_core.setDate(date);
+    Q_EMIT dateChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 ChatParticipantObject::date() const {
+    return m_core.date();
+}
+
+inline void ChatParticipantObject::setInviterId(qint32 inviterId) {
+    if(m_core.inviterId() == inviterId) return;
+    m_core.setInviterId(inviterId);
+    Q_EMIT inviterIdChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 ChatParticipantObject::inviterId() const {
+    return m_core.inviterId();
+}
+
+inline void ChatParticipantObject::setUserId(qint32 userId) {
+    if(m_core.userId() == userId) return;
+    m_core.setUserId(userId);
+    Q_EMIT userIdChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 ChatParticipantObject::userId() const {
+    return m_core.userId();
+}
+
+inline ChatParticipantObject &ChatParticipantObject::operator =(const ChatParticipant &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+
+    Q_EMIT dateChanged();
+    Q_EMIT inviterIdChanged();
+    Q_EMIT userIdChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool ChatParticipantObject::operator ==(const ChatParticipant &b) const {
+    return m_core == b;
+}
+
+inline void ChatParticipantObject::setClassType(quint32 classType) {
+    ChatParticipant::ChatParticipantClassType result;
+    switch(classType) {
+    case TypeChatParticipant:
+        result = ChatParticipant::typeChatParticipant;
+        break;
+    case TypeChatParticipantCreator:
+        result = ChatParticipant::typeChatParticipantCreator;
+        break;
+    case TypeChatParticipantAdmin:
+        result = ChatParticipant::typeChatParticipantAdmin;
+        break;
+    default:
+        result = ChatParticipant::typeChatParticipant;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 ChatParticipantObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case ChatParticipant::typeChatParticipant:
+        result = TypeChatParticipant;
+        break;
+    case ChatParticipant::typeChatParticipantCreator:
+        result = TypeChatParticipantCreator;
+        break;
+    case ChatParticipant::typeChatParticipantAdmin:
+        result = TypeChatParticipantAdmin;
+        break;
+    default:
+        result = TypeChatParticipant;
+        break;
+    }
+
+    return result;
+}
+
+inline void ChatParticipantObject::setCore(const ChatParticipant &core) {
+    operator =(core);
+}
+
+inline ChatParticipant ChatParticipantObject::core() const {
+    return m_core;
+}
+
 #endif // LQTG_TYPE_CHATPARTICIPANT_OBJECT

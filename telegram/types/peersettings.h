@@ -9,6 +9,12 @@
 
 #include <QMetaType>
 #include <QVariant>
+#include "core/inboundpkt.h"
+#include "core/outboundpkt.h"
+#include "../coretypes.h"
+
+#include <QDataStream>
+
 #include <QtGlobal>
 
 class LIBQTELEGRAMSHARED_EXPORT PeerSettings : public TelegramTypeObject
@@ -54,5 +60,148 @@ Q_DECLARE_METATYPE(PeerSettings)
 
 QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const PeerSettings &item);
 QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, PeerSettings &item);
+
+inline PeerSettings::PeerSettings(PeerSettingsClassType classType, InboundPkt *in) :
+    m_flags(0),
+    m_classType(classType)
+{
+    if(in) fetch(in);
+}
+
+inline PeerSettings::PeerSettings(InboundPkt *in) :
+    m_flags(0),
+    m_classType(typePeerSettings)
+{
+    fetch(in);
+}
+
+inline PeerSettings::PeerSettings(const Null &null) :
+    TelegramTypeObject(null),
+    m_flags(0),
+    m_classType(typePeerSettings)
+{
+}
+
+inline PeerSettings::~PeerSettings() {
+}
+
+inline void PeerSettings::setFlags(qint32 flags) {
+    m_flags = flags;
+}
+
+inline qint32 PeerSettings::flags() const {
+    return m_flags;
+}
+
+inline void PeerSettings::setReportSpam(bool reportSpam) {
+    if(reportSpam) m_flags = (m_flags | (1<<0));
+    else m_flags = (m_flags & ~(1<<0));
+}
+
+inline bool PeerSettings::reportSpam() const {
+    return (m_flags & 1<<0);
+}
+
+inline bool PeerSettings::operator ==(const PeerSettings &b) const {
+    return m_classType == b.m_classType &&
+           m_flags == b.m_flags;
+}
+
+inline void PeerSettings::setClassType(PeerSettings::PeerSettingsClassType classType) {
+    m_classType = classType;
+}
+
+inline PeerSettings::PeerSettingsClassType PeerSettings::classType() const {
+    return m_classType;
+}
+
+inline bool PeerSettings::fetch(InboundPkt *in) {
+    LQTG_FETCH_LOG;
+    int x = in->fetchInt();
+    switch(x) {
+    case typePeerSettings: {
+        m_flags = in->fetchInt();
+        m_classType = static_cast<PeerSettingsClassType>(x);
+        return true;
+    }
+        break;
+    
+    default:
+        LQTG_FETCH_ASSERT;
+        return false;
+    }
+}
+
+inline bool PeerSettings::push(OutboundPkt *out) const {
+    out->appendInt(m_classType);
+    switch(m_classType) {
+    case typePeerSettings: {
+        out->appendInt(m_flags);
+        return true;
+    }
+        break;
+    
+    default:
+        return false;
+    }
+}
+
+inline QMap<QString, QVariant> PeerSettings::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typePeerSettings: {
+        result["classType"] = "PeerSettings::typePeerSettings";
+        result["reportSpam"] = QVariant::fromValue<bool>(reportSpam());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+inline PeerSettings PeerSettings::fromMap(const QMap<QString, QVariant> &map) {
+    PeerSettings result;
+    if(map.value("classType").toString() == "PeerSettings::typePeerSettings") {
+        result.setClassType(typePeerSettings);
+        result.setReportSpam( map.value("reportSpam").value<bool>() );
+        return result;
+    }
+    return result;
+}
+
+inline QByteArray PeerSettings::getHash(QCryptographicHash::Algorithm alg) const {
+    QByteArray data;
+    QDataStream str(&data, QIODevice::WriteOnly);
+    str << *this;
+    return QCryptographicHash::hash(data, alg);
+}
+
+inline QDataStream &operator<<(QDataStream &stream, const PeerSettings &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case PeerSettings::typePeerSettings:
+        stream << item.flags();
+        break;
+    }
+    return stream;
+}
+
+inline QDataStream &operator>>(QDataStream &stream, PeerSettings &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<PeerSettings::PeerSettingsClassType>(type));
+    switch(type) {
+    case PeerSettings::typePeerSettings: {
+        qint32 m_flags;
+        stream >> m_flags;
+        item.setFlags(m_flags);
+    }
+        break;
+    }
+    return stream;
+}
+
 
 #endif // LQTG_TYPE_PEERSETTINGS

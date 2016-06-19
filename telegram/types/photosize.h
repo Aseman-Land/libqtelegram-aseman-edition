@@ -9,6 +9,12 @@
 
 #include <QMetaType>
 #include <QVariant>
+#include "core/inboundpkt.h"
+#include "core/outboundpkt.h"
+#include "../coretypes.h"
+
+#include <QDataStream>
+
 #include <QByteArray>
 #include <QtGlobal>
 #include "filelocation.h"
@@ -76,5 +82,322 @@ Q_DECLARE_METATYPE(PhotoSize)
 
 QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const PhotoSize &item);
 QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, PhotoSize &item);
+
+inline PhotoSize::PhotoSize(PhotoSizeClassType classType, InboundPkt *in) :
+    m_h(0),
+    m_size(0),
+    m_w(0),
+    m_classType(classType)
+{
+    if(in) fetch(in);
+}
+
+inline PhotoSize::PhotoSize(InboundPkt *in) :
+    m_h(0),
+    m_size(0),
+    m_w(0),
+    m_classType(typePhotoSizeEmpty)
+{
+    fetch(in);
+}
+
+inline PhotoSize::PhotoSize(const Null &null) :
+    TelegramTypeObject(null),
+    m_h(0),
+    m_size(0),
+    m_w(0),
+    m_classType(typePhotoSizeEmpty)
+{
+}
+
+inline PhotoSize::~PhotoSize() {
+}
+
+inline void PhotoSize::setBytes(const QByteArray &bytes) {
+    m_bytes = bytes;
+}
+
+inline QByteArray PhotoSize::bytes() const {
+    return m_bytes;
+}
+
+inline void PhotoSize::setH(qint32 h) {
+    m_h = h;
+}
+
+inline qint32 PhotoSize::h() const {
+    return m_h;
+}
+
+inline void PhotoSize::setLocation(const FileLocation &location) {
+    m_location = location;
+}
+
+inline FileLocation PhotoSize::location() const {
+    return m_location;
+}
+
+inline void PhotoSize::setSize(qint32 size) {
+    m_size = size;
+}
+
+inline qint32 PhotoSize::size() const {
+    return m_size;
+}
+
+inline void PhotoSize::setType(const QString &type) {
+    m_type = type;
+}
+
+inline QString PhotoSize::type() const {
+    return m_type;
+}
+
+inline void PhotoSize::setW(qint32 w) {
+    m_w = w;
+}
+
+inline qint32 PhotoSize::w() const {
+    return m_w;
+}
+
+inline bool PhotoSize::operator ==(const PhotoSize &b) const {
+    return m_classType == b.m_classType &&
+           m_bytes == b.m_bytes &&
+           m_h == b.m_h &&
+           m_location == b.m_location &&
+           m_size == b.m_size &&
+           m_type == b.m_type &&
+           m_w == b.m_w;
+}
+
+inline void PhotoSize::setClassType(PhotoSize::PhotoSizeClassType classType) {
+    m_classType = classType;
+}
+
+inline PhotoSize::PhotoSizeClassType PhotoSize::classType() const {
+    return m_classType;
+}
+
+inline bool PhotoSize::fetch(InboundPkt *in) {
+    LQTG_FETCH_LOG;
+    int x = in->fetchInt();
+    switch(x) {
+    case typePhotoSizeEmpty: {
+        m_type = in->fetchQString();
+        m_classType = static_cast<PhotoSizeClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typePhotoSize: {
+        m_type = in->fetchQString();
+        m_location.fetch(in);
+        m_w = in->fetchInt();
+        m_h = in->fetchInt();
+        m_size = in->fetchInt();
+        m_classType = static_cast<PhotoSizeClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typePhotoCachedSize: {
+        m_type = in->fetchQString();
+        m_location.fetch(in);
+        m_w = in->fetchInt();
+        m_h = in->fetchInt();
+        m_bytes = in->fetchBytes();
+        m_classType = static_cast<PhotoSizeClassType>(x);
+        return true;
+    }
+        break;
+    
+    default:
+        LQTG_FETCH_ASSERT;
+        return false;
+    }
+}
+
+inline bool PhotoSize::push(OutboundPkt *out) const {
+    out->appendInt(m_classType);
+    switch(m_classType) {
+    case typePhotoSizeEmpty: {
+        out->appendQString(m_type);
+        return true;
+    }
+        break;
+    
+    case typePhotoSize: {
+        out->appendQString(m_type);
+        m_location.push(out);
+        out->appendInt(m_w);
+        out->appendInt(m_h);
+        out->appendInt(m_size);
+        return true;
+    }
+        break;
+    
+    case typePhotoCachedSize: {
+        out->appendQString(m_type);
+        m_location.push(out);
+        out->appendInt(m_w);
+        out->appendInt(m_h);
+        out->appendBytes(m_bytes);
+        return true;
+    }
+        break;
+    
+    default:
+        return false;
+    }
+}
+
+inline QMap<QString, QVariant> PhotoSize::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typePhotoSizeEmpty: {
+        result["classType"] = "PhotoSize::typePhotoSizeEmpty";
+        result["type"] = QVariant::fromValue<QString>(type());
+        return result;
+    }
+        break;
+    
+    case typePhotoSize: {
+        result["classType"] = "PhotoSize::typePhotoSize";
+        result["type"] = QVariant::fromValue<QString>(type());
+        result["location"] = m_location.toMap();
+        result["w"] = QVariant::fromValue<qint32>(w());
+        result["h"] = QVariant::fromValue<qint32>(h());
+        result["size"] = QVariant::fromValue<qint32>(size());
+        return result;
+    }
+        break;
+    
+    case typePhotoCachedSize: {
+        result["classType"] = "PhotoSize::typePhotoCachedSize";
+        result["type"] = QVariant::fromValue<QString>(type());
+        result["location"] = m_location.toMap();
+        result["w"] = QVariant::fromValue<qint32>(w());
+        result["h"] = QVariant::fromValue<qint32>(h());
+        result["bytes"] = QVariant::fromValue<QByteArray>(bytes());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+inline PhotoSize PhotoSize::fromMap(const QMap<QString, QVariant> &map) {
+    PhotoSize result;
+    if(map.value("classType").toString() == "PhotoSize::typePhotoSizeEmpty") {
+        result.setClassType(typePhotoSizeEmpty);
+        result.setType( map.value("type").value<QString>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "PhotoSize::typePhotoSize") {
+        result.setClassType(typePhotoSize);
+        result.setType( map.value("type").value<QString>() );
+        result.setLocation( FileLocation::fromMap(map.value("location").toMap()) );
+        result.setW( map.value("w").value<qint32>() );
+        result.setH( map.value("h").value<qint32>() );
+        result.setSize( map.value("size").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "PhotoSize::typePhotoCachedSize") {
+        result.setClassType(typePhotoCachedSize);
+        result.setType( map.value("type").value<QString>() );
+        result.setLocation( FileLocation::fromMap(map.value("location").toMap()) );
+        result.setW( map.value("w").value<qint32>() );
+        result.setH( map.value("h").value<qint32>() );
+        result.setBytes( map.value("bytes").value<QByteArray>() );
+        return result;
+    }
+    return result;
+}
+
+inline QByteArray PhotoSize::getHash(QCryptographicHash::Algorithm alg) const {
+    QByteArray data;
+    QDataStream str(&data, QIODevice::WriteOnly);
+    str << *this;
+    return QCryptographicHash::hash(data, alg);
+}
+
+inline QDataStream &operator<<(QDataStream &stream, const PhotoSize &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case PhotoSize::typePhotoSizeEmpty:
+        stream << item.type();
+        break;
+    case PhotoSize::typePhotoSize:
+        stream << item.type();
+        stream << item.location();
+        stream << item.w();
+        stream << item.h();
+        stream << item.size();
+        break;
+    case PhotoSize::typePhotoCachedSize:
+        stream << item.type();
+        stream << item.location();
+        stream << item.w();
+        stream << item.h();
+        stream << item.bytes();
+        break;
+    }
+    return stream;
+}
+
+inline QDataStream &operator>>(QDataStream &stream, PhotoSize &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<PhotoSize::PhotoSizeClassType>(type));
+    switch(type) {
+    case PhotoSize::typePhotoSizeEmpty: {
+        QString m_type;
+        stream >> m_type;
+        item.setType(m_type);
+    }
+        break;
+    case PhotoSize::typePhotoSize: {
+        QString m_type;
+        stream >> m_type;
+        item.setType(m_type);
+        FileLocation m_location;
+        stream >> m_location;
+        item.setLocation(m_location);
+        qint32 m_w;
+        stream >> m_w;
+        item.setW(m_w);
+        qint32 m_h;
+        stream >> m_h;
+        item.setH(m_h);
+        qint32 m_size;
+        stream >> m_size;
+        item.setSize(m_size);
+    }
+        break;
+    case PhotoSize::typePhotoCachedSize: {
+        QString m_type;
+        stream >> m_type;
+        item.setType(m_type);
+        FileLocation m_location;
+        stream >> m_location;
+        item.setLocation(m_location);
+        qint32 m_w;
+        stream >> m_w;
+        item.setW(m_w);
+        qint32 m_h;
+        stream >> m_h;
+        item.setH(m_h);
+        QByteArray m_bytes;
+        stream >> m_bytes;
+        item.setBytes(m_bytes);
+    }
+        break;
+    }
+    return stream;
+}
+
 
 #endif // LQTG_TYPE_PHOTOSIZE

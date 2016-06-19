@@ -46,4 +46,76 @@ private:
     PeerNotifyEvents m_core;
 };
 
+inline PeerNotifyEventsObject::PeerNotifyEventsObject(const PeerNotifyEvents &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core(core)
+{
+}
+
+inline PeerNotifyEventsObject::PeerNotifyEventsObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core()
+{
+}
+
+inline PeerNotifyEventsObject::~PeerNotifyEventsObject() {
+}
+
+inline PeerNotifyEventsObject &PeerNotifyEventsObject::operator =(const PeerNotifyEvents &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool PeerNotifyEventsObject::operator ==(const PeerNotifyEvents &b) const {
+    return m_core == b;
+}
+
+inline void PeerNotifyEventsObject::setClassType(quint32 classType) {
+    PeerNotifyEvents::PeerNotifyEventsClassType result;
+    switch(classType) {
+    case TypePeerNotifyEventsEmpty:
+        result = PeerNotifyEvents::typePeerNotifyEventsEmpty;
+        break;
+    case TypePeerNotifyEventsAll:
+        result = PeerNotifyEvents::typePeerNotifyEventsAll;
+        break;
+    default:
+        result = PeerNotifyEvents::typePeerNotifyEventsEmpty;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 PeerNotifyEventsObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case PeerNotifyEvents::typePeerNotifyEventsEmpty:
+        result = TypePeerNotifyEventsEmpty;
+        break;
+    case PeerNotifyEvents::typePeerNotifyEventsAll:
+        result = TypePeerNotifyEventsAll;
+        break;
+    default:
+        result = TypePeerNotifyEventsEmpty;
+        break;
+    }
+
+    return result;
+}
+
+inline void PeerNotifyEventsObject::setCore(const PeerNotifyEvents &core) {
+    operator =(core);
+}
+
+inline PeerNotifyEvents PeerNotifyEventsObject::core() const {
+    return m_core;
+}
+
 #endif // LQTG_TYPE_PEERNOTIFYEVENTS_OBJECT

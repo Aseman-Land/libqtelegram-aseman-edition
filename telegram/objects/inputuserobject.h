@@ -57,4 +57,106 @@ private:
     InputUser m_core;
 };
 
+inline InputUserObject::InputUserObject(const InputUser &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core(core)
+{
+}
+
+inline InputUserObject::InputUserObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core()
+{
+}
+
+inline InputUserObject::~InputUserObject() {
+}
+
+inline void InputUserObject::setAccessHash(qint64 accessHash) {
+    if(m_core.accessHash() == accessHash) return;
+    m_core.setAccessHash(accessHash);
+    Q_EMIT accessHashChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint64 InputUserObject::accessHash() const {
+    return m_core.accessHash();
+}
+
+inline void InputUserObject::setUserId(qint32 userId) {
+    if(m_core.userId() == userId) return;
+    m_core.setUserId(userId);
+    Q_EMIT userIdChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 InputUserObject::userId() const {
+    return m_core.userId();
+}
+
+inline InputUserObject &InputUserObject::operator =(const InputUser &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+
+    Q_EMIT accessHashChanged();
+    Q_EMIT userIdChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool InputUserObject::operator ==(const InputUser &b) const {
+    return m_core == b;
+}
+
+inline void InputUserObject::setClassType(quint32 classType) {
+    InputUser::InputUserClassType result;
+    switch(classType) {
+    case TypeInputUserEmpty:
+        result = InputUser::typeInputUserEmpty;
+        break;
+    case TypeInputUserSelf:
+        result = InputUser::typeInputUserSelf;
+        break;
+    case TypeInputUser:
+        result = InputUser::typeInputUser;
+        break;
+    default:
+        result = InputUser::typeInputUserEmpty;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 InputUserObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case InputUser::typeInputUserEmpty:
+        result = TypeInputUserEmpty;
+        break;
+    case InputUser::typeInputUserSelf:
+        result = TypeInputUserSelf;
+        break;
+    case InputUser::typeInputUser:
+        result = TypeInputUser;
+        break;
+    default:
+        result = TypeInputUserEmpty;
+        break;
+    }
+
+    return result;
+}
+
+inline void InputUserObject::setCore(const InputUser &core) {
+    operator =(core);
+}
+
+inline InputUser InputUserObject::core() const {
+    return m_core;
+}
+
 #endif // LQTG_TYPE_INPUTUSER_OBJECT

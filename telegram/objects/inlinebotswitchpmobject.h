@@ -55,4 +55,94 @@ private:
     InlineBotSwitchPM m_core;
 };
 
+inline InlineBotSwitchPMObject::InlineBotSwitchPMObject(const InlineBotSwitchPM &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core(core)
+{
+}
+
+inline InlineBotSwitchPMObject::InlineBotSwitchPMObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core()
+{
+}
+
+inline InlineBotSwitchPMObject::~InlineBotSwitchPMObject() {
+}
+
+inline void InlineBotSwitchPMObject::setStartParam(const QString &startParam) {
+    if(m_core.startParam() == startParam) return;
+    m_core.setStartParam(startParam);
+    Q_EMIT startParamChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QString InlineBotSwitchPMObject::startParam() const {
+    return m_core.startParam();
+}
+
+inline void InlineBotSwitchPMObject::setText(const QString &text) {
+    if(m_core.text() == text) return;
+    m_core.setText(text);
+    Q_EMIT textChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QString InlineBotSwitchPMObject::text() const {
+    return m_core.text();
+}
+
+inline InlineBotSwitchPMObject &InlineBotSwitchPMObject::operator =(const InlineBotSwitchPM &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+
+    Q_EMIT startParamChanged();
+    Q_EMIT textChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool InlineBotSwitchPMObject::operator ==(const InlineBotSwitchPM &b) const {
+    return m_core == b;
+}
+
+inline void InlineBotSwitchPMObject::setClassType(quint32 classType) {
+    InlineBotSwitchPM::InlineBotSwitchPMClassType result;
+    switch(classType) {
+    case TypeInlineBotSwitchPM:
+        result = InlineBotSwitchPM::typeInlineBotSwitchPM;
+        break;
+    default:
+        result = InlineBotSwitchPM::typeInlineBotSwitchPM;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 InlineBotSwitchPMObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case InlineBotSwitchPM::typeInlineBotSwitchPM:
+        result = TypeInlineBotSwitchPM;
+        break;
+    default:
+        result = TypeInlineBotSwitchPM;
+        break;
+    }
+
+    return result;
+}
+
+inline void InlineBotSwitchPMObject::setCore(const InlineBotSwitchPM &core) {
+    operator =(core);
+}
+
+inline InlineBotSwitchPM InlineBotSwitchPMObject::core() const {
+    return m_core;
+}
+
 #endif // LQTG_TYPE_INLINEBOTSWITCHPM_OBJECT

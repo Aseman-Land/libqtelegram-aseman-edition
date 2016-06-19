@@ -60,4 +60,106 @@ private:
     NearestDc m_core;
 };
 
+inline NearestDcObject::NearestDcObject(const NearestDc &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core(core)
+{
+}
+
+inline NearestDcObject::NearestDcObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core()
+{
+}
+
+inline NearestDcObject::~NearestDcObject() {
+}
+
+inline void NearestDcObject::setCountry(const QString &country) {
+    if(m_core.country() == country) return;
+    m_core.setCountry(country);
+    Q_EMIT countryChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QString NearestDcObject::country() const {
+    return m_core.country();
+}
+
+inline void NearestDcObject::setNearestDc(qint32 nearestDc) {
+    if(m_core.nearestDc() == nearestDc) return;
+    m_core.setNearestDc(nearestDc);
+    Q_EMIT nearestDcChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 NearestDcObject::nearestDc() const {
+    return m_core.nearestDc();
+}
+
+inline void NearestDcObject::setThisDc(qint32 thisDc) {
+    if(m_core.thisDc() == thisDc) return;
+    m_core.setThisDc(thisDc);
+    Q_EMIT thisDcChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 NearestDcObject::thisDc() const {
+    return m_core.thisDc();
+}
+
+inline NearestDcObject &NearestDcObject::operator =(const NearestDc &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+
+    Q_EMIT countryChanged();
+    Q_EMIT nearestDcChanged();
+    Q_EMIT thisDcChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool NearestDcObject::operator ==(const NearestDc &b) const {
+    return m_core == b;
+}
+
+inline void NearestDcObject::setClassType(quint32 classType) {
+    NearestDc::NearestDcClassType result;
+    switch(classType) {
+    case TypeNearestDc:
+        result = NearestDc::typeNearestDc;
+        break;
+    default:
+        result = NearestDc::typeNearestDc;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 NearestDcObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case NearestDc::typeNearestDc:
+        result = TypeNearestDc;
+        break;
+    default:
+        result = TypeNearestDc;
+        break;
+    }
+
+    return result;
+}
+
+inline void NearestDcObject::setCore(const NearestDc &core) {
+    operator =(core);
+}
+
+inline NearestDc NearestDcObject::core() const {
+    return m_core;
+}
+
 #endif // LQTG_TYPE_NEARESTDC_OBJECT

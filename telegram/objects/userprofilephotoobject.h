@@ -66,4 +66,152 @@ private:
     UserProfilePhoto m_core;
 };
 
+inline UserProfilePhotoObject::UserProfilePhotoObject(const UserProfilePhoto &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_photoBig(0),
+    m_photoSmall(0),
+    m_core(core)
+{
+    m_photoBig = new FileLocationObject(m_core.photoBig(), this);
+    connect(m_photoBig.data(), &FileLocationObject::coreChanged, this, &UserProfilePhotoObject::corePhotoBigChanged);
+    m_photoSmall = new FileLocationObject(m_core.photoSmall(), this);
+    connect(m_photoSmall.data(), &FileLocationObject::coreChanged, this, &UserProfilePhotoObject::corePhotoSmallChanged);
+}
+
+inline UserProfilePhotoObject::UserProfilePhotoObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_photoBig(0),
+    m_photoSmall(0),
+    m_core()
+{
+    m_photoBig = new FileLocationObject(m_core.photoBig(), this);
+    connect(m_photoBig.data(), &FileLocationObject::coreChanged, this, &UserProfilePhotoObject::corePhotoBigChanged);
+    m_photoSmall = new FileLocationObject(m_core.photoSmall(), this);
+    connect(m_photoSmall.data(), &FileLocationObject::coreChanged, this, &UserProfilePhotoObject::corePhotoSmallChanged);
+}
+
+inline UserProfilePhotoObject::~UserProfilePhotoObject() {
+}
+
+inline void UserProfilePhotoObject::setPhotoBig(FileLocationObject* photoBig) {
+    if(m_photoBig == photoBig) return;
+    if(m_photoBig) delete m_photoBig;
+    m_photoBig = photoBig;
+    if(m_photoBig) {
+        m_photoBig->setParent(this);
+        m_core.setPhotoBig(m_photoBig->core());
+        connect(m_photoBig.data(), &FileLocationObject::coreChanged, this, &UserProfilePhotoObject::corePhotoBigChanged);
+    }
+    Q_EMIT photoBigChanged();
+    Q_EMIT coreChanged();
+}
+
+inline FileLocationObject*  UserProfilePhotoObject::photoBig() const {
+    return m_photoBig;
+}
+
+inline void UserProfilePhotoObject::setPhotoId(qint64 photoId) {
+    if(m_core.photoId() == photoId) return;
+    m_core.setPhotoId(photoId);
+    Q_EMIT photoIdChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint64 UserProfilePhotoObject::photoId() const {
+    return m_core.photoId();
+}
+
+inline void UserProfilePhotoObject::setPhotoSmall(FileLocationObject* photoSmall) {
+    if(m_photoSmall == photoSmall) return;
+    if(m_photoSmall) delete m_photoSmall;
+    m_photoSmall = photoSmall;
+    if(m_photoSmall) {
+        m_photoSmall->setParent(this);
+        m_core.setPhotoSmall(m_photoSmall->core());
+        connect(m_photoSmall.data(), &FileLocationObject::coreChanged, this, &UserProfilePhotoObject::corePhotoSmallChanged);
+    }
+    Q_EMIT photoSmallChanged();
+    Q_EMIT coreChanged();
+}
+
+inline FileLocationObject*  UserProfilePhotoObject::photoSmall() const {
+    return m_photoSmall;
+}
+
+inline UserProfilePhotoObject &UserProfilePhotoObject::operator =(const UserProfilePhoto &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+    m_photoBig->setCore(b.photoBig());
+    m_photoSmall->setCore(b.photoSmall());
+
+    Q_EMIT photoBigChanged();
+    Q_EMIT photoIdChanged();
+    Q_EMIT photoSmallChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool UserProfilePhotoObject::operator ==(const UserProfilePhoto &b) const {
+    return m_core == b;
+}
+
+inline void UserProfilePhotoObject::setClassType(quint32 classType) {
+    UserProfilePhoto::UserProfilePhotoClassType result;
+    switch(classType) {
+    case TypeUserProfilePhotoEmpty:
+        result = UserProfilePhoto::typeUserProfilePhotoEmpty;
+        break;
+    case TypeUserProfilePhoto:
+        result = UserProfilePhoto::typeUserProfilePhoto;
+        break;
+    default:
+        result = UserProfilePhoto::typeUserProfilePhotoEmpty;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 UserProfilePhotoObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case UserProfilePhoto::typeUserProfilePhotoEmpty:
+        result = TypeUserProfilePhotoEmpty;
+        break;
+    case UserProfilePhoto::typeUserProfilePhoto:
+        result = TypeUserProfilePhoto;
+        break;
+    default:
+        result = TypeUserProfilePhotoEmpty;
+        break;
+    }
+
+    return result;
+}
+
+inline void UserProfilePhotoObject::setCore(const UserProfilePhoto &core) {
+    operator =(core);
+}
+
+inline UserProfilePhoto UserProfilePhotoObject::core() const {
+    return m_core;
+}
+
+inline void UserProfilePhotoObject::corePhotoBigChanged() {
+    if(m_core.photoBig() == m_photoBig->core()) return;
+    m_core.setPhotoBig(m_photoBig->core());
+    Q_EMIT photoBigChanged();
+    Q_EMIT coreChanged();
+}
+
+inline void UserProfilePhotoObject::corePhotoSmallChanged() {
+    if(m_core.photoSmall() == m_photoSmall->core()) return;
+    m_core.setPhotoSmall(m_photoSmall->core());
+    Q_EMIT photoSmallChanged();
+    Q_EMIT coreChanged();
+}
+
 #endif // LQTG_TYPE_USERPROFILEPHOTO_OBJECT

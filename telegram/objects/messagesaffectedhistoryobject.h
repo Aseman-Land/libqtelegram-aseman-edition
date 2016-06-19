@@ -60,4 +60,106 @@ private:
     MessagesAffectedHistory m_core;
 };
 
+inline MessagesAffectedHistoryObject::MessagesAffectedHistoryObject(const MessagesAffectedHistory &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core(core)
+{
+}
+
+inline MessagesAffectedHistoryObject::MessagesAffectedHistoryObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core()
+{
+}
+
+inline MessagesAffectedHistoryObject::~MessagesAffectedHistoryObject() {
+}
+
+inline void MessagesAffectedHistoryObject::setOffset(qint32 offset) {
+    if(m_core.offset() == offset) return;
+    m_core.setOffset(offset);
+    Q_EMIT offsetChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 MessagesAffectedHistoryObject::offset() const {
+    return m_core.offset();
+}
+
+inline void MessagesAffectedHistoryObject::setPts(qint32 pts) {
+    if(m_core.pts() == pts) return;
+    m_core.setPts(pts);
+    Q_EMIT ptsChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 MessagesAffectedHistoryObject::pts() const {
+    return m_core.pts();
+}
+
+inline void MessagesAffectedHistoryObject::setPtsCount(qint32 ptsCount) {
+    if(m_core.ptsCount() == ptsCount) return;
+    m_core.setPtsCount(ptsCount);
+    Q_EMIT ptsCountChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 MessagesAffectedHistoryObject::ptsCount() const {
+    return m_core.ptsCount();
+}
+
+inline MessagesAffectedHistoryObject &MessagesAffectedHistoryObject::operator =(const MessagesAffectedHistory &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+
+    Q_EMIT offsetChanged();
+    Q_EMIT ptsChanged();
+    Q_EMIT ptsCountChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool MessagesAffectedHistoryObject::operator ==(const MessagesAffectedHistory &b) const {
+    return m_core == b;
+}
+
+inline void MessagesAffectedHistoryObject::setClassType(quint32 classType) {
+    MessagesAffectedHistory::MessagesAffectedHistoryClassType result;
+    switch(classType) {
+    case TypeMessagesAffectedHistory:
+        result = MessagesAffectedHistory::typeMessagesAffectedHistory;
+        break;
+    default:
+        result = MessagesAffectedHistory::typeMessagesAffectedHistory;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 MessagesAffectedHistoryObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case MessagesAffectedHistory::typeMessagesAffectedHistory:
+        result = TypeMessagesAffectedHistory;
+        break;
+    default:
+        result = TypeMessagesAffectedHistory;
+        break;
+    }
+
+    return result;
+}
+
+inline void MessagesAffectedHistoryObject::setCore(const MessagesAffectedHistory &core) {
+    operator =(core);
+}
+
+inline MessagesAffectedHistory MessagesAffectedHistoryObject::core() const {
+    return m_core;
+}
+
 #endif // LQTG_TYPE_MESSAGESAFFECTEDHISTORY_OBJECT

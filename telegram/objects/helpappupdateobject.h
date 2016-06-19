@@ -66,4 +66,124 @@ private:
     HelpAppUpdate m_core;
 };
 
+inline HelpAppUpdateObject::HelpAppUpdateObject(const HelpAppUpdate &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core(core)
+{
+}
+
+inline HelpAppUpdateObject::HelpAppUpdateObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core()
+{
+}
+
+inline HelpAppUpdateObject::~HelpAppUpdateObject() {
+}
+
+inline void HelpAppUpdateObject::setCritical(bool critical) {
+    if(m_core.critical() == critical) return;
+    m_core.setCritical(critical);
+    Q_EMIT criticalChanged();
+    Q_EMIT coreChanged();
+}
+
+inline bool HelpAppUpdateObject::critical() const {
+    return m_core.critical();
+}
+
+inline void HelpAppUpdateObject::setId(qint32 id) {
+    if(m_core.id() == id) return;
+    m_core.setId(id);
+    Q_EMIT idChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 HelpAppUpdateObject::id() const {
+    return m_core.id();
+}
+
+inline void HelpAppUpdateObject::setText(const QString &text) {
+    if(m_core.text() == text) return;
+    m_core.setText(text);
+    Q_EMIT textChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QString HelpAppUpdateObject::text() const {
+    return m_core.text();
+}
+
+inline void HelpAppUpdateObject::setUrl(const QString &url) {
+    if(m_core.url() == url) return;
+    m_core.setUrl(url);
+    Q_EMIT urlChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QString HelpAppUpdateObject::url() const {
+    return m_core.url();
+}
+
+inline HelpAppUpdateObject &HelpAppUpdateObject::operator =(const HelpAppUpdate &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+
+    Q_EMIT criticalChanged();
+    Q_EMIT idChanged();
+    Q_EMIT textChanged();
+    Q_EMIT urlChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool HelpAppUpdateObject::operator ==(const HelpAppUpdate &b) const {
+    return m_core == b;
+}
+
+inline void HelpAppUpdateObject::setClassType(quint32 classType) {
+    HelpAppUpdate::HelpAppUpdateClassType result;
+    switch(classType) {
+    case TypeHelpAppUpdate:
+        result = HelpAppUpdate::typeHelpAppUpdate;
+        break;
+    case TypeHelpNoAppUpdate:
+        result = HelpAppUpdate::typeHelpNoAppUpdate;
+        break;
+    default:
+        result = HelpAppUpdate::typeHelpAppUpdate;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 HelpAppUpdateObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case HelpAppUpdate::typeHelpAppUpdate:
+        result = TypeHelpAppUpdate;
+        break;
+    case HelpAppUpdate::typeHelpNoAppUpdate:
+        result = TypeHelpNoAppUpdate;
+        break;
+    default:
+        result = TypeHelpAppUpdate;
+        break;
+    }
+
+    return result;
+}
+
+inline void HelpAppUpdateObject::setCore(const HelpAppUpdate &core) {
+    operator =(core);
+}
+
+inline HelpAppUpdate HelpAppUpdateObject::core() const {
+    return m_core;
+}
+
 #endif // LQTG_TYPE_HELPAPPUPDATE_OBJECT

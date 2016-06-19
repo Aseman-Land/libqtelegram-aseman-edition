@@ -9,6 +9,12 @@
 
 #include <QMetaType>
 #include <QVariant>
+#include "core/inboundpkt.h"
+#include "core/outboundpkt.h"
+#include "../coretypes.h"
+
+#include <QDataStream>
+
 #include <QList>
 #include "document.h"
 #include "stickerpack.h"
@@ -62,5 +68,206 @@ Q_DECLARE_METATYPE(MessagesStickerSet)
 
 QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const MessagesStickerSet &item);
 QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, MessagesStickerSet &item);
+
+inline MessagesStickerSet::MessagesStickerSet(MessagesStickerSetClassType classType, InboundPkt *in) :
+    m_classType(classType)
+{
+    if(in) fetch(in);
+}
+
+inline MessagesStickerSet::MessagesStickerSet(InboundPkt *in) :
+    m_classType(typeMessagesStickerSet)
+{
+    fetch(in);
+}
+
+inline MessagesStickerSet::MessagesStickerSet(const Null &null) :
+    TelegramTypeObject(null),
+    m_classType(typeMessagesStickerSet)
+{
+}
+
+inline MessagesStickerSet::~MessagesStickerSet() {
+}
+
+inline void MessagesStickerSet::setDocuments(const QList<Document> &documents) {
+    m_documents = documents;
+}
+
+inline QList<Document> MessagesStickerSet::documents() const {
+    return m_documents;
+}
+
+inline void MessagesStickerSet::setPacks(const QList<StickerPack> &packs) {
+    m_packs = packs;
+}
+
+inline QList<StickerPack> MessagesStickerSet::packs() const {
+    return m_packs;
+}
+
+inline void MessagesStickerSet::setSet(const StickerSet &set) {
+    m_set = set;
+}
+
+inline StickerSet MessagesStickerSet::set() const {
+    return m_set;
+}
+
+inline bool MessagesStickerSet::operator ==(const MessagesStickerSet &b) const {
+    return m_classType == b.m_classType &&
+           m_documents == b.m_documents &&
+           m_packs == b.m_packs &&
+           m_set == b.m_set;
+}
+
+inline void MessagesStickerSet::setClassType(MessagesStickerSet::MessagesStickerSetClassType classType) {
+    m_classType = classType;
+}
+
+inline MessagesStickerSet::MessagesStickerSetClassType MessagesStickerSet::classType() const {
+    return m_classType;
+}
+
+inline bool MessagesStickerSet::fetch(InboundPkt *in) {
+    LQTG_FETCH_LOG;
+    int x = in->fetchInt();
+    switch(x) {
+    case typeMessagesStickerSet: {
+        m_set.fetch(in);
+        if(in->fetchInt() != (qint32)CoreTypes::typeVector) return false;
+        qint32 m_packs_length = in->fetchInt();
+        m_packs.clear();
+        for (qint32 i = 0; i < m_packs_length; i++) {
+            StickerPack type;
+            type.fetch(in);
+            m_packs.append(type);
+        }
+        if(in->fetchInt() != (qint32)CoreTypes::typeVector) return false;
+        qint32 m_documents_length = in->fetchInt();
+        m_documents.clear();
+        for (qint32 i = 0; i < m_documents_length; i++) {
+            Document type;
+            type.fetch(in);
+            m_documents.append(type);
+        }
+        m_classType = static_cast<MessagesStickerSetClassType>(x);
+        return true;
+    }
+        break;
+    
+    default:
+        LQTG_FETCH_ASSERT;
+        return false;
+    }
+}
+
+inline bool MessagesStickerSet::push(OutboundPkt *out) const {
+    out->appendInt(m_classType);
+    switch(m_classType) {
+    case typeMessagesStickerSet: {
+        m_set.push(out);
+        out->appendInt(CoreTypes::typeVector);
+        out->appendInt(m_packs.count());
+        for (qint32 i = 0; i < m_packs.count(); i++) {
+            m_packs[i].push(out);
+        }
+        out->appendInt(CoreTypes::typeVector);
+        out->appendInt(m_documents.count());
+        for (qint32 i = 0; i < m_documents.count(); i++) {
+            m_documents[i].push(out);
+        }
+        return true;
+    }
+        break;
+    
+    default:
+        return false;
+    }
+}
+
+inline QMap<QString, QVariant> MessagesStickerSet::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeMessagesStickerSet: {
+        result["classType"] = "MessagesStickerSet::typeMessagesStickerSet";
+        result["set"] = m_set.toMap();
+        QList<QVariant> _packs;
+        Q_FOREACH(const StickerPack &m__type, m_packs)
+            _packs << m__type.toMap();
+        result["packs"] = _packs;
+        QList<QVariant> _documents;
+        Q_FOREACH(const Document &m__type, m_documents)
+            _documents << m__type.toMap();
+        result["documents"] = _documents;
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+inline MessagesStickerSet MessagesStickerSet::fromMap(const QMap<QString, QVariant> &map) {
+    MessagesStickerSet result;
+    if(map.value("classType").toString() == "MessagesStickerSet::typeMessagesStickerSet") {
+        result.setClassType(typeMessagesStickerSet);
+        result.setSet( StickerSet::fromMap(map.value("set").toMap()) );
+        QList<QVariant> map_packs = map["packs"].toList();
+        QList<StickerPack> _packs;
+        Q_FOREACH(const QVariant &var, map_packs)
+            _packs << StickerPack::fromMap(var.toMap());
+        result.setPacks(_packs);
+        QList<QVariant> map_documents = map["documents"].toList();
+        QList<Document> _documents;
+        Q_FOREACH(const QVariant &var, map_documents)
+            _documents << Document::fromMap(var.toMap());
+        result.setDocuments(_documents);
+        return result;
+    }
+    return result;
+}
+
+inline QByteArray MessagesStickerSet::getHash(QCryptographicHash::Algorithm alg) const {
+    QByteArray data;
+    QDataStream str(&data, QIODevice::WriteOnly);
+    str << *this;
+    return QCryptographicHash::hash(data, alg);
+}
+
+inline QDataStream &operator<<(QDataStream &stream, const MessagesStickerSet &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case MessagesStickerSet::typeMessagesStickerSet:
+        stream << item.set();
+        stream << item.packs();
+        stream << item.documents();
+        break;
+    }
+    return stream;
+}
+
+inline QDataStream &operator>>(QDataStream &stream, MessagesStickerSet &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<MessagesStickerSet::MessagesStickerSetClassType>(type));
+    switch(type) {
+    case MessagesStickerSet::typeMessagesStickerSet: {
+        StickerSet m_set;
+        stream >> m_set;
+        item.setSet(m_set);
+        QList<StickerPack> m_packs;
+        stream >> m_packs;
+        item.setPacks(m_packs);
+        QList<Document> m_documents;
+        stream >> m_documents;
+        item.setDocuments(m_documents);
+    }
+        break;
+    }
+    return stream;
+}
+
 
 #endif // LQTG_TYPE_MESSAGESSTICKERSET

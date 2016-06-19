@@ -9,6 +9,12 @@
 
 #include <QMetaType>
 #include <QVariant>
+#include "core/inboundpkt.h"
+#include "core/outboundpkt.h"
+#include "../coretypes.h"
+
+#include <QDataStream>
+
 #include <QtGlobal>
 
 class LIBQTELEGRAMSHARED_EXPORT ContactBlocked : public TelegramTypeObject
@@ -55,5 +61,159 @@ Q_DECLARE_METATYPE(ContactBlocked)
 
 QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const ContactBlocked &item);
 QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, ContactBlocked &item);
+
+inline ContactBlocked::ContactBlocked(ContactBlockedClassType classType, InboundPkt *in) :
+    m_date(0),
+    m_userId(0),
+    m_classType(classType)
+{
+    if(in) fetch(in);
+}
+
+inline ContactBlocked::ContactBlocked(InboundPkt *in) :
+    m_date(0),
+    m_userId(0),
+    m_classType(typeContactBlocked)
+{
+    fetch(in);
+}
+
+inline ContactBlocked::ContactBlocked(const Null &null) :
+    TelegramTypeObject(null),
+    m_date(0),
+    m_userId(0),
+    m_classType(typeContactBlocked)
+{
+}
+
+inline ContactBlocked::~ContactBlocked() {
+}
+
+inline void ContactBlocked::setDate(qint32 date) {
+    m_date = date;
+}
+
+inline qint32 ContactBlocked::date() const {
+    return m_date;
+}
+
+inline void ContactBlocked::setUserId(qint32 userId) {
+    m_userId = userId;
+}
+
+inline qint32 ContactBlocked::userId() const {
+    return m_userId;
+}
+
+inline bool ContactBlocked::operator ==(const ContactBlocked &b) const {
+    return m_classType == b.m_classType &&
+           m_date == b.m_date &&
+           m_userId == b.m_userId;
+}
+
+inline void ContactBlocked::setClassType(ContactBlocked::ContactBlockedClassType classType) {
+    m_classType = classType;
+}
+
+inline ContactBlocked::ContactBlockedClassType ContactBlocked::classType() const {
+    return m_classType;
+}
+
+inline bool ContactBlocked::fetch(InboundPkt *in) {
+    LQTG_FETCH_LOG;
+    int x = in->fetchInt();
+    switch(x) {
+    case typeContactBlocked: {
+        m_userId = in->fetchInt();
+        m_date = in->fetchInt();
+        m_classType = static_cast<ContactBlockedClassType>(x);
+        return true;
+    }
+        break;
+    
+    default:
+        LQTG_FETCH_ASSERT;
+        return false;
+    }
+}
+
+inline bool ContactBlocked::push(OutboundPkt *out) const {
+    out->appendInt(m_classType);
+    switch(m_classType) {
+    case typeContactBlocked: {
+        out->appendInt(m_userId);
+        out->appendInt(m_date);
+        return true;
+    }
+        break;
+    
+    default:
+        return false;
+    }
+}
+
+inline QMap<QString, QVariant> ContactBlocked::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeContactBlocked: {
+        result["classType"] = "ContactBlocked::typeContactBlocked";
+        result["userId"] = QVariant::fromValue<qint32>(userId());
+        result["date"] = QVariant::fromValue<qint32>(date());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+inline ContactBlocked ContactBlocked::fromMap(const QMap<QString, QVariant> &map) {
+    ContactBlocked result;
+    if(map.value("classType").toString() == "ContactBlocked::typeContactBlocked") {
+        result.setClassType(typeContactBlocked);
+        result.setUserId( map.value("userId").value<qint32>() );
+        result.setDate( map.value("date").value<qint32>() );
+        return result;
+    }
+    return result;
+}
+
+inline QByteArray ContactBlocked::getHash(QCryptographicHash::Algorithm alg) const {
+    QByteArray data;
+    QDataStream str(&data, QIODevice::WriteOnly);
+    str << *this;
+    return QCryptographicHash::hash(data, alg);
+}
+
+inline QDataStream &operator<<(QDataStream &stream, const ContactBlocked &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case ContactBlocked::typeContactBlocked:
+        stream << item.userId();
+        stream << item.date();
+        break;
+    }
+    return stream;
+}
+
+inline QDataStream &operator>>(QDataStream &stream, ContactBlocked &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<ContactBlocked::ContactBlockedClassType>(type));
+    switch(type) {
+    case ContactBlocked::typeContactBlocked: {
+        qint32 m_user_id;
+        stream >> m_user_id;
+        item.setUserId(m_user_id);
+        qint32 m_date;
+        stream >> m_date;
+        item.setDate(m_date);
+    }
+        break;
+    }
+    return stream;
+}
+
 
 #endif // LQTG_TYPE_CONTACTBLOCKED

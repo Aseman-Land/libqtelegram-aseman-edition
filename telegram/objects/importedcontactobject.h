@@ -55,4 +55,94 @@ private:
     ImportedContact m_core;
 };
 
+inline ImportedContactObject::ImportedContactObject(const ImportedContact &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core(core)
+{
+}
+
+inline ImportedContactObject::ImportedContactObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core()
+{
+}
+
+inline ImportedContactObject::~ImportedContactObject() {
+}
+
+inline void ImportedContactObject::setClientId(qint64 clientId) {
+    if(m_core.clientId() == clientId) return;
+    m_core.setClientId(clientId);
+    Q_EMIT clientIdChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint64 ImportedContactObject::clientId() const {
+    return m_core.clientId();
+}
+
+inline void ImportedContactObject::setUserId(qint32 userId) {
+    if(m_core.userId() == userId) return;
+    m_core.setUserId(userId);
+    Q_EMIT userIdChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 ImportedContactObject::userId() const {
+    return m_core.userId();
+}
+
+inline ImportedContactObject &ImportedContactObject::operator =(const ImportedContact &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+
+    Q_EMIT clientIdChanged();
+    Q_EMIT userIdChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool ImportedContactObject::operator ==(const ImportedContact &b) const {
+    return m_core == b;
+}
+
+inline void ImportedContactObject::setClassType(quint32 classType) {
+    ImportedContact::ImportedContactClassType result;
+    switch(classType) {
+    case TypeImportedContact:
+        result = ImportedContact::typeImportedContact;
+        break;
+    default:
+        result = ImportedContact::typeImportedContact;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 ImportedContactObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case ImportedContact::typeImportedContact:
+        result = TypeImportedContact;
+        break;
+    default:
+        result = TypeImportedContact;
+        break;
+    }
+
+    return result;
+}
+
+inline void ImportedContactObject::setCore(const ImportedContact &core) {
+    operator =(core);
+}
+
+inline ImportedContact ImportedContactObject::core() const {
+    return m_core;
+}
+
 #endif // LQTG_TYPE_IMPORTEDCONTACT_OBJECT

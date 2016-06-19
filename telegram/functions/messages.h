@@ -6,6 +6,10 @@
 #define LQTG_FNC_MESSAGES
 
 #include "telegramfunctionobject.h"
+#include "core/inboundpkt.h"
+#include "core/outboundpkt.h"
+#include "../coretypes.h"
+
 #include "telegram/types/messagesmessages.h"
 #include <QList>
 #include <QtGlobal>
@@ -323,6 +327,1044 @@ public:
 };
 
 }
+inline Functions::Messages::Messages() {
+}
+
+inline Functions::Messages::~Messages() {
+}
+
+inline bool Functions::Messages::getMessages(OutboundPkt *out, const QList<qint32> &id) {
+    out->appendInt(fncMessagesGetMessages);
+    out->appendInt(CoreTypes::typeVector);
+    out->appendInt(id.count());
+    for (qint32 i = 0; i < id.count(); i++) {
+        out->appendInt(id[i]);
+    }
+    return true;
+}
+
+inline MessagesMessages Functions::Messages::getMessagesResult(InboundPkt *in) {
+    MessagesMessages result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Messages::getDialogs(OutboundPkt *out, qint32 offsetDate, qint32 offsetId, const InputPeer &offsetPeer, qint32 limit) {
+    out->appendInt(fncMessagesGetDialogs);
+    out->appendInt(offsetDate);
+    out->appendInt(offsetId);
+    if(!offsetPeer.push(out)) return false;
+    out->appendInt(limit);
+    return true;
+}
+
+inline MessagesDialogs Functions::Messages::getDialogsResult(InboundPkt *in) {
+    MessagesDialogs result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Messages::getHistory(OutboundPkt *out, const InputPeer &peer, qint32 offsetId, qint32 offsetDate, qint32 addOffset, qint32 limit, qint32 maxId, qint32 minId) {
+    out->appendInt(fncMessagesGetHistory);
+    if(!peer.push(out)) return false;
+    out->appendInt(offsetId);
+    out->appendInt(offsetDate);
+    out->appendInt(addOffset);
+    out->appendInt(limit);
+    out->appendInt(maxId);
+    out->appendInt(minId);
+    return true;
+}
+
+inline MessagesMessages Functions::Messages::getHistoryResult(InboundPkt *in) {
+    MessagesMessages result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Messages::search(OutboundPkt *out, bool importantOnly, const InputPeer &peer, const QString &q, const MessagesFilter &filter, qint32 minDate, qint32 maxDate, qint32 offset, qint32 maxId, qint32 limit) {
+    out->appendInt(fncMessagesSearch);
+    
+    qint32 flags = 0;
+    if(importantOnly != 0) flags = (1<<0 | flags);
+    
+    out->appendInt(flags);
+    if(!peer.push(out)) return false;
+    out->appendQString(q);
+    if(!filter.push(out)) return false;
+    out->appendInt(minDate);
+    out->appendInt(maxDate);
+    out->appendInt(offset);
+    out->appendInt(maxId);
+    out->appendInt(limit);
+    return true;
+}
+
+inline MessagesMessages Functions::Messages::searchResult(InboundPkt *in) {
+    MessagesMessages result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Messages::readHistory(OutboundPkt *out, const InputPeer &peer, qint32 maxId) {
+    out->appendInt(fncMessagesReadHistory);
+    if(!peer.push(out)) return false;
+    out->appendInt(maxId);
+    return true;
+}
+
+inline MessagesAffectedMessages Functions::Messages::readHistoryResult(InboundPkt *in) {
+    MessagesAffectedMessages result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Messages::deleteHistory(OutboundPkt *out, const InputPeer &peer, qint32 maxId) {
+    out->appendInt(fncMessagesDeleteHistory);
+    if(!peer.push(out)) return false;
+    out->appendInt(maxId);
+    return true;
+}
+
+inline MessagesAffectedHistory Functions::Messages::deleteHistoryResult(InboundPkt *in) {
+    MessagesAffectedHistory result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Messages::deleteMessages(OutboundPkt *out, const QList<qint32> &id) {
+    out->appendInt(fncMessagesDeleteMessages);
+    out->appendInt(CoreTypes::typeVector);
+    out->appendInt(id.count());
+    for (qint32 i = 0; i < id.count(); i++) {
+        out->appendInt(id[i]);
+    }
+    return true;
+}
+
+inline MessagesAffectedMessages Functions::Messages::deleteMessagesResult(InboundPkt *in) {
+    MessagesAffectedMessages result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Messages::receivedMessages(OutboundPkt *out, qint32 maxId) {
+    out->appendInt(fncMessagesReceivedMessages);
+    out->appendInt(maxId);
+    return true;
+}
+
+inline QList<ReceivedNotifyMessage> Functions::Messages::receivedMessagesResult(InboundPkt *in) {
+    QList<ReceivedNotifyMessage> result;
+    if(in->fetchInt() != (qint32)CoreTypes::typeVector) return result;
+    qint32 result_length = in->fetchInt();
+    result.clear();
+    for (qint32 i = 0; i < result_length; i++) {
+        ReceivedNotifyMessage type;
+        if(!type.fetch(in)) return result;
+        result.append(type);
+    }
+    return result;
+}
+
+inline bool Functions::Messages::setTyping(OutboundPkt *out, const InputPeer &peer, const SendMessageAction &action) {
+    out->appendInt(fncMessagesSetTyping);
+    if(!peer.push(out)) return false;
+    if(!action.push(out)) return false;
+    return true;
+}
+
+inline bool Functions::Messages::setTypingResult(InboundPkt *in) {
+    bool result;
+    result = in->fetchBool();
+    return result;
+}
+
+inline bool Functions::Messages::sendMessage(OutboundPkt *out, bool noWebpage, bool broadcast, bool silent, bool background, const InputPeer &peer, qint32 replyToMsgId, const QString &message, qint64 randomId, const ReplyMarkup &replyMarkup, const QList<MessageEntity> &entities) {
+    out->appendInt(fncMessagesSendMessage);
+    
+    qint32 flags = 0;
+    if(noWebpage != 0) flags = (1<<1 | flags);
+    if(broadcast != 0) flags = (1<<4 | flags);
+    if(silent != 0) flags = (1<<5 | flags);
+    if(background != 0) flags = (1<<6 | flags);
+    if(replyToMsgId != 0) flags = (1<<0 | flags);
+    if(replyMarkup != 0) flags = (1<<2 | flags);
+    if(entities.count() != 0) flags = (1<<3 | flags);
+    
+    out->appendInt(flags);
+    if(!peer.push(out)) return false;
+    if(flags & 1<<0) out->appendInt(replyToMsgId);
+    out->appendQString(message);
+    out->appendLong(randomId);
+    if(flags & 1<<2) if(!replyMarkup.push(out)) return false;
+    if(flags & 1<<3) {
+        out->appendInt(CoreTypes::typeVector);
+        out->appendInt(entities.count());
+        for (qint32 i = 0; i < entities.count(); i++) {
+            if(flags & 1<<3) if(!entities[i].push(out)) return false;
+        }
+    }
+    return true;
+}
+
+inline UpdatesType Functions::Messages::sendMessageResult(InboundPkt *in) {
+    UpdatesType result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Messages::sendMedia(OutboundPkt *out, bool broadcast, bool silent, bool background, const InputPeer &peer, qint32 replyToMsgId, const InputMedia &media, qint64 randomId, const ReplyMarkup &replyMarkup) {
+    out->appendInt(fncMessagesSendMedia);
+    
+    qint32 flags = 0;
+    if(broadcast != 0) flags = (1<<4 | flags);
+    if(silent != 0) flags = (1<<5 | flags);
+    if(background != 0) flags = (1<<6 | flags);
+    if(replyToMsgId != 0) flags = (1<<0 | flags);
+    if(replyMarkup != 0) flags = (1<<2 | flags);
+    
+    out->appendInt(flags);
+    if(!peer.push(out)) return false;
+    if(flags & 1<<0) out->appendInt(replyToMsgId);
+    if(!media.push(out)) return false;
+    out->appendLong(randomId);
+    if(flags & 1<<2) if(!replyMarkup.push(out)) return false;
+    return true;
+}
+
+inline UpdatesType Functions::Messages::sendMediaResult(InboundPkt *in) {
+    UpdatesType result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Messages::forwardMessages(OutboundPkt *out, bool broadcast, bool silent, bool background, const InputPeer &fromPeer, const QList<qint32> &id, const QList<qint64> &randomId, const InputPeer &toPeer) {
+    out->appendInt(fncMessagesForwardMessages);
+    
+    qint32 flags = 0;
+    if(broadcast != 0) flags = (1<<4 | flags);
+    if(silent != 0) flags = (1<<5 | flags);
+    if(background != 0) flags = (1<<6 | flags);
+    
+    out->appendInt(flags);
+    if(!fromPeer.push(out)) return false;
+    out->appendInt(CoreTypes::typeVector);
+    out->appendInt(id.count());
+    for (qint32 i = 0; i < id.count(); i++) {
+        out->appendInt(id[i]);
+    }
+    out->appendInt(CoreTypes::typeVector);
+    out->appendInt(randomId.count());
+    for (qint32 i = 0; i < randomId.count(); i++) {
+        out->appendLong(randomId[i]);
+    }
+    if(!toPeer.push(out)) return false;
+    return true;
+}
+
+inline UpdatesType Functions::Messages::forwardMessagesResult(InboundPkt *in) {
+    UpdatesType result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Messages::reportSpam(OutboundPkt *out, const InputPeer &peer) {
+    out->appendInt(fncMessagesReportSpam);
+    if(!peer.push(out)) return false;
+    return true;
+}
+
+inline bool Functions::Messages::reportSpamResult(InboundPkt *in) {
+    bool result;
+    result = in->fetchBool();
+    return result;
+}
+
+inline bool Functions::Messages::hideReportSpam(OutboundPkt *out, const InputPeer &peer) {
+    out->appendInt(fncMessagesHideReportSpam);
+    if(!peer.push(out)) return false;
+    return true;
+}
+
+inline bool Functions::Messages::hideReportSpamResult(InboundPkt *in) {
+    bool result;
+    result = in->fetchBool();
+    return result;
+}
+
+inline bool Functions::Messages::getPeerSettings(OutboundPkt *out, const InputPeer &peer) {
+    out->appendInt(fncMessagesGetPeerSettings);
+    if(!peer.push(out)) return false;
+    return true;
+}
+
+inline PeerSettings Functions::Messages::getPeerSettingsResult(InboundPkt *in) {
+    PeerSettings result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Messages::getChats(OutboundPkt *out, const QList<qint32> &id) {
+    out->appendInt(fncMessagesGetChats);
+    out->appendInt(CoreTypes::typeVector);
+    out->appendInt(id.count());
+    for (qint32 i = 0; i < id.count(); i++) {
+        out->appendInt(id[i]);
+    }
+    return true;
+}
+
+inline MessagesChats Functions::Messages::getChatsResult(InboundPkt *in) {
+    MessagesChats result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Messages::getFullChat(OutboundPkt *out, qint32 chatId) {
+    out->appendInt(fncMessagesGetFullChat);
+    out->appendInt(chatId);
+    return true;
+}
+
+inline MessagesChatFull Functions::Messages::getFullChatResult(InboundPkt *in) {
+    MessagesChatFull result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Messages::editChatTitle(OutboundPkt *out, qint32 chatId, const QString &title) {
+    out->appendInt(fncMessagesEditChatTitle);
+    out->appendInt(chatId);
+    out->appendQString(title);
+    return true;
+}
+
+inline UpdatesType Functions::Messages::editChatTitleResult(InboundPkt *in) {
+    UpdatesType result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Messages::editChatPhoto(OutboundPkt *out, qint32 chatId, const InputChatPhoto &photo) {
+    out->appendInt(fncMessagesEditChatPhoto);
+    out->appendInt(chatId);
+    if(!photo.push(out)) return false;
+    return true;
+}
+
+inline UpdatesType Functions::Messages::editChatPhotoResult(InboundPkt *in) {
+    UpdatesType result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Messages::addChatUser(OutboundPkt *out, qint32 chatId, const InputUser &userId, qint32 fwdLimit) {
+    out->appendInt(fncMessagesAddChatUser);
+    out->appendInt(chatId);
+    if(!userId.push(out)) return false;
+    out->appendInt(fwdLimit);
+    return true;
+}
+
+inline UpdatesType Functions::Messages::addChatUserResult(InboundPkt *in) {
+    UpdatesType result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Messages::deleteChatUser(OutboundPkt *out, qint32 chatId, const InputUser &userId) {
+    out->appendInt(fncMessagesDeleteChatUser);
+    out->appendInt(chatId);
+    if(!userId.push(out)) return false;
+    return true;
+}
+
+inline UpdatesType Functions::Messages::deleteChatUserResult(InboundPkt *in) {
+    UpdatesType result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Messages::createChat(OutboundPkt *out, const QList<InputUser> &users, const QString &title) {
+    out->appendInt(fncMessagesCreateChat);
+    out->appendInt(CoreTypes::typeVector);
+    out->appendInt(users.count());
+    for (qint32 i = 0; i < users.count(); i++) {
+        if(!users[i].push(out)) return false;
+    }
+    out->appendQString(title);
+    return true;
+}
+
+inline UpdatesType Functions::Messages::createChatResult(InboundPkt *in) {
+    UpdatesType result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Messages::forwardMessage(OutboundPkt *out, const InputPeer &peer, qint32 id, qint64 randomId) {
+    out->appendInt(fncMessagesForwardMessage);
+    if(!peer.push(out)) return false;
+    out->appendInt(id);
+    out->appendLong(randomId);
+    return true;
+}
+
+inline UpdatesType Functions::Messages::forwardMessageResult(InboundPkt *in) {
+    UpdatesType result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Messages::sendBroadcast(OutboundPkt *out, const QList<InputUser> &contacts, const QList<qint64> &randomId, const QString &message, const InputMedia &media) {
+    out->appendInt(fncMessagesSendBroadcast);
+    out->appendInt(CoreTypes::typeVector);
+    out->appendInt(contacts.count());
+    for (qint32 i = 0; i < contacts.count(); i++) {
+        if(!contacts[i].push(out)) return false;
+    }
+    out->appendInt(CoreTypes::typeVector);
+    out->appendInt(randomId.count());
+    for (qint32 i = 0; i < randomId.count(); i++) {
+        out->appendLong(randomId[i]);
+    }
+    out->appendQString(message);
+    if(!media.push(out)) return false;
+    return true;
+}
+
+inline UpdatesType Functions::Messages::sendBroadcastResult(InboundPkt *in) {
+    UpdatesType result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Messages::getDhConfig(OutboundPkt *out, qint32 version, qint32 randomLength) {
+    out->appendInt(fncMessagesGetDhConfig);
+    out->appendInt(version);
+    out->appendInt(randomLength);
+    return true;
+}
+
+inline MessagesDhConfig Functions::Messages::getDhConfigResult(InboundPkt *in) {
+    MessagesDhConfig result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Messages::requestEncryption(OutboundPkt *out, const InputUser &userId, qint32 randomId, const QByteArray &gA) {
+    out->appendInt(fncMessagesRequestEncryption);
+    if(!userId.push(out)) return false;
+    out->appendInt(randomId);
+    out->appendBytes(gA);
+    return true;
+}
+
+inline EncryptedChat Functions::Messages::requestEncryptionResult(InboundPkt *in) {
+    EncryptedChat result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Messages::acceptEncryption(OutboundPkt *out, const InputEncryptedChat &peer, const QByteArray &gB, qint64 keyFingerprint) {
+    out->appendInt(fncMessagesAcceptEncryption);
+    if(!peer.push(out)) return false;
+    out->appendBytes(gB);
+    out->appendLong(keyFingerprint);
+    return true;
+}
+
+inline EncryptedChat Functions::Messages::acceptEncryptionResult(InboundPkt *in) {
+    EncryptedChat result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Messages::discardEncryption(OutboundPkt *out, qint32 chatId) {
+    out->appendInt(fncMessagesDiscardEncryption);
+    out->appendInt(chatId);
+    return true;
+}
+
+inline bool Functions::Messages::discardEncryptionResult(InboundPkt *in) {
+    bool result;
+    result = in->fetchBool();
+    return result;
+}
+
+inline bool Functions::Messages::setEncryptedTyping(OutboundPkt *out, const InputEncryptedChat &peer, bool typing) {
+    out->appendInt(fncMessagesSetEncryptedTyping);
+    if(!peer.push(out)) return false;
+    out->appendBool(typing);
+    return true;
+}
+
+inline bool Functions::Messages::setEncryptedTypingResult(InboundPkt *in) {
+    bool result;
+    result = in->fetchBool();
+    return result;
+}
+
+inline bool Functions::Messages::readEncryptedHistory(OutboundPkt *out, const InputEncryptedChat &peer, qint32 maxDate) {
+    out->appendInt(fncMessagesReadEncryptedHistory);
+    if(!peer.push(out)) return false;
+    out->appendInt(maxDate);
+    return true;
+}
+
+inline bool Functions::Messages::readEncryptedHistoryResult(InboundPkt *in) {
+    bool result;
+    result = in->fetchBool();
+    return result;
+}
+
+inline bool Functions::Messages::sendEncrypted(OutboundPkt *out, const InputEncryptedChat &peer, qint64 randomId, const QByteArray &data) {
+    out->appendInt(fncMessagesSendEncrypted);
+    if(!peer.push(out)) return false;
+    out->appendLong(randomId);
+    out->appendBytes(data);
+    return true;
+}
+
+inline MessagesSentEncryptedMessage Functions::Messages::sendEncryptedResult(InboundPkt *in) {
+    MessagesSentEncryptedMessage result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Messages::sendEncryptedFile(OutboundPkt *out, const InputEncryptedChat &peer, qint64 randomId, const QByteArray &data, const InputEncryptedFile &file) {
+    out->appendInt(fncMessagesSendEncryptedFile);
+    if(!peer.push(out)) return false;
+    out->appendLong(randomId);
+    out->appendBytes(data);
+    if(!file.push(out)) return false;
+    return true;
+}
+
+inline MessagesSentEncryptedMessage Functions::Messages::sendEncryptedFileResult(InboundPkt *in) {
+    MessagesSentEncryptedMessage result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Messages::sendEncryptedService(OutboundPkt *out, const InputEncryptedChat &peer, qint64 randomId, const QByteArray &data) {
+    out->appendInt(fncMessagesSendEncryptedService);
+    if(!peer.push(out)) return false;
+    out->appendLong(randomId);
+    out->appendBytes(data);
+    return true;
+}
+
+inline MessagesSentEncryptedMessage Functions::Messages::sendEncryptedServiceResult(InboundPkt *in) {
+    MessagesSentEncryptedMessage result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Messages::receivedQueue(OutboundPkt *out, qint32 maxQts) {
+    out->appendInt(fncMessagesReceivedQueue);
+    out->appendInt(maxQts);
+    return true;
+}
+
+inline QList<qint64> Functions::Messages::receivedQueueResult(InboundPkt *in) {
+    QList<qint64> result;
+    if(in->fetchInt() != (qint32)CoreTypes::typeVector) return result;
+    qint32 result_length = in->fetchInt();
+    result.clear();
+    for (qint32 i = 0; i < result_length; i++) {
+        qint64 type;
+        type = in->fetchLong();
+        result.append(type);
+    }
+    return result;
+}
+
+inline bool Functions::Messages::readMessageContents(OutboundPkt *out, const QList<qint32> &id) {
+    out->appendInt(fncMessagesReadMessageContents);
+    out->appendInt(CoreTypes::typeVector);
+    out->appendInt(id.count());
+    for (qint32 i = 0; i < id.count(); i++) {
+        out->appendInt(id[i]);
+    }
+    return true;
+}
+
+inline MessagesAffectedMessages Functions::Messages::readMessageContentsResult(InboundPkt *in) {
+    MessagesAffectedMessages result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Messages::getStickers(OutboundPkt *out, const QString &emoticon, const QString &hash) {
+    out->appendInt(fncMessagesGetStickers);
+    out->appendQString(emoticon);
+    out->appendQString(hash);
+    return true;
+}
+
+inline MessagesStickers Functions::Messages::getStickersResult(InboundPkt *in) {
+    MessagesStickers result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Messages::getAllStickers(OutboundPkt *out, qint32 hash) {
+    out->appendInt(fncMessagesGetAllStickers);
+    out->appendInt(hash);
+    return true;
+}
+
+inline MessagesAllStickers Functions::Messages::getAllStickersResult(InboundPkt *in) {
+    MessagesAllStickers result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Messages::getWebPagePreview(OutboundPkt *out, const QString &message) {
+    out->appendInt(fncMessagesGetWebPagePreview);
+    out->appendQString(message);
+    return true;
+}
+
+inline MessageMedia Functions::Messages::getWebPagePreviewResult(InboundPkt *in) {
+    MessageMedia result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Messages::exportChatInvite(OutboundPkt *out, qint32 chatId) {
+    out->appendInt(fncMessagesExportChatInvite);
+    out->appendInt(chatId);
+    return true;
+}
+
+inline ExportedChatInvite Functions::Messages::exportChatInviteResult(InboundPkt *in) {
+    ExportedChatInvite result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Messages::checkChatInvite(OutboundPkt *out, const QString &hash) {
+    out->appendInt(fncMessagesCheckChatInvite);
+    out->appendQString(hash);
+    return true;
+}
+
+inline ChatInvite Functions::Messages::checkChatInviteResult(InboundPkt *in) {
+    ChatInvite result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Messages::importChatInvite(OutboundPkt *out, const QString &hash) {
+    out->appendInt(fncMessagesImportChatInvite);
+    out->appendQString(hash);
+    return true;
+}
+
+inline UpdatesType Functions::Messages::importChatInviteResult(InboundPkt *in) {
+    UpdatesType result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Messages::getStickerSet(OutboundPkt *out, const InputStickerSet &stickerset) {
+    out->appendInt(fncMessagesGetStickerSet);
+    if(!stickerset.push(out)) return false;
+    return true;
+}
+
+inline MessagesStickerSet Functions::Messages::getStickerSetResult(InboundPkt *in) {
+    MessagesStickerSet result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Messages::installStickerSet(OutboundPkt *out, const InputStickerSet &stickerset, bool disabled) {
+    out->appendInt(fncMessagesInstallStickerSet);
+    if(!stickerset.push(out)) return false;
+    out->appendBool(disabled);
+    return true;
+}
+
+inline bool Functions::Messages::installStickerSetResult(InboundPkt *in) {
+    bool result;
+    result = in->fetchBool();
+    return result;
+}
+
+inline bool Functions::Messages::uninstallStickerSet(OutboundPkt *out, const InputStickerSet &stickerset) {
+    out->appendInt(fncMessagesUninstallStickerSet);
+    if(!stickerset.push(out)) return false;
+    return true;
+}
+
+inline bool Functions::Messages::uninstallStickerSetResult(InboundPkt *in) {
+    bool result;
+    result = in->fetchBool();
+    return result;
+}
+
+inline bool Functions::Messages::startBot(OutboundPkt *out, const InputUser &bot, const InputPeer &peer, qint64 randomId, const QString &startParam) {
+    out->appendInt(fncMessagesStartBot);
+    if(!bot.push(out)) return false;
+    if(!peer.push(out)) return false;
+    out->appendLong(randomId);
+    out->appendQString(startParam);
+    return true;
+}
+
+inline UpdatesType Functions::Messages::startBotResult(InboundPkt *in) {
+    UpdatesType result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Messages::getMessagesViews(OutboundPkt *out, const InputPeer &peer, const QList<qint32> &id, bool increment) {
+    out->appendInt(fncMessagesGetMessagesViews);
+    if(!peer.push(out)) return false;
+    out->appendInt(CoreTypes::typeVector);
+    out->appendInt(id.count());
+    for (qint32 i = 0; i < id.count(); i++) {
+        out->appendInt(id[i]);
+    }
+    out->appendBool(increment);
+    return true;
+}
+
+inline QList<qint32> Functions::Messages::getMessagesViewsResult(InboundPkt *in) {
+    QList<qint32> result;
+    if(in->fetchInt() != (qint32)CoreTypes::typeVector) return result;
+    qint32 result_length = in->fetchInt();
+    result.clear();
+    for (qint32 i = 0; i < result_length; i++) {
+        qint32 type;
+        type = in->fetchInt();
+        result.append(type);
+    }
+    return result;
+}
+
+inline bool Functions::Messages::toggleChatAdmins(OutboundPkt *out, qint32 chatId, bool enabled) {
+    out->appendInt(fncMessagesToggleChatAdmins);
+    out->appendInt(chatId);
+    out->appendBool(enabled);
+    return true;
+}
+
+inline UpdatesType Functions::Messages::toggleChatAdminsResult(InboundPkt *in) {
+    UpdatesType result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Messages::editChatAdmin(OutboundPkt *out, qint32 chatId, const InputUser &userId, bool isAdmin) {
+    out->appendInt(fncMessagesEditChatAdmin);
+    out->appendInt(chatId);
+    if(!userId.push(out)) return false;
+    out->appendBool(isAdmin);
+    return true;
+}
+
+inline bool Functions::Messages::editChatAdminResult(InboundPkt *in) {
+    bool result;
+    result = in->fetchBool();
+    return result;
+}
+
+inline bool Functions::Messages::migrateChat(OutboundPkt *out, qint32 chatId) {
+    out->appendInt(fncMessagesMigrateChat);
+    out->appendInt(chatId);
+    return true;
+}
+
+inline UpdatesType Functions::Messages::migrateChatResult(InboundPkt *in) {
+    UpdatesType result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Messages::searchGlobal(OutboundPkt *out, const QString &q, qint32 offsetDate, const InputPeer &offsetPeer, qint32 offsetId, qint32 limit) {
+    out->appendInt(fncMessagesSearchGlobal);
+    out->appendQString(q);
+    out->appendInt(offsetDate);
+    if(!offsetPeer.push(out)) return false;
+    out->appendInt(offsetId);
+    out->appendInt(limit);
+    return true;
+}
+
+inline MessagesMessages Functions::Messages::searchGlobalResult(InboundPkt *in) {
+    MessagesMessages result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Messages::reorderStickerSets(OutboundPkt *out, const QList<qint64> &order) {
+    out->appendInt(fncMessagesReorderStickerSets);
+    out->appendInt(CoreTypes::typeVector);
+    out->appendInt(order.count());
+    for (qint32 i = 0; i < order.count(); i++) {
+        out->appendLong(order[i]);
+    }
+    return true;
+}
+
+inline bool Functions::Messages::reorderStickerSetsResult(InboundPkt *in) {
+    bool result;
+    result = in->fetchBool();
+    return result;
+}
+
+inline bool Functions::Messages::getDocumentByHash(OutboundPkt *out, const QByteArray &sha256, qint32 size, const QString &mimeType) {
+    out->appendInt(fncMessagesGetDocumentByHash);
+    out->appendBytes(sha256);
+    out->appendInt(size);
+    out->appendQString(mimeType);
+    return true;
+}
+
+inline Document Functions::Messages::getDocumentByHashResult(InboundPkt *in) {
+    Document result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Messages::searchGifs(OutboundPkt *out, const QString &q, qint32 offset) {
+    out->appendInt(fncMessagesSearchGifs);
+    out->appendQString(q);
+    out->appendInt(offset);
+    return true;
+}
+
+inline MessagesFoundGifs Functions::Messages::searchGifsResult(InboundPkt *in) {
+    MessagesFoundGifs result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Messages::getSavedGifs(OutboundPkt *out, qint32 hash) {
+    out->appendInt(fncMessagesGetSavedGifs);
+    out->appendInt(hash);
+    return true;
+}
+
+inline MessagesSavedGifs Functions::Messages::getSavedGifsResult(InboundPkt *in) {
+    MessagesSavedGifs result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Messages::saveGif(OutboundPkt *out, const InputDocument &id, bool unsave) {
+    out->appendInt(fncMessagesSaveGif);
+    if(!id.push(out)) return false;
+    out->appendBool(unsave);
+    return true;
+}
+
+inline bool Functions::Messages::saveGifResult(InboundPkt *in) {
+    bool result;
+    result = in->fetchBool();
+    return result;
+}
+
+inline bool Functions::Messages::getInlineBotResults(OutboundPkt *out, const InputUser &bot, const InputPeer &peer, const InputGeoPoint &geoPoint, const QString &query, const QString &offset) {
+    out->appendInt(fncMessagesGetInlineBotResults);
+    
+    qint32 flags = 0;
+    if(geoPoint != 0) flags = (1<<0 | flags);
+    
+    out->appendInt(flags);
+    if(!bot.push(out)) return false;
+    if(!peer.push(out)) return false;
+    if(flags & 1<<0) if(!geoPoint.push(out)) return false;
+    out->appendQString(query);
+    out->appendQString(offset);
+    return true;
+}
+
+inline MessagesBotResults Functions::Messages::getInlineBotResultsResult(InboundPkt *in) {
+    MessagesBotResults result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Messages::setInlineBotResults(OutboundPkt *out, bool gallery, bool privateValue, qint64 queryId, const QList<InputBotInlineResult> &results, qint32 cacheTime, const QString &nextOffset, const InlineBotSwitchPM &switchPm) {
+    out->appendInt(fncMessagesSetInlineBotResults);
+    
+    qint32 flags = 0;
+    if(gallery != 0) flags = (1<<0 | flags);
+    if(privateValue != 0) flags = (1<<1 | flags);
+    if(nextOffset != 0) flags = (1<<2 | flags);
+    if(switchPm != 0) flags = (1<<3 | flags);
+    
+    out->appendInt(flags);
+    out->appendLong(queryId);
+    out->appendInt(CoreTypes::typeVector);
+    out->appendInt(results.count());
+    for (qint32 i = 0; i < results.count(); i++) {
+        if(!results[i].push(out)) return false;
+    }
+    out->appendInt(cacheTime);
+    if(flags & 1<<2) out->appendQString(nextOffset);
+    if(flags & 1<<3) if(!switchPm.push(out)) return false;
+    return true;
+}
+
+inline bool Functions::Messages::setInlineBotResultsResult(InboundPkt *in) {
+    bool result;
+    result = in->fetchBool();
+    return result;
+}
+
+inline bool Functions::Messages::sendInlineBotResult(OutboundPkt *out, bool broadcast, bool silent, bool background, const InputPeer &peer, qint32 replyToMsgId, qint64 randomId, qint64 queryId, const QString &id) {
+    out->appendInt(fncMessagesSendInlineBotResult);
+    
+    qint32 flags = 0;
+    if(broadcast != 0) flags = (1<<4 | flags);
+    if(silent != 0) flags = (1<<5 | flags);
+    if(background != 0) flags = (1<<6 | flags);
+    if(replyToMsgId != 0) flags = (1<<0 | flags);
+    
+    out->appendInt(flags);
+    if(!peer.push(out)) return false;
+    if(flags & 1<<0) out->appendInt(replyToMsgId);
+    out->appendLong(randomId);
+    out->appendLong(queryId);
+    out->appendQString(id);
+    return true;
+}
+
+inline UpdatesType Functions::Messages::sendInlineBotResultResult(InboundPkt *in) {
+    UpdatesType result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Messages::getMessageEditData(OutboundPkt *out, const InputPeer &peer, qint32 id) {
+    out->appendInt(fncMessagesGetMessageEditData);
+    if(!peer.push(out)) return false;
+    out->appendInt(id);
+    return true;
+}
+
+inline MessagesMessageEditData Functions::Messages::getMessageEditDataResult(InboundPkt *in) {
+    MessagesMessageEditData result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Messages::editMessage(OutboundPkt *out, bool noWebpage, const InputPeer &peer, qint32 id, const QString &message, const ReplyMarkup &replyMarkup, const QList<MessageEntity> &entities) {
+    out->appendInt(fncMessagesEditMessage);
+    
+    qint32 flags = 0;
+    if(noWebpage != 0) flags = (1<<1 | flags);
+    if(message != 0) flags = (1<<11 | flags);
+    if(replyMarkup != 0) flags = (1<<2 | flags);
+    if(entities.count() != 0) flags = (1<<3 | flags);
+    
+    out->appendInt(flags);
+    if(!peer.push(out)) return false;
+    out->appendInt(id);
+    if(flags & 1<<11) out->appendQString(message);
+    if(flags & 1<<2) if(!replyMarkup.push(out)) return false;
+    if(flags & 1<<3) {
+        out->appendInt(CoreTypes::typeVector);
+        out->appendInt(entities.count());
+        for (qint32 i = 0; i < entities.count(); i++) {
+            if(flags & 1<<3) if(!entities[i].push(out)) return false;
+        }
+    }
+    return true;
+}
+
+inline UpdatesType Functions::Messages::editMessageResult(InboundPkt *in) {
+    UpdatesType result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Messages::editInlineBotMessage(OutboundPkt *out, bool noWebpage, const InputBotInlineMessageID &id, const QString &message, const ReplyMarkup &replyMarkup, const QList<MessageEntity> &entities) {
+    out->appendInt(fncMessagesEditInlineBotMessage);
+    
+    qint32 flags = 0;
+    if(noWebpage != 0) flags = (1<<1 | flags);
+    if(message != 0) flags = (1<<11 | flags);
+    if(replyMarkup != 0) flags = (1<<2 | flags);
+    if(entities.count() != 0) flags = (1<<3 | flags);
+    
+    out->appendInt(flags);
+    if(!id.push(out)) return false;
+    if(flags & 1<<11) out->appendQString(message);
+    if(flags & 1<<2) if(!replyMarkup.push(out)) return false;
+    if(flags & 1<<3) {
+        out->appendInt(CoreTypes::typeVector);
+        out->appendInt(entities.count());
+        for (qint32 i = 0; i < entities.count(); i++) {
+            if(flags & 1<<3) if(!entities[i].push(out)) return false;
+        }
+    }
+    return true;
+}
+
+inline bool Functions::Messages::editInlineBotMessageResult(InboundPkt *in) {
+    bool result;
+    result = in->fetchBool();
+    return result;
+}
+
+inline bool Functions::Messages::getBotCallbackAnswer(OutboundPkt *out, const InputPeer &peer, qint32 msgId, const QByteArray &data) {
+    out->appendInt(fncMessagesGetBotCallbackAnswer);
+    if(!peer.push(out)) return false;
+    out->appendInt(msgId);
+    out->appendBytes(data);
+    return true;
+}
+
+inline MessagesBotCallbackAnswer Functions::Messages::getBotCallbackAnswerResult(InboundPkt *in) {
+    MessagesBotCallbackAnswer result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Messages::setBotCallbackAnswer(OutboundPkt *out, bool alert, qint64 queryId, const QString &message) {
+    out->appendInt(fncMessagesSetBotCallbackAnswer);
+    
+    qint32 flags = 0;
+    if(alert != 0) flags = (1<<1 | flags);
+    if(message != 0) flags = (1<<0 | flags);
+    
+    out->appendInt(flags);
+    out->appendLong(queryId);
+    if(flags & 1<<0) out->appendQString(message);
+    return true;
+}
+
+inline bool Functions::Messages::setBotCallbackAnswerResult(InboundPkt *in) {
+    bool result;
+    result = in->fetchBool();
+    return result;
+}
+
+inline bool Functions::Messages::getPeerDialogs(OutboundPkt *out, const QList<InputPeer> &peer) {
+    out->appendInt(fncMessagesGetPeerDialogs);
+    out->appendInt(CoreTypes::typeVector);
+    out->appendInt(peer.count());
+    for (qint32 i = 0; i < peer.count(); i++) {
+        if(!peer[i].push(out)) return false;
+    }
+    return true;
+}
+
+inline MessagesPeerDialogs Functions::Messages::getPeerDialogsResult(InboundPkt *in) {
+    MessagesPeerDialogs result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+
 }
 
 #endif // LQTG_FNC_MESSAGES

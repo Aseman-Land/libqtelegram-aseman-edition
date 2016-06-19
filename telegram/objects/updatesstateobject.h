@@ -70,4 +70,130 @@ private:
     UpdatesState m_core;
 };
 
+inline UpdatesStateObject::UpdatesStateObject(const UpdatesState &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core(core)
+{
+}
+
+inline UpdatesStateObject::UpdatesStateObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core()
+{
+}
+
+inline UpdatesStateObject::~UpdatesStateObject() {
+}
+
+inline void UpdatesStateObject::setDate(qint32 date) {
+    if(m_core.date() == date) return;
+    m_core.setDate(date);
+    Q_EMIT dateChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 UpdatesStateObject::date() const {
+    return m_core.date();
+}
+
+inline void UpdatesStateObject::setPts(qint32 pts) {
+    if(m_core.pts() == pts) return;
+    m_core.setPts(pts);
+    Q_EMIT ptsChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 UpdatesStateObject::pts() const {
+    return m_core.pts();
+}
+
+inline void UpdatesStateObject::setQts(qint32 qts) {
+    if(m_core.qts() == qts) return;
+    m_core.setQts(qts);
+    Q_EMIT qtsChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 UpdatesStateObject::qts() const {
+    return m_core.qts();
+}
+
+inline void UpdatesStateObject::setSeq(qint32 seq) {
+    if(m_core.seq() == seq) return;
+    m_core.setSeq(seq);
+    Q_EMIT seqChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 UpdatesStateObject::seq() const {
+    return m_core.seq();
+}
+
+inline void UpdatesStateObject::setUnreadCount(qint32 unreadCount) {
+    if(m_core.unreadCount() == unreadCount) return;
+    m_core.setUnreadCount(unreadCount);
+    Q_EMIT unreadCountChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 UpdatesStateObject::unreadCount() const {
+    return m_core.unreadCount();
+}
+
+inline UpdatesStateObject &UpdatesStateObject::operator =(const UpdatesState &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+
+    Q_EMIT dateChanged();
+    Q_EMIT ptsChanged();
+    Q_EMIT qtsChanged();
+    Q_EMIT seqChanged();
+    Q_EMIT unreadCountChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool UpdatesStateObject::operator ==(const UpdatesState &b) const {
+    return m_core == b;
+}
+
+inline void UpdatesStateObject::setClassType(quint32 classType) {
+    UpdatesState::UpdatesStateClassType result;
+    switch(classType) {
+    case TypeUpdatesState:
+        result = UpdatesState::typeUpdatesState;
+        break;
+    default:
+        result = UpdatesState::typeUpdatesState;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 UpdatesStateObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case UpdatesState::typeUpdatesState:
+        result = TypeUpdatesState;
+        break;
+    default:
+        result = TypeUpdatesState;
+        break;
+    }
+
+    return result;
+}
+
+inline void UpdatesStateObject::setCore(const UpdatesState &core) {
+    operator =(core);
+}
+
+inline UpdatesState UpdatesStateObject::core() const {
+    return m_core;
+}
+
 #endif // LQTG_TYPE_UPDATESSTATE_OBJECT

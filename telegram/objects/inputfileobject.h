@@ -66,4 +66,124 @@ private:
     InputFile m_core;
 };
 
+inline InputFileObject::InputFileObject(const InputFile &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core(core)
+{
+}
+
+inline InputFileObject::InputFileObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core()
+{
+}
+
+inline InputFileObject::~InputFileObject() {
+}
+
+inline void InputFileObject::setId(qint64 id) {
+    if(m_core.id() == id) return;
+    m_core.setId(id);
+    Q_EMIT idChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint64 InputFileObject::id() const {
+    return m_core.id();
+}
+
+inline void InputFileObject::setMd5Checksum(const QString &md5Checksum) {
+    if(m_core.md5Checksum() == md5Checksum) return;
+    m_core.setMd5Checksum(md5Checksum);
+    Q_EMIT md5ChecksumChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QString InputFileObject::md5Checksum() const {
+    return m_core.md5Checksum();
+}
+
+inline void InputFileObject::setName(const QString &name) {
+    if(m_core.name() == name) return;
+    m_core.setName(name);
+    Q_EMIT nameChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QString InputFileObject::name() const {
+    return m_core.name();
+}
+
+inline void InputFileObject::setParts(qint32 parts) {
+    if(m_core.parts() == parts) return;
+    m_core.setParts(parts);
+    Q_EMIT partsChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 InputFileObject::parts() const {
+    return m_core.parts();
+}
+
+inline InputFileObject &InputFileObject::operator =(const InputFile &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+
+    Q_EMIT idChanged();
+    Q_EMIT md5ChecksumChanged();
+    Q_EMIT nameChanged();
+    Q_EMIT partsChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool InputFileObject::operator ==(const InputFile &b) const {
+    return m_core == b;
+}
+
+inline void InputFileObject::setClassType(quint32 classType) {
+    InputFile::InputFileClassType result;
+    switch(classType) {
+    case TypeInputFile:
+        result = InputFile::typeInputFile;
+        break;
+    case TypeInputFileBig:
+        result = InputFile::typeInputFileBig;
+        break;
+    default:
+        result = InputFile::typeInputFile;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 InputFileObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case InputFile::typeInputFile:
+        result = TypeInputFile;
+        break;
+    case InputFile::typeInputFileBig:
+        result = TypeInputFileBig;
+        break;
+    default:
+        result = TypeInputFile;
+        break;
+    }
+
+    return result;
+}
+
+inline void InputFileObject::setCore(const InputFile &core) {
+    operator =(core);
+}
+
+inline InputFile InputFileObject::core() const {
+    return m_core;
+}
+
 #endif // LQTG_TYPE_INPUTFILE_OBJECT

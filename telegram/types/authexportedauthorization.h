@@ -9,6 +9,12 @@
 
 #include <QMetaType>
 #include <QVariant>
+#include "core/inboundpkt.h"
+#include "core/outboundpkt.h"
+#include "../coretypes.h"
+
+#include <QDataStream>
+
 #include <QByteArray>
 #include <QtGlobal>
 
@@ -56,5 +62,156 @@ Q_DECLARE_METATYPE(AuthExportedAuthorization)
 
 QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const AuthExportedAuthorization &item);
 QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, AuthExportedAuthorization &item);
+
+inline AuthExportedAuthorization::AuthExportedAuthorization(AuthExportedAuthorizationClassType classType, InboundPkt *in) :
+    m_id(0),
+    m_classType(classType)
+{
+    if(in) fetch(in);
+}
+
+inline AuthExportedAuthorization::AuthExportedAuthorization(InboundPkt *in) :
+    m_id(0),
+    m_classType(typeAuthExportedAuthorization)
+{
+    fetch(in);
+}
+
+inline AuthExportedAuthorization::AuthExportedAuthorization(const Null &null) :
+    TelegramTypeObject(null),
+    m_id(0),
+    m_classType(typeAuthExportedAuthorization)
+{
+}
+
+inline AuthExportedAuthorization::~AuthExportedAuthorization() {
+}
+
+inline void AuthExportedAuthorization::setBytes(const QByteArray &bytes) {
+    m_bytes = bytes;
+}
+
+inline QByteArray AuthExportedAuthorization::bytes() const {
+    return m_bytes;
+}
+
+inline void AuthExportedAuthorization::setId(qint32 id) {
+    m_id = id;
+}
+
+inline qint32 AuthExportedAuthorization::id() const {
+    return m_id;
+}
+
+inline bool AuthExportedAuthorization::operator ==(const AuthExportedAuthorization &b) const {
+    return m_classType == b.m_classType &&
+           m_bytes == b.m_bytes &&
+           m_id == b.m_id;
+}
+
+inline void AuthExportedAuthorization::setClassType(AuthExportedAuthorization::AuthExportedAuthorizationClassType classType) {
+    m_classType = classType;
+}
+
+inline AuthExportedAuthorization::AuthExportedAuthorizationClassType AuthExportedAuthorization::classType() const {
+    return m_classType;
+}
+
+inline bool AuthExportedAuthorization::fetch(InboundPkt *in) {
+    LQTG_FETCH_LOG;
+    int x = in->fetchInt();
+    switch(x) {
+    case typeAuthExportedAuthorization: {
+        m_id = in->fetchInt();
+        m_bytes = in->fetchBytes();
+        m_classType = static_cast<AuthExportedAuthorizationClassType>(x);
+        return true;
+    }
+        break;
+    
+    default:
+        LQTG_FETCH_ASSERT;
+        return false;
+    }
+}
+
+inline bool AuthExportedAuthorization::push(OutboundPkt *out) const {
+    out->appendInt(m_classType);
+    switch(m_classType) {
+    case typeAuthExportedAuthorization: {
+        out->appendInt(m_id);
+        out->appendBytes(m_bytes);
+        return true;
+    }
+        break;
+    
+    default:
+        return false;
+    }
+}
+
+inline QMap<QString, QVariant> AuthExportedAuthorization::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeAuthExportedAuthorization: {
+        result["classType"] = "AuthExportedAuthorization::typeAuthExportedAuthorization";
+        result["id"] = QVariant::fromValue<qint32>(id());
+        result["bytes"] = QVariant::fromValue<QByteArray>(bytes());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+inline AuthExportedAuthorization AuthExportedAuthorization::fromMap(const QMap<QString, QVariant> &map) {
+    AuthExportedAuthorization result;
+    if(map.value("classType").toString() == "AuthExportedAuthorization::typeAuthExportedAuthorization") {
+        result.setClassType(typeAuthExportedAuthorization);
+        result.setId( map.value("id").value<qint32>() );
+        result.setBytes( map.value("bytes").value<QByteArray>() );
+        return result;
+    }
+    return result;
+}
+
+inline QByteArray AuthExportedAuthorization::getHash(QCryptographicHash::Algorithm alg) const {
+    QByteArray data;
+    QDataStream str(&data, QIODevice::WriteOnly);
+    str << *this;
+    return QCryptographicHash::hash(data, alg);
+}
+
+inline QDataStream &operator<<(QDataStream &stream, const AuthExportedAuthorization &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case AuthExportedAuthorization::typeAuthExportedAuthorization:
+        stream << item.id();
+        stream << item.bytes();
+        break;
+    }
+    return stream;
+}
+
+inline QDataStream &operator>>(QDataStream &stream, AuthExportedAuthorization &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<AuthExportedAuthorization::AuthExportedAuthorizationClassType>(type));
+    switch(type) {
+    case AuthExportedAuthorization::typeAuthExportedAuthorization: {
+        qint32 m_id;
+        stream >> m_id;
+        item.setId(m_id);
+        QByteArray m_bytes;
+        stream >> m_bytes;
+        item.setBytes(m_bytes);
+    }
+        break;
+    }
+    return stream;
+}
+
 
 #endif // LQTG_TYPE_AUTHEXPORTEDAUTHORIZATION

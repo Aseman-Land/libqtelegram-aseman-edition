@@ -61,4 +61,112 @@ private:
     InputPhotoCrop m_core;
 };
 
+inline InputPhotoCropObject::InputPhotoCropObject(const InputPhotoCrop &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core(core)
+{
+}
+
+inline InputPhotoCropObject::InputPhotoCropObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core()
+{
+}
+
+inline InputPhotoCropObject::~InputPhotoCropObject() {
+}
+
+inline void InputPhotoCropObject::setCropLeft(qreal cropLeft) {
+    if(m_core.cropLeft() == cropLeft) return;
+    m_core.setCropLeft(cropLeft);
+    Q_EMIT cropLeftChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qreal InputPhotoCropObject::cropLeft() const {
+    return m_core.cropLeft();
+}
+
+inline void InputPhotoCropObject::setCropTop(qreal cropTop) {
+    if(m_core.cropTop() == cropTop) return;
+    m_core.setCropTop(cropTop);
+    Q_EMIT cropTopChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qreal InputPhotoCropObject::cropTop() const {
+    return m_core.cropTop();
+}
+
+inline void InputPhotoCropObject::setCropWidth(qreal cropWidth) {
+    if(m_core.cropWidth() == cropWidth) return;
+    m_core.setCropWidth(cropWidth);
+    Q_EMIT cropWidthChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qreal InputPhotoCropObject::cropWidth() const {
+    return m_core.cropWidth();
+}
+
+inline InputPhotoCropObject &InputPhotoCropObject::operator =(const InputPhotoCrop &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+
+    Q_EMIT cropLeftChanged();
+    Q_EMIT cropTopChanged();
+    Q_EMIT cropWidthChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool InputPhotoCropObject::operator ==(const InputPhotoCrop &b) const {
+    return m_core == b;
+}
+
+inline void InputPhotoCropObject::setClassType(quint32 classType) {
+    InputPhotoCrop::InputPhotoCropClassType result;
+    switch(classType) {
+    case TypeInputPhotoCropAuto:
+        result = InputPhotoCrop::typeInputPhotoCropAuto;
+        break;
+    case TypeInputPhotoCrop:
+        result = InputPhotoCrop::typeInputPhotoCrop;
+        break;
+    default:
+        result = InputPhotoCrop::typeInputPhotoCropAuto;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 InputPhotoCropObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case InputPhotoCrop::typeInputPhotoCropAuto:
+        result = TypeInputPhotoCropAuto;
+        break;
+    case InputPhotoCrop::typeInputPhotoCrop:
+        result = TypeInputPhotoCrop;
+        break;
+    default:
+        result = TypeInputPhotoCropAuto;
+        break;
+    }
+
+    return result;
+}
+
+inline void InputPhotoCropObject::setCore(const InputPhotoCrop &core) {
+    operator =(core);
+}
+
+inline InputPhotoCrop InputPhotoCropObject::core() const {
+    return m_core;
+}
+
 #endif // LQTG_TYPE_INPUTPHOTOCROP_OBJECT

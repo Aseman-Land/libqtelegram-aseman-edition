@@ -95,4 +95,190 @@ private:
     StickerSet m_core;
 };
 
+inline StickerSetObject::StickerSetObject(const StickerSet &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core(core)
+{
+}
+
+inline StickerSetObject::StickerSetObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core()
+{
+}
+
+inline StickerSetObject::~StickerSetObject() {
+}
+
+inline void StickerSetObject::setAccessHash(qint64 accessHash) {
+    if(m_core.accessHash() == accessHash) return;
+    m_core.setAccessHash(accessHash);
+    Q_EMIT accessHashChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint64 StickerSetObject::accessHash() const {
+    return m_core.accessHash();
+}
+
+inline void StickerSetObject::setCount(qint32 count) {
+    if(m_core.count() == count) return;
+    m_core.setCount(count);
+    Q_EMIT countChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 StickerSetObject::count() const {
+    return m_core.count();
+}
+
+inline void StickerSetObject::setDisabled(bool disabled) {
+    if(m_core.disabled() == disabled) return;
+    m_core.setDisabled(disabled);
+    Q_EMIT disabledChanged();
+    Q_EMIT coreChanged();
+}
+
+inline bool StickerSetObject::disabled() const {
+    return m_core.disabled();
+}
+
+inline void StickerSetObject::setFlags(qint32 flags) {
+    if(m_core.flags() == flags) return;
+    m_core.setFlags(flags);
+    Q_EMIT flagsChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 StickerSetObject::flags() const {
+    return m_core.flags();
+}
+
+inline void StickerSetObject::setHash(qint32 hash) {
+    if(m_core.hash() == hash) return;
+    m_core.setHash(hash);
+    Q_EMIT hashChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 StickerSetObject::hash() const {
+    return m_core.hash();
+}
+
+inline void StickerSetObject::setId(qint64 id) {
+    if(m_core.id() == id) return;
+    m_core.setId(id);
+    Q_EMIT idChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint64 StickerSetObject::id() const {
+    return m_core.id();
+}
+
+inline void StickerSetObject::setInstalled(bool installed) {
+    if(m_core.installed() == installed) return;
+    m_core.setInstalled(installed);
+    Q_EMIT installedChanged();
+    Q_EMIT coreChanged();
+}
+
+inline bool StickerSetObject::installed() const {
+    return m_core.installed();
+}
+
+inline void StickerSetObject::setOfficial(bool official) {
+    if(m_core.official() == official) return;
+    m_core.setOfficial(official);
+    Q_EMIT officialChanged();
+    Q_EMIT coreChanged();
+}
+
+inline bool StickerSetObject::official() const {
+    return m_core.official();
+}
+
+inline void StickerSetObject::setShortName(const QString &shortName) {
+    if(m_core.shortName() == shortName) return;
+    m_core.setShortName(shortName);
+    Q_EMIT shortNameChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QString StickerSetObject::shortName() const {
+    return m_core.shortName();
+}
+
+inline void StickerSetObject::setTitle(const QString &title) {
+    if(m_core.title() == title) return;
+    m_core.setTitle(title);
+    Q_EMIT titleChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QString StickerSetObject::title() const {
+    return m_core.title();
+}
+
+inline StickerSetObject &StickerSetObject::operator =(const StickerSet &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+
+    Q_EMIT accessHashChanged();
+    Q_EMIT countChanged();
+    Q_EMIT disabledChanged();
+    Q_EMIT flagsChanged();
+    Q_EMIT hashChanged();
+    Q_EMIT idChanged();
+    Q_EMIT installedChanged();
+    Q_EMIT officialChanged();
+    Q_EMIT shortNameChanged();
+    Q_EMIT titleChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool StickerSetObject::operator ==(const StickerSet &b) const {
+    return m_core == b;
+}
+
+inline void StickerSetObject::setClassType(quint32 classType) {
+    StickerSet::StickerSetClassType result;
+    switch(classType) {
+    case TypeStickerSet:
+        result = StickerSet::typeStickerSet;
+        break;
+    default:
+        result = StickerSet::typeStickerSet;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 StickerSetObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case StickerSet::typeStickerSet:
+        result = TypeStickerSet;
+        break;
+    default:
+        result = TypeStickerSet;
+        break;
+    }
+
+    return result;
+}
+
+inline void StickerSetObject::setCore(const StickerSet &core) {
+    operator =(core);
+}
+
+inline StickerSet StickerSetObject::core() const {
+    return m_core;
+}
+
 #endif // LQTG_TYPE_STICKERSET_OBJECT

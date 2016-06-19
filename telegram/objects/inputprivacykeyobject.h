@@ -46,4 +46,76 @@ private:
     InputPrivacyKey m_core;
 };
 
+inline InputPrivacyKeyObject::InputPrivacyKeyObject(const InputPrivacyKey &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core(core)
+{
+}
+
+inline InputPrivacyKeyObject::InputPrivacyKeyObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core()
+{
+}
+
+inline InputPrivacyKeyObject::~InputPrivacyKeyObject() {
+}
+
+inline InputPrivacyKeyObject &InputPrivacyKeyObject::operator =(const InputPrivacyKey &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool InputPrivacyKeyObject::operator ==(const InputPrivacyKey &b) const {
+    return m_core == b;
+}
+
+inline void InputPrivacyKeyObject::setClassType(quint32 classType) {
+    InputPrivacyKey::InputPrivacyKeyClassType result;
+    switch(classType) {
+    case TypeInputPrivacyKeyStatusTimestamp:
+        result = InputPrivacyKey::typeInputPrivacyKeyStatusTimestamp;
+        break;
+    case TypeInputPrivacyKeyChatInvite:
+        result = InputPrivacyKey::typeInputPrivacyKeyChatInvite;
+        break;
+    default:
+        result = InputPrivacyKey::typeInputPrivacyKeyStatusTimestamp;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 InputPrivacyKeyObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case InputPrivacyKey::typeInputPrivacyKeyStatusTimestamp:
+        result = TypeInputPrivacyKeyStatusTimestamp;
+        break;
+    case InputPrivacyKey::typeInputPrivacyKeyChatInvite:
+        result = TypeInputPrivacyKeyChatInvite;
+        break;
+    default:
+        result = TypeInputPrivacyKeyStatusTimestamp;
+        break;
+    }
+
+    return result;
+}
+
+inline void InputPrivacyKeyObject::setCore(const InputPrivacyKey &core) {
+    operator =(core);
+}
+
+inline InputPrivacyKey InputPrivacyKeyObject::core() const {
+    return m_core;
+}
+
 #endif // LQTG_TYPE_INPUTPRIVACYKEY_OBJECT

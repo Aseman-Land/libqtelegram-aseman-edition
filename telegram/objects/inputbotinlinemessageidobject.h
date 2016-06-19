@@ -60,4 +60,106 @@ private:
     InputBotInlineMessageID m_core;
 };
 
+inline InputBotInlineMessageIDObject::InputBotInlineMessageIDObject(const InputBotInlineMessageID &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core(core)
+{
+}
+
+inline InputBotInlineMessageIDObject::InputBotInlineMessageIDObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core()
+{
+}
+
+inline InputBotInlineMessageIDObject::~InputBotInlineMessageIDObject() {
+}
+
+inline void InputBotInlineMessageIDObject::setAccessHash(qint64 accessHash) {
+    if(m_core.accessHash() == accessHash) return;
+    m_core.setAccessHash(accessHash);
+    Q_EMIT accessHashChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint64 InputBotInlineMessageIDObject::accessHash() const {
+    return m_core.accessHash();
+}
+
+inline void InputBotInlineMessageIDObject::setDcId(qint32 dcId) {
+    if(m_core.dcId() == dcId) return;
+    m_core.setDcId(dcId);
+    Q_EMIT dcIdChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 InputBotInlineMessageIDObject::dcId() const {
+    return m_core.dcId();
+}
+
+inline void InputBotInlineMessageIDObject::setId(qint64 id) {
+    if(m_core.id() == id) return;
+    m_core.setId(id);
+    Q_EMIT idChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint64 InputBotInlineMessageIDObject::id() const {
+    return m_core.id();
+}
+
+inline InputBotInlineMessageIDObject &InputBotInlineMessageIDObject::operator =(const InputBotInlineMessageID &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+
+    Q_EMIT accessHashChanged();
+    Q_EMIT dcIdChanged();
+    Q_EMIT idChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool InputBotInlineMessageIDObject::operator ==(const InputBotInlineMessageID &b) const {
+    return m_core == b;
+}
+
+inline void InputBotInlineMessageIDObject::setClassType(quint32 classType) {
+    InputBotInlineMessageID::InputBotInlineMessageIDClassType result;
+    switch(classType) {
+    case TypeInputBotInlineMessageID:
+        result = InputBotInlineMessageID::typeInputBotInlineMessageID;
+        break;
+    default:
+        result = InputBotInlineMessageID::typeInputBotInlineMessageID;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 InputBotInlineMessageIDObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case InputBotInlineMessageID::typeInputBotInlineMessageID:
+        result = TypeInputBotInlineMessageID;
+        break;
+    default:
+        result = TypeInputBotInlineMessageID;
+        break;
+    }
+
+    return result;
+}
+
+inline void InputBotInlineMessageIDObject::setCore(const InputBotInlineMessageID &core) {
+    operator =(core);
+}
+
+inline InputBotInlineMessageID InputBotInlineMessageIDObject::core() const {
+    return m_core;
+}
+
 #endif // LQTG_TYPE_INPUTBOTINLINEMESSAGEID_OBJECT

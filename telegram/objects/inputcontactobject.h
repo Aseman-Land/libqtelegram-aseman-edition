@@ -65,4 +65,118 @@ private:
     InputContact m_core;
 };
 
+inline InputContactObject::InputContactObject(const InputContact &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core(core)
+{
+}
+
+inline InputContactObject::InputContactObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core()
+{
+}
+
+inline InputContactObject::~InputContactObject() {
+}
+
+inline void InputContactObject::setClientId(qint64 clientId) {
+    if(m_core.clientId() == clientId) return;
+    m_core.setClientId(clientId);
+    Q_EMIT clientIdChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint64 InputContactObject::clientId() const {
+    return m_core.clientId();
+}
+
+inline void InputContactObject::setFirstName(const QString &firstName) {
+    if(m_core.firstName() == firstName) return;
+    m_core.setFirstName(firstName);
+    Q_EMIT firstNameChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QString InputContactObject::firstName() const {
+    return m_core.firstName();
+}
+
+inline void InputContactObject::setLastName(const QString &lastName) {
+    if(m_core.lastName() == lastName) return;
+    m_core.setLastName(lastName);
+    Q_EMIT lastNameChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QString InputContactObject::lastName() const {
+    return m_core.lastName();
+}
+
+inline void InputContactObject::setPhone(const QString &phone) {
+    if(m_core.phone() == phone) return;
+    m_core.setPhone(phone);
+    Q_EMIT phoneChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QString InputContactObject::phone() const {
+    return m_core.phone();
+}
+
+inline InputContactObject &InputContactObject::operator =(const InputContact &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+
+    Q_EMIT clientIdChanged();
+    Q_EMIT firstNameChanged();
+    Q_EMIT lastNameChanged();
+    Q_EMIT phoneChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool InputContactObject::operator ==(const InputContact &b) const {
+    return m_core == b;
+}
+
+inline void InputContactObject::setClassType(quint32 classType) {
+    InputContact::InputContactClassType result;
+    switch(classType) {
+    case TypeInputPhoneContact:
+        result = InputContact::typeInputPhoneContact;
+        break;
+    default:
+        result = InputContact::typeInputPhoneContact;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 InputContactObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case InputContact::typeInputPhoneContact:
+        result = TypeInputPhoneContact;
+        break;
+    default:
+        result = TypeInputPhoneContact;
+        break;
+    }
+
+    return result;
+}
+
+inline void InputContactObject::setCore(const InputContact &core) {
+    operator =(core);
+}
+
+inline InputContact InputContactObject::core() const {
+    return m_core;
+}
+
 #endif // LQTG_TYPE_INPUTCONTACT_OBJECT

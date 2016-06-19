@@ -50,4 +50,82 @@ private:
     AccountPasswordSettings m_core;
 };
 
+inline AccountPasswordSettingsObject::AccountPasswordSettingsObject(const AccountPasswordSettings &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core(core)
+{
+}
+
+inline AccountPasswordSettingsObject::AccountPasswordSettingsObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core()
+{
+}
+
+inline AccountPasswordSettingsObject::~AccountPasswordSettingsObject() {
+}
+
+inline void AccountPasswordSettingsObject::setEmail(const QString &email) {
+    if(m_core.email() == email) return;
+    m_core.setEmail(email);
+    Q_EMIT emailChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QString AccountPasswordSettingsObject::email() const {
+    return m_core.email();
+}
+
+inline AccountPasswordSettingsObject &AccountPasswordSettingsObject::operator =(const AccountPasswordSettings &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+
+    Q_EMIT emailChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool AccountPasswordSettingsObject::operator ==(const AccountPasswordSettings &b) const {
+    return m_core == b;
+}
+
+inline void AccountPasswordSettingsObject::setClassType(quint32 classType) {
+    AccountPasswordSettings::AccountPasswordSettingsClassType result;
+    switch(classType) {
+    case TypeAccountPasswordSettings:
+        result = AccountPasswordSettings::typeAccountPasswordSettings;
+        break;
+    default:
+        result = AccountPasswordSettings::typeAccountPasswordSettings;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 AccountPasswordSettingsObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case AccountPasswordSettings::typeAccountPasswordSettings:
+        result = TypeAccountPasswordSettings;
+        break;
+    default:
+        result = TypeAccountPasswordSettings;
+        break;
+    }
+
+    return result;
+}
+
+inline void AccountPasswordSettingsObject::setCore(const AccountPasswordSettings &core) {
+    operator =(core);
+}
+
+inline AccountPasswordSettings AccountPasswordSettingsObject::core() const {
+    return m_core;
+}
+
 #endif // LQTG_TYPE_ACCOUNTPASSWORDSETTINGS_OBJECT

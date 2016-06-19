@@ -9,6 +9,12 @@
 
 #include <QMetaType>
 #include <QVariant>
+#include "core/inboundpkt.h"
+#include "core/outboundpkt.h"
+#include "../coretypes.h"
+
+#include <QDataStream>
+
 #include "inputpeer.h"
 
 class LIBQTELEGRAMSHARED_EXPORT InputNotifyPeer : public TelegramTypeObject
@@ -54,5 +60,220 @@ Q_DECLARE_METATYPE(InputNotifyPeer)
 
 QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const InputNotifyPeer &item);
 QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, InputNotifyPeer &item);
+
+inline InputNotifyPeer::InputNotifyPeer(InputNotifyPeerClassType classType, InboundPkt *in) :
+    m_classType(classType)
+{
+    if(in) fetch(in);
+}
+
+inline InputNotifyPeer::InputNotifyPeer(InboundPkt *in) :
+    m_classType(typeInputNotifyPeer)
+{
+    fetch(in);
+}
+
+inline InputNotifyPeer::InputNotifyPeer(const Null &null) :
+    TelegramTypeObject(null),
+    m_classType(typeInputNotifyPeer)
+{
+}
+
+inline InputNotifyPeer::~InputNotifyPeer() {
+}
+
+inline void InputNotifyPeer::setPeer(const InputPeer &peer) {
+    m_peer = peer;
+}
+
+inline InputPeer InputNotifyPeer::peer() const {
+    return m_peer;
+}
+
+inline bool InputNotifyPeer::operator ==(const InputNotifyPeer &b) const {
+    return m_classType == b.m_classType &&
+           m_peer == b.m_peer;
+}
+
+inline void InputNotifyPeer::setClassType(InputNotifyPeer::InputNotifyPeerClassType classType) {
+    m_classType = classType;
+}
+
+inline InputNotifyPeer::InputNotifyPeerClassType InputNotifyPeer::classType() const {
+    return m_classType;
+}
+
+inline bool InputNotifyPeer::fetch(InboundPkt *in) {
+    LQTG_FETCH_LOG;
+    int x = in->fetchInt();
+    switch(x) {
+    case typeInputNotifyPeer: {
+        m_peer.fetch(in);
+        m_classType = static_cast<InputNotifyPeerClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeInputNotifyUsers: {
+        m_classType = static_cast<InputNotifyPeerClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeInputNotifyChats: {
+        m_classType = static_cast<InputNotifyPeerClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeInputNotifyAll: {
+        m_classType = static_cast<InputNotifyPeerClassType>(x);
+        return true;
+    }
+        break;
+    
+    default:
+        LQTG_FETCH_ASSERT;
+        return false;
+    }
+}
+
+inline bool InputNotifyPeer::push(OutboundPkt *out) const {
+    out->appendInt(m_classType);
+    switch(m_classType) {
+    case typeInputNotifyPeer: {
+        m_peer.push(out);
+        return true;
+    }
+        break;
+    
+    case typeInputNotifyUsers: {
+        return true;
+    }
+        break;
+    
+    case typeInputNotifyChats: {
+        return true;
+    }
+        break;
+    
+    case typeInputNotifyAll: {
+        return true;
+    }
+        break;
+    
+    default:
+        return false;
+    }
+}
+
+inline QMap<QString, QVariant> InputNotifyPeer::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeInputNotifyPeer: {
+        result["classType"] = "InputNotifyPeer::typeInputNotifyPeer";
+        result["peer"] = m_peer.toMap();
+        return result;
+    }
+        break;
+    
+    case typeInputNotifyUsers: {
+        result["classType"] = "InputNotifyPeer::typeInputNotifyUsers";
+        return result;
+    }
+        break;
+    
+    case typeInputNotifyChats: {
+        result["classType"] = "InputNotifyPeer::typeInputNotifyChats";
+        return result;
+    }
+        break;
+    
+    case typeInputNotifyAll: {
+        result["classType"] = "InputNotifyPeer::typeInputNotifyAll";
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+inline InputNotifyPeer InputNotifyPeer::fromMap(const QMap<QString, QVariant> &map) {
+    InputNotifyPeer result;
+    if(map.value("classType").toString() == "InputNotifyPeer::typeInputNotifyPeer") {
+        result.setClassType(typeInputNotifyPeer);
+        result.setPeer( InputPeer::fromMap(map.value("peer").toMap()) );
+        return result;
+    }
+    if(map.value("classType").toString() == "InputNotifyPeer::typeInputNotifyUsers") {
+        result.setClassType(typeInputNotifyUsers);
+        return result;
+    }
+    if(map.value("classType").toString() == "InputNotifyPeer::typeInputNotifyChats") {
+        result.setClassType(typeInputNotifyChats);
+        return result;
+    }
+    if(map.value("classType").toString() == "InputNotifyPeer::typeInputNotifyAll") {
+        result.setClassType(typeInputNotifyAll);
+        return result;
+    }
+    return result;
+}
+
+inline QByteArray InputNotifyPeer::getHash(QCryptographicHash::Algorithm alg) const {
+    QByteArray data;
+    QDataStream str(&data, QIODevice::WriteOnly);
+    str << *this;
+    return QCryptographicHash::hash(data, alg);
+}
+
+inline QDataStream &operator<<(QDataStream &stream, const InputNotifyPeer &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case InputNotifyPeer::typeInputNotifyPeer:
+        stream << item.peer();
+        break;
+    case InputNotifyPeer::typeInputNotifyUsers:
+        
+        break;
+    case InputNotifyPeer::typeInputNotifyChats:
+        
+        break;
+    case InputNotifyPeer::typeInputNotifyAll:
+        
+        break;
+    }
+    return stream;
+}
+
+inline QDataStream &operator>>(QDataStream &stream, InputNotifyPeer &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<InputNotifyPeer::InputNotifyPeerClassType>(type));
+    switch(type) {
+    case InputNotifyPeer::typeInputNotifyPeer: {
+        InputPeer m_peer;
+        stream >> m_peer;
+        item.setPeer(m_peer);
+    }
+        break;
+    case InputNotifyPeer::typeInputNotifyUsers: {
+        
+    }
+        break;
+    case InputNotifyPeer::typeInputNotifyChats: {
+        
+    }
+        break;
+    case InputNotifyPeer::typeInputNotifyAll: {
+        
+    }
+        break;
+    }
+    return stream;
+}
+
 
 #endif // LQTG_TYPE_INPUTNOTIFYPEER

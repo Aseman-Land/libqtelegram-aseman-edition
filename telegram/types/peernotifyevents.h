@@ -9,6 +9,12 @@
 
 #include <QMetaType>
 #include <QVariant>
+#include "core/inboundpkt.h"
+#include "core/outboundpkt.h"
+#include "../coretypes.h"
+
+#include <QDataStream>
+
 
 class LIBQTELEGRAMSHARED_EXPORT PeerNotifyEvents : public TelegramTypeObject
 {
@@ -47,5 +53,149 @@ Q_DECLARE_METATYPE(PeerNotifyEvents)
 
 QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const PeerNotifyEvents &item);
 QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, PeerNotifyEvents &item);
+
+inline PeerNotifyEvents::PeerNotifyEvents(PeerNotifyEventsClassType classType, InboundPkt *in) :
+    m_classType(classType)
+{
+    if(in) fetch(in);
+}
+
+inline PeerNotifyEvents::PeerNotifyEvents(InboundPkt *in) :
+    m_classType(typePeerNotifyEventsEmpty)
+{
+    fetch(in);
+}
+
+inline PeerNotifyEvents::PeerNotifyEvents(const Null &null) :
+    TelegramTypeObject(null),
+    m_classType(typePeerNotifyEventsEmpty)
+{
+}
+
+inline PeerNotifyEvents::~PeerNotifyEvents() {
+}
+
+inline bool PeerNotifyEvents::operator ==(const PeerNotifyEvents &b) const {
+    return m_classType == b.m_classType;
+}
+
+inline void PeerNotifyEvents::setClassType(PeerNotifyEvents::PeerNotifyEventsClassType classType) {
+    m_classType = classType;
+}
+
+inline PeerNotifyEvents::PeerNotifyEventsClassType PeerNotifyEvents::classType() const {
+    return m_classType;
+}
+
+inline bool PeerNotifyEvents::fetch(InboundPkt *in) {
+    LQTG_FETCH_LOG;
+    int x = in->fetchInt();
+    switch(x) {
+    case typePeerNotifyEventsEmpty: {
+        m_classType = static_cast<PeerNotifyEventsClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typePeerNotifyEventsAll: {
+        m_classType = static_cast<PeerNotifyEventsClassType>(x);
+        return true;
+    }
+        break;
+    
+    default:
+        LQTG_FETCH_ASSERT;
+        return false;
+    }
+}
+
+inline bool PeerNotifyEvents::push(OutboundPkt *out) const {
+    out->appendInt(m_classType);
+    switch(m_classType) {
+    case typePeerNotifyEventsEmpty: {
+        return true;
+    }
+        break;
+    
+    case typePeerNotifyEventsAll: {
+        return true;
+    }
+        break;
+    
+    default:
+        return false;
+    }
+}
+
+inline QMap<QString, QVariant> PeerNotifyEvents::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typePeerNotifyEventsEmpty: {
+        result["classType"] = "PeerNotifyEvents::typePeerNotifyEventsEmpty";
+        return result;
+    }
+        break;
+    
+    case typePeerNotifyEventsAll: {
+        result["classType"] = "PeerNotifyEvents::typePeerNotifyEventsAll";
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+inline PeerNotifyEvents PeerNotifyEvents::fromMap(const QMap<QString, QVariant> &map) {
+    PeerNotifyEvents result;
+    if(map.value("classType").toString() == "PeerNotifyEvents::typePeerNotifyEventsEmpty") {
+        result.setClassType(typePeerNotifyEventsEmpty);
+        return result;
+    }
+    if(map.value("classType").toString() == "PeerNotifyEvents::typePeerNotifyEventsAll") {
+        result.setClassType(typePeerNotifyEventsAll);
+        return result;
+    }
+    return result;
+}
+
+inline QByteArray PeerNotifyEvents::getHash(QCryptographicHash::Algorithm alg) const {
+    QByteArray data;
+    QDataStream str(&data, QIODevice::WriteOnly);
+    str << *this;
+    return QCryptographicHash::hash(data, alg);
+}
+
+inline QDataStream &operator<<(QDataStream &stream, const PeerNotifyEvents &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case PeerNotifyEvents::typePeerNotifyEventsEmpty:
+        
+        break;
+    case PeerNotifyEvents::typePeerNotifyEventsAll:
+        
+        break;
+    }
+    return stream;
+}
+
+inline QDataStream &operator>>(QDataStream &stream, PeerNotifyEvents &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<PeerNotifyEvents::PeerNotifyEventsClassType>(type));
+    switch(type) {
+    case PeerNotifyEvents::typePeerNotifyEventsEmpty: {
+        
+    }
+        break;
+    case PeerNotifyEvents::typePeerNotifyEventsAll: {
+        
+    }
+        break;
+    }
+    return stream;
+}
+
 
 #endif // LQTG_TYPE_PEERNOTIFYEVENTS

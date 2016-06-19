@@ -63,4 +63,126 @@ private:
     MessagesChatFull m_core;
 };
 
+inline MessagesChatFullObject::MessagesChatFullObject(const MessagesChatFull &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_fullChat(0),
+    m_core(core)
+{
+    m_fullChat = new ChatFullObject(m_core.fullChat(), this);
+    connect(m_fullChat.data(), &ChatFullObject::coreChanged, this, &MessagesChatFullObject::coreFullChatChanged);
+}
+
+inline MessagesChatFullObject::MessagesChatFullObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_fullChat(0),
+    m_core()
+{
+    m_fullChat = new ChatFullObject(m_core.fullChat(), this);
+    connect(m_fullChat.data(), &ChatFullObject::coreChanged, this, &MessagesChatFullObject::coreFullChatChanged);
+}
+
+inline MessagesChatFullObject::~MessagesChatFullObject() {
+}
+
+inline void MessagesChatFullObject::setChats(const QList<Chat> &chats) {
+    if(m_core.chats() == chats) return;
+    m_core.setChats(chats);
+    Q_EMIT chatsChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QList<Chat> MessagesChatFullObject::chats() const {
+    return m_core.chats();
+}
+
+inline void MessagesChatFullObject::setFullChat(ChatFullObject* fullChat) {
+    if(m_fullChat == fullChat) return;
+    if(m_fullChat) delete m_fullChat;
+    m_fullChat = fullChat;
+    if(m_fullChat) {
+        m_fullChat->setParent(this);
+        m_core.setFullChat(m_fullChat->core());
+        connect(m_fullChat.data(), &ChatFullObject::coreChanged, this, &MessagesChatFullObject::coreFullChatChanged);
+    }
+    Q_EMIT fullChatChanged();
+    Q_EMIT coreChanged();
+}
+
+inline ChatFullObject*  MessagesChatFullObject::fullChat() const {
+    return m_fullChat;
+}
+
+inline void MessagesChatFullObject::setUsers(const QList<User> &users) {
+    if(m_core.users() == users) return;
+    m_core.setUsers(users);
+    Q_EMIT usersChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QList<User> MessagesChatFullObject::users() const {
+    return m_core.users();
+}
+
+inline MessagesChatFullObject &MessagesChatFullObject::operator =(const MessagesChatFull &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+    m_fullChat->setCore(b.fullChat());
+
+    Q_EMIT chatsChanged();
+    Q_EMIT fullChatChanged();
+    Q_EMIT usersChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool MessagesChatFullObject::operator ==(const MessagesChatFull &b) const {
+    return m_core == b;
+}
+
+inline void MessagesChatFullObject::setClassType(quint32 classType) {
+    MessagesChatFull::MessagesChatFullClassType result;
+    switch(classType) {
+    case TypeMessagesChatFull:
+        result = MessagesChatFull::typeMessagesChatFull;
+        break;
+    default:
+        result = MessagesChatFull::typeMessagesChatFull;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 MessagesChatFullObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case MessagesChatFull::typeMessagesChatFull:
+        result = TypeMessagesChatFull;
+        break;
+    default:
+        result = TypeMessagesChatFull;
+        break;
+    }
+
+    return result;
+}
+
+inline void MessagesChatFullObject::setCore(const MessagesChatFull &core) {
+    operator =(core);
+}
+
+inline MessagesChatFull MessagesChatFullObject::core() const {
+    return m_core;
+}
+
+inline void MessagesChatFullObject::coreFullChatChanged() {
+    if(m_core.fullChat() == m_fullChat->core()) return;
+    m_core.setFullChat(m_fullChat->core());
+    Q_EMIT fullChatChanged();
+    Q_EMIT coreChanged();
+}
+
 #endif // LQTG_TYPE_MESSAGESCHATFULL_OBJECT

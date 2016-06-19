@@ -9,6 +9,12 @@
 
 #include <QMetaType>
 #include <QVariant>
+#include "core/inboundpkt.h"
+#include "core/outboundpkt.h"
+#include "../coretypes.h"
+
+#include <QDataStream>
+
 #include <QtGlobal>
 #include <QString>
 #include "userprofilephoto.h"
@@ -132,5 +138,508 @@ Q_DECLARE_METATYPE(User)
 
 QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const User &item);
 QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, User &item);
+
+inline User::User(UserClassType classType, InboundPkt *in) :
+    m_accessHash(0),
+    m_botInfoVersion(0),
+    m_flags(0),
+    m_id(0),
+    m_classType(classType)
+{
+    if(in) fetch(in);
+}
+
+inline User::User(InboundPkt *in) :
+    m_accessHash(0),
+    m_botInfoVersion(0),
+    m_flags(0),
+    m_id(0),
+    m_classType(typeUserEmpty)
+{
+    fetch(in);
+}
+
+inline User::User(const Null &null) :
+    TelegramTypeObject(null),
+    m_accessHash(0),
+    m_botInfoVersion(0),
+    m_flags(0),
+    m_id(0),
+    m_classType(typeUserEmpty)
+{
+}
+
+inline User::~User() {
+}
+
+inline void User::setAccessHash(qint64 accessHash) {
+    m_accessHash = accessHash;
+}
+
+inline qint64 User::accessHash() const {
+    return m_accessHash;
+}
+
+inline void User::setBot(bool bot) {
+    if(bot) m_flags = (m_flags | (1<<14));
+    else m_flags = (m_flags & ~(1<<14));
+}
+
+inline bool User::bot() const {
+    return (m_flags & 1<<14);
+}
+
+inline void User::setBotChatHistory(bool botChatHistory) {
+    if(botChatHistory) m_flags = (m_flags | (1<<15));
+    else m_flags = (m_flags & ~(1<<15));
+}
+
+inline bool User::botChatHistory() const {
+    return (m_flags & 1<<15);
+}
+
+inline void User::setBotInfoVersion(qint32 botInfoVersion) {
+    m_botInfoVersion = botInfoVersion;
+}
+
+inline qint32 User::botInfoVersion() const {
+    return m_botInfoVersion;
+}
+
+inline void User::setBotInlineGeo(bool botInlineGeo) {
+    if(botInlineGeo) m_flags = (m_flags | (1<<21));
+    else m_flags = (m_flags & ~(1<<21));
+}
+
+inline bool User::botInlineGeo() const {
+    return (m_flags & 1<<21);
+}
+
+inline void User::setBotInlinePlaceholder(const QString &botInlinePlaceholder) {
+    m_botInlinePlaceholder = botInlinePlaceholder;
+}
+
+inline QString User::botInlinePlaceholder() const {
+    return m_botInlinePlaceholder;
+}
+
+inline void User::setBotNochats(bool botNochats) {
+    if(botNochats) m_flags = (m_flags | (1<<16));
+    else m_flags = (m_flags & ~(1<<16));
+}
+
+inline bool User::botNochats() const {
+    return (m_flags & 1<<16);
+}
+
+inline void User::setContact(bool contact) {
+    if(contact) m_flags = (m_flags | (1<<11));
+    else m_flags = (m_flags & ~(1<<11));
+}
+
+inline bool User::contact() const {
+    return (m_flags & 1<<11);
+}
+
+inline void User::setDeleted(bool deleted) {
+    if(deleted) m_flags = (m_flags | (1<<13));
+    else m_flags = (m_flags & ~(1<<13));
+}
+
+inline bool User::deleted() const {
+    return (m_flags & 1<<13);
+}
+
+inline void User::setFirstName(const QString &firstName) {
+    m_firstName = firstName;
+}
+
+inline QString User::firstName() const {
+    return m_firstName;
+}
+
+inline void User::setFlags(qint32 flags) {
+    m_flags = flags;
+}
+
+inline qint32 User::flags() const {
+    return m_flags;
+}
+
+inline void User::setId(qint32 id) {
+    m_id = id;
+}
+
+inline qint32 User::id() const {
+    return m_id;
+}
+
+inline void User::setLastName(const QString &lastName) {
+    m_lastName = lastName;
+}
+
+inline QString User::lastName() const {
+    return m_lastName;
+}
+
+inline void User::setMin(bool min) {
+    if(min) m_flags = (m_flags | (1<<20));
+    else m_flags = (m_flags & ~(1<<20));
+}
+
+inline bool User::min() const {
+    return (m_flags & 1<<20);
+}
+
+inline void User::setMutualContact(bool mutualContact) {
+    if(mutualContact) m_flags = (m_flags | (1<<12));
+    else m_flags = (m_flags & ~(1<<12));
+}
+
+inline bool User::mutualContact() const {
+    return (m_flags & 1<<12);
+}
+
+inline void User::setPhone(const QString &phone) {
+    m_phone = phone;
+}
+
+inline QString User::phone() const {
+    return m_phone;
+}
+
+inline void User::setPhoto(const UserProfilePhoto &photo) {
+    m_photo = photo;
+}
+
+inline UserProfilePhoto User::photo() const {
+    return m_photo;
+}
+
+inline void User::setRestricted(bool restricted) {
+    if(restricted) m_flags = (m_flags | (1<<18));
+    else m_flags = (m_flags & ~(1<<18));
+}
+
+inline bool User::restricted() const {
+    return (m_flags & 1<<18);
+}
+
+inline void User::setRestrictionReason(const QString &restrictionReason) {
+    m_restrictionReason = restrictionReason;
+}
+
+inline QString User::restrictionReason() const {
+    return m_restrictionReason;
+}
+
+inline void User::setSelf(bool self) {
+    if(self) m_flags = (m_flags | (1<<10));
+    else m_flags = (m_flags & ~(1<<10));
+}
+
+inline bool User::self() const {
+    return (m_flags & 1<<10);
+}
+
+inline void User::setStatus(const UserStatus &status) {
+    m_status = status;
+}
+
+inline UserStatus User::status() const {
+    return m_status;
+}
+
+inline void User::setUsername(const QString &username) {
+    m_username = username;
+}
+
+inline QString User::username() const {
+    return m_username;
+}
+
+inline void User::setVerified(bool verified) {
+    if(verified) m_flags = (m_flags | (1<<17));
+    else m_flags = (m_flags & ~(1<<17));
+}
+
+inline bool User::verified() const {
+    return (m_flags & 1<<17);
+}
+
+inline bool User::operator ==(const User &b) const {
+    return m_classType == b.m_classType &&
+           m_accessHash == b.m_accessHash &&
+           m_botInfoVersion == b.m_botInfoVersion &&
+           m_botInlinePlaceholder == b.m_botInlinePlaceholder &&
+           m_firstName == b.m_firstName &&
+           m_flags == b.m_flags &&
+           m_id == b.m_id &&
+           m_lastName == b.m_lastName &&
+           m_phone == b.m_phone &&
+           m_photo == b.m_photo &&
+           m_restrictionReason == b.m_restrictionReason &&
+           m_status == b.m_status &&
+           m_username == b.m_username;
+}
+
+inline void User::setClassType(User::UserClassType classType) {
+    m_classType = classType;
+}
+
+inline User::UserClassType User::classType() const {
+    return m_classType;
+}
+
+inline bool User::fetch(InboundPkt *in) {
+    LQTG_FETCH_LOG;
+    int x = in->fetchInt();
+    switch(x) {
+    case typeUserEmpty: {
+        m_id = in->fetchInt();
+        m_classType = static_cast<UserClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUser: {
+        m_flags = in->fetchInt();
+        m_id = in->fetchInt();
+        if(m_flags & 1<<0) {
+            m_accessHash = in->fetchLong();
+        }
+        if(m_flags & 1<<1) {
+            m_firstName = in->fetchQString();
+        }
+        if(m_flags & 1<<2) {
+            m_lastName = in->fetchQString();
+        }
+        if(m_flags & 1<<3) {
+            m_username = in->fetchQString();
+        }
+        if(m_flags & 1<<4) {
+            m_phone = in->fetchQString();
+        }
+        if(m_flags & 1<<5) {
+            m_photo.fetch(in);
+        }
+        if(m_flags & 1<<6) {
+            m_status.fetch(in);
+        }
+        if(m_flags & 1<<14) {
+            m_botInfoVersion = in->fetchInt();
+        }
+        if(m_flags & 1<<18) {
+            m_restrictionReason = in->fetchQString();
+        }
+        if(m_flags & 1<<19) {
+            m_botInlinePlaceholder = in->fetchQString();
+        }
+        m_classType = static_cast<UserClassType>(x);
+        return true;
+    }
+        break;
+    
+    default:
+        LQTG_FETCH_ASSERT;
+        return false;
+    }
+}
+
+inline bool User::push(OutboundPkt *out) const {
+    out->appendInt(m_classType);
+    switch(m_classType) {
+    case typeUserEmpty: {
+        out->appendInt(m_id);
+        return true;
+    }
+        break;
+    
+    case typeUser: {
+        out->appendInt(m_flags);
+        out->appendInt(m_id);
+        out->appendLong(m_accessHash);
+        out->appendQString(m_firstName);
+        out->appendQString(m_lastName);
+        out->appendQString(m_username);
+        out->appendQString(m_phone);
+        m_photo.push(out);
+        m_status.push(out);
+        out->appendInt(m_botInfoVersion);
+        out->appendQString(m_restrictionReason);
+        out->appendQString(m_botInlinePlaceholder);
+        return true;
+    }
+        break;
+    
+    default:
+        return false;
+    }
+}
+
+inline QMap<QString, QVariant> User::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeUserEmpty: {
+        result["classType"] = "User::typeUserEmpty";
+        result["id"] = QVariant::fromValue<qint32>(id());
+        return result;
+    }
+        break;
+    
+    case typeUser: {
+        result["classType"] = "User::typeUser";
+        result["self"] = QVariant::fromValue<bool>(self());
+        result["contact"] = QVariant::fromValue<bool>(contact());
+        result["mutualContact"] = QVariant::fromValue<bool>(mutualContact());
+        result["deleted"] = QVariant::fromValue<bool>(deleted());
+        result["bot"] = QVariant::fromValue<bool>(bot());
+        result["botChatHistory"] = QVariant::fromValue<bool>(botChatHistory());
+        result["botNochats"] = QVariant::fromValue<bool>(botNochats());
+        result["verified"] = QVariant::fromValue<bool>(verified());
+        result["restricted"] = QVariant::fromValue<bool>(restricted());
+        result["min"] = QVariant::fromValue<bool>(min());
+        result["botInlineGeo"] = QVariant::fromValue<bool>(botInlineGeo());
+        result["id"] = QVariant::fromValue<qint32>(id());
+        result["accessHash"] = QVariant::fromValue<qint64>(accessHash());
+        result["firstName"] = QVariant::fromValue<QString>(firstName());
+        result["lastName"] = QVariant::fromValue<QString>(lastName());
+        result["username"] = QVariant::fromValue<QString>(username());
+        result["phone"] = QVariant::fromValue<QString>(phone());
+        result["photo"] = m_photo.toMap();
+        result["status"] = m_status.toMap();
+        result["botInfoVersion"] = QVariant::fromValue<qint32>(botInfoVersion());
+        result["restrictionReason"] = QVariant::fromValue<QString>(restrictionReason());
+        result["botInlinePlaceholder"] = QVariant::fromValue<QString>(botInlinePlaceholder());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+inline User User::fromMap(const QMap<QString, QVariant> &map) {
+    User result;
+    if(map.value("classType").toString() == "User::typeUserEmpty") {
+        result.setClassType(typeUserEmpty);
+        result.setId( map.value("id").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "User::typeUser") {
+        result.setClassType(typeUser);
+        result.setSelf( map.value("self").value<bool>() );
+        result.setContact( map.value("contact").value<bool>() );
+        result.setMutualContact( map.value("mutualContact").value<bool>() );
+        result.setDeleted( map.value("deleted").value<bool>() );
+        result.setBot( map.value("bot").value<bool>() );
+        result.setBotChatHistory( map.value("botChatHistory").value<bool>() );
+        result.setBotNochats( map.value("botNochats").value<bool>() );
+        result.setVerified( map.value("verified").value<bool>() );
+        result.setRestricted( map.value("restricted").value<bool>() );
+        result.setMin( map.value("min").value<bool>() );
+        result.setBotInlineGeo( map.value("botInlineGeo").value<bool>() );
+        result.setId( map.value("id").value<qint32>() );
+        result.setAccessHash( map.value("accessHash").value<qint64>() );
+        result.setFirstName( map.value("firstName").value<QString>() );
+        result.setLastName( map.value("lastName").value<QString>() );
+        result.setUsername( map.value("username").value<QString>() );
+        result.setPhone( map.value("phone").value<QString>() );
+        result.setPhoto( UserProfilePhoto::fromMap(map.value("photo").toMap()) );
+        result.setStatus( UserStatus::fromMap(map.value("status").toMap()) );
+        result.setBotInfoVersion( map.value("botInfoVersion").value<qint32>() );
+        result.setRestrictionReason( map.value("restrictionReason").value<QString>() );
+        result.setBotInlinePlaceholder( map.value("botInlinePlaceholder").value<QString>() );
+        return result;
+    }
+    return result;
+}
+
+inline QByteArray User::getHash(QCryptographicHash::Algorithm alg) const {
+    QByteArray data;
+    QDataStream str(&data, QIODevice::WriteOnly);
+    str << *this;
+    return QCryptographicHash::hash(data, alg);
+}
+
+inline QDataStream &operator<<(QDataStream &stream, const User &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case User::typeUserEmpty:
+        stream << item.id();
+        break;
+    case User::typeUser:
+        stream << item.flags();
+        stream << item.id();
+        stream << item.accessHash();
+        stream << item.firstName();
+        stream << item.lastName();
+        stream << item.username();
+        stream << item.phone();
+        stream << item.photo();
+        stream << item.status();
+        stream << item.botInfoVersion();
+        stream << item.restrictionReason();
+        stream << item.botInlinePlaceholder();
+        break;
+    }
+    return stream;
+}
+
+inline QDataStream &operator>>(QDataStream &stream, User &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<User::UserClassType>(type));
+    switch(type) {
+    case User::typeUserEmpty: {
+        qint32 m_id;
+        stream >> m_id;
+        item.setId(m_id);
+    }
+        break;
+    case User::typeUser: {
+        qint32 m_flags;
+        stream >> m_flags;
+        item.setFlags(m_flags);
+        qint32 m_id;
+        stream >> m_id;
+        item.setId(m_id);
+        qint64 m_access_hash;
+        stream >> m_access_hash;
+        item.setAccessHash(m_access_hash);
+        QString m_first_name;
+        stream >> m_first_name;
+        item.setFirstName(m_first_name);
+        QString m_last_name;
+        stream >> m_last_name;
+        item.setLastName(m_last_name);
+        QString m_username;
+        stream >> m_username;
+        item.setUsername(m_username);
+        QString m_phone;
+        stream >> m_phone;
+        item.setPhone(m_phone);
+        UserProfilePhoto m_photo;
+        stream >> m_photo;
+        item.setPhoto(m_photo);
+        UserStatus m_status;
+        stream >> m_status;
+        item.setStatus(m_status);
+        qint32 m_bot_info_version;
+        stream >> m_bot_info_version;
+        item.setBotInfoVersion(m_bot_info_version);
+        QString m_restriction_reason;
+        stream >> m_restriction_reason;
+        item.setRestrictionReason(m_restriction_reason);
+        QString m_bot_inline_placeholder;
+        stream >> m_bot_inline_placeholder;
+        item.setBotInlinePlaceholder(m_bot_inline_placeholder);
+    }
+        break;
+    }
+    return stream;
+}
+
 
 #endif // LQTG_TYPE_USER

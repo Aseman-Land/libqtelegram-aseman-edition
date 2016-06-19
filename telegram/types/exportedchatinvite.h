@@ -9,6 +9,12 @@
 
 #include <QMetaType>
 #include <QVariant>
+#include "core/inboundpkt.h"
+#include "core/outboundpkt.h"
+#include "../coretypes.h"
+
+#include <QDataStream>
+
 #include <QString>
 
 class LIBQTELEGRAMSHARED_EXPORT ExportedChatInvite : public TelegramTypeObject
@@ -52,5 +58,164 @@ Q_DECLARE_METATYPE(ExportedChatInvite)
 
 QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const ExportedChatInvite &item);
 QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, ExportedChatInvite &item);
+
+inline ExportedChatInvite::ExportedChatInvite(ExportedChatInviteClassType classType, InboundPkt *in) :
+    m_classType(classType)
+{
+    if(in) fetch(in);
+}
+
+inline ExportedChatInvite::ExportedChatInvite(InboundPkt *in) :
+    m_classType(typeChatInviteEmpty)
+{
+    fetch(in);
+}
+
+inline ExportedChatInvite::ExportedChatInvite(const Null &null) :
+    TelegramTypeObject(null),
+    m_classType(typeChatInviteEmpty)
+{
+}
+
+inline ExportedChatInvite::~ExportedChatInvite() {
+}
+
+inline void ExportedChatInvite::setLink(const QString &link) {
+    m_link = link;
+}
+
+inline QString ExportedChatInvite::link() const {
+    return m_link;
+}
+
+inline bool ExportedChatInvite::operator ==(const ExportedChatInvite &b) const {
+    return m_classType == b.m_classType &&
+           m_link == b.m_link;
+}
+
+inline void ExportedChatInvite::setClassType(ExportedChatInvite::ExportedChatInviteClassType classType) {
+    m_classType = classType;
+}
+
+inline ExportedChatInvite::ExportedChatInviteClassType ExportedChatInvite::classType() const {
+    return m_classType;
+}
+
+inline bool ExportedChatInvite::fetch(InboundPkt *in) {
+    LQTG_FETCH_LOG;
+    int x = in->fetchInt();
+    switch(x) {
+    case typeChatInviteEmpty: {
+        m_classType = static_cast<ExportedChatInviteClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeChatInviteExported: {
+        m_link = in->fetchQString();
+        m_classType = static_cast<ExportedChatInviteClassType>(x);
+        return true;
+    }
+        break;
+    
+    default:
+        LQTG_FETCH_ASSERT;
+        return false;
+    }
+}
+
+inline bool ExportedChatInvite::push(OutboundPkt *out) const {
+    out->appendInt(m_classType);
+    switch(m_classType) {
+    case typeChatInviteEmpty: {
+        return true;
+    }
+        break;
+    
+    case typeChatInviteExported: {
+        out->appendQString(m_link);
+        return true;
+    }
+        break;
+    
+    default:
+        return false;
+    }
+}
+
+inline QMap<QString, QVariant> ExportedChatInvite::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeChatInviteEmpty: {
+        result["classType"] = "ExportedChatInvite::typeChatInviteEmpty";
+        return result;
+    }
+        break;
+    
+    case typeChatInviteExported: {
+        result["classType"] = "ExportedChatInvite::typeChatInviteExported";
+        result["link"] = QVariant::fromValue<QString>(link());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+inline ExportedChatInvite ExportedChatInvite::fromMap(const QMap<QString, QVariant> &map) {
+    ExportedChatInvite result;
+    if(map.value("classType").toString() == "ExportedChatInvite::typeChatInviteEmpty") {
+        result.setClassType(typeChatInviteEmpty);
+        return result;
+    }
+    if(map.value("classType").toString() == "ExportedChatInvite::typeChatInviteExported") {
+        result.setClassType(typeChatInviteExported);
+        result.setLink( map.value("link").value<QString>() );
+        return result;
+    }
+    return result;
+}
+
+inline QByteArray ExportedChatInvite::getHash(QCryptographicHash::Algorithm alg) const {
+    QByteArray data;
+    QDataStream str(&data, QIODevice::WriteOnly);
+    str << *this;
+    return QCryptographicHash::hash(data, alg);
+}
+
+inline QDataStream &operator<<(QDataStream &stream, const ExportedChatInvite &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case ExportedChatInvite::typeChatInviteEmpty:
+        
+        break;
+    case ExportedChatInvite::typeChatInviteExported:
+        stream << item.link();
+        break;
+    }
+    return stream;
+}
+
+inline QDataStream &operator>>(QDataStream &stream, ExportedChatInvite &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<ExportedChatInvite::ExportedChatInviteClassType>(type));
+    switch(type) {
+    case ExportedChatInvite::typeChatInviteEmpty: {
+        
+    }
+        break;
+    case ExportedChatInvite::typeChatInviteExported: {
+        QString m_link;
+        stream >> m_link;
+        item.setLink(m_link);
+    }
+        break;
+    }
+    return stream;
+}
+
 
 #endif // LQTG_TYPE_EXPORTEDCHATINVITE

@@ -50,4 +50,82 @@ private:
     HelpTermsOfService m_core;
 };
 
+inline HelpTermsOfServiceObject::HelpTermsOfServiceObject(const HelpTermsOfService &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core(core)
+{
+}
+
+inline HelpTermsOfServiceObject::HelpTermsOfServiceObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core()
+{
+}
+
+inline HelpTermsOfServiceObject::~HelpTermsOfServiceObject() {
+}
+
+inline void HelpTermsOfServiceObject::setText(const QString &text) {
+    if(m_core.text() == text) return;
+    m_core.setText(text);
+    Q_EMIT textChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QString HelpTermsOfServiceObject::text() const {
+    return m_core.text();
+}
+
+inline HelpTermsOfServiceObject &HelpTermsOfServiceObject::operator =(const HelpTermsOfService &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+
+    Q_EMIT textChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool HelpTermsOfServiceObject::operator ==(const HelpTermsOfService &b) const {
+    return m_core == b;
+}
+
+inline void HelpTermsOfServiceObject::setClassType(quint32 classType) {
+    HelpTermsOfService::HelpTermsOfServiceClassType result;
+    switch(classType) {
+    case TypeHelpTermsOfService:
+        result = HelpTermsOfService::typeHelpTermsOfService;
+        break;
+    default:
+        result = HelpTermsOfService::typeHelpTermsOfService;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 HelpTermsOfServiceObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case HelpTermsOfService::typeHelpTermsOfService:
+        result = TypeHelpTermsOfService;
+        break;
+    default:
+        result = TypeHelpTermsOfService;
+        break;
+    }
+
+    return result;
+}
+
+inline void HelpTermsOfServiceObject::setCore(const HelpTermsOfService &core) {
+    operator =(core);
+}
+
+inline HelpTermsOfService HelpTermsOfServiceObject::core() const {
+    return m_core;
+}
+
 #endif // LQTG_TYPE_HELPTERMSOFSERVICE_OBJECT

@@ -9,6 +9,12 @@
 
 #include <QMetaType>
 #include <QVariant>
+#include "core/inboundpkt.h"
+#include "core/outboundpkt.h"
+#include "../coretypes.h"
+
+#include <QDataStream>
+
 #include <QtGlobal>
 #include <QString>
 
@@ -65,5 +71,243 @@ Q_DECLARE_METATYPE(InputFile)
 
 QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const InputFile &item);
 QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, InputFile &item);
+
+inline InputFile::InputFile(InputFileClassType classType, InboundPkt *in) :
+    m_id(0),
+    m_parts(0),
+    m_classType(classType)
+{
+    if(in) fetch(in);
+}
+
+inline InputFile::InputFile(InboundPkt *in) :
+    m_id(0),
+    m_parts(0),
+    m_classType(typeInputFile)
+{
+    fetch(in);
+}
+
+inline InputFile::InputFile(const Null &null) :
+    TelegramTypeObject(null),
+    m_id(0),
+    m_parts(0),
+    m_classType(typeInputFile)
+{
+}
+
+inline InputFile::~InputFile() {
+}
+
+inline void InputFile::setId(qint64 id) {
+    m_id = id;
+}
+
+inline qint64 InputFile::id() const {
+    return m_id;
+}
+
+inline void InputFile::setMd5Checksum(const QString &md5Checksum) {
+    m_md5Checksum = md5Checksum;
+}
+
+inline QString InputFile::md5Checksum() const {
+    return m_md5Checksum;
+}
+
+inline void InputFile::setName(const QString &name) {
+    m_name = name;
+}
+
+inline QString InputFile::name() const {
+    return m_name;
+}
+
+inline void InputFile::setParts(qint32 parts) {
+    m_parts = parts;
+}
+
+inline qint32 InputFile::parts() const {
+    return m_parts;
+}
+
+inline bool InputFile::operator ==(const InputFile &b) const {
+    return m_classType == b.m_classType &&
+           m_id == b.m_id &&
+           m_md5Checksum == b.m_md5Checksum &&
+           m_name == b.m_name &&
+           m_parts == b.m_parts;
+}
+
+inline void InputFile::setClassType(InputFile::InputFileClassType classType) {
+    m_classType = classType;
+}
+
+inline InputFile::InputFileClassType InputFile::classType() const {
+    return m_classType;
+}
+
+inline bool InputFile::fetch(InboundPkt *in) {
+    LQTG_FETCH_LOG;
+    int x = in->fetchInt();
+    switch(x) {
+    case typeInputFile: {
+        m_id = in->fetchLong();
+        m_parts = in->fetchInt();
+        m_name = in->fetchQString();
+        m_md5Checksum = in->fetchQString();
+        m_classType = static_cast<InputFileClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeInputFileBig: {
+        m_id = in->fetchLong();
+        m_parts = in->fetchInt();
+        m_name = in->fetchQString();
+        m_classType = static_cast<InputFileClassType>(x);
+        return true;
+    }
+        break;
+    
+    default:
+        LQTG_FETCH_ASSERT;
+        return false;
+    }
+}
+
+inline bool InputFile::push(OutboundPkt *out) const {
+    out->appendInt(m_classType);
+    switch(m_classType) {
+    case typeInputFile: {
+        out->appendLong(m_id);
+        out->appendInt(m_parts);
+        out->appendQString(m_name);
+        out->appendQString(m_md5Checksum);
+        return true;
+    }
+        break;
+    
+    case typeInputFileBig: {
+        out->appendLong(m_id);
+        out->appendInt(m_parts);
+        out->appendQString(m_name);
+        return true;
+    }
+        break;
+    
+    default:
+        return false;
+    }
+}
+
+inline QMap<QString, QVariant> InputFile::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeInputFile: {
+        result["classType"] = "InputFile::typeInputFile";
+        result["id"] = QVariant::fromValue<qint64>(id());
+        result["parts"] = QVariant::fromValue<qint32>(parts());
+        result["name"] = QVariant::fromValue<QString>(name());
+        result["md5Checksum"] = QVariant::fromValue<QString>(md5Checksum());
+        return result;
+    }
+        break;
+    
+    case typeInputFileBig: {
+        result["classType"] = "InputFile::typeInputFileBig";
+        result["id"] = QVariant::fromValue<qint64>(id());
+        result["parts"] = QVariant::fromValue<qint32>(parts());
+        result["name"] = QVariant::fromValue<QString>(name());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+inline InputFile InputFile::fromMap(const QMap<QString, QVariant> &map) {
+    InputFile result;
+    if(map.value("classType").toString() == "InputFile::typeInputFile") {
+        result.setClassType(typeInputFile);
+        result.setId( map.value("id").value<qint64>() );
+        result.setParts( map.value("parts").value<qint32>() );
+        result.setName( map.value("name").value<QString>() );
+        result.setMd5Checksum( map.value("md5Checksum").value<QString>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "InputFile::typeInputFileBig") {
+        result.setClassType(typeInputFileBig);
+        result.setId( map.value("id").value<qint64>() );
+        result.setParts( map.value("parts").value<qint32>() );
+        result.setName( map.value("name").value<QString>() );
+        return result;
+    }
+    return result;
+}
+
+inline QByteArray InputFile::getHash(QCryptographicHash::Algorithm alg) const {
+    QByteArray data;
+    QDataStream str(&data, QIODevice::WriteOnly);
+    str << *this;
+    return QCryptographicHash::hash(data, alg);
+}
+
+inline QDataStream &operator<<(QDataStream &stream, const InputFile &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case InputFile::typeInputFile:
+        stream << item.id();
+        stream << item.parts();
+        stream << item.name();
+        stream << item.md5Checksum();
+        break;
+    case InputFile::typeInputFileBig:
+        stream << item.id();
+        stream << item.parts();
+        stream << item.name();
+        break;
+    }
+    return stream;
+}
+
+inline QDataStream &operator>>(QDataStream &stream, InputFile &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<InputFile::InputFileClassType>(type));
+    switch(type) {
+    case InputFile::typeInputFile: {
+        qint64 m_id;
+        stream >> m_id;
+        item.setId(m_id);
+        qint32 m_parts;
+        stream >> m_parts;
+        item.setParts(m_parts);
+        QString m_name;
+        stream >> m_name;
+        item.setName(m_name);
+        QString m_md5_checksum;
+        stream >> m_md5_checksum;
+        item.setMd5Checksum(m_md5_checksum);
+    }
+        break;
+    case InputFile::typeInputFileBig: {
+        qint64 m_id;
+        stream >> m_id;
+        item.setId(m_id);
+        qint32 m_parts;
+        stream >> m_parts;
+        item.setParts(m_parts);
+        QString m_name;
+        stream >> m_name;
+        item.setName(m_name);
+    }
+        break;
+    }
+    return stream;
+}
+
 
 #endif // LQTG_TYPE_INPUTFILE

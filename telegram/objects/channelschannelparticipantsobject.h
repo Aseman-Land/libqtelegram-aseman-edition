@@ -60,4 +60,106 @@ private:
     ChannelsChannelParticipants m_core;
 };
 
+inline ChannelsChannelParticipantsObject::ChannelsChannelParticipantsObject(const ChannelsChannelParticipants &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core(core)
+{
+}
+
+inline ChannelsChannelParticipantsObject::ChannelsChannelParticipantsObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core()
+{
+}
+
+inline ChannelsChannelParticipantsObject::~ChannelsChannelParticipantsObject() {
+}
+
+inline void ChannelsChannelParticipantsObject::setCount(qint32 count) {
+    if(m_core.count() == count) return;
+    m_core.setCount(count);
+    Q_EMIT countChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 ChannelsChannelParticipantsObject::count() const {
+    return m_core.count();
+}
+
+inline void ChannelsChannelParticipantsObject::setParticipants(const QList<ChannelParticipant> &participants) {
+    if(m_core.participants() == participants) return;
+    m_core.setParticipants(participants);
+    Q_EMIT participantsChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QList<ChannelParticipant> ChannelsChannelParticipantsObject::participants() const {
+    return m_core.participants();
+}
+
+inline void ChannelsChannelParticipantsObject::setUsers(const QList<User> &users) {
+    if(m_core.users() == users) return;
+    m_core.setUsers(users);
+    Q_EMIT usersChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QList<User> ChannelsChannelParticipantsObject::users() const {
+    return m_core.users();
+}
+
+inline ChannelsChannelParticipantsObject &ChannelsChannelParticipantsObject::operator =(const ChannelsChannelParticipants &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+
+    Q_EMIT countChanged();
+    Q_EMIT participantsChanged();
+    Q_EMIT usersChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool ChannelsChannelParticipantsObject::operator ==(const ChannelsChannelParticipants &b) const {
+    return m_core == b;
+}
+
+inline void ChannelsChannelParticipantsObject::setClassType(quint32 classType) {
+    ChannelsChannelParticipants::ChannelsChannelParticipantsClassType result;
+    switch(classType) {
+    case TypeChannelsChannelParticipants:
+        result = ChannelsChannelParticipants::typeChannelsChannelParticipants;
+        break;
+    default:
+        result = ChannelsChannelParticipants::typeChannelsChannelParticipants;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 ChannelsChannelParticipantsObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case ChannelsChannelParticipants::typeChannelsChannelParticipants:
+        result = TypeChannelsChannelParticipants;
+        break;
+    default:
+        result = TypeChannelsChannelParticipants;
+        break;
+    }
+
+    return result;
+}
+
+inline void ChannelsChannelParticipantsObject::setCore(const ChannelsChannelParticipants &core) {
+    operator =(core);
+}
+
+inline ChannelsChannelParticipants ChannelsChannelParticipantsObject::core() const {
+    return m_core;
+}
+
 #endif // LQTG_TYPE_CHANNELSCHANNELPARTICIPANTS_OBJECT

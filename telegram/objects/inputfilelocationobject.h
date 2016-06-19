@@ -72,4 +72,142 @@ private:
     InputFileLocation m_core;
 };
 
+inline InputFileLocationObject::InputFileLocationObject(const InputFileLocation &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core(core)
+{
+}
+
+inline InputFileLocationObject::InputFileLocationObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core()
+{
+}
+
+inline InputFileLocationObject::~InputFileLocationObject() {
+}
+
+inline void InputFileLocationObject::setAccessHash(qint64 accessHash) {
+    if(m_core.accessHash() == accessHash) return;
+    m_core.setAccessHash(accessHash);
+    Q_EMIT accessHashChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint64 InputFileLocationObject::accessHash() const {
+    return m_core.accessHash();
+}
+
+inline void InputFileLocationObject::setId(qint64 id) {
+    if(m_core.id() == id) return;
+    m_core.setId(id);
+    Q_EMIT idChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint64 InputFileLocationObject::id() const {
+    return m_core.id();
+}
+
+inline void InputFileLocationObject::setLocalId(qint32 localId) {
+    if(m_core.localId() == localId) return;
+    m_core.setLocalId(localId);
+    Q_EMIT localIdChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 InputFileLocationObject::localId() const {
+    return m_core.localId();
+}
+
+inline void InputFileLocationObject::setSecret(qint64 secret) {
+    if(m_core.secret() == secret) return;
+    m_core.setSecret(secret);
+    Q_EMIT secretChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint64 InputFileLocationObject::secret() const {
+    return m_core.secret();
+}
+
+inline void InputFileLocationObject::setVolumeId(qint64 volumeId) {
+    if(m_core.volumeId() == volumeId) return;
+    m_core.setVolumeId(volumeId);
+    Q_EMIT volumeIdChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint64 InputFileLocationObject::volumeId() const {
+    return m_core.volumeId();
+}
+
+inline InputFileLocationObject &InputFileLocationObject::operator =(const InputFileLocation &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+
+    Q_EMIT accessHashChanged();
+    Q_EMIT idChanged();
+    Q_EMIT localIdChanged();
+    Q_EMIT secretChanged();
+    Q_EMIT volumeIdChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool InputFileLocationObject::operator ==(const InputFileLocation &b) const {
+    return m_core == b;
+}
+
+inline void InputFileLocationObject::setClassType(quint32 classType) {
+    InputFileLocation::InputFileLocationClassType result;
+    switch(classType) {
+    case TypeInputFileLocation:
+        result = InputFileLocation::typeInputFileLocation;
+        break;
+    case TypeInputEncryptedFileLocation:
+        result = InputFileLocation::typeInputEncryptedFileLocation;
+        break;
+    case TypeInputDocumentFileLocation:
+        result = InputFileLocation::typeInputDocumentFileLocation;
+        break;
+    default:
+        result = InputFileLocation::typeInputFileLocation;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 InputFileLocationObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case InputFileLocation::typeInputFileLocation:
+        result = TypeInputFileLocation;
+        break;
+    case InputFileLocation::typeInputEncryptedFileLocation:
+        result = TypeInputEncryptedFileLocation;
+        break;
+    case InputFileLocation::typeInputDocumentFileLocation:
+        result = TypeInputDocumentFileLocation;
+        break;
+    default:
+        result = TypeInputFileLocation;
+        break;
+    }
+
+    return result;
+}
+
+inline void InputFileLocationObject::setCore(const InputFileLocation &core) {
+    operator =(core);
+}
+
+inline InputFileLocation InputFileLocationObject::core() const {
+    return m_core;
+}
+
 #endif // LQTG_TYPE_INPUTFILELOCATION_OBJECT

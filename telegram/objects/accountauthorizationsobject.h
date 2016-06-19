@@ -50,4 +50,82 @@ private:
     AccountAuthorizations m_core;
 };
 
+inline AccountAuthorizationsObject::AccountAuthorizationsObject(const AccountAuthorizations &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core(core)
+{
+}
+
+inline AccountAuthorizationsObject::AccountAuthorizationsObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core()
+{
+}
+
+inline AccountAuthorizationsObject::~AccountAuthorizationsObject() {
+}
+
+inline void AccountAuthorizationsObject::setAuthorizations(const QList<Authorization> &authorizations) {
+    if(m_core.authorizations() == authorizations) return;
+    m_core.setAuthorizations(authorizations);
+    Q_EMIT authorizationsChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QList<Authorization> AccountAuthorizationsObject::authorizations() const {
+    return m_core.authorizations();
+}
+
+inline AccountAuthorizationsObject &AccountAuthorizationsObject::operator =(const AccountAuthorizations &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+
+    Q_EMIT authorizationsChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool AccountAuthorizationsObject::operator ==(const AccountAuthorizations &b) const {
+    return m_core == b;
+}
+
+inline void AccountAuthorizationsObject::setClassType(quint32 classType) {
+    AccountAuthorizations::AccountAuthorizationsClassType result;
+    switch(classType) {
+    case TypeAccountAuthorizations:
+        result = AccountAuthorizations::typeAccountAuthorizations;
+        break;
+    default:
+        result = AccountAuthorizations::typeAccountAuthorizations;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 AccountAuthorizationsObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case AccountAuthorizations::typeAccountAuthorizations:
+        result = TypeAccountAuthorizations;
+        break;
+    default:
+        result = TypeAccountAuthorizations;
+        break;
+    }
+
+    return result;
+}
+
+inline void AccountAuthorizationsObject::setCore(const AccountAuthorizations &core) {
+    operator =(core);
+}
+
+inline AccountAuthorizations AccountAuthorizationsObject::core() const {
+    return m_core;
+}
+
 #endif // LQTG_TYPE_ACCOUNTAUTHORIZATIONS_OBJECT

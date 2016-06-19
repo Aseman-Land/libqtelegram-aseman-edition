@@ -50,4 +50,82 @@ private:
     ExportedMessageLink m_core;
 };
 
+inline ExportedMessageLinkObject::ExportedMessageLinkObject(const ExportedMessageLink &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core(core)
+{
+}
+
+inline ExportedMessageLinkObject::ExportedMessageLinkObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core()
+{
+}
+
+inline ExportedMessageLinkObject::~ExportedMessageLinkObject() {
+}
+
+inline void ExportedMessageLinkObject::setLink(const QString &link) {
+    if(m_core.link() == link) return;
+    m_core.setLink(link);
+    Q_EMIT linkChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QString ExportedMessageLinkObject::link() const {
+    return m_core.link();
+}
+
+inline ExportedMessageLinkObject &ExportedMessageLinkObject::operator =(const ExportedMessageLink &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+
+    Q_EMIT linkChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool ExportedMessageLinkObject::operator ==(const ExportedMessageLink &b) const {
+    return m_core == b;
+}
+
+inline void ExportedMessageLinkObject::setClassType(quint32 classType) {
+    ExportedMessageLink::ExportedMessageLinkClassType result;
+    switch(classType) {
+    case TypeExportedMessageLink:
+        result = ExportedMessageLink::typeExportedMessageLink;
+        break;
+    default:
+        result = ExportedMessageLink::typeExportedMessageLink;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 ExportedMessageLinkObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case ExportedMessageLink::typeExportedMessageLink:
+        result = TypeExportedMessageLink;
+        break;
+    default:
+        result = TypeExportedMessageLink;
+        break;
+    }
+
+    return result;
+}
+
+inline void ExportedMessageLinkObject::setCore(const ExportedMessageLink &core) {
+    operator =(core);
+}
+
+inline ExportedMessageLink ExportedMessageLinkObject::core() const {
+    return m_core;
+}
+
 #endif // LQTG_TYPE_EXPORTEDMESSAGELINK_OBJECT

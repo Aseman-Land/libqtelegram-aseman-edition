@@ -71,4 +71,136 @@ private:
     EncryptedFile m_core;
 };
 
+inline EncryptedFileObject::EncryptedFileObject(const EncryptedFile &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core(core)
+{
+}
+
+inline EncryptedFileObject::EncryptedFileObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core()
+{
+}
+
+inline EncryptedFileObject::~EncryptedFileObject() {
+}
+
+inline void EncryptedFileObject::setAccessHash(qint64 accessHash) {
+    if(m_core.accessHash() == accessHash) return;
+    m_core.setAccessHash(accessHash);
+    Q_EMIT accessHashChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint64 EncryptedFileObject::accessHash() const {
+    return m_core.accessHash();
+}
+
+inline void EncryptedFileObject::setDcId(qint32 dcId) {
+    if(m_core.dcId() == dcId) return;
+    m_core.setDcId(dcId);
+    Q_EMIT dcIdChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 EncryptedFileObject::dcId() const {
+    return m_core.dcId();
+}
+
+inline void EncryptedFileObject::setId(qint64 id) {
+    if(m_core.id() == id) return;
+    m_core.setId(id);
+    Q_EMIT idChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint64 EncryptedFileObject::id() const {
+    return m_core.id();
+}
+
+inline void EncryptedFileObject::setKeyFingerprint(qint32 keyFingerprint) {
+    if(m_core.keyFingerprint() == keyFingerprint) return;
+    m_core.setKeyFingerprint(keyFingerprint);
+    Q_EMIT keyFingerprintChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 EncryptedFileObject::keyFingerprint() const {
+    return m_core.keyFingerprint();
+}
+
+inline void EncryptedFileObject::setSize(qint32 size) {
+    if(m_core.size() == size) return;
+    m_core.setSize(size);
+    Q_EMIT sizeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 EncryptedFileObject::size() const {
+    return m_core.size();
+}
+
+inline EncryptedFileObject &EncryptedFileObject::operator =(const EncryptedFile &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+
+    Q_EMIT accessHashChanged();
+    Q_EMIT dcIdChanged();
+    Q_EMIT idChanged();
+    Q_EMIT keyFingerprintChanged();
+    Q_EMIT sizeChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool EncryptedFileObject::operator ==(const EncryptedFile &b) const {
+    return m_core == b;
+}
+
+inline void EncryptedFileObject::setClassType(quint32 classType) {
+    EncryptedFile::EncryptedFileClassType result;
+    switch(classType) {
+    case TypeEncryptedFileEmpty:
+        result = EncryptedFile::typeEncryptedFileEmpty;
+        break;
+    case TypeEncryptedFile:
+        result = EncryptedFile::typeEncryptedFile;
+        break;
+    default:
+        result = EncryptedFile::typeEncryptedFileEmpty;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 EncryptedFileObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case EncryptedFile::typeEncryptedFileEmpty:
+        result = TypeEncryptedFileEmpty;
+        break;
+    case EncryptedFile::typeEncryptedFile:
+        result = TypeEncryptedFile;
+        break;
+    default:
+        result = TypeEncryptedFileEmpty;
+        break;
+    }
+
+    return result;
+}
+
+inline void EncryptedFileObject::setCore(const EncryptedFile &core) {
+    operator =(core);
+}
+
+inline EncryptedFile EncryptedFileObject::core() const {
+    return m_core;
+}
+
 #endif // LQTG_TYPE_ENCRYPTEDFILE_OBJECT

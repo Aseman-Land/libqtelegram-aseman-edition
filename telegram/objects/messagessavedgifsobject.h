@@ -56,4 +56,100 @@ private:
     MessagesSavedGifs m_core;
 };
 
+inline MessagesSavedGifsObject::MessagesSavedGifsObject(const MessagesSavedGifs &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core(core)
+{
+}
+
+inline MessagesSavedGifsObject::MessagesSavedGifsObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core()
+{
+}
+
+inline MessagesSavedGifsObject::~MessagesSavedGifsObject() {
+}
+
+inline void MessagesSavedGifsObject::setGifs(const QList<Document> &gifs) {
+    if(m_core.gifs() == gifs) return;
+    m_core.setGifs(gifs);
+    Q_EMIT gifsChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QList<Document> MessagesSavedGifsObject::gifs() const {
+    return m_core.gifs();
+}
+
+inline void MessagesSavedGifsObject::setHash(qint32 hash) {
+    if(m_core.hash() == hash) return;
+    m_core.setHash(hash);
+    Q_EMIT hashChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 MessagesSavedGifsObject::hash() const {
+    return m_core.hash();
+}
+
+inline MessagesSavedGifsObject &MessagesSavedGifsObject::operator =(const MessagesSavedGifs &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+
+    Q_EMIT gifsChanged();
+    Q_EMIT hashChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool MessagesSavedGifsObject::operator ==(const MessagesSavedGifs &b) const {
+    return m_core == b;
+}
+
+inline void MessagesSavedGifsObject::setClassType(quint32 classType) {
+    MessagesSavedGifs::MessagesSavedGifsClassType result;
+    switch(classType) {
+    case TypeMessagesSavedGifsNotModified:
+        result = MessagesSavedGifs::typeMessagesSavedGifsNotModified;
+        break;
+    case TypeMessagesSavedGifs:
+        result = MessagesSavedGifs::typeMessagesSavedGifs;
+        break;
+    default:
+        result = MessagesSavedGifs::typeMessagesSavedGifsNotModified;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 MessagesSavedGifsObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case MessagesSavedGifs::typeMessagesSavedGifsNotModified:
+        result = TypeMessagesSavedGifsNotModified;
+        break;
+    case MessagesSavedGifs::typeMessagesSavedGifs:
+        result = TypeMessagesSavedGifs;
+        break;
+    default:
+        result = TypeMessagesSavedGifsNotModified;
+        break;
+    }
+
+    return result;
+}
+
+inline void MessagesSavedGifsObject::setCore(const MessagesSavedGifs &core) {
+    operator =(core);
+}
+
+inline MessagesSavedGifs MessagesSavedGifsObject::core() const {
+    return m_core;
+}
+
 #endif // LQTG_TYPE_MESSAGESSAVEDGIFS_OBJECT

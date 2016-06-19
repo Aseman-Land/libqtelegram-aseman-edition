@@ -49,4 +49,94 @@ private:
     TopPeerCategory m_core;
 };
 
+inline TopPeerCategoryObject::TopPeerCategoryObject(const TopPeerCategory &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core(core)
+{
+}
+
+inline TopPeerCategoryObject::TopPeerCategoryObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core()
+{
+}
+
+inline TopPeerCategoryObject::~TopPeerCategoryObject() {
+}
+
+inline TopPeerCategoryObject &TopPeerCategoryObject::operator =(const TopPeerCategory &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool TopPeerCategoryObject::operator ==(const TopPeerCategory &b) const {
+    return m_core == b;
+}
+
+inline void TopPeerCategoryObject::setClassType(quint32 classType) {
+    TopPeerCategory::TopPeerCategoryClassType result;
+    switch(classType) {
+    case TypeTopPeerCategoryBotsPM:
+        result = TopPeerCategory::typeTopPeerCategoryBotsPM;
+        break;
+    case TypeTopPeerCategoryBotsInline:
+        result = TopPeerCategory::typeTopPeerCategoryBotsInline;
+        break;
+    case TypeTopPeerCategoryCorrespondents:
+        result = TopPeerCategory::typeTopPeerCategoryCorrespondents;
+        break;
+    case TypeTopPeerCategoryGroups:
+        result = TopPeerCategory::typeTopPeerCategoryGroups;
+        break;
+    case TypeTopPeerCategoryChannels:
+        result = TopPeerCategory::typeTopPeerCategoryChannels;
+        break;
+    default:
+        result = TopPeerCategory::typeTopPeerCategoryBotsPM;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 TopPeerCategoryObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case TopPeerCategory::typeTopPeerCategoryBotsPM:
+        result = TypeTopPeerCategoryBotsPM;
+        break;
+    case TopPeerCategory::typeTopPeerCategoryBotsInline:
+        result = TypeTopPeerCategoryBotsInline;
+        break;
+    case TopPeerCategory::typeTopPeerCategoryCorrespondents:
+        result = TypeTopPeerCategoryCorrespondents;
+        break;
+    case TopPeerCategory::typeTopPeerCategoryGroups:
+        result = TypeTopPeerCategoryGroups;
+        break;
+    case TopPeerCategory::typeTopPeerCategoryChannels:
+        result = TypeTopPeerCategoryChannels;
+        break;
+    default:
+        result = TypeTopPeerCategoryBotsPM;
+        break;
+    }
+
+    return result;
+}
+
+inline void TopPeerCategoryObject::setCore(const TopPeerCategory &core) {
+    operator =(core);
+}
+
+inline TopPeerCategory TopPeerCategoryObject::core() const {
+    return m_core;
+}
+
 #endif // LQTG_TYPE_TOPPEERCATEGORY_OBJECT

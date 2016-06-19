@@ -56,4 +56,100 @@ private:
     GeoPoint m_core;
 };
 
+inline GeoPointObject::GeoPointObject(const GeoPoint &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core(core)
+{
+}
+
+inline GeoPointObject::GeoPointObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core()
+{
+}
+
+inline GeoPointObject::~GeoPointObject() {
+}
+
+inline void GeoPointObject::setLat(qreal lat) {
+    if(m_core.lat() == lat) return;
+    m_core.setLat(lat);
+    Q_EMIT latChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qreal GeoPointObject::lat() const {
+    return m_core.lat();
+}
+
+inline void GeoPointObject::setLongValue(qreal longValue) {
+    if(m_core.longValue() == longValue) return;
+    m_core.setLongValue(longValue);
+    Q_EMIT longValueChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qreal GeoPointObject::longValue() const {
+    return m_core.longValue();
+}
+
+inline GeoPointObject &GeoPointObject::operator =(const GeoPoint &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+
+    Q_EMIT latChanged();
+    Q_EMIT longValueChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool GeoPointObject::operator ==(const GeoPoint &b) const {
+    return m_core == b;
+}
+
+inline void GeoPointObject::setClassType(quint32 classType) {
+    GeoPoint::GeoPointClassType result;
+    switch(classType) {
+    case TypeGeoPointEmpty:
+        result = GeoPoint::typeGeoPointEmpty;
+        break;
+    case TypeGeoPoint:
+        result = GeoPoint::typeGeoPoint;
+        break;
+    default:
+        result = GeoPoint::typeGeoPointEmpty;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 GeoPointObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case GeoPoint::typeGeoPointEmpty:
+        result = TypeGeoPointEmpty;
+        break;
+    case GeoPoint::typeGeoPoint:
+        result = TypeGeoPoint;
+        break;
+    default:
+        result = TypeGeoPointEmpty;
+        break;
+    }
+
+    return result;
+}
+
+inline void GeoPointObject::setCore(const GeoPoint &core) {
+    operator =(core);
+}
+
+inline GeoPoint GeoPointObject::core() const {
+    return m_core;
+}
+
 #endif // LQTG_TYPE_GEOPOINT_OBJECT

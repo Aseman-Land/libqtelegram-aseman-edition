@@ -125,4 +125,302 @@ private:
     InputBotInlineMessage m_core;
 };
 
+inline InputBotInlineMessageObject::InputBotInlineMessageObject(const InputBotInlineMessage &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_geoPoint(0),
+    m_replyMarkup(0),
+    m_core(core)
+{
+    m_geoPoint = new InputGeoPointObject(m_core.geoPoint(), this);
+    connect(m_geoPoint.data(), &InputGeoPointObject::coreChanged, this, &InputBotInlineMessageObject::coreGeoPointChanged);
+    m_replyMarkup = new ReplyMarkupObject(m_core.replyMarkup(), this);
+    connect(m_replyMarkup.data(), &ReplyMarkupObject::coreChanged, this, &InputBotInlineMessageObject::coreReplyMarkupChanged);
+}
+
+inline InputBotInlineMessageObject::InputBotInlineMessageObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_geoPoint(0),
+    m_replyMarkup(0),
+    m_core()
+{
+    m_geoPoint = new InputGeoPointObject(m_core.geoPoint(), this);
+    connect(m_geoPoint.data(), &InputGeoPointObject::coreChanged, this, &InputBotInlineMessageObject::coreGeoPointChanged);
+    m_replyMarkup = new ReplyMarkupObject(m_core.replyMarkup(), this);
+    connect(m_replyMarkup.data(), &ReplyMarkupObject::coreChanged, this, &InputBotInlineMessageObject::coreReplyMarkupChanged);
+}
+
+inline InputBotInlineMessageObject::~InputBotInlineMessageObject() {
+}
+
+inline void InputBotInlineMessageObject::setAddress(const QString &address) {
+    if(m_core.address() == address) return;
+    m_core.setAddress(address);
+    Q_EMIT addressChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QString InputBotInlineMessageObject::address() const {
+    return m_core.address();
+}
+
+inline void InputBotInlineMessageObject::setCaption(const QString &caption) {
+    if(m_core.caption() == caption) return;
+    m_core.setCaption(caption);
+    Q_EMIT captionChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QString InputBotInlineMessageObject::caption() const {
+    return m_core.caption();
+}
+
+inline void InputBotInlineMessageObject::setEntities(const QList<MessageEntity> &entities) {
+    if(m_core.entities() == entities) return;
+    m_core.setEntities(entities);
+    Q_EMIT entitiesChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QList<MessageEntity> InputBotInlineMessageObject::entities() const {
+    return m_core.entities();
+}
+
+inline void InputBotInlineMessageObject::setFirstName(const QString &firstName) {
+    if(m_core.firstName() == firstName) return;
+    m_core.setFirstName(firstName);
+    Q_EMIT firstNameChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QString InputBotInlineMessageObject::firstName() const {
+    return m_core.firstName();
+}
+
+inline void InputBotInlineMessageObject::setFlags(qint32 flags) {
+    if(m_core.flags() == flags) return;
+    m_core.setFlags(flags);
+    Q_EMIT flagsChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 InputBotInlineMessageObject::flags() const {
+    return m_core.flags();
+}
+
+inline void InputBotInlineMessageObject::setGeoPoint(InputGeoPointObject* geoPoint) {
+    if(m_geoPoint == geoPoint) return;
+    if(m_geoPoint) delete m_geoPoint;
+    m_geoPoint = geoPoint;
+    if(m_geoPoint) {
+        m_geoPoint->setParent(this);
+        m_core.setGeoPoint(m_geoPoint->core());
+        connect(m_geoPoint.data(), &InputGeoPointObject::coreChanged, this, &InputBotInlineMessageObject::coreGeoPointChanged);
+    }
+    Q_EMIT geoPointChanged();
+    Q_EMIT coreChanged();
+}
+
+inline InputGeoPointObject*  InputBotInlineMessageObject::geoPoint() const {
+    return m_geoPoint;
+}
+
+inline void InputBotInlineMessageObject::setLastName(const QString &lastName) {
+    if(m_core.lastName() == lastName) return;
+    m_core.setLastName(lastName);
+    Q_EMIT lastNameChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QString InputBotInlineMessageObject::lastName() const {
+    return m_core.lastName();
+}
+
+inline void InputBotInlineMessageObject::setMessage(const QString &message) {
+    if(m_core.message() == message) return;
+    m_core.setMessage(message);
+    Q_EMIT messageChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QString InputBotInlineMessageObject::message() const {
+    return m_core.message();
+}
+
+inline void InputBotInlineMessageObject::setNoWebpage(bool noWebpage) {
+    if(m_core.noWebpage() == noWebpage) return;
+    m_core.setNoWebpage(noWebpage);
+    Q_EMIT noWebpageChanged();
+    Q_EMIT coreChanged();
+}
+
+inline bool InputBotInlineMessageObject::noWebpage() const {
+    return m_core.noWebpage();
+}
+
+inline void InputBotInlineMessageObject::setPhoneNumber(const QString &phoneNumber) {
+    if(m_core.phoneNumber() == phoneNumber) return;
+    m_core.setPhoneNumber(phoneNumber);
+    Q_EMIT phoneNumberChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QString InputBotInlineMessageObject::phoneNumber() const {
+    return m_core.phoneNumber();
+}
+
+inline void InputBotInlineMessageObject::setProvider(const QString &provider) {
+    if(m_core.provider() == provider) return;
+    m_core.setProvider(provider);
+    Q_EMIT providerChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QString InputBotInlineMessageObject::provider() const {
+    return m_core.provider();
+}
+
+inline void InputBotInlineMessageObject::setReplyMarkup(ReplyMarkupObject* replyMarkup) {
+    if(m_replyMarkup == replyMarkup) return;
+    if(m_replyMarkup) delete m_replyMarkup;
+    m_replyMarkup = replyMarkup;
+    if(m_replyMarkup) {
+        m_replyMarkup->setParent(this);
+        m_core.setReplyMarkup(m_replyMarkup->core());
+        connect(m_replyMarkup.data(), &ReplyMarkupObject::coreChanged, this, &InputBotInlineMessageObject::coreReplyMarkupChanged);
+    }
+    Q_EMIT replyMarkupChanged();
+    Q_EMIT coreChanged();
+}
+
+inline ReplyMarkupObject*  InputBotInlineMessageObject::replyMarkup() const {
+    return m_replyMarkup;
+}
+
+inline void InputBotInlineMessageObject::setTitle(const QString &title) {
+    if(m_core.title() == title) return;
+    m_core.setTitle(title);
+    Q_EMIT titleChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QString InputBotInlineMessageObject::title() const {
+    return m_core.title();
+}
+
+inline void InputBotInlineMessageObject::setVenueId(const QString &venueId) {
+    if(m_core.venueId() == venueId) return;
+    m_core.setVenueId(venueId);
+    Q_EMIT venueIdChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QString InputBotInlineMessageObject::venueId() const {
+    return m_core.venueId();
+}
+
+inline InputBotInlineMessageObject &InputBotInlineMessageObject::operator =(const InputBotInlineMessage &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+    m_geoPoint->setCore(b.geoPoint());
+    m_replyMarkup->setCore(b.replyMarkup());
+
+    Q_EMIT addressChanged();
+    Q_EMIT captionChanged();
+    Q_EMIT entitiesChanged();
+    Q_EMIT firstNameChanged();
+    Q_EMIT flagsChanged();
+    Q_EMIT geoPointChanged();
+    Q_EMIT lastNameChanged();
+    Q_EMIT messageChanged();
+    Q_EMIT noWebpageChanged();
+    Q_EMIT phoneNumberChanged();
+    Q_EMIT providerChanged();
+    Q_EMIT replyMarkupChanged();
+    Q_EMIT titleChanged();
+    Q_EMIT venueIdChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool InputBotInlineMessageObject::operator ==(const InputBotInlineMessage &b) const {
+    return m_core == b;
+}
+
+inline void InputBotInlineMessageObject::setClassType(quint32 classType) {
+    InputBotInlineMessage::InputBotInlineMessageClassType result;
+    switch(classType) {
+    case TypeInputBotInlineMessageMediaAuto:
+        result = InputBotInlineMessage::typeInputBotInlineMessageMediaAuto;
+        break;
+    case TypeInputBotInlineMessageText:
+        result = InputBotInlineMessage::typeInputBotInlineMessageText;
+        break;
+    case TypeInputBotInlineMessageMediaGeo:
+        result = InputBotInlineMessage::typeInputBotInlineMessageMediaGeo;
+        break;
+    case TypeInputBotInlineMessageMediaVenue:
+        result = InputBotInlineMessage::typeInputBotInlineMessageMediaVenue;
+        break;
+    case TypeInputBotInlineMessageMediaContact:
+        result = InputBotInlineMessage::typeInputBotInlineMessageMediaContact;
+        break;
+    default:
+        result = InputBotInlineMessage::typeInputBotInlineMessageMediaAuto;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 InputBotInlineMessageObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case InputBotInlineMessage::typeInputBotInlineMessageMediaAuto:
+        result = TypeInputBotInlineMessageMediaAuto;
+        break;
+    case InputBotInlineMessage::typeInputBotInlineMessageText:
+        result = TypeInputBotInlineMessageText;
+        break;
+    case InputBotInlineMessage::typeInputBotInlineMessageMediaGeo:
+        result = TypeInputBotInlineMessageMediaGeo;
+        break;
+    case InputBotInlineMessage::typeInputBotInlineMessageMediaVenue:
+        result = TypeInputBotInlineMessageMediaVenue;
+        break;
+    case InputBotInlineMessage::typeInputBotInlineMessageMediaContact:
+        result = TypeInputBotInlineMessageMediaContact;
+        break;
+    default:
+        result = TypeInputBotInlineMessageMediaAuto;
+        break;
+    }
+
+    return result;
+}
+
+inline void InputBotInlineMessageObject::setCore(const InputBotInlineMessage &core) {
+    operator =(core);
+}
+
+inline InputBotInlineMessage InputBotInlineMessageObject::core() const {
+    return m_core;
+}
+
+inline void InputBotInlineMessageObject::coreGeoPointChanged() {
+    if(m_core.geoPoint() == m_geoPoint->core()) return;
+    m_core.setGeoPoint(m_geoPoint->core());
+    Q_EMIT geoPointChanged();
+    Q_EMIT coreChanged();
+}
+
+inline void InputBotInlineMessageObject::coreReplyMarkupChanged() {
+    if(m_core.replyMarkup() == m_replyMarkup->core()) return;
+    m_core.setReplyMarkup(m_replyMarkup->core());
+    Q_EMIT replyMarkupChanged();
+    Q_EMIT coreChanged();
+}
+
 #endif // LQTG_TYPE_INPUTBOTINLINEMESSAGE_OBJECT

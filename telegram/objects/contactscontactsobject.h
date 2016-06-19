@@ -56,4 +56,100 @@ private:
     ContactsContacts m_core;
 };
 
+inline ContactsContactsObject::ContactsContactsObject(const ContactsContacts &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core(core)
+{
+}
+
+inline ContactsContactsObject::ContactsContactsObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core()
+{
+}
+
+inline ContactsContactsObject::~ContactsContactsObject() {
+}
+
+inline void ContactsContactsObject::setContacts(const QList<Contact> &contacts) {
+    if(m_core.contacts() == contacts) return;
+    m_core.setContacts(contacts);
+    Q_EMIT contactsChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QList<Contact> ContactsContactsObject::contacts() const {
+    return m_core.contacts();
+}
+
+inline void ContactsContactsObject::setUsers(const QList<User> &users) {
+    if(m_core.users() == users) return;
+    m_core.setUsers(users);
+    Q_EMIT usersChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QList<User> ContactsContactsObject::users() const {
+    return m_core.users();
+}
+
+inline ContactsContactsObject &ContactsContactsObject::operator =(const ContactsContacts &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+
+    Q_EMIT contactsChanged();
+    Q_EMIT usersChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool ContactsContactsObject::operator ==(const ContactsContacts &b) const {
+    return m_core == b;
+}
+
+inline void ContactsContactsObject::setClassType(quint32 classType) {
+    ContactsContacts::ContactsContactsClassType result;
+    switch(classType) {
+    case TypeContactsContactsNotModified:
+        result = ContactsContacts::typeContactsContactsNotModified;
+        break;
+    case TypeContactsContacts:
+        result = ContactsContacts::typeContactsContacts;
+        break;
+    default:
+        result = ContactsContacts::typeContactsContactsNotModified;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 ContactsContactsObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case ContactsContacts::typeContactsContactsNotModified:
+        result = TypeContactsContactsNotModified;
+        break;
+    case ContactsContacts::typeContactsContacts:
+        result = TypeContactsContacts;
+        break;
+    default:
+        result = TypeContactsContactsNotModified;
+        break;
+    }
+
+    return result;
+}
+
+inline void ContactsContactsObject::setCore(const ContactsContacts &core) {
+    operator =(core);
+}
+
+inline ContactsContacts ContactsContactsObject::core() const {
+    return m_core;
+}
+
 #endif // LQTG_TYPE_CONTACTSCONTACTS_OBJECT

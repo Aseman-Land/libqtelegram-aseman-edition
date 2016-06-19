@@ -73,4 +73,150 @@ private:
     MessagesPeerDialogs m_core;
 };
 
+inline MessagesPeerDialogsObject::MessagesPeerDialogsObject(const MessagesPeerDialogs &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_state(0),
+    m_core(core)
+{
+    m_state = new UpdatesStateObject(m_core.state(), this);
+    connect(m_state.data(), &UpdatesStateObject::coreChanged, this, &MessagesPeerDialogsObject::coreStateChanged);
+}
+
+inline MessagesPeerDialogsObject::MessagesPeerDialogsObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_state(0),
+    m_core()
+{
+    m_state = new UpdatesStateObject(m_core.state(), this);
+    connect(m_state.data(), &UpdatesStateObject::coreChanged, this, &MessagesPeerDialogsObject::coreStateChanged);
+}
+
+inline MessagesPeerDialogsObject::~MessagesPeerDialogsObject() {
+}
+
+inline void MessagesPeerDialogsObject::setChats(const QList<Chat> &chats) {
+    if(m_core.chats() == chats) return;
+    m_core.setChats(chats);
+    Q_EMIT chatsChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QList<Chat> MessagesPeerDialogsObject::chats() const {
+    return m_core.chats();
+}
+
+inline void MessagesPeerDialogsObject::setDialogs(const QList<Dialog> &dialogs) {
+    if(m_core.dialogs() == dialogs) return;
+    m_core.setDialogs(dialogs);
+    Q_EMIT dialogsChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QList<Dialog> MessagesPeerDialogsObject::dialogs() const {
+    return m_core.dialogs();
+}
+
+inline void MessagesPeerDialogsObject::setMessages(const QList<Message> &messages) {
+    if(m_core.messages() == messages) return;
+    m_core.setMessages(messages);
+    Q_EMIT messagesChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QList<Message> MessagesPeerDialogsObject::messages() const {
+    return m_core.messages();
+}
+
+inline void MessagesPeerDialogsObject::setState(UpdatesStateObject* state) {
+    if(m_state == state) return;
+    if(m_state) delete m_state;
+    m_state = state;
+    if(m_state) {
+        m_state->setParent(this);
+        m_core.setState(m_state->core());
+        connect(m_state.data(), &UpdatesStateObject::coreChanged, this, &MessagesPeerDialogsObject::coreStateChanged);
+    }
+    Q_EMIT stateChanged();
+    Q_EMIT coreChanged();
+}
+
+inline UpdatesStateObject*  MessagesPeerDialogsObject::state() const {
+    return m_state;
+}
+
+inline void MessagesPeerDialogsObject::setUsers(const QList<User> &users) {
+    if(m_core.users() == users) return;
+    m_core.setUsers(users);
+    Q_EMIT usersChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QList<User> MessagesPeerDialogsObject::users() const {
+    return m_core.users();
+}
+
+inline MessagesPeerDialogsObject &MessagesPeerDialogsObject::operator =(const MessagesPeerDialogs &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+    m_state->setCore(b.state());
+
+    Q_EMIT chatsChanged();
+    Q_EMIT dialogsChanged();
+    Q_EMIT messagesChanged();
+    Q_EMIT stateChanged();
+    Q_EMIT usersChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool MessagesPeerDialogsObject::operator ==(const MessagesPeerDialogs &b) const {
+    return m_core == b;
+}
+
+inline void MessagesPeerDialogsObject::setClassType(quint32 classType) {
+    MessagesPeerDialogs::MessagesPeerDialogsClassType result;
+    switch(classType) {
+    case TypeMessagesPeerDialogs:
+        result = MessagesPeerDialogs::typeMessagesPeerDialogs;
+        break;
+    default:
+        result = MessagesPeerDialogs::typeMessagesPeerDialogs;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 MessagesPeerDialogsObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case MessagesPeerDialogs::typeMessagesPeerDialogs:
+        result = TypeMessagesPeerDialogs;
+        break;
+    default:
+        result = TypeMessagesPeerDialogs;
+        break;
+    }
+
+    return result;
+}
+
+inline void MessagesPeerDialogsObject::setCore(const MessagesPeerDialogs &core) {
+    operator =(core);
+}
+
+inline MessagesPeerDialogs MessagesPeerDialogsObject::core() const {
+    return m_core;
+}
+
+inline void MessagesPeerDialogsObject::coreStateChanged() {
+    if(m_core.state() == m_state->core()) return;
+    m_core.setState(m_state->core());
+    Q_EMIT stateChanged();
+    Q_EMIT coreChanged();
+}
+
 #endif // LQTG_TYPE_MESSAGESPEERDIALOGS_OBJECT

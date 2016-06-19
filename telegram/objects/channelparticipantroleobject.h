@@ -47,4 +47,82 @@ private:
     ChannelParticipantRole m_core;
 };
 
+inline ChannelParticipantRoleObject::ChannelParticipantRoleObject(const ChannelParticipantRole &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core(core)
+{
+}
+
+inline ChannelParticipantRoleObject::ChannelParticipantRoleObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core()
+{
+}
+
+inline ChannelParticipantRoleObject::~ChannelParticipantRoleObject() {
+}
+
+inline ChannelParticipantRoleObject &ChannelParticipantRoleObject::operator =(const ChannelParticipantRole &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool ChannelParticipantRoleObject::operator ==(const ChannelParticipantRole &b) const {
+    return m_core == b;
+}
+
+inline void ChannelParticipantRoleObject::setClassType(quint32 classType) {
+    ChannelParticipantRole::ChannelParticipantRoleClassType result;
+    switch(classType) {
+    case TypeChannelRoleEmpty:
+        result = ChannelParticipantRole::typeChannelRoleEmpty;
+        break;
+    case TypeChannelRoleModerator:
+        result = ChannelParticipantRole::typeChannelRoleModerator;
+        break;
+    case TypeChannelRoleEditor:
+        result = ChannelParticipantRole::typeChannelRoleEditor;
+        break;
+    default:
+        result = ChannelParticipantRole::typeChannelRoleEmpty;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 ChannelParticipantRoleObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case ChannelParticipantRole::typeChannelRoleEmpty:
+        result = TypeChannelRoleEmpty;
+        break;
+    case ChannelParticipantRole::typeChannelRoleModerator:
+        result = TypeChannelRoleModerator;
+        break;
+    case ChannelParticipantRole::typeChannelRoleEditor:
+        result = TypeChannelRoleEditor;
+        break;
+    default:
+        result = TypeChannelRoleEmpty;
+        break;
+    }
+
+    return result;
+}
+
+inline void ChannelParticipantRoleObject::setCore(const ChannelParticipantRole &core) {
+    operator =(core);
+}
+
+inline ChannelParticipantRole ChannelParticipantRoleObject::core() const {
+    return m_core;
+}
+
 #endif // LQTG_TYPE_CHANNELPARTICIPANTROLE_OBJECT

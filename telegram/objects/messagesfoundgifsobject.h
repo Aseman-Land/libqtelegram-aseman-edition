@@ -55,4 +55,94 @@ private:
     MessagesFoundGifs m_core;
 };
 
+inline MessagesFoundGifsObject::MessagesFoundGifsObject(const MessagesFoundGifs &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core(core)
+{
+}
+
+inline MessagesFoundGifsObject::MessagesFoundGifsObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core()
+{
+}
+
+inline MessagesFoundGifsObject::~MessagesFoundGifsObject() {
+}
+
+inline void MessagesFoundGifsObject::setNextOffset(qint32 nextOffset) {
+    if(m_core.nextOffset() == nextOffset) return;
+    m_core.setNextOffset(nextOffset);
+    Q_EMIT nextOffsetChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 MessagesFoundGifsObject::nextOffset() const {
+    return m_core.nextOffset();
+}
+
+inline void MessagesFoundGifsObject::setResults(const QList<FoundGif> &results) {
+    if(m_core.results() == results) return;
+    m_core.setResults(results);
+    Q_EMIT resultsChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QList<FoundGif> MessagesFoundGifsObject::results() const {
+    return m_core.results();
+}
+
+inline MessagesFoundGifsObject &MessagesFoundGifsObject::operator =(const MessagesFoundGifs &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+
+    Q_EMIT nextOffsetChanged();
+    Q_EMIT resultsChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool MessagesFoundGifsObject::operator ==(const MessagesFoundGifs &b) const {
+    return m_core == b;
+}
+
+inline void MessagesFoundGifsObject::setClassType(quint32 classType) {
+    MessagesFoundGifs::MessagesFoundGifsClassType result;
+    switch(classType) {
+    case TypeMessagesFoundGifs:
+        result = MessagesFoundGifs::typeMessagesFoundGifs;
+        break;
+    default:
+        result = MessagesFoundGifs::typeMessagesFoundGifs;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 MessagesFoundGifsObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case MessagesFoundGifs::typeMessagesFoundGifs:
+        result = TypeMessagesFoundGifs;
+        break;
+    default:
+        result = TypeMessagesFoundGifs;
+        break;
+    }
+
+    return result;
+}
+
+inline void MessagesFoundGifsObject::setCore(const MessagesFoundGifs &core) {
+    operator =(core);
+}
+
+inline MessagesFoundGifs MessagesFoundGifsObject::core() const {
+    return m_core;
+}
+
 #endif // LQTG_TYPE_MESSAGESFOUNDGIFS_OBJECT

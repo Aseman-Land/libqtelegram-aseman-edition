@@ -65,4 +65,118 @@ private:
     InputAppEvent m_core;
 };
 
+inline InputAppEventObject::InputAppEventObject(const InputAppEvent &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core(core)
+{
+}
+
+inline InputAppEventObject::InputAppEventObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core()
+{
+}
+
+inline InputAppEventObject::~InputAppEventObject() {
+}
+
+inline void InputAppEventObject::setData(const QString &data) {
+    if(m_core.data() == data) return;
+    m_core.setData(data);
+    Q_EMIT dataChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QString InputAppEventObject::data() const {
+    return m_core.data();
+}
+
+inline void InputAppEventObject::setPeer(qint64 peer) {
+    if(m_core.peer() == peer) return;
+    m_core.setPeer(peer);
+    Q_EMIT peerChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint64 InputAppEventObject::peer() const {
+    return m_core.peer();
+}
+
+inline void InputAppEventObject::setTime(qreal time) {
+    if(m_core.time() == time) return;
+    m_core.setTime(time);
+    Q_EMIT timeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qreal InputAppEventObject::time() const {
+    return m_core.time();
+}
+
+inline void InputAppEventObject::setType(const QString &type) {
+    if(m_core.type() == type) return;
+    m_core.setType(type);
+    Q_EMIT typeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QString InputAppEventObject::type() const {
+    return m_core.type();
+}
+
+inline InputAppEventObject &InputAppEventObject::operator =(const InputAppEvent &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+
+    Q_EMIT dataChanged();
+    Q_EMIT peerChanged();
+    Q_EMIT timeChanged();
+    Q_EMIT typeChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool InputAppEventObject::operator ==(const InputAppEvent &b) const {
+    return m_core == b;
+}
+
+inline void InputAppEventObject::setClassType(quint32 classType) {
+    InputAppEvent::InputAppEventClassType result;
+    switch(classType) {
+    case TypeInputAppEvent:
+        result = InputAppEvent::typeInputAppEvent;
+        break;
+    default:
+        result = InputAppEvent::typeInputAppEvent;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 InputAppEventObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case InputAppEvent::typeInputAppEvent:
+        result = TypeInputAppEvent;
+        break;
+    default:
+        result = TypeInputAppEvent;
+        break;
+    }
+
+    return result;
+}
+
+inline void InputAppEventObject::setCore(const InputAppEvent &core) {
+    operator =(core);
+}
+
+inline InputAppEvent InputAppEventObject::core() const {
+    return m_core;
+}
+
 #endif // LQTG_TYPE_INPUTAPPEVENT_OBJECT

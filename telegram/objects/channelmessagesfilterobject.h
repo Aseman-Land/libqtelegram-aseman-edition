@@ -67,4 +67,130 @@ private:
     ChannelMessagesFilter m_core;
 };
 
+inline ChannelMessagesFilterObject::ChannelMessagesFilterObject(const ChannelMessagesFilter &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core(core)
+{
+}
+
+inline ChannelMessagesFilterObject::ChannelMessagesFilterObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core()
+{
+}
+
+inline ChannelMessagesFilterObject::~ChannelMessagesFilterObject() {
+}
+
+inline void ChannelMessagesFilterObject::setExcludeNewMessages(bool excludeNewMessages) {
+    if(m_core.excludeNewMessages() == excludeNewMessages) return;
+    m_core.setExcludeNewMessages(excludeNewMessages);
+    Q_EMIT excludeNewMessagesChanged();
+    Q_EMIT coreChanged();
+}
+
+inline bool ChannelMessagesFilterObject::excludeNewMessages() const {
+    return m_core.excludeNewMessages();
+}
+
+inline void ChannelMessagesFilterObject::setFlags(qint32 flags) {
+    if(m_core.flags() == flags) return;
+    m_core.setFlags(flags);
+    Q_EMIT flagsChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 ChannelMessagesFilterObject::flags() const {
+    return m_core.flags();
+}
+
+inline void ChannelMessagesFilterObject::setImportantOnly(bool importantOnly) {
+    if(m_core.importantOnly() == importantOnly) return;
+    m_core.setImportantOnly(importantOnly);
+    Q_EMIT importantOnlyChanged();
+    Q_EMIT coreChanged();
+}
+
+inline bool ChannelMessagesFilterObject::importantOnly() const {
+    return m_core.importantOnly();
+}
+
+inline void ChannelMessagesFilterObject::setRanges(const QList<MessageRange> &ranges) {
+    if(m_core.ranges() == ranges) return;
+    m_core.setRanges(ranges);
+    Q_EMIT rangesChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QList<MessageRange> ChannelMessagesFilterObject::ranges() const {
+    return m_core.ranges();
+}
+
+inline ChannelMessagesFilterObject &ChannelMessagesFilterObject::operator =(const ChannelMessagesFilter &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+
+    Q_EMIT excludeNewMessagesChanged();
+    Q_EMIT flagsChanged();
+    Q_EMIT importantOnlyChanged();
+    Q_EMIT rangesChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool ChannelMessagesFilterObject::operator ==(const ChannelMessagesFilter &b) const {
+    return m_core == b;
+}
+
+inline void ChannelMessagesFilterObject::setClassType(quint32 classType) {
+    ChannelMessagesFilter::ChannelMessagesFilterClassType result;
+    switch(classType) {
+    case TypeChannelMessagesFilterEmpty:
+        result = ChannelMessagesFilter::typeChannelMessagesFilterEmpty;
+        break;
+    case TypeChannelMessagesFilter:
+        result = ChannelMessagesFilter::typeChannelMessagesFilter;
+        break;
+    case TypeChannelMessagesFilterCollapsed:
+        result = ChannelMessagesFilter::typeChannelMessagesFilterCollapsed;
+        break;
+    default:
+        result = ChannelMessagesFilter::typeChannelMessagesFilterEmpty;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 ChannelMessagesFilterObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case ChannelMessagesFilter::typeChannelMessagesFilterEmpty:
+        result = TypeChannelMessagesFilterEmpty;
+        break;
+    case ChannelMessagesFilter::typeChannelMessagesFilter:
+        result = TypeChannelMessagesFilter;
+        break;
+    case ChannelMessagesFilter::typeChannelMessagesFilterCollapsed:
+        result = TypeChannelMessagesFilterCollapsed;
+        break;
+    default:
+        result = TypeChannelMessagesFilterEmpty;
+        break;
+    }
+
+    return result;
+}
+
+inline void ChannelMessagesFilterObject::setCore(const ChannelMessagesFilter &core) {
+    operator =(core);
+}
+
+inline ChannelMessagesFilter ChannelMessagesFilterObject::core() const {
+    return m_core;
+}
+
 #endif // LQTG_TYPE_CHANNELMESSAGESFILTER_OBJECT

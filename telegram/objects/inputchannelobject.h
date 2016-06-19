@@ -56,4 +56,100 @@ private:
     InputChannel m_core;
 };
 
+inline InputChannelObject::InputChannelObject(const InputChannel &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core(core)
+{
+}
+
+inline InputChannelObject::InputChannelObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core()
+{
+}
+
+inline InputChannelObject::~InputChannelObject() {
+}
+
+inline void InputChannelObject::setAccessHash(qint64 accessHash) {
+    if(m_core.accessHash() == accessHash) return;
+    m_core.setAccessHash(accessHash);
+    Q_EMIT accessHashChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint64 InputChannelObject::accessHash() const {
+    return m_core.accessHash();
+}
+
+inline void InputChannelObject::setChannelId(qint32 channelId) {
+    if(m_core.channelId() == channelId) return;
+    m_core.setChannelId(channelId);
+    Q_EMIT channelIdChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 InputChannelObject::channelId() const {
+    return m_core.channelId();
+}
+
+inline InputChannelObject &InputChannelObject::operator =(const InputChannel &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+
+    Q_EMIT accessHashChanged();
+    Q_EMIT channelIdChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool InputChannelObject::operator ==(const InputChannel &b) const {
+    return m_core == b;
+}
+
+inline void InputChannelObject::setClassType(quint32 classType) {
+    InputChannel::InputChannelClassType result;
+    switch(classType) {
+    case TypeInputChannelEmpty:
+        result = InputChannel::typeInputChannelEmpty;
+        break;
+    case TypeInputChannel:
+        result = InputChannel::typeInputChannel;
+        break;
+    default:
+        result = InputChannel::typeInputChannelEmpty;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 InputChannelObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case InputChannel::typeInputChannelEmpty:
+        result = TypeInputChannelEmpty;
+        break;
+    case InputChannel::typeInputChannel:
+        result = TypeInputChannel;
+        break;
+    default:
+        result = TypeInputChannelEmpty;
+        break;
+    }
+
+    return result;
+}
+
+inline void InputChannelObject::setCore(const InputChannel &core) {
+    operator =(core);
+}
+
+inline InputChannel InputChannelObject::core() const {
+    return m_core;
+}
+
 #endif // LQTG_TYPE_INPUTCHANNEL_OBJECT

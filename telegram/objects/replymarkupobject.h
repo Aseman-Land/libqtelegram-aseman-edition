@@ -73,4 +73,148 @@ private:
     ReplyMarkup m_core;
 };
 
+inline ReplyMarkupObject::ReplyMarkupObject(const ReplyMarkup &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core(core)
+{
+}
+
+inline ReplyMarkupObject::ReplyMarkupObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core()
+{
+}
+
+inline ReplyMarkupObject::~ReplyMarkupObject() {
+}
+
+inline void ReplyMarkupObject::setFlags(qint32 flags) {
+    if(m_core.flags() == flags) return;
+    m_core.setFlags(flags);
+    Q_EMIT flagsChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 ReplyMarkupObject::flags() const {
+    return m_core.flags();
+}
+
+inline void ReplyMarkupObject::setResize(bool resize) {
+    if(m_core.resize() == resize) return;
+    m_core.setResize(resize);
+    Q_EMIT resizeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline bool ReplyMarkupObject::resize() const {
+    return m_core.resize();
+}
+
+inline void ReplyMarkupObject::setRows(const QList<KeyboardButtonRow> &rows) {
+    if(m_core.rows() == rows) return;
+    m_core.setRows(rows);
+    Q_EMIT rowsChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QList<KeyboardButtonRow> ReplyMarkupObject::rows() const {
+    return m_core.rows();
+}
+
+inline void ReplyMarkupObject::setSelective(bool selective) {
+    if(m_core.selective() == selective) return;
+    m_core.setSelective(selective);
+    Q_EMIT selectiveChanged();
+    Q_EMIT coreChanged();
+}
+
+inline bool ReplyMarkupObject::selective() const {
+    return m_core.selective();
+}
+
+inline void ReplyMarkupObject::setSingleUse(bool singleUse) {
+    if(m_core.singleUse() == singleUse) return;
+    m_core.setSingleUse(singleUse);
+    Q_EMIT singleUseChanged();
+    Q_EMIT coreChanged();
+}
+
+inline bool ReplyMarkupObject::singleUse() const {
+    return m_core.singleUse();
+}
+
+inline ReplyMarkupObject &ReplyMarkupObject::operator =(const ReplyMarkup &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+
+    Q_EMIT flagsChanged();
+    Q_EMIT resizeChanged();
+    Q_EMIT rowsChanged();
+    Q_EMIT selectiveChanged();
+    Q_EMIT singleUseChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool ReplyMarkupObject::operator ==(const ReplyMarkup &b) const {
+    return m_core == b;
+}
+
+inline void ReplyMarkupObject::setClassType(quint32 classType) {
+    ReplyMarkup::ReplyMarkupClassType result;
+    switch(classType) {
+    case TypeReplyKeyboardHide:
+        result = ReplyMarkup::typeReplyKeyboardHide;
+        break;
+    case TypeReplyKeyboardForceReply:
+        result = ReplyMarkup::typeReplyKeyboardForceReply;
+        break;
+    case TypeReplyKeyboardMarkup:
+        result = ReplyMarkup::typeReplyKeyboardMarkup;
+        break;
+    case TypeReplyInlineMarkup:
+        result = ReplyMarkup::typeReplyInlineMarkup;
+        break;
+    default:
+        result = ReplyMarkup::typeReplyKeyboardHide;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 ReplyMarkupObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case ReplyMarkup::typeReplyKeyboardHide:
+        result = TypeReplyKeyboardHide;
+        break;
+    case ReplyMarkup::typeReplyKeyboardForceReply:
+        result = TypeReplyKeyboardForceReply;
+        break;
+    case ReplyMarkup::typeReplyKeyboardMarkup:
+        result = TypeReplyKeyboardMarkup;
+        break;
+    case ReplyMarkup::typeReplyInlineMarkup:
+        result = TypeReplyInlineMarkup;
+        break;
+    default:
+        result = TypeReplyKeyboardHide;
+        break;
+    }
+
+    return result;
+}
+
+inline void ReplyMarkupObject::setCore(const ReplyMarkup &core) {
+    operator =(core);
+}
+
+inline ReplyMarkup ReplyMarkupObject::core() const {
+    return m_core;
+}
+
 #endif // LQTG_TYPE_REPLYMARKUP_OBJECT

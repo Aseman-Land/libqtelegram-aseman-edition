@@ -61,4 +61,112 @@ private:
     ContactsBlocked m_core;
 };
 
+inline ContactsBlockedObject::ContactsBlockedObject(const ContactsBlocked &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core(core)
+{
+}
+
+inline ContactsBlockedObject::ContactsBlockedObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core()
+{
+}
+
+inline ContactsBlockedObject::~ContactsBlockedObject() {
+}
+
+inline void ContactsBlockedObject::setBlocked(const QList<ContactBlocked> &blocked) {
+    if(m_core.blocked() == blocked) return;
+    m_core.setBlocked(blocked);
+    Q_EMIT blockedChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QList<ContactBlocked> ContactsBlockedObject::blocked() const {
+    return m_core.blocked();
+}
+
+inline void ContactsBlockedObject::setCount(qint32 count) {
+    if(m_core.count() == count) return;
+    m_core.setCount(count);
+    Q_EMIT countChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 ContactsBlockedObject::count() const {
+    return m_core.count();
+}
+
+inline void ContactsBlockedObject::setUsers(const QList<User> &users) {
+    if(m_core.users() == users) return;
+    m_core.setUsers(users);
+    Q_EMIT usersChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QList<User> ContactsBlockedObject::users() const {
+    return m_core.users();
+}
+
+inline ContactsBlockedObject &ContactsBlockedObject::operator =(const ContactsBlocked &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+
+    Q_EMIT blockedChanged();
+    Q_EMIT countChanged();
+    Q_EMIT usersChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool ContactsBlockedObject::operator ==(const ContactsBlocked &b) const {
+    return m_core == b;
+}
+
+inline void ContactsBlockedObject::setClassType(quint32 classType) {
+    ContactsBlocked::ContactsBlockedClassType result;
+    switch(classType) {
+    case TypeContactsBlocked:
+        result = ContactsBlocked::typeContactsBlocked;
+        break;
+    case TypeContactsBlockedSlice:
+        result = ContactsBlocked::typeContactsBlockedSlice;
+        break;
+    default:
+        result = ContactsBlocked::typeContactsBlocked;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 ContactsBlockedObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case ContactsBlocked::typeContactsBlocked:
+        result = TypeContactsBlocked;
+        break;
+    case ContactsBlocked::typeContactsBlockedSlice:
+        result = TypeContactsBlockedSlice;
+        break;
+    default:
+        result = TypeContactsBlocked;
+        break;
+    }
+
+    return result;
+}
+
+inline void ContactsBlockedObject::setCore(const ContactsBlocked &core) {
+    operator =(core);
+}
+
+inline ContactsBlocked ContactsBlockedObject::core() const {
+    return m_core;
+}
+
 #endif // LQTG_TYPE_CONTACTSBLOCKED_OBJECT

@@ -55,4 +55,94 @@ private:
     BotCommand m_core;
 };
 
+inline BotCommandObject::BotCommandObject(const BotCommand &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core(core)
+{
+}
+
+inline BotCommandObject::BotCommandObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core()
+{
+}
+
+inline BotCommandObject::~BotCommandObject() {
+}
+
+inline void BotCommandObject::setCommand(const QString &command) {
+    if(m_core.command() == command) return;
+    m_core.setCommand(command);
+    Q_EMIT commandChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QString BotCommandObject::command() const {
+    return m_core.command();
+}
+
+inline void BotCommandObject::setDescription(const QString &description) {
+    if(m_core.description() == description) return;
+    m_core.setDescription(description);
+    Q_EMIT descriptionChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QString BotCommandObject::description() const {
+    return m_core.description();
+}
+
+inline BotCommandObject &BotCommandObject::operator =(const BotCommand &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+
+    Q_EMIT commandChanged();
+    Q_EMIT descriptionChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool BotCommandObject::operator ==(const BotCommand &b) const {
+    return m_core == b;
+}
+
+inline void BotCommandObject::setClassType(quint32 classType) {
+    BotCommand::BotCommandClassType result;
+    switch(classType) {
+    case TypeBotCommand:
+        result = BotCommand::typeBotCommand;
+        break;
+    default:
+        result = BotCommand::typeBotCommand;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 BotCommandObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case BotCommand::typeBotCommand:
+        result = TypeBotCommand;
+        break;
+    default:
+        result = TypeBotCommand;
+        break;
+    }
+
+    return result;
+}
+
+inline void BotCommandObject::setCore(const BotCommand &core) {
+    operator =(core);
+}
+
+inline BotCommand BotCommandObject::core() const {
+    return m_core;
+}
+
 #endif // LQTG_TYPE_BOTCOMMAND_OBJECT

@@ -92,4 +92,212 @@ private:
     FoundGif m_core;
 };
 
+inline FoundGifObject::FoundGifObject(const FoundGif &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_document(0),
+    m_photo(0),
+    m_core(core)
+{
+    m_document = new DocumentObject(m_core.document(), this);
+    connect(m_document.data(), &DocumentObject::coreChanged, this, &FoundGifObject::coreDocumentChanged);
+    m_photo = new PhotoObject(m_core.photo(), this);
+    connect(m_photo.data(), &PhotoObject::coreChanged, this, &FoundGifObject::corePhotoChanged);
+}
+
+inline FoundGifObject::FoundGifObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_document(0),
+    m_photo(0),
+    m_core()
+{
+    m_document = new DocumentObject(m_core.document(), this);
+    connect(m_document.data(), &DocumentObject::coreChanged, this, &FoundGifObject::coreDocumentChanged);
+    m_photo = new PhotoObject(m_core.photo(), this);
+    connect(m_photo.data(), &PhotoObject::coreChanged, this, &FoundGifObject::corePhotoChanged);
+}
+
+inline FoundGifObject::~FoundGifObject() {
+}
+
+inline void FoundGifObject::setContentType(const QString &contentType) {
+    if(m_core.contentType() == contentType) return;
+    m_core.setContentType(contentType);
+    Q_EMIT contentTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QString FoundGifObject::contentType() const {
+    return m_core.contentType();
+}
+
+inline void FoundGifObject::setContentUrl(const QString &contentUrl) {
+    if(m_core.contentUrl() == contentUrl) return;
+    m_core.setContentUrl(contentUrl);
+    Q_EMIT contentUrlChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QString FoundGifObject::contentUrl() const {
+    return m_core.contentUrl();
+}
+
+inline void FoundGifObject::setDocument(DocumentObject* document) {
+    if(m_document == document) return;
+    if(m_document) delete m_document;
+    m_document = document;
+    if(m_document) {
+        m_document->setParent(this);
+        m_core.setDocument(m_document->core());
+        connect(m_document.data(), &DocumentObject::coreChanged, this, &FoundGifObject::coreDocumentChanged);
+    }
+    Q_EMIT documentChanged();
+    Q_EMIT coreChanged();
+}
+
+inline DocumentObject*  FoundGifObject::document() const {
+    return m_document;
+}
+
+inline void FoundGifObject::setH(qint32 h) {
+    if(m_core.h() == h) return;
+    m_core.setH(h);
+    Q_EMIT hChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 FoundGifObject::h() const {
+    return m_core.h();
+}
+
+inline void FoundGifObject::setPhoto(PhotoObject* photo) {
+    if(m_photo == photo) return;
+    if(m_photo) delete m_photo;
+    m_photo = photo;
+    if(m_photo) {
+        m_photo->setParent(this);
+        m_core.setPhoto(m_photo->core());
+        connect(m_photo.data(), &PhotoObject::coreChanged, this, &FoundGifObject::corePhotoChanged);
+    }
+    Q_EMIT photoChanged();
+    Q_EMIT coreChanged();
+}
+
+inline PhotoObject*  FoundGifObject::photo() const {
+    return m_photo;
+}
+
+inline void FoundGifObject::setThumbUrl(const QString &thumbUrl) {
+    if(m_core.thumbUrl() == thumbUrl) return;
+    m_core.setThumbUrl(thumbUrl);
+    Q_EMIT thumbUrlChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QString FoundGifObject::thumbUrl() const {
+    return m_core.thumbUrl();
+}
+
+inline void FoundGifObject::setUrl(const QString &url) {
+    if(m_core.url() == url) return;
+    m_core.setUrl(url);
+    Q_EMIT urlChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QString FoundGifObject::url() const {
+    return m_core.url();
+}
+
+inline void FoundGifObject::setW(qint32 w) {
+    if(m_core.w() == w) return;
+    m_core.setW(w);
+    Q_EMIT wChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 FoundGifObject::w() const {
+    return m_core.w();
+}
+
+inline FoundGifObject &FoundGifObject::operator =(const FoundGif &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+    m_document->setCore(b.document());
+    m_photo->setCore(b.photo());
+
+    Q_EMIT contentTypeChanged();
+    Q_EMIT contentUrlChanged();
+    Q_EMIT documentChanged();
+    Q_EMIT hChanged();
+    Q_EMIT photoChanged();
+    Q_EMIT thumbUrlChanged();
+    Q_EMIT urlChanged();
+    Q_EMIT wChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool FoundGifObject::operator ==(const FoundGif &b) const {
+    return m_core == b;
+}
+
+inline void FoundGifObject::setClassType(quint32 classType) {
+    FoundGif::FoundGifClassType result;
+    switch(classType) {
+    case TypeFoundGif:
+        result = FoundGif::typeFoundGif;
+        break;
+    case TypeFoundGifCached:
+        result = FoundGif::typeFoundGifCached;
+        break;
+    default:
+        result = FoundGif::typeFoundGif;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 FoundGifObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case FoundGif::typeFoundGif:
+        result = TypeFoundGif;
+        break;
+    case FoundGif::typeFoundGifCached:
+        result = TypeFoundGifCached;
+        break;
+    default:
+        result = TypeFoundGif;
+        break;
+    }
+
+    return result;
+}
+
+inline void FoundGifObject::setCore(const FoundGif &core) {
+    operator =(core);
+}
+
+inline FoundGif FoundGifObject::core() const {
+    return m_core;
+}
+
+inline void FoundGifObject::coreDocumentChanged() {
+    if(m_core.document() == m_document->core()) return;
+    m_core.setDocument(m_document->core());
+    Q_EMIT documentChanged();
+    Q_EMIT coreChanged();
+}
+
+inline void FoundGifObject::corePhotoChanged() {
+    if(m_core.photo() == m_photo->core()) return;
+    m_core.setPhoto(m_photo->core());
+    Q_EMIT photoChanged();
+    Q_EMIT coreChanged();
+}
+
 #endif // LQTG_TYPE_FOUNDGIF_OBJECT

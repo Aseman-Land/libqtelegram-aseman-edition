@@ -55,4 +55,94 @@ private:
     Contact m_core;
 };
 
+inline ContactObject::ContactObject(const Contact &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core(core)
+{
+}
+
+inline ContactObject::ContactObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core()
+{
+}
+
+inline ContactObject::~ContactObject() {
+}
+
+inline void ContactObject::setMutual(bool mutual) {
+    if(m_core.mutual() == mutual) return;
+    m_core.setMutual(mutual);
+    Q_EMIT mutualChanged();
+    Q_EMIT coreChanged();
+}
+
+inline bool ContactObject::mutual() const {
+    return m_core.mutual();
+}
+
+inline void ContactObject::setUserId(qint32 userId) {
+    if(m_core.userId() == userId) return;
+    m_core.setUserId(userId);
+    Q_EMIT userIdChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 ContactObject::userId() const {
+    return m_core.userId();
+}
+
+inline ContactObject &ContactObject::operator =(const Contact &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+
+    Q_EMIT mutualChanged();
+    Q_EMIT userIdChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool ContactObject::operator ==(const Contact &b) const {
+    return m_core == b;
+}
+
+inline void ContactObject::setClassType(quint32 classType) {
+    Contact::ContactClassType result;
+    switch(classType) {
+    case TypeContact:
+        result = Contact::typeContact;
+        break;
+    default:
+        result = Contact::typeContact;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 ContactObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case Contact::typeContact:
+        result = TypeContact;
+        break;
+    default:
+        result = TypeContact;
+        break;
+    }
+
+    return result;
+}
+
+inline void ContactObject::setCore(const Contact &core) {
+    operator =(core);
+}
+
+inline Contact ContactObject::core() const {
+    return m_core;
+}
+
 #endif // LQTG_TYPE_CONTACT_OBJECT

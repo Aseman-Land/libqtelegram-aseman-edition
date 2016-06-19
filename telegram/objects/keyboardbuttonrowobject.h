@@ -50,4 +50,82 @@ private:
     KeyboardButtonRow m_core;
 };
 
+inline KeyboardButtonRowObject::KeyboardButtonRowObject(const KeyboardButtonRow &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core(core)
+{
+}
+
+inline KeyboardButtonRowObject::KeyboardButtonRowObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core()
+{
+}
+
+inline KeyboardButtonRowObject::~KeyboardButtonRowObject() {
+}
+
+inline void KeyboardButtonRowObject::setButtons(const QList<KeyboardButton> &buttons) {
+    if(m_core.buttons() == buttons) return;
+    m_core.setButtons(buttons);
+    Q_EMIT buttonsChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QList<KeyboardButton> KeyboardButtonRowObject::buttons() const {
+    return m_core.buttons();
+}
+
+inline KeyboardButtonRowObject &KeyboardButtonRowObject::operator =(const KeyboardButtonRow &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+
+    Q_EMIT buttonsChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool KeyboardButtonRowObject::operator ==(const KeyboardButtonRow &b) const {
+    return m_core == b;
+}
+
+inline void KeyboardButtonRowObject::setClassType(quint32 classType) {
+    KeyboardButtonRow::KeyboardButtonRowClassType result;
+    switch(classType) {
+    case TypeKeyboardButtonRow:
+        result = KeyboardButtonRow::typeKeyboardButtonRow;
+        break;
+    default:
+        result = KeyboardButtonRow::typeKeyboardButtonRow;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 KeyboardButtonRowObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case KeyboardButtonRow::typeKeyboardButtonRow:
+        result = TypeKeyboardButtonRow;
+        break;
+    default:
+        result = TypeKeyboardButtonRow;
+        break;
+    }
+
+    return result;
+}
+
+inline void KeyboardButtonRowObject::setCore(const KeyboardButtonRow &core) {
+    operator =(core);
+}
+
+inline KeyboardButtonRow KeyboardButtonRowObject::core() const {
+    return m_core;
+}
+
 #endif // LQTG_TYPE_KEYBOARDBUTTONROW_OBJECT

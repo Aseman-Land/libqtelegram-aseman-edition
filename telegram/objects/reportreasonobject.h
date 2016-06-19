@@ -53,4 +53,100 @@ private:
     ReportReason m_core;
 };
 
+inline ReportReasonObject::ReportReasonObject(const ReportReason &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core(core)
+{
+}
+
+inline ReportReasonObject::ReportReasonObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core()
+{
+}
+
+inline ReportReasonObject::~ReportReasonObject() {
+}
+
+inline void ReportReasonObject::setText(const QString &text) {
+    if(m_core.text() == text) return;
+    m_core.setText(text);
+    Q_EMIT textChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QString ReportReasonObject::text() const {
+    return m_core.text();
+}
+
+inline ReportReasonObject &ReportReasonObject::operator =(const ReportReason &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+
+    Q_EMIT textChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool ReportReasonObject::operator ==(const ReportReason &b) const {
+    return m_core == b;
+}
+
+inline void ReportReasonObject::setClassType(quint32 classType) {
+    ReportReason::ReportReasonClassType result;
+    switch(classType) {
+    case TypeInputReportReasonSpam:
+        result = ReportReason::typeInputReportReasonSpam;
+        break;
+    case TypeInputReportReasonViolence:
+        result = ReportReason::typeInputReportReasonViolence;
+        break;
+    case TypeInputReportReasonPornography:
+        result = ReportReason::typeInputReportReasonPornography;
+        break;
+    case TypeInputReportReasonOther:
+        result = ReportReason::typeInputReportReasonOther;
+        break;
+    default:
+        result = ReportReason::typeInputReportReasonSpam;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 ReportReasonObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case ReportReason::typeInputReportReasonSpam:
+        result = TypeInputReportReasonSpam;
+        break;
+    case ReportReason::typeInputReportReasonViolence:
+        result = TypeInputReportReasonViolence;
+        break;
+    case ReportReason::typeInputReportReasonPornography:
+        result = TypeInputReportReasonPornography;
+        break;
+    case ReportReason::typeInputReportReasonOther:
+        result = TypeInputReportReasonOther;
+        break;
+    default:
+        result = TypeInputReportReasonSpam;
+        break;
+    }
+
+    return result;
+}
+
+inline void ReportReasonObject::setCore(const ReportReason &core) {
+    operator =(core);
+}
+
+inline ReportReason ReportReasonObject::core() const {
+    return m_core;
+}
+
 #endif // LQTG_TYPE_REPORTREASON_OBJECT

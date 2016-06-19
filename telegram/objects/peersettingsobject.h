@@ -55,4 +55,94 @@ private:
     PeerSettings m_core;
 };
 
+inline PeerSettingsObject::PeerSettingsObject(const PeerSettings &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core(core)
+{
+}
+
+inline PeerSettingsObject::PeerSettingsObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core()
+{
+}
+
+inline PeerSettingsObject::~PeerSettingsObject() {
+}
+
+inline void PeerSettingsObject::setFlags(qint32 flags) {
+    if(m_core.flags() == flags) return;
+    m_core.setFlags(flags);
+    Q_EMIT flagsChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 PeerSettingsObject::flags() const {
+    return m_core.flags();
+}
+
+inline void PeerSettingsObject::setReportSpam(bool reportSpam) {
+    if(m_core.reportSpam() == reportSpam) return;
+    m_core.setReportSpam(reportSpam);
+    Q_EMIT reportSpamChanged();
+    Q_EMIT coreChanged();
+}
+
+inline bool PeerSettingsObject::reportSpam() const {
+    return m_core.reportSpam();
+}
+
+inline PeerSettingsObject &PeerSettingsObject::operator =(const PeerSettings &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+
+    Q_EMIT flagsChanged();
+    Q_EMIT reportSpamChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool PeerSettingsObject::operator ==(const PeerSettings &b) const {
+    return m_core == b;
+}
+
+inline void PeerSettingsObject::setClassType(quint32 classType) {
+    PeerSettings::PeerSettingsClassType result;
+    switch(classType) {
+    case TypePeerSettings:
+        result = PeerSettings::typePeerSettings;
+        break;
+    default:
+        result = PeerSettings::typePeerSettings;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 PeerSettingsObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case PeerSettings::typePeerSettings:
+        result = TypePeerSettings;
+        break;
+    default:
+        result = TypePeerSettings;
+        break;
+    }
+
+    return result;
+}
+
+inline void PeerSettingsObject::setCore(const PeerSettings &core) {
+    operator =(core);
+}
+
+inline PeerSettings PeerSettingsObject::core() const {
+    return m_core;
+}
+
 #endif // LQTG_TYPE_PEERSETTINGS_OBJECT

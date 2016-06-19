@@ -6,6 +6,10 @@
 #define LQTG_FNC_CONTACTS
 
 #include "telegramfunctionobject.h"
+#include "core/inboundpkt.h"
+#include "core/outboundpkt.h"
+#include "../coretypes.h"
+
 #include <QList>
 #include "telegram/types/contactstatus.h"
 #include "telegram/types/contactscontacts.h"
@@ -94,6 +98,220 @@ public:
 };
 
 }
+inline Functions::Contacts::Contacts() {
+}
+
+inline Functions::Contacts::~Contacts() {
+}
+
+inline bool Functions::Contacts::getStatuses(OutboundPkt *out) {
+    out->appendInt(fncContactsGetStatuses);
+    return true;
+}
+
+inline QList<ContactStatus> Functions::Contacts::getStatusesResult(InboundPkt *in) {
+    QList<ContactStatus> result;
+    if(in->fetchInt() != (qint32)CoreTypes::typeVector) return result;
+    qint32 result_length = in->fetchInt();
+    result.clear();
+    for (qint32 i = 0; i < result_length; i++) {
+        ContactStatus type;
+        if(!type.fetch(in)) return result;
+        result.append(type);
+    }
+    return result;
+}
+
+inline bool Functions::Contacts::getContacts(OutboundPkt *out, const QString &hash) {
+    out->appendInt(fncContactsGetContacts);
+    out->appendQString(hash);
+    return true;
+}
+
+inline ContactsContacts Functions::Contacts::getContactsResult(InboundPkt *in) {
+    ContactsContacts result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Contacts::importContacts(OutboundPkt *out, const QList<InputContact> &contacts, bool replace) {
+    out->appendInt(fncContactsImportContacts);
+    out->appendInt(CoreTypes::typeVector);
+    out->appendInt(contacts.count());
+    for (qint32 i = 0; i < contacts.count(); i++) {
+        if(!contacts[i].push(out)) return false;
+    }
+    out->appendBool(replace);
+    return true;
+}
+
+inline ContactsImportedContacts Functions::Contacts::importContactsResult(InboundPkt *in) {
+    ContactsImportedContacts result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Contacts::deleteContact(OutboundPkt *out, const InputUser &id) {
+    out->appendInt(fncContactsDeleteContact);
+    if(!id.push(out)) return false;
+    return true;
+}
+
+inline ContactsLink Functions::Contacts::deleteContactResult(InboundPkt *in) {
+    ContactsLink result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Contacts::deleteContacts(OutboundPkt *out, const QList<InputUser> &id) {
+    out->appendInt(fncContactsDeleteContacts);
+    out->appendInt(CoreTypes::typeVector);
+    out->appendInt(id.count());
+    for (qint32 i = 0; i < id.count(); i++) {
+        if(!id[i].push(out)) return false;
+    }
+    return true;
+}
+
+inline bool Functions::Contacts::deleteContactsResult(InboundPkt *in) {
+    bool result;
+    result = in->fetchBool();
+    return result;
+}
+
+inline bool Functions::Contacts::block(OutboundPkt *out, const InputUser &id) {
+    out->appendInt(fncContactsBlock);
+    if(!id.push(out)) return false;
+    return true;
+}
+
+inline bool Functions::Contacts::blockResult(InboundPkt *in) {
+    bool result;
+    result = in->fetchBool();
+    return result;
+}
+
+inline bool Functions::Contacts::unblock(OutboundPkt *out, const InputUser &id) {
+    out->appendInt(fncContactsUnblock);
+    if(!id.push(out)) return false;
+    return true;
+}
+
+inline bool Functions::Contacts::unblockResult(InboundPkt *in) {
+    bool result;
+    result = in->fetchBool();
+    return result;
+}
+
+inline bool Functions::Contacts::getBlocked(OutboundPkt *out, qint32 offset, qint32 limit) {
+    out->appendInt(fncContactsGetBlocked);
+    out->appendInt(offset);
+    out->appendInt(limit);
+    return true;
+}
+
+inline ContactsBlocked Functions::Contacts::getBlockedResult(InboundPkt *in) {
+    ContactsBlocked result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Contacts::exportCard(OutboundPkt *out) {
+    out->appendInt(fncContactsExportCard);
+    return true;
+}
+
+inline QList<qint32> Functions::Contacts::exportCardResult(InboundPkt *in) {
+    QList<qint32> result;
+    if(in->fetchInt() != (qint32)CoreTypes::typeVector) return result;
+    qint32 result_length = in->fetchInt();
+    result.clear();
+    for (qint32 i = 0; i < result_length; i++) {
+        qint32 type;
+        type = in->fetchInt();
+        result.append(type);
+    }
+    return result;
+}
+
+inline bool Functions::Contacts::importCard(OutboundPkt *out, const QList<qint32> &exportCard) {
+    out->appendInt(fncContactsImportCard);
+    out->appendInt(CoreTypes::typeVector);
+    out->appendInt(exportCard.count());
+    for (qint32 i = 0; i < exportCard.count(); i++) {
+        out->appendInt(exportCard[i]);
+    }
+    return true;
+}
+
+inline User Functions::Contacts::importCardResult(InboundPkt *in) {
+    User result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Contacts::search(OutboundPkt *out, const QString &q, qint32 limit) {
+    out->appendInt(fncContactsSearch);
+    out->appendQString(q);
+    out->appendInt(limit);
+    return true;
+}
+
+inline ContactsFound Functions::Contacts::searchResult(InboundPkt *in) {
+    ContactsFound result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Contacts::resolveUsername(OutboundPkt *out, const QString &username) {
+    out->appendInt(fncContactsResolveUsername);
+    out->appendQString(username);
+    return true;
+}
+
+inline ContactsResolvedPeer Functions::Contacts::resolveUsernameResult(InboundPkt *in) {
+    ContactsResolvedPeer result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Contacts::getTopPeers(OutboundPkt *out, bool correspondents, bool botsPm, bool botsInline, bool groups, bool channels, qint32 offset, qint32 limit, qint32 hash) {
+    out->appendInt(fncContactsGetTopPeers);
+    
+    qint32 flags = 0;
+    if(correspondents != 0) flags = (1<<0 | flags);
+    if(botsPm != 0) flags = (1<<1 | flags);
+    if(botsInline != 0) flags = (1<<2 | flags);
+    if(groups != 0) flags = (1<<10 | flags);
+    if(channels != 0) flags = (1<<15 | flags);
+    
+    out->appendInt(flags);
+    out->appendInt(offset);
+    out->appendInt(limit);
+    out->appendInt(hash);
+    return true;
+}
+
+inline ContactsTopPeers Functions::Contacts::getTopPeersResult(InboundPkt *in) {
+    ContactsTopPeers result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Contacts::resetTopPeerRating(OutboundPkt *out, const TopPeerCategory &category, const InputPeer &peer) {
+    out->appendInt(fncContactsResetTopPeerRating);
+    if(!category.push(out)) return false;
+    if(!peer.push(out)) return false;
+    return true;
+}
+
+inline bool Functions::Contacts::resetTopPeerRatingResult(InboundPkt *in) {
+    bool result;
+    result = in->fetchBool();
+    return result;
+}
+
+
 }
 
 #endif // LQTG_FNC_CONTACTS

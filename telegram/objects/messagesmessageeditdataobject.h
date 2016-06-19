@@ -55,4 +55,94 @@ private:
     MessagesMessageEditData m_core;
 };
 
+inline MessagesMessageEditDataObject::MessagesMessageEditDataObject(const MessagesMessageEditData &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core(core)
+{
+}
+
+inline MessagesMessageEditDataObject::MessagesMessageEditDataObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core()
+{
+}
+
+inline MessagesMessageEditDataObject::~MessagesMessageEditDataObject() {
+}
+
+inline void MessagesMessageEditDataObject::setCaption(bool caption) {
+    if(m_core.caption() == caption) return;
+    m_core.setCaption(caption);
+    Q_EMIT captionChanged();
+    Q_EMIT coreChanged();
+}
+
+inline bool MessagesMessageEditDataObject::caption() const {
+    return m_core.caption();
+}
+
+inline void MessagesMessageEditDataObject::setFlags(qint32 flags) {
+    if(m_core.flags() == flags) return;
+    m_core.setFlags(flags);
+    Q_EMIT flagsChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 MessagesMessageEditDataObject::flags() const {
+    return m_core.flags();
+}
+
+inline MessagesMessageEditDataObject &MessagesMessageEditDataObject::operator =(const MessagesMessageEditData &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+
+    Q_EMIT captionChanged();
+    Q_EMIT flagsChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool MessagesMessageEditDataObject::operator ==(const MessagesMessageEditData &b) const {
+    return m_core == b;
+}
+
+inline void MessagesMessageEditDataObject::setClassType(quint32 classType) {
+    MessagesMessageEditData::MessagesMessageEditDataClassType result;
+    switch(classType) {
+    case TypeMessagesMessageEditData:
+        result = MessagesMessageEditData::typeMessagesMessageEditData;
+        break;
+    default:
+        result = MessagesMessageEditData::typeMessagesMessageEditData;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 MessagesMessageEditDataObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case MessagesMessageEditData::typeMessagesMessageEditData:
+        result = TypeMessagesMessageEditData;
+        break;
+    default:
+        result = TypeMessagesMessageEditData;
+        break;
+    }
+
+    return result;
+}
+
+inline void MessagesMessageEditDataObject::setCore(const MessagesMessageEditData &core) {
+    operator =(core);
+}
+
+inline MessagesMessageEditData MessagesMessageEditDataObject::core() const {
+    return m_core;
+}
+
 #endif // LQTG_TYPE_MESSAGESMESSAGEEDITDATA_OBJECT

@@ -53,4 +53,102 @@ private:
     AuthAuthorization m_core;
 };
 
+inline AuthAuthorizationObject::AuthAuthorizationObject(const AuthAuthorization &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_user(0),
+    m_core(core)
+{
+    m_user = new UserObject(m_core.user(), this);
+    connect(m_user.data(), &UserObject::coreChanged, this, &AuthAuthorizationObject::coreUserChanged);
+}
+
+inline AuthAuthorizationObject::AuthAuthorizationObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_user(0),
+    m_core()
+{
+    m_user = new UserObject(m_core.user(), this);
+    connect(m_user.data(), &UserObject::coreChanged, this, &AuthAuthorizationObject::coreUserChanged);
+}
+
+inline AuthAuthorizationObject::~AuthAuthorizationObject() {
+}
+
+inline void AuthAuthorizationObject::setUser(UserObject* user) {
+    if(m_user == user) return;
+    if(m_user) delete m_user;
+    m_user = user;
+    if(m_user) {
+        m_user->setParent(this);
+        m_core.setUser(m_user->core());
+        connect(m_user.data(), &UserObject::coreChanged, this, &AuthAuthorizationObject::coreUserChanged);
+    }
+    Q_EMIT userChanged();
+    Q_EMIT coreChanged();
+}
+
+inline UserObject*  AuthAuthorizationObject::user() const {
+    return m_user;
+}
+
+inline AuthAuthorizationObject &AuthAuthorizationObject::operator =(const AuthAuthorization &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+    m_user->setCore(b.user());
+
+    Q_EMIT userChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool AuthAuthorizationObject::operator ==(const AuthAuthorization &b) const {
+    return m_core == b;
+}
+
+inline void AuthAuthorizationObject::setClassType(quint32 classType) {
+    AuthAuthorization::AuthAuthorizationClassType result;
+    switch(classType) {
+    case TypeAuthAuthorization:
+        result = AuthAuthorization::typeAuthAuthorization;
+        break;
+    default:
+        result = AuthAuthorization::typeAuthAuthorization;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 AuthAuthorizationObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case AuthAuthorization::typeAuthAuthorization:
+        result = TypeAuthAuthorization;
+        break;
+    default:
+        result = TypeAuthAuthorization;
+        break;
+    }
+
+    return result;
+}
+
+inline void AuthAuthorizationObject::setCore(const AuthAuthorization &core) {
+    operator =(core);
+}
+
+inline AuthAuthorization AuthAuthorizationObject::core() const {
+    return m_core;
+}
+
+inline void AuthAuthorizationObject::coreUserChanged() {
+    if(m_core.user() == m_user->core()) return;
+    m_core.setUser(m_user->core());
+    Q_EMIT userChanged();
+    Q_EMIT coreChanged();
+}
+
 #endif // LQTG_TYPE_AUTHAUTHORIZATION_OBJECT

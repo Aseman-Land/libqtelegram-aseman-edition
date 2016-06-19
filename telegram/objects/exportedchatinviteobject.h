@@ -51,4 +51,88 @@ private:
     ExportedChatInvite m_core;
 };
 
+inline ExportedChatInviteObject::ExportedChatInviteObject(const ExportedChatInvite &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core(core)
+{
+}
+
+inline ExportedChatInviteObject::ExportedChatInviteObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core()
+{
+}
+
+inline ExportedChatInviteObject::~ExportedChatInviteObject() {
+}
+
+inline void ExportedChatInviteObject::setLink(const QString &link) {
+    if(m_core.link() == link) return;
+    m_core.setLink(link);
+    Q_EMIT linkChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QString ExportedChatInviteObject::link() const {
+    return m_core.link();
+}
+
+inline ExportedChatInviteObject &ExportedChatInviteObject::operator =(const ExportedChatInvite &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+
+    Q_EMIT linkChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool ExportedChatInviteObject::operator ==(const ExportedChatInvite &b) const {
+    return m_core == b;
+}
+
+inline void ExportedChatInviteObject::setClassType(quint32 classType) {
+    ExportedChatInvite::ExportedChatInviteClassType result;
+    switch(classType) {
+    case TypeChatInviteEmpty:
+        result = ExportedChatInvite::typeChatInviteEmpty;
+        break;
+    case TypeChatInviteExported:
+        result = ExportedChatInvite::typeChatInviteExported;
+        break;
+    default:
+        result = ExportedChatInvite::typeChatInviteEmpty;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 ExportedChatInviteObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case ExportedChatInvite::typeChatInviteEmpty:
+        result = TypeChatInviteEmpty;
+        break;
+    case ExportedChatInvite::typeChatInviteExported:
+        result = TypeChatInviteExported;
+        break;
+    default:
+        result = TypeChatInviteEmpty;
+        break;
+    }
+
+    return result;
+}
+
+inline void ExportedChatInviteObject::setCore(const ExportedChatInvite &core) {
+    operator =(core);
+}
+
+inline ExportedChatInvite ExportedChatInviteObject::core() const {
+    return m_core;
+}
+
 #endif // LQTG_TYPE_EXPORTEDCHATINVITE_OBJECT

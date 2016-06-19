@@ -56,4 +56,100 @@ private:
     InputGeoPoint m_core;
 };
 
+inline InputGeoPointObject::InputGeoPointObject(const InputGeoPoint &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core(core)
+{
+}
+
+inline InputGeoPointObject::InputGeoPointObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core()
+{
+}
+
+inline InputGeoPointObject::~InputGeoPointObject() {
+}
+
+inline void InputGeoPointObject::setLat(qreal lat) {
+    if(m_core.lat() == lat) return;
+    m_core.setLat(lat);
+    Q_EMIT latChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qreal InputGeoPointObject::lat() const {
+    return m_core.lat();
+}
+
+inline void InputGeoPointObject::setLongValue(qreal longValue) {
+    if(m_core.longValue() == longValue) return;
+    m_core.setLongValue(longValue);
+    Q_EMIT longValueChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qreal InputGeoPointObject::longValue() const {
+    return m_core.longValue();
+}
+
+inline InputGeoPointObject &InputGeoPointObject::operator =(const InputGeoPoint &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+
+    Q_EMIT latChanged();
+    Q_EMIT longValueChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool InputGeoPointObject::operator ==(const InputGeoPoint &b) const {
+    return m_core == b;
+}
+
+inline void InputGeoPointObject::setClassType(quint32 classType) {
+    InputGeoPoint::InputGeoPointClassType result;
+    switch(classType) {
+    case TypeInputGeoPointEmpty:
+        result = InputGeoPoint::typeInputGeoPointEmpty;
+        break;
+    case TypeInputGeoPoint:
+        result = InputGeoPoint::typeInputGeoPoint;
+        break;
+    default:
+        result = InputGeoPoint::typeInputGeoPointEmpty;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 InputGeoPointObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case InputGeoPoint::typeInputGeoPointEmpty:
+        result = TypeInputGeoPointEmpty;
+        break;
+    case InputGeoPoint::typeInputGeoPoint:
+        result = TypeInputGeoPoint;
+        break;
+    default:
+        result = TypeInputGeoPointEmpty;
+        break;
+    }
+
+    return result;
+}
+
+inline void InputGeoPointObject::setCore(const InputGeoPoint &core) {
+    operator =(core);
+}
+
+inline InputGeoPoint InputGeoPointObject::core() const {
+    return m_core;
+}
+
 #endif // LQTG_TYPE_INPUTGEOPOINT_OBJECT

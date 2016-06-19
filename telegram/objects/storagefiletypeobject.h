@@ -54,4 +54,124 @@ private:
     StorageFileType m_core;
 };
 
+inline StorageFileTypeObject::StorageFileTypeObject(const StorageFileType &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core(core)
+{
+}
+
+inline StorageFileTypeObject::StorageFileTypeObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core()
+{
+}
+
+inline StorageFileTypeObject::~StorageFileTypeObject() {
+}
+
+inline StorageFileTypeObject &StorageFileTypeObject::operator =(const StorageFileType &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool StorageFileTypeObject::operator ==(const StorageFileType &b) const {
+    return m_core == b;
+}
+
+inline void StorageFileTypeObject::setClassType(quint32 classType) {
+    StorageFileType::StorageFileTypeClassType result;
+    switch(classType) {
+    case TypeStorageFileUnknown:
+        result = StorageFileType::typeStorageFileUnknown;
+        break;
+    case TypeStorageFileJpeg:
+        result = StorageFileType::typeStorageFileJpeg;
+        break;
+    case TypeStorageFileGif:
+        result = StorageFileType::typeStorageFileGif;
+        break;
+    case TypeStorageFilePng:
+        result = StorageFileType::typeStorageFilePng;
+        break;
+    case TypeStorageFilePdf:
+        result = StorageFileType::typeStorageFilePdf;
+        break;
+    case TypeStorageFileMp3:
+        result = StorageFileType::typeStorageFileMp3;
+        break;
+    case TypeStorageFileMov:
+        result = StorageFileType::typeStorageFileMov;
+        break;
+    case TypeStorageFilePartial:
+        result = StorageFileType::typeStorageFilePartial;
+        break;
+    case TypeStorageFileMp4:
+        result = StorageFileType::typeStorageFileMp4;
+        break;
+    case TypeStorageFileWebp:
+        result = StorageFileType::typeStorageFileWebp;
+        break;
+    default:
+        result = StorageFileType::typeStorageFileUnknown;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 StorageFileTypeObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case StorageFileType::typeStorageFileUnknown:
+        result = TypeStorageFileUnknown;
+        break;
+    case StorageFileType::typeStorageFileJpeg:
+        result = TypeStorageFileJpeg;
+        break;
+    case StorageFileType::typeStorageFileGif:
+        result = TypeStorageFileGif;
+        break;
+    case StorageFileType::typeStorageFilePng:
+        result = TypeStorageFilePng;
+        break;
+    case StorageFileType::typeStorageFilePdf:
+        result = TypeStorageFilePdf;
+        break;
+    case StorageFileType::typeStorageFileMp3:
+        result = TypeStorageFileMp3;
+        break;
+    case StorageFileType::typeStorageFileMov:
+        result = TypeStorageFileMov;
+        break;
+    case StorageFileType::typeStorageFilePartial:
+        result = TypeStorageFilePartial;
+        break;
+    case StorageFileType::typeStorageFileMp4:
+        result = TypeStorageFileMp4;
+        break;
+    case StorageFileType::typeStorageFileWebp:
+        result = TypeStorageFileWebp;
+        break;
+    default:
+        result = TypeStorageFileUnknown;
+        break;
+    }
+
+    return result;
+}
+
+inline void StorageFileTypeObject::setCore(const StorageFileType &core) {
+    operator =(core);
+}
+
+inline StorageFileType StorageFileTypeObject::core() const {
+    return m_core;
+}
+
 #endif // LQTG_TYPE_STORAGEFILETYPE_OBJECT

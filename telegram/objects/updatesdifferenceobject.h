@@ -97,4 +97,230 @@ private:
     UpdatesDifference m_core;
 };
 
+inline UpdatesDifferenceObject::UpdatesDifferenceObject(const UpdatesDifference &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_intermediateState(0),
+    m_state(0),
+    m_core(core)
+{
+    m_intermediateState = new UpdatesStateObject(m_core.intermediateState(), this);
+    connect(m_intermediateState.data(), &UpdatesStateObject::coreChanged, this, &UpdatesDifferenceObject::coreIntermediateStateChanged);
+    m_state = new UpdatesStateObject(m_core.state(), this);
+    connect(m_state.data(), &UpdatesStateObject::coreChanged, this, &UpdatesDifferenceObject::coreStateChanged);
+}
+
+inline UpdatesDifferenceObject::UpdatesDifferenceObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_intermediateState(0),
+    m_state(0),
+    m_core()
+{
+    m_intermediateState = new UpdatesStateObject(m_core.intermediateState(), this);
+    connect(m_intermediateState.data(), &UpdatesStateObject::coreChanged, this, &UpdatesDifferenceObject::coreIntermediateStateChanged);
+    m_state = new UpdatesStateObject(m_core.state(), this);
+    connect(m_state.data(), &UpdatesStateObject::coreChanged, this, &UpdatesDifferenceObject::coreStateChanged);
+}
+
+inline UpdatesDifferenceObject::~UpdatesDifferenceObject() {
+}
+
+inline void UpdatesDifferenceObject::setChats(const QList<Chat> &chats) {
+    if(m_core.chats() == chats) return;
+    m_core.setChats(chats);
+    Q_EMIT chatsChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QList<Chat> UpdatesDifferenceObject::chats() const {
+    return m_core.chats();
+}
+
+inline void UpdatesDifferenceObject::setDate(qint32 date) {
+    if(m_core.date() == date) return;
+    m_core.setDate(date);
+    Q_EMIT dateChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 UpdatesDifferenceObject::date() const {
+    return m_core.date();
+}
+
+inline void UpdatesDifferenceObject::setIntermediateState(UpdatesStateObject* intermediateState) {
+    if(m_intermediateState == intermediateState) return;
+    if(m_intermediateState) delete m_intermediateState;
+    m_intermediateState = intermediateState;
+    if(m_intermediateState) {
+        m_intermediateState->setParent(this);
+        m_core.setIntermediateState(m_intermediateState->core());
+        connect(m_intermediateState.data(), &UpdatesStateObject::coreChanged, this, &UpdatesDifferenceObject::coreIntermediateStateChanged);
+    }
+    Q_EMIT intermediateStateChanged();
+    Q_EMIT coreChanged();
+}
+
+inline UpdatesStateObject*  UpdatesDifferenceObject::intermediateState() const {
+    return m_intermediateState;
+}
+
+inline void UpdatesDifferenceObject::setNewEncryptedMessages(const QList<EncryptedMessage> &newEncryptedMessages) {
+    if(m_core.newEncryptedMessages() == newEncryptedMessages) return;
+    m_core.setNewEncryptedMessages(newEncryptedMessages);
+    Q_EMIT newEncryptedMessagesChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QList<EncryptedMessage> UpdatesDifferenceObject::newEncryptedMessages() const {
+    return m_core.newEncryptedMessages();
+}
+
+inline void UpdatesDifferenceObject::setNewMessages(const QList<Message> &newMessages) {
+    if(m_core.newMessages() == newMessages) return;
+    m_core.setNewMessages(newMessages);
+    Q_EMIT newMessagesChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QList<Message> UpdatesDifferenceObject::newMessages() const {
+    return m_core.newMessages();
+}
+
+inline void UpdatesDifferenceObject::setOtherUpdates(const QList<Update> &otherUpdates) {
+    if(m_core.otherUpdates() == otherUpdates) return;
+    m_core.setOtherUpdates(otherUpdates);
+    Q_EMIT otherUpdatesChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QList<Update> UpdatesDifferenceObject::otherUpdates() const {
+    return m_core.otherUpdates();
+}
+
+inline void UpdatesDifferenceObject::setSeq(qint32 seq) {
+    if(m_core.seq() == seq) return;
+    m_core.setSeq(seq);
+    Q_EMIT seqChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 UpdatesDifferenceObject::seq() const {
+    return m_core.seq();
+}
+
+inline void UpdatesDifferenceObject::setState(UpdatesStateObject* state) {
+    if(m_state == state) return;
+    if(m_state) delete m_state;
+    m_state = state;
+    if(m_state) {
+        m_state->setParent(this);
+        m_core.setState(m_state->core());
+        connect(m_state.data(), &UpdatesStateObject::coreChanged, this, &UpdatesDifferenceObject::coreStateChanged);
+    }
+    Q_EMIT stateChanged();
+    Q_EMIT coreChanged();
+}
+
+inline UpdatesStateObject*  UpdatesDifferenceObject::state() const {
+    return m_state;
+}
+
+inline void UpdatesDifferenceObject::setUsers(const QList<User> &users) {
+    if(m_core.users() == users) return;
+    m_core.setUsers(users);
+    Q_EMIT usersChanged();
+    Q_EMIT coreChanged();
+}
+
+inline QList<User> UpdatesDifferenceObject::users() const {
+    return m_core.users();
+}
+
+inline UpdatesDifferenceObject &UpdatesDifferenceObject::operator =(const UpdatesDifference &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+    m_intermediateState->setCore(b.intermediateState());
+    m_state->setCore(b.state());
+
+    Q_EMIT chatsChanged();
+    Q_EMIT dateChanged();
+    Q_EMIT intermediateStateChanged();
+    Q_EMIT newEncryptedMessagesChanged();
+    Q_EMIT newMessagesChanged();
+    Q_EMIT otherUpdatesChanged();
+    Q_EMIT seqChanged();
+    Q_EMIT stateChanged();
+    Q_EMIT usersChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool UpdatesDifferenceObject::operator ==(const UpdatesDifference &b) const {
+    return m_core == b;
+}
+
+inline void UpdatesDifferenceObject::setClassType(quint32 classType) {
+    UpdatesDifference::UpdatesDifferenceClassType result;
+    switch(classType) {
+    case TypeUpdatesDifferenceEmpty:
+        result = UpdatesDifference::typeUpdatesDifferenceEmpty;
+        break;
+    case TypeUpdatesDifference:
+        result = UpdatesDifference::typeUpdatesDifference;
+        break;
+    case TypeUpdatesDifferenceSlice:
+        result = UpdatesDifference::typeUpdatesDifferenceSlice;
+        break;
+    default:
+        result = UpdatesDifference::typeUpdatesDifferenceEmpty;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 UpdatesDifferenceObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case UpdatesDifference::typeUpdatesDifferenceEmpty:
+        result = TypeUpdatesDifferenceEmpty;
+        break;
+    case UpdatesDifference::typeUpdatesDifference:
+        result = TypeUpdatesDifference;
+        break;
+    case UpdatesDifference::typeUpdatesDifferenceSlice:
+        result = TypeUpdatesDifferenceSlice;
+        break;
+    default:
+        result = TypeUpdatesDifferenceEmpty;
+        break;
+    }
+
+    return result;
+}
+
+inline void UpdatesDifferenceObject::setCore(const UpdatesDifference &core) {
+    operator =(core);
+}
+
+inline UpdatesDifference UpdatesDifferenceObject::core() const {
+    return m_core;
+}
+
+inline void UpdatesDifferenceObject::coreIntermediateStateChanged() {
+    if(m_core.intermediateState() == m_intermediateState->core()) return;
+    m_core.setIntermediateState(m_intermediateState->core());
+    Q_EMIT intermediateStateChanged();
+    Q_EMIT coreChanged();
+}
+
+inline void UpdatesDifferenceObject::coreStateChanged() {
+    if(m_core.state() == m_state->core()) return;
+    m_core.setState(m_state->core());
+    Q_EMIT stateChanged();
+    Q_EMIT coreChanged();
+}
+
 #endif // LQTG_TYPE_UPDATESDIFFERENCE_OBJECT

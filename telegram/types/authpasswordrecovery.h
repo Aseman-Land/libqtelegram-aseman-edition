@@ -9,6 +9,12 @@
 
 #include <QMetaType>
 #include <QVariant>
+#include "core/inboundpkt.h"
+#include "core/outboundpkt.h"
+#include "../coretypes.h"
+
+#include <QDataStream>
+
 #include <QString>
 
 class LIBQTELEGRAMSHARED_EXPORT AuthPasswordRecovery : public TelegramTypeObject
@@ -51,5 +57,136 @@ Q_DECLARE_METATYPE(AuthPasswordRecovery)
 
 QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const AuthPasswordRecovery &item);
 QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, AuthPasswordRecovery &item);
+
+inline AuthPasswordRecovery::AuthPasswordRecovery(AuthPasswordRecoveryClassType classType, InboundPkt *in) :
+    m_classType(classType)
+{
+    if(in) fetch(in);
+}
+
+inline AuthPasswordRecovery::AuthPasswordRecovery(InboundPkt *in) :
+    m_classType(typeAuthPasswordRecovery)
+{
+    fetch(in);
+}
+
+inline AuthPasswordRecovery::AuthPasswordRecovery(const Null &null) :
+    TelegramTypeObject(null),
+    m_classType(typeAuthPasswordRecovery)
+{
+}
+
+inline AuthPasswordRecovery::~AuthPasswordRecovery() {
+}
+
+inline void AuthPasswordRecovery::setEmailPattern(const QString &emailPattern) {
+    m_emailPattern = emailPattern;
+}
+
+inline QString AuthPasswordRecovery::emailPattern() const {
+    return m_emailPattern;
+}
+
+inline bool AuthPasswordRecovery::operator ==(const AuthPasswordRecovery &b) const {
+    return m_classType == b.m_classType &&
+           m_emailPattern == b.m_emailPattern;
+}
+
+inline void AuthPasswordRecovery::setClassType(AuthPasswordRecovery::AuthPasswordRecoveryClassType classType) {
+    m_classType = classType;
+}
+
+inline AuthPasswordRecovery::AuthPasswordRecoveryClassType AuthPasswordRecovery::classType() const {
+    return m_classType;
+}
+
+inline bool AuthPasswordRecovery::fetch(InboundPkt *in) {
+    LQTG_FETCH_LOG;
+    int x = in->fetchInt();
+    switch(x) {
+    case typeAuthPasswordRecovery: {
+        m_emailPattern = in->fetchQString();
+        m_classType = static_cast<AuthPasswordRecoveryClassType>(x);
+        return true;
+    }
+        break;
+    
+    default:
+        LQTG_FETCH_ASSERT;
+        return false;
+    }
+}
+
+inline bool AuthPasswordRecovery::push(OutboundPkt *out) const {
+    out->appendInt(m_classType);
+    switch(m_classType) {
+    case typeAuthPasswordRecovery: {
+        out->appendQString(m_emailPattern);
+        return true;
+    }
+        break;
+    
+    default:
+        return false;
+    }
+}
+
+inline QMap<QString, QVariant> AuthPasswordRecovery::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeAuthPasswordRecovery: {
+        result["classType"] = "AuthPasswordRecovery::typeAuthPasswordRecovery";
+        result["emailPattern"] = QVariant::fromValue<QString>(emailPattern());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+inline AuthPasswordRecovery AuthPasswordRecovery::fromMap(const QMap<QString, QVariant> &map) {
+    AuthPasswordRecovery result;
+    if(map.value("classType").toString() == "AuthPasswordRecovery::typeAuthPasswordRecovery") {
+        result.setClassType(typeAuthPasswordRecovery);
+        result.setEmailPattern( map.value("emailPattern").value<QString>() );
+        return result;
+    }
+    return result;
+}
+
+inline QByteArray AuthPasswordRecovery::getHash(QCryptographicHash::Algorithm alg) const {
+    QByteArray data;
+    QDataStream str(&data, QIODevice::WriteOnly);
+    str << *this;
+    return QCryptographicHash::hash(data, alg);
+}
+
+inline QDataStream &operator<<(QDataStream &stream, const AuthPasswordRecovery &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case AuthPasswordRecovery::typeAuthPasswordRecovery:
+        stream << item.emailPattern();
+        break;
+    }
+    return stream;
+}
+
+inline QDataStream &operator>>(QDataStream &stream, AuthPasswordRecovery &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<AuthPasswordRecovery::AuthPasswordRecoveryClassType>(type));
+    switch(type) {
+    case AuthPasswordRecovery::typeAuthPasswordRecovery: {
+        QString m_email_pattern;
+        stream >> m_email_pattern;
+        item.setEmailPattern(m_email_pattern);
+    }
+        break;
+    }
+    return stream;
+}
+
 
 #endif // LQTG_TYPE_AUTHPASSWORDRECOVERY

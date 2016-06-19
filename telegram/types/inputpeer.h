@@ -9,6 +9,12 @@
 
 #include <QMetaType>
 #include <QVariant>
+#include "core/inboundpkt.h"
+#include "core/outboundpkt.h"
+#include "../coretypes.h"
+
+#include <QDataStream>
+
 #include <QtGlobal>
 
 class LIBQTELEGRAMSHARED_EXPORT InputPeer : public TelegramTypeObject
@@ -67,5 +73,315 @@ Q_DECLARE_METATYPE(InputPeer)
 
 QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const InputPeer &item);
 QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, InputPeer &item);
+
+inline InputPeer::InputPeer(InputPeerClassType classType, InboundPkt *in) :
+    m_accessHash(0),
+    m_channelId(0),
+    m_chatId(0),
+    m_userId(0),
+    m_classType(classType)
+{
+    if(in) fetch(in);
+}
+
+inline InputPeer::InputPeer(InboundPkt *in) :
+    m_accessHash(0),
+    m_channelId(0),
+    m_chatId(0),
+    m_userId(0),
+    m_classType(typeInputPeerEmpty)
+{
+    fetch(in);
+}
+
+inline InputPeer::InputPeer(const Null &null) :
+    TelegramTypeObject(null),
+    m_accessHash(0),
+    m_channelId(0),
+    m_chatId(0),
+    m_userId(0),
+    m_classType(typeInputPeerEmpty)
+{
+}
+
+inline InputPeer::~InputPeer() {
+}
+
+inline void InputPeer::setAccessHash(qint64 accessHash) {
+    m_accessHash = accessHash;
+}
+
+inline qint64 InputPeer::accessHash() const {
+    return m_accessHash;
+}
+
+inline void InputPeer::setChannelId(qint32 channelId) {
+    m_channelId = channelId;
+}
+
+inline qint32 InputPeer::channelId() const {
+    return m_channelId;
+}
+
+inline void InputPeer::setChatId(qint32 chatId) {
+    m_chatId = chatId;
+}
+
+inline qint32 InputPeer::chatId() const {
+    return m_chatId;
+}
+
+inline void InputPeer::setUserId(qint32 userId) {
+    m_userId = userId;
+}
+
+inline qint32 InputPeer::userId() const {
+    return m_userId;
+}
+
+inline bool InputPeer::operator ==(const InputPeer &b) const {
+    return m_classType == b.m_classType &&
+           m_accessHash == b.m_accessHash &&
+           m_channelId == b.m_channelId &&
+           m_chatId == b.m_chatId &&
+           m_userId == b.m_userId;
+}
+
+inline void InputPeer::setClassType(InputPeer::InputPeerClassType classType) {
+    m_classType = classType;
+}
+
+inline InputPeer::InputPeerClassType InputPeer::classType() const {
+    return m_classType;
+}
+
+inline bool InputPeer::fetch(InboundPkt *in) {
+    LQTG_FETCH_LOG;
+    int x = in->fetchInt();
+    switch(x) {
+    case typeInputPeerEmpty: {
+        m_classType = static_cast<InputPeerClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeInputPeerSelf: {
+        m_classType = static_cast<InputPeerClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeInputPeerChat: {
+        m_chatId = in->fetchInt();
+        m_classType = static_cast<InputPeerClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeInputPeerUser: {
+        m_userId = in->fetchInt();
+        m_accessHash = in->fetchLong();
+        m_classType = static_cast<InputPeerClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeInputPeerChannel: {
+        m_channelId = in->fetchInt();
+        m_accessHash = in->fetchLong();
+        m_classType = static_cast<InputPeerClassType>(x);
+        return true;
+    }
+        break;
+    
+    default:
+        LQTG_FETCH_ASSERT;
+        return false;
+    }
+}
+
+inline bool InputPeer::push(OutboundPkt *out) const {
+    out->appendInt(m_classType);
+    switch(m_classType) {
+    case typeInputPeerEmpty: {
+        return true;
+    }
+        break;
+    
+    case typeInputPeerSelf: {
+        return true;
+    }
+        break;
+    
+    case typeInputPeerChat: {
+        out->appendInt(m_chatId);
+        return true;
+    }
+        break;
+    
+    case typeInputPeerUser: {
+        out->appendInt(m_userId);
+        out->appendLong(m_accessHash);
+        return true;
+    }
+        break;
+    
+    case typeInputPeerChannel: {
+        out->appendInt(m_channelId);
+        out->appendLong(m_accessHash);
+        return true;
+    }
+        break;
+    
+    default:
+        return false;
+    }
+}
+
+inline QMap<QString, QVariant> InputPeer::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeInputPeerEmpty: {
+        result["classType"] = "InputPeer::typeInputPeerEmpty";
+        return result;
+    }
+        break;
+    
+    case typeInputPeerSelf: {
+        result["classType"] = "InputPeer::typeInputPeerSelf";
+        return result;
+    }
+        break;
+    
+    case typeInputPeerChat: {
+        result["classType"] = "InputPeer::typeInputPeerChat";
+        result["chatId"] = QVariant::fromValue<qint32>(chatId());
+        return result;
+    }
+        break;
+    
+    case typeInputPeerUser: {
+        result["classType"] = "InputPeer::typeInputPeerUser";
+        result["userId"] = QVariant::fromValue<qint32>(userId());
+        result["accessHash"] = QVariant::fromValue<qint64>(accessHash());
+        return result;
+    }
+        break;
+    
+    case typeInputPeerChannel: {
+        result["classType"] = "InputPeer::typeInputPeerChannel";
+        result["channelId"] = QVariant::fromValue<qint32>(channelId());
+        result["accessHash"] = QVariant::fromValue<qint64>(accessHash());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+inline InputPeer InputPeer::fromMap(const QMap<QString, QVariant> &map) {
+    InputPeer result;
+    if(map.value("classType").toString() == "InputPeer::typeInputPeerEmpty") {
+        result.setClassType(typeInputPeerEmpty);
+        return result;
+    }
+    if(map.value("classType").toString() == "InputPeer::typeInputPeerSelf") {
+        result.setClassType(typeInputPeerSelf);
+        return result;
+    }
+    if(map.value("classType").toString() == "InputPeer::typeInputPeerChat") {
+        result.setClassType(typeInputPeerChat);
+        result.setChatId( map.value("chatId").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "InputPeer::typeInputPeerUser") {
+        result.setClassType(typeInputPeerUser);
+        result.setUserId( map.value("userId").value<qint32>() );
+        result.setAccessHash( map.value("accessHash").value<qint64>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "InputPeer::typeInputPeerChannel") {
+        result.setClassType(typeInputPeerChannel);
+        result.setChannelId( map.value("channelId").value<qint32>() );
+        result.setAccessHash( map.value("accessHash").value<qint64>() );
+        return result;
+    }
+    return result;
+}
+
+inline QByteArray InputPeer::getHash(QCryptographicHash::Algorithm alg) const {
+    QByteArray data;
+    QDataStream str(&data, QIODevice::WriteOnly);
+    str << *this;
+    return QCryptographicHash::hash(data, alg);
+}
+
+inline QDataStream &operator<<(QDataStream &stream, const InputPeer &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case InputPeer::typeInputPeerEmpty:
+        
+        break;
+    case InputPeer::typeInputPeerSelf:
+        
+        break;
+    case InputPeer::typeInputPeerChat:
+        stream << item.chatId();
+        break;
+    case InputPeer::typeInputPeerUser:
+        stream << item.userId();
+        stream << item.accessHash();
+        break;
+    case InputPeer::typeInputPeerChannel:
+        stream << item.channelId();
+        stream << item.accessHash();
+        break;
+    }
+    return stream;
+}
+
+inline QDataStream &operator>>(QDataStream &stream, InputPeer &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<InputPeer::InputPeerClassType>(type));
+    switch(type) {
+    case InputPeer::typeInputPeerEmpty: {
+        
+    }
+        break;
+    case InputPeer::typeInputPeerSelf: {
+        
+    }
+        break;
+    case InputPeer::typeInputPeerChat: {
+        qint32 m_chat_id;
+        stream >> m_chat_id;
+        item.setChatId(m_chat_id);
+    }
+        break;
+    case InputPeer::typeInputPeerUser: {
+        qint32 m_user_id;
+        stream >> m_user_id;
+        item.setUserId(m_user_id);
+        qint64 m_access_hash;
+        stream >> m_access_hash;
+        item.setAccessHash(m_access_hash);
+    }
+        break;
+    case InputPeer::typeInputPeerChannel: {
+        qint32 m_channel_id;
+        stream >> m_channel_id;
+        item.setChannelId(m_channel_id);
+        qint64 m_access_hash;
+        stream >> m_access_hash;
+        item.setAccessHash(m_access_hash);
+    }
+        break;
+    }
+    return stream;
+}
+
 
 #endif // LQTG_TYPE_INPUTPEER

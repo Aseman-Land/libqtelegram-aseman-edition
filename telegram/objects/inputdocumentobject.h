@@ -56,4 +56,100 @@ private:
     InputDocument m_core;
 };
 
+inline InputDocumentObject::InputDocumentObject(const InputDocument &core, QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core(core)
+{
+}
+
+inline InputDocumentObject::InputDocumentObject(QObject *parent) :
+    TelegramTypeQObject(parent),
+    m_core()
+{
+}
+
+inline InputDocumentObject::~InputDocumentObject() {
+}
+
+inline void InputDocumentObject::setAccessHash(qint64 accessHash) {
+    if(m_core.accessHash() == accessHash) return;
+    m_core.setAccessHash(accessHash);
+    Q_EMIT accessHashChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint64 InputDocumentObject::accessHash() const {
+    return m_core.accessHash();
+}
+
+inline void InputDocumentObject::setId(qint64 id) {
+    if(m_core.id() == id) return;
+    m_core.setId(id);
+    Q_EMIT idChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint64 InputDocumentObject::id() const {
+    return m_core.id();
+}
+
+inline InputDocumentObject &InputDocumentObject::operator =(const InputDocument &b) {
+    if(m_core == b) return *this;
+    m_core = b;
+
+    Q_EMIT accessHashChanged();
+    Q_EMIT idChanged();
+    Q_EMIT coreChanged();
+    return *this;
+}
+
+inline bool InputDocumentObject::operator ==(const InputDocument &b) const {
+    return m_core == b;
+}
+
+inline void InputDocumentObject::setClassType(quint32 classType) {
+    InputDocument::InputDocumentClassType result;
+    switch(classType) {
+    case TypeInputDocumentEmpty:
+        result = InputDocument::typeInputDocumentEmpty;
+        break;
+    case TypeInputDocument:
+        result = InputDocument::typeInputDocument;
+        break;
+    default:
+        result = InputDocument::typeInputDocumentEmpty;
+        break;
+    }
+
+    if(m_core.classType() == result) return;
+    m_core.setClassType(result);
+    Q_EMIT classTypeChanged();
+    Q_EMIT coreChanged();
+}
+
+inline quint32 InputDocumentObject::classType() const {
+    int result;
+    switch(static_cast<qint64>(m_core.classType())) {
+    case InputDocument::typeInputDocumentEmpty:
+        result = TypeInputDocumentEmpty;
+        break;
+    case InputDocument::typeInputDocument:
+        result = TypeInputDocument;
+        break;
+    default:
+        result = TypeInputDocumentEmpty;
+        break;
+    }
+
+    return result;
+}
+
+inline void InputDocumentObject::setCore(const InputDocument &core) {
+    operator =(core);
+}
+
+inline InputDocument InputDocumentObject::core() const {
+    return m_core;
+}
+
 #endif // LQTG_TYPE_INPUTDOCUMENT_OBJECT

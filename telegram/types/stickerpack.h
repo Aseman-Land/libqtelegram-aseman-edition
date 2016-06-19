@@ -9,6 +9,12 @@
 
 #include <QMetaType>
 #include <QVariant>
+#include "core/inboundpkt.h"
+#include "core/outboundpkt.h"
+#include "../coretypes.h"
+
+#include <QDataStream>
+
 #include <QList>
 #include <QtGlobal>
 #include <QString>
@@ -57,5 +63,171 @@ Q_DECLARE_METATYPE(StickerPack)
 
 QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const StickerPack &item);
 QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, StickerPack &item);
+
+inline StickerPack::StickerPack(StickerPackClassType classType, InboundPkt *in) :
+    m_classType(classType)
+{
+    if(in) fetch(in);
+}
+
+inline StickerPack::StickerPack(InboundPkt *in) :
+    m_classType(typeStickerPack)
+{
+    fetch(in);
+}
+
+inline StickerPack::StickerPack(const Null &null) :
+    TelegramTypeObject(null),
+    m_classType(typeStickerPack)
+{
+}
+
+inline StickerPack::~StickerPack() {
+}
+
+inline void StickerPack::setDocuments(const QList<qint64> &documents) {
+    m_documents = documents;
+}
+
+inline QList<qint64> StickerPack::documents() const {
+    return m_documents;
+}
+
+inline void StickerPack::setEmoticon(const QString &emoticon) {
+    m_emoticon = emoticon;
+}
+
+inline QString StickerPack::emoticon() const {
+    return m_emoticon;
+}
+
+inline bool StickerPack::operator ==(const StickerPack &b) const {
+    return m_classType == b.m_classType &&
+           m_documents == b.m_documents &&
+           m_emoticon == b.m_emoticon;
+}
+
+inline void StickerPack::setClassType(StickerPack::StickerPackClassType classType) {
+    m_classType = classType;
+}
+
+inline StickerPack::StickerPackClassType StickerPack::classType() const {
+    return m_classType;
+}
+
+inline bool StickerPack::fetch(InboundPkt *in) {
+    LQTG_FETCH_LOG;
+    int x = in->fetchInt();
+    switch(x) {
+    case typeStickerPack: {
+        m_emoticon = in->fetchQString();
+        if(in->fetchInt() != (qint32)CoreTypes::typeVector) return false;
+        qint32 m_documents_length = in->fetchInt();
+        m_documents.clear();
+        for (qint32 i = 0; i < m_documents_length; i++) {
+            qint64 type;
+            type = in->fetchLong();
+            m_documents.append(type);
+        }
+        m_classType = static_cast<StickerPackClassType>(x);
+        return true;
+    }
+        break;
+    
+    default:
+        LQTG_FETCH_ASSERT;
+        return false;
+    }
+}
+
+inline bool StickerPack::push(OutboundPkt *out) const {
+    out->appendInt(m_classType);
+    switch(m_classType) {
+    case typeStickerPack: {
+        out->appendQString(m_emoticon);
+        out->appendInt(CoreTypes::typeVector);
+        out->appendInt(m_documents.count());
+        for (qint32 i = 0; i < m_documents.count(); i++) {
+            out->appendLong(m_documents[i]);
+        }
+        return true;
+    }
+        break;
+    
+    default:
+        return false;
+    }
+}
+
+inline QMap<QString, QVariant> StickerPack::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeStickerPack: {
+        result["classType"] = "StickerPack::typeStickerPack";
+        result["emoticon"] = QVariant::fromValue<QString>(emoticon());
+        QList<QVariant> _documents;
+        Q_FOREACH(const qint64 &m__type, m_documents)
+            _documents << QVariant::fromValue<qint64>(m__type);
+        result["documents"] = _documents;
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+inline StickerPack StickerPack::fromMap(const QMap<QString, QVariant> &map) {
+    StickerPack result;
+    if(map.value("classType").toString() == "StickerPack::typeStickerPack") {
+        result.setClassType(typeStickerPack);
+        result.setEmoticon( map.value("emoticon").value<QString>() );
+        QList<QVariant> map_documents = map["documents"].toList();
+        QList<qint64> _documents;
+        Q_FOREACH(const QVariant &var, map_documents)
+            _documents << var.value<qint64>();;
+        result.setDocuments(_documents);
+        return result;
+    }
+    return result;
+}
+
+inline QByteArray StickerPack::getHash(QCryptographicHash::Algorithm alg) const {
+    QByteArray data;
+    QDataStream str(&data, QIODevice::WriteOnly);
+    str << *this;
+    return QCryptographicHash::hash(data, alg);
+}
+
+inline QDataStream &operator<<(QDataStream &stream, const StickerPack &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case StickerPack::typeStickerPack:
+        stream << item.emoticon();
+        stream << item.documents();
+        break;
+    }
+    return stream;
+}
+
+inline QDataStream &operator>>(QDataStream &stream, StickerPack &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<StickerPack::StickerPackClassType>(type));
+    switch(type) {
+    case StickerPack::typeStickerPack: {
+        QString m_emoticon;
+        stream >> m_emoticon;
+        item.setEmoticon(m_emoticon);
+        QList<qint64> m_documents;
+        stream >> m_documents;
+        item.setDocuments(m_documents);
+    }
+        break;
+    }
+    return stream;
+}
+
 
 #endif // LQTG_TYPE_STICKERPACK

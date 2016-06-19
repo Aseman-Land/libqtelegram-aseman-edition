@@ -9,6 +9,12 @@
 
 #include <QMetaType>
 #include <QVariant>
+#include "core/inboundpkt.h"
+#include "core/outboundpkt.h"
+#include "../coretypes.h"
+
+#include <QDataStream>
+
 #include <QList>
 #include "chat.h"
 
@@ -52,5 +58,154 @@ Q_DECLARE_METATYPE(MessagesChats)
 
 QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const MessagesChats &item);
 QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, MessagesChats &item);
+
+inline MessagesChats::MessagesChats(MessagesChatsClassType classType, InboundPkt *in) :
+    m_classType(classType)
+{
+    if(in) fetch(in);
+}
+
+inline MessagesChats::MessagesChats(InboundPkt *in) :
+    m_classType(typeMessagesChats)
+{
+    fetch(in);
+}
+
+inline MessagesChats::MessagesChats(const Null &null) :
+    TelegramTypeObject(null),
+    m_classType(typeMessagesChats)
+{
+}
+
+inline MessagesChats::~MessagesChats() {
+}
+
+inline void MessagesChats::setChats(const QList<Chat> &chats) {
+    m_chats = chats;
+}
+
+inline QList<Chat> MessagesChats::chats() const {
+    return m_chats;
+}
+
+inline bool MessagesChats::operator ==(const MessagesChats &b) const {
+    return m_classType == b.m_classType &&
+           m_chats == b.m_chats;
+}
+
+inline void MessagesChats::setClassType(MessagesChats::MessagesChatsClassType classType) {
+    m_classType = classType;
+}
+
+inline MessagesChats::MessagesChatsClassType MessagesChats::classType() const {
+    return m_classType;
+}
+
+inline bool MessagesChats::fetch(InboundPkt *in) {
+    LQTG_FETCH_LOG;
+    int x = in->fetchInt();
+    switch(x) {
+    case typeMessagesChats: {
+        if(in->fetchInt() != (qint32)CoreTypes::typeVector) return false;
+        qint32 m_chats_length = in->fetchInt();
+        m_chats.clear();
+        for (qint32 i = 0; i < m_chats_length; i++) {
+            Chat type;
+            type.fetch(in);
+            m_chats.append(type);
+        }
+        m_classType = static_cast<MessagesChatsClassType>(x);
+        return true;
+    }
+        break;
+    
+    default:
+        LQTG_FETCH_ASSERT;
+        return false;
+    }
+}
+
+inline bool MessagesChats::push(OutboundPkt *out) const {
+    out->appendInt(m_classType);
+    switch(m_classType) {
+    case typeMessagesChats: {
+        out->appendInt(CoreTypes::typeVector);
+        out->appendInt(m_chats.count());
+        for (qint32 i = 0; i < m_chats.count(); i++) {
+            m_chats[i].push(out);
+        }
+        return true;
+    }
+        break;
+    
+    default:
+        return false;
+    }
+}
+
+inline QMap<QString, QVariant> MessagesChats::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeMessagesChats: {
+        result["classType"] = "MessagesChats::typeMessagesChats";
+        QList<QVariant> _chats;
+        Q_FOREACH(const Chat &m__type, m_chats)
+            _chats << m__type.toMap();
+        result["chats"] = _chats;
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+inline MessagesChats MessagesChats::fromMap(const QMap<QString, QVariant> &map) {
+    MessagesChats result;
+    if(map.value("classType").toString() == "MessagesChats::typeMessagesChats") {
+        result.setClassType(typeMessagesChats);
+        QList<QVariant> map_chats = map["chats"].toList();
+        QList<Chat> _chats;
+        Q_FOREACH(const QVariant &var, map_chats)
+            _chats << Chat::fromMap(var.toMap());
+        result.setChats(_chats);
+        return result;
+    }
+    return result;
+}
+
+inline QByteArray MessagesChats::getHash(QCryptographicHash::Algorithm alg) const {
+    QByteArray data;
+    QDataStream str(&data, QIODevice::WriteOnly);
+    str << *this;
+    return QCryptographicHash::hash(data, alg);
+}
+
+inline QDataStream &operator<<(QDataStream &stream, const MessagesChats &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case MessagesChats::typeMessagesChats:
+        stream << item.chats();
+        break;
+    }
+    return stream;
+}
+
+inline QDataStream &operator>>(QDataStream &stream, MessagesChats &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<MessagesChats::MessagesChatsClassType>(type));
+    switch(type) {
+    case MessagesChats::typeMessagesChats: {
+        QList<Chat> m_chats;
+        stream >> m_chats;
+        item.setChats(m_chats);
+    }
+        break;
+    }
+    return stream;
+}
+
 
 #endif // LQTG_TYPE_MESSAGESCHATS

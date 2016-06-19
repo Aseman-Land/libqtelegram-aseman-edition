@@ -9,6 +9,12 @@
 
 #include <QMetaType>
 #include <QVariant>
+#include "core/inboundpkt.h"
+#include "core/outboundpkt.h"
+#include "../coretypes.h"
+
+#include <QDataStream>
+
 #include <QtGlobal>
 
 class LIBQTELEGRAMSHARED_EXPORT MessagesAffectedMessages : public TelegramTypeObject
@@ -55,5 +61,159 @@ Q_DECLARE_METATYPE(MessagesAffectedMessages)
 
 QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const MessagesAffectedMessages &item);
 QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, MessagesAffectedMessages &item);
+
+inline MessagesAffectedMessages::MessagesAffectedMessages(MessagesAffectedMessagesClassType classType, InboundPkt *in) :
+    m_pts(0),
+    m_ptsCount(0),
+    m_classType(classType)
+{
+    if(in) fetch(in);
+}
+
+inline MessagesAffectedMessages::MessagesAffectedMessages(InboundPkt *in) :
+    m_pts(0),
+    m_ptsCount(0),
+    m_classType(typeMessagesAffectedMessages)
+{
+    fetch(in);
+}
+
+inline MessagesAffectedMessages::MessagesAffectedMessages(const Null &null) :
+    TelegramTypeObject(null),
+    m_pts(0),
+    m_ptsCount(0),
+    m_classType(typeMessagesAffectedMessages)
+{
+}
+
+inline MessagesAffectedMessages::~MessagesAffectedMessages() {
+}
+
+inline void MessagesAffectedMessages::setPts(qint32 pts) {
+    m_pts = pts;
+}
+
+inline qint32 MessagesAffectedMessages::pts() const {
+    return m_pts;
+}
+
+inline void MessagesAffectedMessages::setPtsCount(qint32 ptsCount) {
+    m_ptsCount = ptsCount;
+}
+
+inline qint32 MessagesAffectedMessages::ptsCount() const {
+    return m_ptsCount;
+}
+
+inline bool MessagesAffectedMessages::operator ==(const MessagesAffectedMessages &b) const {
+    return m_classType == b.m_classType &&
+           m_pts == b.m_pts &&
+           m_ptsCount == b.m_ptsCount;
+}
+
+inline void MessagesAffectedMessages::setClassType(MessagesAffectedMessages::MessagesAffectedMessagesClassType classType) {
+    m_classType = classType;
+}
+
+inline MessagesAffectedMessages::MessagesAffectedMessagesClassType MessagesAffectedMessages::classType() const {
+    return m_classType;
+}
+
+inline bool MessagesAffectedMessages::fetch(InboundPkt *in) {
+    LQTG_FETCH_LOG;
+    int x = in->fetchInt();
+    switch(x) {
+    case typeMessagesAffectedMessages: {
+        m_pts = in->fetchInt();
+        m_ptsCount = in->fetchInt();
+        m_classType = static_cast<MessagesAffectedMessagesClassType>(x);
+        return true;
+    }
+        break;
+    
+    default:
+        LQTG_FETCH_ASSERT;
+        return false;
+    }
+}
+
+inline bool MessagesAffectedMessages::push(OutboundPkt *out) const {
+    out->appendInt(m_classType);
+    switch(m_classType) {
+    case typeMessagesAffectedMessages: {
+        out->appendInt(m_pts);
+        out->appendInt(m_ptsCount);
+        return true;
+    }
+        break;
+    
+    default:
+        return false;
+    }
+}
+
+inline QMap<QString, QVariant> MessagesAffectedMessages::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeMessagesAffectedMessages: {
+        result["classType"] = "MessagesAffectedMessages::typeMessagesAffectedMessages";
+        result["pts"] = QVariant::fromValue<qint32>(pts());
+        result["ptsCount"] = QVariant::fromValue<qint32>(ptsCount());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+inline MessagesAffectedMessages MessagesAffectedMessages::fromMap(const QMap<QString, QVariant> &map) {
+    MessagesAffectedMessages result;
+    if(map.value("classType").toString() == "MessagesAffectedMessages::typeMessagesAffectedMessages") {
+        result.setClassType(typeMessagesAffectedMessages);
+        result.setPts( map.value("pts").value<qint32>() );
+        result.setPtsCount( map.value("ptsCount").value<qint32>() );
+        return result;
+    }
+    return result;
+}
+
+inline QByteArray MessagesAffectedMessages::getHash(QCryptographicHash::Algorithm alg) const {
+    QByteArray data;
+    QDataStream str(&data, QIODevice::WriteOnly);
+    str << *this;
+    return QCryptographicHash::hash(data, alg);
+}
+
+inline QDataStream &operator<<(QDataStream &stream, const MessagesAffectedMessages &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case MessagesAffectedMessages::typeMessagesAffectedMessages:
+        stream << item.pts();
+        stream << item.ptsCount();
+        break;
+    }
+    return stream;
+}
+
+inline QDataStream &operator>>(QDataStream &stream, MessagesAffectedMessages &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<MessagesAffectedMessages::MessagesAffectedMessagesClassType>(type));
+    switch(type) {
+    case MessagesAffectedMessages::typeMessagesAffectedMessages: {
+        qint32 m_pts;
+        stream >> m_pts;
+        item.setPts(m_pts);
+        qint32 m_pts_count;
+        stream >> m_pts_count;
+        item.setPtsCount(m_pts_count);
+    }
+        break;
+    }
+    return stream;
+}
+
 
 #endif // LQTG_TYPE_MESSAGESAFFECTEDMESSAGES
