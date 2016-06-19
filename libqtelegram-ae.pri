@@ -2,8 +2,6 @@ QT += gui
 QT += network
 QT += multimedia
 
-DEFINES += LQTG_DISABLE_LOG
-
 win32 {
     isEmpty(OPENSSL_LIB_DIR): OPENSSL_LIB_DIR = $${DESTDIR}
     isEmpty(OPENSSL_INCLUDE_PATH): OPENSSL_INCLUDE_PATH = $${DESTDIR}/include

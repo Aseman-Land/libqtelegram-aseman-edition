@@ -8,7 +8,7 @@
 #define LQTG_FETCH_ASSERT setError(true)
 #define LQTG_PUSH_ASSERT setError(true)
 
-#ifdef LQTG_DISABLE_LOG
+#ifndef LQTG_ENABLE_LOG
 #define LQTG_FETCH_LOG
 #define LQTG_PUSH_LOG
 #else
