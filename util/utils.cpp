@@ -55,7 +55,7 @@ int clock_gettime(int /*clk_id*/, struct timespec* t) {
 //clock_gettime is not implemented on Win
 // took from https://stackoverflow.com/questions/5404277/porting-clock-gettime-to-windows
 
-#ifdef Q_CC_MSVC
+#if defined(Q_CC_MSVC) && (!defined(_INC_TIME) || defined(_CRT_NO_TIME_T))
 struct timespec {
     long int tv_sec;    /* Seconds.  */
     long int tv_nsec;   /* Nanoseconds.  */
