@@ -130,3 +130,7 @@
 
 * **Get peer dialogs** - [TelegramCore::messagesGetPeerDialogs](methods/getpeerdialogs.md)
 
+* **Save draft** - [TelegramCore::messagesSaveDraft](methods/savedraft.md)
+
+* **Get all drafts** - [TelegramCore::messagesGetAllDrafts](methods/getalldrafts.md)
+

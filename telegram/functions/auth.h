@@ -28,7 +28,7 @@ class LIBQTELEGRAMSHARED_EXPORT Auth : public TelegramFunctionObject
 public:
     enum AuthFunction {
         fncAuthCheckPhone = 0x6fe51dfb,
-        fncAuthSendCode = 0xccfd70cf,
+        fncAuthSendCode = 0x86aef0ec,
         fncAuthSignUp = 0x1b067634,
         fncAuthSignIn = 0xbcd51581,
         fncAuthLogOut = 0x5717da40,
@@ -51,7 +51,7 @@ public:
     static bool checkPhone(OutboundPkt *out, const QString &phoneNumber);
     static AuthCheckedPhone checkPhoneResult(InboundPkt *in);
 
-    static bool sendCode(OutboundPkt *out, bool allowFlashcall, const QString &phoneNumber, bool currentNumber, qint32 apiId, const QString &apiHash, const QString &langCode);
+    static bool sendCode(OutboundPkt *out, bool allowFlashcall, const QString &phoneNumber, bool currentNumber, qint32 apiId, const QString &apiHash);
     static AuthSentCode sendCodeResult(InboundPkt *in);
 
     static bool signUp(OutboundPkt *out, const QString &phoneNumber, const QString &phoneCodeHash, const QString &phoneCode, const QString &firstName, const QString &lastName);
@@ -117,7 +117,7 @@ inline AuthCheckedPhone Functions::Auth::checkPhoneResult(InboundPkt *in) {
     return result;
 }
 
-inline bool Functions::Auth::sendCode(OutboundPkt *out, bool allowFlashcall, const QString &phoneNumber, bool currentNumber, qint32 apiId, const QString &apiHash, const QString &langCode) {
+inline bool Functions::Auth::sendCode(OutboundPkt *out, bool allowFlashcall, const QString &phoneNumber, bool currentNumber, qint32 apiId, const QString &apiHash) {
     out->appendInt(fncAuthSendCode);
     
     qint32 flags = 0;
@@ -129,7 +129,6 @@ inline bool Functions::Auth::sendCode(OutboundPkt *out, bool allowFlashcall, con
     if(flags & 1<<0) out->appendBool(currentNumber);
     out->appendInt(apiId);
     out->appendQString(apiHash);
-    out->appendQString(langCode);
     return true;
 }
 

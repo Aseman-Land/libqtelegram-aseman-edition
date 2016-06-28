@@ -34,6 +34,7 @@ void qtelegramRegisterQmlTypes(const char *uri, int major, int minor) {
     qmlRegisterType<DisabledFeatureObject>(uri, major, minor, "DisabledFeature");
     qmlRegisterType<DocumentObject>(uri, major, minor, "Document");
     qmlRegisterType<DocumentAttributeObject>(uri, major, minor, "DocumentAttribute");
+    qmlRegisterType<DraftMessageObject>(uri, major, minor, "DraftMessage");
     qmlRegisterType<EncryptedChatObject>(uri, major, minor, "EncryptedChat");
     qmlRegisterType<EncryptedFileObject>(uri, major, minor, "EncryptedFile");
     qmlRegisterType<EncryptedMessageObject>(uri, major, minor, "EncryptedMessage");
@@ -74,7 +75,6 @@ void qtelegramRegisterQmlTypes(const char *uri, int major, int minor) {
     qmlRegisterType<MessageActionObject>(uri, major, minor, "MessageAction");
     qmlRegisterType<MessageEntityObject>(uri, major, minor, "MessageEntity");
     qmlRegisterType<MessageFwdHeaderObject>(uri, major, minor, "MessageFwdHeader");
-    qmlRegisterType<MessageGroupObject>(uri, major, minor, "MessageGroup");
     qmlRegisterType<MessageMediaObject>(uri, major, minor, "MessageMedia");
     qmlRegisterType<MessageRangeObject>(uri, major, minor, "MessageRange");
     qmlRegisterType<MessagesFilterObject>(uri, major, minor, "MessagesFilter");

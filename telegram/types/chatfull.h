@@ -29,7 +29,7 @@ class LIBQTELEGRAMSHARED_EXPORT ChatFull : public TelegramTypeObject
 public:
     enum ChatFullClassType {
         typeChatFull = 0x2e02a614,
-        typeChannelFull = 0x97bee562
+        typeChannelFull = 0xc3d5512f
     };
 
     ChatFull(ChatFullClassType classType = typeChatFull, InboundPkt *in = 0);
@@ -88,11 +88,11 @@ public:
     void setReadInboxMaxId(qint32 readInboxMaxId);
     qint32 readInboxMaxId() const;
 
+    void setReadOutboxMaxId(qint32 readOutboxMaxId);
+    qint32 readOutboxMaxId() const;
+
     void setUnreadCount(qint32 unreadCount);
     qint32 unreadCount() const;
-
-    void setUnreadImportantCount(qint32 unreadImportantCount);
-    qint32 unreadImportantCount() const;
 
     void setClassType(ChatFullClassType classType);
     ChatFullClassType classType() const;
@@ -126,8 +126,8 @@ private:
     qint32 m_participantsCount;
     qint32 m_pinnedMsgId;
     qint32 m_readInboxMaxId;
+    qint32 m_readOutboxMaxId;
     qint32 m_unreadCount;
-    qint32 m_unreadImportantCount;
     ChatFullClassType m_classType;
 };
 
@@ -146,8 +146,8 @@ inline ChatFull::ChatFull(ChatFullClassType classType, InboundPkt *in) :
     m_participantsCount(0),
     m_pinnedMsgId(0),
     m_readInboxMaxId(0),
+    m_readOutboxMaxId(0),
     m_unreadCount(0),
-    m_unreadImportantCount(0),
     m_classType(classType)
 {
     if(in) fetch(in);
@@ -163,8 +163,8 @@ inline ChatFull::ChatFull(InboundPkt *in) :
     m_participantsCount(0),
     m_pinnedMsgId(0),
     m_readInboxMaxId(0),
+    m_readOutboxMaxId(0),
     m_unreadCount(0),
-    m_unreadImportantCount(0),
     m_classType(typeChatFull)
 {
     fetch(in);
@@ -181,8 +181,8 @@ inline ChatFull::ChatFull(const Null &null) :
     m_participantsCount(0),
     m_pinnedMsgId(0),
     m_readInboxMaxId(0),
+    m_readOutboxMaxId(0),
     m_unreadCount(0),
-    m_unreadImportantCount(0),
     m_classType(typeChatFull)
 {
 }
@@ -328,20 +328,20 @@ inline qint32 ChatFull::readInboxMaxId() const {
     return m_readInboxMaxId;
 }
 
+inline void ChatFull::setReadOutboxMaxId(qint32 readOutboxMaxId) {
+    m_readOutboxMaxId = readOutboxMaxId;
+}
+
+inline qint32 ChatFull::readOutboxMaxId() const {
+    return m_readOutboxMaxId;
+}
+
 inline void ChatFull::setUnreadCount(qint32 unreadCount) {
     m_unreadCount = unreadCount;
 }
 
 inline qint32 ChatFull::unreadCount() const {
     return m_unreadCount;
-}
-
-inline void ChatFull::setUnreadImportantCount(qint32 unreadImportantCount) {
-    m_unreadImportantCount = unreadImportantCount;
-}
-
-inline qint32 ChatFull::unreadImportantCount() const {
-    return m_unreadImportantCount;
 }
 
 inline bool ChatFull::operator ==(const ChatFull &b) const {
@@ -361,8 +361,8 @@ inline bool ChatFull::operator ==(const ChatFull &b) const {
            m_participantsCount == b.m_participantsCount &&
            m_pinnedMsgId == b.m_pinnedMsgId &&
            m_readInboxMaxId == b.m_readInboxMaxId &&
-           m_unreadCount == b.m_unreadCount &&
-           m_unreadImportantCount == b.m_unreadImportantCount;
+           m_readOutboxMaxId == b.m_readOutboxMaxId &&
+           m_unreadCount == b.m_unreadCount;
 }
 
 inline void ChatFull::setClassType(ChatFull::ChatFullClassType classType) {
@@ -410,8 +410,8 @@ inline bool ChatFull::fetch(InboundPkt *in) {
             m_kickedCount = in->fetchInt();
         }
         m_readInboxMaxId = in->fetchInt();
+        m_readOutboxMaxId = in->fetchInt();
         m_unreadCount = in->fetchInt();
-        m_unreadImportantCount = in->fetchInt();
         m_chatPhoto.fetch(in);
         m_notifySettings.fetch(in);
         m_exportedInvite.fetch(in);
@@ -469,8 +469,8 @@ inline bool ChatFull::push(OutboundPkt *out) const {
         out->appendInt(m_adminsCount);
         out->appendInt(m_kickedCount);
         out->appendInt(m_readInboxMaxId);
+        out->appendInt(m_readOutboxMaxId);
         out->appendInt(m_unreadCount);
-        out->appendInt(m_unreadImportantCount);
         m_chatPhoto.push(out);
         m_notifySettings.push(out);
         m_exportedInvite.push(out);
@@ -519,8 +519,8 @@ inline QMap<QString, QVariant> ChatFull::toMap() const {
         result["adminsCount"] = QVariant::fromValue<qint32>(adminsCount());
         result["kickedCount"] = QVariant::fromValue<qint32>(kickedCount());
         result["readInboxMaxId"] = QVariant::fromValue<qint32>(readInboxMaxId());
+        result["readOutboxMaxId"] = QVariant::fromValue<qint32>(readOutboxMaxId());
         result["unreadCount"] = QVariant::fromValue<qint32>(unreadCount());
-        result["unreadImportantCount"] = QVariant::fromValue<qint32>(unreadImportantCount());
         result["chatPhoto"] = m_chatPhoto.toMap();
         result["notifySettings"] = m_notifySettings.toMap();
         result["exportedInvite"] = m_exportedInvite.toMap();
@@ -566,8 +566,8 @@ inline ChatFull ChatFull::fromMap(const QMap<QString, QVariant> &map) {
         result.setAdminsCount( map.value("adminsCount").value<qint32>() );
         result.setKickedCount( map.value("kickedCount").value<qint32>() );
         result.setReadInboxMaxId( map.value("readInboxMaxId").value<qint32>() );
+        result.setReadOutboxMaxId( map.value("readOutboxMaxId").value<qint32>() );
         result.setUnreadCount( map.value("unreadCount").value<qint32>() );
-        result.setUnreadImportantCount( map.value("unreadImportantCount").value<qint32>() );
         result.setChatPhoto( Photo::fromMap(map.value("chatPhoto").toMap()) );
         result.setNotifySettings( PeerNotifySettings::fromMap(map.value("notifySettings").toMap()) );
         result.setExportedInvite( ExportedChatInvite::fromMap(map.value("exportedInvite").toMap()) );
@@ -610,8 +610,8 @@ inline QDataStream &operator<<(QDataStream &stream, const ChatFull &item) {
         stream << item.adminsCount();
         stream << item.kickedCount();
         stream << item.readInboxMaxId();
+        stream << item.readOutboxMaxId();
         stream << item.unreadCount();
-        stream << item.unreadImportantCount();
         stream << item.chatPhoto();
         stream << item.notifySettings();
         stream << item.exportedInvite();
@@ -672,12 +672,12 @@ inline QDataStream &operator>>(QDataStream &stream, ChatFull &item) {
         qint32 m_read_inbox_max_id;
         stream >> m_read_inbox_max_id;
         item.setReadInboxMaxId(m_read_inbox_max_id);
+        qint32 m_read_outbox_max_id;
+        stream >> m_read_outbox_max_id;
+        item.setReadOutboxMaxId(m_read_outbox_max_id);
         qint32 m_unread_count;
         stream >> m_unread_count;
         item.setUnreadCount(m_unread_count);
-        qint32 m_unread_important_count;
-        stream >> m_unread_important_count;
-        item.setUnreadImportantCount(m_unread_important_count);
         Photo m_chat_photo;
         stream >> m_chat_photo;
         item.setChatPhoto(m_chat_photo);

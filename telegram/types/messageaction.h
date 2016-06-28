@@ -35,7 +35,8 @@ public:
         typeMessageActionChannelCreate = 0x95d2ac92,
         typeMessageActionChatMigrateTo = 0x51bdb021,
         typeMessageActionChannelMigrateFrom = 0xb055eaee,
-        typeMessageActionPinMessage = 0x94bd38ed
+        typeMessageActionPinMessage = 0x94bd38ed,
+        typeMessageActionHistoryClear = 0x9fbab604
     };
 
     MessageAction(MessageActionClassType classType = typeMessageActionEmpty, InboundPkt *in = 0);
@@ -305,6 +306,12 @@ inline bool MessageAction::fetch(InboundPkt *in) {
     }
         break;
     
+    case typeMessageActionHistoryClear: {
+        m_classType = static_cast<MessageActionClassType>(x);
+        return true;
+    }
+        break;
+    
     default:
         LQTG_FETCH_ASSERT;
         return false;
@@ -389,6 +396,11 @@ inline bool MessageAction::push(OutboundPkt *out) const {
         break;
     
     case typeMessageActionPinMessage: {
+        return true;
+    }
+        break;
+    
+    case typeMessageActionHistoryClear: {
         return true;
     }
         break;
@@ -490,6 +502,12 @@ inline QMap<QString, QVariant> MessageAction::toMap() const {
     }
         break;
     
+    case typeMessageActionHistoryClear: {
+        result["classType"] = "MessageAction::typeMessageActionHistoryClear";
+        return result;
+    }
+        break;
+    
     default:
         return result;
     }
@@ -564,6 +582,10 @@ inline MessageAction MessageAction::fromMap(const QMap<QString, QVariant> &map) 
         result.setClassType(typeMessageActionPinMessage);
         return result;
     }
+    if(map.value("classType").toString() == "MessageAction::typeMessageActionHistoryClear") {
+        result.setClassType(typeMessageActionHistoryClear);
+        return result;
+    }
     return result;
 }
 
@@ -613,6 +635,9 @@ inline QDataStream &operator<<(QDataStream &stream, const MessageAction &item) {
         stream << item.chatId();
         break;
     case MessageAction::typeMessageActionPinMessage:
+        
+        break;
+    case MessageAction::typeMessageActionHistoryClear:
         
         break;
     }
@@ -693,6 +718,10 @@ inline QDataStream &operator>>(QDataStream &stream, MessageAction &item) {
     }
         break;
     case MessageAction::typeMessageActionPinMessage: {
+        
+    }
+        break;
+    case MessageAction::typeMessageActionHistoryClear: {
         
     }
         break;

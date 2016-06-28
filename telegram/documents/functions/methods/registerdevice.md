@@ -7,7 +7,7 @@ TelegramCore::accountRegisterDevice
 ## Schema:
 
 ```c++
-account.registerDevice#446c712c token_type:int token:string device_model:string system_version:string app_version:string app_sandbox:Bool lang_code:string = Bool;
+account.registerDevice#637ea878 token_type:int token:string = Bool;
 ```
 ## Parameters:
 
@@ -15,11 +15,6 @@ account.registerDevice#446c712c token_type:int token:string device_model:string 
 |----|----|-------|
 |tokenType|qint32||
 |token|QString||
-|deviceModel|QString||
-|systemVersion|QString||
-|appVersion|QString||
-|appSandbox|bool||
-|langCode|QString||
 |callBack|Callback&lt;bool&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
@@ -56,7 +51,7 @@ onRegisterDeviceError(qint64 msgId, qint32 errorCode, const QString &errorText)
 ## Examples:
 
 ```c++
-tg->registerDevice(token_type, token, device_model, system_version, app_version, app_sandbox, lang_code, [=](TG_REGISTER_DEVICE_CALLBACK){
+tg->registerDevice(token_type, token, [=](TG_REGISTER_DEVICE_CALLBACK){
     ...
 }, 30000);
 ```

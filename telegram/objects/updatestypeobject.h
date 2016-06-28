@@ -36,7 +36,6 @@ class LIBQTELEGRAMSHARED_EXPORT UpdatesTypeObject : public TelegramTypeQObject
     Q_PROPERTY(qint32 seq READ seq WRITE setSeq NOTIFY seqChanged)
     Q_PROPERTY(qint32 seqStart READ seqStart WRITE setSeqStart NOTIFY seqStartChanged)
     Q_PROPERTY(bool silent READ silent WRITE setSilent NOTIFY silentChanged)
-    Q_PROPERTY(bool unread READ unread WRITE setUnread NOTIFY unreadChanged)
     Q_PROPERTY(UpdateObject* update READ update WRITE setUpdate NOTIFY updateChanged)
     Q_PROPERTY(QList<Update> updates READ updates WRITE setUpdates NOTIFY updatesChanged)
     Q_PROPERTY(qint32 userId READ userId WRITE setUserId NOTIFY userIdChanged)
@@ -117,9 +116,6 @@ public:
     void setSilent(bool silent);
     bool silent() const;
 
-    void setUnread(bool unread);
-    bool unread() const;
-
     void setUpdate(UpdateObject* update);
     UpdateObject* update() const;
 
@@ -166,7 +162,6 @@ Q_SIGNALS:
     void seqChanged();
     void seqStartChanged();
     void silentChanged();
-    void unreadChanged();
     void updateChanged();
     void updatesChanged();
     void userIdChanged();
@@ -439,17 +434,6 @@ inline bool UpdatesTypeObject::silent() const {
     return m_core.silent();
 }
 
-inline void UpdatesTypeObject::setUnread(bool unread) {
-    if(m_core.unread() == unread) return;
-    m_core.setUnread(unread);
-    Q_EMIT unreadChanged();
-    Q_EMIT coreChanged();
-}
-
-inline bool UpdatesTypeObject::unread() const {
-    return m_core.unread();
-}
-
 inline void UpdatesTypeObject::setUpdate(UpdateObject* update) {
     if(m_update == update) return;
     if(m_update) delete m_update;
@@ -537,7 +521,6 @@ inline UpdatesTypeObject &UpdatesTypeObject::operator =(const UpdatesType &b) {
     Q_EMIT seqChanged();
     Q_EMIT seqStartChanged();
     Q_EMIT silentChanged();
-    Q_EMIT unreadChanged();
     Q_EMIT updateChanged();
     Q_EMIT updatesChanged();
     Q_EMIT userIdChanged();

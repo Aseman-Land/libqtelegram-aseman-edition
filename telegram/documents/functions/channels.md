@@ -2,10 +2,6 @@
 
 ## Methods:
 
-* **Get dialogs** - [TelegramCore::channelsGetDialogs](methods/getdialogs.md)
-
-* **Get important history** - [TelegramCore::channelsGetImportantHistory](methods/getimportanthistory.md)
-
 * **Read history** - [TelegramCore::channelsReadHistory](methods/readhistory.md)
 
 * **Delete messages** - [TelegramCore::channelsDeleteMessages](methods/deletemessages.md)
@@ -33,8 +29,6 @@
 * **Edit title** - [TelegramCore::channelsEditTitle](methods/edittitle.md)
 
 * **Edit photo** - [TelegramCore::channelsEditPhoto](methods/editphoto.md)
-
-* **Toggle comments** - [TelegramCore::channelsToggleComments](methods/togglecomments.md)
 
 * **Check username** - [TelegramCore::channelsCheckUsername](methods/checkusername.md)
 

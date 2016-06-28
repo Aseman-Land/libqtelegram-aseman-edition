@@ -12,6 +12,7 @@
 * [typeInputMessagesFilterGif](#messagesfiltertypeinputmessagesfiltergif)
 * [typeInputMessagesFilterVoice](#messagesfiltertypeinputmessagesfiltervoice)
 * [typeInputMessagesFilterMusic](#messagesfiltertypeinputmessagesfiltermusic)
+* [typeInputMessagesFilterChatPhotos](#messagesfiltertypeinputmessagesfilterchatphotos)
 
 ## MessagesFilter::typeInputMessagesFilterEmpty
 
@@ -118,6 +119,17 @@ inputMessagesFilterVoice#50f5c392 = MessagesFilter;
 
 ```c++
 inputMessagesFilterMusic#3751b49e = MessagesFilter;
+```
+
+#### Parameters:
+
+
+## MessagesFilter::typeInputMessagesFilterChatPhotos
+
+#### Schema:
+
+```c++
+inputMessagesFilterChatPhotos#3a20ecb8 = MessagesFilter;
 ```
 
 #### Parameters:

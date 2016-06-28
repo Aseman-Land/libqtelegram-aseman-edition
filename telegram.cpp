@@ -1137,11 +1137,11 @@ qint64 Telegram::authCheckPhone(Callback<AuthCheckedPhone> callBack, qint32 time
 }
 
 qint64 Telegram::authSendCode(Callback<AuthSentCode> callBack, qint32 timeout) {
-    return TelegramCore::authSendCode(false, prv->mSettings->phoneNumber(), 0, prv->mSettings->appId(), prv->mSettings->appHash(), LANG_CODE, callBack, timeout);
+    return TelegramCore::authSendCode(false, prv->mSettings->phoneNumber(), 0, prv->mSettings->appId(), prv->mSettings->appHash(), callBack, timeout);
 }
 
 qint64 Telegram::authSendCall(Callback<AuthSentCode> callBack, qint32 timeout) {
-    return TelegramCore::authSendCode(true, prv->mSettings->phoneNumber(), 0, prv->mSettings->appId(), prv->mSettings->appHash(), LANG_CODE, callBack, timeout);
+    return TelegramCore::authSendCode(true, prv->mSettings->phoneNumber(), 0, prv->mSettings->appId(), prv->mSettings->appHash(), callBack, timeout);
 }
 
 qint64 Telegram::authSignIn(const QString &code, Callback<AuthAuthorization> callBack, qint32 timeout) {
@@ -1157,6 +1157,7 @@ qint64 Telegram::authCheckPassword(const QByteArray &password, Callback<AuthAuth
 }
 
 qint64 Telegram::accountRegisterDevice(const QString &token, const QString &appVersion, bool appSandbox, Callback<bool > callBack, qint32 timeout) {
+    Q_UNUSED(appSandbox)
     if (token.length() == 0) {
         qCCritical(TG_TELEGRAM) << "refuse to register with empty token!";
         return -1;
@@ -1166,7 +1167,7 @@ qint64 Telegram::accountRegisterDevice(const QString &token, const QString &appV
         version = Utils::getAppVersion();
     }
     qCDebug(TG_TELEGRAM) << "registering device for push - app version" << version;
-    return TelegramCore::accountRegisterDevice(UBUNTU_PHONE_TOKEN_TYPE, token, Utils::getDeviceModel(), Utils::getSystemVersion(), version, appSandbox, prv->mSettings->langCode(), callBack, timeout);
+    return TelegramCore::accountRegisterDevice(UBUNTU_PHONE_TOKEN_TYPE, token, callBack, timeout);
 }
 
 qint64 Telegram::accountUnregisterDevice(const QString &token, Callback<bool> callBack, qint32 timeout) {

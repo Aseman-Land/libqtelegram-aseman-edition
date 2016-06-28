@@ -27,7 +27,7 @@ updates.channelDifferenceEmpty#3e11affb flags:# final:flags.0?true pts:int timeo
 #### Schema:
 
 ```c++
-updates.channelDifferenceTooLong#5e167646 flags:# final:flags.0?true pts:int timeout:flags.1?int top_message:int top_important_message:int read_inbox_max_id:int unread_count:int unread_important_count:int messages:Vector<Message> chats:Vector<Chat> users:Vector<User> = updates.ChannelDifference;
+updates.channelDifferenceTooLong#410dee07 flags:# final:flags.0?true pts:int timeout:flags.1?int top_message:int read_inbox_max_id:int read_outbox_max_id:int unread_count:int messages:Vector<Message> chats:Vector<Chat> users:Vector<User> = updates.ChannelDifference;
 ```
 
 #### Parameters:
@@ -38,10 +38,9 @@ updates.channelDifferenceTooLong#5e167646 flags:# final:flags.0?true pts:int tim
 |pts|qint32|
 |timeout|qint32|
 |topMessage|qint32|
-|topImportantMessage|qint32|
 |readInboxMaxId|qint32|
+|readOutboxMaxId|qint32|
 |unreadCount|qint32|
-|unreadImportantCount|qint32|
 |messages|QList&lt;[Message](message.md)&gt;|
 |chats|QList&lt;[Chat](chat.md)&gt;|
 |users|QList&lt;[User](user.md)&gt;|

@@ -52,6 +52,8 @@
 
 * [DocumentAttribute](documentattribute.md)
 
+* [DraftMessage](draftmessage.md)
+
 * [EncryptedChat](encryptedchat.md)
 
 * [EncryptedFile](encryptedfile.md)
@@ -131,8 +133,6 @@
 * [MessageEntity](messageentity.md)
 
 * [MessageFwdHeader](messagefwdheader.md)
-
-* [MessageGroup](messagegroup.md)
 
 * [MessageMedia](messagemedia.md)
 

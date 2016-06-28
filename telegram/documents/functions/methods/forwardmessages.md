@@ -7,13 +7,12 @@ TelegramCore::messagesForwardMessages
 ## Schema:
 
 ```c++
-messages.forwardMessages#708e0195 flags:# broadcast:flags.4?true silent:flags.5?true background:flags.6?true from_peer:InputPeer id:Vector<int> random_id:Vector<long> to_peer:InputPeer = Updates;
+messages.forwardMessages#708e0195 flags:# silent:flags.5?true background:flags.6?true from_peer:InputPeer id:Vector<int> random_id:Vector<long> to_peer:InputPeer = Updates;
 ```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
-|broadcast|bool||
 |silent|bool||
 |background|bool||
 |fromPeer|[InputPeer](../../types/inputpeer.md)||
@@ -56,7 +55,7 @@ onForwardMessagesError(qint64 msgId, qint32 errorCode, const QString &errorText)
 ## Examples:
 
 ```c++
-tg->forwardMessages(broadcast, silent, background, from_peer, id, random_id, to_peer, [=](TG_FORWARD_MESSAGES_CALLBACK){
+tg->forwardMessages(silent, background, from_peer, id, random_id, to_peer, [=](TG_FORWARD_MESSAGES_CALLBACK){
     ...
 }, 30000);
 ```

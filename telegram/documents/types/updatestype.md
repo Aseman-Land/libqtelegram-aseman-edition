@@ -26,14 +26,13 @@ updatesTooLong#e317af7e = Updates;
 #### Schema:
 
 ```c++
-updateShortMessage#914fbf11 flags:# unread:flags.0?true out:flags.1?true mentioned:flags.4?true media_unread:flags.5?true silent:flags.13?true id:int user_id:int message:string pts:int pts_count:int date:int fwd_from:flags.2?MessageFwdHeader via_bot_id:flags.11?int reply_to_msg_id:flags.3?int entities:flags.7?Vector<MessageEntity> = Updates;
+updateShortMessage#914fbf11 flags:# out:flags.1?true mentioned:flags.4?true media_unread:flags.5?true silent:flags.13?true id:int user_id:int message:string pts:int pts_count:int date:int fwd_from:flags.2?MessageFwdHeader via_bot_id:flags.11?int reply_to_msg_id:flags.3?int entities:flags.7?Vector<MessageEntity> = Updates;
 ```
 
 #### Parameters:
 
 |Name|Type|
 |----|----|
-|unread|bool|
 |out|bool|
 |mentioned|bool|
 |mediaUnread|bool|
@@ -54,14 +53,13 @@ updateShortMessage#914fbf11 flags:# unread:flags.0?true out:flags.1?true mention
 #### Schema:
 
 ```c++
-updateShortChatMessage#16812688 flags:# unread:flags.0?true out:flags.1?true mentioned:flags.4?true media_unread:flags.5?true silent:flags.13?true id:int from_id:int chat_id:int message:string pts:int pts_count:int date:int fwd_from:flags.2?MessageFwdHeader via_bot_id:flags.11?int reply_to_msg_id:flags.3?int entities:flags.7?Vector<MessageEntity> = Updates;
+updateShortChatMessage#16812688 flags:# out:flags.1?true mentioned:flags.4?true media_unread:flags.5?true silent:flags.13?true id:int from_id:int chat_id:int message:string pts:int pts_count:int date:int fwd_from:flags.2?MessageFwdHeader via_bot_id:flags.11?int reply_to_msg_id:flags.3?int entities:flags.7?Vector<MessageEntity> = Updates;
 ```
 
 #### Parameters:
 
 |Name|Type|
 |----|----|
-|unread|bool|
 |out|bool|
 |mentioned|bool|
 |mediaUnread|bool|
@@ -135,14 +133,13 @@ updates#74ae4240 updates:Vector<Update> users:Vector<User> chats:Vector<Chat> da
 #### Schema:
 
 ```c++
-updateShortSentMessage#11f1331c flags:# unread:flags.0?true out:flags.1?true id:int pts:int pts_count:int date:int media:flags.9?MessageMedia entities:flags.7?Vector<MessageEntity> = Updates;
+updateShortSentMessage#11f1331c flags:# out:flags.1?true id:int pts:int pts_count:int date:int media:flags.9?MessageMedia entities:flags.7?Vector<MessageEntity> = Updates;
 ```
 
 #### Parameters:
 
 |Name|Type|
 |----|----|
-|unread|bool|
 |out|bool|
 |id|qint32|
 |pts|qint32|
