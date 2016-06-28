@@ -25,14 +25,13 @@ messageEmpty#83e5de54 id:int = Message;
 #### Schema:
 
 ```c++
-message#c09be45f flags:# unread:flags.0?true out:flags.1?true mentioned:flags.4?true media_unread:flags.5?true silent:flags.13?true post:flags.14?true id:int from_id:flags.8?int to_id:Peer fwd_from:flags.2?MessageFwdHeader via_bot_id:flags.11?int reply_to_msg_id:flags.3?int date:int message:string media:flags.9?MessageMedia reply_markup:flags.6?ReplyMarkup entities:flags.7?Vector<MessageEntity> views:flags.10?int edit_date:flags.15?int = Message;
+message#c09be45f flags:# out:flags.1?true mentioned:flags.4?true media_unread:flags.5?true silent:flags.13?true post:flags.14?true id:int from_id:flags.8?int to_id:Peer fwd_from:flags.2?MessageFwdHeader via_bot_id:flags.11?int reply_to_msg_id:flags.3?int date:int message:string media:flags.9?MessageMedia reply_markup:flags.6?ReplyMarkup entities:flags.7?Vector<MessageEntity> views:flags.10?int edit_date:flags.15?int = Message;
 ```
 
 #### Parameters:
 
 |Name|Type|
 |----|----|
-|unread|bool|
 |out|bool|
 |mentioned|bool|
 |mediaUnread|bool|
@@ -57,14 +56,13 @@ message#c09be45f flags:# unread:flags.0?true out:flags.1?true mentioned:flags.4?
 #### Schema:
 
 ```c++
-messageService#9e19a1f6 flags:# unread:flags.0?true out:flags.1?true mentioned:flags.4?true media_unread:flags.5?true silent:flags.13?true post:flags.14?true id:int from_id:flags.8?int to_id:Peer reply_to_msg_id:flags.3?int date:int action:MessageAction = Message;
+messageService#9e19a1f6 flags:# out:flags.1?true mentioned:flags.4?true media_unread:flags.5?true silent:flags.13?true post:flags.14?true id:int from_id:flags.8?int to_id:Peer reply_to_msg_id:flags.3?int date:int action:MessageAction = Message;
 ```
 
 #### Parameters:
 
 |Name|Type|
 |----|----|
-|unread|bool|
 |out|bool|
 |mentioned|bool|
 |mediaUnread|bool|

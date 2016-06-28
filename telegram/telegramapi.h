@@ -20,7 +20,7 @@ public:
     explicit TelegramApi(Session *session, Settings *settings, CryptoUtils *crypto, QObject *parent = 0);
     virtual ~TelegramApi();
 
-    qint64 accountRegisterDevice(qint32 token_type, const QString &token, const QString &device_model, const QString &system_version, const QString &app_version, bool app_sandbox, const QString &lang_code, const QVariant &attachedData = QVariant(), Session *session = 0);
+    qint64 accountRegisterDevice(qint32 token_type, const QString &token, const QVariant &attachedData = QVariant(), Session *session = 0);
     qint64 accountUnregisterDevice(qint32 token_type, const QString &token, const QVariant &attachedData = QVariant(), Session *session = 0);
     qint64 accountUpdateNotifySettings(const InputNotifyPeer &peer, const InputPeerNotifySettings &settings, const QVariant &attachedData = QVariant(), Session *session = 0);
     qint64 accountGetNotifySettings(const InputNotifyPeer &peer, const QVariant &attachedData = QVariant(), Session *session = 0);
@@ -46,7 +46,7 @@ public:
     qint64 accountUpdatePasswordSettings(const QByteArray &current_password_hash, const AccountPasswordInputSettings &new_settings, const QVariant &attachedData = QVariant(), Session *session = 0);
     
     qint64 authCheckPhone(const QString &phone_number, const QVariant &attachedData = QVariant(), Session *session = 0);
-    qint64 authSendCode(bool allow_flashcall, const QString &phone_number, bool current_number, qint32 api_id, const QString &api_hash, const QString &lang_code, const QVariant &attachedData = QVariant(), Session *session = 0);
+    qint64 authSendCode(bool allow_flashcall, const QString &phone_number, bool current_number, qint32 api_id, const QString &api_hash, const QVariant &attachedData = QVariant(), Session *session = 0);
     qint64 authSignUp(const QString &phone_number, const QString &phone_code_hash, const QString &phone_code, const QString &first_name, const QString &last_name, const QVariant &attachedData = QVariant(), Session *session = 0);
     qint64 authSignIn(const QString &phone_number, const QString &phone_code_hash, const QString &phone_code, const QVariant &attachedData = QVariant(), Session *session = 0);
     qint64 authLogOut(const QVariant &attachedData = QVariant(), Session *session = 0);
@@ -62,8 +62,6 @@ public:
     qint64 authResendCode(const QString &phone_number, const QString &phone_code_hash, const QVariant &attachedData = QVariant(), Session *session = 0);
     qint64 authCancelCode(const QString &phone_number, const QString &phone_code_hash, const QVariant &attachedData = QVariant(), Session *session = 0);
     
-    qint64 channelsGetDialogs(qint32 offset, qint32 limit, const QVariant &attachedData = QVariant(), Session *session = 0);
-    qint64 channelsGetImportantHistory(const InputChannel &channel, qint32 offset_id, qint32 offset_date, qint32 add_offset, qint32 limit, qint32 max_id, qint32 min_id, const QVariant &attachedData = QVariant(), Session *session = 0);
     qint64 channelsReadHistory(const InputChannel &channel, qint32 max_id, const QVariant &attachedData = QVariant(), Session *session = 0);
     qint64 channelsDeleteMessages(const InputChannel &channel, const QList<qint32> &id, const QVariant &attachedData = QVariant(), Session *session = 0);
     qint64 channelsDeleteUserHistory(const InputChannel &channel, const InputUser &user_id, const QVariant &attachedData = QVariant(), Session *session = 0);
@@ -78,7 +76,6 @@ public:
     qint64 channelsEditAdmin(const InputChannel &channel, const InputUser &user_id, const ChannelParticipantRole &role, const QVariant &attachedData = QVariant(), Session *session = 0);
     qint64 channelsEditTitle(const InputChannel &channel, const QString &title, const QVariant &attachedData = QVariant(), Session *session = 0);
     qint64 channelsEditPhoto(const InputChannel &channel, const InputChatPhoto &photo, const QVariant &attachedData = QVariant(), Session *session = 0);
-    qint64 channelsToggleComments(const InputChannel &channel, bool enabled, const QVariant &attachedData = QVariant(), Session *session = 0);
     qint64 channelsCheckUsername(const InputChannel &channel, const QString &username, const QVariant &attachedData = QVariant(), Session *session = 0);
     qint64 channelsUpdateUsername(const InputChannel &channel, const QString &username, const QVariant &attachedData = QVariant(), Session *session = 0);
     qint64 channelsJoinChannel(const InputChannel &channel, const QVariant &attachedData = QVariant(), Session *session = 0);
@@ -109,25 +106,25 @@ public:
     
     qint64 helpGetConfig(const QVariant &attachedData = QVariant(), Session *session = 0);
     qint64 helpGetNearestDc(const QVariant &attachedData = QVariant(), Session *session = 0);
-    qint64 helpGetAppUpdate(const QString &device_model, const QString &system_version, const QString &app_version, const QString &lang_code, const QVariant &attachedData = QVariant(), Session *session = 0);
+    qint64 helpGetAppUpdate(const QVariant &attachedData = QVariant(), Session *session = 0);
     qint64 helpSaveAppLog(const QList<InputAppEvent> &events, const QVariant &attachedData = QVariant(), Session *session = 0);
-    qint64 helpGetInviteText(const QString &lang_code, const QVariant &attachedData = QVariant(), Session *session = 0);
+    qint64 helpGetInviteText(const QVariant &attachedData = QVariant(), Session *session = 0);
     qint64 helpGetSupport(const QVariant &attachedData = QVariant(), Session *session = 0);
-    qint64 helpGetAppChangelog(const QString &device_model, const QString &system_version, const QString &app_version, const QString &lang_code, const QVariant &attachedData = QVariant(), Session *session = 0);
-    qint64 helpGetTermsOfService(const QString &lang_code, const QVariant &attachedData = QVariant(), Session *session = 0);
+    qint64 helpGetAppChangelog(const QVariant &attachedData = QVariant(), Session *session = 0);
+    qint64 helpGetTermsOfService(const QVariant &attachedData = QVariant(), Session *session = 0);
     
     qint64 messagesGetMessages(const QList<qint32> &id, const QVariant &attachedData = QVariant(), Session *session = 0);
     qint64 messagesGetDialogs(qint32 offset_date, qint32 offset_id, const InputPeer &offset_peer, qint32 limit, const QVariant &attachedData = QVariant(), Session *session = 0);
     qint64 messagesGetHistory(const InputPeer &peer, qint32 offset_id, qint32 offset_date, qint32 add_offset, qint32 limit, qint32 max_id, qint32 min_id, const QVariant &attachedData = QVariant(), Session *session = 0);
-    qint64 messagesSearch(bool important_only, const InputPeer &peer, const QString &q, const MessagesFilter &filter, qint32 min_date, qint32 max_date, qint32 offset, qint32 max_id, qint32 limit, const QVariant &attachedData = QVariant(), Session *session = 0);
+    qint64 messagesSearch(const InputPeer &peer, const QString &q, const MessagesFilter &filter, qint32 min_date, qint32 max_date, qint32 offset, qint32 max_id, qint32 limit, const QVariant &attachedData = QVariant(), Session *session = 0);
     qint64 messagesReadHistory(const InputPeer &peer, qint32 max_id, const QVariant &attachedData = QVariant(), Session *session = 0);
-    qint64 messagesDeleteHistory(const InputPeer &peer, qint32 max_id, const QVariant &attachedData = QVariant(), Session *session = 0);
+    qint64 messagesDeleteHistory(bool just_clear, const InputPeer &peer, qint32 max_id, const QVariant &attachedData = QVariant(), Session *session = 0);
     qint64 messagesDeleteMessages(const QList<qint32> &id, const QVariant &attachedData = QVariant(), Session *session = 0);
     qint64 messagesReceivedMessages(qint32 max_id, const QVariant &attachedData = QVariant(), Session *session = 0);
     qint64 messagesSetTyping(const InputPeer &peer, const SendMessageAction &action, const QVariant &attachedData = QVariant(), Session *session = 0);
-    qint64 messagesSendMessage(bool no_webpage, bool broadcast, bool silent, bool background, const InputPeer &peer, qint32 reply_to_msg_id, const QString &message, qint64 random_id, const ReplyMarkup &reply_markup, const QList<MessageEntity> &entities, const QVariant &attachedData = QVariant(), Session *session = 0);
-    qint64 messagesSendMedia(bool broadcast, bool silent, bool background, const InputPeer &peer, qint32 reply_to_msg_id, const InputMedia &media, qint64 random_id, const ReplyMarkup &reply_markup, const QVariant &attachedData = QVariant(), Session *session = 0);
-    qint64 messagesForwardMessages(bool broadcast, bool silent, bool background, const InputPeer &from_peer, const QList<qint32> &id, const QList<qint64> &random_id, const InputPeer &to_peer, const QVariant &attachedData = QVariant(), Session *session = 0);
+    qint64 messagesSendMessage(bool no_webpage, bool silent, bool background, bool clear_draft, const InputPeer &peer, qint32 reply_to_msg_id, const QString &message, qint64 random_id, const ReplyMarkup &reply_markup, const QList<MessageEntity> &entities, const QVariant &attachedData = QVariant(), Session *session = 0);
+    qint64 messagesSendMedia(bool silent, bool background, bool clear_draft, const InputPeer &peer, qint32 reply_to_msg_id, const InputMedia &media, qint64 random_id, const ReplyMarkup &reply_markup, const QVariant &attachedData = QVariant(), Session *session = 0);
+    qint64 messagesForwardMessages(bool silent, bool background, const InputPeer &from_peer, const QList<qint32> &id, const QList<qint64> &random_id, const InputPeer &to_peer, const QVariant &attachedData = QVariant(), Session *session = 0);
     qint64 messagesReportSpam(const InputPeer &peer, const QVariant &attachedData = QVariant(), Session *session = 0);
     qint64 messagesHideReportSpam(const InputPeer &peer, const QVariant &attachedData = QVariant(), Session *session = 0);
     qint64 messagesGetPeerSettings(const InputPeer &peer, const QVariant &attachedData = QVariant(), Session *session = 0);
@@ -173,13 +170,15 @@ public:
     qint64 messagesSaveGif(const InputDocument &id, bool unsave, const QVariant &attachedData = QVariant(), Session *session = 0);
     qint64 messagesGetInlineBotResults(const InputUser &bot, const InputPeer &peer, const InputGeoPoint &geo_point, const QString &query, const QString &offset, const QVariant &attachedData = QVariant(), Session *session = 0);
     qint64 messagesSetInlineBotResults(bool gallery, bool privateValue, qint64 query_id, const QList<InputBotInlineResult> &results, qint32 cache_time, const QString &next_offset, const InlineBotSwitchPM &switch_pm, const QVariant &attachedData = QVariant(), Session *session = 0);
-    qint64 messagesSendInlineBotResult(bool broadcast, bool silent, bool background, const InputPeer &peer, qint32 reply_to_msg_id, qint64 random_id, qint64 query_id, const QString &id, const QVariant &attachedData = QVariant(), Session *session = 0);
+    qint64 messagesSendInlineBotResult(bool silent, bool background, bool clear_draft, const InputPeer &peer, qint32 reply_to_msg_id, qint64 random_id, qint64 query_id, const QString &id, const QVariant &attachedData = QVariant(), Session *session = 0);
     qint64 messagesGetMessageEditData(const InputPeer &peer, qint32 id, const QVariant &attachedData = QVariant(), Session *session = 0);
     qint64 messagesEditMessage(bool no_webpage, const InputPeer &peer, qint32 id, const QString &message, const ReplyMarkup &reply_markup, const QList<MessageEntity> &entities, const QVariant &attachedData = QVariant(), Session *session = 0);
     qint64 messagesEditInlineBotMessage(bool no_webpage, const InputBotInlineMessageID &id, const QString &message, const ReplyMarkup &reply_markup, const QList<MessageEntity> &entities, const QVariant &attachedData = QVariant(), Session *session = 0);
     qint64 messagesGetBotCallbackAnswer(const InputPeer &peer, qint32 msg_id, const QByteArray &data, const QVariant &attachedData = QVariant(), Session *session = 0);
     qint64 messagesSetBotCallbackAnswer(bool alert, qint64 query_id, const QString &message, const QVariant &attachedData = QVariant(), Session *session = 0);
-    qint64 messagesGetPeerDialogs(const QList<InputPeer> &peer, const QVariant &attachedData = QVariant(), Session *session = 0);
+    qint64 messagesGetPeerDialogs(const QList<InputPeer> &peers, const QVariant &attachedData = QVariant(), Session *session = 0);
+    qint64 messagesSaveDraft(bool no_webpage, qint32 reply_to_msg_id, const InputPeer &peer, const QString &message, const QList<MessageEntity> &entities, const QVariant &attachedData = QVariant(), Session *session = 0);
+    qint64 messagesGetAllDrafts(const QVariant &attachedData = QVariant(), Session *session = 0);
     
     qint64 photosUpdateProfilePhoto(const InputPhoto &id, const InputPhotoCrop &crop, const QVariant &attachedData = QVariant(), Session *session = 0);
     qint64 photosUploadProfilePhoto(const InputFile &file, const QString &caption, const InputGeoPoint &geo_point, const InputPhotoCrop &crop, const QVariant &attachedData = QVariant(), Session *session = 0);
@@ -240,8 +239,6 @@ Q_SIGNALS:
     void authResendCodeAnswer(qint64 msgId, const AuthSentCode &result, const QVariant &attachedData);
     void authCancelCodeAnswer(qint64 msgId, bool result, const QVariant &attachedData);
     
-    void channelsGetDialogsAnswer(qint64 msgId, const MessagesDialogs &result, const QVariant &attachedData);
-    void channelsGetImportantHistoryAnswer(qint64 msgId, const MessagesMessages &result, const QVariant &attachedData);
     void channelsReadHistoryAnswer(qint64 msgId, bool result, const QVariant &attachedData);
     void channelsDeleteMessagesAnswer(qint64 msgId, const MessagesAffectedMessages &result, const QVariant &attachedData);
     void channelsDeleteUserHistoryAnswer(qint64 msgId, const MessagesAffectedHistory &result, const QVariant &attachedData);
@@ -256,7 +253,6 @@ Q_SIGNALS:
     void channelsEditAdminAnswer(qint64 msgId, const UpdatesType &result, const QVariant &attachedData);
     void channelsEditTitleAnswer(qint64 msgId, const UpdatesType &result, const QVariant &attachedData);
     void channelsEditPhotoAnswer(qint64 msgId, const UpdatesType &result, const QVariant &attachedData);
-    void channelsToggleCommentsAnswer(qint64 msgId, const UpdatesType &result, const QVariant &attachedData);
     void channelsCheckUsernameAnswer(qint64 msgId, bool result, const QVariant &attachedData);
     void channelsUpdateUsernameAnswer(qint64 msgId, bool result, const QVariant &attachedData);
     void channelsJoinChannelAnswer(qint64 msgId, const UpdatesType &result, const QVariant &attachedData);
@@ -358,6 +354,8 @@ Q_SIGNALS:
     void messagesGetBotCallbackAnswerAnswer(qint64 msgId, const MessagesBotCallbackAnswer &result, const QVariant &attachedData);
     void messagesSetBotCallbackAnswerAnswer(qint64 msgId, bool result, const QVariant &attachedData);
     void messagesGetPeerDialogsAnswer(qint64 msgId, const MessagesPeerDialogs &result, const QVariant &attachedData);
+    void messagesSaveDraftAnswer(qint64 msgId, bool result, const QVariant &attachedData);
+    void messagesGetAllDraftsAnswer(qint64 msgId, const UpdatesType &result, const QVariant &attachedData);
     
     void photosUpdateProfilePhotoAnswer(qint64 msgId, const UserProfilePhoto &result, const QVariant &attachedData);
     void photosUploadProfilePhotoAnswer(qint64 msgId, const PhotosPhoto &result, const QVariant &attachedData);
@@ -418,8 +416,6 @@ Q_SIGNALS:
     void authResendCodeError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     void authCancelCodeError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     
-    void channelsGetDialogsError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
-    void channelsGetImportantHistoryError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     void channelsReadHistoryError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     void channelsDeleteMessagesError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     void channelsDeleteUserHistoryError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
@@ -434,7 +430,6 @@ Q_SIGNALS:
     void channelsEditAdminError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     void channelsEditTitleError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     void channelsEditPhotoError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
-    void channelsToggleCommentsError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     void channelsCheckUsernameError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     void channelsUpdateUsernameError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     void channelsJoinChannelError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
@@ -536,6 +531,8 @@ Q_SIGNALS:
     void messagesGetBotCallbackAnswerError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     void messagesSetBotCallbackAnswerError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     void messagesGetPeerDialogsError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
+    void messagesSaveDraftError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
+    void messagesGetAllDraftsError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     
     void photosUpdateProfilePhotoError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
     void photosUploadProfilePhotoError(qint64 msgId, qint32 errorCode, const QString &errorText, const QVariant &attachedData);
@@ -601,8 +598,6 @@ private:
     QueryMethods authResendCodeMethods;
     QueryMethods authCancelCodeMethods;
     
-    QueryMethods channelsGetDialogsMethods;
-    QueryMethods channelsGetImportantHistoryMethods;
     QueryMethods channelsReadHistoryMethods;
     QueryMethods channelsDeleteMessagesMethods;
     QueryMethods channelsDeleteUserHistoryMethods;
@@ -617,7 +612,6 @@ private:
     QueryMethods channelsEditAdminMethods;
     QueryMethods channelsEditTitleMethods;
     QueryMethods channelsEditPhotoMethods;
-    QueryMethods channelsToggleCommentsMethods;
     QueryMethods channelsCheckUsernameMethods;
     QueryMethods channelsUpdateUsernameMethods;
     QueryMethods channelsJoinChannelMethods;
@@ -719,6 +713,8 @@ private:
     QueryMethods messagesGetBotCallbackAnswerMethods;
     QueryMethods messagesSetBotCallbackAnswerMethods;
     QueryMethods messagesGetPeerDialogsMethods;
+    QueryMethods messagesSaveDraftMethods;
+    QueryMethods messagesGetAllDraftsMethods;
     
     QueryMethods photosUpdateProfilePhotoMethods;
     QueryMethods photosUploadProfilePhotoMethods;
@@ -779,8 +775,6 @@ private:
     void onAuthResendCodeAnswer(Query *q, InboundPkt &inboundPkt);
     void onAuthCancelCodeAnswer(Query *q, InboundPkt &inboundPkt);
     
-    void onChannelsGetDialogsAnswer(Query *q, InboundPkt &inboundPkt);
-    void onChannelsGetImportantHistoryAnswer(Query *q, InboundPkt &inboundPkt);
     void onChannelsReadHistoryAnswer(Query *q, InboundPkt &inboundPkt);
     void onChannelsDeleteMessagesAnswer(Query *q, InboundPkt &inboundPkt);
     void onChannelsDeleteUserHistoryAnswer(Query *q, InboundPkt &inboundPkt);
@@ -795,7 +789,6 @@ private:
     void onChannelsEditAdminAnswer(Query *q, InboundPkt &inboundPkt);
     void onChannelsEditTitleAnswer(Query *q, InboundPkt &inboundPkt);
     void onChannelsEditPhotoAnswer(Query *q, InboundPkt &inboundPkt);
-    void onChannelsToggleCommentsAnswer(Query *q, InboundPkt &inboundPkt);
     void onChannelsCheckUsernameAnswer(Query *q, InboundPkt &inboundPkt);
     void onChannelsUpdateUsernameAnswer(Query *q, InboundPkt &inboundPkt);
     void onChannelsJoinChannelAnswer(Query *q, InboundPkt &inboundPkt);
@@ -897,6 +890,8 @@ private:
     void onMessagesGetBotCallbackAnswerAnswer(Query *q, InboundPkt &inboundPkt);
     void onMessagesSetBotCallbackAnswerAnswer(Query *q, InboundPkt &inboundPkt);
     void onMessagesGetPeerDialogsAnswer(Query *q, InboundPkt &inboundPkt);
+    void onMessagesSaveDraftAnswer(Query *q, InboundPkt &inboundPkt);
+    void onMessagesGetAllDraftsAnswer(Query *q, InboundPkt &inboundPkt);
     
     void onPhotosUpdateProfilePhotoAnswer(Query *q, InboundPkt &inboundPkt);
     void onPhotosUploadProfilePhotoAnswer(Query *q, InboundPkt &inboundPkt);
@@ -957,8 +952,6 @@ private:
     void onAuthResendCodeError(Query *q, qint32 errorCode, const QString &errorText);
     void onAuthCancelCodeError(Query *q, qint32 errorCode, const QString &errorText);
     
-    void onChannelsGetDialogsError(Query *q, qint32 errorCode, const QString &errorText);
-    void onChannelsGetImportantHistoryError(Query *q, qint32 errorCode, const QString &errorText);
     void onChannelsReadHistoryError(Query *q, qint32 errorCode, const QString &errorText);
     void onChannelsDeleteMessagesError(Query *q, qint32 errorCode, const QString &errorText);
     void onChannelsDeleteUserHistoryError(Query *q, qint32 errorCode, const QString &errorText);
@@ -973,7 +966,6 @@ private:
     void onChannelsEditAdminError(Query *q, qint32 errorCode, const QString &errorText);
     void onChannelsEditTitleError(Query *q, qint32 errorCode, const QString &errorText);
     void onChannelsEditPhotoError(Query *q, qint32 errorCode, const QString &errorText);
-    void onChannelsToggleCommentsError(Query *q, qint32 errorCode, const QString &errorText);
     void onChannelsCheckUsernameError(Query *q, qint32 errorCode, const QString &errorText);
     void onChannelsUpdateUsernameError(Query *q, qint32 errorCode, const QString &errorText);
     void onChannelsJoinChannelError(Query *q, qint32 errorCode, const QString &errorText);
@@ -1075,6 +1067,8 @@ private:
     void onMessagesGetBotCallbackAnswerError(Query *q, qint32 errorCode, const QString &errorText);
     void onMessagesSetBotCallbackAnswerError(Query *q, qint32 errorCode, const QString &errorText);
     void onMessagesGetPeerDialogsError(Query *q, qint32 errorCode, const QString &errorText);
+    void onMessagesSaveDraftError(Query *q, qint32 errorCode, const QString &errorText);
+    void onMessagesGetAllDraftsError(Query *q, qint32 errorCode, const QString &errorText);
     
     void onPhotosUpdateProfilePhotoError(Query *q, qint32 errorCode, const QString &errorText);
     void onPhotosUploadProfilePhotoError(Query *q, qint32 errorCode, const QString &errorText);

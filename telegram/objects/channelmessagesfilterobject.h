@@ -16,7 +16,6 @@ class LIBQTELEGRAMSHARED_EXPORT ChannelMessagesFilterObject : public TelegramTyp
     Q_ENUMS(ChannelMessagesFilterClassType)
     Q_PROPERTY(bool excludeNewMessages READ excludeNewMessages WRITE setExcludeNewMessages NOTIFY excludeNewMessagesChanged)
     Q_PROPERTY(qint32 flags READ flags WRITE setFlags NOTIFY flagsChanged)
-    Q_PROPERTY(bool importantOnly READ importantOnly WRITE setImportantOnly NOTIFY importantOnlyChanged)
     Q_PROPERTY(QList<MessageRange> ranges READ ranges WRITE setRanges NOTIFY rangesChanged)
     Q_PROPERTY(ChannelMessagesFilter core READ core WRITE setCore NOTIFY coreChanged)
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
@@ -24,8 +23,7 @@ class LIBQTELEGRAMSHARED_EXPORT ChannelMessagesFilterObject : public TelegramTyp
 public:
     enum ChannelMessagesFilterClassType {
         TypeChannelMessagesFilterEmpty,
-        TypeChannelMessagesFilter,
-        TypeChannelMessagesFilterCollapsed
+        TypeChannelMessagesFilter
     };
 
     ChannelMessagesFilterObject(const ChannelMessagesFilter &core, QObject *parent = 0);
@@ -37,9 +35,6 @@ public:
 
     void setFlags(qint32 flags);
     qint32 flags() const;
-
-    void setImportantOnly(bool importantOnly);
-    bool importantOnly() const;
 
     void setRanges(const QList<MessageRange> &ranges);
     QList<MessageRange> ranges() const;
@@ -58,7 +53,6 @@ Q_SIGNALS:
     void classTypeChanged();
     void excludeNewMessagesChanged();
     void flagsChanged();
-    void importantOnlyChanged();
     void rangesChanged();
 
 private Q_SLOTS:
@@ -104,17 +98,6 @@ inline qint32 ChannelMessagesFilterObject::flags() const {
     return m_core.flags();
 }
 
-inline void ChannelMessagesFilterObject::setImportantOnly(bool importantOnly) {
-    if(m_core.importantOnly() == importantOnly) return;
-    m_core.setImportantOnly(importantOnly);
-    Q_EMIT importantOnlyChanged();
-    Q_EMIT coreChanged();
-}
-
-inline bool ChannelMessagesFilterObject::importantOnly() const {
-    return m_core.importantOnly();
-}
-
 inline void ChannelMessagesFilterObject::setRanges(const QList<MessageRange> &ranges) {
     if(m_core.ranges() == ranges) return;
     m_core.setRanges(ranges);
@@ -132,7 +115,6 @@ inline ChannelMessagesFilterObject &ChannelMessagesFilterObject::operator =(cons
 
     Q_EMIT excludeNewMessagesChanged();
     Q_EMIT flagsChanged();
-    Q_EMIT importantOnlyChanged();
     Q_EMIT rangesChanged();
     Q_EMIT coreChanged();
     return *this;
@@ -150,9 +132,6 @@ inline void ChannelMessagesFilterObject::setClassType(quint32 classType) {
         break;
     case TypeChannelMessagesFilter:
         result = ChannelMessagesFilter::typeChannelMessagesFilter;
-        break;
-    case TypeChannelMessagesFilterCollapsed:
-        result = ChannelMessagesFilter::typeChannelMessagesFilterCollapsed;
         break;
     default:
         result = ChannelMessagesFilter::typeChannelMessagesFilterEmpty;
@@ -173,9 +152,6 @@ inline quint32 ChannelMessagesFilterObject::classType() const {
         break;
     case ChannelMessagesFilter::typeChannelMessagesFilter:
         result = TypeChannelMessagesFilter;
-        break;
-    case ChannelMessagesFilter::typeChannelMessagesFilterCollapsed:
-        result = TypeChannelMessagesFilterCollapsed;
         break;
     default:
         result = TypeChannelMessagesFilterEmpty;

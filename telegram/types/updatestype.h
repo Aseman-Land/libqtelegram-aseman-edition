@@ -100,9 +100,6 @@ public:
     void setSilent(bool silent);
     bool silent() const;
 
-    void setUnread(bool unread);
-    bool unread() const;
-
     void setUpdate(const Update &update);
     Update update() const;
 
@@ -374,15 +371,6 @@ inline void UpdatesType::setSilent(bool silent) {
 
 inline bool UpdatesType::silent() const {
     return (m_flags & 1<<13);
-}
-
-inline void UpdatesType::setUnread(bool unread) {
-    if(unread) m_flags = (m_flags | (1<<0));
-    else m_flags = (m_flags & ~(1<<0));
-}
-
-inline bool UpdatesType::unread() const {
-    return (m_flags & 1<<0);
 }
 
 inline void UpdatesType::setUpdate(const Update &update) {
@@ -774,7 +762,6 @@ inline QMap<QString, QVariant> UpdatesType::toMap() const {
     
     case typeUpdateShortMessage: {
         result["classType"] = "UpdatesType::typeUpdateShortMessage";
-        result["unread"] = QVariant::fromValue<bool>(unread());
         result["out"] = QVariant::fromValue<bool>(out());
         result["mentioned"] = QVariant::fromValue<bool>(mentioned());
         result["mediaUnread"] = QVariant::fromValue<bool>(mediaUnread());
@@ -798,7 +785,6 @@ inline QMap<QString, QVariant> UpdatesType::toMap() const {
     
     case typeUpdateShortChatMessage: {
         result["classType"] = "UpdatesType::typeUpdateShortChatMessage";
-        result["unread"] = QVariant::fromValue<bool>(unread());
         result["out"] = QVariant::fromValue<bool>(out());
         result["mentioned"] = QVariant::fromValue<bool>(mentioned());
         result["mediaUnread"] = QVariant::fromValue<bool>(mediaUnread());
@@ -872,7 +858,6 @@ inline QMap<QString, QVariant> UpdatesType::toMap() const {
     
     case typeUpdateShortSentMessage: {
         result["classType"] = "UpdatesType::typeUpdateShortSentMessage";
-        result["unread"] = QVariant::fromValue<bool>(unread());
         result["out"] = QVariant::fromValue<bool>(out());
         result["id"] = QVariant::fromValue<qint32>(id());
         result["pts"] = QVariant::fromValue<qint32>(pts());
@@ -900,7 +885,6 @@ inline UpdatesType UpdatesType::fromMap(const QMap<QString, QVariant> &map) {
     }
     if(map.value("classType").toString() == "UpdatesType::typeUpdateShortMessage") {
         result.setClassType(typeUpdateShortMessage);
-        result.setUnread( map.value("unread").value<bool>() );
         result.setOut( map.value("out").value<bool>() );
         result.setMentioned( map.value("mentioned").value<bool>() );
         result.setMediaUnread( map.value("mediaUnread").value<bool>() );
@@ -923,7 +907,6 @@ inline UpdatesType UpdatesType::fromMap(const QMap<QString, QVariant> &map) {
     }
     if(map.value("classType").toString() == "UpdatesType::typeUpdateShortChatMessage") {
         result.setClassType(typeUpdateShortChatMessage);
-        result.setUnread( map.value("unread").value<bool>() );
         result.setOut( map.value("out").value<bool>() );
         result.setMentioned( map.value("mentioned").value<bool>() );
         result.setMediaUnread( map.value("mediaUnread").value<bool>() );
@@ -996,7 +979,6 @@ inline UpdatesType UpdatesType::fromMap(const QMap<QString, QVariant> &map) {
     }
     if(map.value("classType").toString() == "UpdatesType::typeUpdateShortSentMessage") {
         result.setClassType(typeUpdateShortSentMessage);
-        result.setUnread( map.value("unread").value<bool>() );
         result.setOut( map.value("out").value<bool>() );
         result.setId( map.value("id").value<qint32>() );
         result.setPts( map.value("pts").value<qint32>() );

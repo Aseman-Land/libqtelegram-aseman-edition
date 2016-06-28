@@ -15,7 +15,6 @@ class LIBQTELEGRAMSHARED_EXPORT MessagesMessagesObject : public TelegramTypeQObj
     Q_OBJECT
     Q_ENUMS(MessagesMessagesClassType)
     Q_PROPERTY(QList<Chat> chats READ chats WRITE setChats NOTIFY chatsChanged)
-    Q_PROPERTY(QList<MessageGroup> collapsed READ collapsed WRITE setCollapsed NOTIFY collapsedChanged)
     Q_PROPERTY(qint32 count READ count WRITE setCount NOTIFY countChanged)
     Q_PROPERTY(qint32 flags READ flags WRITE setFlags NOTIFY flagsChanged)
     Q_PROPERTY(QList<Message> messages READ messages WRITE setMessages NOTIFY messagesChanged)
@@ -37,9 +36,6 @@ public:
 
     void setChats(const QList<Chat> &chats);
     QList<Chat> chats() const;
-
-    void setCollapsed(const QList<MessageGroup> &collapsed);
-    QList<MessageGroup> collapsed() const;
 
     void setCount(qint32 count);
     qint32 count() const;
@@ -69,7 +65,6 @@ Q_SIGNALS:
     void coreChanged();
     void classTypeChanged();
     void chatsChanged();
-    void collapsedChanged();
     void countChanged();
     void flagsChanged();
     void messagesChanged();
@@ -106,17 +101,6 @@ inline void MessagesMessagesObject::setChats(const QList<Chat> &chats) {
 
 inline QList<Chat> MessagesMessagesObject::chats() const {
     return m_core.chats();
-}
-
-inline void MessagesMessagesObject::setCollapsed(const QList<MessageGroup> &collapsed) {
-    if(m_core.collapsed() == collapsed) return;
-    m_core.setCollapsed(collapsed);
-    Q_EMIT collapsedChanged();
-    Q_EMIT coreChanged();
-}
-
-inline QList<MessageGroup> MessagesMessagesObject::collapsed() const {
-    return m_core.collapsed();
 }
 
 inline void MessagesMessagesObject::setCount(qint32 count) {
@@ -179,7 +163,6 @@ inline MessagesMessagesObject &MessagesMessagesObject::operator =(const Messages
     m_core = b;
 
     Q_EMIT chatsChanged();
-    Q_EMIT collapsedChanged();
     Q_EMIT countChanged();
     Q_EMIT flagsChanged();
     Q_EMIT messagesChanged();

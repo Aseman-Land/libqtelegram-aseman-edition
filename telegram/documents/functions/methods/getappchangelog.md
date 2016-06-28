@@ -7,16 +7,12 @@ TelegramCore::helpGetAppChangelog
 ## Schema:
 
 ```c++
-help.getAppChangelog#5bab7fb2 device_model:string system_version:string app_version:string lang_code:string = help.AppChangelog;
+help.getAppChangelog#b921197a = help.AppChangelog;
 ```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
-|deviceModel|QString||
-|systemVersion|QString||
-|appVersion|QString||
-|langCode|QString||
 |callBack|Callback&lt;[HelpAppChangelog](../../types/helpappchangelog.md)&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
@@ -53,7 +49,7 @@ onGetAppChangelogError(qint64 msgId, qint32 errorCode, const QString &errorText)
 ## Examples:
 
 ```c++
-tg->getAppChangelog(device_model, system_version, app_version, lang_code, [=](TG_GET_APP_CHANGELOG_CALLBACK){
+tg->getAppChangelog([=](TG_GET_APP_CHANGELOG_CALLBACK){
     ...
 }, 30000);
 ```

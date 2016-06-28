@@ -38,7 +38,7 @@ class LIBQTELEGRAMSHARED_EXPORT Account : public TelegramFunctionObject
 {
 public:
     enum AccountFunction {
-        fncAccountRegisterDevice = 0x446c712c,
+        fncAccountRegisterDevice = 0x637ea878,
         fncAccountUnregisterDevice = 0x65c55b40,
         fncAccountUpdateNotifySettings = 0x84be5b93,
         fncAccountGetNotifySettings = 0x12b3ad31,
@@ -67,7 +67,7 @@ public:
     Account();
     virtual ~Account();
 
-    static bool registerDevice(OutboundPkt *out, qint32 tokenType, const QString &token, const QString &deviceModel, const QString &systemVersion, const QString &appVersion, bool appSandbox, const QString &langCode);
+    static bool registerDevice(OutboundPkt *out, qint32 tokenType, const QString &token);
     static bool registerDeviceResult(InboundPkt *in);
 
     static bool unregisterDevice(OutboundPkt *out, qint32 tokenType, const QString &token);
@@ -148,15 +148,10 @@ inline Functions::Account::Account() {
 inline Functions::Account::~Account() {
 }
 
-inline bool Functions::Account::registerDevice(OutboundPkt *out, qint32 tokenType, const QString &token, const QString &deviceModel, const QString &systemVersion, const QString &appVersion, bool appSandbox, const QString &langCode) {
+inline bool Functions::Account::registerDevice(OutboundPkt *out, qint32 tokenType, const QString &token) {
     out->appendInt(fncAccountRegisterDevice);
     out->appendInt(tokenType);
     out->appendQString(token);
-    out->appendQString(deviceModel);
-    out->appendQString(systemVersion);
-    out->appendQString(appVersion);
-    out->appendBool(appSandbox);
-    out->appendQString(langCode);
     return true;
 }
 

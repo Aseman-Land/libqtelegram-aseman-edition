@@ -32,7 +32,6 @@
 * [typeUpdateReadMessagesContents](#updatetypeupdatereadmessagescontents)
 * [typeUpdateChannelTooLong](#updatetypeupdatechanneltoolong)
 * [typeUpdateChannel](#updatetypeupdatechannel)
-* [typeUpdateChannelGroup](#updatetypeupdatechannelgroup)
 * [typeUpdateNewChannelMessage](#updatetypeupdatenewchannelmessage)
 * [typeUpdateReadChannelInbox](#updatetypeupdatereadchannelinbox)
 * [typeUpdateDeleteChannelMessages](#updatetypeupdatedeletechannelmessages)
@@ -50,6 +49,8 @@
 * [typeUpdateBotCallbackQuery](#updatetypeupdatebotcallbackquery)
 * [typeUpdateEditMessage](#updatetypeupdateeditmessage)
 * [typeUpdateInlineBotCallbackQuery](#updatetypeupdateinlinebotcallbackquery)
+* [typeUpdateReadChannelOutbox](#updatetypeupdatereadchanneloutbox)
+* [typeUpdateDraftMessage](#updatetypeupdatedraftmessage)
 
 ## Update::typeUpdateNewMessage
 
@@ -520,21 +521,6 @@ updateChannel#b6d45656 channel_id:int = Update;
 |----|----|
 |channelId|qint32|
 
-## Update::typeUpdateChannelGroup
-
-#### Schema:
-
-```c++
-updateChannelGroup#c36c1e3c channel_id:int group:MessageGroup = Update;
-```
-
-#### Parameters:
-
-|Name|Type|
-|----|----|
-|channelId|qint32|
-|group|[MessageGroup](messagegroup.md)|
-
 ## Update::typeUpdateNewChannelMessage
 
 #### Schema:
@@ -799,4 +785,34 @@ updateInlineBotCallbackQuery#2cbd95af query_id:long user_id:int msg_id:InputBotI
 |userId|qint32|
 |msgId|[InputBotInlineMessageID](inputbotinlinemessageid.md)|
 |data|QByteArray|
+
+## Update::typeUpdateReadChannelOutbox
+
+#### Schema:
+
+```c++
+updateReadChannelOutbox#25d6c9c7 channel_id:int max_id:int = Update;
+```
+
+#### Parameters:
+
+|Name|Type|
+|----|----|
+|channelId|qint32|
+|maxId|qint32|
+
+## Update::typeUpdateDraftMessage
+
+#### Schema:
+
+```c++
+updateDraftMessage#ee2bb969 peer:Peer draft:DraftMessage = Update;
+```
+
+#### Parameters:
+
+|Name|Type|
+|----|----|
+|peer|[Peer](peer.md)|
+|draft|[DraftMessage](draftmessage.md)|
 

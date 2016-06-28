@@ -7,13 +7,12 @@ TelegramCore::helpGetInviteText
 ## Schema:
 
 ```c++
-help.getInviteText#a4a95186 lang_code:string = help.InviteText;
+help.getInviteText#4d392343 = help.InviteText;
 ```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
-|langCode|QString||
 |callBack|Callback&lt;[HelpInviteText](../../types/helpinvitetext.md)&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
@@ -50,7 +49,7 @@ onGetInviteTextError(qint64 msgId, qint32 errorCode, const QString &errorText)
 ## Examples:
 
 ```c++
-tg->getInviteText(lang_code, [=](TG_GET_INVITE_TEXT_CALLBACK){
+tg->getInviteText([=](TG_GET_INVITE_TEXT_CALLBACK){
     ...
 }, 30000);
 ```

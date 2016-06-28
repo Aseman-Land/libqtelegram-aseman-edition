@@ -22,11 +22,10 @@ class LIBQTELEGRAMSHARED_EXPORT UpdatesChannelDifferenceObject : public Telegram
     Q_PROPERTY(QList<Update> otherUpdates READ otherUpdates WRITE setOtherUpdates NOTIFY otherUpdatesChanged)
     Q_PROPERTY(qint32 pts READ pts WRITE setPts NOTIFY ptsChanged)
     Q_PROPERTY(qint32 readInboxMaxId READ readInboxMaxId WRITE setReadInboxMaxId NOTIFY readInboxMaxIdChanged)
+    Q_PROPERTY(qint32 readOutboxMaxId READ readOutboxMaxId WRITE setReadOutboxMaxId NOTIFY readOutboxMaxIdChanged)
     Q_PROPERTY(qint32 timeout READ timeout WRITE setTimeout NOTIFY timeoutChanged)
-    Q_PROPERTY(qint32 topImportantMessage READ topImportantMessage WRITE setTopImportantMessage NOTIFY topImportantMessageChanged)
     Q_PROPERTY(qint32 topMessage READ topMessage WRITE setTopMessage NOTIFY topMessageChanged)
     Q_PROPERTY(qint32 unreadCount READ unreadCount WRITE setUnreadCount NOTIFY unreadCountChanged)
-    Q_PROPERTY(qint32 unreadImportantCount READ unreadImportantCount WRITE setUnreadImportantCount NOTIFY unreadImportantCountChanged)
     Q_PROPERTY(QList<User> users READ users WRITE setUsers NOTIFY usersChanged)
     Q_PROPERTY(UpdatesChannelDifference core READ core WRITE setCore NOTIFY coreChanged)
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
@@ -66,20 +65,17 @@ public:
     void setReadInboxMaxId(qint32 readInboxMaxId);
     qint32 readInboxMaxId() const;
 
+    void setReadOutboxMaxId(qint32 readOutboxMaxId);
+    qint32 readOutboxMaxId() const;
+
     void setTimeout(qint32 timeout);
     qint32 timeout() const;
-
-    void setTopImportantMessage(qint32 topImportantMessage);
-    qint32 topImportantMessage() const;
 
     void setTopMessage(qint32 topMessage);
     qint32 topMessage() const;
 
     void setUnreadCount(qint32 unreadCount);
     qint32 unreadCount() const;
-
-    void setUnreadImportantCount(qint32 unreadImportantCount);
-    qint32 unreadImportantCount() const;
 
     void setUsers(const QList<User> &users);
     QList<User> users() const;
@@ -104,11 +100,10 @@ Q_SIGNALS:
     void otherUpdatesChanged();
     void ptsChanged();
     void readInboxMaxIdChanged();
+    void readOutboxMaxIdChanged();
     void timeoutChanged();
-    void topImportantMessageChanged();
     void topMessageChanged();
     void unreadCountChanged();
-    void unreadImportantCountChanged();
     void usersChanged();
 
 private Q_SLOTS:
@@ -220,6 +215,17 @@ inline qint32 UpdatesChannelDifferenceObject::readInboxMaxId() const {
     return m_core.readInboxMaxId();
 }
 
+inline void UpdatesChannelDifferenceObject::setReadOutboxMaxId(qint32 readOutboxMaxId) {
+    if(m_core.readOutboxMaxId() == readOutboxMaxId) return;
+    m_core.setReadOutboxMaxId(readOutboxMaxId);
+    Q_EMIT readOutboxMaxIdChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 UpdatesChannelDifferenceObject::readOutboxMaxId() const {
+    return m_core.readOutboxMaxId();
+}
+
 inline void UpdatesChannelDifferenceObject::setTimeout(qint32 timeout) {
     if(m_core.timeout() == timeout) return;
     m_core.setTimeout(timeout);
@@ -229,17 +235,6 @@ inline void UpdatesChannelDifferenceObject::setTimeout(qint32 timeout) {
 
 inline qint32 UpdatesChannelDifferenceObject::timeout() const {
     return m_core.timeout();
-}
-
-inline void UpdatesChannelDifferenceObject::setTopImportantMessage(qint32 topImportantMessage) {
-    if(m_core.topImportantMessage() == topImportantMessage) return;
-    m_core.setTopImportantMessage(topImportantMessage);
-    Q_EMIT topImportantMessageChanged();
-    Q_EMIT coreChanged();
-}
-
-inline qint32 UpdatesChannelDifferenceObject::topImportantMessage() const {
-    return m_core.topImportantMessage();
 }
 
 inline void UpdatesChannelDifferenceObject::setTopMessage(qint32 topMessage) {
@@ -262,17 +257,6 @@ inline void UpdatesChannelDifferenceObject::setUnreadCount(qint32 unreadCount) {
 
 inline qint32 UpdatesChannelDifferenceObject::unreadCount() const {
     return m_core.unreadCount();
-}
-
-inline void UpdatesChannelDifferenceObject::setUnreadImportantCount(qint32 unreadImportantCount) {
-    if(m_core.unreadImportantCount() == unreadImportantCount) return;
-    m_core.setUnreadImportantCount(unreadImportantCount);
-    Q_EMIT unreadImportantCountChanged();
-    Q_EMIT coreChanged();
-}
-
-inline qint32 UpdatesChannelDifferenceObject::unreadImportantCount() const {
-    return m_core.unreadImportantCount();
 }
 
 inline void UpdatesChannelDifferenceObject::setUsers(const QList<User> &users) {
@@ -298,11 +282,10 @@ inline UpdatesChannelDifferenceObject &UpdatesChannelDifferenceObject::operator 
     Q_EMIT otherUpdatesChanged();
     Q_EMIT ptsChanged();
     Q_EMIT readInboxMaxIdChanged();
+    Q_EMIT readOutboxMaxIdChanged();
     Q_EMIT timeoutChanged();
-    Q_EMIT topImportantMessageChanged();
     Q_EMIT topMessageChanged();
     Q_EMIT unreadCountChanged();
-    Q_EMIT unreadImportantCountChanged();
     Q_EMIT usersChanged();
     Q_EMIT coreChanged();
     return *this;

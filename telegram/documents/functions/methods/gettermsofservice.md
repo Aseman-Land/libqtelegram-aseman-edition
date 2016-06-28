@@ -7,13 +7,12 @@ TelegramCore::helpGetTermsOfService
 ## Schema:
 
 ```c++
-help.getTermsOfService#37d78f83 lang_code:string = help.TermsOfService;
+help.getTermsOfService#350170f3 = help.TermsOfService;
 ```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
-|langCode|QString||
 |callBack|Callback&lt;[HelpTermsOfService](../../types/helptermsofservice.md)&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
@@ -50,7 +49,7 @@ onGetTermsOfServiceError(qint64 msgId, qint32 errorCode, const QString &errorTex
 ## Examples:
 
 ```c++
-tg->getTermsOfService(lang_code, [=](TG_GET_TERMS_OF_SERVICE_CALLBACK){
+tg->getTermsOfService([=](TG_GET_TERMS_OF_SERVICE_CALLBACK){
     ...
 }, 30000);
 ```

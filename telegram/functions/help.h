@@ -13,7 +13,6 @@
 #include "telegram/types/config.h"
 #include "telegram/types/nearestdc.h"
 #include "telegram/types/helpappupdate.h"
-#include <QString>
 #include <QList>
 #include "telegram/types/inputappevent.h"
 #include "telegram/types/helpinvitetext.h"
@@ -30,12 +29,12 @@ public:
     enum HelpFunction {
         fncHelpGetConfig = 0xc4f9186b,
         fncHelpGetNearestDc = 0x1fb33026,
-        fncHelpGetAppUpdate = 0xc812ac7e,
+        fncHelpGetAppUpdate = 0xae2de196,
         fncHelpSaveAppLog = 0x6f02f748,
-        fncHelpGetInviteText = 0xa4a95186,
+        fncHelpGetInviteText = 0x4d392343,
         fncHelpGetSupport = 0x9cdf08cd,
-        fncHelpGetAppChangelog = 0x5bab7fb2,
-        fncHelpGetTermsOfService = 0x37d78f83
+        fncHelpGetAppChangelog = 0xb921197a,
+        fncHelpGetTermsOfService = 0x350170f3
     };
 
     Help();
@@ -47,22 +46,22 @@ public:
     static bool getNearestDc(OutboundPkt *out);
     static NearestDc getNearestDcResult(InboundPkt *in);
 
-    static bool getAppUpdate(OutboundPkt *out, const QString &deviceModel, const QString &systemVersion, const QString &appVersion, const QString &langCode);
+    static bool getAppUpdate(OutboundPkt *out);
     static HelpAppUpdate getAppUpdateResult(InboundPkt *in);
 
     static bool saveAppLog(OutboundPkt *out, const QList<InputAppEvent> &events);
     static bool saveAppLogResult(InboundPkt *in);
 
-    static bool getInviteText(OutboundPkt *out, const QString &langCode);
+    static bool getInviteText(OutboundPkt *out);
     static HelpInviteText getInviteTextResult(InboundPkt *in);
 
     static bool getSupport(OutboundPkt *out);
     static HelpSupport getSupportResult(InboundPkt *in);
 
-    static bool getAppChangelog(OutboundPkt *out, const QString &deviceModel, const QString &systemVersion, const QString &appVersion, const QString &langCode);
+    static bool getAppChangelog(OutboundPkt *out);
     static HelpAppChangelog getAppChangelogResult(InboundPkt *in);
 
-    static bool getTermsOfService(OutboundPkt *out, const QString &langCode);
+    static bool getTermsOfService(OutboundPkt *out);
     static HelpTermsOfService getTermsOfServiceResult(InboundPkt *in);
 
 };
@@ -96,12 +95,8 @@ inline NearestDc Functions::Help::getNearestDcResult(InboundPkt *in) {
     return result;
 }
 
-inline bool Functions::Help::getAppUpdate(OutboundPkt *out, const QString &deviceModel, const QString &systemVersion, const QString &appVersion, const QString &langCode) {
+inline bool Functions::Help::getAppUpdate(OutboundPkt *out) {
     out->appendInt(fncHelpGetAppUpdate);
-    out->appendQString(deviceModel);
-    out->appendQString(systemVersion);
-    out->appendQString(appVersion);
-    out->appendQString(langCode);
     return true;
 }
 
@@ -127,9 +122,8 @@ inline bool Functions::Help::saveAppLogResult(InboundPkt *in) {
     return result;
 }
 
-inline bool Functions::Help::getInviteText(OutboundPkt *out, const QString &langCode) {
+inline bool Functions::Help::getInviteText(OutboundPkt *out) {
     out->appendInt(fncHelpGetInviteText);
-    out->appendQString(langCode);
     return true;
 }
 
@@ -150,12 +144,8 @@ inline HelpSupport Functions::Help::getSupportResult(InboundPkt *in) {
     return result;
 }
 
-inline bool Functions::Help::getAppChangelog(OutboundPkt *out, const QString &deviceModel, const QString &systemVersion, const QString &appVersion, const QString &langCode) {
+inline bool Functions::Help::getAppChangelog(OutboundPkt *out) {
     out->appendInt(fncHelpGetAppChangelog);
-    out->appendQString(deviceModel);
-    out->appendQString(systemVersion);
-    out->appendQString(appVersion);
-    out->appendQString(langCode);
     return true;
 }
 
@@ -165,9 +155,8 @@ inline HelpAppChangelog Functions::Help::getAppChangelogResult(InboundPkt *in) {
     return result;
 }
 
-inline bool Functions::Help::getTermsOfService(OutboundPkt *out, const QString &langCode) {
+inline bool Functions::Help::getTermsOfService(OutboundPkt *out) {
     out->appendInt(fncHelpGetTermsOfService);
-    out->appendQString(langCode);
     return true;
 }
 

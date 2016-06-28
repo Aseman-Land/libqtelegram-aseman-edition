@@ -7,15 +7,15 @@ TelegramCore::messagesSendMedia
 ## Schema:
 
 ```c++
-messages.sendMedia#c8f16791 flags:# broadcast:flags.4?true silent:flags.5?true background:flags.6?true peer:InputPeer reply_to_msg_id:flags.0?int media:InputMedia random_id:long reply_markup:flags.2?ReplyMarkup = Updates;
+messages.sendMedia#c8f16791 flags:# silent:flags.5?true background:flags.6?true clear_draft:flags.7?true peer:InputPeer reply_to_msg_id:flags.0?int media:InputMedia random_id:long reply_markup:flags.2?ReplyMarkup = Updates;
 ```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
-|broadcast|bool||
 |silent|bool||
 |background|bool||
+|clearDraft|bool||
 |peer|[InputPeer](../../types/inputpeer.md)||
 |replyToMsgId|qint32||
 |media|[InputMedia](../../types/inputmedia.md)||
@@ -57,7 +57,7 @@ onSendMediaError(qint64 msgId, qint32 errorCode, const QString &errorText)
 ## Examples:
 
 ```c++
-tg->sendMedia(broadcast, silent, background, peer, reply_to_msg_id, media, random_id, reply_markup, [=](TG_SEND_MEDIA_CALLBACK){
+tg->sendMedia(silent, background, clear_draft, peer, reply_to_msg_id, media, random_id, reply_markup, [=](TG_SEND_MEDIA_CALLBACK){
     ...
 }, 30000);
 ```

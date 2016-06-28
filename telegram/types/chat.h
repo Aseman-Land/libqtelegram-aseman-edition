@@ -28,7 +28,7 @@ public:
         typeChat = 0xd91cdd54,
         typeChatForbidden = 0x7328bdb,
         typeChannel = 0xa14dca52,
-        typeChannelForbidden = 0x2d85832c
+        typeChannelForbidden = 0x8537784f
     };
 
     Chat(ChatClassType classType = typeChatEmpty, InboundPkt *in = 0);
@@ -492,6 +492,7 @@ inline bool Chat::fetch(InboundPkt *in) {
         break;
     
     case typeChannelForbidden: {
+        m_flags = in->fetchInt();
         m_id = in->fetchInt();
         m_accessHash = in->fetchLong();
         m_title = in->fetchQString();
@@ -550,6 +551,7 @@ inline bool Chat::push(OutboundPkt *out) const {
         break;
     
     case typeChannelForbidden: {
+        out->appendInt(m_flags);
         out->appendInt(m_id);
         out->appendLong(m_accessHash);
         out->appendQString(m_title);
@@ -627,6 +629,8 @@ inline QMap<QString, QVariant> Chat::toMap() const {
     
     case typeChannelForbidden: {
         result["classType"] = "Chat::typeChannelForbidden";
+        result["broadcast"] = QVariant::fromValue<bool>(broadcast());
+        result["megagroup"] = QVariant::fromValue<bool>(megagroup());
         result["id"] = QVariant::fromValue<qint32>(id());
         result["accessHash"] = QVariant::fromValue<qint64>(accessHash());
         result["title"] = QVariant::fromValue<QString>(title());
@@ -695,6 +699,8 @@ inline Chat Chat::fromMap(const QMap<QString, QVariant> &map) {
     }
     if(map.value("classType").toString() == "Chat::typeChannelForbidden") {
         result.setClassType(typeChannelForbidden);
+        result.setBroadcast( map.value("broadcast").value<bool>() );
+        result.setMegagroup( map.value("megagroup").value<bool>() );
         result.setId( map.value("id").value<qint32>() );
         result.setAccessHash( map.value("accessHash").value<qint64>() );
         result.setTitle( map.value("title").value<QString>() );
@@ -742,6 +748,7 @@ inline QDataStream &operator<<(QDataStream &stream, const Chat &item) {
         stream << item.restrictionReason();
         break;
     case Chat::typeChannelForbidden:
+        stream << item.flags();
         stream << item.id();
         stream << item.accessHash();
         stream << item.title();
@@ -828,6 +835,9 @@ inline QDataStream &operator>>(QDataStream &stream, Chat &item) {
     }
         break;
     case Chat::typeChannelForbidden: {
+        qint32 m_flags;
+        stream >> m_flags;
+        item.setFlags(m_flags);
         qint32 m_id;
         stream >> m_id;
         item.setId(m_id);

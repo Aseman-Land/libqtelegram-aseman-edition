@@ -27,7 +27,7 @@ class LIBQTELEGRAMSHARED_EXPORT UpdatesChannelDifference : public TelegramTypeOb
 public:
     enum UpdatesChannelDifferenceClassType {
         typeUpdatesChannelDifferenceEmpty = 0x3e11affb,
-        typeUpdatesChannelDifferenceTooLong = 0x5e167646,
+        typeUpdatesChannelDifferenceTooLong = 0x410dee07,
         typeUpdatesChannelDifference = 0x2064674e
     };
 
@@ -60,20 +60,17 @@ public:
     void setReadInboxMaxId(qint32 readInboxMaxId);
     qint32 readInboxMaxId() const;
 
+    void setReadOutboxMaxId(qint32 readOutboxMaxId);
+    qint32 readOutboxMaxId() const;
+
     void setTimeout(qint32 timeout);
     qint32 timeout() const;
-
-    void setTopImportantMessage(qint32 topImportantMessage);
-    qint32 topImportantMessage() const;
 
     void setTopMessage(qint32 topMessage);
     qint32 topMessage() const;
 
     void setUnreadCount(qint32 unreadCount);
     qint32 unreadCount() const;
-
-    void setUnreadImportantCount(qint32 unreadImportantCount);
-    qint32 unreadImportantCount() const;
 
     void setUsers(const QList<User> &users);
     QList<User> users() const;
@@ -102,11 +99,10 @@ private:
     QList<Update> m_otherUpdates;
     qint32 m_pts;
     qint32 m_readInboxMaxId;
+    qint32 m_readOutboxMaxId;
     qint32 m_timeout;
-    qint32 m_topImportantMessage;
     qint32 m_topMessage;
     qint32 m_unreadCount;
-    qint32 m_unreadImportantCount;
     QList<User> m_users;
     UpdatesChannelDifferenceClassType m_classType;
 };
@@ -120,11 +116,10 @@ inline UpdatesChannelDifference::UpdatesChannelDifference(UpdatesChannelDifferen
     m_flags(0),
     m_pts(0),
     m_readInboxMaxId(0),
+    m_readOutboxMaxId(0),
     m_timeout(0),
-    m_topImportantMessage(0),
     m_topMessage(0),
     m_unreadCount(0),
-    m_unreadImportantCount(0),
     m_classType(classType)
 {
     if(in) fetch(in);
@@ -134,11 +129,10 @@ inline UpdatesChannelDifference::UpdatesChannelDifference(InboundPkt *in) :
     m_flags(0),
     m_pts(0),
     m_readInboxMaxId(0),
+    m_readOutboxMaxId(0),
     m_timeout(0),
-    m_topImportantMessage(0),
     m_topMessage(0),
     m_unreadCount(0),
-    m_unreadImportantCount(0),
     m_classType(typeUpdatesChannelDifferenceEmpty)
 {
     fetch(in);
@@ -149,11 +143,10 @@ inline UpdatesChannelDifference::UpdatesChannelDifference(const Null &null) :
     m_flags(0),
     m_pts(0),
     m_readInboxMaxId(0),
+    m_readOutboxMaxId(0),
     m_timeout(0),
-    m_topImportantMessage(0),
     m_topMessage(0),
     m_unreadCount(0),
-    m_unreadImportantCount(0),
     m_classType(typeUpdatesChannelDifferenceEmpty)
 {
 }
@@ -226,20 +219,20 @@ inline qint32 UpdatesChannelDifference::readInboxMaxId() const {
     return m_readInboxMaxId;
 }
 
+inline void UpdatesChannelDifference::setReadOutboxMaxId(qint32 readOutboxMaxId) {
+    m_readOutboxMaxId = readOutboxMaxId;
+}
+
+inline qint32 UpdatesChannelDifference::readOutboxMaxId() const {
+    return m_readOutboxMaxId;
+}
+
 inline void UpdatesChannelDifference::setTimeout(qint32 timeout) {
     m_timeout = timeout;
 }
 
 inline qint32 UpdatesChannelDifference::timeout() const {
     return m_timeout;
-}
-
-inline void UpdatesChannelDifference::setTopImportantMessage(qint32 topImportantMessage) {
-    m_topImportantMessage = topImportantMessage;
-}
-
-inline qint32 UpdatesChannelDifference::topImportantMessage() const {
-    return m_topImportantMessage;
 }
 
 inline void UpdatesChannelDifference::setTopMessage(qint32 topMessage) {
@@ -256,14 +249,6 @@ inline void UpdatesChannelDifference::setUnreadCount(qint32 unreadCount) {
 
 inline qint32 UpdatesChannelDifference::unreadCount() const {
     return m_unreadCount;
-}
-
-inline void UpdatesChannelDifference::setUnreadImportantCount(qint32 unreadImportantCount) {
-    m_unreadImportantCount = unreadImportantCount;
-}
-
-inline qint32 UpdatesChannelDifference::unreadImportantCount() const {
-    return m_unreadImportantCount;
 }
 
 inline void UpdatesChannelDifference::setUsers(const QList<User> &users) {
@@ -283,11 +268,10 @@ inline bool UpdatesChannelDifference::operator ==(const UpdatesChannelDifference
            m_otherUpdates == b.m_otherUpdates &&
            m_pts == b.m_pts &&
            m_readInboxMaxId == b.m_readInboxMaxId &&
+           m_readOutboxMaxId == b.m_readOutboxMaxId &&
            m_timeout == b.m_timeout &&
-           m_topImportantMessage == b.m_topImportantMessage &&
            m_topMessage == b.m_topMessage &&
            m_unreadCount == b.m_unreadCount &&
-           m_unreadImportantCount == b.m_unreadImportantCount &&
            m_users == b.m_users;
 }
 
@@ -321,10 +305,9 @@ inline bool UpdatesChannelDifference::fetch(InboundPkt *in) {
             m_timeout = in->fetchInt();
         }
         m_topMessage = in->fetchInt();
-        m_topImportantMessage = in->fetchInt();
         m_readInboxMaxId = in->fetchInt();
+        m_readOutboxMaxId = in->fetchInt();
         m_unreadCount = in->fetchInt();
-        m_unreadImportantCount = in->fetchInt();
         if(in->fetchInt() != (qint32)CoreTypes::typeVector) return false;
         qint32 m_messages_length = in->fetchInt();
         m_messages.clear();
@@ -419,10 +402,9 @@ inline bool UpdatesChannelDifference::push(OutboundPkt *out) const {
         out->appendInt(m_pts);
         out->appendInt(m_timeout);
         out->appendInt(m_topMessage);
-        out->appendInt(m_topImportantMessage);
         out->appendInt(m_readInboxMaxId);
+        out->appendInt(m_readOutboxMaxId);
         out->appendInt(m_unreadCount);
-        out->appendInt(m_unreadImportantCount);
         out->appendInt(CoreTypes::typeVector);
         out->appendInt(m_messages.count());
         for (qint32 i = 0; i < m_messages.count(); i++) {
@@ -493,10 +475,9 @@ inline QMap<QString, QVariant> UpdatesChannelDifference::toMap() const {
         result["pts"] = QVariant::fromValue<qint32>(pts());
         result["timeout"] = QVariant::fromValue<qint32>(timeout());
         result["topMessage"] = QVariant::fromValue<qint32>(topMessage());
-        result["topImportantMessage"] = QVariant::fromValue<qint32>(topImportantMessage());
         result["readInboxMaxId"] = QVariant::fromValue<qint32>(readInboxMaxId());
+        result["readOutboxMaxId"] = QVariant::fromValue<qint32>(readOutboxMaxId());
         result["unreadCount"] = QVariant::fromValue<qint32>(unreadCount());
-        result["unreadImportantCount"] = QVariant::fromValue<qint32>(unreadImportantCount());
         QList<QVariant> _messages;
         Q_FOREACH(const Message &m__type, m_messages)
             _messages << m__type.toMap();
@@ -558,10 +539,9 @@ inline UpdatesChannelDifference UpdatesChannelDifference::fromMap(const QMap<QSt
         result.setPts( map.value("pts").value<qint32>() );
         result.setTimeout( map.value("timeout").value<qint32>() );
         result.setTopMessage( map.value("topMessage").value<qint32>() );
-        result.setTopImportantMessage( map.value("topImportantMessage").value<qint32>() );
         result.setReadInboxMaxId( map.value("readInboxMaxId").value<qint32>() );
+        result.setReadOutboxMaxId( map.value("readOutboxMaxId").value<qint32>() );
         result.setUnreadCount( map.value("unreadCount").value<qint32>() );
-        result.setUnreadImportantCount( map.value("unreadImportantCount").value<qint32>() );
         QList<QVariant> map_messages = map["messages"].toList();
         QList<Message> _messages;
         Q_FOREACH(const QVariant &var, map_messages)
@@ -629,10 +609,9 @@ inline QDataStream &operator<<(QDataStream &stream, const UpdatesChannelDifferen
         stream << item.pts();
         stream << item.timeout();
         stream << item.topMessage();
-        stream << item.topImportantMessage();
         stream << item.readInboxMaxId();
+        stream << item.readOutboxMaxId();
         stream << item.unreadCount();
-        stream << item.unreadImportantCount();
         stream << item.messages();
         stream << item.chats();
         stream << item.users();
@@ -680,18 +659,15 @@ inline QDataStream &operator>>(QDataStream &stream, UpdatesChannelDifference &it
         qint32 m_top_message;
         stream >> m_top_message;
         item.setTopMessage(m_top_message);
-        qint32 m_top_important_message;
-        stream >> m_top_important_message;
-        item.setTopImportantMessage(m_top_important_message);
         qint32 m_read_inbox_max_id;
         stream >> m_read_inbox_max_id;
         item.setReadInboxMaxId(m_read_inbox_max_id);
+        qint32 m_read_outbox_max_id;
+        stream >> m_read_outbox_max_id;
+        item.setReadOutboxMaxId(m_read_outbox_max_id);
         qint32 m_unread_count;
         stream >> m_unread_count;
         item.setUnreadCount(m_unread_count);
-        qint32 m_unread_important_count;
-        stream >> m_unread_important_count;
-        item.setUnreadImportantCount(m_unread_important_count);
         QList<Message> m_messages;
         stream >> m_messages;
         item.setMessages(m_messages);

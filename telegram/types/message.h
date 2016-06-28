@@ -93,9 +93,6 @@ public:
     void setToId(const Peer &toId);
     Peer toId() const;
 
-    void setUnread(bool unread);
-    bool unread() const;
-
     void setViaBotId(qint32 viaBotId);
     qint32 viaBotId() const;
 
@@ -336,15 +333,6 @@ inline Peer Message::toId() const {
     return m_toId;
 }
 
-inline void Message::setUnread(bool unread) {
-    if(unread) m_flags = (m_flags | (1<<0));
-    else m_flags = (m_flags & ~(1<<0));
-}
-
-inline bool Message::unread() const {
-    return (m_flags & 1<<0);
-}
-
 inline void Message::setViaBotId(qint32 viaBotId) {
     m_viaBotId = viaBotId;
 }
@@ -530,7 +518,6 @@ inline QMap<QString, QVariant> Message::toMap() const {
     
     case typeMessage: {
         result["classType"] = "Message::typeMessage";
-        result["unread"] = QVariant::fromValue<bool>(unread());
         result["out"] = QVariant::fromValue<bool>(out());
         result["mentioned"] = QVariant::fromValue<bool>(mentioned());
         result["mediaUnread"] = QVariant::fromValue<bool>(mediaUnread());
@@ -558,7 +545,6 @@ inline QMap<QString, QVariant> Message::toMap() const {
     
     case typeMessageService: {
         result["classType"] = "Message::typeMessageService";
-        result["unread"] = QVariant::fromValue<bool>(unread());
         result["out"] = QVariant::fromValue<bool>(out());
         result["mentioned"] = QVariant::fromValue<bool>(mentioned());
         result["mediaUnread"] = QVariant::fromValue<bool>(mediaUnread());
@@ -588,7 +574,6 @@ inline Message Message::fromMap(const QMap<QString, QVariant> &map) {
     }
     if(map.value("classType").toString() == "Message::typeMessage") {
         result.setClassType(typeMessage);
-        result.setUnread( map.value("unread").value<bool>() );
         result.setOut( map.value("out").value<bool>() );
         result.setMentioned( map.value("mentioned").value<bool>() );
         result.setMediaUnread( map.value("mediaUnread").value<bool>() );
@@ -615,7 +600,6 @@ inline Message Message::fromMap(const QMap<QString, QVariant> &map) {
     }
     if(map.value("classType").toString() == "Message::typeMessageService") {
         result.setClassType(typeMessageService);
-        result.setUnread( map.value("unread").value<bool>() );
         result.setOut( map.value("out").value<bool>() );
         result.setMentioned( map.value("mentioned").value<bool>() );
         result.setMediaUnread( map.value("mediaUnread").value<bool>() );

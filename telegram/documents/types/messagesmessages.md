@@ -44,7 +44,7 @@ messages.messagesSlice#b446ae3 count:int messages:Vector<Message> chats:Vector<C
 #### Schema:
 
 ```c++
-messages.channelMessages#bc0f17bc flags:# pts:int count:int messages:Vector<Message> collapsed:flags.0?Vector<MessageGroup> chats:Vector<Chat> users:Vector<User> = messages.Messages;
+messages.channelMessages#99262e37 flags:# pts:int count:int messages:Vector<Message> chats:Vector<Chat> users:Vector<User> = messages.Messages;
 ```
 
 #### Parameters:
@@ -54,7 +54,6 @@ messages.channelMessages#bc0f17bc flags:# pts:int count:int messages:Vector<Mess
 |pts|qint32|
 |count|qint32|
 |messages|QList&lt;[Message](message.md)&gt;|
-|collapsed|QList&lt;[MessageGroup](messagegroup.md)&gt;|
 |chats|QList&lt;[Chat](chat.md)&gt;|
 |users|QList&lt;[User](user.md)&gt;|
 

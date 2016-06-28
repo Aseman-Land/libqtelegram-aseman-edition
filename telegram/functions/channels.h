@@ -10,14 +10,13 @@
 #include "core/outboundpkt.h"
 #include "../coretypes.h"
 
-#include "telegram/types/messagesdialogs.h"
-#include <QtGlobal>
-#include "telegram/types/messagesmessages.h"
 #include "telegram/types/inputchannel.h"
+#include <QtGlobal>
 #include "telegram/types/messagesaffectedmessages.h"
 #include <QList>
 #include "telegram/types/messagesaffectedhistory.h"
 #include "telegram/types/inputuser.h"
+#include "telegram/types/messagesmessages.h"
 #include "telegram/types/channelschannelparticipants.h"
 #include "telegram/types/channelparticipantsfilter.h"
 #include "telegram/types/channelschannelparticipant.h"
@@ -37,8 +36,6 @@ class LIBQTELEGRAMSHARED_EXPORT Channels : public TelegramFunctionObject
 {
 public:
     enum ChannelsFunction {
-        fncChannelsGetDialogs = 0xa9d3d249,
-        fncChannelsGetImportantHistory = 0x8f494bb2,
         fncChannelsReadHistory = 0xcc104937,
         fncChannelsDeleteMessages = 0x84c1fd4e,
         fncChannelsDeleteUserHistory = 0xd10dd71b,
@@ -53,7 +50,6 @@ public:
         fncChannelsEditAdmin = 0xeb7611d0,
         fncChannelsEditTitle = 0x566decd0,
         fncChannelsEditPhoto = 0xf12e57c9,
-        fncChannelsToggleComments = 0xaaa29e88,
         fncChannelsCheckUsername = 0x10e6bd2c,
         fncChannelsUpdateUsername = 0x3514b3de,
         fncChannelsJoinChannel = 0x24b524c5,
@@ -70,12 +66,6 @@ public:
 
     Channels();
     virtual ~Channels();
-
-    static bool getDialogs(OutboundPkt *out, qint32 offset, qint32 limit);
-    static MessagesDialogs getDialogsResult(InboundPkt *in);
-
-    static bool getImportantHistory(OutboundPkt *out, const InputChannel &channel, qint32 offsetId, qint32 offsetDate, qint32 addOffset, qint32 limit, qint32 maxId, qint32 minId);
-    static MessagesMessages getImportantHistoryResult(InboundPkt *in);
 
     static bool readHistory(OutboundPkt *out, const InputChannel &channel, qint32 maxId);
     static bool readHistoryResult(InboundPkt *in);
@@ -118,9 +108,6 @@ public:
 
     static bool editPhoto(OutboundPkt *out, const InputChannel &channel, const InputChatPhoto &photo);
     static UpdatesType editPhotoResult(InboundPkt *in);
-
-    static bool toggleComments(OutboundPkt *out, const InputChannel &channel, bool enabled);
-    static UpdatesType toggleCommentsResult(InboundPkt *in);
 
     static bool checkUsername(OutboundPkt *out, const InputChannel &channel, const QString &username);
     static bool checkUsernameResult(InboundPkt *in);
@@ -165,37 +152,6 @@ inline Functions::Channels::Channels() {
 }
 
 inline Functions::Channels::~Channels() {
-}
-
-inline bool Functions::Channels::getDialogs(OutboundPkt *out, qint32 offset, qint32 limit) {
-    out->appendInt(fncChannelsGetDialogs);
-    out->appendInt(offset);
-    out->appendInt(limit);
-    return true;
-}
-
-inline MessagesDialogs Functions::Channels::getDialogsResult(InboundPkt *in) {
-    MessagesDialogs result;
-    if(!result.fetch(in)) return result;
-    return result;
-}
-
-inline bool Functions::Channels::getImportantHistory(OutboundPkt *out, const InputChannel &channel, qint32 offsetId, qint32 offsetDate, qint32 addOffset, qint32 limit, qint32 maxId, qint32 minId) {
-    out->appendInt(fncChannelsGetImportantHistory);
-    if(!channel.push(out)) return false;
-    out->appendInt(offsetId);
-    out->appendInt(offsetDate);
-    out->appendInt(addOffset);
-    out->appendInt(limit);
-    out->appendInt(maxId);
-    out->appendInt(minId);
-    return true;
-}
-
-inline MessagesMessages Functions::Channels::getImportantHistoryResult(InboundPkt *in) {
-    MessagesMessages result;
-    if(!result.fetch(in)) return result;
-    return result;
 }
 
 inline bool Functions::Channels::readHistory(OutboundPkt *out, const InputChannel &channel, qint32 maxId) {
@@ -399,19 +355,6 @@ inline bool Functions::Channels::editPhoto(OutboundPkt *out, const InputChannel 
 }
 
 inline UpdatesType Functions::Channels::editPhotoResult(InboundPkt *in) {
-    UpdatesType result;
-    if(!result.fetch(in)) return result;
-    return result;
-}
-
-inline bool Functions::Channels::toggleComments(OutboundPkt *out, const InputChannel &channel, bool enabled) {
-    out->appendInt(fncChannelsToggleComments);
-    if(!channel.push(out)) return false;
-    out->appendBool(enabled);
-    return true;
-}
-
-inline UpdatesType Functions::Channels::toggleCommentsResult(InboundPkt *in) {
     UpdatesType result;
     if(!result.fetch(in)) return result;
     return result;

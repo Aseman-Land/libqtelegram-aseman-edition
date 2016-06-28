@@ -11,9 +11,9 @@
 #include <QPointer>
 #include "sendmessageactionobject.h"
 #include "encryptedchatobject.h"
+#include "draftmessageobject.h"
 #include "contactlinkobject.h"
 #include "geopointobject.h"
-#include "messagegroupobject.h"
 #include "privacykeyobject.h"
 #include "messagemediaobject.h"
 #include "encryptedmessageobject.h"
@@ -42,12 +42,12 @@ class LIBQTELEGRAMSHARED_EXPORT UpdateObject : public TelegramTypeQObject
     Q_PROPERTY(qint32 date READ date WRITE setDate NOTIFY dateChanged)
     Q_PROPERTY(QList<DcOption> dcOptions READ dcOptions WRITE setDcOptions NOTIFY dcOptionsChanged)
     Q_PROPERTY(QString device READ device WRITE setDevice NOTIFY deviceChanged)
+    Q_PROPERTY(DraftMessageObject* draft READ draft WRITE setDraft NOTIFY draftChanged)
     Q_PROPERTY(bool enabled READ enabled WRITE setEnabled NOTIFY enabledChanged)
     Q_PROPERTY(QString firstName READ firstName WRITE setFirstName NOTIFY firstNameChanged)
     Q_PROPERTY(qint32 flags READ flags WRITE setFlags NOTIFY flagsChanged)
     Q_PROPERTY(ContactLinkObject* foreignLink READ foreignLink WRITE setForeignLink NOTIFY foreignLinkChanged)
     Q_PROPERTY(GeoPointObject* geo READ geo WRITE setGeo NOTIFY geoChanged)
-    Q_PROPERTY(MessageGroupObject* group READ group WRITE setGroup NOTIFY groupChanged)
     Q_PROPERTY(QString idString READ idString WRITE setIdString NOTIFY idStringChanged)
     Q_PROPERTY(qint32 idInt READ idInt WRITE setIdInt NOTIFY idIntChanged)
     Q_PROPERTY(qint32 inviterId READ inviterId WRITE setInviterId NOTIFY inviterIdChanged)
@@ -125,7 +125,6 @@ public:
         TypeUpdateReadMessagesContents,
         TypeUpdateChannelTooLong,
         TypeUpdateChannel,
-        TypeUpdateChannelGroup,
         TypeUpdateNewChannelMessage,
         TypeUpdateReadChannelInbox,
         TypeUpdateDeleteChannelMessages,
@@ -142,7 +141,9 @@ public:
         TypeUpdateChannelPinnedMessage,
         TypeUpdateBotCallbackQuery,
         TypeUpdateEditMessage,
-        TypeUpdateInlineBotCallbackQuery
+        TypeUpdateInlineBotCallbackQuery,
+        TypeUpdateReadChannelOutbox,
+        TypeUpdateDraftMessage
     };
 
     UpdateObject(const Update &core, QObject *parent = 0);
@@ -179,6 +180,9 @@ public:
     void setDevice(const QString &device);
     QString device() const;
 
+    void setDraft(DraftMessageObject* draft);
+    DraftMessageObject* draft() const;
+
     void setEnabled(bool enabled);
     bool enabled() const;
 
@@ -193,9 +197,6 @@ public:
 
     void setGeo(GeoPointObject* geo);
     GeoPointObject* geo() const;
-
-    void setGroup(MessageGroupObject* group);
-    MessageGroupObject* group() const;
 
     void setIdString(const QString &idString);
     QString idString() const;
@@ -345,12 +346,12 @@ Q_SIGNALS:
     void dateChanged();
     void dcOptionsChanged();
     void deviceChanged();
+    void draftChanged();
     void enabledChanged();
     void firstNameChanged();
     void flagsChanged();
     void foreignLinkChanged();
     void geoChanged();
-    void groupChanged();
     void idStringChanged();
     void idIntChanged();
     void inviterIdChanged();
@@ -397,9 +398,9 @@ Q_SIGNALS:
 private Q_SLOTS:
     void coreActionChanged();
     void coreChatChanged();
+    void coreDraftChanged();
     void coreForeignLinkChanged();
     void coreGeoChanged();
-    void coreGroupChanged();
     void coreKeyChanged();
     void coreMediaChanged();
     void coreMessageEncryptedChanged();
@@ -418,9 +419,9 @@ private Q_SLOTS:
 private:
     QPointer<SendMessageActionObject> m_action;
     QPointer<EncryptedChatObject> m_chat;
+    QPointer<DraftMessageObject> m_draft;
     QPointer<ContactLinkObject> m_foreignLink;
     QPointer<GeoPointObject> m_geo;
-    QPointer<MessageGroupObject> m_group;
     QPointer<PrivacyKeyObject> m_key;
     QPointer<MessageMediaObject> m_media;
     QPointer<EncryptedMessageObject> m_messageEncrypted;
@@ -442,9 +443,9 @@ inline UpdateObject::UpdateObject(const Update &core, QObject *parent) :
     TelegramTypeQObject(parent),
     m_action(0),
     m_chat(0),
+    m_draft(0),
     m_foreignLink(0),
     m_geo(0),
-    m_group(0),
     m_key(0),
     m_media(0),
     m_messageEncrypted(0),
@@ -465,12 +466,12 @@ inline UpdateObject::UpdateObject(const Update &core, QObject *parent) :
     connect(m_action.data(), &SendMessageActionObject::coreChanged, this, &UpdateObject::coreActionChanged);
     m_chat = new EncryptedChatObject(m_core.chat(), this);
     connect(m_chat.data(), &EncryptedChatObject::coreChanged, this, &UpdateObject::coreChatChanged);
+    m_draft = new DraftMessageObject(m_core.draft(), this);
+    connect(m_draft.data(), &DraftMessageObject::coreChanged, this, &UpdateObject::coreDraftChanged);
     m_foreignLink = new ContactLinkObject(m_core.foreignLink(), this);
     connect(m_foreignLink.data(), &ContactLinkObject::coreChanged, this, &UpdateObject::coreForeignLinkChanged);
     m_geo = new GeoPointObject(m_core.geo(), this);
     connect(m_geo.data(), &GeoPointObject::coreChanged, this, &UpdateObject::coreGeoChanged);
-    m_group = new MessageGroupObject(m_core.group(), this);
-    connect(m_group.data(), &MessageGroupObject::coreChanged, this, &UpdateObject::coreGroupChanged);
     m_key = new PrivacyKeyObject(m_core.key(), this);
     connect(m_key.data(), &PrivacyKeyObject::coreChanged, this, &UpdateObject::coreKeyChanged);
     m_media = new MessageMediaObject(m_core.media(), this);
@@ -505,9 +506,9 @@ inline UpdateObject::UpdateObject(QObject *parent) :
     TelegramTypeQObject(parent),
     m_action(0),
     m_chat(0),
+    m_draft(0),
     m_foreignLink(0),
     m_geo(0),
-    m_group(0),
     m_key(0),
     m_media(0),
     m_messageEncrypted(0),
@@ -528,12 +529,12 @@ inline UpdateObject::UpdateObject(QObject *parent) :
     connect(m_action.data(), &SendMessageActionObject::coreChanged, this, &UpdateObject::coreActionChanged);
     m_chat = new EncryptedChatObject(m_core.chat(), this);
     connect(m_chat.data(), &EncryptedChatObject::coreChanged, this, &UpdateObject::coreChatChanged);
+    m_draft = new DraftMessageObject(m_core.draft(), this);
+    connect(m_draft.data(), &DraftMessageObject::coreChanged, this, &UpdateObject::coreDraftChanged);
     m_foreignLink = new ContactLinkObject(m_core.foreignLink(), this);
     connect(m_foreignLink.data(), &ContactLinkObject::coreChanged, this, &UpdateObject::coreForeignLinkChanged);
     m_geo = new GeoPointObject(m_core.geo(), this);
     connect(m_geo.data(), &GeoPointObject::coreChanged, this, &UpdateObject::coreGeoChanged);
-    m_group = new MessageGroupObject(m_core.group(), this);
-    connect(m_group.data(), &MessageGroupObject::coreChanged, this, &UpdateObject::coreGroupChanged);
     m_key = new PrivacyKeyObject(m_core.key(), this);
     connect(m_key.data(), &PrivacyKeyObject::coreChanged, this, &UpdateObject::coreKeyChanged);
     m_media = new MessageMediaObject(m_core.media(), this);
@@ -689,6 +690,23 @@ inline QString UpdateObject::device() const {
     return m_core.device();
 }
 
+inline void UpdateObject::setDraft(DraftMessageObject* draft) {
+    if(m_draft == draft) return;
+    if(m_draft) delete m_draft;
+    m_draft = draft;
+    if(m_draft) {
+        m_draft->setParent(this);
+        m_core.setDraft(m_draft->core());
+        connect(m_draft.data(), &DraftMessageObject::coreChanged, this, &UpdateObject::coreDraftChanged);
+    }
+    Q_EMIT draftChanged();
+    Q_EMIT coreChanged();
+}
+
+inline DraftMessageObject*  UpdateObject::draft() const {
+    return m_draft;
+}
+
 inline void UpdateObject::setEnabled(bool enabled) {
     if(m_core.enabled() == enabled) return;
     m_core.setEnabled(enabled);
@@ -754,23 +772,6 @@ inline void UpdateObject::setGeo(GeoPointObject* geo) {
 
 inline GeoPointObject*  UpdateObject::geo() const {
     return m_geo;
-}
-
-inline void UpdateObject::setGroup(MessageGroupObject* group) {
-    if(m_group == group) return;
-    if(m_group) delete m_group;
-    m_group = group;
-    if(m_group) {
-        m_group->setParent(this);
-        m_core.setGroup(m_group->core());
-        connect(m_group.data(), &MessageGroupObject::coreChanged, this, &UpdateObject::coreGroupChanged);
-    }
-    Q_EMIT groupChanged();
-    Q_EMIT coreChanged();
-}
-
-inline MessageGroupObject*  UpdateObject::group() const {
-    return m_group;
 }
 
 inline void UpdateObject::setIdString(const QString &idString) {
@@ -1324,9 +1325,9 @@ inline UpdateObject &UpdateObject::operator =(const Update &b) {
     m_core = b;
     m_action->setCore(b.action());
     m_chat->setCore(b.chat());
+    m_draft->setCore(b.draft());
     m_foreignLink->setCore(b.foreignLink());
     m_geo->setCore(b.geo());
-    m_group->setCore(b.group());
     m_key->setCore(b.key());
     m_media->setCore(b.media());
     m_messageEncrypted->setCore(b.messageEncrypted());
@@ -1352,12 +1353,12 @@ inline UpdateObject &UpdateObject::operator =(const Update &b) {
     Q_EMIT dateChanged();
     Q_EMIT dcOptionsChanged();
     Q_EMIT deviceChanged();
+    Q_EMIT draftChanged();
     Q_EMIT enabledChanged();
     Q_EMIT firstNameChanged();
     Q_EMIT flagsChanged();
     Q_EMIT foreignLinkChanged();
     Q_EMIT geoChanged();
-    Q_EMIT groupChanged();
     Q_EMIT idStringChanged();
     Q_EMIT idIntChanged();
     Q_EMIT inviterIdChanged();
@@ -1501,9 +1502,6 @@ inline void UpdateObject::setClassType(quint32 classType) {
     case TypeUpdateChannel:
         result = Update::typeUpdateChannel;
         break;
-    case TypeUpdateChannelGroup:
-        result = Update::typeUpdateChannelGroup;
-        break;
     case TypeUpdateNewChannelMessage:
         result = Update::typeUpdateNewChannelMessage;
         break;
@@ -1554,6 +1552,12 @@ inline void UpdateObject::setClassType(quint32 classType) {
         break;
     case TypeUpdateInlineBotCallbackQuery:
         result = Update::typeUpdateInlineBotCallbackQuery;
+        break;
+    case TypeUpdateReadChannelOutbox:
+        result = Update::typeUpdateReadChannelOutbox;
+        break;
+    case TypeUpdateDraftMessage:
+        result = Update::typeUpdateDraftMessage;
         break;
     default:
         result = Update::typeUpdateNewMessage;
@@ -1659,9 +1663,6 @@ inline quint32 UpdateObject::classType() const {
     case Update::typeUpdateChannel:
         result = TypeUpdateChannel;
         break;
-    case Update::typeUpdateChannelGroup:
-        result = TypeUpdateChannelGroup;
-        break;
     case Update::typeUpdateNewChannelMessage:
         result = TypeUpdateNewChannelMessage;
         break;
@@ -1713,6 +1714,12 @@ inline quint32 UpdateObject::classType() const {
     case Update::typeUpdateInlineBotCallbackQuery:
         result = TypeUpdateInlineBotCallbackQuery;
         break;
+    case Update::typeUpdateReadChannelOutbox:
+        result = TypeUpdateReadChannelOutbox;
+        break;
+    case Update::typeUpdateDraftMessage:
+        result = TypeUpdateDraftMessage;
+        break;
     default:
         result = TypeUpdateNewMessage;
         break;
@@ -1743,6 +1750,13 @@ inline void UpdateObject::coreChatChanged() {
     Q_EMIT coreChanged();
 }
 
+inline void UpdateObject::coreDraftChanged() {
+    if(m_core.draft() == m_draft->core()) return;
+    m_core.setDraft(m_draft->core());
+    Q_EMIT draftChanged();
+    Q_EMIT coreChanged();
+}
+
 inline void UpdateObject::coreForeignLinkChanged() {
     if(m_core.foreignLink() == m_foreignLink->core()) return;
     m_core.setForeignLink(m_foreignLink->core());
@@ -1754,13 +1768,6 @@ inline void UpdateObject::coreGeoChanged() {
     if(m_core.geo() == m_geo->core()) return;
     m_core.setGeo(m_geo->core());
     Q_EMIT geoChanged();
-    Q_EMIT coreChanged();
-}
-
-inline void UpdateObject::coreGroupChanged() {
-    if(m_core.group() == m_group->core()) return;
-    m_core.setGroup(m_group->core());
-    Q_EMIT groupChanged();
     Q_EMIT coreChanged();
 }
 

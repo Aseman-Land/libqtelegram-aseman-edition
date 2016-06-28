@@ -7,12 +7,13 @@ TelegramCore::messagesDeleteHistory
 ## Schema:
 
 ```c++
-messages.deleteHistory#b7c13bd9 peer:InputPeer max_id:int = messages.AffectedHistory;
+messages.deleteHistory#1c015b09 flags:# just_clear:flags.0?true peer:InputPeer max_id:int = messages.AffectedHistory;
 ```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
+|justClear|bool||
 |peer|[InputPeer](../../types/inputpeer.md)||
 |maxId|qint32||
 |callBack|Callback&lt;[MessagesAffectedHistory](../../types/messagesaffectedhistory.md)&gt;|0|
@@ -51,7 +52,7 @@ onDeleteHistoryError(qint64 msgId, qint32 errorCode, const QString &errorText)
 ## Examples:
 
 ```c++
-tg->deleteHistory(peer, max_id, [=](TG_DELETE_HISTORY_CALLBACK){
+tg->deleteHistory(just_clear, peer, max_id, [=](TG_DELETE_HISTORY_CALLBACK){
     ...
 }, 30000);
 ```

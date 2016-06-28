@@ -7,13 +7,13 @@ TelegramCore::messagesGetPeerDialogs
 ## Schema:
 
 ```c++
-messages.getPeerDialogs#19250887 peer:Vector<InputPeer> = messages.PeerDialogs;
+messages.getPeerDialogs#2d9776b9 peers:Vector<InputPeer> = messages.PeerDialogs;
 ```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
-|peer|QList&lt;[InputPeer](../../types/inputpeer.md)&gt;||
+|peers|QList&lt;[InputPeer](../../types/inputpeer.md)&gt;||
 |callBack|Callback&lt;[MessagesPeerDialogs](../../types/messagespeerdialogs.md)&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
@@ -50,7 +50,7 @@ onGetPeerDialogsError(qint64 msgId, qint32 errorCode, const QString &errorText)
 ## Examples:
 
 ```c++
-tg->getPeerDialogs(peer, [=](TG_GET_PEER_DIALOGS_CALLBACK){
+tg->getPeerDialogs(peers, [=](TG_GET_PEER_DIALOGS_CALLBACK){
     ...
 }, 30000);
 ```

@@ -9,6 +9,7 @@
 #include "telegram/types/dialog.h"
 
 #include <QPointer>
+#include "draftmessageobject.h"
 #include "peernotifysettingsobject.h"
 #include "peerobject.h"
 
@@ -16,26 +17,32 @@ class LIBQTELEGRAMSHARED_EXPORT DialogObject : public TelegramTypeQObject
 {
     Q_OBJECT
     Q_ENUMS(DialogClassType)
+    Q_PROPERTY(DraftMessageObject* draft READ draft WRITE setDraft NOTIFY draftChanged)
+    Q_PROPERTY(qint32 flags READ flags WRITE setFlags NOTIFY flagsChanged)
     Q_PROPERTY(PeerNotifySettingsObject* notifySettings READ notifySettings WRITE setNotifySettings NOTIFY notifySettingsChanged)
     Q_PROPERTY(PeerObject* peer READ peer WRITE setPeer NOTIFY peerChanged)
     Q_PROPERTY(qint32 pts READ pts WRITE setPts NOTIFY ptsChanged)
     Q_PROPERTY(qint32 readInboxMaxId READ readInboxMaxId WRITE setReadInboxMaxId NOTIFY readInboxMaxIdChanged)
-    Q_PROPERTY(qint32 topImportantMessage READ topImportantMessage WRITE setTopImportantMessage NOTIFY topImportantMessageChanged)
+    Q_PROPERTY(qint32 readOutboxMaxId READ readOutboxMaxId WRITE setReadOutboxMaxId NOTIFY readOutboxMaxIdChanged)
     Q_PROPERTY(qint32 topMessage READ topMessage WRITE setTopMessage NOTIFY topMessageChanged)
     Q_PROPERTY(qint32 unreadCount READ unreadCount WRITE setUnreadCount NOTIFY unreadCountChanged)
-    Q_PROPERTY(qint32 unreadImportantCount READ unreadImportantCount WRITE setUnreadImportantCount NOTIFY unreadImportantCountChanged)
     Q_PROPERTY(Dialog core READ core WRITE setCore NOTIFY coreChanged)
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
 public:
     enum DialogClassType {
-        TypeDialog,
-        TypeDialogChannel
+        TypeDialog
     };
 
     DialogObject(const Dialog &core, QObject *parent = 0);
     DialogObject(QObject *parent = 0);
     virtual ~DialogObject();
+
+    void setDraft(DraftMessageObject* draft);
+    DraftMessageObject* draft() const;
+
+    void setFlags(qint32 flags);
+    qint32 flags() const;
 
     void setNotifySettings(PeerNotifySettingsObject* notifySettings);
     PeerNotifySettingsObject* notifySettings() const;
@@ -49,17 +56,14 @@ public:
     void setReadInboxMaxId(qint32 readInboxMaxId);
     qint32 readInboxMaxId() const;
 
-    void setTopImportantMessage(qint32 topImportantMessage);
-    qint32 topImportantMessage() const;
+    void setReadOutboxMaxId(qint32 readOutboxMaxId);
+    qint32 readOutboxMaxId() const;
 
     void setTopMessage(qint32 topMessage);
     qint32 topMessage() const;
 
     void setUnreadCount(qint32 unreadCount);
     qint32 unreadCount() const;
-
-    void setUnreadImportantCount(qint32 unreadImportantCount);
-    qint32 unreadImportantCount() const;
 
     void setClassType(quint32 classType);
     quint32 classType() const;
@@ -73,20 +77,23 @@ public:
 Q_SIGNALS:
     void coreChanged();
     void classTypeChanged();
+    void draftChanged();
+    void flagsChanged();
     void notifySettingsChanged();
     void peerChanged();
     void ptsChanged();
     void readInboxMaxIdChanged();
-    void topImportantMessageChanged();
+    void readOutboxMaxIdChanged();
     void topMessageChanged();
     void unreadCountChanged();
-    void unreadImportantCountChanged();
 
 private Q_SLOTS:
+    void coreDraftChanged();
     void coreNotifySettingsChanged();
     void corePeerChanged();
 
 private:
+    QPointer<DraftMessageObject> m_draft;
     QPointer<PeerNotifySettingsObject> m_notifySettings;
     QPointer<PeerObject> m_peer;
     Dialog m_core;
@@ -94,10 +101,13 @@ private:
 
 inline DialogObject::DialogObject(const Dialog &core, QObject *parent) :
     TelegramTypeQObject(parent),
+    m_draft(0),
     m_notifySettings(0),
     m_peer(0),
     m_core(core)
 {
+    m_draft = new DraftMessageObject(m_core.draft(), this);
+    connect(m_draft.data(), &DraftMessageObject::coreChanged, this, &DialogObject::coreDraftChanged);
     m_notifySettings = new PeerNotifySettingsObject(m_core.notifySettings(), this);
     connect(m_notifySettings.data(), &PeerNotifySettingsObject::coreChanged, this, &DialogObject::coreNotifySettingsChanged);
     m_peer = new PeerObject(m_core.peer(), this);
@@ -106,10 +116,13 @@ inline DialogObject::DialogObject(const Dialog &core, QObject *parent) :
 
 inline DialogObject::DialogObject(QObject *parent) :
     TelegramTypeQObject(parent),
+    m_draft(0),
     m_notifySettings(0),
     m_peer(0),
     m_core()
 {
+    m_draft = new DraftMessageObject(m_core.draft(), this);
+    connect(m_draft.data(), &DraftMessageObject::coreChanged, this, &DialogObject::coreDraftChanged);
     m_notifySettings = new PeerNotifySettingsObject(m_core.notifySettings(), this);
     connect(m_notifySettings.data(), &PeerNotifySettingsObject::coreChanged, this, &DialogObject::coreNotifySettingsChanged);
     m_peer = new PeerObject(m_core.peer(), this);
@@ -117,6 +130,34 @@ inline DialogObject::DialogObject(QObject *parent) :
 }
 
 inline DialogObject::~DialogObject() {
+}
+
+inline void DialogObject::setDraft(DraftMessageObject* draft) {
+    if(m_draft == draft) return;
+    if(m_draft) delete m_draft;
+    m_draft = draft;
+    if(m_draft) {
+        m_draft->setParent(this);
+        m_core.setDraft(m_draft->core());
+        connect(m_draft.data(), &DraftMessageObject::coreChanged, this, &DialogObject::coreDraftChanged);
+    }
+    Q_EMIT draftChanged();
+    Q_EMIT coreChanged();
+}
+
+inline DraftMessageObject*  DialogObject::draft() const {
+    return m_draft;
+}
+
+inline void DialogObject::setFlags(qint32 flags) {
+    if(m_core.flags() == flags) return;
+    m_core.setFlags(flags);
+    Q_EMIT flagsChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 DialogObject::flags() const {
+    return m_core.flags();
 }
 
 inline void DialogObject::setNotifySettings(PeerNotifySettingsObject* notifySettings) {
@@ -175,15 +216,15 @@ inline qint32 DialogObject::readInboxMaxId() const {
     return m_core.readInboxMaxId();
 }
 
-inline void DialogObject::setTopImportantMessage(qint32 topImportantMessage) {
-    if(m_core.topImportantMessage() == topImportantMessage) return;
-    m_core.setTopImportantMessage(topImportantMessage);
-    Q_EMIT topImportantMessageChanged();
+inline void DialogObject::setReadOutboxMaxId(qint32 readOutboxMaxId) {
+    if(m_core.readOutboxMaxId() == readOutboxMaxId) return;
+    m_core.setReadOutboxMaxId(readOutboxMaxId);
+    Q_EMIT readOutboxMaxIdChanged();
     Q_EMIT coreChanged();
 }
 
-inline qint32 DialogObject::topImportantMessage() const {
-    return m_core.topImportantMessage();
+inline qint32 DialogObject::readOutboxMaxId() const {
+    return m_core.readOutboxMaxId();
 }
 
 inline void DialogObject::setTopMessage(qint32 topMessage) {
@@ -208,31 +249,22 @@ inline qint32 DialogObject::unreadCount() const {
     return m_core.unreadCount();
 }
 
-inline void DialogObject::setUnreadImportantCount(qint32 unreadImportantCount) {
-    if(m_core.unreadImportantCount() == unreadImportantCount) return;
-    m_core.setUnreadImportantCount(unreadImportantCount);
-    Q_EMIT unreadImportantCountChanged();
-    Q_EMIT coreChanged();
-}
-
-inline qint32 DialogObject::unreadImportantCount() const {
-    return m_core.unreadImportantCount();
-}
-
 inline DialogObject &DialogObject::operator =(const Dialog &b) {
     if(m_core == b) return *this;
     m_core = b;
+    m_draft->setCore(b.draft());
     m_notifySettings->setCore(b.notifySettings());
     m_peer->setCore(b.peer());
 
+    Q_EMIT draftChanged();
+    Q_EMIT flagsChanged();
     Q_EMIT notifySettingsChanged();
     Q_EMIT peerChanged();
     Q_EMIT ptsChanged();
     Q_EMIT readInboxMaxIdChanged();
-    Q_EMIT topImportantMessageChanged();
+    Q_EMIT readOutboxMaxIdChanged();
     Q_EMIT topMessageChanged();
     Q_EMIT unreadCountChanged();
-    Q_EMIT unreadImportantCountChanged();
     Q_EMIT coreChanged();
     return *this;
 }
@@ -246,9 +278,6 @@ inline void DialogObject::setClassType(quint32 classType) {
     switch(classType) {
     case TypeDialog:
         result = Dialog::typeDialog;
-        break;
-    case TypeDialogChannel:
-        result = Dialog::typeDialogChannel;
         break;
     default:
         result = Dialog::typeDialog;
@@ -267,9 +296,6 @@ inline quint32 DialogObject::classType() const {
     case Dialog::typeDialog:
         result = TypeDialog;
         break;
-    case Dialog::typeDialogChannel:
-        result = TypeDialogChannel;
-        break;
     default:
         result = TypeDialog;
         break;
@@ -284,6 +310,13 @@ inline void DialogObject::setCore(const Dialog &core) {
 
 inline Dialog DialogObject::core() const {
     return m_core;
+}
+
+inline void DialogObject::coreDraftChanged() {
+    if(m_core.draft() == m_draft->core()) return;
+    m_core.setDraft(m_draft->core());
+    Q_EMIT draftChanged();
+    Q_EMIT coreChanged();
 }
 
 inline void DialogObject::coreNotifySettingsChanged() {

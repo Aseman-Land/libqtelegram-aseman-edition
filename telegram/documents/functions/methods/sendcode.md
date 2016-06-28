@@ -7,7 +7,7 @@ TelegramCore::authSendCode
 ## Schema:
 
 ```c++
-auth.sendCode#ccfd70cf flags:# allow_flashcall:flags.0?true phone_number:string current_number:flags.0?Bool api_id:int api_hash:string lang_code:string = auth.SentCode;
+auth.sendCode#86aef0ec flags:# allow_flashcall:flags.0?true phone_number:string current_number:flags.0?Bool api_id:int api_hash:string = auth.SentCode;
 ```
 ## Parameters:
 
@@ -18,7 +18,6 @@ auth.sendCode#ccfd70cf flags:# allow_flashcall:flags.0?true phone_number:string 
 |currentNumber|bool||
 |apiId|qint32||
 |apiHash|QString||
-|langCode|QString||
 |callBack|Callback&lt;[AuthSentCode](../../types/authsentcode.md)&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
@@ -55,7 +54,7 @@ onSendCodeError(qint64 msgId, qint32 errorCode, const QString &errorText)
 ## Examples:
 
 ```c++
-tg->sendCode(allow_flashcall, phone_number, current_number, api_id, api_hash, lang_code, [=](TG_SEND_CODE_CALLBACK){
+tg->sendCode(allow_flashcall, phone_number, current_number, api_id, api_hash, [=](TG_SEND_CODE_CALLBACK){
     ...
 }, 30000);
 ```

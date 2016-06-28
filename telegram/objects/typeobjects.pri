@@ -33,6 +33,7 @@ HEADERS += \
     $$PWD/disabledfeatureobject.h \
     $$PWD/documentobject.h \
     $$PWD/documentattributeobject.h \
+    $$PWD/draftmessageobject.h \
     $$PWD/encryptedchatobject.h \
     $$PWD/encryptedfileobject.h \
     $$PWD/encryptedmessageobject.h \
@@ -73,7 +74,6 @@ HEADERS += \
     $$PWD/messageactionobject.h \
     $$PWD/messageentityobject.h \
     $$PWD/messagefwdheaderobject.h \
-    $$PWD/messagegroupobject.h \
     $$PWD/messagemediaobject.h \
     $$PWD/messagerangeobject.h \
     $$PWD/messagesfilterobject.h \
@@ -183,6 +183,7 @@ SOURCES += \
     $$PWD/disabledfeatureobject.cpp \
     $$PWD/documentobject.cpp \
     $$PWD/documentattributeobject.cpp \
+    $$PWD/draftmessageobject.cpp \
     $$PWD/encryptedchatobject.cpp \
     $$PWD/encryptedfileobject.cpp \
     $$PWD/encryptedmessageobject.cpp \
@@ -223,7 +224,6 @@ SOURCES += \
     $$PWD/messageactionobject.cpp \
     $$PWD/messageentityobject.cpp \
     $$PWD/messagefwdheaderobject.cpp \
-    $$PWD/messagegroupobject.cpp \
     $$PWD/messagemediaobject.cpp \
     $$PWD/messagerangeobject.cpp \
     $$PWD/messagesfilterobject.cpp \

@@ -37,7 +37,6 @@ class LIBQTELEGRAMSHARED_EXPORT MessageObject : public TelegramTypeQObject
     Q_PROPERTY(qint32 replyToMsgId READ replyToMsgId WRITE setReplyToMsgId NOTIFY replyToMsgIdChanged)
     Q_PROPERTY(bool silent READ silent WRITE setSilent NOTIFY silentChanged)
     Q_PROPERTY(PeerObject* toId READ toId WRITE setToId NOTIFY toIdChanged)
-    Q_PROPERTY(bool unread READ unread WRITE setUnread NOTIFY unreadChanged)
     Q_PROPERTY(qint32 viaBotId READ viaBotId WRITE setViaBotId NOTIFY viaBotIdChanged)
     Q_PROPERTY(qint32 views READ views WRITE setViews NOTIFY viewsChanged)
     Q_PROPERTY(Message core READ core WRITE setCore NOTIFY coreChanged)
@@ -108,9 +107,6 @@ public:
     void setToId(PeerObject* toId);
     PeerObject* toId() const;
 
-    void setUnread(bool unread);
-    bool unread() const;
-
     void setViaBotId(qint32 viaBotId);
     qint32 viaBotId() const;
 
@@ -147,7 +143,6 @@ Q_SIGNALS:
     void replyToMsgIdChanged();
     void silentChanged();
     void toIdChanged();
-    void unreadChanged();
     void viaBotIdChanged();
     void viewsChanged();
 
@@ -440,17 +435,6 @@ inline PeerObject*  MessageObject::toId() const {
     return m_toId;
 }
 
-inline void MessageObject::setUnread(bool unread) {
-    if(m_core.unread() == unread) return;
-    m_core.setUnread(unread);
-    Q_EMIT unreadChanged();
-    Q_EMIT coreChanged();
-}
-
-inline bool MessageObject::unread() const {
-    return m_core.unread();
-}
-
 inline void MessageObject::setViaBotId(qint32 viaBotId) {
     if(m_core.viaBotId() == viaBotId) return;
     m_core.setViaBotId(viaBotId);
@@ -500,7 +484,6 @@ inline MessageObject &MessageObject::operator =(const Message &b) {
     Q_EMIT replyToMsgIdChanged();
     Q_EMIT silentChanged();
     Q_EMIT toIdChanged();
-    Q_EMIT unreadChanged();
     Q_EMIT viaBotIdChanged();
     Q_EMIT viewsChanged();
     Q_EMIT coreChanged();

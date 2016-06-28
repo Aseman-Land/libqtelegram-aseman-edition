@@ -32,6 +32,7 @@ HEADERS += \
     $$PWD/disabledfeature.h \
     $$PWD/document.h \
     $$PWD/documentattribute.h \
+    $$PWD/draftmessage.h \
     $$PWD/encryptedchat.h \
     $$PWD/encryptedfile.h \
     $$PWD/encryptedmessage.h \
@@ -72,7 +73,6 @@ HEADERS += \
     $$PWD/messageaction.h \
     $$PWD/messageentity.h \
     $$PWD/messagefwdheader.h \
-    $$PWD/messagegroup.h \
     $$PWD/messagemedia.h \
     $$PWD/messagerange.h \
     $$PWD/messagesfilter.h \

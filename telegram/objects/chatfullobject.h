@@ -35,8 +35,8 @@ class LIBQTELEGRAMSHARED_EXPORT ChatFullObject : public TelegramTypeQObject
     Q_PROPERTY(qint32 participantsCount READ participantsCount WRITE setParticipantsCount NOTIFY participantsCountChanged)
     Q_PROPERTY(qint32 pinnedMsgId READ pinnedMsgId WRITE setPinnedMsgId NOTIFY pinnedMsgIdChanged)
     Q_PROPERTY(qint32 readInboxMaxId READ readInboxMaxId WRITE setReadInboxMaxId NOTIFY readInboxMaxIdChanged)
+    Q_PROPERTY(qint32 readOutboxMaxId READ readOutboxMaxId WRITE setReadOutboxMaxId NOTIFY readOutboxMaxIdChanged)
     Q_PROPERTY(qint32 unreadCount READ unreadCount WRITE setUnreadCount NOTIFY unreadCountChanged)
-    Q_PROPERTY(qint32 unreadImportantCount READ unreadImportantCount WRITE setUnreadImportantCount NOTIFY unreadImportantCountChanged)
     Q_PROPERTY(ChatFull core READ core WRITE setCore NOTIFY coreChanged)
     Q_PROPERTY(quint32 classType READ classType WRITE setClassType NOTIFY classTypeChanged)
 
@@ -101,11 +101,11 @@ public:
     void setReadInboxMaxId(qint32 readInboxMaxId);
     qint32 readInboxMaxId() const;
 
+    void setReadOutboxMaxId(qint32 readOutboxMaxId);
+    qint32 readOutboxMaxId() const;
+
     void setUnreadCount(qint32 unreadCount);
     qint32 unreadCount() const;
-
-    void setUnreadImportantCount(qint32 unreadImportantCount);
-    qint32 unreadImportantCount() const;
 
     void setClassType(quint32 classType);
     quint32 classType() const;
@@ -136,8 +136,8 @@ Q_SIGNALS:
     void participantsCountChanged();
     void pinnedMsgIdChanged();
     void readInboxMaxIdChanged();
+    void readOutboxMaxIdChanged();
     void unreadCountChanged();
-    void unreadImportantCountChanged();
 
 private Q_SLOTS:
     void coreChatPhotoChanged();
@@ -403,6 +403,17 @@ inline qint32 ChatFullObject::readInboxMaxId() const {
     return m_core.readInboxMaxId();
 }
 
+inline void ChatFullObject::setReadOutboxMaxId(qint32 readOutboxMaxId) {
+    if(m_core.readOutboxMaxId() == readOutboxMaxId) return;
+    m_core.setReadOutboxMaxId(readOutboxMaxId);
+    Q_EMIT readOutboxMaxIdChanged();
+    Q_EMIT coreChanged();
+}
+
+inline qint32 ChatFullObject::readOutboxMaxId() const {
+    return m_core.readOutboxMaxId();
+}
+
 inline void ChatFullObject::setUnreadCount(qint32 unreadCount) {
     if(m_core.unreadCount() == unreadCount) return;
     m_core.setUnreadCount(unreadCount);
@@ -412,17 +423,6 @@ inline void ChatFullObject::setUnreadCount(qint32 unreadCount) {
 
 inline qint32 ChatFullObject::unreadCount() const {
     return m_core.unreadCount();
-}
-
-inline void ChatFullObject::setUnreadImportantCount(qint32 unreadImportantCount) {
-    if(m_core.unreadImportantCount() == unreadImportantCount) return;
-    m_core.setUnreadImportantCount(unreadImportantCount);
-    Q_EMIT unreadImportantCountChanged();
-    Q_EMIT coreChanged();
-}
-
-inline qint32 ChatFullObject::unreadImportantCount() const {
-    return m_core.unreadImportantCount();
 }
 
 inline ChatFullObject &ChatFullObject::operator =(const ChatFull &b) {
@@ -450,8 +450,8 @@ inline ChatFullObject &ChatFullObject::operator =(const ChatFull &b) {
     Q_EMIT participantsCountChanged();
     Q_EMIT pinnedMsgIdChanged();
     Q_EMIT readInboxMaxIdChanged();
+    Q_EMIT readOutboxMaxIdChanged();
     Q_EMIT unreadCountChanged();
-    Q_EMIT unreadImportantCountChanged();
     Q_EMIT coreChanged();
     return *this;
 }

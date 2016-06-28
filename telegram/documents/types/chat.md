@@ -101,13 +101,15 @@ channel#a14dca52 flags:# creator:flags.0?true kicked:flags.1?true left:flags.2?t
 #### Schema:
 
 ```c++
-channelForbidden#2d85832c id:int access_hash:long title:string = Chat;
+channelForbidden#8537784f flags:# broadcast:flags.5?true megagroup:flags.8?true id:int access_hash:long title:string = Chat;
 ```
 
 #### Parameters:
 
 |Name|Type|
 |----|----|
+|broadcast|bool|
+|megagroup|bool|
 |id|qint32|
 |accessHash|qint64|
 |title|QString|

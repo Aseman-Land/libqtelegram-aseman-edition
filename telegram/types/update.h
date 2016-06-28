@@ -22,9 +22,9 @@
 #include <QList>
 #include "dcoption.h"
 #include <QString>
+#include "draftmessage.h"
 #include "contactlink.h"
 #include "geopoint.h"
-#include "messagegroup.h"
 #include "privacykey.h"
 #include "messagemedia.h"
 #include "encryptedmessage.h"
@@ -74,7 +74,6 @@ public:
         typeUpdateReadMessagesContents = 0x68c13933,
         typeUpdateChannelTooLong = 0xeb0467fb,
         typeUpdateChannel = 0xb6d45656,
-        typeUpdateChannelGroup = 0xc36c1e3c,
         typeUpdateNewChannelMessage = 0x62ba04d9,
         typeUpdateReadChannelInbox = 0x4214f37f,
         typeUpdateDeleteChannelMessages = 0xc37521c9,
@@ -91,7 +90,9 @@ public:
         typeUpdateChannelPinnedMessage = 0x98592475,
         typeUpdateBotCallbackQuery = 0xa68c688c,
         typeUpdateEditMessage = 0xe40370a3,
-        typeUpdateInlineBotCallbackQuery = 0x2cbd95af
+        typeUpdateInlineBotCallbackQuery = 0x2cbd95af,
+        typeUpdateReadChannelOutbox = 0x25d6c9c7,
+        typeUpdateDraftMessage = 0xee2bb969
     };
 
     Update(UpdateClassType classType = typeUpdateNewMessage, InboundPkt *in = 0);
@@ -129,6 +130,9 @@ public:
     void setDevice(const QString &device);
     QString device() const;
 
+    void setDraft(const DraftMessage &draft);
+    DraftMessage draft() const;
+
     void setEnabled(bool enabled);
     bool enabled() const;
 
@@ -143,9 +147,6 @@ public:
 
     void setGeo(const GeoPoint &geo);
     GeoPoint geo() const;
-
-    void setGroup(const MessageGroup &group);
-    MessageGroup group() const;
 
     void setIdString(const QString &idString);
     QString idString() const;
@@ -300,12 +301,12 @@ private:
     qint32 m_date;
     QList<DcOption> m_dcOptions;
     QString m_device;
+    DraftMessage m_draft;
     bool m_enabled;
     QString m_firstName;
     qint32 m_flags;
     ContactLink m_foreignLink;
     GeoPoint m_geo;
-    MessageGroup m_group;
     QString m_idString;
     qint32 m_idInt;
     qint32 m_inviterId;
@@ -526,6 +527,14 @@ inline QString Update::device() const {
     return m_device;
 }
 
+inline void Update::setDraft(const DraftMessage &draft) {
+    m_draft = draft;
+}
+
+inline DraftMessage Update::draft() const {
+    return m_draft;
+}
+
 inline void Update::setEnabled(bool enabled) {
     m_enabled = enabled;
 }
@@ -564,14 +573,6 @@ inline void Update::setGeo(const GeoPoint &geo) {
 
 inline GeoPoint Update::geo() const {
     return m_geo;
-}
-
-inline void Update::setGroup(const MessageGroup &group) {
-    m_group = group;
-}
-
-inline MessageGroup Update::group() const {
-    return m_group;
 }
 
 inline void Update::setIdString(const QString &idString) {
@@ -922,12 +923,12 @@ inline bool Update::operator ==(const Update &b) const {
            m_date == b.m_date &&
            m_dcOptions == b.m_dcOptions &&
            m_device == b.m_device &&
+           m_draft == b.m_draft &&
            m_enabled == b.m_enabled &&
            m_firstName == b.m_firstName &&
            m_flags == b.m_flags &&
            m_foreignLink == b.m_foreignLink &&
            m_geo == b.m_geo &&
-           m_group == b.m_group &&
            m_idString == b.m_idString &&
            m_idInt == b.m_idInt &&
            m_inviterId == b.m_inviterId &&
@@ -1274,14 +1275,6 @@ inline bool Update::fetch(InboundPkt *in) {
     }
         break;
     
-    case typeUpdateChannelGroup: {
-        m_channelId = in->fetchInt();
-        m_group.fetch(in);
-        m_classType = static_cast<UpdateClassType>(x);
-        return true;
-    }
-        break;
-    
     case typeUpdateNewChannelMessage: {
         m_message.fetch(in);
         m_pts = in->fetchInt();
@@ -1449,6 +1442,22 @@ inline bool Update::fetch(InboundPkt *in) {
         m_userId = in->fetchInt();
         m_msgIdInputBotInlineMessageID.fetch(in);
         m_data = in->fetchBytes();
+        m_classType = static_cast<UpdateClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateReadChannelOutbox: {
+        m_channelId = in->fetchInt();
+        m_maxId = in->fetchInt();
+        m_classType = static_cast<UpdateClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUpdateDraftMessage: {
+        m_peer.fetch(in);
+        m_draft.fetch(in);
         m_classType = static_cast<UpdateClassType>(x);
         return true;
     }
@@ -1709,13 +1718,6 @@ inline bool Update::push(OutboundPkt *out) const {
     }
         break;
     
-    case typeUpdateChannelGroup: {
-        out->appendInt(m_channelId);
-        m_group.push(out);
-        return true;
-    }
-        break;
-    
     case typeUpdateNewChannelMessage: {
         m_message.push(out);
         out->appendInt(m_pts);
@@ -1855,6 +1857,20 @@ inline bool Update::push(OutboundPkt *out) const {
         out->appendInt(m_userId);
         m_msgIdInputBotInlineMessageID.push(out);
         out->appendBytes(m_data);
+        return true;
+    }
+        break;
+    
+    case typeUpdateReadChannelOutbox: {
+        out->appendInt(m_channelId);
+        out->appendInt(m_maxId);
+        return true;
+    }
+        break;
+    
+    case typeUpdateDraftMessage: {
+        m_peer.push(out);
+        m_draft.push(out);
         return true;
     }
         break;
@@ -2138,14 +2154,6 @@ inline QMap<QString, QVariant> Update::toMap() const {
     }
         break;
     
-    case typeUpdateChannelGroup: {
-        result["classType"] = "Update::typeUpdateChannelGroup";
-        result["channelId"] = QVariant::fromValue<qint32>(channelId());
-        result["group"] = m_group.toMap();
-        return result;
-    }
-        break;
-    
     case typeUpdateNewChannelMessage: {
         result["classType"] = "Update::typeUpdateNewChannelMessage";
         result["message"] = m_message.toMap();
@@ -2298,6 +2306,22 @@ inline QMap<QString, QVariant> Update::toMap() const {
         result["userId"] = QVariant::fromValue<qint32>(userId());
         result["msgIdInputBotInlineMessageID"] = m_msgIdInputBotInlineMessageID.toMap();
         result["data"] = QVariant::fromValue<QByteArray>(data());
+        return result;
+    }
+        break;
+    
+    case typeUpdateReadChannelOutbox: {
+        result["classType"] = "Update::typeUpdateReadChannelOutbox";
+        result["channelId"] = QVariant::fromValue<qint32>(channelId());
+        result["maxId"] = QVariant::fromValue<qint32>(maxId());
+        return result;
+    }
+        break;
+    
+    case typeUpdateDraftMessage: {
+        result["classType"] = "Update::typeUpdateDraftMessage";
+        result["peer"] = m_peer.toMap();
+        result["draft"] = m_draft.toMap();
         return result;
     }
         break;
@@ -2524,12 +2548,6 @@ inline Update Update::fromMap(const QMap<QString, QVariant> &map) {
         result.setChannelId( map.value("channelId").value<qint32>() );
         return result;
     }
-    if(map.value("classType").toString() == "Update::typeUpdateChannelGroup") {
-        result.setClassType(typeUpdateChannelGroup);
-        result.setChannelId( map.value("channelId").value<qint32>() );
-        result.setGroup( MessageGroup::fromMap(map.value("group").toMap()) );
-        return result;
-    }
     if(map.value("classType").toString() == "Update::typeUpdateNewChannelMessage") {
         result.setClassType(typeUpdateNewChannelMessage);
         result.setMessage( Message::fromMap(map.value("message").toMap()) );
@@ -2652,6 +2670,18 @@ inline Update Update::fromMap(const QMap<QString, QVariant> &map) {
         result.setUserId( map.value("userId").value<qint32>() );
         result.setMsgIdInputBotInlineMessageID( InputBotInlineMessageID::fromMap(map.value("msgIdInputBotInlineMessageID").toMap()) );
         result.setData( map.value("data").value<QByteArray>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "Update::typeUpdateReadChannelOutbox") {
+        result.setClassType(typeUpdateReadChannelOutbox);
+        result.setChannelId( map.value("channelId").value<qint32>() );
+        result.setMaxId( map.value("maxId").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "Update::typeUpdateDraftMessage") {
+        result.setClassType(typeUpdateDraftMessage);
+        result.setPeer( Peer::fromMap(map.value("peer").toMap()) );
+        result.setDraft( DraftMessage::fromMap(map.value("draft").toMap()) );
         return result;
     }
     return result;
@@ -2807,10 +2837,6 @@ inline QDataStream &operator<<(QDataStream &stream, const Update &item) {
     case Update::typeUpdateChannel:
         stream << item.channelId();
         break;
-    case Update::typeUpdateChannelGroup:
-        stream << item.channelId();
-        stream << item.group();
-        break;
     case Update::typeUpdateNewChannelMessage:
         stream << item.message();
         stream << item.pts();
@@ -2896,6 +2922,14 @@ inline QDataStream &operator<<(QDataStream &stream, const Update &item) {
         stream << item.userId();
         stream << item.msgIdInputBotInlineMessageID();
         stream << item.data();
+        break;
+    case Update::typeUpdateReadChannelOutbox:
+        stream << item.channelId();
+        stream << item.maxId();
+        break;
+    case Update::typeUpdateDraftMessage:
+        stream << item.peer();
+        stream << item.draft();
         break;
     }
     return stream;
@@ -3236,15 +3270,6 @@ inline QDataStream &operator>>(QDataStream &stream, Update &item) {
         item.setChannelId(m_channel_id);
     }
         break;
-    case Update::typeUpdateChannelGroup: {
-        qint32 m_channel_id;
-        stream >> m_channel_id;
-        item.setChannelId(m_channel_id);
-        MessageGroup m_group;
-        stream >> m_group;
-        item.setGroup(m_group);
-    }
-        break;
     case Update::typeUpdateNewChannelMessage: {
         Message m_message;
         stream >> m_message;
@@ -3446,6 +3471,24 @@ inline QDataStream &operator>>(QDataStream &stream, Update &item) {
         QByteArray m_data;
         stream >> m_data;
         item.setData(m_data);
+    }
+        break;
+    case Update::typeUpdateReadChannelOutbox: {
+        qint32 m_channel_id;
+        stream >> m_channel_id;
+        item.setChannelId(m_channel_id);
+        qint32 m_max_id;
+        stream >> m_max_id;
+        item.setMaxId(m_max_id);
+    }
+        break;
+    case Update::typeUpdateDraftMessage: {
+        Peer m_peer;
+        stream >> m_peer;
+        item.setPeer(m_peer);
+        DraftMessage m_draft;
+        stream >> m_draft;
+        item.setDraft(m_draft);
     }
         break;
     }

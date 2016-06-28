@@ -29,7 +29,8 @@ public:
         typeInputMessagesFilterUrl = 0x7ef0dd87,
         typeInputMessagesFilterGif = 0xffc86587,
         typeInputMessagesFilterVoice = 0x50f5c392,
-        typeInputMessagesFilterMusic = 0x3751b49e
+        typeInputMessagesFilterMusic = 0x3751b49e,
+        typeInputMessagesFilterChatPhotos = 0x3a20ecb8
     };
 
     MessagesFilter(MessagesFilterClassType classType = typeInputMessagesFilterEmpty, InboundPkt *in = 0);
@@ -159,6 +160,12 @@ inline bool MessagesFilter::fetch(InboundPkt *in) {
     }
         break;
     
+    case typeInputMessagesFilterChatPhotos: {
+        m_classType = static_cast<MessagesFilterClassType>(x);
+        return true;
+    }
+        break;
+    
     default:
         LQTG_FETCH_ASSERT;
         return false;
@@ -214,6 +221,11 @@ inline bool MessagesFilter::push(OutboundPkt *out) const {
         break;
     
     case typeInputMessagesFilterMusic: {
+        return true;
+    }
+        break;
+    
+    case typeInputMessagesFilterChatPhotos: {
         return true;
     }
         break;
@@ -286,6 +298,12 @@ inline QMap<QString, QVariant> MessagesFilter::toMap() const {
     }
         break;
     
+    case typeInputMessagesFilterChatPhotos: {
+        result["classType"] = "MessagesFilter::typeInputMessagesFilterChatPhotos";
+        return result;
+    }
+        break;
+    
     default:
         return result;
     }
@@ -333,6 +351,10 @@ inline MessagesFilter MessagesFilter::fromMap(const QMap<QString, QVariant> &map
         result.setClassType(typeInputMessagesFilterMusic);
         return result;
     }
+    if(map.value("classType").toString() == "MessagesFilter::typeInputMessagesFilterChatPhotos") {
+        result.setClassType(typeInputMessagesFilterChatPhotos);
+        return result;
+    }
     return result;
 }
 
@@ -374,6 +396,9 @@ inline QDataStream &operator<<(QDataStream &stream, const MessagesFilter &item) 
         
         break;
     case MessagesFilter::typeInputMessagesFilterMusic:
+        
+        break;
+    case MessagesFilter::typeInputMessagesFilterChatPhotos:
         
         break;
     }
@@ -422,6 +447,10 @@ inline QDataStream &operator>>(QDataStream &stream, MessagesFilter &item) {
     }
         break;
     case MessagesFilter::typeInputMessagesFilterMusic: {
+        
+    }
+        break;
+    case MessagesFilter::typeInputMessagesFilterChatPhotos: {
         
     }
         break;
