@@ -7958,7 +7958,11 @@ qint64 TelegramCore::retry(qint64 mid)
         result = messagesSendEncryptedService(args["peer"].value<InputEncryptedChat>(), args["random_id"].value<qint64>(), args["data"].value<QByteArray>(), [this, mid](TG_CALLBACK_SIGNATURE(MessagesSentEncryptedMessage)){ Q_UNUSED(msgId); callBackCall<MessagesSentEncryptedMessage>(mid, result, error); } );
     } else if(functionName == "messagesReceivedQueue") {
         result = messagesReceivedQueue(args["max_qts"].value<qint32>(), [this, mid](TG_CALLBACK_SIGNATURE(QList<qint64>)){ Q_UNUSED(msgId); callBackCall<QList<qint64>>(mid, result, error); } );
-    } else if(functionName == "messagesReadMessageContents") {
+    } 
+    #ifndef Q_CC_MSVC // break if-else chain on Microsoft compilers with nesting limits
+        else
+    #endif
+    if(functionName == "messagesReadMessageContents") {
         result = messagesReadMessageContents(args["id"].value<QList<qint32>>(), [this, mid](TG_CALLBACK_SIGNATURE(MessagesAffectedMessages)){ Q_UNUSED(msgId); callBackCall<MessagesAffectedMessages>(mid, result, error); } );
     } else if(functionName == "messagesGetStickers") {
         result = messagesGetStickers(args["emoticon"].value<QString>(), args["hash"].value<QString>(), [this, mid](TG_CALLBACK_SIGNATURE(MessagesStickers)){ Q_UNUSED(msgId); callBackCall<MessagesStickers>(mid, result, error); } );
