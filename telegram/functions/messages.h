@@ -392,7 +392,7 @@ inline MessagesMessages Functions::Messages::getHistoryResult(InboundPkt *in) {
 
 inline bool Functions::Messages::search(OutboundPkt *out, const InputPeer &peer, const QString &q, const MessagesFilter &filter, qint32 minDate, qint32 maxDate, qint32 offset, qint32 maxId, qint32 limit) {
     out->appendInt(fncMessagesSearch);
-
+    
     qint32 flags = 0;
     out->appendInt(flags);
     if(!peer.push(out)) return false;

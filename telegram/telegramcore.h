@@ -44,6 +44,10 @@ public:
     static qint32 timeOut() { return mTimeOut; }
     static void setTimeOut(const qint32 &timeOut) { mTimeOut = timeOut; }
 
+    QVariantHash lastArguments() const {
+        return mLastArgs;
+    }
+
     virtual void init() = 0;
 
     virtual qint64 accountRegisterDevice(qint32 token_type, const QString &token, Callback<bool > callBack = 0, qint32 timeout = timeOut());
@@ -980,6 +984,7 @@ protected:
 private:
     QHash<qint64, void*> mCallbacks;
     QHash<qint64, QVariantHash> mRecallArgs;
+    QVariantHash mLastArgs;
     QHash<qint64, qint32> mTimer;
     static qint32 mTimeOut;
 
