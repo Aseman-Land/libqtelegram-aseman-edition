@@ -103,6 +103,9 @@ public:
     QString defaultHostAddress;
     qint16 defaultHostPort;
     qint16 defaultHostDcId;
+
+    Settings::ReadFunc telegram_settings_read_fnc;
+    Settings::WriteFunc telegram_settings_write_fnc;
 };
 
 Telegram::Telegram(const QString &defaultHostAddress, qint16 defaultHostPort, qint16 defaultHostDcId, qint32 appId, const QString &appHash, const QString &phoneNumber, const QString &configPath, const QString &publicKeyFile) :
@@ -128,6 +131,9 @@ Telegram::Telegram(const QString &defaultHostAddress, qint16 defaultHostPort, qi
     prv->mDcProvider = 0;
     prv->mCrypto = 0;
     prv->mSettings = 0;
+
+    prv->telegram_settings_read_fnc = 0;
+    prv->telegram_settings_write_fnc = 0;
 
     QLoggingCategory::setFilterRules(QString(qgetenv("QT_LOGGING_RULES")));
 }
@@ -185,12 +191,14 @@ void Telegram::init(qint32 timeout) {
     if(prv->mCrypto) delete prv->mCrypto;
     if(prv->mSettings) delete prv->mSettings;
 
-    prv->mSettings = new Settings();
+    prv->mSettings = new Settings(this);
     prv->mSettings->setAppHash(prv->appHash);
     prv->mSettings->setAppId(prv->appId);
     prv->mSettings->setDefaultHostAddress(prv->defaultHostAddress);
     prv->mSettings->setDefaultHostDcId(prv->defaultHostDcId);
     prv->mSettings->setDefaultHostPort(prv->defaultHostPort);
+    if(prv->telegram_settings_read_fnc && prv->telegram_settings_write_fnc)
+        prv->mSettings->setAuthConfigMethods(prv->telegram_settings_read_fnc, prv->telegram_settings_write_fnc);
 
     // load settings
     if (!prv->mSettings->loadSettings(prv->phoneNumber, prv->configPath, prv->publicKeyFile)) {
@@ -276,6 +284,12 @@ Settings *Telegram::settings() const
 CryptoUtils *Telegram::crypto() const
 {
     return prv->mCrypto;
+}
+
+void Telegram::setAuthConfigMethods(Settings::ReadFunc readFunc, Settings::WriteFunc writeFunc)
+{
+    prv->telegram_settings_read_fnc = readFunc;
+    prv->telegram_settings_write_fnc = writeFunc;
 }
 
 void Telegram::setDefaultSettingsFormat(const QSettings::Format &format)

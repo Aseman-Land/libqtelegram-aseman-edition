@@ -33,6 +33,7 @@
 #include "secret/secretchat.h"
 #include "secret/secretchatmessage.h"
 #include "telegram/telegramcore.h"
+#include "core/settings.h"
 
 Q_DECLARE_LOGGING_CATEGORY(TG_LIB_API)
 Q_DECLARE_LOGGING_CATEGORY(TG_LIB_SECRET)
@@ -44,7 +45,6 @@ Q_DECLARE_LOGGING_CATEGORY(TG_LIB_SECRET)
 #define TG_UPLOAD_SEND_PHOTO_CUSTOM_CALLBACK \
     TG_CALLBACK_SIGNATURE(UploadSendPhoto)
 
-class Settings;
 class CryptoUtils;
 class TelegramPrivate;
 class FileOperation;
@@ -68,6 +68,8 @@ public:
 
     Settings *settings() const;
     CryptoUtils *crypto() const;
+
+    void setAuthConfigMethods(Settings::ReadFunc readFunc, Settings::WriteFunc writeFunc);
 
     static void setDefaultSettingsFormat(const QSettings::Format &format);
     static QSettings::Format defaultSettingsFormat();

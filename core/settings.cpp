@@ -45,9 +45,9 @@ QString telegram_settings_auth_path(const QString &configPath, const QString &ph
     return pathDir + '/' + AUTH_KEY_FILE;
 }
 
-bool telegram_settings_read_fnc(const QString &configPath, const QString &phone, QVariantMap &map)
+bool telegram_settings_read_fnc(Telegram *tg, QVariantMap &map)
 {
-    const QString configFilename = telegram_settings_auth_path(configPath, phone);
+    const QString configFilename = telegram_settings_auth_path(tg->configPath(), tg->phoneNumber());
 
     QSettings settings(configFilename, QSettings::IniFormat);
     const QStringList &keys = settings.allKeys();
@@ -57,9 +57,9 @@ bool telegram_settings_read_fnc(const QString &configPath, const QString &phone,
     return true;
 }
 
-bool telegram_settings_write_fnc(const QString &configPath, const QString &phone, const QVariantMap &map)
+bool telegram_settings_write_fnc(Telegram *tg, const QVariantMap &map)
 {
-    const QString configFilename = telegram_settings_auth_path(configPath, phone);
+    const QString configFilename = telegram_settings_auth_path(tg->configPath(), tg->phoneNumber());
 
     QSettings settings(configFilename, QSettings::IniFormat);
     QMapIterator<QString,QVariant> i(map);
@@ -72,17 +72,17 @@ bool telegram_settings_write_fnc(const QString &configPath, const QString &phone
     return true;
 }
 
-Settings::ReadFunc _telegram_settings_read_fnc = telegram_settings_read_fnc;
-Settings::WriteFunc _telegram_settings_write_fnc = telegram_settings_write_fnc;
-
-Settings::Settings() :
+Settings::Settings(Telegram *telegram) :
     m_defaultHostPort(0),
     m_defaultHostDcId(0),
     m_appId(0),
     m_workingDcConfigAvailabe(false),
     m_pubKey(0),
     m_phoneNumber(""),
-    m_baseConfigDirectory("") {
+    m_baseConfigDirectory(""),
+    mTelegram(telegram),
+    _telegram_settings_read_fnc(telegram_settings_read_fnc),
+    _telegram_settings_write_fnc(telegram_settings_write_fnc) {
 }
 
 Settings::~Settings() {
@@ -243,14 +243,14 @@ void Settings::writeAuthFile() {
         map[ar + ST_EXPIRES] = m_dcsList[i]->expires();
     }
 
-    if(!_telegram_settings_write_fnc(m_baseConfigDirectory, m_phoneNumber, map))
-        telegram_settings_write_fnc(m_baseConfigDirectory, m_phoneNumber, map);
+    if(!_telegram_settings_write_fnc(mTelegram, map))
+        telegram_settings_write_fnc(mTelegram, map);
 }
 
 void Settings::readAuthFile() {
     QVariantMap map;
-    if(!_telegram_settings_read_fnc(m_baseConfigDirectory, m_phoneNumber, map))
-        telegram_settings_read_fnc(m_baseConfigDirectory, m_phoneNumber, map);
+    if(!_telegram_settings_read_fnc(mTelegram, map))
+        telegram_settings_read_fnc(mTelegram, map);
 
     QString pre = testMode() ? ST_TEST : ST_PRODUCTION;
     pre += "/";
@@ -313,9 +313,9 @@ void Settings::setAuthConfigMethods(Settings::ReadFunc readFunc, Settings::Write
     _telegram_settings_write_fnc = writeFunc;
 }
 
-void Settings::clearAuth(const QString &configPath, const QString &phone)
+void Settings::clearAuth()
 {
-    _telegram_settings_write_fnc(configPath, phone, QVariantMap());
+    _telegram_settings_write_fnc(mTelegram, QVariantMap());
 }
 
 void Settings::readSecretFile() {
