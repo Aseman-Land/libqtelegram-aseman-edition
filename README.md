@@ -1,6 +1,8 @@
 # libqtelegram-aseman-edition
 It's a fork of libqtelegram by Aseman Team which is porting to windows and mac alongside linux support. It's also build using qmake instead of cmake.
 
+### [Developer Documents](telegram/documents/start.md)
+
 ### How to Compile
 #### Install dependencies
 
@@ -37,6 +39,10 @@ And:
     cd libqtelegram-aseman-edition
     mkdir build && cd build
     qmake -r PREFIX=/usr  ..
+    
+You can also use below flag to qmake to make qt-objects type available:
+
+    qmake -r PREFIX=/usr CONFIG+=typeobjects ..
     
 And then start building:
 

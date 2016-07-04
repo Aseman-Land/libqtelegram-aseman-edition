@@ -6,18 +6,28 @@
 #define LQTG_TYPE_CONTACTSTATUS
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
+#include <QVariant>
+#include "core/inboundpkt.h"
+#include "core/outboundpkt.h"
+#include "../coretypes.h"
+
+#include <QDataStream>
+
 #include "userstatus.h"
 #include <QtGlobal>
 
 class LIBQTELEGRAMSHARED_EXPORT ContactStatus : public TelegramTypeObject
 {
 public:
-    enum ContactStatusType {
+    enum ContactStatusClassType {
         typeContactStatus = 0xd3680c61
     };
 
-    ContactStatus(ContactStatusType classType = typeContactStatus, InboundPkt *in = 0);
+    ContactStatus(ContactStatusClassType classType = typeContactStatus, InboundPkt *in = 0);
     ContactStatus(InboundPkt *in);
+    ContactStatus(const Null&);
     virtual ~ContactStatus();
 
     void setStatus(const UserStatus &status);
@@ -26,18 +36,182 @@ public:
     void setUserId(qint32 userId);
     qint32 userId() const;
 
-    void setClassType(ContactStatusType classType);
-    ContactStatusType classType() const;
+    void setClassType(ContactStatusClassType classType);
+    ContactStatusClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const ContactStatus &b);
+    QMap<QString, QVariant> toMap() const;
+    static ContactStatus fromMap(const QMap<QString, QVariant> &map);
+
+    bool operator ==(const ContactStatus &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
+
+    QByteArray getHash(QCryptographicHash::Algorithm alg = QCryptographicHash::Md5) const;
 
 private:
     UserStatus m_status;
     qint32 m_userId;
-    ContactStatusType m_classType;
+    ContactStatusClassType m_classType;
 };
+
+Q_DECLARE_METATYPE(ContactStatus)
+
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const ContactStatus &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, ContactStatus &item);
+
+inline ContactStatus::ContactStatus(ContactStatusClassType classType, InboundPkt *in) :
+    m_userId(0),
+    m_classType(classType)
+{
+    if(in) fetch(in);
+}
+
+inline ContactStatus::ContactStatus(InboundPkt *in) :
+    m_userId(0),
+    m_classType(typeContactStatus)
+{
+    fetch(in);
+}
+
+inline ContactStatus::ContactStatus(const Null &null) :
+    TelegramTypeObject(null),
+    m_userId(0),
+    m_classType(typeContactStatus)
+{
+}
+
+inline ContactStatus::~ContactStatus() {
+}
+
+inline void ContactStatus::setStatus(const UserStatus &status) {
+    m_status = status;
+}
+
+inline UserStatus ContactStatus::status() const {
+    return m_status;
+}
+
+inline void ContactStatus::setUserId(qint32 userId) {
+    m_userId = userId;
+}
+
+inline qint32 ContactStatus::userId() const {
+    return m_userId;
+}
+
+inline bool ContactStatus::operator ==(const ContactStatus &b) const {
+    return m_classType == b.m_classType &&
+           m_status == b.m_status &&
+           m_userId == b.m_userId;
+}
+
+inline void ContactStatus::setClassType(ContactStatus::ContactStatusClassType classType) {
+    m_classType = classType;
+}
+
+inline ContactStatus::ContactStatusClassType ContactStatus::classType() const {
+    return m_classType;
+}
+
+inline bool ContactStatus::fetch(InboundPkt *in) {
+    LQTG_FETCH_LOG;
+    int x = in->fetchInt();
+    switch(x) {
+    case typeContactStatus: {
+        m_userId = in->fetchInt();
+        m_status.fetch(in);
+        m_classType = static_cast<ContactStatusClassType>(x);
+        return true;
+    }
+        break;
+    
+    default:
+        LQTG_FETCH_ASSERT;
+        return false;
+    }
+}
+
+inline bool ContactStatus::push(OutboundPkt *out) const {
+    out->appendInt(m_classType);
+    switch(m_classType) {
+    case typeContactStatus: {
+        out->appendInt(m_userId);
+        m_status.push(out);
+        return true;
+    }
+        break;
+    
+    default:
+        return false;
+    }
+}
+
+inline QMap<QString, QVariant> ContactStatus::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeContactStatus: {
+        result["classType"] = "ContactStatus::typeContactStatus";
+        result["userId"] = QVariant::fromValue<qint32>(userId());
+        result["status"] = m_status.toMap();
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+inline ContactStatus ContactStatus::fromMap(const QMap<QString, QVariant> &map) {
+    ContactStatus result;
+    if(map.value("classType").toString() == "ContactStatus::typeContactStatus") {
+        result.setClassType(typeContactStatus);
+        result.setUserId( map.value("userId").value<qint32>() );
+        result.setStatus( UserStatus::fromMap(map.value("status").toMap()) );
+        return result;
+    }
+    return result;
+}
+
+inline QByteArray ContactStatus::getHash(QCryptographicHash::Algorithm alg) const {
+    QByteArray data;
+    QDataStream str(&data, QIODevice::WriteOnly);
+    str << *this;
+    return QCryptographicHash::hash(data, alg);
+}
+
+inline QDataStream &operator<<(QDataStream &stream, const ContactStatus &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case ContactStatus::typeContactStatus:
+        stream << item.userId();
+        stream << item.status();
+        break;
+    }
+    return stream;
+}
+
+inline QDataStream &operator>>(QDataStream &stream, ContactStatus &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<ContactStatus::ContactStatusClassType>(type));
+    switch(type) {
+    case ContactStatus::typeContactStatus: {
+        qint32 m_user_id;
+        stream >> m_user_id;
+        item.setUserId(m_user_id);
+        UserStatus m_status;
+        stream >> m_status;
+        item.setStatus(m_status);
+    }
+        break;
+    }
+    return stream;
+}
+
 
 #endif // LQTG_TYPE_CONTACTSTATUS

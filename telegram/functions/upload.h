@@ -6,6 +6,10 @@
 #define LQTG_FNC_UPLOAD
 
 #include "telegramfunctionobject.h"
+#include "core/inboundpkt.h"
+#include "core/outboundpkt.h"
+#include "../coretypes.h"
+
 #include <QtGlobal>
 #include <QByteArray>
 #include "telegram/types/uploadfile.h"
@@ -38,6 +42,56 @@ public:
 };
 
 }
+inline Functions::Upload::Upload() {
+}
+
+inline Functions::Upload::~Upload() {
+}
+
+inline bool Functions::Upload::saveFilePart(OutboundPkt *out, qint64 fileId, qint32 filePart, const QByteArray &bytes) {
+    out->appendInt(fncUploadSaveFilePart);
+    out->appendLong(fileId);
+    out->appendInt(filePart);
+    out->appendBytes(bytes);
+    return true;
+}
+
+inline bool Functions::Upload::saveFilePartResult(InboundPkt *in) {
+    bool result;
+    result = in->fetchBool();
+    return result;
+}
+
+inline bool Functions::Upload::getFile(OutboundPkt *out, const InputFileLocation &location, qint32 offset, qint32 limit) {
+    out->appendInt(fncUploadGetFile);
+    if(!location.push(out)) return false;
+    out->appendInt(offset);
+    out->appendInt(limit);
+    return true;
+}
+
+inline UploadFile Functions::Upload::getFileResult(InboundPkt *in) {
+    UploadFile result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Upload::saveBigFilePart(OutboundPkt *out, qint64 fileId, qint32 filePart, qint32 fileTotalParts, const QByteArray &bytes) {
+    out->appendInt(fncUploadSaveBigFilePart);
+    out->appendLong(fileId);
+    out->appendInt(filePart);
+    out->appendInt(fileTotalParts);
+    out->appendBytes(bytes);
+    return true;
+}
+
+inline bool Functions::Upload::saveBigFilePartResult(InboundPkt *in) {
+    bool result;
+    result = in->fetchBool();
+    return result;
+}
+
+
 }
 
 #endif // LQTG_FNC_UPLOAD

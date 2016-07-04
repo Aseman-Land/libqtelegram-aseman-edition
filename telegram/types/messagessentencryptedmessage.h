@@ -6,19 +6,29 @@
 #define LQTG_TYPE_MESSAGESSENTENCRYPTEDMESSAGE
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
+#include <QVariant>
+#include "core/inboundpkt.h"
+#include "core/outboundpkt.h"
+#include "../coretypes.h"
+
+#include <QDataStream>
+
 #include <QtGlobal>
 #include "encryptedfile.h"
 
 class LIBQTELEGRAMSHARED_EXPORT MessagesSentEncryptedMessage : public TelegramTypeObject
 {
 public:
-    enum MessagesSentEncryptedMessageType {
+    enum MessagesSentEncryptedMessageClassType {
         typeMessagesSentEncryptedMessage = 0x560f8935,
         typeMessagesSentEncryptedFile = 0x9493ff32
     };
 
-    MessagesSentEncryptedMessage(MessagesSentEncryptedMessageType classType = typeMessagesSentEncryptedMessage, InboundPkt *in = 0);
+    MessagesSentEncryptedMessage(MessagesSentEncryptedMessageClassType classType = typeMessagesSentEncryptedMessage, InboundPkt *in = 0);
     MessagesSentEncryptedMessage(InboundPkt *in);
+    MessagesSentEncryptedMessage(const Null&);
     virtual ~MessagesSentEncryptedMessage();
 
     void setDate(qint32 date);
@@ -27,18 +37,216 @@ public:
     void setFile(const EncryptedFile &file);
     EncryptedFile file() const;
 
-    void setClassType(MessagesSentEncryptedMessageType classType);
-    MessagesSentEncryptedMessageType classType() const;
+    void setClassType(MessagesSentEncryptedMessageClassType classType);
+    MessagesSentEncryptedMessageClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const MessagesSentEncryptedMessage &b);
+    QMap<QString, QVariant> toMap() const;
+    static MessagesSentEncryptedMessage fromMap(const QMap<QString, QVariant> &map);
+
+    bool operator ==(const MessagesSentEncryptedMessage &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
+
+    QByteArray getHash(QCryptographicHash::Algorithm alg = QCryptographicHash::Md5) const;
 
 private:
     qint32 m_date;
     EncryptedFile m_file;
-    MessagesSentEncryptedMessageType m_classType;
+    MessagesSentEncryptedMessageClassType m_classType;
 };
+
+Q_DECLARE_METATYPE(MessagesSentEncryptedMessage)
+
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const MessagesSentEncryptedMessage &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, MessagesSentEncryptedMessage &item);
+
+inline MessagesSentEncryptedMessage::MessagesSentEncryptedMessage(MessagesSentEncryptedMessageClassType classType, InboundPkt *in) :
+    m_date(0),
+    m_classType(classType)
+{
+    if(in) fetch(in);
+}
+
+inline MessagesSentEncryptedMessage::MessagesSentEncryptedMessage(InboundPkt *in) :
+    m_date(0),
+    m_classType(typeMessagesSentEncryptedMessage)
+{
+    fetch(in);
+}
+
+inline MessagesSentEncryptedMessage::MessagesSentEncryptedMessage(const Null &null) :
+    TelegramTypeObject(null),
+    m_date(0),
+    m_classType(typeMessagesSentEncryptedMessage)
+{
+}
+
+inline MessagesSentEncryptedMessage::~MessagesSentEncryptedMessage() {
+}
+
+inline void MessagesSentEncryptedMessage::setDate(qint32 date) {
+    m_date = date;
+}
+
+inline qint32 MessagesSentEncryptedMessage::date() const {
+    return m_date;
+}
+
+inline void MessagesSentEncryptedMessage::setFile(const EncryptedFile &file) {
+    m_file = file;
+}
+
+inline EncryptedFile MessagesSentEncryptedMessage::file() const {
+    return m_file;
+}
+
+inline bool MessagesSentEncryptedMessage::operator ==(const MessagesSentEncryptedMessage &b) const {
+    return m_classType == b.m_classType &&
+           m_date == b.m_date &&
+           m_file == b.m_file;
+}
+
+inline void MessagesSentEncryptedMessage::setClassType(MessagesSentEncryptedMessage::MessagesSentEncryptedMessageClassType classType) {
+    m_classType = classType;
+}
+
+inline MessagesSentEncryptedMessage::MessagesSentEncryptedMessageClassType MessagesSentEncryptedMessage::classType() const {
+    return m_classType;
+}
+
+inline bool MessagesSentEncryptedMessage::fetch(InboundPkt *in) {
+    LQTG_FETCH_LOG;
+    int x = in->fetchInt();
+    switch(x) {
+    case typeMessagesSentEncryptedMessage: {
+        m_date = in->fetchInt();
+        m_classType = static_cast<MessagesSentEncryptedMessageClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeMessagesSentEncryptedFile: {
+        m_date = in->fetchInt();
+        m_file.fetch(in);
+        m_classType = static_cast<MessagesSentEncryptedMessageClassType>(x);
+        return true;
+    }
+        break;
+    
+    default:
+        LQTG_FETCH_ASSERT;
+        return false;
+    }
+}
+
+inline bool MessagesSentEncryptedMessage::push(OutboundPkt *out) const {
+    out->appendInt(m_classType);
+    switch(m_classType) {
+    case typeMessagesSentEncryptedMessage: {
+        out->appendInt(m_date);
+        return true;
+    }
+        break;
+    
+    case typeMessagesSentEncryptedFile: {
+        out->appendInt(m_date);
+        m_file.push(out);
+        return true;
+    }
+        break;
+    
+    default:
+        return false;
+    }
+}
+
+inline QMap<QString, QVariant> MessagesSentEncryptedMessage::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeMessagesSentEncryptedMessage: {
+        result["classType"] = "MessagesSentEncryptedMessage::typeMessagesSentEncryptedMessage";
+        result["date"] = QVariant::fromValue<qint32>(date());
+        return result;
+    }
+        break;
+    
+    case typeMessagesSentEncryptedFile: {
+        result["classType"] = "MessagesSentEncryptedMessage::typeMessagesSentEncryptedFile";
+        result["date"] = QVariant::fromValue<qint32>(date());
+        result["file"] = m_file.toMap();
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+inline MessagesSentEncryptedMessage MessagesSentEncryptedMessage::fromMap(const QMap<QString, QVariant> &map) {
+    MessagesSentEncryptedMessage result;
+    if(map.value("classType").toString() == "MessagesSentEncryptedMessage::typeMessagesSentEncryptedMessage") {
+        result.setClassType(typeMessagesSentEncryptedMessage);
+        result.setDate( map.value("date").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "MessagesSentEncryptedMessage::typeMessagesSentEncryptedFile") {
+        result.setClassType(typeMessagesSentEncryptedFile);
+        result.setDate( map.value("date").value<qint32>() );
+        result.setFile( EncryptedFile::fromMap(map.value("file").toMap()) );
+        return result;
+    }
+    return result;
+}
+
+inline QByteArray MessagesSentEncryptedMessage::getHash(QCryptographicHash::Algorithm alg) const {
+    QByteArray data;
+    QDataStream str(&data, QIODevice::WriteOnly);
+    str << *this;
+    return QCryptographicHash::hash(data, alg);
+}
+
+inline QDataStream &operator<<(QDataStream &stream, const MessagesSentEncryptedMessage &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case MessagesSentEncryptedMessage::typeMessagesSentEncryptedMessage:
+        stream << item.date();
+        break;
+    case MessagesSentEncryptedMessage::typeMessagesSentEncryptedFile:
+        stream << item.date();
+        stream << item.file();
+        break;
+    }
+    return stream;
+}
+
+inline QDataStream &operator>>(QDataStream &stream, MessagesSentEncryptedMessage &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<MessagesSentEncryptedMessage::MessagesSentEncryptedMessageClassType>(type));
+    switch(type) {
+    case MessagesSentEncryptedMessage::typeMessagesSentEncryptedMessage: {
+        qint32 m_date;
+        stream >> m_date;
+        item.setDate(m_date);
+    }
+        break;
+    case MessagesSentEncryptedMessage::typeMessagesSentEncryptedFile: {
+        qint32 m_date;
+        stream >> m_date;
+        item.setDate(m_date);
+        EncryptedFile m_file;
+        stream >> m_file;
+        item.setFile(m_file);
+    }
+        break;
+    }
+    return stream;
+}
+
 
 #endif // LQTG_TYPE_MESSAGESSENTENCRYPTEDMESSAGE

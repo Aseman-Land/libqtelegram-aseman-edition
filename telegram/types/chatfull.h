@@ -6,22 +6,51 @@
 #define LQTG_TYPE_CHATFULL
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
+#include <QVariant>
+#include "core/inboundpkt.h"
+#include "core/outboundpkt.h"
+#include "../coretypes.h"
+
+#include <QDataStream>
+
+#include <QString>
+#include <QtGlobal>
+#include <QList>
+#include "botinfo.h"
 #include "photo.h"
 #include "exportedchatinvite.h"
-#include <QtGlobal>
 #include "peernotifysettings.h"
 #include "chatparticipants.h"
 
 class LIBQTELEGRAMSHARED_EXPORT ChatFull : public TelegramTypeObject
 {
 public:
-    enum ChatFullType {
-        typeChatFull = 0xcade0791
+    enum ChatFullClassType {
+        typeChatFull = 0x2e02a614,
+        typeChannelFull = 0xc3d5512f
     };
 
-    ChatFull(ChatFullType classType = typeChatFull, InboundPkt *in = 0);
+    ChatFull(ChatFullClassType classType = typeChatFull, InboundPkt *in = 0);
     ChatFull(InboundPkt *in);
+    ChatFull(const Null&);
     virtual ~ChatFull();
+
+    void setAbout(const QString &about);
+    QString about() const;
+
+    void setAdminsCount(qint32 adminsCount);
+    qint32 adminsCount() const;
+
+    void setBotInfo(const QList<BotInfo> &botInfo);
+    QList<BotInfo> botInfo() const;
+
+    void setCanSetUsername(bool canSetUsername);
+    bool canSetUsername() const;
+
+    void setCanViewParticipants(bool canViewParticipants);
+    bool canViewParticipants() const;
 
     void setChatPhoto(const Photo &chatPhoto);
     Photo chatPhoto() const;
@@ -29,8 +58,20 @@ public:
     void setExportedInvite(const ExportedChatInvite &exportedInvite);
     ExportedChatInvite exportedInvite() const;
 
+    void setFlags(qint32 flags);
+    qint32 flags() const;
+
     void setId(qint32 id);
     qint32 id() const;
+
+    void setKickedCount(qint32 kickedCount);
+    qint32 kickedCount() const;
+
+    void setMigratedFromChatId(qint32 migratedFromChatId);
+    qint32 migratedFromChatId() const;
+
+    void setMigratedFromMaxId(qint32 migratedFromMaxId);
+    qint32 migratedFromMaxId() const;
 
     void setNotifySettings(const PeerNotifySettings &notifySettings);
     PeerNotifySettings notifySettings() const;
@@ -38,21 +79,631 @@ public:
     void setParticipants(const ChatParticipants &participants);
     ChatParticipants participants() const;
 
-    void setClassType(ChatFullType classType);
-    ChatFullType classType() const;
+    void setParticipantsCount(qint32 participantsCount);
+    qint32 participantsCount() const;
+
+    void setPinnedMsgId(qint32 pinnedMsgId);
+    qint32 pinnedMsgId() const;
+
+    void setReadInboxMaxId(qint32 readInboxMaxId);
+    qint32 readInboxMaxId() const;
+
+    void setReadOutboxMaxId(qint32 readOutboxMaxId);
+    qint32 readOutboxMaxId() const;
+
+    void setUnreadCount(qint32 unreadCount);
+    qint32 unreadCount() const;
+
+    void setClassType(ChatFullClassType classType);
+    ChatFullClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const ChatFull &b);
+    QMap<QString, QVariant> toMap() const;
+    static ChatFull fromMap(const QMap<QString, QVariant> &map);
+
+    bool operator ==(const ChatFull &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
+
+    QByteArray getHash(QCryptographicHash::Algorithm alg = QCryptographicHash::Md5) const;
 
 private:
+    QString m_about;
+    qint32 m_adminsCount;
+    QList<BotInfo> m_botInfo;
     Photo m_chatPhoto;
     ExportedChatInvite m_exportedInvite;
+    qint32 m_flags;
     qint32 m_id;
+    qint32 m_kickedCount;
+    qint32 m_migratedFromChatId;
+    qint32 m_migratedFromMaxId;
     PeerNotifySettings m_notifySettings;
     ChatParticipants m_participants;
-    ChatFullType m_classType;
+    qint32 m_participantsCount;
+    qint32 m_pinnedMsgId;
+    qint32 m_readInboxMaxId;
+    qint32 m_readOutboxMaxId;
+    qint32 m_unreadCount;
+    ChatFullClassType m_classType;
 };
+
+Q_DECLARE_METATYPE(ChatFull)
+
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const ChatFull &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, ChatFull &item);
+
+inline ChatFull::ChatFull(ChatFullClassType classType, InboundPkt *in) :
+    m_adminsCount(0),
+    m_flags(0),
+    m_id(0),
+    m_kickedCount(0),
+    m_migratedFromChatId(0),
+    m_migratedFromMaxId(0),
+    m_participantsCount(0),
+    m_pinnedMsgId(0),
+    m_readInboxMaxId(0),
+    m_readOutboxMaxId(0),
+    m_unreadCount(0),
+    m_classType(classType)
+{
+    if(in) fetch(in);
+}
+
+inline ChatFull::ChatFull(InboundPkt *in) :
+    m_adminsCount(0),
+    m_flags(0),
+    m_id(0),
+    m_kickedCount(0),
+    m_migratedFromChatId(0),
+    m_migratedFromMaxId(0),
+    m_participantsCount(0),
+    m_pinnedMsgId(0),
+    m_readInboxMaxId(0),
+    m_readOutboxMaxId(0),
+    m_unreadCount(0),
+    m_classType(typeChatFull)
+{
+    fetch(in);
+}
+
+inline ChatFull::ChatFull(const Null &null) :
+    TelegramTypeObject(null),
+    m_adminsCount(0),
+    m_flags(0),
+    m_id(0),
+    m_kickedCount(0),
+    m_migratedFromChatId(0),
+    m_migratedFromMaxId(0),
+    m_participantsCount(0),
+    m_pinnedMsgId(0),
+    m_readInboxMaxId(0),
+    m_readOutboxMaxId(0),
+    m_unreadCount(0),
+    m_classType(typeChatFull)
+{
+}
+
+inline ChatFull::~ChatFull() {
+}
+
+inline void ChatFull::setAbout(const QString &about) {
+    m_about = about;
+}
+
+inline QString ChatFull::about() const {
+    return m_about;
+}
+
+inline void ChatFull::setAdminsCount(qint32 adminsCount) {
+    m_adminsCount = adminsCount;
+}
+
+inline qint32 ChatFull::adminsCount() const {
+    return m_adminsCount;
+}
+
+inline void ChatFull::setBotInfo(const QList<BotInfo> &botInfo) {
+    m_botInfo = botInfo;
+}
+
+inline QList<BotInfo> ChatFull::botInfo() const {
+    return m_botInfo;
+}
+
+inline void ChatFull::setCanSetUsername(bool canSetUsername) {
+    if(canSetUsername) m_flags = (m_flags | (1<<6));
+    else m_flags = (m_flags & ~(1<<6));
+}
+
+inline bool ChatFull::canSetUsername() const {
+    return (m_flags & 1<<6);
+}
+
+inline void ChatFull::setCanViewParticipants(bool canViewParticipants) {
+    if(canViewParticipants) m_flags = (m_flags | (1<<3));
+    else m_flags = (m_flags & ~(1<<3));
+}
+
+inline bool ChatFull::canViewParticipants() const {
+    return (m_flags & 1<<3);
+}
+
+inline void ChatFull::setChatPhoto(const Photo &chatPhoto) {
+    m_chatPhoto = chatPhoto;
+}
+
+inline Photo ChatFull::chatPhoto() const {
+    return m_chatPhoto;
+}
+
+inline void ChatFull::setExportedInvite(const ExportedChatInvite &exportedInvite) {
+    m_exportedInvite = exportedInvite;
+}
+
+inline ExportedChatInvite ChatFull::exportedInvite() const {
+    return m_exportedInvite;
+}
+
+inline void ChatFull::setFlags(qint32 flags) {
+    m_flags = flags;
+}
+
+inline qint32 ChatFull::flags() const {
+    return m_flags;
+}
+
+inline void ChatFull::setId(qint32 id) {
+    m_id = id;
+}
+
+inline qint32 ChatFull::id() const {
+    return m_id;
+}
+
+inline void ChatFull::setKickedCount(qint32 kickedCount) {
+    m_kickedCount = kickedCount;
+}
+
+inline qint32 ChatFull::kickedCount() const {
+    return m_kickedCount;
+}
+
+inline void ChatFull::setMigratedFromChatId(qint32 migratedFromChatId) {
+    m_migratedFromChatId = migratedFromChatId;
+}
+
+inline qint32 ChatFull::migratedFromChatId() const {
+    return m_migratedFromChatId;
+}
+
+inline void ChatFull::setMigratedFromMaxId(qint32 migratedFromMaxId) {
+    m_migratedFromMaxId = migratedFromMaxId;
+}
+
+inline qint32 ChatFull::migratedFromMaxId() const {
+    return m_migratedFromMaxId;
+}
+
+inline void ChatFull::setNotifySettings(const PeerNotifySettings &notifySettings) {
+    m_notifySettings = notifySettings;
+}
+
+inline PeerNotifySettings ChatFull::notifySettings() const {
+    return m_notifySettings;
+}
+
+inline void ChatFull::setParticipants(const ChatParticipants &participants) {
+    m_participants = participants;
+}
+
+inline ChatParticipants ChatFull::participants() const {
+    return m_participants;
+}
+
+inline void ChatFull::setParticipantsCount(qint32 participantsCount) {
+    m_participantsCount = participantsCount;
+}
+
+inline qint32 ChatFull::participantsCount() const {
+    return m_participantsCount;
+}
+
+inline void ChatFull::setPinnedMsgId(qint32 pinnedMsgId) {
+    m_pinnedMsgId = pinnedMsgId;
+}
+
+inline qint32 ChatFull::pinnedMsgId() const {
+    return m_pinnedMsgId;
+}
+
+inline void ChatFull::setReadInboxMaxId(qint32 readInboxMaxId) {
+    m_readInboxMaxId = readInboxMaxId;
+}
+
+inline qint32 ChatFull::readInboxMaxId() const {
+    return m_readInboxMaxId;
+}
+
+inline void ChatFull::setReadOutboxMaxId(qint32 readOutboxMaxId) {
+    m_readOutboxMaxId = readOutboxMaxId;
+}
+
+inline qint32 ChatFull::readOutboxMaxId() const {
+    return m_readOutboxMaxId;
+}
+
+inline void ChatFull::setUnreadCount(qint32 unreadCount) {
+    m_unreadCount = unreadCount;
+}
+
+inline qint32 ChatFull::unreadCount() const {
+    return m_unreadCount;
+}
+
+inline bool ChatFull::operator ==(const ChatFull &b) const {
+    return m_classType == b.m_classType &&
+           m_about == b.m_about &&
+           m_adminsCount == b.m_adminsCount &&
+           m_botInfo == b.m_botInfo &&
+           m_chatPhoto == b.m_chatPhoto &&
+           m_exportedInvite == b.m_exportedInvite &&
+           m_flags == b.m_flags &&
+           m_id == b.m_id &&
+           m_kickedCount == b.m_kickedCount &&
+           m_migratedFromChatId == b.m_migratedFromChatId &&
+           m_migratedFromMaxId == b.m_migratedFromMaxId &&
+           m_notifySettings == b.m_notifySettings &&
+           m_participants == b.m_participants &&
+           m_participantsCount == b.m_participantsCount &&
+           m_pinnedMsgId == b.m_pinnedMsgId &&
+           m_readInboxMaxId == b.m_readInboxMaxId &&
+           m_readOutboxMaxId == b.m_readOutboxMaxId &&
+           m_unreadCount == b.m_unreadCount;
+}
+
+inline void ChatFull::setClassType(ChatFull::ChatFullClassType classType) {
+    m_classType = classType;
+}
+
+inline ChatFull::ChatFullClassType ChatFull::classType() const {
+    return m_classType;
+}
+
+inline bool ChatFull::fetch(InboundPkt *in) {
+    LQTG_FETCH_LOG;
+    int x = in->fetchInt();
+    switch(x) {
+    case typeChatFull: {
+        m_id = in->fetchInt();
+        m_participants.fetch(in);
+        m_chatPhoto.fetch(in);
+        m_notifySettings.fetch(in);
+        m_exportedInvite.fetch(in);
+        if(in->fetchInt() != (qint32)CoreTypes::typeVector) return false;
+        qint32 m_botInfo_length = in->fetchInt();
+        m_botInfo.clear();
+        for (qint32 i = 0; i < m_botInfo_length; i++) {
+            BotInfo type;
+            type.fetch(in);
+            m_botInfo.append(type);
+        }
+        m_classType = static_cast<ChatFullClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeChannelFull: {
+        m_flags = in->fetchInt();
+        m_id = in->fetchInt();
+        m_about = in->fetchQString();
+        if(m_flags & 1<<0) {
+            m_participantsCount = in->fetchInt();
+        }
+        if(m_flags & 1<<1) {
+            m_adminsCount = in->fetchInt();
+        }
+        if(m_flags & 1<<2) {
+            m_kickedCount = in->fetchInt();
+        }
+        m_readInboxMaxId = in->fetchInt();
+        m_readOutboxMaxId = in->fetchInt();
+        m_unreadCount = in->fetchInt();
+        m_chatPhoto.fetch(in);
+        m_notifySettings.fetch(in);
+        m_exportedInvite.fetch(in);
+        if(in->fetchInt() != (qint32)CoreTypes::typeVector) return false;
+        qint32 m_botInfo_length = in->fetchInt();
+        m_botInfo.clear();
+        for (qint32 i = 0; i < m_botInfo_length; i++) {
+            BotInfo type;
+            type.fetch(in);
+            m_botInfo.append(type);
+        }
+        if(m_flags & 1<<4) {
+            m_migratedFromChatId = in->fetchInt();
+        }
+        if(m_flags & 1<<4) {
+            m_migratedFromMaxId = in->fetchInt();
+        }
+        if(m_flags & 1<<5) {
+            m_pinnedMsgId = in->fetchInt();
+        }
+        m_classType = static_cast<ChatFullClassType>(x);
+        return true;
+    }
+        break;
+    
+    default:
+        LQTG_FETCH_ASSERT;
+        return false;
+    }
+}
+
+inline bool ChatFull::push(OutboundPkt *out) const {
+    out->appendInt(m_classType);
+    switch(m_classType) {
+    case typeChatFull: {
+        out->appendInt(m_id);
+        m_participants.push(out);
+        m_chatPhoto.push(out);
+        m_notifySettings.push(out);
+        m_exportedInvite.push(out);
+        out->appendInt(CoreTypes::typeVector);
+        out->appendInt(m_botInfo.count());
+        for (qint32 i = 0; i < m_botInfo.count(); i++) {
+            m_botInfo[i].push(out);
+        }
+        return true;
+    }
+        break;
+    
+    case typeChannelFull: {
+        out->appendInt(m_flags);
+        out->appendInt(m_id);
+        out->appendQString(m_about);
+        out->appendInt(m_participantsCount);
+        out->appendInt(m_adminsCount);
+        out->appendInt(m_kickedCount);
+        out->appendInt(m_readInboxMaxId);
+        out->appendInt(m_readOutboxMaxId);
+        out->appendInt(m_unreadCount);
+        m_chatPhoto.push(out);
+        m_notifySettings.push(out);
+        m_exportedInvite.push(out);
+        out->appendInt(CoreTypes::typeVector);
+        out->appendInt(m_botInfo.count());
+        for (qint32 i = 0; i < m_botInfo.count(); i++) {
+            m_botInfo[i].push(out);
+        }
+        out->appendInt(m_migratedFromChatId);
+        out->appendInt(m_migratedFromMaxId);
+        out->appendInt(m_pinnedMsgId);
+        return true;
+    }
+        break;
+    
+    default:
+        return false;
+    }
+}
+
+inline QMap<QString, QVariant> ChatFull::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeChatFull: {
+        result["classType"] = "ChatFull::typeChatFull";
+        result["id"] = QVariant::fromValue<qint32>(id());
+        result["participants"] = m_participants.toMap();
+        result["chatPhoto"] = m_chatPhoto.toMap();
+        result["notifySettings"] = m_notifySettings.toMap();
+        result["exportedInvite"] = m_exportedInvite.toMap();
+        QList<QVariant> _botInfo;
+        Q_FOREACH(const BotInfo &m__type, m_botInfo)
+            _botInfo << m__type.toMap();
+        result["botInfo"] = _botInfo;
+        return result;
+    }
+        break;
+    
+    case typeChannelFull: {
+        result["classType"] = "ChatFull::typeChannelFull";
+        result["canViewParticipants"] = QVariant::fromValue<bool>(canViewParticipants());
+        result["canSetUsername"] = QVariant::fromValue<bool>(canSetUsername());
+        result["id"] = QVariant::fromValue<qint32>(id());
+        result["about"] = QVariant::fromValue<QString>(about());
+        result["participantsCount"] = QVariant::fromValue<qint32>(participantsCount());
+        result["adminsCount"] = QVariant::fromValue<qint32>(adminsCount());
+        result["kickedCount"] = QVariant::fromValue<qint32>(kickedCount());
+        result["readInboxMaxId"] = QVariant::fromValue<qint32>(readInboxMaxId());
+        result["readOutboxMaxId"] = QVariant::fromValue<qint32>(readOutboxMaxId());
+        result["unreadCount"] = QVariant::fromValue<qint32>(unreadCount());
+        result["chatPhoto"] = m_chatPhoto.toMap();
+        result["notifySettings"] = m_notifySettings.toMap();
+        result["exportedInvite"] = m_exportedInvite.toMap();
+        QList<QVariant> _botInfo;
+        Q_FOREACH(const BotInfo &m__type, m_botInfo)
+            _botInfo << m__type.toMap();
+        result["botInfo"] = _botInfo;
+        result["migratedFromChatId"] = QVariant::fromValue<qint32>(migratedFromChatId());
+        result["migratedFromMaxId"] = QVariant::fromValue<qint32>(migratedFromMaxId());
+        result["pinnedMsgId"] = QVariant::fromValue<qint32>(pinnedMsgId());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+inline ChatFull ChatFull::fromMap(const QMap<QString, QVariant> &map) {
+    ChatFull result;
+    if(map.value("classType").toString() == "ChatFull::typeChatFull") {
+        result.setClassType(typeChatFull);
+        result.setId( map.value("id").value<qint32>() );
+        result.setParticipants( ChatParticipants::fromMap(map.value("participants").toMap()) );
+        result.setChatPhoto( Photo::fromMap(map.value("chatPhoto").toMap()) );
+        result.setNotifySettings( PeerNotifySettings::fromMap(map.value("notifySettings").toMap()) );
+        result.setExportedInvite( ExportedChatInvite::fromMap(map.value("exportedInvite").toMap()) );
+        QList<QVariant> map_botInfo = map["botInfo"].toList();
+        QList<BotInfo> _botInfo;
+        Q_FOREACH(const QVariant &var, map_botInfo)
+            _botInfo << BotInfo::fromMap(var.toMap());
+        result.setBotInfo(_botInfo);
+        return result;
+    }
+    if(map.value("classType").toString() == "ChatFull::typeChannelFull") {
+        result.setClassType(typeChannelFull);
+        result.setCanViewParticipants( map.value("canViewParticipants").value<bool>() );
+        result.setCanSetUsername( map.value("canSetUsername").value<bool>() );
+        result.setId( map.value("id").value<qint32>() );
+        result.setAbout( map.value("about").value<QString>() );
+        result.setParticipantsCount( map.value("participantsCount").value<qint32>() );
+        result.setAdminsCount( map.value("adminsCount").value<qint32>() );
+        result.setKickedCount( map.value("kickedCount").value<qint32>() );
+        result.setReadInboxMaxId( map.value("readInboxMaxId").value<qint32>() );
+        result.setReadOutboxMaxId( map.value("readOutboxMaxId").value<qint32>() );
+        result.setUnreadCount( map.value("unreadCount").value<qint32>() );
+        result.setChatPhoto( Photo::fromMap(map.value("chatPhoto").toMap()) );
+        result.setNotifySettings( PeerNotifySettings::fromMap(map.value("notifySettings").toMap()) );
+        result.setExportedInvite( ExportedChatInvite::fromMap(map.value("exportedInvite").toMap()) );
+        QList<QVariant> map_botInfo = map["botInfo"].toList();
+        QList<BotInfo> _botInfo;
+        Q_FOREACH(const QVariant &var, map_botInfo)
+            _botInfo << BotInfo::fromMap(var.toMap());
+        result.setBotInfo(_botInfo);
+        result.setMigratedFromChatId( map.value("migratedFromChatId").value<qint32>() );
+        result.setMigratedFromMaxId( map.value("migratedFromMaxId").value<qint32>() );
+        result.setPinnedMsgId( map.value("pinnedMsgId").value<qint32>() );
+        return result;
+    }
+    return result;
+}
+
+inline QByteArray ChatFull::getHash(QCryptographicHash::Algorithm alg) const {
+    QByteArray data;
+    QDataStream str(&data, QIODevice::WriteOnly);
+    str << *this;
+    return QCryptographicHash::hash(data, alg);
+}
+
+inline QDataStream &operator<<(QDataStream &stream, const ChatFull &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case ChatFull::typeChatFull:
+        stream << item.id();
+        stream << item.participants();
+        stream << item.chatPhoto();
+        stream << item.notifySettings();
+        stream << item.exportedInvite();
+        stream << item.botInfo();
+        break;
+    case ChatFull::typeChannelFull:
+        stream << item.flags();
+        stream << item.id();
+        stream << item.about();
+        stream << item.participantsCount();
+        stream << item.adminsCount();
+        stream << item.kickedCount();
+        stream << item.readInboxMaxId();
+        stream << item.readOutboxMaxId();
+        stream << item.unreadCount();
+        stream << item.chatPhoto();
+        stream << item.notifySettings();
+        stream << item.exportedInvite();
+        stream << item.botInfo();
+        stream << item.migratedFromChatId();
+        stream << item.migratedFromMaxId();
+        stream << item.pinnedMsgId();
+        break;
+    }
+    return stream;
+}
+
+inline QDataStream &operator>>(QDataStream &stream, ChatFull &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<ChatFull::ChatFullClassType>(type));
+    switch(type) {
+    case ChatFull::typeChatFull: {
+        qint32 m_id;
+        stream >> m_id;
+        item.setId(m_id);
+        ChatParticipants m_participants;
+        stream >> m_participants;
+        item.setParticipants(m_participants);
+        Photo m_chat_photo;
+        stream >> m_chat_photo;
+        item.setChatPhoto(m_chat_photo);
+        PeerNotifySettings m_notify_settings;
+        stream >> m_notify_settings;
+        item.setNotifySettings(m_notify_settings);
+        ExportedChatInvite m_exported_invite;
+        stream >> m_exported_invite;
+        item.setExportedInvite(m_exported_invite);
+        QList<BotInfo> m_bot_info;
+        stream >> m_bot_info;
+        item.setBotInfo(m_bot_info);
+    }
+        break;
+    case ChatFull::typeChannelFull: {
+        qint32 m_flags;
+        stream >> m_flags;
+        item.setFlags(m_flags);
+        qint32 m_id;
+        stream >> m_id;
+        item.setId(m_id);
+        QString m_about;
+        stream >> m_about;
+        item.setAbout(m_about);
+        qint32 m_participants_count;
+        stream >> m_participants_count;
+        item.setParticipantsCount(m_participants_count);
+        qint32 m_admins_count;
+        stream >> m_admins_count;
+        item.setAdminsCount(m_admins_count);
+        qint32 m_kicked_count;
+        stream >> m_kicked_count;
+        item.setKickedCount(m_kicked_count);
+        qint32 m_read_inbox_max_id;
+        stream >> m_read_inbox_max_id;
+        item.setReadInboxMaxId(m_read_inbox_max_id);
+        qint32 m_read_outbox_max_id;
+        stream >> m_read_outbox_max_id;
+        item.setReadOutboxMaxId(m_read_outbox_max_id);
+        qint32 m_unread_count;
+        stream >> m_unread_count;
+        item.setUnreadCount(m_unread_count);
+        Photo m_chat_photo;
+        stream >> m_chat_photo;
+        item.setChatPhoto(m_chat_photo);
+        PeerNotifySettings m_notify_settings;
+        stream >> m_notify_settings;
+        item.setNotifySettings(m_notify_settings);
+        ExportedChatInvite m_exported_invite;
+        stream >> m_exported_invite;
+        item.setExportedInvite(m_exported_invite);
+        QList<BotInfo> m_bot_info;
+        stream >> m_bot_info;
+        item.setBotInfo(m_bot_info);
+        qint32 m_migrated_from_chat_id;
+        stream >> m_migrated_from_chat_id;
+        item.setMigratedFromChatId(m_migrated_from_chat_id);
+        qint32 m_migrated_from_max_id;
+        stream >> m_migrated_from_max_id;
+        item.setMigratedFromMaxId(m_migrated_from_max_id);
+        qint32 m_pinned_msg_id;
+        stream >> m_pinned_msg_id;
+        item.setPinnedMsgId(m_pinned_msg_id);
+    }
+        break;
+    }
+    return stream;
+}
+
 
 #endif // LQTG_TYPE_CHATFULL

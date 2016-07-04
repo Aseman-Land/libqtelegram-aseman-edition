@@ -6,18 +6,28 @@
 #define LQTG_TYPE_GEOPOINT
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
+#include <QVariant>
+#include "core/inboundpkt.h"
+#include "core/outboundpkt.h"
+#include "../coretypes.h"
+
+#include <QDataStream>
+
 #include <QtGlobal>
 
 class LIBQTELEGRAMSHARED_EXPORT GeoPoint : public TelegramTypeObject
 {
 public:
-    enum GeoPointType {
+    enum GeoPointClassType {
         typeGeoPointEmpty = 0x1117dd5f,
         typeGeoPoint = 0x2049d70c
     };
 
-    GeoPoint(GeoPointType classType = typeGeoPointEmpty, InboundPkt *in = 0);
+    GeoPoint(GeoPointClassType classType = typeGeoPointEmpty, InboundPkt *in = 0);
     GeoPoint(InboundPkt *in);
+    GeoPoint(const Null&);
     virtual ~GeoPoint();
 
     void setLat(qreal lat);
@@ -26,18 +36,213 @@ public:
     void setLongValue(qreal longValue);
     qreal longValue() const;
 
-    void setClassType(GeoPointType classType);
-    GeoPointType classType() const;
+    void setClassType(GeoPointClassType classType);
+    GeoPointClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const GeoPoint &b);
+    QMap<QString, QVariant> toMap() const;
+    static GeoPoint fromMap(const QMap<QString, QVariant> &map);
+
+    bool operator ==(const GeoPoint &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
+
+    QByteArray getHash(QCryptographicHash::Algorithm alg = QCryptographicHash::Md5) const;
 
 private:
     qreal m_lat;
     qreal m_longValue;
-    GeoPointType m_classType;
+    GeoPointClassType m_classType;
 };
+
+Q_DECLARE_METATYPE(GeoPoint)
+
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const GeoPoint &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, GeoPoint &item);
+
+inline GeoPoint::GeoPoint(GeoPointClassType classType, InboundPkt *in) :
+    m_lat(0),
+    m_longValue(0),
+    m_classType(classType)
+{
+    if(in) fetch(in);
+}
+
+inline GeoPoint::GeoPoint(InboundPkt *in) :
+    m_lat(0),
+    m_longValue(0),
+    m_classType(typeGeoPointEmpty)
+{
+    fetch(in);
+}
+
+inline GeoPoint::GeoPoint(const Null &null) :
+    TelegramTypeObject(null),
+    m_lat(0),
+    m_longValue(0),
+    m_classType(typeGeoPointEmpty)
+{
+}
+
+inline GeoPoint::~GeoPoint() {
+}
+
+inline void GeoPoint::setLat(qreal lat) {
+    m_lat = lat;
+}
+
+inline qreal GeoPoint::lat() const {
+    return m_lat;
+}
+
+inline void GeoPoint::setLongValue(qreal longValue) {
+    m_longValue = longValue;
+}
+
+inline qreal GeoPoint::longValue() const {
+    return m_longValue;
+}
+
+inline bool GeoPoint::operator ==(const GeoPoint &b) const {
+    return m_classType == b.m_classType &&
+           m_lat == b.m_lat &&
+           m_longValue == b.m_longValue;
+}
+
+inline void GeoPoint::setClassType(GeoPoint::GeoPointClassType classType) {
+    m_classType = classType;
+}
+
+inline GeoPoint::GeoPointClassType GeoPoint::classType() const {
+    return m_classType;
+}
+
+inline bool GeoPoint::fetch(InboundPkt *in) {
+    LQTG_FETCH_LOG;
+    int x = in->fetchInt();
+    switch(x) {
+    case typeGeoPointEmpty: {
+        m_classType = static_cast<GeoPointClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeGeoPoint: {
+        m_longValue = in->fetchDouble();
+        m_lat = in->fetchDouble();
+        m_classType = static_cast<GeoPointClassType>(x);
+        return true;
+    }
+        break;
+    
+    default:
+        LQTG_FETCH_ASSERT;
+        return false;
+    }
+}
+
+inline bool GeoPoint::push(OutboundPkt *out) const {
+    out->appendInt(m_classType);
+    switch(m_classType) {
+    case typeGeoPointEmpty: {
+        return true;
+    }
+        break;
+    
+    case typeGeoPoint: {
+        out->appendDouble(m_longValue);
+        out->appendDouble(m_lat);
+        return true;
+    }
+        break;
+    
+    default:
+        return false;
+    }
+}
+
+inline QMap<QString, QVariant> GeoPoint::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeGeoPointEmpty: {
+        result["classType"] = "GeoPoint::typeGeoPointEmpty";
+        return result;
+    }
+        break;
+    
+    case typeGeoPoint: {
+        result["classType"] = "GeoPoint::typeGeoPoint";
+        result["longValue"] = QVariant::fromValue<qreal>(longValue());
+        result["lat"] = QVariant::fromValue<qreal>(lat());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+inline GeoPoint GeoPoint::fromMap(const QMap<QString, QVariant> &map) {
+    GeoPoint result;
+    if(map.value("classType").toString() == "GeoPoint::typeGeoPointEmpty") {
+        result.setClassType(typeGeoPointEmpty);
+        return result;
+    }
+    if(map.value("classType").toString() == "GeoPoint::typeGeoPoint") {
+        result.setClassType(typeGeoPoint);
+        result.setLongValue( map.value("longValue").value<qreal>() );
+        result.setLat( map.value("lat").value<qreal>() );
+        return result;
+    }
+    return result;
+}
+
+inline QByteArray GeoPoint::getHash(QCryptographicHash::Algorithm alg) const {
+    QByteArray data;
+    QDataStream str(&data, QIODevice::WriteOnly);
+    str << *this;
+    return QCryptographicHash::hash(data, alg);
+}
+
+inline QDataStream &operator<<(QDataStream &stream, const GeoPoint &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case GeoPoint::typeGeoPointEmpty:
+        
+        break;
+    case GeoPoint::typeGeoPoint:
+        stream << item.longValue();
+        stream << item.lat();
+        break;
+    }
+    return stream;
+}
+
+inline QDataStream &operator>>(QDataStream &stream, GeoPoint &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<GeoPoint::GeoPointClassType>(type));
+    switch(type) {
+    case GeoPoint::typeGeoPointEmpty: {
+        
+    }
+        break;
+    case GeoPoint::typeGeoPoint: {
+        qreal m_longValue;
+        stream >> m_longValue;
+        item.setLongValue(m_longValue);
+        qreal m_lat;
+        stream >> m_lat;
+        item.setLat(m_lat);
+    }
+        break;
+    }
+    return stream;
+}
+
 
 #endif // LQTG_TYPE_GEOPOINT

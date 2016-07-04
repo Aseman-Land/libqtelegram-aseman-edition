@@ -6,18 +6,28 @@
 #define LQTG_TYPE_NEARESTDC
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
+#include <QVariant>
+#include "core/inboundpkt.h"
+#include "core/outboundpkt.h"
+#include "../coretypes.h"
+
+#include <QDataStream>
+
 #include <QString>
 #include <QtGlobal>
 
 class LIBQTELEGRAMSHARED_EXPORT NearestDc : public TelegramTypeObject
 {
 public:
-    enum NearestDcType {
+    enum NearestDcClassType {
         typeNearestDc = 0x8e1a1775
     };
 
-    NearestDc(NearestDcType classType = typeNearestDc, InboundPkt *in = 0);
+    NearestDc(NearestDcClassType classType = typeNearestDc, InboundPkt *in = 0);
     NearestDc(InboundPkt *in);
+    NearestDc(const Null&);
     virtual ~NearestDc();
 
     void setCountry(const QString &country);
@@ -29,19 +39,203 @@ public:
     void setThisDc(qint32 thisDc);
     qint32 thisDc() const;
 
-    void setClassType(NearestDcType classType);
-    NearestDcType classType() const;
+    void setClassType(NearestDcClassType classType);
+    NearestDcClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const NearestDc &b);
+    QMap<QString, QVariant> toMap() const;
+    static NearestDc fromMap(const QMap<QString, QVariant> &map);
+
+    bool operator ==(const NearestDc &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
+
+    QByteArray getHash(QCryptographicHash::Algorithm alg = QCryptographicHash::Md5) const;
 
 private:
     QString m_country;
     qint32 m_nearestDc;
     qint32 m_thisDc;
-    NearestDcType m_classType;
+    NearestDcClassType m_classType;
 };
+
+Q_DECLARE_METATYPE(NearestDc)
+
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const NearestDc &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, NearestDc &item);
+
+inline NearestDc::NearestDc(NearestDcClassType classType, InboundPkt *in) :
+    m_nearestDc(0),
+    m_thisDc(0),
+    m_classType(classType)
+{
+    if(in) fetch(in);
+}
+
+inline NearestDc::NearestDc(InboundPkt *in) :
+    m_nearestDc(0),
+    m_thisDc(0),
+    m_classType(typeNearestDc)
+{
+    fetch(in);
+}
+
+inline NearestDc::NearestDc(const Null &null) :
+    TelegramTypeObject(null),
+    m_nearestDc(0),
+    m_thisDc(0),
+    m_classType(typeNearestDc)
+{
+}
+
+inline NearestDc::~NearestDc() {
+}
+
+inline void NearestDc::setCountry(const QString &country) {
+    m_country = country;
+}
+
+inline QString NearestDc::country() const {
+    return m_country;
+}
+
+inline void NearestDc::setNearestDc(qint32 nearestDc) {
+    m_nearestDc = nearestDc;
+}
+
+inline qint32 NearestDc::nearestDc() const {
+    return m_nearestDc;
+}
+
+inline void NearestDc::setThisDc(qint32 thisDc) {
+    m_thisDc = thisDc;
+}
+
+inline qint32 NearestDc::thisDc() const {
+    return m_thisDc;
+}
+
+inline bool NearestDc::operator ==(const NearestDc &b) const {
+    return m_classType == b.m_classType &&
+           m_country == b.m_country &&
+           m_nearestDc == b.m_nearestDc &&
+           m_thisDc == b.m_thisDc;
+}
+
+inline void NearestDc::setClassType(NearestDc::NearestDcClassType classType) {
+    m_classType = classType;
+}
+
+inline NearestDc::NearestDcClassType NearestDc::classType() const {
+    return m_classType;
+}
+
+inline bool NearestDc::fetch(InboundPkt *in) {
+    LQTG_FETCH_LOG;
+    int x = in->fetchInt();
+    switch(x) {
+    case typeNearestDc: {
+        m_country = in->fetchQString();
+        m_thisDc = in->fetchInt();
+        m_nearestDc = in->fetchInt();
+        m_classType = static_cast<NearestDcClassType>(x);
+        return true;
+    }
+        break;
+    
+    default:
+        LQTG_FETCH_ASSERT;
+        return false;
+    }
+}
+
+inline bool NearestDc::push(OutboundPkt *out) const {
+    out->appendInt(m_classType);
+    switch(m_classType) {
+    case typeNearestDc: {
+        out->appendQString(m_country);
+        out->appendInt(m_thisDc);
+        out->appendInt(m_nearestDc);
+        return true;
+    }
+        break;
+    
+    default:
+        return false;
+    }
+}
+
+inline QMap<QString, QVariant> NearestDc::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeNearestDc: {
+        result["classType"] = "NearestDc::typeNearestDc";
+        result["country"] = QVariant::fromValue<QString>(country());
+        result["thisDc"] = QVariant::fromValue<qint32>(thisDc());
+        result["nearestDc"] = QVariant::fromValue<qint32>(nearestDc());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+inline NearestDc NearestDc::fromMap(const QMap<QString, QVariant> &map) {
+    NearestDc result;
+    if(map.value("classType").toString() == "NearestDc::typeNearestDc") {
+        result.setClassType(typeNearestDc);
+        result.setCountry( map.value("country").value<QString>() );
+        result.setThisDc( map.value("thisDc").value<qint32>() );
+        result.setNearestDc( map.value("nearestDc").value<qint32>() );
+        return result;
+    }
+    return result;
+}
+
+inline QByteArray NearestDc::getHash(QCryptographicHash::Algorithm alg) const {
+    QByteArray data;
+    QDataStream str(&data, QIODevice::WriteOnly);
+    str << *this;
+    return QCryptographicHash::hash(data, alg);
+}
+
+inline QDataStream &operator<<(QDataStream &stream, const NearestDc &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case NearestDc::typeNearestDc:
+        stream << item.country();
+        stream << item.thisDc();
+        stream << item.nearestDc();
+        break;
+    }
+    return stream;
+}
+
+inline QDataStream &operator>>(QDataStream &stream, NearestDc &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<NearestDc::NearestDcClassType>(type));
+    switch(type) {
+    case NearestDc::typeNearestDc: {
+        QString m_country;
+        stream >> m_country;
+        item.setCountry(m_country);
+        qint32 m_this_dc;
+        stream >> m_this_dc;
+        item.setThisDc(m_this_dc);
+        qint32 m_nearest_dc;
+        stream >> m_nearest_dc;
+        item.setNearestDc(m_nearest_dc);
+    }
+        break;
+    }
+    return stream;
+}
+
 
 #endif // LQTG_TYPE_NEARESTDC

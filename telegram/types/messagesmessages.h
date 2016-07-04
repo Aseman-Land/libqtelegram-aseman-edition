@@ -6,6 +6,15 @@
 #define LQTG_TYPE_MESSAGESMESSAGES
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
+#include <QVariant>
+#include "core/inboundpkt.h"
+#include "core/outboundpkt.h"
+#include "../coretypes.h"
+
+#include <QDataStream>
+
 #include <QList>
 #include "chat.h"
 #include <QtGlobal>
@@ -15,13 +24,15 @@
 class LIBQTELEGRAMSHARED_EXPORT MessagesMessages : public TelegramTypeObject
 {
 public:
-    enum MessagesMessagesType {
+    enum MessagesMessagesClassType {
         typeMessagesMessages = 0x8c718e87,
-        typeMessagesMessagesSlice = 0xb446ae3
+        typeMessagesMessagesSlice = 0xb446ae3,
+        typeMessagesChannelMessages = 0x99262e37
     };
 
-    MessagesMessages(MessagesMessagesType classType = typeMessagesMessages, InboundPkt *in = 0);
+    MessagesMessages(MessagesMessagesClassType classType = typeMessagesMessages, InboundPkt *in = 0);
     MessagesMessages(InboundPkt *in);
+    MessagesMessages(const Null&);
     virtual ~MessagesMessages();
 
     void setChats(const QList<Chat> &chats);
@@ -30,26 +41,540 @@ public:
     void setCount(qint32 count);
     qint32 count() const;
 
+    void setFlags(qint32 flags);
+    qint32 flags() const;
+
     void setMessages(const QList<Message> &messages);
     QList<Message> messages() const;
+
+    void setPts(qint32 pts);
+    qint32 pts() const;
 
     void setUsers(const QList<User> &users);
     QList<User> users() const;
 
-    void setClassType(MessagesMessagesType classType);
-    MessagesMessagesType classType() const;
+    void setClassType(MessagesMessagesClassType classType);
+    MessagesMessagesClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const MessagesMessages &b);
+    QMap<QString, QVariant> toMap() const;
+    static MessagesMessages fromMap(const QMap<QString, QVariant> &map);
+
+    bool operator ==(const MessagesMessages &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
+
+    QByteArray getHash(QCryptographicHash::Algorithm alg = QCryptographicHash::Md5) const;
 
 private:
     QList<Chat> m_chats;
     qint32 m_count;
+    qint32 m_flags;
     QList<Message> m_messages;
+    qint32 m_pts;
     QList<User> m_users;
-    MessagesMessagesType m_classType;
+    MessagesMessagesClassType m_classType;
 };
+
+Q_DECLARE_METATYPE(MessagesMessages)
+
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const MessagesMessages &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, MessagesMessages &item);
+
+inline MessagesMessages::MessagesMessages(MessagesMessagesClassType classType, InboundPkt *in) :
+    m_count(0),
+    m_flags(0),
+    m_pts(0),
+    m_classType(classType)
+{
+    if(in) fetch(in);
+}
+
+inline MessagesMessages::MessagesMessages(InboundPkt *in) :
+    m_count(0),
+    m_flags(0),
+    m_pts(0),
+    m_classType(typeMessagesMessages)
+{
+    fetch(in);
+}
+
+inline MessagesMessages::MessagesMessages(const Null &null) :
+    TelegramTypeObject(null),
+    m_count(0),
+    m_flags(0),
+    m_pts(0),
+    m_classType(typeMessagesMessages)
+{
+}
+
+inline MessagesMessages::~MessagesMessages() {
+}
+
+inline void MessagesMessages::setChats(const QList<Chat> &chats) {
+    m_chats = chats;
+}
+
+inline QList<Chat> MessagesMessages::chats() const {
+    return m_chats;
+}
+
+inline void MessagesMessages::setCount(qint32 count) {
+    m_count = count;
+}
+
+inline qint32 MessagesMessages::count() const {
+    return m_count;
+}
+
+inline void MessagesMessages::setFlags(qint32 flags) {
+    m_flags = flags;
+}
+
+inline qint32 MessagesMessages::flags() const {
+    return m_flags;
+}
+
+inline void MessagesMessages::setMessages(const QList<Message> &messages) {
+    m_messages = messages;
+}
+
+inline QList<Message> MessagesMessages::messages() const {
+    return m_messages;
+}
+
+inline void MessagesMessages::setPts(qint32 pts) {
+    m_pts = pts;
+}
+
+inline qint32 MessagesMessages::pts() const {
+    return m_pts;
+}
+
+inline void MessagesMessages::setUsers(const QList<User> &users) {
+    m_users = users;
+}
+
+inline QList<User> MessagesMessages::users() const {
+    return m_users;
+}
+
+inline bool MessagesMessages::operator ==(const MessagesMessages &b) const {
+    return m_classType == b.m_classType &&
+           m_chats == b.m_chats &&
+           m_count == b.m_count &&
+           m_flags == b.m_flags &&
+           m_messages == b.m_messages &&
+           m_pts == b.m_pts &&
+           m_users == b.m_users;
+}
+
+inline void MessagesMessages::setClassType(MessagesMessages::MessagesMessagesClassType classType) {
+    m_classType = classType;
+}
+
+inline MessagesMessages::MessagesMessagesClassType MessagesMessages::classType() const {
+    return m_classType;
+}
+
+inline bool MessagesMessages::fetch(InboundPkt *in) {
+    LQTG_FETCH_LOG;
+    int x = in->fetchInt();
+    switch(x) {
+    case typeMessagesMessages: {
+        if(in->fetchInt() != (qint32)CoreTypes::typeVector) return false;
+        qint32 m_messages_length = in->fetchInt();
+        m_messages.clear();
+        for (qint32 i = 0; i < m_messages_length; i++) {
+            Message type;
+            type.fetch(in);
+            m_messages.append(type);
+        }
+        if(in->fetchInt() != (qint32)CoreTypes::typeVector) return false;
+        qint32 m_chats_length = in->fetchInt();
+        m_chats.clear();
+        for (qint32 i = 0; i < m_chats_length; i++) {
+            Chat type;
+            type.fetch(in);
+            m_chats.append(type);
+        }
+        if(in->fetchInt() != (qint32)CoreTypes::typeVector) return false;
+        qint32 m_users_length = in->fetchInt();
+        m_users.clear();
+        for (qint32 i = 0; i < m_users_length; i++) {
+            User type;
+            type.fetch(in);
+            m_users.append(type);
+        }
+        m_classType = static_cast<MessagesMessagesClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeMessagesMessagesSlice: {
+        m_count = in->fetchInt();
+        if(in->fetchInt() != (qint32)CoreTypes::typeVector) return false;
+        qint32 m_messages_length = in->fetchInt();
+        m_messages.clear();
+        for (qint32 i = 0; i < m_messages_length; i++) {
+            Message type;
+            type.fetch(in);
+            m_messages.append(type);
+        }
+        if(in->fetchInt() != (qint32)CoreTypes::typeVector) return false;
+        qint32 m_chats_length = in->fetchInt();
+        m_chats.clear();
+        for (qint32 i = 0; i < m_chats_length; i++) {
+            Chat type;
+            type.fetch(in);
+            m_chats.append(type);
+        }
+        if(in->fetchInt() != (qint32)CoreTypes::typeVector) return false;
+        qint32 m_users_length = in->fetchInt();
+        m_users.clear();
+        for (qint32 i = 0; i < m_users_length; i++) {
+            User type;
+            type.fetch(in);
+            m_users.append(type);
+        }
+        m_classType = static_cast<MessagesMessagesClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeMessagesChannelMessages: {
+        m_flags = in->fetchInt();
+        m_pts = in->fetchInt();
+        m_count = in->fetchInt();
+        if(in->fetchInt() != (qint32)CoreTypes::typeVector) return false;
+        qint32 m_messages_length = in->fetchInt();
+        m_messages.clear();
+        for (qint32 i = 0; i < m_messages_length; i++) {
+            Message type;
+            type.fetch(in);
+            m_messages.append(type);
+        }
+        if(in->fetchInt() != (qint32)CoreTypes::typeVector) return false;
+        qint32 m_chats_length = in->fetchInt();
+        m_chats.clear();
+        for (qint32 i = 0; i < m_chats_length; i++) {
+            Chat type;
+            type.fetch(in);
+            m_chats.append(type);
+        }
+        if(in->fetchInt() != (qint32)CoreTypes::typeVector) return false;
+        qint32 m_users_length = in->fetchInt();
+        m_users.clear();
+        for (qint32 i = 0; i < m_users_length; i++) {
+            User type;
+            type.fetch(in);
+            m_users.append(type);
+        }
+        m_classType = static_cast<MessagesMessagesClassType>(x);
+        return true;
+    }
+        break;
+    
+    default:
+        LQTG_FETCH_ASSERT;
+        return false;
+    }
+}
+
+inline bool MessagesMessages::push(OutboundPkt *out) const {
+    out->appendInt(m_classType);
+    switch(m_classType) {
+    case typeMessagesMessages: {
+        out->appendInt(CoreTypes::typeVector);
+        out->appendInt(m_messages.count());
+        for (qint32 i = 0; i < m_messages.count(); i++) {
+            m_messages[i].push(out);
+        }
+        out->appendInt(CoreTypes::typeVector);
+        out->appendInt(m_chats.count());
+        for (qint32 i = 0; i < m_chats.count(); i++) {
+            m_chats[i].push(out);
+        }
+        out->appendInt(CoreTypes::typeVector);
+        out->appendInt(m_users.count());
+        for (qint32 i = 0; i < m_users.count(); i++) {
+            m_users[i].push(out);
+        }
+        return true;
+    }
+        break;
+    
+    case typeMessagesMessagesSlice: {
+        out->appendInt(m_count);
+        out->appendInt(CoreTypes::typeVector);
+        out->appendInt(m_messages.count());
+        for (qint32 i = 0; i < m_messages.count(); i++) {
+            m_messages[i].push(out);
+        }
+        out->appendInt(CoreTypes::typeVector);
+        out->appendInt(m_chats.count());
+        for (qint32 i = 0; i < m_chats.count(); i++) {
+            m_chats[i].push(out);
+        }
+        out->appendInt(CoreTypes::typeVector);
+        out->appendInt(m_users.count());
+        for (qint32 i = 0; i < m_users.count(); i++) {
+            m_users[i].push(out);
+        }
+        return true;
+    }
+        break;
+    
+    case typeMessagesChannelMessages: {
+        out->appendInt(m_flags);
+        out->appendInt(m_pts);
+        out->appendInt(m_count);
+        out->appendInt(CoreTypes::typeVector);
+        out->appendInt(m_messages.count());
+        for (qint32 i = 0; i < m_messages.count(); i++) {
+            m_messages[i].push(out);
+        }
+        out->appendInt(CoreTypes::typeVector);
+        out->appendInt(m_chats.count());
+        for (qint32 i = 0; i < m_chats.count(); i++) {
+            m_chats[i].push(out);
+        }
+        out->appendInt(CoreTypes::typeVector);
+        out->appendInt(m_users.count());
+        for (qint32 i = 0; i < m_users.count(); i++) {
+            m_users[i].push(out);
+        }
+        return true;
+    }
+        break;
+    
+    default:
+        return false;
+    }
+}
+
+inline QMap<QString, QVariant> MessagesMessages::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeMessagesMessages: {
+        result["classType"] = "MessagesMessages::typeMessagesMessages";
+        QList<QVariant> _messages;
+        Q_FOREACH(const Message &m__type, m_messages)
+            _messages << m__type.toMap();
+        result["messages"] = _messages;
+        QList<QVariant> _chats;
+        Q_FOREACH(const Chat &m__type, m_chats)
+            _chats << m__type.toMap();
+        result["chats"] = _chats;
+        QList<QVariant> _users;
+        Q_FOREACH(const User &m__type, m_users)
+            _users << m__type.toMap();
+        result["users"] = _users;
+        return result;
+    }
+        break;
+    
+    case typeMessagesMessagesSlice: {
+        result["classType"] = "MessagesMessages::typeMessagesMessagesSlice";
+        result["count"] = QVariant::fromValue<qint32>(count());
+        QList<QVariant> _messages;
+        Q_FOREACH(const Message &m__type, m_messages)
+            _messages << m__type.toMap();
+        result["messages"] = _messages;
+        QList<QVariant> _chats;
+        Q_FOREACH(const Chat &m__type, m_chats)
+            _chats << m__type.toMap();
+        result["chats"] = _chats;
+        QList<QVariant> _users;
+        Q_FOREACH(const User &m__type, m_users)
+            _users << m__type.toMap();
+        result["users"] = _users;
+        return result;
+    }
+        break;
+    
+    case typeMessagesChannelMessages: {
+        result["classType"] = "MessagesMessages::typeMessagesChannelMessages";
+        result["pts"] = QVariant::fromValue<qint32>(pts());
+        result["count"] = QVariant::fromValue<qint32>(count());
+        QList<QVariant> _messages;
+        Q_FOREACH(const Message &m__type, m_messages)
+            _messages << m__type.toMap();
+        result["messages"] = _messages;
+        QList<QVariant> _chats;
+        Q_FOREACH(const Chat &m__type, m_chats)
+            _chats << m__type.toMap();
+        result["chats"] = _chats;
+        QList<QVariant> _users;
+        Q_FOREACH(const User &m__type, m_users)
+            _users << m__type.toMap();
+        result["users"] = _users;
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+inline MessagesMessages MessagesMessages::fromMap(const QMap<QString, QVariant> &map) {
+    MessagesMessages result;
+    if(map.value("classType").toString() == "MessagesMessages::typeMessagesMessages") {
+        result.setClassType(typeMessagesMessages);
+        QList<QVariant> map_messages = map["messages"].toList();
+        QList<Message> _messages;
+        Q_FOREACH(const QVariant &var, map_messages)
+            _messages << Message::fromMap(var.toMap());
+        result.setMessages(_messages);
+        QList<QVariant> map_chats = map["chats"].toList();
+        QList<Chat> _chats;
+        Q_FOREACH(const QVariant &var, map_chats)
+            _chats << Chat::fromMap(var.toMap());
+        result.setChats(_chats);
+        QList<QVariant> map_users = map["users"].toList();
+        QList<User> _users;
+        Q_FOREACH(const QVariant &var, map_users)
+            _users << User::fromMap(var.toMap());
+        result.setUsers(_users);
+        return result;
+    }
+    if(map.value("classType").toString() == "MessagesMessages::typeMessagesMessagesSlice") {
+        result.setClassType(typeMessagesMessagesSlice);
+        result.setCount( map.value("count").value<qint32>() );
+        QList<QVariant> map_messages = map["messages"].toList();
+        QList<Message> _messages;
+        Q_FOREACH(const QVariant &var, map_messages)
+            _messages << Message::fromMap(var.toMap());
+        result.setMessages(_messages);
+        QList<QVariant> map_chats = map["chats"].toList();
+        QList<Chat> _chats;
+        Q_FOREACH(const QVariant &var, map_chats)
+            _chats << Chat::fromMap(var.toMap());
+        result.setChats(_chats);
+        QList<QVariant> map_users = map["users"].toList();
+        QList<User> _users;
+        Q_FOREACH(const QVariant &var, map_users)
+            _users << User::fromMap(var.toMap());
+        result.setUsers(_users);
+        return result;
+    }
+    if(map.value("classType").toString() == "MessagesMessages::typeMessagesChannelMessages") {
+        result.setClassType(typeMessagesChannelMessages);
+        result.setPts( map.value("pts").value<qint32>() );
+        result.setCount( map.value("count").value<qint32>() );
+        QList<QVariant> map_messages = map["messages"].toList();
+        QList<Message> _messages;
+        Q_FOREACH(const QVariant &var, map_messages)
+            _messages << Message::fromMap(var.toMap());
+        result.setMessages(_messages);
+        QList<QVariant> map_chats = map["chats"].toList();
+        QList<Chat> _chats;
+        Q_FOREACH(const QVariant &var, map_chats)
+            _chats << Chat::fromMap(var.toMap());
+        result.setChats(_chats);
+        QList<QVariant> map_users = map["users"].toList();
+        QList<User> _users;
+        Q_FOREACH(const QVariant &var, map_users)
+            _users << User::fromMap(var.toMap());
+        result.setUsers(_users);
+        return result;
+    }
+    return result;
+}
+
+inline QByteArray MessagesMessages::getHash(QCryptographicHash::Algorithm alg) const {
+    QByteArray data;
+    QDataStream str(&data, QIODevice::WriteOnly);
+    str << *this;
+    return QCryptographicHash::hash(data, alg);
+}
+
+inline QDataStream &operator<<(QDataStream &stream, const MessagesMessages &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case MessagesMessages::typeMessagesMessages:
+        stream << item.messages();
+        stream << item.chats();
+        stream << item.users();
+        break;
+    case MessagesMessages::typeMessagesMessagesSlice:
+        stream << item.count();
+        stream << item.messages();
+        stream << item.chats();
+        stream << item.users();
+        break;
+    case MessagesMessages::typeMessagesChannelMessages:
+        stream << item.flags();
+        stream << item.pts();
+        stream << item.count();
+        stream << item.messages();
+        stream << item.chats();
+        stream << item.users();
+        break;
+    }
+    return stream;
+}
+
+inline QDataStream &operator>>(QDataStream &stream, MessagesMessages &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<MessagesMessages::MessagesMessagesClassType>(type));
+    switch(type) {
+    case MessagesMessages::typeMessagesMessages: {
+        QList<Message> m_messages;
+        stream >> m_messages;
+        item.setMessages(m_messages);
+        QList<Chat> m_chats;
+        stream >> m_chats;
+        item.setChats(m_chats);
+        QList<User> m_users;
+        stream >> m_users;
+        item.setUsers(m_users);
+    }
+        break;
+    case MessagesMessages::typeMessagesMessagesSlice: {
+        qint32 m_count;
+        stream >> m_count;
+        item.setCount(m_count);
+        QList<Message> m_messages;
+        stream >> m_messages;
+        item.setMessages(m_messages);
+        QList<Chat> m_chats;
+        stream >> m_chats;
+        item.setChats(m_chats);
+        QList<User> m_users;
+        stream >> m_users;
+        item.setUsers(m_users);
+    }
+        break;
+    case MessagesMessages::typeMessagesChannelMessages: {
+        qint32 m_flags;
+        stream >> m_flags;
+        item.setFlags(m_flags);
+        qint32 m_pts;
+        stream >> m_pts;
+        item.setPts(m_pts);
+        qint32 m_count;
+        stream >> m_count;
+        item.setCount(m_count);
+        QList<Message> m_messages;
+        stream >> m_messages;
+        item.setMessages(m_messages);
+        QList<Chat> m_chats;
+        stream >> m_chats;
+        item.setChats(m_chats);
+        QList<User> m_users;
+        stream >> m_users;
+        item.setUsers(m_users);
+    }
+        break;
+    }
+    return stream;
+}
+
 
 #endif // LQTG_TYPE_MESSAGESMESSAGES

@@ -4,6 +4,7 @@ QT += multimedia
 
 TARGET = qtelegram-ae
 TEMPLATE = lib
+VERSION = 1.0.0
 DEFINES += LIBQTELEGRAM_LIBRARY
 
 macx {
@@ -43,3 +44,6 @@ linux {
 
     INSTALLS += target
 }
+
+DISTFILES += \
+    schema/scheme-45.tl

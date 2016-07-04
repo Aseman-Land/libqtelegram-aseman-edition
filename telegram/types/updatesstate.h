@@ -6,17 +6,27 @@
 #define LQTG_TYPE_UPDATESSTATE
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
+#include <QVariant>
+#include "core/inboundpkt.h"
+#include "core/outboundpkt.h"
+#include "../coretypes.h"
+
+#include <QDataStream>
+
 #include <QtGlobal>
 
 class LIBQTELEGRAMSHARED_EXPORT UpdatesState : public TelegramTypeObject
 {
 public:
-    enum UpdatesStateType {
+    enum UpdatesStateClassType {
         typeUpdatesState = 0xa56c2a3e
     };
 
-    UpdatesState(UpdatesStateType classType = typeUpdatesState, InboundPkt *in = 0);
+    UpdatesState(UpdatesStateClassType classType = typeUpdatesState, InboundPkt *in = 0);
     UpdatesState(InboundPkt *in);
+    UpdatesState(const Null&);
     virtual ~UpdatesState();
 
     void setDate(qint32 date);
@@ -34,13 +44,21 @@ public:
     void setUnreadCount(qint32 unreadCount);
     qint32 unreadCount() const;
 
-    void setClassType(UpdatesStateType classType);
-    UpdatesStateType classType() const;
+    void setClassType(UpdatesStateClassType classType);
+    UpdatesStateClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const UpdatesState &b);
+    QMap<QString, QVariant> toMap() const;
+    static UpdatesState fromMap(const QMap<QString, QVariant> &map);
+
+    bool operator ==(const UpdatesState &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
+
+    QByteArray getHash(QCryptographicHash::Algorithm alg = QCryptographicHash::Md5) const;
 
 private:
     qint32 m_date;
@@ -48,7 +66,226 @@ private:
     qint32 m_qts;
     qint32 m_seq;
     qint32 m_unreadCount;
-    UpdatesStateType m_classType;
+    UpdatesStateClassType m_classType;
 };
+
+Q_DECLARE_METATYPE(UpdatesState)
+
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const UpdatesState &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, UpdatesState &item);
+
+inline UpdatesState::UpdatesState(UpdatesStateClassType classType, InboundPkt *in) :
+    m_date(0),
+    m_pts(0),
+    m_qts(0),
+    m_seq(0),
+    m_unreadCount(0),
+    m_classType(classType)
+{
+    if(in) fetch(in);
+}
+
+inline UpdatesState::UpdatesState(InboundPkt *in) :
+    m_date(0),
+    m_pts(0),
+    m_qts(0),
+    m_seq(0),
+    m_unreadCount(0),
+    m_classType(typeUpdatesState)
+{
+    fetch(in);
+}
+
+inline UpdatesState::UpdatesState(const Null &null) :
+    TelegramTypeObject(null),
+    m_date(0),
+    m_pts(0),
+    m_qts(0),
+    m_seq(0),
+    m_unreadCount(0),
+    m_classType(typeUpdatesState)
+{
+}
+
+inline UpdatesState::~UpdatesState() {
+}
+
+inline void UpdatesState::setDate(qint32 date) {
+    m_date = date;
+}
+
+inline qint32 UpdatesState::date() const {
+    return m_date;
+}
+
+inline void UpdatesState::setPts(qint32 pts) {
+    m_pts = pts;
+}
+
+inline qint32 UpdatesState::pts() const {
+    return m_pts;
+}
+
+inline void UpdatesState::setQts(qint32 qts) {
+    m_qts = qts;
+}
+
+inline qint32 UpdatesState::qts() const {
+    return m_qts;
+}
+
+inline void UpdatesState::setSeq(qint32 seq) {
+    m_seq = seq;
+}
+
+inline qint32 UpdatesState::seq() const {
+    return m_seq;
+}
+
+inline void UpdatesState::setUnreadCount(qint32 unreadCount) {
+    m_unreadCount = unreadCount;
+}
+
+inline qint32 UpdatesState::unreadCount() const {
+    return m_unreadCount;
+}
+
+inline bool UpdatesState::operator ==(const UpdatesState &b) const {
+    return m_classType == b.m_classType &&
+           m_date == b.m_date &&
+           m_pts == b.m_pts &&
+           m_qts == b.m_qts &&
+           m_seq == b.m_seq &&
+           m_unreadCount == b.m_unreadCount;
+}
+
+inline void UpdatesState::setClassType(UpdatesState::UpdatesStateClassType classType) {
+    m_classType = classType;
+}
+
+inline UpdatesState::UpdatesStateClassType UpdatesState::classType() const {
+    return m_classType;
+}
+
+inline bool UpdatesState::fetch(InboundPkt *in) {
+    LQTG_FETCH_LOG;
+    int x = in->fetchInt();
+    switch(x) {
+    case typeUpdatesState: {
+        m_pts = in->fetchInt();
+        m_qts = in->fetchInt();
+        m_date = in->fetchInt();
+        m_seq = in->fetchInt();
+        m_unreadCount = in->fetchInt();
+        m_classType = static_cast<UpdatesStateClassType>(x);
+        return true;
+    }
+        break;
+    
+    default:
+        LQTG_FETCH_ASSERT;
+        return false;
+    }
+}
+
+inline bool UpdatesState::push(OutboundPkt *out) const {
+    out->appendInt(m_classType);
+    switch(m_classType) {
+    case typeUpdatesState: {
+        out->appendInt(m_pts);
+        out->appendInt(m_qts);
+        out->appendInt(m_date);
+        out->appendInt(m_seq);
+        out->appendInt(m_unreadCount);
+        return true;
+    }
+        break;
+    
+    default:
+        return false;
+    }
+}
+
+inline QMap<QString, QVariant> UpdatesState::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeUpdatesState: {
+        result["classType"] = "UpdatesState::typeUpdatesState";
+        result["pts"] = QVariant::fromValue<qint32>(pts());
+        result["qts"] = QVariant::fromValue<qint32>(qts());
+        result["date"] = QVariant::fromValue<qint32>(date());
+        result["seq"] = QVariant::fromValue<qint32>(seq());
+        result["unreadCount"] = QVariant::fromValue<qint32>(unreadCount());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+inline UpdatesState UpdatesState::fromMap(const QMap<QString, QVariant> &map) {
+    UpdatesState result;
+    if(map.value("classType").toString() == "UpdatesState::typeUpdatesState") {
+        result.setClassType(typeUpdatesState);
+        result.setPts( map.value("pts").value<qint32>() );
+        result.setQts( map.value("qts").value<qint32>() );
+        result.setDate( map.value("date").value<qint32>() );
+        result.setSeq( map.value("seq").value<qint32>() );
+        result.setUnreadCount( map.value("unreadCount").value<qint32>() );
+        return result;
+    }
+    return result;
+}
+
+inline QByteArray UpdatesState::getHash(QCryptographicHash::Algorithm alg) const {
+    QByteArray data;
+    QDataStream str(&data, QIODevice::WriteOnly);
+    str << *this;
+    return QCryptographicHash::hash(data, alg);
+}
+
+inline QDataStream &operator<<(QDataStream &stream, const UpdatesState &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case UpdatesState::typeUpdatesState:
+        stream << item.pts();
+        stream << item.qts();
+        stream << item.date();
+        stream << item.seq();
+        stream << item.unreadCount();
+        break;
+    }
+    return stream;
+}
+
+inline QDataStream &operator>>(QDataStream &stream, UpdatesState &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<UpdatesState::UpdatesStateClassType>(type));
+    switch(type) {
+    case UpdatesState::typeUpdatesState: {
+        qint32 m_pts;
+        stream >> m_pts;
+        item.setPts(m_pts);
+        qint32 m_qts;
+        stream >> m_qts;
+        item.setQts(m_qts);
+        qint32 m_date;
+        stream >> m_date;
+        item.setDate(m_date);
+        qint32 m_seq;
+        stream >> m_seq;
+        item.setSeq(m_seq);
+        qint32 m_unread_count;
+        stream >> m_unread_count;
+        item.setUnreadCount(m_unread_count);
+    }
+        break;
+    }
+    return stream;
+}
+
 
 #endif // LQTG_TYPE_UPDATESSTATE

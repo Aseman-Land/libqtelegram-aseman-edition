@@ -6,18 +6,28 @@
 #define LQTG_TYPE_CHATPHOTO
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
+#include <QVariant>
+#include "core/inboundpkt.h"
+#include "core/outboundpkt.h"
+#include "../coretypes.h"
+
+#include <QDataStream>
+
 #include "filelocation.h"
 
 class LIBQTELEGRAMSHARED_EXPORT ChatPhoto : public TelegramTypeObject
 {
 public:
-    enum ChatPhotoType {
+    enum ChatPhotoClassType {
         typeChatPhotoEmpty = 0x37c1011c,
         typeChatPhoto = 0x6153276a
     };
 
-    ChatPhoto(ChatPhotoType classType = typeChatPhotoEmpty, InboundPkt *in = 0);
+    ChatPhoto(ChatPhotoClassType classType = typeChatPhotoEmpty, InboundPkt *in = 0);
     ChatPhoto(InboundPkt *in);
+    ChatPhoto(const Null&);
     virtual ~ChatPhoto();
 
     void setPhotoBig(const FileLocation &photoBig);
@@ -26,18 +36,207 @@ public:
     void setPhotoSmall(const FileLocation &photoSmall);
     FileLocation photoSmall() const;
 
-    void setClassType(ChatPhotoType classType);
-    ChatPhotoType classType() const;
+    void setClassType(ChatPhotoClassType classType);
+    ChatPhotoClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const ChatPhoto &b);
+    QMap<QString, QVariant> toMap() const;
+    static ChatPhoto fromMap(const QMap<QString, QVariant> &map);
+
+    bool operator ==(const ChatPhoto &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
+
+    QByteArray getHash(QCryptographicHash::Algorithm alg = QCryptographicHash::Md5) const;
 
 private:
     FileLocation m_photoBig;
     FileLocation m_photoSmall;
-    ChatPhotoType m_classType;
+    ChatPhotoClassType m_classType;
 };
+
+Q_DECLARE_METATYPE(ChatPhoto)
+
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const ChatPhoto &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, ChatPhoto &item);
+
+inline ChatPhoto::ChatPhoto(ChatPhotoClassType classType, InboundPkt *in) :
+    m_classType(classType)
+{
+    if(in) fetch(in);
+}
+
+inline ChatPhoto::ChatPhoto(InboundPkt *in) :
+    m_classType(typeChatPhotoEmpty)
+{
+    fetch(in);
+}
+
+inline ChatPhoto::ChatPhoto(const Null &null) :
+    TelegramTypeObject(null),
+    m_classType(typeChatPhotoEmpty)
+{
+}
+
+inline ChatPhoto::~ChatPhoto() {
+}
+
+inline void ChatPhoto::setPhotoBig(const FileLocation &photoBig) {
+    m_photoBig = photoBig;
+}
+
+inline FileLocation ChatPhoto::photoBig() const {
+    return m_photoBig;
+}
+
+inline void ChatPhoto::setPhotoSmall(const FileLocation &photoSmall) {
+    m_photoSmall = photoSmall;
+}
+
+inline FileLocation ChatPhoto::photoSmall() const {
+    return m_photoSmall;
+}
+
+inline bool ChatPhoto::operator ==(const ChatPhoto &b) const {
+    return m_classType == b.m_classType &&
+           m_photoBig == b.m_photoBig &&
+           m_photoSmall == b.m_photoSmall;
+}
+
+inline void ChatPhoto::setClassType(ChatPhoto::ChatPhotoClassType classType) {
+    m_classType = classType;
+}
+
+inline ChatPhoto::ChatPhotoClassType ChatPhoto::classType() const {
+    return m_classType;
+}
+
+inline bool ChatPhoto::fetch(InboundPkt *in) {
+    LQTG_FETCH_LOG;
+    int x = in->fetchInt();
+    switch(x) {
+    case typeChatPhotoEmpty: {
+        m_classType = static_cast<ChatPhotoClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeChatPhoto: {
+        m_photoSmall.fetch(in);
+        m_photoBig.fetch(in);
+        m_classType = static_cast<ChatPhotoClassType>(x);
+        return true;
+    }
+        break;
+    
+    default:
+        LQTG_FETCH_ASSERT;
+        return false;
+    }
+}
+
+inline bool ChatPhoto::push(OutboundPkt *out) const {
+    out->appendInt(m_classType);
+    switch(m_classType) {
+    case typeChatPhotoEmpty: {
+        return true;
+    }
+        break;
+    
+    case typeChatPhoto: {
+        m_photoSmall.push(out);
+        m_photoBig.push(out);
+        return true;
+    }
+        break;
+    
+    default:
+        return false;
+    }
+}
+
+inline QMap<QString, QVariant> ChatPhoto::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeChatPhotoEmpty: {
+        result["classType"] = "ChatPhoto::typeChatPhotoEmpty";
+        return result;
+    }
+        break;
+    
+    case typeChatPhoto: {
+        result["classType"] = "ChatPhoto::typeChatPhoto";
+        result["photoSmall"] = m_photoSmall.toMap();
+        result["photoBig"] = m_photoBig.toMap();
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+inline ChatPhoto ChatPhoto::fromMap(const QMap<QString, QVariant> &map) {
+    ChatPhoto result;
+    if(map.value("classType").toString() == "ChatPhoto::typeChatPhotoEmpty") {
+        result.setClassType(typeChatPhotoEmpty);
+        return result;
+    }
+    if(map.value("classType").toString() == "ChatPhoto::typeChatPhoto") {
+        result.setClassType(typeChatPhoto);
+        result.setPhotoSmall( FileLocation::fromMap(map.value("photoSmall").toMap()) );
+        result.setPhotoBig( FileLocation::fromMap(map.value("photoBig").toMap()) );
+        return result;
+    }
+    return result;
+}
+
+inline QByteArray ChatPhoto::getHash(QCryptographicHash::Algorithm alg) const {
+    QByteArray data;
+    QDataStream str(&data, QIODevice::WriteOnly);
+    str << *this;
+    return QCryptographicHash::hash(data, alg);
+}
+
+inline QDataStream &operator<<(QDataStream &stream, const ChatPhoto &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case ChatPhoto::typeChatPhotoEmpty:
+        
+        break;
+    case ChatPhoto::typeChatPhoto:
+        stream << item.photoSmall();
+        stream << item.photoBig();
+        break;
+    }
+    return stream;
+}
+
+inline QDataStream &operator>>(QDataStream &stream, ChatPhoto &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<ChatPhoto::ChatPhotoClassType>(type));
+    switch(type) {
+    case ChatPhoto::typeChatPhotoEmpty: {
+        
+    }
+        break;
+    case ChatPhoto::typeChatPhoto: {
+        FileLocation m_photo_small;
+        stream >> m_photo_small;
+        item.setPhotoSmall(m_photo_small);
+        FileLocation m_photo_big;
+        stream >> m_photo_big;
+        item.setPhotoBig(m_photo_big);
+    }
+        break;
+    }
+    return stream;
+}
+
 
 #endif // LQTG_TYPE_CHATPHOTO

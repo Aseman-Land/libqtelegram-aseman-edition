@@ -6,12 +6,21 @@
 #define LQTG_TYPE_USERSTATUS
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
+#include <QVariant>
+#include "core/inboundpkt.h"
+#include "core/outboundpkt.h"
+#include "../coretypes.h"
+
+#include <QDataStream>
+
 #include <QtGlobal>
 
 class LIBQTELEGRAMSHARED_EXPORT UserStatus : public TelegramTypeObject
 {
 public:
-    enum UserStatusType {
+    enum UserStatusClassType {
         typeUserStatusEmpty = 0x9d05049,
         typeUserStatusOnline = 0xedb93949,
         typeUserStatusOffline = 0x8c703f,
@@ -20,8 +29,9 @@ public:
         typeUserStatusLastMonth = 0x77ebc742
     };
 
-    UserStatus(UserStatusType classType = typeUserStatusEmpty, InboundPkt *in = 0);
+    UserStatus(UserStatusClassType classType = typeUserStatusEmpty, InboundPkt *in = 0);
     UserStatus(InboundPkt *in);
+    UserStatus(const Null&);
     virtual ~UserStatus();
 
     void setExpires(qint32 expires);
@@ -30,18 +40,323 @@ public:
     void setWasOnline(qint32 wasOnline);
     qint32 wasOnline() const;
 
-    void setClassType(UserStatusType classType);
-    UserStatusType classType() const;
+    void setClassType(UserStatusClassType classType);
+    UserStatusClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const UserStatus &b);
+    QMap<QString, QVariant> toMap() const;
+    static UserStatus fromMap(const QMap<QString, QVariant> &map);
+
+    bool operator ==(const UserStatus &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
+
+    QByteArray getHash(QCryptographicHash::Algorithm alg = QCryptographicHash::Md5) const;
 
 private:
     qint32 m_expires;
     qint32 m_wasOnline;
-    UserStatusType m_classType;
+    UserStatusClassType m_classType;
 };
+
+Q_DECLARE_METATYPE(UserStatus)
+
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const UserStatus &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, UserStatus &item);
+
+inline UserStatus::UserStatus(UserStatusClassType classType, InboundPkt *in) :
+    m_expires(0),
+    m_wasOnline(0),
+    m_classType(classType)
+{
+    if(in) fetch(in);
+}
+
+inline UserStatus::UserStatus(InboundPkt *in) :
+    m_expires(0),
+    m_wasOnline(0),
+    m_classType(typeUserStatusEmpty)
+{
+    fetch(in);
+}
+
+inline UserStatus::UserStatus(const Null &null) :
+    TelegramTypeObject(null),
+    m_expires(0),
+    m_wasOnline(0),
+    m_classType(typeUserStatusEmpty)
+{
+}
+
+inline UserStatus::~UserStatus() {
+}
+
+inline void UserStatus::setExpires(qint32 expires) {
+    m_expires = expires;
+}
+
+inline qint32 UserStatus::expires() const {
+    return m_expires;
+}
+
+inline void UserStatus::setWasOnline(qint32 wasOnline) {
+    m_wasOnline = wasOnline;
+}
+
+inline qint32 UserStatus::wasOnline() const {
+    return m_wasOnline;
+}
+
+inline bool UserStatus::operator ==(const UserStatus &b) const {
+    return m_classType == b.m_classType &&
+           m_expires == b.m_expires &&
+           m_wasOnline == b.m_wasOnline;
+}
+
+inline void UserStatus::setClassType(UserStatus::UserStatusClassType classType) {
+    m_classType = classType;
+}
+
+inline UserStatus::UserStatusClassType UserStatus::classType() const {
+    return m_classType;
+}
+
+inline bool UserStatus::fetch(InboundPkt *in) {
+    LQTG_FETCH_LOG;
+    int x = in->fetchInt();
+    switch(x) {
+    case typeUserStatusEmpty: {
+        m_classType = static_cast<UserStatusClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUserStatusOnline: {
+        m_expires = in->fetchInt();
+        m_classType = static_cast<UserStatusClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUserStatusOffline: {
+        m_wasOnline = in->fetchInt();
+        m_classType = static_cast<UserStatusClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUserStatusRecently: {
+        m_classType = static_cast<UserStatusClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUserStatusLastWeek: {
+        m_classType = static_cast<UserStatusClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUserStatusLastMonth: {
+        m_classType = static_cast<UserStatusClassType>(x);
+        return true;
+    }
+        break;
+    
+    default:
+        LQTG_FETCH_ASSERT;
+        return false;
+    }
+}
+
+inline bool UserStatus::push(OutboundPkt *out) const {
+    out->appendInt(m_classType);
+    switch(m_classType) {
+    case typeUserStatusEmpty: {
+        return true;
+    }
+        break;
+    
+    case typeUserStatusOnline: {
+        out->appendInt(m_expires);
+        return true;
+    }
+        break;
+    
+    case typeUserStatusOffline: {
+        out->appendInt(m_wasOnline);
+        return true;
+    }
+        break;
+    
+    case typeUserStatusRecently: {
+        return true;
+    }
+        break;
+    
+    case typeUserStatusLastWeek: {
+        return true;
+    }
+        break;
+    
+    case typeUserStatusLastMonth: {
+        return true;
+    }
+        break;
+    
+    default:
+        return false;
+    }
+}
+
+inline QMap<QString, QVariant> UserStatus::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeUserStatusEmpty: {
+        result["classType"] = "UserStatus::typeUserStatusEmpty";
+        return result;
+    }
+        break;
+    
+    case typeUserStatusOnline: {
+        result["classType"] = "UserStatus::typeUserStatusOnline";
+        result["expires"] = QVariant::fromValue<qint32>(expires());
+        return result;
+    }
+        break;
+    
+    case typeUserStatusOffline: {
+        result["classType"] = "UserStatus::typeUserStatusOffline";
+        result["wasOnline"] = QVariant::fromValue<qint32>(wasOnline());
+        return result;
+    }
+        break;
+    
+    case typeUserStatusRecently: {
+        result["classType"] = "UserStatus::typeUserStatusRecently";
+        return result;
+    }
+        break;
+    
+    case typeUserStatusLastWeek: {
+        result["classType"] = "UserStatus::typeUserStatusLastWeek";
+        return result;
+    }
+        break;
+    
+    case typeUserStatusLastMonth: {
+        result["classType"] = "UserStatus::typeUserStatusLastMonth";
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+inline UserStatus UserStatus::fromMap(const QMap<QString, QVariant> &map) {
+    UserStatus result;
+    if(map.value("classType").toString() == "UserStatus::typeUserStatusEmpty") {
+        result.setClassType(typeUserStatusEmpty);
+        return result;
+    }
+    if(map.value("classType").toString() == "UserStatus::typeUserStatusOnline") {
+        result.setClassType(typeUserStatusOnline);
+        result.setExpires( map.value("expires").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "UserStatus::typeUserStatusOffline") {
+        result.setClassType(typeUserStatusOffline);
+        result.setWasOnline( map.value("wasOnline").value<qint32>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "UserStatus::typeUserStatusRecently") {
+        result.setClassType(typeUserStatusRecently);
+        return result;
+    }
+    if(map.value("classType").toString() == "UserStatus::typeUserStatusLastWeek") {
+        result.setClassType(typeUserStatusLastWeek);
+        return result;
+    }
+    if(map.value("classType").toString() == "UserStatus::typeUserStatusLastMonth") {
+        result.setClassType(typeUserStatusLastMonth);
+        return result;
+    }
+    return result;
+}
+
+inline QByteArray UserStatus::getHash(QCryptographicHash::Algorithm alg) const {
+    QByteArray data;
+    QDataStream str(&data, QIODevice::WriteOnly);
+    str << *this;
+    return QCryptographicHash::hash(data, alg);
+}
+
+inline QDataStream &operator<<(QDataStream &stream, const UserStatus &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case UserStatus::typeUserStatusEmpty:
+        
+        break;
+    case UserStatus::typeUserStatusOnline:
+        stream << item.expires();
+        break;
+    case UserStatus::typeUserStatusOffline:
+        stream << item.wasOnline();
+        break;
+    case UserStatus::typeUserStatusRecently:
+        
+        break;
+    case UserStatus::typeUserStatusLastWeek:
+        
+        break;
+    case UserStatus::typeUserStatusLastMonth:
+        
+        break;
+    }
+    return stream;
+}
+
+inline QDataStream &operator>>(QDataStream &stream, UserStatus &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<UserStatus::UserStatusClassType>(type));
+    switch(type) {
+    case UserStatus::typeUserStatusEmpty: {
+        
+    }
+        break;
+    case UserStatus::typeUserStatusOnline: {
+        qint32 m_expires;
+        stream >> m_expires;
+        item.setExpires(m_expires);
+    }
+        break;
+    case UserStatus::typeUserStatusOffline: {
+        qint32 m_was_online;
+        stream >> m_was_online;
+        item.setWasOnline(m_was_online);
+    }
+        break;
+    case UserStatus::typeUserStatusRecently: {
+        
+    }
+        break;
+    case UserStatus::typeUserStatusLastWeek: {
+        
+    }
+        break;
+    case UserStatus::typeUserStatusLastMonth: {
+        
+    }
+        break;
+    }
+    return stream;
+}
+
 
 #endif // LQTG_TYPE_USERSTATUS

@@ -6,6 +6,10 @@
 #define LQTG_FNC_AUTH
 
 #include "telegramfunctionobject.h"
+#include "core/inboundpkt.h"
+#include "core/outboundpkt.h"
+#include "../coretypes.h"
+
 #include "telegram/types/authcheckedphone.h"
 #include <QString>
 #include "telegram/types/authsentcode.h"
@@ -24,8 +28,7 @@ class LIBQTELEGRAMSHARED_EXPORT Auth : public TelegramFunctionObject
 public:
     enum AuthFunction {
         fncAuthCheckPhone = 0x6fe51dfb,
-        fncAuthSendCode = 0x768d5f4d,
-        fncAuthSendCall = 0x3c51564,
+        fncAuthSendCode = 0x86aef0ec,
         fncAuthSignUp = 0x1b067634,
         fncAuthSignIn = 0xbcd51581,
         fncAuthLogOut = 0x5717da40,
@@ -34,10 +37,12 @@ public:
         fncAuthExportAuthorization = 0xe5bfffcd,
         fncAuthImportAuthorization = 0xe3ef9613,
         fncAuthBindTempAuthKey = 0xcdd42a05,
-        fncAuthSendSms = 0xda9f3e8,
+        fncAuthImportBotAuthorization = 0x67a3ff2c,
         fncAuthCheckPassword = 0xa63011e,
         fncAuthRequestPasswordRecovery = 0xd897bc66,
-        fncAuthRecoverPassword = 0x4ea56e92
+        fncAuthRecoverPassword = 0x4ea56e92,
+        fncAuthResendCode = 0x3ef1a9bf,
+        fncAuthCancelCode = 0x1f040578
     };
 
     Auth();
@@ -46,11 +51,8 @@ public:
     static bool checkPhone(OutboundPkt *out, const QString &phoneNumber);
     static AuthCheckedPhone checkPhoneResult(InboundPkt *in);
 
-    static bool sendCode(OutboundPkt *out, const QString &phoneNumber, qint32 smsType, qint32 apiId, const QString &apiHash, const QString &langCode);
+    static bool sendCode(OutboundPkt *out, bool allowFlashcall, const QString &phoneNumber, bool currentNumber, qint32 apiId, const QString &apiHash);
     static AuthSentCode sendCodeResult(InboundPkt *in);
-
-    static bool sendCall(OutboundPkt *out, const QString &phoneNumber, const QString &phoneCodeHash);
-    static bool sendCallResult(InboundPkt *in);
 
     static bool signUp(OutboundPkt *out, const QString &phoneNumber, const QString &phoneCodeHash, const QString &phoneCode, const QString &firstName, const QString &lastName);
     static AuthAuthorization signUpResult(InboundPkt *in);
@@ -76,8 +78,8 @@ public:
     static bool bindTempAuthKey(OutboundPkt *out, qint64 permAuthKeyId, qint64 nonce, qint32 expiresAt, const QByteArray &encryptedMessage);
     static bool bindTempAuthKeyResult(InboundPkt *in);
 
-    static bool sendSms(OutboundPkt *out, const QString &phoneNumber, const QString &phoneCodeHash);
-    static bool sendSmsResult(InboundPkt *in);
+    static bool importBotAuthorization(OutboundPkt *out, qint32 flags, qint32 apiId, const QString &apiHash, const QString &botAuthToken);
+    static AuthAuthorization importBotAuthorizationResult(InboundPkt *in);
 
     static bool checkPassword(OutboundPkt *out, const QByteArray &passwordHash);
     static AuthAuthorization checkPasswordResult(InboundPkt *in);
@@ -88,9 +90,240 @@ public:
     static bool recoverPassword(OutboundPkt *out, const QString &code);
     static AuthAuthorization recoverPasswordResult(InboundPkt *in);
 
+    static bool resendCode(OutboundPkt *out, const QString &phoneNumber, const QString &phoneCodeHash);
+    static AuthSentCode resendCodeResult(InboundPkt *in);
+
+    static bool cancelCode(OutboundPkt *out, const QString &phoneNumber, const QString &phoneCodeHash);
+    static bool cancelCodeResult(InboundPkt *in);
+
 };
 
 }
+inline Functions::Auth::Auth() {
+}
+
+inline Functions::Auth::~Auth() {
+}
+
+inline bool Functions::Auth::checkPhone(OutboundPkt *out, const QString &phoneNumber) {
+    out->appendInt(fncAuthCheckPhone);
+    out->appendQString(phoneNumber);
+    return true;
+}
+
+inline AuthCheckedPhone Functions::Auth::checkPhoneResult(InboundPkt *in) {
+    AuthCheckedPhone result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Auth::sendCode(OutboundPkt *out, bool allowFlashcall, const QString &phoneNumber, bool currentNumber, qint32 apiId, const QString &apiHash) {
+    out->appendInt(fncAuthSendCode);
+    
+    qint32 flags = 0;
+    if(allowFlashcall != 0) flags = (1<<0 | flags);
+    if(currentNumber != 0) flags = (1<<0 | flags);
+    
+    out->appendInt(flags);
+    out->appendQString(phoneNumber);
+    if(flags & 1<<0) out->appendBool(currentNumber);
+    out->appendInt(apiId);
+    out->appendQString(apiHash);
+    return true;
+}
+
+inline AuthSentCode Functions::Auth::sendCodeResult(InboundPkt *in) {
+    AuthSentCode result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Auth::signUp(OutboundPkt *out, const QString &phoneNumber, const QString &phoneCodeHash, const QString &phoneCode, const QString &firstName, const QString &lastName) {
+    out->appendInt(fncAuthSignUp);
+    out->appendQString(phoneNumber);
+    out->appendQString(phoneCodeHash);
+    out->appendQString(phoneCode);
+    out->appendQString(firstName);
+    out->appendQString(lastName);
+    return true;
+}
+
+inline AuthAuthorization Functions::Auth::signUpResult(InboundPkt *in) {
+    AuthAuthorization result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Auth::signIn(OutboundPkt *out, const QString &phoneNumber, const QString &phoneCodeHash, const QString &phoneCode) {
+    out->appendInt(fncAuthSignIn);
+    out->appendQString(phoneNumber);
+    out->appendQString(phoneCodeHash);
+    out->appendQString(phoneCode);
+    return true;
+}
+
+inline AuthAuthorization Functions::Auth::signInResult(InboundPkt *in) {
+    AuthAuthorization result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Auth::logOut(OutboundPkt *out) {
+    out->appendInt(fncAuthLogOut);
+    return true;
+}
+
+inline bool Functions::Auth::logOutResult(InboundPkt *in) {
+    bool result;
+    result = in->fetchBool();
+    return result;
+}
+
+inline bool Functions::Auth::resetAuthorizations(OutboundPkt *out) {
+    out->appendInt(fncAuthResetAuthorizations);
+    return true;
+}
+
+inline bool Functions::Auth::resetAuthorizationsResult(InboundPkt *in) {
+    bool result;
+    result = in->fetchBool();
+    return result;
+}
+
+inline bool Functions::Auth::sendInvites(OutboundPkt *out, const QList<QString> &phoneNumbers, const QString &message) {
+    out->appendInt(fncAuthSendInvites);
+    out->appendInt(CoreTypes::typeVector);
+    out->appendInt(phoneNumbers.count());
+    for (qint32 i = 0; i < phoneNumbers.count(); i++) {
+        out->appendQString(phoneNumbers[i]);
+    }
+    out->appendQString(message);
+    return true;
+}
+
+inline bool Functions::Auth::sendInvitesResult(InboundPkt *in) {
+    bool result;
+    result = in->fetchBool();
+    return result;
+}
+
+inline bool Functions::Auth::exportAuthorization(OutboundPkt *out, qint32 dcId) {
+    out->appendInt(fncAuthExportAuthorization);
+    out->appendInt(dcId);
+    return true;
+}
+
+inline AuthExportedAuthorization Functions::Auth::exportAuthorizationResult(InboundPkt *in) {
+    AuthExportedAuthorization result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Auth::importAuthorization(OutboundPkt *out, qint32 id, const QByteArray &bytes) {
+    out->appendInt(fncAuthImportAuthorization);
+    out->appendInt(id);
+    out->appendBytes(bytes);
+    return true;
+}
+
+inline AuthAuthorization Functions::Auth::importAuthorizationResult(InboundPkt *in) {
+    AuthAuthorization result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Auth::bindTempAuthKey(OutboundPkt *out, qint64 permAuthKeyId, qint64 nonce, qint32 expiresAt, const QByteArray &encryptedMessage) {
+    out->appendInt(fncAuthBindTempAuthKey);
+    out->appendLong(permAuthKeyId);
+    out->appendLong(nonce);
+    out->appendInt(expiresAt);
+    out->appendBytes(encryptedMessage);
+    return true;
+}
+
+inline bool Functions::Auth::bindTempAuthKeyResult(InboundPkt *in) {
+    bool result;
+    result = in->fetchBool();
+    return result;
+}
+
+inline bool Functions::Auth::importBotAuthorization(OutboundPkt *out, qint32 flags, qint32 apiId, const QString &apiHash, const QString &botAuthToken) {
+    out->appendInt(fncAuthImportBotAuthorization);
+    out->appendInt(flags);
+    out->appendInt(apiId);
+    out->appendQString(apiHash);
+    out->appendQString(botAuthToken);
+    return true;
+}
+
+inline AuthAuthorization Functions::Auth::importBotAuthorizationResult(InboundPkt *in) {
+    AuthAuthorization result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Auth::checkPassword(OutboundPkt *out, const QByteArray &passwordHash) {
+    out->appendInt(fncAuthCheckPassword);
+    out->appendBytes(passwordHash);
+    return true;
+}
+
+inline AuthAuthorization Functions::Auth::checkPasswordResult(InboundPkt *in) {
+    AuthAuthorization result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Auth::requestPasswordRecovery(OutboundPkt *out) {
+    out->appendInt(fncAuthRequestPasswordRecovery);
+    return true;
+}
+
+inline AuthPasswordRecovery Functions::Auth::requestPasswordRecoveryResult(InboundPkt *in) {
+    AuthPasswordRecovery result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Auth::recoverPassword(OutboundPkt *out, const QString &code) {
+    out->appendInt(fncAuthRecoverPassword);
+    out->appendQString(code);
+    return true;
+}
+
+inline AuthAuthorization Functions::Auth::recoverPasswordResult(InboundPkt *in) {
+    AuthAuthorization result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Auth::resendCode(OutboundPkt *out, const QString &phoneNumber, const QString &phoneCodeHash) {
+    out->appendInt(fncAuthResendCode);
+    out->appendQString(phoneNumber);
+    out->appendQString(phoneCodeHash);
+    return true;
+}
+
+inline AuthSentCode Functions::Auth::resendCodeResult(InboundPkt *in) {
+    AuthSentCode result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+inline bool Functions::Auth::cancelCode(OutboundPkt *out, const QString &phoneNumber, const QString &phoneCodeHash) {
+    out->appendInt(fncAuthCancelCode);
+    out->appendQString(phoneNumber);
+    out->appendQString(phoneCodeHash);
+    return true;
+}
+
+inline bool Functions::Auth::cancelCodeResult(InboundPkt *in) {
+    bool result;
+    result = in->fetchBool();
+    return result;
+}
+
+
 }
 
 #endif // LQTG_FNC_AUTH

@@ -6,23 +6,37 @@
 #define LQTG_TYPE_AUTHSENTCODE
 
 #include "telegramtypeobject.h"
-#include <QString>
+
+#include <QMetaType>
+#include <QVariant>
+#include "core/inboundpkt.h"
+#include "core/outboundpkt.h"
+#include "../coretypes.h"
+
+#include <QDataStream>
+
 #include <QtGlobal>
+#include "authcodetype.h"
+#include <QString>
+#include "authsentcodetype.h"
 
 class LIBQTELEGRAMSHARED_EXPORT AuthSentCode : public TelegramTypeObject
 {
 public:
-    enum AuthSentCodeType {
-        typeAuthSentCode = 0xefed51d9,
-        typeAuthSentAppCode = 0xe325edcf
+    enum AuthSentCodeClassType {
+        typeAuthSentCode = 0x5e002502
     };
 
-    AuthSentCode(AuthSentCodeType classType = typeAuthSentCode, InboundPkt *in = 0);
+    AuthSentCode(AuthSentCodeClassType classType = typeAuthSentCode, InboundPkt *in = 0);
     AuthSentCode(InboundPkt *in);
+    AuthSentCode(const Null&);
     virtual ~AuthSentCode();
 
-    void setIsPassword(bool isPassword);
-    bool isPassword() const;
+    void setFlags(qint32 flags);
+    qint32 flags() const;
+
+    void setNextType(const AuthCodeType &nextType);
+    AuthCodeType nextType() const;
 
     void setPhoneCodeHash(const QString &phoneCodeHash);
     QString phoneCodeHash() const;
@@ -30,23 +44,258 @@ public:
     void setPhoneRegistered(bool phoneRegistered);
     bool phoneRegistered() const;
 
-    void setSendCallTimeout(qint32 sendCallTimeout);
-    qint32 sendCallTimeout() const;
+    void setTimeout(qint32 timeout);
+    qint32 timeout() const;
 
-    void setClassType(AuthSentCodeType classType);
-    AuthSentCodeType classType() const;
+    void setType(const AuthSentCodeType &type);
+    AuthSentCodeType type() const;
+
+    void setClassType(AuthSentCodeClassType classType);
+    AuthSentCodeClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const AuthSentCode &b);
+    QMap<QString, QVariant> toMap() const;
+    static AuthSentCode fromMap(const QMap<QString, QVariant> &map);
+
+    bool operator ==(const AuthSentCode &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
+
+    QByteArray getHash(QCryptographicHash::Algorithm alg = QCryptographicHash::Md5) const;
 
 private:
-    bool m_isPassword;
+    qint32 m_flags;
+    AuthCodeType m_nextType;
     QString m_phoneCodeHash;
-    bool m_phoneRegistered;
-    qint32 m_sendCallTimeout;
-    AuthSentCodeType m_classType;
+    qint32 m_timeout;
+    AuthSentCodeType m_type;
+    AuthSentCodeClassType m_classType;
 };
+
+Q_DECLARE_METATYPE(AuthSentCode)
+
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const AuthSentCode &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, AuthSentCode &item);
+
+inline AuthSentCode::AuthSentCode(AuthSentCodeClassType classType, InboundPkt *in) :
+    m_flags(0),
+    m_timeout(0),
+    m_classType(classType)
+{
+    if(in) fetch(in);
+}
+
+inline AuthSentCode::AuthSentCode(InboundPkt *in) :
+    m_flags(0),
+    m_timeout(0),
+    m_classType(typeAuthSentCode)
+{
+    fetch(in);
+}
+
+inline AuthSentCode::AuthSentCode(const Null &null) :
+    TelegramTypeObject(null),
+    m_flags(0),
+    m_timeout(0),
+    m_classType(typeAuthSentCode)
+{
+}
+
+inline AuthSentCode::~AuthSentCode() {
+}
+
+inline void AuthSentCode::setFlags(qint32 flags) {
+    m_flags = flags;
+}
+
+inline qint32 AuthSentCode::flags() const {
+    return m_flags;
+}
+
+inline void AuthSentCode::setNextType(const AuthCodeType &nextType) {
+    m_nextType = nextType;
+}
+
+inline AuthCodeType AuthSentCode::nextType() const {
+    return m_nextType;
+}
+
+inline void AuthSentCode::setPhoneCodeHash(const QString &phoneCodeHash) {
+    m_phoneCodeHash = phoneCodeHash;
+}
+
+inline QString AuthSentCode::phoneCodeHash() const {
+    return m_phoneCodeHash;
+}
+
+inline void AuthSentCode::setPhoneRegistered(bool phoneRegistered) {
+    if(phoneRegistered) m_flags = (m_flags | (1<<0));
+    else m_flags = (m_flags & ~(1<<0));
+}
+
+inline bool AuthSentCode::phoneRegistered() const {
+    return (m_flags & 1<<0);
+}
+
+inline void AuthSentCode::setTimeout(qint32 timeout) {
+    m_timeout = timeout;
+}
+
+inline qint32 AuthSentCode::timeout() const {
+    return m_timeout;
+}
+
+inline void AuthSentCode::setType(const AuthSentCodeType &type) {
+    m_type = type;
+}
+
+inline AuthSentCodeType AuthSentCode::type() const {
+    return m_type;
+}
+
+inline bool AuthSentCode::operator ==(const AuthSentCode &b) const {
+    return m_classType == b.m_classType &&
+           m_flags == b.m_flags &&
+           m_nextType == b.m_nextType &&
+           m_phoneCodeHash == b.m_phoneCodeHash &&
+           m_timeout == b.m_timeout &&
+           m_type == b.m_type;
+}
+
+inline void AuthSentCode::setClassType(AuthSentCode::AuthSentCodeClassType classType) {
+    m_classType = classType;
+}
+
+inline AuthSentCode::AuthSentCodeClassType AuthSentCode::classType() const {
+    return m_classType;
+}
+
+inline bool AuthSentCode::fetch(InboundPkt *in) {
+    LQTG_FETCH_LOG;
+    int x = in->fetchInt();
+    switch(x) {
+    case typeAuthSentCode: {
+        m_flags = in->fetchInt();
+        m_type.fetch(in);
+        m_phoneCodeHash = in->fetchQString();
+        if(m_flags & 1<<1) {
+            m_nextType.fetch(in);
+        }
+        if(m_flags & 1<<2) {
+            m_timeout = in->fetchInt();
+        }
+        m_classType = static_cast<AuthSentCodeClassType>(x);
+        return true;
+    }
+        break;
+    
+    default:
+        LQTG_FETCH_ASSERT;
+        return false;
+    }
+}
+
+inline bool AuthSentCode::push(OutboundPkt *out) const {
+    out->appendInt(m_classType);
+    switch(m_classType) {
+    case typeAuthSentCode: {
+        out->appendInt(m_flags);
+        m_type.push(out);
+        out->appendQString(m_phoneCodeHash);
+        m_nextType.push(out);
+        out->appendInt(m_timeout);
+        return true;
+    }
+        break;
+    
+    default:
+        return false;
+    }
+}
+
+inline QMap<QString, QVariant> AuthSentCode::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeAuthSentCode: {
+        result["classType"] = "AuthSentCode::typeAuthSentCode";
+        result["phoneRegistered"] = QVariant::fromValue<bool>(phoneRegistered());
+        result["type"] = m_type.toMap();
+        result["phoneCodeHash"] = QVariant::fromValue<QString>(phoneCodeHash());
+        result["nextType"] = m_nextType.toMap();
+        result["timeout"] = QVariant::fromValue<qint32>(timeout());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+inline AuthSentCode AuthSentCode::fromMap(const QMap<QString, QVariant> &map) {
+    AuthSentCode result;
+    if(map.value("classType").toString() == "AuthSentCode::typeAuthSentCode") {
+        result.setClassType(typeAuthSentCode);
+        result.setPhoneRegistered( map.value("phoneRegistered").value<bool>() );
+        result.setType( AuthSentCodeType::fromMap(map.value("type").toMap()) );
+        result.setPhoneCodeHash( map.value("phoneCodeHash").value<QString>() );
+        result.setNextType( AuthCodeType::fromMap(map.value("nextType").toMap()) );
+        result.setTimeout( map.value("timeout").value<qint32>() );
+        return result;
+    }
+    return result;
+}
+
+inline QByteArray AuthSentCode::getHash(QCryptographicHash::Algorithm alg) const {
+    QByteArray data;
+    QDataStream str(&data, QIODevice::WriteOnly);
+    str << *this;
+    return QCryptographicHash::hash(data, alg);
+}
+
+inline QDataStream &operator<<(QDataStream &stream, const AuthSentCode &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case AuthSentCode::typeAuthSentCode:
+        stream << item.flags();
+        stream << item.type();
+        stream << item.phoneCodeHash();
+        stream << item.nextType();
+        stream << item.timeout();
+        break;
+    }
+    return stream;
+}
+
+inline QDataStream &operator>>(QDataStream &stream, AuthSentCode &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<AuthSentCode::AuthSentCodeClassType>(type));
+    switch(type) {
+    case AuthSentCode::typeAuthSentCode: {
+        qint32 m_flags;
+        stream >> m_flags;
+        item.setFlags(m_flags);
+        AuthSentCodeType m_type;
+        stream >> m_type;
+        item.setType(m_type);
+        QString m_phone_code_hash;
+        stream >> m_phone_code_hash;
+        item.setPhoneCodeHash(m_phone_code_hash);
+        AuthCodeType m_next_type;
+        stream >> m_next_type;
+        item.setNextType(m_next_type);
+        qint32 m_timeout;
+        stream >> m_timeout;
+        item.setTimeout(m_timeout);
+    }
+        break;
+    }
+    return stream;
+}
+
 
 #endif // LQTG_TYPE_AUTHSENTCODE

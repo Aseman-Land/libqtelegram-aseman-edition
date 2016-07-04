@@ -6,20 +6,30 @@
 #define LQTG_TYPE_INPUTSTICKERSET
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
+#include <QVariant>
+#include "core/inboundpkt.h"
+#include "core/outboundpkt.h"
+#include "../coretypes.h"
+
+#include <QDataStream>
+
 #include <QtGlobal>
 #include <QString>
 
 class LIBQTELEGRAMSHARED_EXPORT InputStickerSet : public TelegramTypeObject
 {
 public:
-    enum InputStickerSetType {
+    enum InputStickerSetClassType {
         typeInputStickerSetEmpty = 0xffb62b95,
         typeInputStickerSetID = 0x9de7a269,
         typeInputStickerSetShortName = 0x861cc8a0
     };
 
-    InputStickerSet(InputStickerSetType classType = typeInputStickerSetEmpty, InboundPkt *in = 0);
+    InputStickerSet(InputStickerSetClassType classType = typeInputStickerSetEmpty, InboundPkt *in = 0);
     InputStickerSet(InboundPkt *in);
+    InputStickerSet(const Null&);
     virtual ~InputStickerSet();
 
     void setAccessHash(qint64 accessHash);
@@ -31,19 +41,257 @@ public:
     void setShortName(const QString &shortName);
     QString shortName() const;
 
-    void setClassType(InputStickerSetType classType);
-    InputStickerSetType classType() const;
+    void setClassType(InputStickerSetClassType classType);
+    InputStickerSetClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const InputStickerSet &b);
+    QMap<QString, QVariant> toMap() const;
+    static InputStickerSet fromMap(const QMap<QString, QVariant> &map);
+
+    bool operator ==(const InputStickerSet &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
+
+    QByteArray getHash(QCryptographicHash::Algorithm alg = QCryptographicHash::Md5) const;
 
 private:
     qint64 m_accessHash;
     qint64 m_id;
     QString m_shortName;
-    InputStickerSetType m_classType;
+    InputStickerSetClassType m_classType;
 };
+
+Q_DECLARE_METATYPE(InputStickerSet)
+
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const InputStickerSet &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, InputStickerSet &item);
+
+inline InputStickerSet::InputStickerSet(InputStickerSetClassType classType, InboundPkt *in) :
+    m_accessHash(0),
+    m_id(0),
+    m_classType(classType)
+{
+    if(in) fetch(in);
+}
+
+inline InputStickerSet::InputStickerSet(InboundPkt *in) :
+    m_accessHash(0),
+    m_id(0),
+    m_classType(typeInputStickerSetEmpty)
+{
+    fetch(in);
+}
+
+inline InputStickerSet::InputStickerSet(const Null &null) :
+    TelegramTypeObject(null),
+    m_accessHash(0),
+    m_id(0),
+    m_classType(typeInputStickerSetEmpty)
+{
+}
+
+inline InputStickerSet::~InputStickerSet() {
+}
+
+inline void InputStickerSet::setAccessHash(qint64 accessHash) {
+    m_accessHash = accessHash;
+}
+
+inline qint64 InputStickerSet::accessHash() const {
+    return m_accessHash;
+}
+
+inline void InputStickerSet::setId(qint64 id) {
+    m_id = id;
+}
+
+inline qint64 InputStickerSet::id() const {
+    return m_id;
+}
+
+inline void InputStickerSet::setShortName(const QString &shortName) {
+    m_shortName = shortName;
+}
+
+inline QString InputStickerSet::shortName() const {
+    return m_shortName;
+}
+
+inline bool InputStickerSet::operator ==(const InputStickerSet &b) const {
+    return m_classType == b.m_classType &&
+           m_accessHash == b.m_accessHash &&
+           m_id == b.m_id &&
+           m_shortName == b.m_shortName;
+}
+
+inline void InputStickerSet::setClassType(InputStickerSet::InputStickerSetClassType classType) {
+    m_classType = classType;
+}
+
+inline InputStickerSet::InputStickerSetClassType InputStickerSet::classType() const {
+    return m_classType;
+}
+
+inline bool InputStickerSet::fetch(InboundPkt *in) {
+    LQTG_FETCH_LOG;
+    int x = in->fetchInt();
+    switch(x) {
+    case typeInputStickerSetEmpty: {
+        m_classType = static_cast<InputStickerSetClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeInputStickerSetID: {
+        m_id = in->fetchLong();
+        m_accessHash = in->fetchLong();
+        m_classType = static_cast<InputStickerSetClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeInputStickerSetShortName: {
+        m_shortName = in->fetchQString();
+        m_classType = static_cast<InputStickerSetClassType>(x);
+        return true;
+    }
+        break;
+    
+    default:
+        LQTG_FETCH_ASSERT;
+        return false;
+    }
+}
+
+inline bool InputStickerSet::push(OutboundPkt *out) const {
+    out->appendInt(m_classType);
+    switch(m_classType) {
+    case typeInputStickerSetEmpty: {
+        return true;
+    }
+        break;
+    
+    case typeInputStickerSetID: {
+        out->appendLong(m_id);
+        out->appendLong(m_accessHash);
+        return true;
+    }
+        break;
+    
+    case typeInputStickerSetShortName: {
+        out->appendQString(m_shortName);
+        return true;
+    }
+        break;
+    
+    default:
+        return false;
+    }
+}
+
+inline QMap<QString, QVariant> InputStickerSet::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeInputStickerSetEmpty: {
+        result["classType"] = "InputStickerSet::typeInputStickerSetEmpty";
+        return result;
+    }
+        break;
+    
+    case typeInputStickerSetID: {
+        result["classType"] = "InputStickerSet::typeInputStickerSetID";
+        result["id"] = QVariant::fromValue<qint64>(id());
+        result["accessHash"] = QVariant::fromValue<qint64>(accessHash());
+        return result;
+    }
+        break;
+    
+    case typeInputStickerSetShortName: {
+        result["classType"] = "InputStickerSet::typeInputStickerSetShortName";
+        result["shortName"] = QVariant::fromValue<QString>(shortName());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+inline InputStickerSet InputStickerSet::fromMap(const QMap<QString, QVariant> &map) {
+    InputStickerSet result;
+    if(map.value("classType").toString() == "InputStickerSet::typeInputStickerSetEmpty") {
+        result.setClassType(typeInputStickerSetEmpty);
+        return result;
+    }
+    if(map.value("classType").toString() == "InputStickerSet::typeInputStickerSetID") {
+        result.setClassType(typeInputStickerSetID);
+        result.setId( map.value("id").value<qint64>() );
+        result.setAccessHash( map.value("accessHash").value<qint64>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "InputStickerSet::typeInputStickerSetShortName") {
+        result.setClassType(typeInputStickerSetShortName);
+        result.setShortName( map.value("shortName").value<QString>() );
+        return result;
+    }
+    return result;
+}
+
+inline QByteArray InputStickerSet::getHash(QCryptographicHash::Algorithm alg) const {
+    QByteArray data;
+    QDataStream str(&data, QIODevice::WriteOnly);
+    str << *this;
+    return QCryptographicHash::hash(data, alg);
+}
+
+inline QDataStream &operator<<(QDataStream &stream, const InputStickerSet &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case InputStickerSet::typeInputStickerSetEmpty:
+        
+        break;
+    case InputStickerSet::typeInputStickerSetID:
+        stream << item.id();
+        stream << item.accessHash();
+        break;
+    case InputStickerSet::typeInputStickerSetShortName:
+        stream << item.shortName();
+        break;
+    }
+    return stream;
+}
+
+inline QDataStream &operator>>(QDataStream &stream, InputStickerSet &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<InputStickerSet::InputStickerSetClassType>(type));
+    switch(type) {
+    case InputStickerSet::typeInputStickerSetEmpty: {
+        
+    }
+        break;
+    case InputStickerSet::typeInputStickerSetID: {
+        qint64 m_id;
+        stream >> m_id;
+        item.setId(m_id);
+        qint64 m_access_hash;
+        stream >> m_access_hash;
+        item.setAccessHash(m_access_hash);
+    }
+        break;
+    case InputStickerSet::typeInputStickerSetShortName: {
+        QString m_short_name;
+        stream >> m_short_name;
+        item.setShortName(m_short_name);
+    }
+        break;
+    }
+    return stream;
+}
+
 
 #endif // LQTG_TYPE_INPUTSTICKERSET

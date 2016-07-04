@@ -6,33 +6,187 @@
 #define LQTG_TYPE_HELPINVITETEXT
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
+#include <QVariant>
+#include "core/inboundpkt.h"
+#include "core/outboundpkt.h"
+#include "../coretypes.h"
+
+#include <QDataStream>
+
 #include <QString>
 
 class LIBQTELEGRAMSHARED_EXPORT HelpInviteText : public TelegramTypeObject
 {
 public:
-    enum HelpInviteTextType {
+    enum HelpInviteTextClassType {
         typeHelpInviteText = 0x18cb9f78
     };
 
-    HelpInviteText(HelpInviteTextType classType = typeHelpInviteText, InboundPkt *in = 0);
+    HelpInviteText(HelpInviteTextClassType classType = typeHelpInviteText, InboundPkt *in = 0);
     HelpInviteText(InboundPkt *in);
+    HelpInviteText(const Null&);
     virtual ~HelpInviteText();
 
     void setMessage(const QString &message);
     QString message() const;
 
-    void setClassType(HelpInviteTextType classType);
-    HelpInviteTextType classType() const;
+    void setClassType(HelpInviteTextClassType classType);
+    HelpInviteTextClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const HelpInviteText &b);
+    QMap<QString, QVariant> toMap() const;
+    static HelpInviteText fromMap(const QMap<QString, QVariant> &map);
+
+    bool operator ==(const HelpInviteText &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
+
+    QByteArray getHash(QCryptographicHash::Algorithm alg = QCryptographicHash::Md5) const;
 
 private:
     QString m_message;
-    HelpInviteTextType m_classType;
+    HelpInviteTextClassType m_classType;
 };
+
+Q_DECLARE_METATYPE(HelpInviteText)
+
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const HelpInviteText &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, HelpInviteText &item);
+
+inline HelpInviteText::HelpInviteText(HelpInviteTextClassType classType, InboundPkt *in) :
+    m_classType(classType)
+{
+    if(in) fetch(in);
+}
+
+inline HelpInviteText::HelpInviteText(InboundPkt *in) :
+    m_classType(typeHelpInviteText)
+{
+    fetch(in);
+}
+
+inline HelpInviteText::HelpInviteText(const Null &null) :
+    TelegramTypeObject(null),
+    m_classType(typeHelpInviteText)
+{
+}
+
+inline HelpInviteText::~HelpInviteText() {
+}
+
+inline void HelpInviteText::setMessage(const QString &message) {
+    m_message = message;
+}
+
+inline QString HelpInviteText::message() const {
+    return m_message;
+}
+
+inline bool HelpInviteText::operator ==(const HelpInviteText &b) const {
+    return m_classType == b.m_classType &&
+           m_message == b.m_message;
+}
+
+inline void HelpInviteText::setClassType(HelpInviteText::HelpInviteTextClassType classType) {
+    m_classType = classType;
+}
+
+inline HelpInviteText::HelpInviteTextClassType HelpInviteText::classType() const {
+    return m_classType;
+}
+
+inline bool HelpInviteText::fetch(InboundPkt *in) {
+    LQTG_FETCH_LOG;
+    int x = in->fetchInt();
+    switch(x) {
+    case typeHelpInviteText: {
+        m_message = in->fetchQString();
+        m_classType = static_cast<HelpInviteTextClassType>(x);
+        return true;
+    }
+        break;
+    
+    default:
+        LQTG_FETCH_ASSERT;
+        return false;
+    }
+}
+
+inline bool HelpInviteText::push(OutboundPkt *out) const {
+    out->appendInt(m_classType);
+    switch(m_classType) {
+    case typeHelpInviteText: {
+        out->appendQString(m_message);
+        return true;
+    }
+        break;
+    
+    default:
+        return false;
+    }
+}
+
+inline QMap<QString, QVariant> HelpInviteText::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeHelpInviteText: {
+        result["classType"] = "HelpInviteText::typeHelpInviteText";
+        result["message"] = QVariant::fromValue<QString>(message());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+inline HelpInviteText HelpInviteText::fromMap(const QMap<QString, QVariant> &map) {
+    HelpInviteText result;
+    if(map.value("classType").toString() == "HelpInviteText::typeHelpInviteText") {
+        result.setClassType(typeHelpInviteText);
+        result.setMessage( map.value("message").value<QString>() );
+        return result;
+    }
+    return result;
+}
+
+inline QByteArray HelpInviteText::getHash(QCryptographicHash::Algorithm alg) const {
+    QByteArray data;
+    QDataStream str(&data, QIODevice::WriteOnly);
+    str << *this;
+    return QCryptographicHash::hash(data, alg);
+}
+
+inline QDataStream &operator<<(QDataStream &stream, const HelpInviteText &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case HelpInviteText::typeHelpInviteText:
+        stream << item.message();
+        break;
+    }
+    return stream;
+}
+
+inline QDataStream &operator>>(QDataStream &stream, HelpInviteText &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<HelpInviteText::HelpInviteTextClassType>(type));
+    switch(type) {
+    case HelpInviteText::typeHelpInviteText: {
+        QString m_message;
+        stream >> m_message;
+        item.setMessage(m_message);
+    }
+        break;
+    }
+    return stream;
+}
+
 
 #endif // LQTG_TYPE_HELPINVITETEXT

@@ -2,8 +2,6 @@ QT += gui
 QT += network
 QT += multimedia
 
-DEFINES += LQTG_DISABLE_LOG
-
 win32 {
     isEmpty(OPENSSL_LIB_DIR): OPENSSL_LIB_DIR = $${DESTDIR}
     isEmpty(OPENSSL_INCLUDE_PATH): OPENSSL_INCLUDE_PATH = $${DESTDIR}/include
@@ -41,7 +39,6 @@ SOURCES += \
     $$PWD/core/eventtimer.cpp \
     $$PWD/core/settings.cpp \
     $$PWD/core/dcprovider.cpp \
-    $$PWD/core/api.cpp \
     $$PWD/core/sessionmanager.cpp \
     $$PWD/core/inboundpkt.cpp \
     $$PWD/core/abstractapi.cpp \
@@ -80,7 +77,6 @@ HEADERS += \
     $$PWD/core/sessionmanager.h \
     $$PWD/core/dcprovider.h \
     $$PWD/core/abstractapi.h \
-    $$PWD/core/api.h \
     $$PWD/core/inboundpkt.h \
     $$PWD/core/dcauth.h \
     $$PWD/core/endpoint.h \

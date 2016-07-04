@@ -6,6 +6,15 @@
 #define LQTG_TYPE_PHOTOSPHOTO
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
+#include <QVariant>
+#include "core/inboundpkt.h"
+#include "core/outboundpkt.h"
+#include "../coretypes.h"
+
+#include <QDataStream>
+
 #include "photo.h"
 #include <QList>
 #include "user.h"
@@ -13,12 +22,13 @@
 class LIBQTELEGRAMSHARED_EXPORT PhotosPhoto : public TelegramTypeObject
 {
 public:
-    enum PhotosPhotoType {
+    enum PhotosPhotoClassType {
         typePhotosPhoto = 0x20212ca8
     };
 
-    PhotosPhoto(PhotosPhotoType classType = typePhotosPhoto, InboundPkt *in = 0);
+    PhotosPhoto(PhotosPhotoClassType classType = typePhotosPhoto, InboundPkt *in = 0);
     PhotosPhoto(InboundPkt *in);
+    PhotosPhoto(const Null&);
     virtual ~PhotosPhoto();
 
     void setPhoto(const Photo &photo);
@@ -27,18 +37,197 @@ public:
     void setUsers(const QList<User> &users);
     QList<User> users() const;
 
-    void setClassType(PhotosPhotoType classType);
-    PhotosPhotoType classType() const;
+    void setClassType(PhotosPhotoClassType classType);
+    PhotosPhotoClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const PhotosPhoto &b);
+    QMap<QString, QVariant> toMap() const;
+    static PhotosPhoto fromMap(const QMap<QString, QVariant> &map);
+
+    bool operator ==(const PhotosPhoto &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
+
+    QByteArray getHash(QCryptographicHash::Algorithm alg = QCryptographicHash::Md5) const;
 
 private:
     Photo m_photo;
     QList<User> m_users;
-    PhotosPhotoType m_classType;
+    PhotosPhotoClassType m_classType;
 };
+
+Q_DECLARE_METATYPE(PhotosPhoto)
+
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const PhotosPhoto &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, PhotosPhoto &item);
+
+inline PhotosPhoto::PhotosPhoto(PhotosPhotoClassType classType, InboundPkt *in) :
+    m_classType(classType)
+{
+    if(in) fetch(in);
+}
+
+inline PhotosPhoto::PhotosPhoto(InboundPkt *in) :
+    m_classType(typePhotosPhoto)
+{
+    fetch(in);
+}
+
+inline PhotosPhoto::PhotosPhoto(const Null &null) :
+    TelegramTypeObject(null),
+    m_classType(typePhotosPhoto)
+{
+}
+
+inline PhotosPhoto::~PhotosPhoto() {
+}
+
+inline void PhotosPhoto::setPhoto(const Photo &photo) {
+    m_photo = photo;
+}
+
+inline Photo PhotosPhoto::photo() const {
+    return m_photo;
+}
+
+inline void PhotosPhoto::setUsers(const QList<User> &users) {
+    m_users = users;
+}
+
+inline QList<User> PhotosPhoto::users() const {
+    return m_users;
+}
+
+inline bool PhotosPhoto::operator ==(const PhotosPhoto &b) const {
+    return m_classType == b.m_classType &&
+           m_photo == b.m_photo &&
+           m_users == b.m_users;
+}
+
+inline void PhotosPhoto::setClassType(PhotosPhoto::PhotosPhotoClassType classType) {
+    m_classType = classType;
+}
+
+inline PhotosPhoto::PhotosPhotoClassType PhotosPhoto::classType() const {
+    return m_classType;
+}
+
+inline bool PhotosPhoto::fetch(InboundPkt *in) {
+    LQTG_FETCH_LOG;
+    int x = in->fetchInt();
+    switch(x) {
+    case typePhotosPhoto: {
+        m_photo.fetch(in);
+        if(in->fetchInt() != (qint32)CoreTypes::typeVector) return false;
+        qint32 m_users_length = in->fetchInt();
+        m_users.clear();
+        for (qint32 i = 0; i < m_users_length; i++) {
+            User type;
+            type.fetch(in);
+            m_users.append(type);
+        }
+        m_classType = static_cast<PhotosPhotoClassType>(x);
+        return true;
+    }
+        break;
+    
+    default:
+        LQTG_FETCH_ASSERT;
+        return false;
+    }
+}
+
+inline bool PhotosPhoto::push(OutboundPkt *out) const {
+    out->appendInt(m_classType);
+    switch(m_classType) {
+    case typePhotosPhoto: {
+        m_photo.push(out);
+        out->appendInt(CoreTypes::typeVector);
+        out->appendInt(m_users.count());
+        for (qint32 i = 0; i < m_users.count(); i++) {
+            m_users[i].push(out);
+        }
+        return true;
+    }
+        break;
+    
+    default:
+        return false;
+    }
+}
+
+inline QMap<QString, QVariant> PhotosPhoto::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typePhotosPhoto: {
+        result["classType"] = "PhotosPhoto::typePhotosPhoto";
+        result["photo"] = m_photo.toMap();
+        QList<QVariant> _users;
+        Q_FOREACH(const User &m__type, m_users)
+            _users << m__type.toMap();
+        result["users"] = _users;
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+inline PhotosPhoto PhotosPhoto::fromMap(const QMap<QString, QVariant> &map) {
+    PhotosPhoto result;
+    if(map.value("classType").toString() == "PhotosPhoto::typePhotosPhoto") {
+        result.setClassType(typePhotosPhoto);
+        result.setPhoto( Photo::fromMap(map.value("photo").toMap()) );
+        QList<QVariant> map_users = map["users"].toList();
+        QList<User> _users;
+        Q_FOREACH(const QVariant &var, map_users)
+            _users << User::fromMap(var.toMap());
+        result.setUsers(_users);
+        return result;
+    }
+    return result;
+}
+
+inline QByteArray PhotosPhoto::getHash(QCryptographicHash::Algorithm alg) const {
+    QByteArray data;
+    QDataStream str(&data, QIODevice::WriteOnly);
+    str << *this;
+    return QCryptographicHash::hash(data, alg);
+}
+
+inline QDataStream &operator<<(QDataStream &stream, const PhotosPhoto &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case PhotosPhoto::typePhotosPhoto:
+        stream << item.photo();
+        stream << item.users();
+        break;
+    }
+    return stream;
+}
+
+inline QDataStream &operator>>(QDataStream &stream, PhotosPhoto &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<PhotosPhoto::PhotosPhotoClassType>(type));
+    switch(type) {
+    case PhotosPhoto::typePhotosPhoto: {
+        Photo m_photo;
+        stream >> m_photo;
+        item.setPhoto(m_photo);
+        QList<User> m_users;
+        stream >> m_users;
+        item.setUsers(m_users);
+    }
+        break;
+    }
+    return stream;
+}
+
 
 #endif // LQTG_TYPE_PHOTOSPHOTO

@@ -6,6 +6,15 @@
 #define LQTG_TYPE_ENCRYPTEDMESSAGE
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
+#include <QVariant>
+#include "core/inboundpkt.h"
+#include "core/outboundpkt.h"
+#include "../coretypes.h"
+
+#include <QDataStream>
+
 #include <QByteArray>
 #include <QtGlobal>
 #include "encryptedfile.h"
@@ -13,13 +22,14 @@
 class LIBQTELEGRAMSHARED_EXPORT EncryptedMessage : public TelegramTypeObject
 {
 public:
-    enum EncryptedMessageType {
+    enum EncryptedMessageClassType {
         typeEncryptedMessage = 0xed18c118,
         typeEncryptedMessageService = 0x23734b06
     };
 
-    EncryptedMessage(EncryptedMessageType classType = typeEncryptedMessage, InboundPkt *in = 0);
+    EncryptedMessage(EncryptedMessageClassType classType = typeEncryptedMessage, InboundPkt *in = 0);
     EncryptedMessage(InboundPkt *in);
+    EncryptedMessage(const Null&);
     virtual ~EncryptedMessage();
 
     void setBytes(const QByteArray &bytes);
@@ -37,13 +47,21 @@ public:
     void setRandomId(qint64 randomId);
     qint64 randomId() const;
 
-    void setClassType(EncryptedMessageType classType);
-    EncryptedMessageType classType() const;
+    void setClassType(EncryptedMessageClassType classType);
+    EncryptedMessageClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const EncryptedMessage &b);
+    QMap<QString, QVariant> toMap() const;
+    static EncryptedMessage fromMap(const QMap<QString, QVariant> &map);
+
+    bool operator ==(const EncryptedMessage &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
+
+    QByteArray getHash(QCryptographicHash::Algorithm alg = QCryptographicHash::Md5) const;
 
 private:
     QByteArray m_bytes;
@@ -51,7 +69,278 @@ private:
     qint32 m_date;
     EncryptedFile m_file;
     qint64 m_randomId;
-    EncryptedMessageType m_classType;
+    EncryptedMessageClassType m_classType;
 };
+
+Q_DECLARE_METATYPE(EncryptedMessage)
+
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const EncryptedMessage &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, EncryptedMessage &item);
+
+inline EncryptedMessage::EncryptedMessage(EncryptedMessageClassType classType, InboundPkt *in) :
+    m_chatId(0),
+    m_date(0),
+    m_randomId(0),
+    m_classType(classType)
+{
+    if(in) fetch(in);
+}
+
+inline EncryptedMessage::EncryptedMessage(InboundPkt *in) :
+    m_chatId(0),
+    m_date(0),
+    m_randomId(0),
+    m_classType(typeEncryptedMessage)
+{
+    fetch(in);
+}
+
+inline EncryptedMessage::EncryptedMessage(const Null &null) :
+    TelegramTypeObject(null),
+    m_chatId(0),
+    m_date(0),
+    m_randomId(0),
+    m_classType(typeEncryptedMessage)
+{
+}
+
+inline EncryptedMessage::~EncryptedMessage() {
+}
+
+inline void EncryptedMessage::setBytes(const QByteArray &bytes) {
+    m_bytes = bytes;
+}
+
+inline QByteArray EncryptedMessage::bytes() const {
+    return m_bytes;
+}
+
+inline void EncryptedMessage::setChatId(qint32 chatId) {
+    m_chatId = chatId;
+}
+
+inline qint32 EncryptedMessage::chatId() const {
+    return m_chatId;
+}
+
+inline void EncryptedMessage::setDate(qint32 date) {
+    m_date = date;
+}
+
+inline qint32 EncryptedMessage::date() const {
+    return m_date;
+}
+
+inline void EncryptedMessage::setFile(const EncryptedFile &file) {
+    m_file = file;
+}
+
+inline EncryptedFile EncryptedMessage::file() const {
+    return m_file;
+}
+
+inline void EncryptedMessage::setRandomId(qint64 randomId) {
+    m_randomId = randomId;
+}
+
+inline qint64 EncryptedMessage::randomId() const {
+    return m_randomId;
+}
+
+inline bool EncryptedMessage::operator ==(const EncryptedMessage &b) const {
+    return m_classType == b.m_classType &&
+           m_bytes == b.m_bytes &&
+           m_chatId == b.m_chatId &&
+           m_date == b.m_date &&
+           m_file == b.m_file &&
+           m_randomId == b.m_randomId;
+}
+
+inline void EncryptedMessage::setClassType(EncryptedMessage::EncryptedMessageClassType classType) {
+    m_classType = classType;
+}
+
+inline EncryptedMessage::EncryptedMessageClassType EncryptedMessage::classType() const {
+    return m_classType;
+}
+
+inline bool EncryptedMessage::fetch(InboundPkt *in) {
+    LQTG_FETCH_LOG;
+    int x = in->fetchInt();
+    switch(x) {
+    case typeEncryptedMessage: {
+        m_randomId = in->fetchLong();
+        m_chatId = in->fetchInt();
+        m_date = in->fetchInt();
+        m_bytes = in->fetchBytes();
+        m_file.fetch(in);
+        m_classType = static_cast<EncryptedMessageClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeEncryptedMessageService: {
+        m_randomId = in->fetchLong();
+        m_chatId = in->fetchInt();
+        m_date = in->fetchInt();
+        m_bytes = in->fetchBytes();
+        m_classType = static_cast<EncryptedMessageClassType>(x);
+        return true;
+    }
+        break;
+    
+    default:
+        LQTG_FETCH_ASSERT;
+        return false;
+    }
+}
+
+inline bool EncryptedMessage::push(OutboundPkt *out) const {
+    out->appendInt(m_classType);
+    switch(m_classType) {
+    case typeEncryptedMessage: {
+        out->appendLong(m_randomId);
+        out->appendInt(m_chatId);
+        out->appendInt(m_date);
+        out->appendBytes(m_bytes);
+        m_file.push(out);
+        return true;
+    }
+        break;
+    
+    case typeEncryptedMessageService: {
+        out->appendLong(m_randomId);
+        out->appendInt(m_chatId);
+        out->appendInt(m_date);
+        out->appendBytes(m_bytes);
+        return true;
+    }
+        break;
+    
+    default:
+        return false;
+    }
+}
+
+inline QMap<QString, QVariant> EncryptedMessage::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeEncryptedMessage: {
+        result["classType"] = "EncryptedMessage::typeEncryptedMessage";
+        result["randomId"] = QVariant::fromValue<qint64>(randomId());
+        result["chatId"] = QVariant::fromValue<qint32>(chatId());
+        result["date"] = QVariant::fromValue<qint32>(date());
+        result["bytes"] = QVariant::fromValue<QByteArray>(bytes());
+        result["file"] = m_file.toMap();
+        return result;
+    }
+        break;
+    
+    case typeEncryptedMessageService: {
+        result["classType"] = "EncryptedMessage::typeEncryptedMessageService";
+        result["randomId"] = QVariant::fromValue<qint64>(randomId());
+        result["chatId"] = QVariant::fromValue<qint32>(chatId());
+        result["date"] = QVariant::fromValue<qint32>(date());
+        result["bytes"] = QVariant::fromValue<QByteArray>(bytes());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+inline EncryptedMessage EncryptedMessage::fromMap(const QMap<QString, QVariant> &map) {
+    EncryptedMessage result;
+    if(map.value("classType").toString() == "EncryptedMessage::typeEncryptedMessage") {
+        result.setClassType(typeEncryptedMessage);
+        result.setRandomId( map.value("randomId").value<qint64>() );
+        result.setChatId( map.value("chatId").value<qint32>() );
+        result.setDate( map.value("date").value<qint32>() );
+        result.setBytes( map.value("bytes").value<QByteArray>() );
+        result.setFile( EncryptedFile::fromMap(map.value("file").toMap()) );
+        return result;
+    }
+    if(map.value("classType").toString() == "EncryptedMessage::typeEncryptedMessageService") {
+        result.setClassType(typeEncryptedMessageService);
+        result.setRandomId( map.value("randomId").value<qint64>() );
+        result.setChatId( map.value("chatId").value<qint32>() );
+        result.setDate( map.value("date").value<qint32>() );
+        result.setBytes( map.value("bytes").value<QByteArray>() );
+        return result;
+    }
+    return result;
+}
+
+inline QByteArray EncryptedMessage::getHash(QCryptographicHash::Algorithm alg) const {
+    QByteArray data;
+    QDataStream str(&data, QIODevice::WriteOnly);
+    str << *this;
+    return QCryptographicHash::hash(data, alg);
+}
+
+inline QDataStream &operator<<(QDataStream &stream, const EncryptedMessage &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case EncryptedMessage::typeEncryptedMessage:
+        stream << item.randomId();
+        stream << item.chatId();
+        stream << item.date();
+        stream << item.bytes();
+        stream << item.file();
+        break;
+    case EncryptedMessage::typeEncryptedMessageService:
+        stream << item.randomId();
+        stream << item.chatId();
+        stream << item.date();
+        stream << item.bytes();
+        break;
+    }
+    return stream;
+}
+
+inline QDataStream &operator>>(QDataStream &stream, EncryptedMessage &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<EncryptedMessage::EncryptedMessageClassType>(type));
+    switch(type) {
+    case EncryptedMessage::typeEncryptedMessage: {
+        qint64 m_random_id;
+        stream >> m_random_id;
+        item.setRandomId(m_random_id);
+        qint32 m_chat_id;
+        stream >> m_chat_id;
+        item.setChatId(m_chat_id);
+        qint32 m_date;
+        stream >> m_date;
+        item.setDate(m_date);
+        QByteArray m_bytes;
+        stream >> m_bytes;
+        item.setBytes(m_bytes);
+        EncryptedFile m_file;
+        stream >> m_file;
+        item.setFile(m_file);
+    }
+        break;
+    case EncryptedMessage::typeEncryptedMessageService: {
+        qint64 m_random_id;
+        stream >> m_random_id;
+        item.setRandomId(m_random_id);
+        qint32 m_chat_id;
+        stream >> m_chat_id;
+        item.setChatId(m_chat_id);
+        qint32 m_date;
+        stream >> m_date;
+        item.setDate(m_date);
+        QByteArray m_bytes;
+        stream >> m_bytes;
+        item.setBytes(m_bytes);
+    }
+        break;
+    }
+    return stream;
+}
+
 
 #endif // LQTG_TYPE_ENCRYPTEDMESSAGE

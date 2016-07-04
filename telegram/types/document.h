@@ -6,6 +6,15 @@
 #define LQTG_TYPE_DOCUMENT
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
+#include <QVariant>
+#include "core/inboundpkt.h"
+#include "core/outboundpkt.h"
+#include "../coretypes.h"
+
+#include <QDataStream>
+
 #include <QtGlobal>
 #include <QList>
 #include "documentattribute.h"
@@ -15,13 +24,14 @@
 class LIBQTELEGRAMSHARED_EXPORT Document : public TelegramTypeObject
 {
 public:
-    enum DocumentType {
+    enum DocumentClassType {
         typeDocumentEmpty = 0x36f8c871,
         typeDocument = 0xf9a39f4f
     };
 
-    Document(DocumentType classType = typeDocumentEmpty, InboundPkt *in = 0);
+    Document(DocumentClassType classType = typeDocumentEmpty, InboundPkt *in = 0);
     Document(InboundPkt *in);
+    Document(const Null&);
     virtual ~Document();
 
     void setAccessHash(qint64 accessHash);
@@ -48,13 +58,21 @@ public:
     void setThumb(const PhotoSize &thumb);
     PhotoSize thumb() const;
 
-    void setClassType(DocumentType classType);
-    DocumentType classType() const;
+    void setClassType(DocumentClassType classType);
+    DocumentClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const Document &b);
+    QMap<QString, QVariant> toMap() const;
+    static Document fromMap(const QMap<QString, QVariant> &map);
+
+    bool operator ==(const Document &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
+
+    QByteArray getHash(QCryptographicHash::Algorithm alg = QCryptographicHash::Md5) const;
 
 private:
     qint64 m_accessHash;
@@ -65,7 +83,329 @@ private:
     QString m_mimeType;
     qint32 m_size;
     PhotoSize m_thumb;
-    DocumentType m_classType;
+    DocumentClassType m_classType;
 };
+
+Q_DECLARE_METATYPE(Document)
+
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const Document &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, Document &item);
+
+inline Document::Document(DocumentClassType classType, InboundPkt *in) :
+    m_accessHash(0),
+    m_date(0),
+    m_dcId(0),
+    m_id(0),
+    m_size(0),
+    m_classType(classType)
+{
+    if(in) fetch(in);
+}
+
+inline Document::Document(InboundPkt *in) :
+    m_accessHash(0),
+    m_date(0),
+    m_dcId(0),
+    m_id(0),
+    m_size(0),
+    m_classType(typeDocumentEmpty)
+{
+    fetch(in);
+}
+
+inline Document::Document(const Null &null) :
+    TelegramTypeObject(null),
+    m_accessHash(0),
+    m_date(0),
+    m_dcId(0),
+    m_id(0),
+    m_size(0),
+    m_classType(typeDocumentEmpty)
+{
+}
+
+inline Document::~Document() {
+}
+
+inline void Document::setAccessHash(qint64 accessHash) {
+    m_accessHash = accessHash;
+}
+
+inline qint64 Document::accessHash() const {
+    return m_accessHash;
+}
+
+inline void Document::setAttributes(const QList<DocumentAttribute> &attributes) {
+    m_attributes = attributes;
+}
+
+inline QList<DocumentAttribute> Document::attributes() const {
+    return m_attributes;
+}
+
+inline void Document::setDate(qint32 date) {
+    m_date = date;
+}
+
+inline qint32 Document::date() const {
+    return m_date;
+}
+
+inline void Document::setDcId(qint32 dcId) {
+    m_dcId = dcId;
+}
+
+inline qint32 Document::dcId() const {
+    return m_dcId;
+}
+
+inline void Document::setId(qint64 id) {
+    m_id = id;
+}
+
+inline qint64 Document::id() const {
+    return m_id;
+}
+
+inline void Document::setMimeType(const QString &mimeType) {
+    m_mimeType = mimeType;
+}
+
+inline QString Document::mimeType() const {
+    return m_mimeType;
+}
+
+inline void Document::setSize(qint32 size) {
+    m_size = size;
+}
+
+inline qint32 Document::size() const {
+    return m_size;
+}
+
+inline void Document::setThumb(const PhotoSize &thumb) {
+    m_thumb = thumb;
+}
+
+inline PhotoSize Document::thumb() const {
+    return m_thumb;
+}
+
+inline bool Document::operator ==(const Document &b) const {
+    return m_classType == b.m_classType &&
+           m_accessHash == b.m_accessHash &&
+           m_attributes == b.m_attributes &&
+           m_date == b.m_date &&
+           m_dcId == b.m_dcId &&
+           m_id == b.m_id &&
+           m_mimeType == b.m_mimeType &&
+           m_size == b.m_size &&
+           m_thumb == b.m_thumb;
+}
+
+inline void Document::setClassType(Document::DocumentClassType classType) {
+    m_classType = classType;
+}
+
+inline Document::DocumentClassType Document::classType() const {
+    return m_classType;
+}
+
+inline bool Document::fetch(InboundPkt *in) {
+    LQTG_FETCH_LOG;
+    int x = in->fetchInt();
+    switch(x) {
+    case typeDocumentEmpty: {
+        m_id = in->fetchLong();
+        m_classType = static_cast<DocumentClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeDocument: {
+        m_id = in->fetchLong();
+        m_accessHash = in->fetchLong();
+        m_date = in->fetchInt();
+        m_mimeType = in->fetchQString();
+        m_size = in->fetchInt();
+        m_thumb.fetch(in);
+        m_dcId = in->fetchInt();
+        if(in->fetchInt() != (qint32)CoreTypes::typeVector) return false;
+        qint32 m_attributes_length = in->fetchInt();
+        m_attributes.clear();
+        for (qint32 i = 0; i < m_attributes_length; i++) {
+            DocumentAttribute type;
+            type.fetch(in);
+            m_attributes.append(type);
+        }
+        m_classType = static_cast<DocumentClassType>(x);
+        return true;
+    }
+        break;
+    
+    default:
+        LQTG_FETCH_ASSERT;
+        return false;
+    }
+}
+
+inline bool Document::push(OutboundPkt *out) const {
+    out->appendInt(m_classType);
+    switch(m_classType) {
+    case typeDocumentEmpty: {
+        out->appendLong(m_id);
+        return true;
+    }
+        break;
+    
+    case typeDocument: {
+        out->appendLong(m_id);
+        out->appendLong(m_accessHash);
+        out->appendInt(m_date);
+        out->appendQString(m_mimeType);
+        out->appendInt(m_size);
+        m_thumb.push(out);
+        out->appendInt(m_dcId);
+        out->appendInt(CoreTypes::typeVector);
+        out->appendInt(m_attributes.count());
+        for (qint32 i = 0; i < m_attributes.count(); i++) {
+            m_attributes[i].push(out);
+        }
+        return true;
+    }
+        break;
+    
+    default:
+        return false;
+    }
+}
+
+inline QMap<QString, QVariant> Document::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeDocumentEmpty: {
+        result["classType"] = "Document::typeDocumentEmpty";
+        result["id"] = QVariant::fromValue<qint64>(id());
+        return result;
+    }
+        break;
+    
+    case typeDocument: {
+        result["classType"] = "Document::typeDocument";
+        result["id"] = QVariant::fromValue<qint64>(id());
+        result["accessHash"] = QVariant::fromValue<qint64>(accessHash());
+        result["date"] = QVariant::fromValue<qint32>(date());
+        result["mimeType"] = QVariant::fromValue<QString>(mimeType());
+        result["size"] = QVariant::fromValue<qint32>(size());
+        result["thumb"] = m_thumb.toMap();
+        result["dcId"] = QVariant::fromValue<qint32>(dcId());
+        QList<QVariant> _attributes;
+        Q_FOREACH(const DocumentAttribute &m__type, m_attributes)
+            _attributes << m__type.toMap();
+        result["attributes"] = _attributes;
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+inline Document Document::fromMap(const QMap<QString, QVariant> &map) {
+    Document result;
+    if(map.value("classType").toString() == "Document::typeDocumentEmpty") {
+        result.setClassType(typeDocumentEmpty);
+        result.setId( map.value("id").value<qint64>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "Document::typeDocument") {
+        result.setClassType(typeDocument);
+        result.setId( map.value("id").value<qint64>() );
+        result.setAccessHash( map.value("accessHash").value<qint64>() );
+        result.setDate( map.value("date").value<qint32>() );
+        result.setMimeType( map.value("mimeType").value<QString>() );
+        result.setSize( map.value("size").value<qint32>() );
+        result.setThumb( PhotoSize::fromMap(map.value("thumb").toMap()) );
+        result.setDcId( map.value("dcId").value<qint32>() );
+        QList<QVariant> map_attributes = map["attributes"].toList();
+        QList<DocumentAttribute> _attributes;
+        Q_FOREACH(const QVariant &var, map_attributes)
+            _attributes << DocumentAttribute::fromMap(var.toMap());
+        result.setAttributes(_attributes);
+        return result;
+    }
+    return result;
+}
+
+inline QByteArray Document::getHash(QCryptographicHash::Algorithm alg) const {
+    QByteArray data;
+    QDataStream str(&data, QIODevice::WriteOnly);
+    str << *this;
+    return QCryptographicHash::hash(data, alg);
+}
+
+inline QDataStream &operator<<(QDataStream &stream, const Document &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case Document::typeDocumentEmpty:
+        stream << item.id();
+        break;
+    case Document::typeDocument:
+        stream << item.id();
+        stream << item.accessHash();
+        stream << item.date();
+        stream << item.mimeType();
+        stream << item.size();
+        stream << item.thumb();
+        stream << item.dcId();
+        stream << item.attributes();
+        break;
+    }
+    return stream;
+}
+
+inline QDataStream &operator>>(QDataStream &stream, Document &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<Document::DocumentClassType>(type));
+    switch(type) {
+    case Document::typeDocumentEmpty: {
+        qint64 m_id;
+        stream >> m_id;
+        item.setId(m_id);
+    }
+        break;
+    case Document::typeDocument: {
+        qint64 m_id;
+        stream >> m_id;
+        item.setId(m_id);
+        qint64 m_access_hash;
+        stream >> m_access_hash;
+        item.setAccessHash(m_access_hash);
+        qint32 m_date;
+        stream >> m_date;
+        item.setDate(m_date);
+        QString m_mime_type;
+        stream >> m_mime_type;
+        item.setMimeType(m_mime_type);
+        qint32 m_size;
+        stream >> m_size;
+        item.setSize(m_size);
+        PhotoSize m_thumb;
+        stream >> m_thumb;
+        item.setThumb(m_thumb);
+        qint32 m_dc_id;
+        stream >> m_dc_id;
+        item.setDcId(m_dc_id);
+        QList<DocumentAttribute> m_attributes;
+        stream >> m_attributes;
+        item.setAttributes(m_attributes);
+    }
+        break;
+    }
+    return stream;
+}
+
 
 #endif // LQTG_TYPE_DOCUMENT

@@ -6,6 +6,10 @@
 #define LQTG_FNC_USERS
 
 #include "telegramfunctionobject.h"
+#include "core/inboundpkt.h"
+#include "core/outboundpkt.h"
+#include "../coretypes.h"
+
 #include <QList>
 #include "telegram/types/user.h"
 #include "telegram/types/inputuser.h"
@@ -34,6 +38,48 @@ public:
 };
 
 }
+inline Functions::Users::Users() {
+}
+
+inline Functions::Users::~Users() {
+}
+
+inline bool Functions::Users::getUsers(OutboundPkt *out, const QList<InputUser> &id) {
+    out->appendInt(fncUsersGetUsers);
+    out->appendInt(CoreTypes::typeVector);
+    out->appendInt(id.count());
+    for (qint32 i = 0; i < id.count(); i++) {
+        if(!id[i].push(out)) return false;
+    }
+    return true;
+}
+
+inline QList<User> Functions::Users::getUsersResult(InboundPkt *in) {
+    QList<User> result;
+    if(in->fetchInt() != (qint32)CoreTypes::typeVector) return result;
+    qint32 result_length = in->fetchInt();
+    result.clear();
+    for (qint32 i = 0; i < result_length; i++) {
+        User type;
+        if(!type.fetch(in)) return result;
+        result.append(type);
+    }
+    return result;
+}
+
+inline bool Functions::Users::getFullUser(OutboundPkt *out, const InputUser &id) {
+    out->appendInt(fncUsersGetFullUser);
+    if(!id.push(out)) return false;
+    return true;
+}
+
+inline UserFull Functions::Users::getFullUserResult(InboundPkt *in) {
+    UserFull result;
+    if(!result.fetch(in)) return result;
+    return result;
+}
+
+
 }
 
 #endif // LQTG_FNC_USERS

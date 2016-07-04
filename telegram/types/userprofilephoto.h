@@ -6,19 +6,29 @@
 #define LQTG_TYPE_USERPROFILEPHOTO
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
+#include <QVariant>
+#include "core/inboundpkt.h"
+#include "core/outboundpkt.h"
+#include "../coretypes.h"
+
+#include <QDataStream>
+
 #include "filelocation.h"
 #include <QtGlobal>
 
 class LIBQTELEGRAMSHARED_EXPORT UserProfilePhoto : public TelegramTypeObject
 {
 public:
-    enum UserProfilePhotoType {
+    enum UserProfilePhotoClassType {
         typeUserProfilePhotoEmpty = 0x4f11bae1,
         typeUserProfilePhoto = 0xd559d8c8
     };
 
-    UserProfilePhoto(UserProfilePhotoType classType = typeUserProfilePhotoEmpty, InboundPkt *in = 0);
+    UserProfilePhoto(UserProfilePhotoClassType classType = typeUserProfilePhotoEmpty, InboundPkt *in = 0);
     UserProfilePhoto(InboundPkt *in);
+    UserProfilePhoto(const Null&);
     virtual ~UserProfilePhoto();
 
     void setPhotoBig(const FileLocation &photoBig);
@@ -30,19 +40,228 @@ public:
     void setPhotoSmall(const FileLocation &photoSmall);
     FileLocation photoSmall() const;
 
-    void setClassType(UserProfilePhotoType classType);
-    UserProfilePhotoType classType() const;
+    void setClassType(UserProfilePhotoClassType classType);
+    UserProfilePhotoClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const UserProfilePhoto &b);
+    QMap<QString, QVariant> toMap() const;
+    static UserProfilePhoto fromMap(const QMap<QString, QVariant> &map);
+
+    bool operator ==(const UserProfilePhoto &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
+
+    QByteArray getHash(QCryptographicHash::Algorithm alg = QCryptographicHash::Md5) const;
 
 private:
     FileLocation m_photoBig;
     qint64 m_photoId;
     FileLocation m_photoSmall;
-    UserProfilePhotoType m_classType;
+    UserProfilePhotoClassType m_classType;
 };
+
+Q_DECLARE_METATYPE(UserProfilePhoto)
+
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const UserProfilePhoto &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, UserProfilePhoto &item);
+
+inline UserProfilePhoto::UserProfilePhoto(UserProfilePhotoClassType classType, InboundPkt *in) :
+    m_photoId(0),
+    m_classType(classType)
+{
+    if(in) fetch(in);
+}
+
+inline UserProfilePhoto::UserProfilePhoto(InboundPkt *in) :
+    m_photoId(0),
+    m_classType(typeUserProfilePhotoEmpty)
+{
+    fetch(in);
+}
+
+inline UserProfilePhoto::UserProfilePhoto(const Null &null) :
+    TelegramTypeObject(null),
+    m_photoId(0),
+    m_classType(typeUserProfilePhotoEmpty)
+{
+}
+
+inline UserProfilePhoto::~UserProfilePhoto() {
+}
+
+inline void UserProfilePhoto::setPhotoBig(const FileLocation &photoBig) {
+    m_photoBig = photoBig;
+}
+
+inline FileLocation UserProfilePhoto::photoBig() const {
+    return m_photoBig;
+}
+
+inline void UserProfilePhoto::setPhotoId(qint64 photoId) {
+    m_photoId = photoId;
+}
+
+inline qint64 UserProfilePhoto::photoId() const {
+    return m_photoId;
+}
+
+inline void UserProfilePhoto::setPhotoSmall(const FileLocation &photoSmall) {
+    m_photoSmall = photoSmall;
+}
+
+inline FileLocation UserProfilePhoto::photoSmall() const {
+    return m_photoSmall;
+}
+
+inline bool UserProfilePhoto::operator ==(const UserProfilePhoto &b) const {
+    return m_classType == b.m_classType &&
+           m_photoBig == b.m_photoBig &&
+           m_photoId == b.m_photoId &&
+           m_photoSmall == b.m_photoSmall;
+}
+
+inline void UserProfilePhoto::setClassType(UserProfilePhoto::UserProfilePhotoClassType classType) {
+    m_classType = classType;
+}
+
+inline UserProfilePhoto::UserProfilePhotoClassType UserProfilePhoto::classType() const {
+    return m_classType;
+}
+
+inline bool UserProfilePhoto::fetch(InboundPkt *in) {
+    LQTG_FETCH_LOG;
+    int x = in->fetchInt();
+    switch(x) {
+    case typeUserProfilePhotoEmpty: {
+        m_classType = static_cast<UserProfilePhotoClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeUserProfilePhoto: {
+        m_photoId = in->fetchLong();
+        m_photoSmall.fetch(in);
+        m_photoBig.fetch(in);
+        m_classType = static_cast<UserProfilePhotoClassType>(x);
+        return true;
+    }
+        break;
+    
+    default:
+        LQTG_FETCH_ASSERT;
+        return false;
+    }
+}
+
+inline bool UserProfilePhoto::push(OutboundPkt *out) const {
+    out->appendInt(m_classType);
+    switch(m_classType) {
+    case typeUserProfilePhotoEmpty: {
+        return true;
+    }
+        break;
+    
+    case typeUserProfilePhoto: {
+        out->appendLong(m_photoId);
+        m_photoSmall.push(out);
+        m_photoBig.push(out);
+        return true;
+    }
+        break;
+    
+    default:
+        return false;
+    }
+}
+
+inline QMap<QString, QVariant> UserProfilePhoto::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeUserProfilePhotoEmpty: {
+        result["classType"] = "UserProfilePhoto::typeUserProfilePhotoEmpty";
+        return result;
+    }
+        break;
+    
+    case typeUserProfilePhoto: {
+        result["classType"] = "UserProfilePhoto::typeUserProfilePhoto";
+        result["photoId"] = QVariant::fromValue<qint64>(photoId());
+        result["photoSmall"] = m_photoSmall.toMap();
+        result["photoBig"] = m_photoBig.toMap();
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+inline UserProfilePhoto UserProfilePhoto::fromMap(const QMap<QString, QVariant> &map) {
+    UserProfilePhoto result;
+    if(map.value("classType").toString() == "UserProfilePhoto::typeUserProfilePhotoEmpty") {
+        result.setClassType(typeUserProfilePhotoEmpty);
+        return result;
+    }
+    if(map.value("classType").toString() == "UserProfilePhoto::typeUserProfilePhoto") {
+        result.setClassType(typeUserProfilePhoto);
+        result.setPhotoId( map.value("photoId").value<qint64>() );
+        result.setPhotoSmall( FileLocation::fromMap(map.value("photoSmall").toMap()) );
+        result.setPhotoBig( FileLocation::fromMap(map.value("photoBig").toMap()) );
+        return result;
+    }
+    return result;
+}
+
+inline QByteArray UserProfilePhoto::getHash(QCryptographicHash::Algorithm alg) const {
+    QByteArray data;
+    QDataStream str(&data, QIODevice::WriteOnly);
+    str << *this;
+    return QCryptographicHash::hash(data, alg);
+}
+
+inline QDataStream &operator<<(QDataStream &stream, const UserProfilePhoto &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case UserProfilePhoto::typeUserProfilePhotoEmpty:
+        
+        break;
+    case UserProfilePhoto::typeUserProfilePhoto:
+        stream << item.photoId();
+        stream << item.photoSmall();
+        stream << item.photoBig();
+        break;
+    }
+    return stream;
+}
+
+inline QDataStream &operator>>(QDataStream &stream, UserProfilePhoto &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<UserProfilePhoto::UserProfilePhotoClassType>(type));
+    switch(type) {
+    case UserProfilePhoto::typeUserProfilePhotoEmpty: {
+        
+    }
+        break;
+    case UserProfilePhoto::typeUserProfilePhoto: {
+        qint64 m_photo_id;
+        stream >> m_photo_id;
+        item.setPhotoId(m_photo_id);
+        FileLocation m_photo_small;
+        stream >> m_photo_small;
+        item.setPhotoSmall(m_photo_small);
+        FileLocation m_photo_big;
+        stream >> m_photo_big;
+        item.setPhotoBig(m_photo_big);
+    }
+        break;
+    }
+    return stream;
+}
+
 
 #endif // LQTG_TYPE_USERPROFILEPHOTO

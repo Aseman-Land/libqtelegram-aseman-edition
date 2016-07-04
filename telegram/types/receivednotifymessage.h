@@ -6,17 +6,27 @@
 #define LQTG_TYPE_RECEIVEDNOTIFYMESSAGE
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
+#include <QVariant>
+#include "core/inboundpkt.h"
+#include "core/outboundpkt.h"
+#include "../coretypes.h"
+
+#include <QDataStream>
+
 #include <QtGlobal>
 
 class LIBQTELEGRAMSHARED_EXPORT ReceivedNotifyMessage : public TelegramTypeObject
 {
 public:
-    enum ReceivedNotifyMessageType {
+    enum ReceivedNotifyMessageClassType {
         typeReceivedNotifyMessage = 0xa384b779
     };
 
-    ReceivedNotifyMessage(ReceivedNotifyMessageType classType = typeReceivedNotifyMessage, InboundPkt *in = 0);
+    ReceivedNotifyMessage(ReceivedNotifyMessageClassType classType = typeReceivedNotifyMessage, InboundPkt *in = 0);
     ReceivedNotifyMessage(InboundPkt *in);
+    ReceivedNotifyMessage(const Null&);
     virtual ~ReceivedNotifyMessage();
 
     void setFlags(qint32 flags);
@@ -25,18 +35,185 @@ public:
     void setId(qint32 id);
     qint32 id() const;
 
-    void setClassType(ReceivedNotifyMessageType classType);
-    ReceivedNotifyMessageType classType() const;
+    void setClassType(ReceivedNotifyMessageClassType classType);
+    ReceivedNotifyMessageClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const ReceivedNotifyMessage &b);
+    QMap<QString, QVariant> toMap() const;
+    static ReceivedNotifyMessage fromMap(const QMap<QString, QVariant> &map);
+
+    bool operator ==(const ReceivedNotifyMessage &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
+
+    QByteArray getHash(QCryptographicHash::Algorithm alg = QCryptographicHash::Md5) const;
 
 private:
     qint32 m_flags;
     qint32 m_id;
-    ReceivedNotifyMessageType m_classType;
+    ReceivedNotifyMessageClassType m_classType;
 };
+
+Q_DECLARE_METATYPE(ReceivedNotifyMessage)
+
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const ReceivedNotifyMessage &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, ReceivedNotifyMessage &item);
+
+inline ReceivedNotifyMessage::ReceivedNotifyMessage(ReceivedNotifyMessageClassType classType, InboundPkt *in) :
+    m_flags(0),
+    m_id(0),
+    m_classType(classType)
+{
+    if(in) fetch(in);
+}
+
+inline ReceivedNotifyMessage::ReceivedNotifyMessage(InboundPkt *in) :
+    m_flags(0),
+    m_id(0),
+    m_classType(typeReceivedNotifyMessage)
+{
+    fetch(in);
+}
+
+inline ReceivedNotifyMessage::ReceivedNotifyMessage(const Null &null) :
+    TelegramTypeObject(null),
+    m_flags(0),
+    m_id(0),
+    m_classType(typeReceivedNotifyMessage)
+{
+}
+
+inline ReceivedNotifyMessage::~ReceivedNotifyMessage() {
+}
+
+inline void ReceivedNotifyMessage::setFlags(qint32 flags) {
+    m_flags = flags;
+}
+
+inline qint32 ReceivedNotifyMessage::flags() const {
+    return m_flags;
+}
+
+inline void ReceivedNotifyMessage::setId(qint32 id) {
+    m_id = id;
+}
+
+inline qint32 ReceivedNotifyMessage::id() const {
+    return m_id;
+}
+
+inline bool ReceivedNotifyMessage::operator ==(const ReceivedNotifyMessage &b) const {
+    return m_classType == b.m_classType &&
+           m_flags == b.m_flags &&
+           m_id == b.m_id;
+}
+
+inline void ReceivedNotifyMessage::setClassType(ReceivedNotifyMessage::ReceivedNotifyMessageClassType classType) {
+    m_classType = classType;
+}
+
+inline ReceivedNotifyMessage::ReceivedNotifyMessageClassType ReceivedNotifyMessage::classType() const {
+    return m_classType;
+}
+
+inline bool ReceivedNotifyMessage::fetch(InboundPkt *in) {
+    LQTG_FETCH_LOG;
+    int x = in->fetchInt();
+    switch(x) {
+    case typeReceivedNotifyMessage: {
+        m_id = in->fetchInt();
+        m_flags = in->fetchInt();
+        m_classType = static_cast<ReceivedNotifyMessageClassType>(x);
+        return true;
+    }
+        break;
+    
+    default:
+        LQTG_FETCH_ASSERT;
+        return false;
+    }
+}
+
+inline bool ReceivedNotifyMessage::push(OutboundPkt *out) const {
+    out->appendInt(m_classType);
+    switch(m_classType) {
+    case typeReceivedNotifyMessage: {
+        out->appendInt(m_id);
+        out->appendInt(m_flags);
+        return true;
+    }
+        break;
+    
+    default:
+        return false;
+    }
+}
+
+inline QMap<QString, QVariant> ReceivedNotifyMessage::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeReceivedNotifyMessage: {
+        result["classType"] = "ReceivedNotifyMessage::typeReceivedNotifyMessage";
+        result["id"] = QVariant::fromValue<qint32>(id());
+        result["flags"] = QVariant::fromValue<qint32>(flags());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+inline ReceivedNotifyMessage ReceivedNotifyMessage::fromMap(const QMap<QString, QVariant> &map) {
+    ReceivedNotifyMessage result;
+    if(map.value("classType").toString() == "ReceivedNotifyMessage::typeReceivedNotifyMessage") {
+        result.setClassType(typeReceivedNotifyMessage);
+        result.setId( map.value("id").value<qint32>() );
+        result.setFlags( map.value("flags").value<qint32>() );
+        return result;
+    }
+    return result;
+}
+
+inline QByteArray ReceivedNotifyMessage::getHash(QCryptographicHash::Algorithm alg) const {
+    QByteArray data;
+    QDataStream str(&data, QIODevice::WriteOnly);
+    str << *this;
+    return QCryptographicHash::hash(data, alg);
+}
+
+inline QDataStream &operator<<(QDataStream &stream, const ReceivedNotifyMessage &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case ReceivedNotifyMessage::typeReceivedNotifyMessage:
+        stream << item.id();
+        stream << item.flags();
+        break;
+    }
+    return stream;
+}
+
+inline QDataStream &operator>>(QDataStream &stream, ReceivedNotifyMessage &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<ReceivedNotifyMessage::ReceivedNotifyMessageClassType>(type));
+    switch(type) {
+    case ReceivedNotifyMessage::typeReceivedNotifyMessage: {
+        qint32 m_id;
+        stream >> m_id;
+        item.setId(m_id);
+        qint32 m_flags;
+        stream >> m_flags;
+        item.setFlags(m_flags);
+    }
+        break;
+    }
+    return stream;
+}
+
 
 #endif // LQTG_TYPE_RECEIVEDNOTIFYMESSAGE

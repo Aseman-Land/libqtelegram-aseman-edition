@@ -7,27 +7,195 @@
 
 #include "telegramtypeobject.h"
 
+#include <QMetaType>
+#include <QVariant>
+#include "core/inboundpkt.h"
+#include "core/outboundpkt.h"
+#include "../coretypes.h"
+
+#include <QDataStream>
+
+
 class LIBQTELEGRAMSHARED_EXPORT InputPrivacyKey : public TelegramTypeObject
 {
 public:
-    enum InputPrivacyKeyType {
-        typeInputPrivacyKeyStatusTimestamp = 0x4f96cb18
+    enum InputPrivacyKeyClassType {
+        typeInputPrivacyKeyStatusTimestamp = 0x4f96cb18,
+        typeInputPrivacyKeyChatInvite = 0xbdfb0426
     };
 
-    InputPrivacyKey(InputPrivacyKeyType classType = typeInputPrivacyKeyStatusTimestamp, InboundPkt *in = 0);
+    InputPrivacyKey(InputPrivacyKeyClassType classType = typeInputPrivacyKeyStatusTimestamp, InboundPkt *in = 0);
     InputPrivacyKey(InboundPkt *in);
+    InputPrivacyKey(const Null&);
     virtual ~InputPrivacyKey();
 
-    void setClassType(InputPrivacyKeyType classType);
-    InputPrivacyKeyType classType() const;
+    void setClassType(InputPrivacyKeyClassType classType);
+    InputPrivacyKeyClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const InputPrivacyKey &b);
+    QMap<QString, QVariant> toMap() const;
+    static InputPrivacyKey fromMap(const QMap<QString, QVariant> &map);
+
+    bool operator ==(const InputPrivacyKey &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
+
+    QByteArray getHash(QCryptographicHash::Algorithm alg = QCryptographicHash::Md5) const;
 
 private:
-    InputPrivacyKeyType m_classType;
+    InputPrivacyKeyClassType m_classType;
 };
+
+Q_DECLARE_METATYPE(InputPrivacyKey)
+
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const InputPrivacyKey &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, InputPrivacyKey &item);
+
+inline InputPrivacyKey::InputPrivacyKey(InputPrivacyKeyClassType classType, InboundPkt *in) :
+    m_classType(classType)
+{
+    if(in) fetch(in);
+}
+
+inline InputPrivacyKey::InputPrivacyKey(InboundPkt *in) :
+    m_classType(typeInputPrivacyKeyStatusTimestamp)
+{
+    fetch(in);
+}
+
+inline InputPrivacyKey::InputPrivacyKey(const Null &null) :
+    TelegramTypeObject(null),
+    m_classType(typeInputPrivacyKeyStatusTimestamp)
+{
+}
+
+inline InputPrivacyKey::~InputPrivacyKey() {
+}
+
+inline bool InputPrivacyKey::operator ==(const InputPrivacyKey &b) const {
+    return m_classType == b.m_classType;
+}
+
+inline void InputPrivacyKey::setClassType(InputPrivacyKey::InputPrivacyKeyClassType classType) {
+    m_classType = classType;
+}
+
+inline InputPrivacyKey::InputPrivacyKeyClassType InputPrivacyKey::classType() const {
+    return m_classType;
+}
+
+inline bool InputPrivacyKey::fetch(InboundPkt *in) {
+    LQTG_FETCH_LOG;
+    int x = in->fetchInt();
+    switch(x) {
+    case typeInputPrivacyKeyStatusTimestamp: {
+        m_classType = static_cast<InputPrivacyKeyClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeInputPrivacyKeyChatInvite: {
+        m_classType = static_cast<InputPrivacyKeyClassType>(x);
+        return true;
+    }
+        break;
+    
+    default:
+        LQTG_FETCH_ASSERT;
+        return false;
+    }
+}
+
+inline bool InputPrivacyKey::push(OutboundPkt *out) const {
+    out->appendInt(m_classType);
+    switch(m_classType) {
+    case typeInputPrivacyKeyStatusTimestamp: {
+        return true;
+    }
+        break;
+    
+    case typeInputPrivacyKeyChatInvite: {
+        return true;
+    }
+        break;
+    
+    default:
+        return false;
+    }
+}
+
+inline QMap<QString, QVariant> InputPrivacyKey::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeInputPrivacyKeyStatusTimestamp: {
+        result["classType"] = "InputPrivacyKey::typeInputPrivacyKeyStatusTimestamp";
+        return result;
+    }
+        break;
+    
+    case typeInputPrivacyKeyChatInvite: {
+        result["classType"] = "InputPrivacyKey::typeInputPrivacyKeyChatInvite";
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+inline InputPrivacyKey InputPrivacyKey::fromMap(const QMap<QString, QVariant> &map) {
+    InputPrivacyKey result;
+    if(map.value("classType").toString() == "InputPrivacyKey::typeInputPrivacyKeyStatusTimestamp") {
+        result.setClassType(typeInputPrivacyKeyStatusTimestamp);
+        return result;
+    }
+    if(map.value("classType").toString() == "InputPrivacyKey::typeInputPrivacyKeyChatInvite") {
+        result.setClassType(typeInputPrivacyKeyChatInvite);
+        return result;
+    }
+    return result;
+}
+
+inline QByteArray InputPrivacyKey::getHash(QCryptographicHash::Algorithm alg) const {
+    QByteArray data;
+    QDataStream str(&data, QIODevice::WriteOnly);
+    str << *this;
+    return QCryptographicHash::hash(data, alg);
+}
+
+inline QDataStream &operator<<(QDataStream &stream, const InputPrivacyKey &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case InputPrivacyKey::typeInputPrivacyKeyStatusTimestamp:
+        
+        break;
+    case InputPrivacyKey::typeInputPrivacyKeyChatInvite:
+        
+        break;
+    }
+    return stream;
+}
+
+inline QDataStream &operator>>(QDataStream &stream, InputPrivacyKey &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<InputPrivacyKey::InputPrivacyKeyClassType>(type));
+    switch(type) {
+    case InputPrivacyKey::typeInputPrivacyKeyStatusTimestamp: {
+        
+    }
+        break;
+    case InputPrivacyKey::typeInputPrivacyKeyChatInvite: {
+        
+    }
+        break;
+    }
+    return stream;
+}
+
 
 #endif // LQTG_TYPE_INPUTPRIVACYKEY

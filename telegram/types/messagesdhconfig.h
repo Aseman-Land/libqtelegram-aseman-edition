@@ -6,19 +6,29 @@
 #define LQTG_TYPE_MESSAGESDHCONFIG
 
 #include "telegramtypeobject.h"
+
+#include <QMetaType>
+#include <QVariant>
+#include "core/inboundpkt.h"
+#include "core/outboundpkt.h"
+#include "../coretypes.h"
+
+#include <QDataStream>
+
 #include <QtGlobal>
 #include <QByteArray>
 
 class LIBQTELEGRAMSHARED_EXPORT MessagesDhConfig : public TelegramTypeObject
 {
 public:
-    enum MessagesDhConfigType {
+    enum MessagesDhConfigClassType {
         typeMessagesDhConfigNotModified = 0xc0e24635,
         typeMessagesDhConfig = 0x2c221edd
     };
 
-    MessagesDhConfig(MessagesDhConfigType classType = typeMessagesDhConfigNotModified, InboundPkt *in = 0);
+    MessagesDhConfig(MessagesDhConfigClassType classType = typeMessagesDhConfigNotModified, InboundPkt *in = 0);
     MessagesDhConfig(InboundPkt *in);
+    MessagesDhConfig(const Null&);
     virtual ~MessagesDhConfig();
 
     void setG(qint32 g);
@@ -33,20 +43,255 @@ public:
     void setVersion(qint32 version);
     qint32 version() const;
 
-    void setClassType(MessagesDhConfigType classType);
-    MessagesDhConfigType classType() const;
+    void setClassType(MessagesDhConfigClassType classType);
+    MessagesDhConfigClassType classType() const;
 
     bool fetch(InboundPkt *in);
     bool push(OutboundPkt *out) const;
 
-    bool operator ==(const MessagesDhConfig &b);
+    QMap<QString, QVariant> toMap() const;
+    static MessagesDhConfig fromMap(const QMap<QString, QVariant> &map);
+
+    bool operator ==(const MessagesDhConfig &b) const;
+
+    bool operator==(bool stt) const { return isNull() != stt; }
+    bool operator!=(bool stt) const { return !operator ==(stt); }
+
+    QByteArray getHash(QCryptographicHash::Algorithm alg = QCryptographicHash::Md5) const;
 
 private:
     qint32 m_g;
     QByteArray m_p;
     QByteArray m_random;
     qint32 m_version;
-    MessagesDhConfigType m_classType;
+    MessagesDhConfigClassType m_classType;
 };
+
+Q_DECLARE_METATYPE(MessagesDhConfig)
+
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator<<(QDataStream &stream, const MessagesDhConfig &item);
+QDataStream LIBQTELEGRAMSHARED_EXPORT &operator>>(QDataStream &stream, MessagesDhConfig &item);
+
+inline MessagesDhConfig::MessagesDhConfig(MessagesDhConfigClassType classType, InboundPkt *in) :
+    m_g(0),
+    m_version(0),
+    m_classType(classType)
+{
+    if(in) fetch(in);
+}
+
+inline MessagesDhConfig::MessagesDhConfig(InboundPkt *in) :
+    m_g(0),
+    m_version(0),
+    m_classType(typeMessagesDhConfigNotModified)
+{
+    fetch(in);
+}
+
+inline MessagesDhConfig::MessagesDhConfig(const Null &null) :
+    TelegramTypeObject(null),
+    m_g(0),
+    m_version(0),
+    m_classType(typeMessagesDhConfigNotModified)
+{
+}
+
+inline MessagesDhConfig::~MessagesDhConfig() {
+}
+
+inline void MessagesDhConfig::setG(qint32 g) {
+    m_g = g;
+}
+
+inline qint32 MessagesDhConfig::g() const {
+    return m_g;
+}
+
+inline void MessagesDhConfig::setP(const QByteArray &p) {
+    m_p = p;
+}
+
+inline QByteArray MessagesDhConfig::p() const {
+    return m_p;
+}
+
+inline void MessagesDhConfig::setRandom(const QByteArray &random) {
+    m_random = random;
+}
+
+inline QByteArray MessagesDhConfig::random() const {
+    return m_random;
+}
+
+inline void MessagesDhConfig::setVersion(qint32 version) {
+    m_version = version;
+}
+
+inline qint32 MessagesDhConfig::version() const {
+    return m_version;
+}
+
+inline bool MessagesDhConfig::operator ==(const MessagesDhConfig &b) const {
+    return m_classType == b.m_classType &&
+           m_g == b.m_g &&
+           m_p == b.m_p &&
+           m_random == b.m_random &&
+           m_version == b.m_version;
+}
+
+inline void MessagesDhConfig::setClassType(MessagesDhConfig::MessagesDhConfigClassType classType) {
+    m_classType = classType;
+}
+
+inline MessagesDhConfig::MessagesDhConfigClassType MessagesDhConfig::classType() const {
+    return m_classType;
+}
+
+inline bool MessagesDhConfig::fetch(InboundPkt *in) {
+    LQTG_FETCH_LOG;
+    int x = in->fetchInt();
+    switch(x) {
+    case typeMessagesDhConfigNotModified: {
+        m_random = in->fetchBytes();
+        m_classType = static_cast<MessagesDhConfigClassType>(x);
+        return true;
+    }
+        break;
+    
+    case typeMessagesDhConfig: {
+        m_g = in->fetchInt();
+        m_p = in->fetchBytes();
+        m_version = in->fetchInt();
+        m_random = in->fetchBytes();
+        m_classType = static_cast<MessagesDhConfigClassType>(x);
+        return true;
+    }
+        break;
+    
+    default:
+        LQTG_FETCH_ASSERT;
+        return false;
+    }
+}
+
+inline bool MessagesDhConfig::push(OutboundPkt *out) const {
+    out->appendInt(m_classType);
+    switch(m_classType) {
+    case typeMessagesDhConfigNotModified: {
+        out->appendBytes(m_random);
+        return true;
+    }
+        break;
+    
+    case typeMessagesDhConfig: {
+        out->appendInt(m_g);
+        out->appendBytes(m_p);
+        out->appendInt(m_version);
+        out->appendBytes(m_random);
+        return true;
+    }
+        break;
+    
+    default:
+        return false;
+    }
+}
+
+inline QMap<QString, QVariant> MessagesDhConfig::toMap() const {
+    QMap<QString, QVariant> result;
+    switch(static_cast<int>(m_classType)) {
+    case typeMessagesDhConfigNotModified: {
+        result["classType"] = "MessagesDhConfig::typeMessagesDhConfigNotModified";
+        result["random"] = QVariant::fromValue<QByteArray>(random());
+        return result;
+    }
+        break;
+    
+    case typeMessagesDhConfig: {
+        result["classType"] = "MessagesDhConfig::typeMessagesDhConfig";
+        result["g"] = QVariant::fromValue<qint32>(g());
+        result["p"] = QVariant::fromValue<QByteArray>(p());
+        result["version"] = QVariant::fromValue<qint32>(version());
+        result["random"] = QVariant::fromValue<QByteArray>(random());
+        return result;
+    }
+        break;
+    
+    default:
+        return result;
+    }
+}
+
+inline MessagesDhConfig MessagesDhConfig::fromMap(const QMap<QString, QVariant> &map) {
+    MessagesDhConfig result;
+    if(map.value("classType").toString() == "MessagesDhConfig::typeMessagesDhConfigNotModified") {
+        result.setClassType(typeMessagesDhConfigNotModified);
+        result.setRandom( map.value("random").value<QByteArray>() );
+        return result;
+    }
+    if(map.value("classType").toString() == "MessagesDhConfig::typeMessagesDhConfig") {
+        result.setClassType(typeMessagesDhConfig);
+        result.setG( map.value("g").value<qint32>() );
+        result.setP( map.value("p").value<QByteArray>() );
+        result.setVersion( map.value("version").value<qint32>() );
+        result.setRandom( map.value("random").value<QByteArray>() );
+        return result;
+    }
+    return result;
+}
+
+inline QByteArray MessagesDhConfig::getHash(QCryptographicHash::Algorithm alg) const {
+    QByteArray data;
+    QDataStream str(&data, QIODevice::WriteOnly);
+    str << *this;
+    return QCryptographicHash::hash(data, alg);
+}
+
+inline QDataStream &operator<<(QDataStream &stream, const MessagesDhConfig &item) {
+    stream << static_cast<uint>(item.classType());
+    switch(item.classType()) {
+    case MessagesDhConfig::typeMessagesDhConfigNotModified:
+        stream << item.random();
+        break;
+    case MessagesDhConfig::typeMessagesDhConfig:
+        stream << item.g();
+        stream << item.p();
+        stream << item.version();
+        stream << item.random();
+        break;
+    }
+    return stream;
+}
+
+inline QDataStream &operator>>(QDataStream &stream, MessagesDhConfig &item) {
+    uint type = 0;
+    stream >> type;
+    item.setClassType(static_cast<MessagesDhConfig::MessagesDhConfigClassType>(type));
+    switch(type) {
+    case MessagesDhConfig::typeMessagesDhConfigNotModified: {
+        QByteArray m_random;
+        stream >> m_random;
+        item.setRandom(m_random);
+    }
+        break;
+    case MessagesDhConfig::typeMessagesDhConfig: {
+        qint32 m_g;
+        stream >> m_g;
+        item.setG(m_g);
+        QByteArray m_p;
+        stream >> m_p;
+        item.setP(m_p);
+        qint32 m_version;
+        stream >> m_version;
+        item.setVersion(m_version);
+        QByteArray m_random;
+        stream >> m_random;
+        item.setRandom(m_random);
+    }
+        break;
+    }
+    return stream;
+}
+
 
 #endif // LQTG_TYPE_MESSAGESDHCONFIG
