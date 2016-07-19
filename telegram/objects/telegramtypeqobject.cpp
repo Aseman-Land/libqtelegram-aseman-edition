@@ -4,12 +4,16 @@
 
 #include "telegramtypeqobject.h"
 
+qint64 TelegramTypeQObject::mConstructedCount = 0;
+
 TelegramTypeQObject::TelegramTypeQObject(QObject *parent) :
     QObject(parent)
 {
+    mConstructedCount++;
 }
 
 TelegramTypeQObject::~TelegramTypeQObject()
 {
+    mConstructedCount--;
 }
 

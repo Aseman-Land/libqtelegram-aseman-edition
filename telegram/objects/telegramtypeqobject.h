@@ -14,6 +14,13 @@ class LIBQTELEGRAMSHARED_EXPORT TelegramTypeQObject: public QObject
 public:
     TelegramTypeQObject(QObject *parent = 0);
     virtual ~TelegramTypeQObject();
+
+    static qint64 constructedCount() {
+        return mConstructedCount;
+    }
+
+private:
+    static qint64 mConstructedCount;
 };
 
 #endif // TELEGRAMTYPEQOBJECT_H

@@ -41,6 +41,10 @@ public:
     bool operator==(bool stt) { return mNull != stt; }
     bool operator!=(bool stt) { return !operator ==(stt); }
 
+    static qint64 constructedCount() {
+        return mConstructedCount;
+    }
+
 protected:
     void setError(bool stt) { mError = stt; }
     void setNull(bool stt) { mNull = stt; }
@@ -48,6 +52,7 @@ protected:
 private:
     bool mError;
     bool mNull;
+    static qint64 mConstructedCount;
 };
 
 #endif // TELEGRAMTYPEOBJECT_H

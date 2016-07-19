@@ -5,11 +5,13 @@
 #include "telegramtypeobject.h"
 
 const TelegramTypeObject::Null TelegramTypeObject::null = TelegramTypeObject::Null();
+qint64 TelegramTypeObject::mConstructedCount = 0;
 
 TelegramTypeObject::TelegramTypeObject() :
     mError(false),
     mNull(false)
 {
+    mConstructedCount++;
 }
 
 TelegramTypeObject::TelegramTypeObject(const Null&) :
@@ -20,5 +22,6 @@ TelegramTypeObject::TelegramTypeObject(const Null&) :
 
 TelegramTypeObject::~TelegramTypeObject()
 {
+    mConstructedCount--;
 }
 

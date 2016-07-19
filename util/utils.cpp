@@ -268,7 +268,12 @@ RSA *Utils::rsaLoadPublicKey(const QString &publicKeyName) {
     QByteArray fileData = file.readAll();
     BIO *bufio = BIO_new_mem_buf((void*)fileData.data(), fileData.length());
     pubKey = PEM_read_bio_RSAPublicKey (bufio, NULL, NULL, NULL);
-    delete bufio;
+
+    BUF_MEM *bptr;
+    BIO_get_mem_ptr(bufio, &bptr);
+    BIO_set_close(bufio, BIO_NOCLOSE); /* So BIO_free() leaves BUF_MEM alone */
+    BIO_free(bufio);
+
     if (pubKey == NULL) {
         qCWarning(TG_UTIL_UTILS) << "PEM_read_RSAPublicKey returns NULL";
         return NULL;
