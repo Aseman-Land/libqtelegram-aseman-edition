@@ -24,6 +24,10 @@ EventTimer::EventTimer(qint64 msgId, qint32 timeout, QObject *parent) :
     connect(this, &QTimer::timeout, this, &EventTimer::onTimeout);
 }
 
+EventTimer::~EventTimer()
+{
+}
+
 void EventTimer::onTimeout() {
     Q_EMIT timerTimeout(mMsgId);
 }
