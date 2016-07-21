@@ -1166,8 +1166,8 @@ qint64 Telegram::authSignUp(const QString &code, const QString &firstName, const
     return TelegramCore::authSignUp(prv->mSettings->phoneNumber(), prv->m_phoneCodeHash, code, firstName, lastName, callBack, timeout);
 }
 
-qint64 Telegram::authCheckPassword(const QByteArray &password, Callback<AuthAuthorization> callBack, qint32 timeout) {
-    return TelegramCore::authCheckPassword( QCryptographicHash::hash(password, QCryptographicHash::Sha3_256), callBack, timeout);
+qint64 Telegram::authCheckPassword(const QByteArray & passwordData, Callback<AuthAuthorization> callBack, qint32 timeout) {
+    return TelegramCore::authCheckPassword( QCryptographicHash::hash(passwordData, QCryptographicHash::Sha256), callBack, timeout);
 }
 
 qint64 Telegram::accountRegisterDevice(const QString &token, const QString &appVersion, bool appSandbox, Callback<bool > callBack, qint32 timeout) {
