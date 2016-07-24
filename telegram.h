@@ -80,7 +80,7 @@ public:
     qint64 authSignIn(const QString &code, Callback<AuthAuthorization > callBack = 0, qint32 timeout = timeOut());
     qint64 authSignUp(const QString &code, const QString &firstName, const QString &lastName, Callback<AuthAuthorization > callBack = 0, qint32 timeout = timeOut());
     qint64 authSendCall(Callback<AuthSentCode > callBack = 0, qint32 timeout = timeOut());
-    qint64 authCheckPassword(const QByteArray &passwordHash, Callback<AuthAuthorization > callBack = 0, qint32 timeout = timeOut());
+    qint64 authCheckPassword(const QByteArray &passwordData, Callback<AuthAuthorization > callBack = 0, qint32 timeout = timeOut());
 
     // Working with push notifications. Settings
     qint64 accountRegisterDevice(const QString &token, const QString &appVersion = QString::null, bool appSandbox = false, Callback<bool> callBack = 0, qint32 timeout = timeOut());
