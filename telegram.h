@@ -204,6 +204,7 @@ protected:
     void onAuthSignUpAnswer(qint64 msgId, const AuthAuthorization &result, const QVariant &attachedData);
     void onAuthSignInAnswer(qint64 msgId, const AuthAuthorization &result, const QVariant &attachedData);
     void onAuthCheckPasswordAnswer(qint64 msgId, const AuthAuthorization &result, const QVariant &attachedData);
+    void onAuthImportBotAuthorizationAnswer(qint64 msgId, const AuthAuthorization &result, const QVariant &attachedData);
     void onAuthLogOutAnswer(qint64 id, bool ok, const QVariant &attachedData);
     void onContactsGetContactsAnswer(qint64 msgId, const ContactsContacts &result, const QVariant &attachedData);
     void onMessagesGetDhConfigAnswer(qint64 msgId, const MessagesDhConfig &result, const QVariant &attachedData);
