@@ -37,6 +37,7 @@ Get libqtelegram using below command
 And:
 
     cd libqtelegram-aseman-edition
+    ./init
     mkdir build && cd build
     qmake -r PREFIX=/usr  ..
     
