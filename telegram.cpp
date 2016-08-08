@@ -1069,6 +1069,12 @@ void Telegram::onAuthCheckPasswordAnswer(qint64 msgId, const AuthAuthorization &
     TelegramCore::onAuthCheckPasswordAnswer(msgId, result, attachedData);
 }
 
+void Telegram::onAuthImportBotAuthorizationAnswer(qint64 msgId, const AuthAuthorization &result, const QVariant &attachedData)
+{
+    authorizeUser(msgId, result.user());
+    TelegramCore::onAuthImportBotAuthorizationAnswer(msgId, result, attachedData);
+}
+
 void Telegram::onUpdatesGetDifferenceAnswer(qint64 id, const UpdatesDifference &result, const QVariant &attachedData) {
     processDifferences(id, result.newMessages(), result.newEncryptedMessages(), result.otherUpdates(),
                        result.chats(), result.users(), result.state(),
