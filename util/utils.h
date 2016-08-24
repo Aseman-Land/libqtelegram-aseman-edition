@@ -48,6 +48,8 @@ public:
     explicit Utils(QObject *parent = 0);
 
     static qint32 randomBytes(void *buffer, qint32 count);
+    static QByteArray generateRandomBytes();
+
     static qint32 serializeBignum(BIGNUM *b, char *buffer, qint32 maxlen);
     static double getUTime(qint32 clockId);
     static quint64 gcd (quint64 a, quint64 b);

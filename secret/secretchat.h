@@ -31,7 +31,7 @@
 
 #include "telegram/types/inputuser.h"
 #include "telegram/types/encryptedchat.h"
-#include "secret/decryptedmessage.h"
+#include "telegram/types/decryptedmessage.h"
 #include "util/constants.h"
 #include "libqtelegram_global.h"
 

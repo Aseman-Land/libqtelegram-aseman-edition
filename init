@@ -22,7 +22,7 @@ cd "$BUILD_DIR"
 qmake -r ../libqtelegram-code-generator
 make
 
-./libqtelegram-generator 53 $ASEMAN_SRC_PATH/scheme/scheme-53.tl $ASEMAN_SRC_PATH
+./libqtelegram-generator 54 $ASEMAN_SRC_PATH/scheme/scheme-54.tl $ASEMAN_SRC_PATH
 
 cd ..
 #rm -rf "$BUILD_DIR"

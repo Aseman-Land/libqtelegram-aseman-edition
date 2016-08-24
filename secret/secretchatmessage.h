@@ -1,7 +1,7 @@
 #ifndef SECRETCHATMESSAGE_H
 #define SECRETCHATMESSAGE_H
 
-#include "secret/decryptedmessage.h"
+#include "telegram/types/decryptedmessage.h"
 #include "telegram/types/encryptedfile.h"
 
 class SecretChatMessage {
@@ -11,7 +11,7 @@ public:
         mChatId(0),
         mTtl(0),
         mDate(0),
-        mDecryptedMessage(DecryptedMessage::typeDecryptedMessage_level8),
+        mDecryptedMessage(DecryptedMessage::typeDecryptedMessageSecret8),
         mAttachment(EncryptedFile::typeEncryptedFileEmpty) {}
 
     qint32 chatId() const { return mChatId; }
@@ -26,8 +26,8 @@ public:
     void setAttachment(const EncryptedFile &attachment) { mAttachment = attachment; }
 
     bool isServiceMessage() const {
-        return (mDecryptedMessage.classType() == DecryptedMessage::typeDecryptedMessageService ||
-                mDecryptedMessage.classType() == DecryptedMessage::typeDecryptedMessageService_level8) ;
+        return (mDecryptedMessage.classType() == DecryptedMessage::typeDecryptedMessageServiceSecret8 ||
+                mDecryptedMessage.classType() == DecryptedMessage::typeDecryptedMessageServiceSecret17) ;
     }
 
 private:

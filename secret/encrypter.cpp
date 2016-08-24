@@ -19,7 +19,6 @@
 #include "util/utils.h"
 #include <openssl/sha.h>
 #include <openssl/aes.h>
-#include "decryptedmessagebuilder.h"
 #include "util/tlvalues.h"
 #include "telegram/coretypes.h"
 
@@ -51,14 +50,13 @@ QByteArray Encrypter::generateEncryptedData(const DecryptedMessage &decryptedMes
 
     if (mSecretChat->layer() >= 17) {
         appendInt(TL_DecryptedMessageLayer);
-        appendBytes(DecryptedMessageBuilder::generateRandomBytes());
+        appendBytes(Utils::generateRandomBytes());
         appendInt(CoreTypes::typeLayerVersion);
         appendInt(mSecretChat->getInSeqNoParam());
         appendInt(mSecretChat->getOutSeqNoParam());
     }
 
-    appendDecryptedMessage(decryptedMessage);
-
+    decryptedMessage.push(this);
     endEncryption();
 
     return getGeneratedBytes();
@@ -68,146 +66,6 @@ QByteArray Encrypter::getGeneratedBytes() {
     qint32 dataInts = (mEncrEnd - mEncrStart);
     QByteArray encryptedData = QByteArray::fromRawData((char *)mEncrStart, dataInts * 4);
     return encryptedData;
-}
-
-void Encrypter::appendDecryptedMessage(const DecryptedMessage &decryptedMessage) {
-    DecryptedMessage::DecryptedMessageType x = decryptedMessage.classType();
-    appendInt(x);
-    appendLong(decryptedMessage.randomId());
-    if (x == DecryptedMessage::typeDecryptedMessageService_level8 || x == DecryptedMessage::typeDecryptedMessage_level8) {
-        appendBytes(decryptedMessage.randomBytes());
-    }
-    if (x == DecryptedMessage::typeDecryptedMessage) {
-        appendInt(decryptedMessage.ttl());
-    }
-    if (x == DecryptedMessage::typeDecryptedMessage_level8 || x == DecryptedMessage::typeDecryptedMessage) {
-        appendQString(decryptedMessage.message());
-        appendDecryptedMessageMedia(decryptedMessage.media());
-    } else {
-        appendDecryptedMessageAction(decryptedMessage.action());
-    }
-}
-
-void Encrypter::appendDecryptedMessageMedia(const DecryptedMessageMedia &media) {
-    DecryptedMessageMedia::DecryptedMessageMediaType x = media.classType();
-    appendInt(x);
-    switch(static_cast<int>(x)) {
-    case DecryptedMessageMedia::typeDecryptedMessageMediaEmpty: {
-        break;
-    }
-    case DecryptedMessageMedia::typeDecryptedMessageMediaPhoto: {
-        appendBytes(media.thumb());
-        appendInt(media.thumbW());
-        appendInt(media.thumbH());
-        appendInt(media.w());
-        appendInt(media.h());
-        appendInt(media.size());
-        appendBytes(media.key());
-        appendBytes(media.iv());
-        break;
-    }
-    case DecryptedMessageMedia::typeDecryptedMessageMediaVideo_layer8: {
-        appendBytes(media.thumb());
-        appendInt(media.thumbW());
-        appendInt(media.thumbH());
-        appendInt(media.duration());
-        appendInt(media.w());
-        appendInt(media.h());
-        appendInt(media.size());
-        appendBytes(media.key());
-        appendBytes(media.iv());
-        break;
-    }
-    case DecryptedMessageMedia::typeDecryptedMessageMediaGeoPoint: {
-        appendDouble(media.latitude());
-        appendDouble(media.longitude());
-        break;
-    }
-    case DecryptedMessageMedia::typeDecryptedMessageMediaContact: {
-        appendQString(media.phoneNumber());
-        appendQString(media.firstName());
-        appendQString(media.lastName());
-        appendInt(media.userId());
-        break;
-    }
-    case DecryptedMessageMedia::typeDecryptedMessageMediaDocument: {
-        appendBytes(media.thumb());
-        appendInt(media.thumbW());
-        appendInt(media.thumbH());
-        appendQString(media.fileName());
-        appendQString(media.mimeType());
-        appendInt(media.size());
-        appendBytes(media.key());
-        appendBytes(media.iv());
-        break;
-    }
-    case DecryptedMessageMedia::typeDecryptedMessageMediaAudio_layer8: {
-        appendInt(media.duration());
-        appendInt(media.size());
-        appendBytes(media.key());
-        appendBytes(media.iv());
-        break;
-    }
-    case DecryptedMessageMedia::typeDecryptedMessageMediaVideo: {
-        appendBytes(media.thumb());
-        appendInt(media.thumbW());
-        appendInt(media.thumbH());
-        appendInt(media.duration());
-        appendQString(media.mimeType());
-        appendInt(media.w());
-        appendInt(media.h());
-        appendInt(media.size());
-        appendBytes(media.key());
-        appendBytes(media.iv());
-        break;
-    }
-    case DecryptedMessageMedia::typeDecryptedMessageMediaAudio: {
-        appendInt(media.duration());
-        appendQString(media.mimeType());
-        appendInt(media.size());
-        appendBytes(media.key());
-        appendBytes(media.iv());
-        break;
-    }
-    }
-}
-
-void Encrypter::appendDecryptedMessageAction(const DecryptedMessageAction &action) {
-    DecryptedMessageAction::DecryptedMessageActionType x = action.classType();
-    appendInt(x);
-    switch (static_cast<int>(x)) {
-    case DecryptedMessageAction::typeDecryptedMessageActionSetMessageTTL: {
-        appendInt(action.ttlSeconds());
-        break;
-    }
-    case DecryptedMessageAction::typeDecryptedMessageActionReadMessages:
-    case DecryptedMessageAction::typeDecryptedMessageActionDeleteMessages:
-    case DecryptedMessageAction::typeDecryptedMessageActionScreenshotMessages: {
-        appendInt(CoreTypes::typeVector);
-        appendInt(action.randomIds().size());
-        Q_FOREACH (qint64 randomId, action.randomIds()) {
-            appendLong(randomId);
-        }
-        break;
-    }
-    case DecryptedMessageAction::typeDecryptedMessageActionResend: {
-        appendInt(action.startSeqNo());
-        appendInt(action.endSeqNo());
-        break;
-    }
-    case DecryptedMessageAction::typeDecryptedMessageActionNotifyLayer: {
-        appendInt(action.layer());
-        break;
-    }
-    case DecryptedMessageAction::typeDecryptedMessageActionTyping: {
-        appendSendMessageAction(action.action());
-        break;
-    }
-    }
-}
-
-void Encrypter::appendSendMessageAction(const SendMessageAction &sendMessageAction) {
-    appendInt(sendMessageAction.classType());
 }
 
 void Encrypter::startEncryption() {

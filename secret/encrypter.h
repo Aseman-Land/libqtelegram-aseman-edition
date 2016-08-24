@@ -19,7 +19,7 @@
 #define ENCRYPTER_H
 
 #include "core/outboundpkt.h"
-#include "secret/decryptedmessage.h"
+#include "telegram/types/decryptedmessage.h"
 #include "secret/secretchat.h"
 #include <QLoggingCategory>
 
@@ -45,11 +45,6 @@ protected:
     void endEncryption();
     qint32 *encryptDecryptedMessage();
     QByteArray getGeneratedBytes();
-
-    void appendDecryptedMessage(const DecryptedMessage &decryptedMessage);
-    void appendDecryptedMessageMedia(const DecryptedMessageMedia &media);
-    void appendDecryptedMessageAction(const DecryptedMessageAction &action);
-    void appendSendMessageAction(const SendMessageAction &sendMessageAction);
 };
 
 #endif // ENCRYPTER_H

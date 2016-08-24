@@ -44,7 +44,6 @@
 #include "secret/encrypter.h"
 #include "secret/decrypter.h"
 #include "secret/secretchatmessage.h"
-#include "secret/decryptedmessagebuilder.h"
 #include "file/filehandler.h"
 #include "core/dcprovider.h"
 #include "telegram/coretypes.h"
@@ -414,8 +413,12 @@ qint64 Telegram::messagesSetEncryptedTTL(const InputEncryptedChat &chat, qint64 
         return 0;
     }
 
-    DecryptedMessageBuilder builder(secretChat->layer());
-    DecryptedMessage decryptedMessage = builder.buildDecryptedMessageForTtl(randomId, ttl);
+    DecryptedMessageAction action(DecryptedMessageAction::typeDecryptedMessageActionSetMessageTTLSecret8);
+    action.setTtlSeconds(ttl);
+
+    DecryptedMessage decryptedMessage(DecryptedMessage::typeDecryptedMessageServiceSecret17);
+    decryptedMessage.setRandomId(randomId);
+    decryptedMessage.setAction(action);
 
     prv->mEncrypter->setSecretChat(secretChat);
     QByteArray data = prv->mEncrypter->generateEncryptedData(decryptedMessage);
@@ -444,8 +447,10 @@ qint64 Telegram::messagesSendEncrypted(const InputEncryptedChat &chat, qint64 ra
         return 0;
     }
 
-    DecryptedMessageBuilder builder(secretChat->layer());
-    DecryptedMessage decryptedMessage = builder.buildDecryptedMessageForSendMessage(randomId, ttl, text);
+    DecryptedMessage decryptedMessage(DecryptedMessage::typeDecryptedMessageSecret17);
+    decryptedMessage.setRandomId(randomId);
+    decryptedMessage.setTtl(ttl);
+    decryptedMessage.setMessage(text);
 
     prv->mEncrypter->setSecretChat(secretChat);
     QByteArray data = prv->mEncrypter->generateEncryptedData(decryptedMessage);
@@ -474,12 +479,15 @@ void Telegram::onSequenceNumberGap(qint32 chatId, qint32 startSeqNo, qint32 endS
     qint64 randomId;
     Utils::randomBytes(&randomId, 8);
 
-    DecryptedMessageBuilder builder(secretChat->layer());
-    DecryptedMessage decryptedMessage = builder.buildDecryptedMessageForResend(randomId, startSeqNo, endSeqNo);
+    DecryptedMessageAction action(DecryptedMessageAction::typeDecryptedMessageActionResendSecret17);
+    action.setStartSeqNo(startSeqNo);
+    action.setEndSeqNo(endSeqNo);
+
+    DecryptedMessage decryptedMessage(DecryptedMessage::typeDecryptedMessageServiceSecret17);
+    decryptedMessage.setAction(action);
 
     prv->mEncrypter->setSecretChat(secretChat);
     QByteArray data = prv->mEncrypter->generateEncryptedData(decryptedMessage);
-    QList<qint64> previousMsgs = secretChat->sequence();
     TelegramCore::messagesSendEncrypted(inputEncryptedChat, randomId, data);
 
     secretChat->increaseOutSeqNo();
@@ -515,8 +523,18 @@ qint64 Telegram::messagesSendEncryptedPhoto(const InputEncryptedChat &chat, qint
     qint32 width = image.width();
     qint32 height = image.height();
 
-    DecryptedMessageBuilder builder(secretChat->layer());
-    DecryptedMessage decryptedMessage = builder.buildDecryptedMessageForSendPhoto(randomId, ttl, key, iv, size, width, height);
+    DecryptedMessageMedia media(DecryptedMessageMedia::typeDecryptedMessageMediaPhotoSecret8);
+    media.setW(width);
+    media.setH(height);
+    media.setSize(size);
+    media.setKey(key);
+    media.setIv(iv);
+
+    DecryptedMessage decryptedMessage(DecryptedMessage::typeDecryptedMessageSecret17);
+    decryptedMessage.setRandomId(randomId);
+    decryptedMessage.setTtl(ttl);
+    decryptedMessage.setMedia(media);
+
     op->setDecryptedMessage(decryptedMessage);
 
     return prv->mFileHandler->uploadSendFile(*op, filePath);
@@ -546,9 +564,21 @@ qint64 Telegram::messagesSendEncryptedVideo(const InputEncryptedChat &chat, qint
     qint32 size = fileInfo.size();
     QString mimeType = QMimeDatabase().mimeTypeForFile(QFileInfo(filePath)).name();
 
-    DecryptedMessageBuilder builder(secretChat->layer());
-    DecryptedMessage decryptedMessage =
-            builder.buildDecryptedMessageForSendVideo(randomId, ttl, key, iv, size, mimeType, duration, width, height, thumbnailBytes);
+    DecryptedMessageMedia media(DecryptedMessageMedia::typeDecryptedMessageMediaVideoSecret17);
+    media.setThumbBytes(thumbnailBytes);
+    media.setDuration(duration);
+    media.setMimeType(mimeType);
+    media.setW(width);
+    media.setH(height);
+    media.setSize(size);
+    media.setKey(key);
+    media.setIv(iv);
+
+    DecryptedMessage decryptedMessage(DecryptedMessage::typeDecryptedMessageSecret17);
+    decryptedMessage.setRandomId(randomId);
+    decryptedMessage.setTtl(ttl);
+    decryptedMessage.setMedia(media);
+
     op->setDecryptedMessage(decryptedMessage);
 
     return prv->mFileHandler->uploadSendFile(*op, filePath);
@@ -579,8 +609,18 @@ qint64 Telegram::messagesSendEncryptedDocument(const InputEncryptedChat &chat, q
     QString fileName = fileInfo.fileName();
     QString mimeType = QMimeDatabase().mimeTypeForFile(filePath).name();
 
-    DecryptedMessageBuilder builder(secretChat->layer());
-    DecryptedMessage decryptedMessage = builder.buildDecryptedMessageForSendDocument(randomId, ttl, key, iv, size, fileName, mimeType);
+    DecryptedMessageMedia media(DecryptedMessageMedia::typeDecryptedMessageMediaDocumentSecret8);
+    media.setFileName(fileName);
+    media.setMimeType(mimeType);
+    media.setSize(size);
+    media.setKey(key);
+    media.setIv(iv);
+
+    DecryptedMessage decryptedMessage(DecryptedMessage::typeDecryptedMessageSecret17);
+    decryptedMessage.setRandomId(randomId);
+    decryptedMessage.setTtl(ttl);
+    decryptedMessage.setMedia(media);
+
     op->setDecryptedMessage(decryptedMessage);
 
     return prv->mFileHandler->uploadSendFile(*op, filePath);
@@ -597,8 +637,8 @@ qint64 Telegram::messagesSendEncryptedService(const InputEncryptedChat &chat, qi
         return 0;
     }
 
-    DecryptedMessageBuilder builder(secretChat->layer());
-    DecryptedMessage decryptedMessage = builder.buildDecryptedMessageForNotifyLayer(randomId, CoreTypes::typeLayerVersion);
+    DecryptedMessage decryptedMessage(DecryptedMessage::typeDecryptedMessageServiceSecret17);
+    decryptedMessage.setRandomId(randomId);
     decryptedMessage.setAction(action);
 
     QByteArray data = prv->mEncrypter->generateEncryptedData(decryptedMessage);
@@ -910,9 +950,14 @@ void Telegram::processSecretChatUpdate(const Update &update) {
                 prv->mEncrypter->setSecretChat(secretChat);
                 qint64 randomId;
                 Utils::randomBytes(&randomId, 8);
-                QList<qint64> previousMsgs = secretChat->sequence();
-                DecryptedMessageBuilder builder(secretChat->layer());
-                DecryptedMessage decryptedMessage = builder.buildDecryptedMessageForNotifyLayer(randomId, CoreTypes::typeLayerVersion);
+
+                DecryptedMessageAction action(DecryptedMessageAction::typeDecryptedMessageActionNotifyLayerSecret17);
+                action.setLayer(CoreTypes::typeLayerVersion);
+
+                DecryptedMessage decryptedMessage(DecryptedMessage::typeDecryptedMessageServiceSecret17);
+                decryptedMessage.setRandomId(randomId);
+                decryptedMessage.setAction(action);
+
                 QByteArray data = prv->mEncrypter->generateEncryptedData(decryptedMessage);
                 TelegramCore::messagesSendEncryptedService(inputEncryptedChat, randomId, data);
 
@@ -1098,8 +1143,14 @@ void Telegram::onMessagesAcceptEncryptionAnswer(qint64 msgId, const EncryptedCha
     prv->mEncrypter->setSecretChat(secretChat);
     qint64 randomId;
     Utils::randomBytes(&randomId, 8);
-    DecryptedMessageBuilder builder(secretChat->layer());
-    DecryptedMessage decryptedMessage = builder.buildDecryptedMessageForNotifyLayer(randomId, CoreTypes::typeLayerVersion);
+
+    DecryptedMessageAction action(DecryptedMessageAction::typeDecryptedMessageActionNotifyLayerSecret17);
+    action.setLayer(CoreTypes::typeLayerVersion);
+
+    DecryptedMessage decryptedMessage(DecryptedMessage::typeDecryptedMessageServiceSecret17);
+    decryptedMessage.setRandomId(randomId);
+    decryptedMessage.setAction(action);
+
     QByteArray data = prv->mEncrypter->generateEncryptedData(decryptedMessage);
     TelegramCore::messagesSendEncryptedService(inputEncryptedChat, randomId, data);
 

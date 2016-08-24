@@ -137,6 +137,14 @@ qint32 Utils::randomBytes(void *buffer, qint32 count) {
     return returnValue;
 }
 
+QByteArray Utils::generateRandomBytes() {
+    qint32 n = 15 + 4 * (lrand48() % 3);
+    QScopedArrayPointer<char> rnd(new char[n]);
+    Utils::randomBytes(rnd.data(), n);
+    QByteArray randomBytes(rnd.data());
+    return randomBytes;
+}
+
 qint32 Utils::serializeBignum(BIGNUM *b, char *buffer, qint32 maxlen) {
     qint32 itslen = BN_num_bytes (b);
     qint32 reqlen;
