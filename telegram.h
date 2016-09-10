@@ -31,7 +31,6 @@
 #include "telegram/types/types.h"
 #include "telegram/customtypes/customtypes.h"
 #include "secret/secretchat.h"
-#include "secret/secretchatmessage.h"
 #include "telegram/telegramcore.h"
 #include "core/settings.h"
 

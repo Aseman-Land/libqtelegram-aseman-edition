@@ -61,7 +61,6 @@ HEADERS += \
     $$PWD/file/file.h \
     $$PWD/file/downloadfile.h \
     $$PWD/file/fileoperation.h \
-    $$PWD/secret/secretchatmessage.h \
     $$PWD/secret/decrypter.h \
     $$PWD/secret/secretchat.h \
     $$PWD/secret/encrypter.h \

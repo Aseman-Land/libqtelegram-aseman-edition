@@ -665,6 +665,7 @@ photoCachedSize_Secret23#e9a734fa type:string location:FileLocation w:int h:int 
 fileLocationUnavailable_Secret23#7c596b46 volume_id:long local_id:int secret:long = FileLocation;
 fileLocation_Secret23#53d69076 dc_id:int volume_id:long local_id:int secret:long = FileLocation;
 decryptedMessageMediaExternalDocument_Secret23#fa95b0dd id:long access_hash:long date:int mime_type:string size:int thumb:PhotoSize dc_id:int attributes:Vector<DocumentAttribute> = DecryptedMessageMedia; 
+secretChatMessage#187dd9f4 chat_id:int ttl:int date:int decryptedMessage:DecryptedMessage attachment:EncryptedFile = SecretChatMessage
 
 ---functions---
 

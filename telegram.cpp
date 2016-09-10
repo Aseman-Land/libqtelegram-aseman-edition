@@ -43,7 +43,6 @@
 #include "secret/secretstate.h"
 #include "secret/encrypter.h"
 #include "secret/decrypter.h"
-#include "secret/secretchatmessage.h"
 #include "file/filehandler.h"
 #include "core/dcprovider.h"
 #include "telegram/coretypes.h"
