@@ -201,7 +201,7 @@ QByteArray Decrypter::decryptEncryptedMessage() {
     qint32 *msgKey = m_inPtr;
     qint32 bufferLength = 4 * (m_inEnd - m_inPtr);
 
-    fetchInts(4);
+    Utils::freeSecure(fetchInts(4), 8);
     static uchar sha1a_buffer[20];
     static uchar sha1b_buffer[20];
     static uchar sha1c_buffer[20];
