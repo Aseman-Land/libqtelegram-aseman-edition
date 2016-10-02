@@ -20,7 +20,7 @@
 
 #include "core/inboundpkt.h"
 #include <QByteArray>
-#include "secret/decryptedmessage.h"
+#include "telegram/types/decryptedmessage.h"
 #include "telegram/types/encryptedmessage.h"
 #include "core/settings.h"
 
@@ -50,11 +50,6 @@ protected:
 
     bool checkKeyFingerprints();
     QByteArray decryptEncryptedMessage();
-
-    DecryptedMessage fetchDecryptedMessage();
-    DecryptedMessageMedia fetchDecryptedMessageMedia();
-    DecryptedMessageAction fetchDecryptedMessageAction();
-    SendMessageAction fetchSendMessageAction();
 };
 
 #endif // DECRYPTER_H

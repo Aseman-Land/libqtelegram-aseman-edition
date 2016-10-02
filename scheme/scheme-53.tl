@@ -601,6 +601,56 @@ contacts.topPeers#70b772a8 categories:Vector<TopPeerCategoryPeers> chats:Vector<
 draftMessageEmpty#ba4baec5 = DraftMessage;
 draftMessage#fd8e711f flags:# no_webpage:flags.1?true reply_to_msg_id:flags.0?int message:string entities:flags.3?Vector<MessageEntity> date:int = DraftMessage;
 
+decryptedMessage8#1f814f1f random_id:long random_bytes:bytes message:string media:DecryptedMessageMedia = DecryptedMessage;
+decryptedMessageService8#aa48327d random_id:long random_bytes:bytes action:DecryptedMessageAction = DecryptedMessage;
+decryptedMessageMediaEmpty8#89f5c4a = DecryptedMessageMedia;
+decryptedMessageMediaPhoto8#32798a8c thumb:bytes thumb_w:int thumb_h:int w:int h:int size:int key:bytes iv:bytes = DecryptedMessageMedia;
+decryptedMessageMediaVideo8#4cee6ef3 thumb:bytes thumb_w:int thumb_h:int duration:int w:int h:int size:int key:bytes iv:bytes = DecryptedMessageMedia;
+decryptedMessageMediaGeoPoint8#35480a59 lat:double long:double = DecryptedMessageMedia;
+decryptedMessageMediaContact8#588a0a97 phone_number:string first_name:string last_name:string user_id:int = DecryptedMessageMedia;
+decryptedMessageActionSetMessageTTL8#a1733aec ttl_seconds:int = DecryptedMessageAction;
+decryptedMessageMediaDocument8#b095434b thumb:bytes thumb_w:int thumb_h:int file_name:string mime_type:string size:int key:bytes iv:bytes = DecryptedMessageMedia;
+decryptedMessageMediaAudio8#6080758f duration:int size:int key:bytes iv:bytes = DecryptedMessageMedia;
+decryptedMessageActionReadMessages8#c4f40be random_ids:Vector<long> = DecryptedMessageAction;
+decryptedMessageActionDeleteMessages8#65614304 random_ids:Vector<long> = DecryptedMessageAction;
+decryptedMessageActionScreenshotMessages8#8ac1f475 random_ids:Vector<long> = DecryptedMessageAction;
+decryptedMessageActionFlushHistory8#6719e45c = DecryptedMessageAction;
+decryptedMessage17#204d3878 random_id:long ttl:int message:string media:DecryptedMessageMedia = DecryptedMessage;
+decryptedMessageService17#73164160 random_id:long action:DecryptedMessageAction = DecryptedMessage;
+decryptedMessageMediaVideo17#524a415d thumb:bytes thumb_w:int thumb_h:int duration:int mime_type:string w:int h:int size:int key:bytes iv:bytes = DecryptedMessageMedia;
+decryptedMessageMediaAudio17#57e0a9cb duration:int mime_type:string size:int key:bytes iv:bytes = DecryptedMessageMedia;
+decryptedMessageLayer17#1be31789 random_bytes:bytes layer:int in_seq_no:int out_seq_no:int message:DecryptedMessage = DecryptedMessageLayer;
+sendMessageTypingAction17#16bf744e = SendMessageAction;
+sendMessageCancelAction17#fd5ec8f5 = SendMessageAction;
+sendMessageRecordVideoAction17#a187d66f = SendMessageAction;
+sendMessageUploadVideoAction17#92042ff7 = SendMessageAction;
+sendMessageRecordAudioAction17#d52f73f7 = SendMessageAction;
+sendMessageUploadAudioAction17#e6ac8a6f = SendMessageAction;
+sendMessageUploadPhotoAction17#990a3c1a = SendMessageAction;
+sendMessageUploadDocumentAction17#8faee98e = SendMessageAction;
+sendMessageGeoLocationAction17#176f8ba1 = SendMessageAction;
+sendMessageChooseContactAction17#628cbc6f = SendMessageAction;
+decryptedMessageActionResend17#511110b0 start_seq_no:int end_seq_no:int = DecryptedMessageAction;
+decryptedMessageActionNotifyLayer17#f3048883 layer:int = DecryptedMessageAction;
+decryptedMessageActionTyping17#ccb27641 action:SendMessageAction = DecryptedMessageAction;
+decryptedMessageActionRequestKey20#f3c9611b exchange_id:long g_a:bytes = DecryptedMessageAction;
+decryptedMessageActionAcceptKey20#6fe1735b exchange_id:long g_b:bytes key_fingerprint:long = DecryptedMessageAction;
+decryptedMessageActionAbortKey20#dd05ec6b exchange_id:long = DecryptedMessageAction;
+decryptedMessageActionCommitKey20#ec2e0b9b exchange_id:long key_fingerprint:long = DecryptedMessageAction;
+decryptedMessageActionNoop20#a82fdd63 = DecryptedMessageAction;
+documentAttributeImageSize23#6c37c15c w:int h:int = DocumentAttribute;
+documentAttributeAnimated23#11b58939 = DocumentAttribute;
+documentAttributeSticker23#fb0a5727 = DocumentAttribute;
+documentAttributeVideo23#5910cccb duration:int w:int h:int = DocumentAttribute;
+documentAttributeAudio23#51448e5 duration:int = DocumentAttribute;
+documentAttributeFilename23#15590068 file_name:string = DocumentAttribute;
+photoSizeEmpty23#e17e23c type:string = PhotoSize;
+photoSize23#77bfb61b type:string location:FileLocation w:int h:int size:int = PhotoSize;
+photoCachedSize23#e9a734fa type:string location:FileLocation w:int h:int bytes:bytes = PhotoSize;
+fileLocationUnavailable23#7c596b46 volume_id:long local_id:int secret:long = FileLocation;
+fileLocation23#53d69076 dc_id:int volume_id:long local_id:int secret:long = FileLocation;
+decryptedMessageMediaExternalDocument23#fa95b0dd id:long access_hash:long date:int mime_type:string size:int thumb:PhotoSize dc_id:int attributes:Vector<DocumentAttribute> = DecryptedMessageMedia; 
+
 ---functions---
 
 invokeAfterMsg#cb9f372d {X:Type} msg_id:long query:!X = X;

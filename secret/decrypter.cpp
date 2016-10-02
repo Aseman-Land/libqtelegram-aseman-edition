@@ -138,7 +138,7 @@ DecryptedMessage Decrypter::decryptEncryptedData(qint64 randomId, const QByteArr
             }
         }
 
-        DecryptedMessage decryptedMessage = fetchDecryptedMessage();
+        DecryptedMessage decryptedMessage(this);
 
         // from layer 17, decrypted message randomId must be equals to wrapping message one
         if (mSecretChat->layer() >= 17 && decryptedMessage.randomId() != randomId) {
@@ -148,11 +148,11 @@ DecryptedMessage Decrypter::decryptEncryptedData(qint64 randomId, const QByteArr
         if (processMessage) {
             // process internal message
             // TODO Roberto: move this to another method
-            if (decryptedMessage.classType() == DecryptedMessage::typeDecryptedMessageService ||
-                    decryptedMessage.classType() == DecryptedMessage::typeDecryptedMessageService_level8) {
+            if (decryptedMessage.classType() == DecryptedMessage::typeDecryptedMessageServiceSecret17 ||
+                    decryptedMessage.classType() == DecryptedMessage::typeDecryptedMessageServiceSecret8) {
                 DecryptedMessageAction action = decryptedMessage.action();
                 switch (action.classType()) {
-                case DecryptedMessageAction::typeDecryptedMessageActionNotifyLayer: {
+                case DecryptedMessageAction::typeDecryptedMessageActionNotifyLayerSecret17: {
                     mSecretChat->setLayer(action.layer());
                     qCDebug(TG_SECRET_DECRYPTER) << "Received layer" << action.layer() << "from peer";
                     break;
@@ -261,214 +261,4 @@ QByteArray Decrypter::decryptEncryptedMessage() {
 
     QByteArray plainData((char *)m_inPtr, plainDataLength);
     return plainData;
-}
-
-DecryptedMessage Decrypter::fetchDecryptedMessage() {
-    qint32 x = fetchInt();
-    ASSERT(x == (qint32)DecryptedMessage::typeDecryptedMessage_level8 ||
-           x == (qint32)DecryptedMessage::typeDecryptedMessageService_level8 ||
-           x == (qint32)DecryptedMessage::typeDecryptedMessage ||
-           x == (qint32)DecryptedMessage::typeDecryptedMessageService);
-    DecryptedMessage message((DecryptedMessage::DecryptedMessageType)x);
-    message.setRandomId(fetchLong());
-
-    switch (x) {
-    case DecryptedMessage::typeDecryptedMessage_level8: {
-        message.setRandomBytes(fetchBytes());
-        message.setMessage(fetchQString());
-        message.setMedia(fetchDecryptedMessageMedia());
-        break;
-    }
-    case DecryptedMessage::typeDecryptedMessageService_level8: {
-        message.setRandomBytes(fetchBytes());
-        message.setAction(fetchDecryptedMessageAction());
-        break;
-    }
-    case DecryptedMessage::typeDecryptedMessage: {
-        message.setTtl(fetchInt());
-        message.setMessage(fetchQString());
-        message.setMedia(fetchDecryptedMessageMedia());
-        break;
-    }
-    case DecryptedMessage::typeDecryptedMessageService: {
-        message.setAction(fetchDecryptedMessageAction());
-        break;
-    }
-    }
-    return message;
-}
-
-DecryptedMessageMedia Decrypter::fetchDecryptedMessageMedia() {
-    qint32 x = fetchInt();
-    ASSERT(x == (qint32)DecryptedMessageMedia::typeDecryptedMessageMediaEmpty ||
-           x == (qint32)DecryptedMessageMedia::typeDecryptedMessageMediaPhoto ||
-           x == (qint32)DecryptedMessageMedia::typeDecryptedMessageMediaVideo_layer8 ||
-           x == (qint32)DecryptedMessageMedia::typeDecryptedMessageMediaGeoPoint ||
-           x == (qint32)DecryptedMessageMedia::typeDecryptedMessageMediaContact ||
-           x == (qint32)DecryptedMessageMedia::typeDecryptedMessageMediaDocument ||
-           x == (qint32)DecryptedMessageMedia::typeDecryptedMessageMediaAudio_layer8 ||
-           x == (qint32)DecryptedMessageMedia::typeDecryptedMessageMediaVideo ||
-           x == (qint32)DecryptedMessageMedia::typeDecryptedMessageMediaAudio ||
-           x == (qint32)DecryptedMessageMedia::typeDecryptedMessageMediaExternalDocument);
-    DecryptedMessageMedia media((DecryptedMessageMedia::DecryptedMessageMediaType)x);
-
-    switch(x) {
-    case DecryptedMessageMedia::typeDecryptedMessageMediaEmpty: {
-        break;
-    }
-    case DecryptedMessageMedia::typeDecryptedMessageMediaExternalDocument: {
-        media.setId(fetchInt());
-        media.setAccessHash(fetchLong());
-        media.setDate(fetchLong());
-        media.setMimeType(fetchQString());
-        media.setSize(fetchInt());
-        media.setThumb23(this);
-        media.setDcId(fetchInt());
-
-        ASSERT(fetchInt() == (qint32)CoreTypes::typeVector);
-        qint32 n = fetchInt();
-        QList<DocumentAttribute> attrs;
-        for (qint32 i = 0; i < n; i++)
-            attrs.append(this);
-        media.setAttributes(attrs);
-        break;
-    }
-
-    case DecryptedMessageMedia::typeDecryptedMessageMediaPhoto: {
-        media.setThumb(fetchBytes());
-        media.setThumbW(fetchInt());
-        media.setThumbH(fetchInt());
-        media.setW(fetchInt());
-        media.setH(fetchInt());
-        media.setSize(fetchInt());
-        media.setKey(fetchBytes());
-        media.setIv(fetchBytes());
-        break;
-    }
-    case DecryptedMessageMedia::typeDecryptedMessageMediaVideo_layer8: {
-        media.setThumb(fetchBytes());
-        media.setThumbW(fetchInt());
-        media.setThumbH(fetchInt());
-        media.setDuration(fetchInt());
-        media.setW(fetchInt());
-        media.setH(fetchInt());
-        media.setSize(fetchInt());
-        media.setKey(fetchBytes());
-        media.setIv(fetchBytes());
-        break;
-    }
-    case DecryptedMessageMedia::typeDecryptedMessageMediaGeoPoint: {
-        media.setLatitude(fetchDouble());
-        media.setLongitude(fetchDouble());
-        break;
-    }
-    case DecryptedMessageMedia::typeDecryptedMessageMediaContact: {
-        media.setPhoneNumber(fetchQString());
-        media.setFirstName(fetchQString());
-        media.setLastName(fetchQString());
-        media.setUserId(fetchInt());
-        break;
-    }
-    case DecryptedMessageMedia::typeDecryptedMessageMediaDocument: {
-        media.setThumb(fetchBytes());
-        media.setThumbW(fetchInt());
-        media.setThumbH(fetchInt());
-        media.setFileName(fetchQString());
-        media.setMimeType(fetchQString());
-        media.setSize(fetchInt());
-        media.setKey(fetchBytes());
-        media.setIv(fetchBytes());
-        break;
-    }
-    case DecryptedMessageMedia::typeDecryptedMessageMediaAudio_layer8: {
-        media.setDuration(fetchInt());
-        media.setSize(fetchInt());
-        media.setKey(fetchBytes());
-        media.setIv(fetchBytes());
-        break;
-    }
-    case DecryptedMessageMedia::typeDecryptedMessageMediaVideo: {
-        media.setThumb(fetchBytes());
-        media.setThumbW(fetchInt());
-        media.setThumbH(fetchInt());
-        media.setDuration(fetchInt());
-        media.setMimeType(fetchQString());
-        media.setW(fetchInt());
-        media.setH(fetchInt());
-        media.setSize(fetchInt());
-        media.setKey(fetchBytes());
-        media.setIv(fetchBytes());
-        break;
-    }
-    case DecryptedMessageMedia::typeDecryptedMessageMediaAudio: {
-        media.setDuration(fetchInt());
-        media.setMimeType(fetchQString());
-        media.setSize(fetchInt());
-        media.setKey(fetchBytes());
-        media.setIv(fetchBytes());
-        break;
-    }
-    }
-    return media;
-}
-
-DecryptedMessageAction Decrypter::fetchDecryptedMessageAction() {
-    qint32 x = fetchInt();
-    ASSERT(x == (qint32)DecryptedMessageAction::typeDecryptedMessageActionSetMessageTTL ||
-           x == (qint32)DecryptedMessageAction::typeDecryptedMessageActionReadMessages ||
-           x == (qint32)DecryptedMessageAction::typeDecryptedMessageActionDeleteMessages ||
-           x == (qint32)DecryptedMessageAction::typeDecryptedMessageActionScreenshotMessages ||
-           x == (qint32)DecryptedMessageAction::typeDecryptedMessageActionFlushHistory ||
-           x == (qint32)DecryptedMessageAction::typeDecryptedMessageActionResend ||
-           x == (qint32)DecryptedMessageAction::typeDecryptedMessageActionNotifyLayer ||
-           x == (qint32)DecryptedMessageAction::typeDecryptedMessageActionTyping);
-    DecryptedMessageAction action((DecryptedMessageAction::DecryptedMessageActionType)x);
-
-    switch (x) {
-    case DecryptedMessageAction::typeDecryptedMessageActionSetMessageTTL: {
-        action.setTtlSeconds(fetchInt());
-        break;
-    }
-    case DecryptedMessageAction::typeDecryptedMessageActionReadMessages:
-    case DecryptedMessageAction::typeDecryptedMessageActionDeleteMessages:
-    case DecryptedMessageAction::typeDecryptedMessageActionScreenshotMessages: {
-        ASSERT(fetchInt() == (qint32)CoreTypes::typeVector);
-        qint32 n = fetchInt();
-        QList<qint64> randomIds;
-        for (qint32 i = 0; i < n; i++) {
-            randomIds.append(fetchLong());
-        }
-        action.setRandomIds(randomIds);
-    }
-    case DecryptedMessageAction::typeDecryptedMessageActionResend: {
-        action.setStartSeqNo(fetchInt());
-        action.setEndSeqNo(fetchInt());
-        break;
-    }
-    case DecryptedMessageAction::typeDecryptedMessageActionNotifyLayer: {
-        action.setLayer(fetchInt());
-        break;
-    }
-    case DecryptedMessageAction::typeDecryptedMessageActionTyping: {
-        action.setAction(fetchSendMessageAction());
-        break;
-    }
-    }
-    return action;
-}
-
-SendMessageAction Decrypter::fetchSendMessageAction() {
-    qint32 x = fetchInt();
-    ASSERT(x == (qint32)SendMessageAction::typeSendMessageTypingAction ||
-           x == (qint32)SendMessageAction::typeSendMessageCancelAction ||
-           x == (qint32)SendMessageAction::typeSendMessageRecordVideoAction ||
-           x == (qint32)SendMessageAction::typeSendMessageUploadVideoAction ||
-           x == (qint32)SendMessageAction::typeSendMessageRecordAudioAction ||
-           x == (qint32)SendMessageAction::typeSendMessageUploadAudioAction ||
-           x == (qint32)SendMessageAction::typeSendMessageUploadPhotoAction ||
-           x == (qint32)SendMessageAction::typeSendMessageUploadDocumentAction ||
-           x == (qint32)SendMessageAction::typeSendMessageGeoLocationAction ||
-           x == (qint32)SendMessageAction::typeSendMessageChooseContactAction);
-    SendMessageAction sendMessageAction((SendMessageAction::SendMessageActionClassType)x);
-    return sendMessageAction;
 }

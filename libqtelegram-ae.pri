@@ -37,10 +37,6 @@ SOURCES += \
     $$PWD/secret/secretstate.cpp \
     $$PWD/secret/secretchat.cpp \
     $$PWD/secret/encrypter.cpp \
-    $$PWD/secret/decryptedmessagebuilder.cpp \
-    $$PWD/secret/decryptedmessage.cpp \
-    $$PWD/secret/decryptedmessageaction.cpp \
-    $$PWD/secret/decryptedmessagemedia.cpp \
     $$PWD/core/outboundpkt.cpp \
     $$PWD/core/eventtimer.cpp \
     $$PWD/core/settings.cpp \
@@ -65,15 +61,10 @@ HEADERS += \
     $$PWD/file/file.h \
     $$PWD/file/downloadfile.h \
     $$PWD/file/fileoperation.h \
-    $$PWD/secret/secretchatmessage.h \
-    $$PWD/secret/decryptedmessagebuilder.h \
     $$PWD/secret/decrypter.h \
     $$PWD/secret/secretchat.h \
     $$PWD/secret/encrypter.h \
     $$PWD/secret/secretstate.h \
-    $$PWD/secret/decryptedmessage.h \
-    $$PWD/secret/decryptedmessageaction.h \
-    $$PWD/secret/decryptedmessagemedia.h \
     $$PWD/core/query.h \
     $$PWD/core/session.h \
     $$PWD/core/connection.h \
