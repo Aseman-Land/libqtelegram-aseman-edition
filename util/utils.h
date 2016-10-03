@@ -21,17 +21,6 @@
 
 #ifndef UTILS_H
 #define UTILS_H
-
-#ifdef DEBUG
-#define RES_PRE 8
-#define RES_AFTER 8
-#define MAX_BLOCKS 1000000
-void *blocks[MAX_BLOCKS];
-void *free_blocks[MAX_BLOCKS];
-qint32 usedBlocks;
-qint32 freeBlocksCnt;
-#endif
-
 #include <QObject>
 #include <openssl/bn.h>
 #include "constants.h"

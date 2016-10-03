@@ -18,7 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
 #include "utils.h"
 #include <openssl/rand.h>
 #include <openssl/pem.h>
@@ -39,6 +38,16 @@
 
 
 Q_LOGGING_CATEGORY(TG_UTIL_UTILS, "tg.util.utils")
+
+#ifdef DEBUG
+#define RES_PRE 8
+#define RES_AFTER 8
+#define MAX_BLOCKS 1000000
+void *blocks[MAX_BLOCKS];
+void *free_blocks[MAX_BLOCKS];
+qint32 usedBlocks;
+qint32 freeBlocksCnt;
+#endif
 
 #if defined(Q_OS_MAC)
 #include <sys/time.h>
