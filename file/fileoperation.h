@@ -54,7 +54,6 @@ public:
         mTimeOut(0),
         mInputChatPhoto(InputChatPhoto::typeInputChatPhotoEmpty),
         mGeoPoint(InputGeoPoint::typeInputGeoPointEmpty),
-        mCrop(InputPhotoCrop::typeInputPhotoCropAuto),
         mType(opType) {}
     ~FileOperation() {
         setResultCallback<int>(0);
@@ -84,8 +83,6 @@ public:
     void setCaption(QString caption) { mCaption = caption; }
     InputGeoPoint geoPoint() const { return mGeoPoint; }
     void setGeoPoint(const InputGeoPoint &geoPoint) { mGeoPoint = geoPoint; }
-    InputPhotoCrop crop() const { return mCrop; }
-    void setCrop(const InputPhotoCrop &crop) { mCrop = crop; }
     OpType opType() const { return mType; }
     void setTimeOut(const qint32 &timeOut) { mTimeOut = timeOut; }
     qint32 timeOut() const { return mTimeOut; }
@@ -141,7 +138,6 @@ private:
     // uploadProfilePhoto operation attributes
     QString mCaption;
     InputGeoPoint mGeoPoint;
-    InputPhotoCrop mCrop;
     OpType mType;
 
     InputEncryptedChat mInputEncryptedChat;

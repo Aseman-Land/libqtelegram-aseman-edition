@@ -87,8 +87,8 @@ public:
     qint64 accountUnregisterDevice(const QString &token, Callback<bool > callBack = 0, qint32 timeout = timeOut());
 
     //Photos
-    qint64 photosUploadProfilePhoto(const QByteArray &bytes, const QString &fileName, const QString &caption = QString::null, const InputGeoPoint &geoPoint = InputGeoPoint(InputGeoPoint::typeInputGeoPointEmpty), const InputPhotoCrop &crop = InputPhotoCrop(InputPhotoCrop::typeInputPhotoCropAuto), Callback<UploadSendPhoto> callBack = 0, qint32 timeout = timeOut());
-    qint64 photosUploadProfilePhoto(const QString &filePath, const QString &caption = QString::null, const InputGeoPoint &geoPoint = InputGeoPoint(InputGeoPoint::typeInputGeoPointEmpty), const InputPhotoCrop &crop = InputPhotoCrop(InputPhotoCrop::typeInputPhotoCropAuto), Callback<UploadSendPhoto> callBack = 0, qint32 timeout = timeOut());
+    qint64 photosUploadProfilePhoto(const QByteArray &bytes, const QString &fileName, const QString &caption = QString::null, const InputGeoPoint &geoPoint = InputGeoPoint(InputGeoPoint::typeInputGeoPointEmpty), Callback<UploadSendPhoto> callBack = 0, qint32 timeout = timeOut());
+    qint64 photosUploadProfilePhoto(const QString &filePath, const QString &caption = QString::null, const InputGeoPoint &geoPoint = InputGeoPoint(InputGeoPoint::typeInputGeoPointEmpty), Callback<UploadSendPhoto> callBack = 0, qint32 timeout = timeOut());
 
     // Working with contacts
     qint64 contactsGetContacts(Callback<ContactsContacts > callBack = 0, qint32 timeout = timeOut());
@@ -110,8 +110,8 @@ public:
     qint64 messagesForwardDocument(const InputPeer &peer, qint64 randomId, qint64 documentId, qint64 accessHash, qint32 replyToMsgId = 0, const ReplyMarkup &reply_markup = ReplyMarkup::null, bool broadcast = false, bool silent = false, bool background = false, Callback<UpdatesType > callBack = 0, qint32 timeout = timeOut());
 
     // Working with chats
-    qint64 messagesEditChatPhoto(qint32 chatId, const QString &filePath, const InputPhotoCrop &crop = InputPhotoCrop(InputPhotoCrop::typeInputPhotoCropAuto), Callback<UploadSendFile> callBack = 0, qint32 timeout = timeOut());
-    qint64 messagesEditChatPhoto(qint32 chatId, qint64 photoId, qint64 accessHash, const InputPhotoCrop &crop = InputPhotoCrop(InputPhotoCrop::typeInputPhotoCropAuto), Callback<UpdatesType > callBack = 0, qint32 timeout = timeOut());
+    qint64 messagesEditChatPhoto(qint32 chatId, const QString &filePath, Callback<UploadSendFile> callBack = 0, qint32 timeout = timeOut());
+    qint64 messagesEditChatPhoto(qint32 chatId, qint64 photoId, qint64 accessHash, Callback<UpdatesType > callBack = 0, qint32 timeout = timeOut());
 
     // Working with secret chats
     qint64 messagesCreateEncryptedChat(const InputUser &user, Callback<EncryptedChat > callBack = 0, qint32 timeout = timeOut()); //this method involves all DH key exchange and encrypted chat creation

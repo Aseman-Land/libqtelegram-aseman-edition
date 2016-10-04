@@ -227,10 +227,7 @@ void FileHandler::onUploadSaveFilePartResult(qint64, bool, const QVariant &attac
                     break;
                 }
                 case FileOperation::uploadProfilePhoto: {
-                    QString caption = op->caption();
-                    InputGeoPoint geoPoint = op->geoPoint();
-                    InputPhotoCrop crop = op->crop();
-                    requestId = mCore->photosUploadProfilePhoto(inputFile, caption, geoPoint, crop, [=](TG_PHOTOS_UPLOAD_PROFILE_PHOTO_CALLBACK){
+                    requestId = mCore->photosUploadProfilePhoto(inputFile, [=](TG_PHOTOS_UPLOAD_PROFILE_PHOTO_CALLBACK){
                         UploadSendPhoto usp(error.null? UploadSendPhoto::typeUploadSendPhotoFinished :
                                                         UploadSendPhoto::typeUploadSendPhotoCanceled);
                         usp.setPhoto(result);

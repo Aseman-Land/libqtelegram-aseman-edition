@@ -1248,21 +1248,19 @@ qint64 Telegram::accountUnregisterDevice(const QString &token, Callback<bool> ca
     return TelegramCore::accountUnregisterDevice(UBUNTU_PHONE_TOKEN_TYPE, token, callBack, timeout);
 }
 
-qint64 Telegram::photosUploadProfilePhoto(const QByteArray &bytes, const QString &fileName, const QString &caption, const InputGeoPoint &geoPoint, const InputPhotoCrop &crop, Callback<UploadSendPhoto> callBack, qint32 timeout) {
+qint64 Telegram::photosUploadProfilePhoto(const QByteArray &bytes, const QString &fileName, const QString &caption, const InputGeoPoint &geoPoint, Callback<UploadSendPhoto> callBack, qint32 timeout) {
     FileOperation *op = new FileOperation(FileOperation::uploadProfilePhoto);
     op->setCaption(caption);
     op->setGeoPoint(geoPoint);
-    op->setCrop(crop);
     op->setResultCallback<UploadSendPhoto>(callBack);
     op->setTimeOut(timeout);
     return prv->mFileHandler->uploadSendFile(*op, fileName, bytes);
 }
 
-qint64 Telegram::photosUploadProfilePhoto(const QString &filePath, const QString &caption, const InputGeoPoint &geoPoint, const InputPhotoCrop &crop, Callback<UploadSendPhoto> callBack, qint32 timeout) {
+qint64 Telegram::photosUploadProfilePhoto(const QString &filePath, const QString &caption, const InputGeoPoint &geoPoint, Callback<UploadSendPhoto> callBack, qint32 timeout) {
     FileOperation *op = new FileOperation(FileOperation::uploadProfilePhoto);
     op->setCaption(caption);
     op->setGeoPoint(geoPoint);
-    op->setCrop(crop);
     op->setResultCallback<UploadSendPhoto>(callBack);
     op->setTimeOut(timeout);
     return prv->mFileHandler->uploadSendFile(*op, filePath);
@@ -1582,9 +1580,8 @@ qint64 Telegram::messagesSetEncryptedTyping(qint32 chatId, bool typing, Callback
     return TelegramCore::messagesSetEncryptedTyping(mChat,typing, callBack, timeout);
 }
 
-qint64 Telegram::messagesEditChatPhoto(qint32 chatId, const QString &filePath, const InputPhotoCrop &crop, Callback<UploadSendFile > callBack, qint32 timeout) {
+qint64 Telegram::messagesEditChatPhoto(qint32 chatId, const QString &filePath, Callback<UploadSendFile > callBack, qint32 timeout) {
     InputChatPhoto inputChatPhoto(InputChatPhoto::typeInputChatUploadedPhoto);
-    inputChatPhoto.setCrop(crop);
     FileOperation *op = new FileOperation(FileOperation::editChatPhoto);
     op->setChatId(chatId);
     op->setInputChatPhoto(inputChatPhoto);
@@ -1593,13 +1590,12 @@ qint64 Telegram::messagesEditChatPhoto(qint32 chatId, const QString &filePath, c
     return prv->mFileHandler->uploadSendFile(*op, filePath);
 }
 
-qint64 Telegram::messagesEditChatPhoto(qint32 chatId, qint64 photoId, qint64 accessHash, const InputPhotoCrop &crop, Callback<UpdatesType> callBack, qint32 timeout) {
+qint64 Telegram::messagesEditChatPhoto(qint32 chatId, qint64 photoId, qint64 accessHash, Callback<UpdatesType> callBack, qint32 timeout) {
     InputChatPhoto inputChatPhoto(InputChatPhoto::typeInputChatPhoto);
     InputPhoto inputPhoto(InputPhoto::typeInputPhoto);
     inputPhoto.setId(photoId);
     inputPhoto.setAccessHash(accessHash);
     inputChatPhoto.setId(inputPhoto);
-    inputChatPhoto.setCrop(crop);
     return TelegramCore::messagesEditChatPhoto(chatId, inputChatPhoto, callBack, timeout);
 }
 
