@@ -46,7 +46,7 @@ public:
         mInputMedia(InputMedia::typeInputMediaEmpty),
         mRandomId(0),
         mReplyToMsgId(0),
-        mBroadcast(false),
+        mClearDraft(false),
         mSilent(false),
         mBackground(false),
         mReplyMarkup(ReplyMarkup::null),
@@ -67,8 +67,8 @@ public:
     void setRandomId(qint64 randomId) { mRandomId = randomId; }
     qint32 replyToMsgId() const { return mReplyToMsgId; }
     void setReplyToMsgId(const qint32 &replyToMsgId) { mReplyToMsgId = replyToMsgId; }
-    bool broadcast() const { return mBroadcast; }
-    void setBroadcast(bool broadcast) { mBroadcast = broadcast; }
+    bool clearDraft() const { return mClearDraft; }
+    void setClearDraft(bool clearDraft) { mClearDraft = clearDraft; }
     bool silent() const { return mSilent; }
     void setSilent(bool silent) { mSilent = silent; }
     bool background() const { return mBackground; }
@@ -126,7 +126,7 @@ private:
     InputMedia mInputMedia;
     qint64 mRandomId;
     qint32 mReplyToMsgId;
-    bool mBroadcast;
+    bool mClearDraft;
     bool mSilent;
     bool mBackground;
     ReplyMarkup mReplyMarkup;
