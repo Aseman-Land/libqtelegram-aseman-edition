@@ -9,12 +9,13 @@
 #### Schema:
 
 ```c++
-auth.authorization#ff036af1 user:User = auth.Authorization;
+auth.authorization#cd050916 flags:# tmp_sessions:flags.0?int user:User = auth.Authorization;
 ```
 
 #### Parameters:
 
 |Name|Type|
 |----|----|
+|tmpSessions|qint32|
 |user|[User](user.md)|
 

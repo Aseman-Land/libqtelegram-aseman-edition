@@ -54,3 +54,5 @@
 
 * **Update pinned message** - [TelegramCore::channelsUpdatePinnedMessage](methods/updatepinnedmessage.md)
 
+* **Get admined public channels** - [TelegramCore::channelsGetAdminedPublicChannels](methods/getadminedpublicchannels.md)
+

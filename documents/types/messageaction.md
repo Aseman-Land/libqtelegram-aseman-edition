@@ -15,6 +15,7 @@
 * [typeMessageActionChannelMigrateFrom](#messageactiontypemessageactionchannelmigratefrom)
 * [typeMessageActionPinMessage](#messageactiontypemessageactionpinmessage)
 * [typeMessageActionHistoryClear](#messageactiontypemessageactionhistoryclear)
+* [typeMessageActionGameScore](#messageactiontypemessageactiongamescore)
 
 ## MessageAction::typeMessageActionEmpty
 
@@ -187,4 +188,19 @@ messageActionHistoryClear#9fbab604 = MessageAction;
 
 #### Parameters:
 
+
+## MessageAction::typeMessageActionGameScore
+
+#### Schema:
+
+```c++
+messageActionGameScore#92a72876 game_id:long score:int = MessageAction;
+```
+
+#### Parameters:
+
+|Name|Type|
+|----|----|
+|gameId|qint64|
+|score|qint32|
 

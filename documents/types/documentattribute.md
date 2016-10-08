@@ -8,6 +8,7 @@
 * [typeDocumentAttributeVideo](#documentattributetypedocumentattributevideo)
 * [typeDocumentAttributeAudio](#documentattributetypedocumentattributeaudio)
 * [typeDocumentAttributeFilename](#documentattributetypedocumentattributefilename)
+* [typeDocumentAttributeHasStickers](#documentattributetypedocumentattributehasstickers)
 * [typeDocumentAttributeImageSizeSecret23](#documentattributetypedocumentattributeimagesizesecret23)
 * [typeDocumentAttributeAnimatedSecret23](#documentattributetypedocumentattributeanimatedsecret23)
 * [typeDocumentAttributeStickerSecret23](#documentattributetypedocumentattributestickersecret23)
@@ -46,15 +47,17 @@ documentAttributeAnimated#11b58939 = DocumentAttribute;
 #### Schema:
 
 ```c++
-documentAttributeSticker#3a556302 alt:string stickerset:InputStickerSet = DocumentAttribute;
+documentAttributeSticker#6319d612 flags:# mask:flags.1?true alt:string stickerset:InputStickerSet mask_coords:flags.0?MaskCoords = DocumentAttribute;
 ```
 
 #### Parameters:
 
 |Name|Type|
 |----|----|
+|mask|bool|
 |alt|QString|
 |stickerset|[InputStickerSet](inputstickerset.md)|
+|maskCoords|[MaskCoords](maskcoords.md)|
 
 ## DocumentAttribute::typeDocumentAttributeVideo
 
@@ -103,6 +106,17 @@ documentAttributeFilename#15590068 file_name:string = DocumentAttribute;
 |Name|Type|
 |----|----|
 |fileName|QString|
+
+## DocumentAttribute::typeDocumentAttributeHasStickers
+
+#### Schema:
+
+```c++
+documentAttributeHasStickers#9801d2f7 = DocumentAttribute;
+```
+
+#### Parameters:
+
 
 ## DocumentAttribute::typeDocumentAttributeImageSizeSecret23
 

@@ -5,6 +5,7 @@
 * [typeInputBotInlineResult](#inputbotinlineresulttypeinputbotinlineresult)
 * [typeInputBotInlineResultPhoto](#inputbotinlineresulttypeinputbotinlineresultphoto)
 * [typeInputBotInlineResultDocument](#inputbotinlineresulttypeinputbotinlineresultdocument)
+* [typeInputBotInlineResultGame](#inputbotinlineresulttypeinputbotinlineresultgame)
 
 ## InputBotInlineResult::typeInputBotInlineResult
 
@@ -65,5 +66,21 @@ inputBotInlineResultDocument#fff8fdc4 flags:# id:string type:string title:flags.
 |title|QString|
 |description|QString|
 |document|[InputDocument](inputdocument.md)|
+|sendMessage|[InputBotInlineMessage](inputbotinlinemessage.md)|
+
+## InputBotInlineResult::typeInputBotInlineResultGame
+
+#### Schema:
+
+```c++
+inputBotInlineResultGame#4fa417f2 id:string short_name:string send_message:InputBotInlineMessage = InputBotInlineResult;
+```
+
+#### Parameters:
+
+|Name|Type|
+|----|----|
+|id|QString|
+|shortName|QString|
 |sendMessage|[InputBotInlineMessage](inputbotinlinemessage.md)|
 

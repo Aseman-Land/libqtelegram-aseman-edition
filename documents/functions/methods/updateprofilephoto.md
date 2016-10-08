@@ -7,14 +7,13 @@ TelegramCore::photosUpdateProfilePhoto
 ## Schema:
 
 ```c++
-photos.updateProfilePhoto#eef579a0 id:InputPhoto crop:InputPhotoCrop = UserProfilePhoto;
+photos.updateProfilePhoto#f0bb5152 id:InputPhoto = UserProfilePhoto;
 ```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
 |id|[InputPhoto](../../types/inputphoto.md)||
-|crop|[InputPhotoCrop](../../types/inputphotocrop.md)||
 |callBack|Callback&lt;[UserProfilePhoto](../../types/userprofilephoto.md)&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
@@ -51,7 +50,7 @@ onUpdateProfilePhotoError(qint64 msgId, qint32 errorCode, const QString &errorTe
 ## Examples:
 
 ```c++
-tg->updateProfilePhoto(id, crop, [=](TG_UPDATE_PROFILE_PHOTO_CALLBACK){
+tg->updateProfilePhoto(id, [=](TG_UPDATE_PROFILE_PHOTO_CALLBACK){
     ...
 }, 30000);
 ```

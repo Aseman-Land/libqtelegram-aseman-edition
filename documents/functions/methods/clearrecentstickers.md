@@ -7,12 +7,13 @@ TelegramCore::messagesClearRecentStickers
 ## Schema:
 
 ```c++
-messages.clearRecentStickers#ab02e5d2 = Bool;
+messages.clearRecentStickers#8999602d flags:# attached:flags.0?true = Bool;
 ```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
+|attached|bool||
 |callBack|Callback&lt;bool&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
@@ -49,7 +50,7 @@ onClearRecentStickersError(qint64 msgId, qint32 errorCode, const QString &errorT
 ## Examples:
 
 ```c++
-tg->clearRecentStickers([=](TG_CLEAR_RECENT_STICKERS_CALLBACK){
+tg->clearRecentStickers(attached, [=](TG_CLEAR_RECENT_STICKERS_CALLBACK){
     ...
 }, 30000);
 ```

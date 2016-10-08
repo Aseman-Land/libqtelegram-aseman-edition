@@ -7,12 +7,13 @@ TelegramCore::messagesReorderStickerSets
 ## Schema:
 
 ```c++
-messages.reorderStickerSets#9fcfbc30 order:Vector<long> = Bool;
+messages.reorderStickerSets#78337739 flags:# masks:flags.0?true order:Vector<long> = Bool;
 ```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
+|masks|bool||
 |order|QList&lt;qint64&gt;||
 |callBack|Callback&lt;bool&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
@@ -50,7 +51,7 @@ onReorderStickerSetsError(qint64 msgId, qint32 errorCode, const QString &errorTe
 ## Examples:
 
 ```c++
-tg->reorderStickerSets(order, [=](TG_REORDER_STICKER_SETS_CALLBACK){
+tg->reorderStickerSets(masks, order, [=](TG_REORDER_STICKER_SETS_CALLBACK){
     ...
 }, 30000);
 ```

@@ -24,13 +24,14 @@ photoEmpty#2331b22d id:long = Photo;
 #### Schema:
 
 ```c++
-photo#cded42fe id:long access_hash:long date:int sizes:Vector<PhotoSize> = Photo;
+photo#9288dd29 flags:# has_stickers:flags.0?true id:long access_hash:long date:int sizes:Vector<PhotoSize> = Photo;
 ```
 
 #### Parameters:
 
 |Name|Type|
 |----|----|
+|hasStickers|bool|
 |id|qint64|
 |accessHash|qint64|
 |date|qint32|

@@ -7,12 +7,13 @@ TelegramCore::messagesGetBotCallbackAnswer
 ## Schema:
 
 ```c++
-messages.getBotCallbackAnswer#a6e94f04 peer:InputPeer msg_id:int data:bytes = messages.BotCallbackAnswer;
+messages.getBotCallbackAnswer#810a9fec flags:# game:flags.1?true peer:InputPeer msg_id:int data:flags.0?bytes = messages.BotCallbackAnswer;
 ```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
+|game|bool||
 |peer|[InputPeer](../../types/inputpeer.md)||
 |msgId|qint32||
 |data|QByteArray||
@@ -52,7 +53,7 @@ onGetBotCallbackAnswerError(qint64 msgId, qint32 errorCode, const QString &error
 ## Examples:
 
 ```c++
-tg->getBotCallbackAnswer(peer, msg_id, data, [=](TG_GET_BOT_CALLBACK_ANSWER_CALLBACK){
+tg->getBotCallbackAnswer(game, peer, msg_id, data, [=](TG_GET_BOT_CALLBACK_ANSWER_CALLBACK){
     ...
 }, 30000);
 ```

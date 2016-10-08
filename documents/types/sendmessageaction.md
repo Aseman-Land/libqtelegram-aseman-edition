@@ -12,6 +12,8 @@
 * [typeSendMessageUploadDocumentAction](#sendmessageactiontypesendmessageuploaddocumentaction)
 * [typeSendMessageGeoLocationAction](#sendmessageactiontypesendmessagegeolocationaction)
 * [typeSendMessageChooseContactAction](#sendmessageactiontypesendmessagechoosecontactaction)
+* [typeSendMessageGamePlayAction](#sendmessageactiontypesendmessagegameplayaction)
+* [typeSendMessageGameStopAction](#sendmessageactiontypesendmessagegamestopaction)
 * [typeSendMessageTypingActionSecret17](#sendmessageactiontypesendmessagetypingactionsecret17)
 * [typeSendMessageCancelActionSecret17](#sendmessageactiontypesendmessagecancelactionsecret17)
 * [typeSendMessageRecordVideoActionSecret17](#sendmessageactiontypesendmessagerecordvideoactionsecret17)
@@ -140,6 +142,28 @@ sendMessageGeoLocationAction#176f8ba1 = SendMessageAction;
 
 ```c++
 sendMessageChooseContactAction#628cbc6f = SendMessageAction;
+```
+
+#### Parameters:
+
+
+## SendMessageAction::typeSendMessageGamePlayAction
+
+#### Schema:
+
+```c++
+sendMessageGamePlayAction#dd6a8f48 = SendMessageAction;
+```
+
+#### Parameters:
+
+
+## SendMessageAction::typeSendMessageGameStopAction
+
+#### Schema:
+
+```c++
+sendMessageGameStopAction#15c2c99a = SendMessageAction;
 ```
 
 #### Parameters:

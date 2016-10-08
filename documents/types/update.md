@@ -53,6 +53,8 @@
 * [typeUpdateDraftMessage](#updatetypeupdatedraftmessage)
 * [typeUpdateReadFeaturedStickers](#updatetypeupdatereadfeaturedstickers)
 * [typeUpdateRecentStickers](#updatetypeupdaterecentstickers)
+* [typeUpdateConfig](#updatetypeupdateconfig)
+* [typeUpdatePtsChanged](#updatetypeupdateptschanged)
 
 ## Update::typeUpdateNewMessage
 
@@ -639,13 +641,14 @@ updateNewStickerSet#688a30aa stickerset:messages.StickerSet = Update;
 #### Schema:
 
 ```c++
-updateStickerSetsOrder#f0dfb451 order:Vector<long> = Update;
+updateStickerSetsOrder#bb2d201 flags:# masks:flags.0?true order:Vector<long> = Update;
 ```
 
 #### Parameters:
 
 |Name|Type|
 |----|----|
+|masks|bool|
 |order|QList&lt;qint64&gt;|
 
 ## Update::typeUpdateStickerSets
@@ -742,7 +745,7 @@ updateChannelPinnedMessage#98592475 channel_id:int id:int = Update;
 #### Schema:
 
 ```c++
-updateBotCallbackQuery#a68c688c query_id:long user_id:int peer:Peer msg_id:int data:bytes = Update;
+updateBotCallbackQuery#e73547e1 flags:# query_id:long user_id:int peer:Peer msg_id:int chat_instance:long data:flags.0?bytes game_short_name:flags.1?string = Update;
 ```
 
 #### Parameters:
@@ -753,7 +756,9 @@ updateBotCallbackQuery#a68c688c query_id:long user_id:int peer:Peer msg_id:int d
 |userId|qint32|
 |peer|[Peer](peer.md)|
 |msgId|qint32|
+|chatInstance|qint64|
 |data|QByteArray|
+|gameShortName|QString|
 
 ## Update::typeUpdateEditMessage
 
@@ -776,7 +781,7 @@ updateEditMessage#e40370a3 message:Message pts:int pts_count:int = Update;
 #### Schema:
 
 ```c++
-updateInlineBotCallbackQuery#2cbd95af query_id:long user_id:int msg_id:InputBotInlineMessageID data:bytes = Update;
+updateInlineBotCallbackQuery#f9d27a5a flags:# query_id:long user_id:int msg_id:InputBotInlineMessageID chat_instance:long data:flags.0?bytes game_short_name:flags.1?string = Update;
 ```
 
 #### Parameters:
@@ -786,7 +791,9 @@ updateInlineBotCallbackQuery#2cbd95af query_id:long user_id:int msg_id:InputBotI
 |queryId|qint64|
 |userId|qint32|
 |msgId|[InputBotInlineMessageID](inputbotinlinemessageid.md)|
+|chatInstance|qint64|
 |data|QByteArray|
+|gameShortName|QString|
 
 ## Update::typeUpdateReadChannelOutbox
 
@@ -835,6 +842,28 @@ updateReadFeaturedStickers#571d2742 = Update;
 
 ```c++
 updateRecentStickers#9a422c20 = Update;
+```
+
+#### Parameters:
+
+
+## Update::typeUpdateConfig
+
+#### Schema:
+
+```c++
+updateConfig#a229dd06 = Update;
+```
+
+#### Parameters:
+
+
+## Update::typeUpdatePtsChanged
+
+#### Schema:
+
+```c++
+updatePtsChanged#3354678f = Update;
 ```
 
 #### Parameters:
