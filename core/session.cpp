@@ -449,22 +449,21 @@ qint64 Session::encryptSendMessage(qint32 *msg, qint32 msgInts, qint32 useful) {
     if (msgInts <= 0 || msgInts > MAX_MESSAGE_INTS - 4) {
       return -1;
     }
-    EncryptedMsg *encMsg = initEncryptedMessage(useful);
+
+    QScopedPointer<EncryptedMsg> encMsg(initEncryptedMessage(useful));
     if (msg) {
       memcpy (encMsg->message, msg, msgInts * 4);
       encMsg->msgLen = msgInts * 4;
     } else if ((encMsg->msgLen & 0x80000003) || encMsg->msgLen > MAX_MESSAGE_INTS * 4 - 16) {
-      delete encMsg;
       return -1;
     }
 
-    qint32 l = aesEncryptMessage(encMsg);
+    qint32 l = aesEncryptMessage(encMsg.data());
     Q_ASSERT(l > 0);
 
-    if(!rpcSendMessage(encMsg, l + UNENCSZ))
+    if(!rpcSendMessage(encMsg.data(), l + UNENCSZ))
         return -1;
 
-    delete encMsg;
     return m_clientLastMsgId;
 }
 
