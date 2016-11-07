@@ -46,7 +46,7 @@ public:
         mInputMedia(InputMedia::typeInputMediaEmpty),
         mRandomId(0),
         mReplyToMsgId(0),
-        mBroadcast(false),
+        mClearDraft(false),
         mSilent(false),
         mBackground(false),
         mReplyMarkup(ReplyMarkup::null),
@@ -54,7 +54,6 @@ public:
         mTimeOut(0),
         mInputChatPhoto(InputChatPhoto::typeInputChatPhotoEmpty),
         mGeoPoint(InputGeoPoint::typeInputGeoPointEmpty),
-        mCrop(InputPhotoCrop::typeInputPhotoCropAuto),
         mType(opType) {}
     ~FileOperation() {
         setResultCallback<int>(0);
@@ -68,8 +67,8 @@ public:
     void setRandomId(qint64 randomId) { mRandomId = randomId; }
     qint32 replyToMsgId() const { return mReplyToMsgId; }
     void setReplyToMsgId(const qint32 &replyToMsgId) { mReplyToMsgId = replyToMsgId; }
-    bool broadcast() const { return mBroadcast; }
-    void setBroadcast(bool broadcast) { mBroadcast = broadcast; }
+    bool clearDraft() const { return mClearDraft; }
+    void setClearDraft(bool clearDraft) { mClearDraft = clearDraft; }
     bool silent() const { return mSilent; }
     void setSilent(bool silent) { mSilent = silent; }
     bool background() const { return mBackground; }
@@ -84,8 +83,6 @@ public:
     void setCaption(QString caption) { mCaption = caption; }
     InputGeoPoint geoPoint() const { return mGeoPoint; }
     void setGeoPoint(const InputGeoPoint &geoPoint) { mGeoPoint = geoPoint; }
-    InputPhotoCrop crop() const { return mCrop; }
-    void setCrop(const InputPhotoCrop &crop) { mCrop = crop; }
     OpType opType() const { return mType; }
     void setTimeOut(const qint32 &timeOut) { mTimeOut = timeOut; }
     qint32 timeOut() const { return mTimeOut; }
@@ -129,7 +126,7 @@ private:
     InputMedia mInputMedia;
     qint64 mRandomId;
     qint32 mReplyToMsgId;
-    bool mBroadcast;
+    bool mClearDraft;
     bool mSilent;
     bool mBackground;
     ReplyMarkup mReplyMarkup;
@@ -141,7 +138,6 @@ private:
     // uploadProfilePhoto operation attributes
     QString mCaption;
     InputGeoPoint mGeoPoint;
-    InputPhotoCrop mCrop;
     OpType mType;
 
     InputEncryptedChat mInputEncryptedChat;

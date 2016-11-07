@@ -76,7 +76,11 @@
 
 * [FoundGif](foundgif.md)
 
+* [Game](game.md)
+
 * [GeoPoint](geopoint.md)
+
+* [HighScore](highscore.md)
 
 * [ImportedContact](importedcontact.md)
 
@@ -106,6 +110,8 @@
 
 * [InputFileLocation](inputfilelocation.md)
 
+* [InputGame](inputgame.md)
+
 * [InputGeoPoint](inputgeopoint.md)
 
 * [InputMedia](inputmedia.md)
@@ -120,19 +126,21 @@
 
 * [InputPhoto](inputphoto.md)
 
-* [InputPhotoCrop](inputphotocrop.md)
-
 * [InputPrivacyKey](inputprivacykey.md)
 
 * [InputPrivacyRule](inputprivacyrule.md)
 
 * [InputStickerSet](inputstickerset.md)
 
+* [InputStickeredMedia](inputstickeredmedia.md)
+
 * [InputUser](inputuser.md)
 
 * [KeyboardButton](keyboardbutton.md)
 
 * [KeyboardButtonRow](keyboardbuttonrow.md)
+
+* [MaskCoords](maskcoords.md)
 
 * [Message](message.md)
 
@@ -173,6 +181,8 @@
 * [ReplyMarkup](replymarkup.md)
 
 * [ReportReason](reportreason.md)
+
+* [SecretChatMessage](secretchatmessage.md)
 
 * [SendMessageAction](sendmessageaction.md)
 
@@ -279,6 +289,8 @@
 * [MessagesFeaturedStickers](messagesfeaturedstickers.md)
 
 * [MessagesFoundGifs](messagesfoundgifs.md)
+
+* [MessagesHighScores](messageshighscores.md)
 
 * [MessagesMessageEditData](messagesmessageeditdata.md)
 

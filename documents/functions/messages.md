@@ -48,8 +48,6 @@
 
 * **Forward message** - [TelegramCore::messagesForwardMessage](methods/forwardmessage.md)
 
-* **Send broadcast** - [TelegramCore::messagesSendBroadcast](methods/sendbroadcast.md)
-
 * **Get dh config** - [TelegramCore::messagesGetDhConfig](methods/getdhconfig.md)
 
 * **Request encryption** - [TelegramCore::messagesRequestEncryption](methods/requestencryption.md)
@@ -71,8 +69,6 @@
 * **Received queue** - [TelegramCore::messagesReceivedQueue](methods/receivedqueue.md)
 
 * **Read message contents** - [TelegramCore::messagesReadMessageContents](methods/readmessagecontents.md)
-
-* **Get stickers** - [TelegramCore::messagesGetStickers](methods/getstickers.md)
 
 * **Get all stickers** - [TelegramCore::messagesGetAllStickers](methods/getallstickers.md)
 
@@ -144,7 +140,17 @@
 
 * **Clear recent stickers** - [TelegramCore::messagesClearRecentStickers](methods/clearrecentstickers.md)
 
-* **Get unused stickers** - [TelegramCore::messagesGetUnusedStickers](methods/getunusedstickers.md)
-
 * **Get archived stickers** - [TelegramCore::messagesGetArchivedStickers](methods/getarchivedstickers.md)
+
+* **Get mask stickers** - [TelegramCore::messagesGetMaskStickers](methods/getmaskstickers.md)
+
+* **Get attached stickers** - [TelegramCore::messagesGetAttachedStickers](methods/getattachedstickers.md)
+
+* **Set game score** - [TelegramCore::messagesSetGameScore](methods/setgamescore.md)
+
+* **Set inline game score** - [TelegramCore::messagesSetInlineGameScore](methods/setinlinegamescore.md)
+
+* **Get game high scores** - [TelegramCore::messagesGetGameHighScores](methods/getgamehighscores.md)
+
+* **Get inline game high scores** - [TelegramCore::messagesGetInlineGameHighScores](methods/getinlinegamehighscores.md)
 

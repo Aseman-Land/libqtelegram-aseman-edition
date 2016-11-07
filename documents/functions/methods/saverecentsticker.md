@@ -7,12 +7,13 @@ TelegramCore::messagesSaveRecentSticker
 ## Schema:
 
 ```c++
-messages.saveRecentSticker#348e39bf id:InputDocument unsave:Bool = Bool;
+messages.saveRecentSticker#392718f8 flags:# attached:flags.0?true id:InputDocument unsave:Bool = Bool;
 ```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
+|attached|bool||
 |id|[InputDocument](../../types/inputdocument.md)||
 |unsave|bool||
 |callBack|Callback&lt;bool&gt;|0|
@@ -51,7 +52,7 @@ onSaveRecentStickerError(qint64 msgId, qint32 errorCode, const QString &errorTex
 ## Examples:
 
 ```c++
-tg->saveRecentSticker(id, unsave, [=](TG_SAVE_RECENT_STICKER_CALLBACK){
+tg->saveRecentSticker(attached, id, unsave, [=](TG_SAVE_RECENT_STICKER_CALLBACK){
     ...
 }, 30000);
 ```

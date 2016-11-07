@@ -10,6 +10,7 @@
 * [typeMessageMediaDocument](#messagemediatypemessagemediadocument)
 * [typeMessageMediaWebPage](#messagemediatypemessagemediawebpage)
 * [typeMessageMediaVenue](#messagemediatypemessagemediavenue)
+* [typeMessageMediaGame](#messagemediatypemessagemediagame)
 
 ## MessageMedia::typeMessageMediaEmpty
 
@@ -125,4 +126,18 @@ messageMediaVenue#7912b71f geo:GeoPoint title:string address:string provider:str
 |address|QString|
 |provider|QString|
 |venueId|QString|
+
+## MessageMedia::typeMessageMediaGame
+
+#### Schema:
+
+```c++
+messageMediaGame#fdb19008 game:Game = MessageMedia;
+```
+
+#### Parameters:
+
+|Name|Type|
+|----|----|
+|game|[Game](game.md)|
 

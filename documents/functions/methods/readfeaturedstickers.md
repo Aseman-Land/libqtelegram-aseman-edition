@@ -7,12 +7,13 @@ TelegramCore::messagesReadFeaturedStickers
 ## Schema:
 
 ```c++
-messages.readFeaturedStickers#e21cbb = Bool;
+messages.readFeaturedStickers#5b118126 id:Vector<long> = Bool;
 ```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
+|id|QList&lt;qint64&gt;||
 |callBack|Callback&lt;bool&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
@@ -49,7 +50,7 @@ onReadFeaturedStickersError(qint64 msgId, qint32 errorCode, const QString &error
 ## Examples:
 
 ```c++
-tg->readFeaturedStickers([=](TG_READ_FEATURED_STICKERS_CALLBACK){
+tg->readFeaturedStickers(id, [=](TG_READ_FEATURED_STICKERS_CALLBACK){
     ...
 }, 30000);
 ```

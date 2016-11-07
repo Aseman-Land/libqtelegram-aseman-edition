@@ -12,6 +12,9 @@
 * [typeInputMediaDocument](#inputmediatypeinputmediadocument)
 * [typeInputMediaVenue](#inputmediatypeinputmediavenue)
 * [typeInputMediaGifExternal](#inputmediatypeinputmediagifexternal)
+* [typeInputMediaPhotoExternal](#inputmediatypeinputmediaphotoexternal)
+* [typeInputMediaDocumentExternal](#inputmediatypeinputmediadocumentexternal)
+* [typeInputMediaGame](#inputmediatypeinputmediagame)
 
 ## InputMedia::typeInputMediaEmpty
 
@@ -29,7 +32,7 @@ inputMediaEmpty#9664f57f = InputMedia;
 #### Schema:
 
 ```c++
-inputMediaUploadedPhoto#f7aff1c0 file:InputFile caption:string = InputMedia;
+inputMediaUploadedPhoto#630c9af1 flags:# file:InputFile caption:string stickers:flags.0?Vector<InputDocument> = InputMedia;
 ```
 
 #### Parameters:
@@ -38,6 +41,7 @@ inputMediaUploadedPhoto#f7aff1c0 file:InputFile caption:string = InputMedia;
 |----|----|
 |file|[InputFile](inputfile.md)|
 |caption|QString|
+|stickers|QList&lt;[InputDocument](inputdocument.md)&gt;|
 
 ## InputMedia::typeInputMediaPhoto
 
@@ -89,7 +93,7 @@ inputMediaContact#a6e45987 phone_number:string first_name:string last_name:strin
 #### Schema:
 
 ```c++
-inputMediaUploadedDocument#1d89306d file:InputFile mime_type:string attributes:Vector<DocumentAttribute> caption:string = InputMedia;
+inputMediaUploadedDocument#d070f1e9 flags:# file:InputFile mime_type:string attributes:Vector<DocumentAttribute> caption:string stickers:flags.0?Vector<InputDocument> = InputMedia;
 ```
 
 #### Parameters:
@@ -100,13 +104,14 @@ inputMediaUploadedDocument#1d89306d file:InputFile mime_type:string attributes:V
 |mimeType|QString|
 |attributes|QList&lt;[DocumentAttribute](documentattribute.md)&gt;|
 |caption|QString|
+|stickers|QList&lt;[InputDocument](inputdocument.md)&gt;|
 
 ## InputMedia::typeInputMediaUploadedThumbDocument
 
 #### Schema:
 
 ```c++
-inputMediaUploadedThumbDocument#ad613491 file:InputFile thumb:InputFile mime_type:string attributes:Vector<DocumentAttribute> caption:string = InputMedia;
+inputMediaUploadedThumbDocument#50d88cae flags:# file:InputFile thumb:InputFile mime_type:string attributes:Vector<DocumentAttribute> caption:string stickers:flags.0?Vector<InputDocument> = InputMedia;
 ```
 
 #### Parameters:
@@ -118,6 +123,7 @@ inputMediaUploadedThumbDocument#ad613491 file:InputFile thumb:InputFile mime_typ
 |mimeType|QString|
 |attributes|QList&lt;[DocumentAttribute](documentattribute.md)&gt;|
 |caption|QString|
+|stickers|QList&lt;[InputDocument](inputdocument.md)&gt;|
 
 ## InputMedia::typeInputMediaDocument
 
@@ -166,4 +172,48 @@ inputMediaGifExternal#4843b0fd url:string q:string = InputMedia;
 |----|----|
 |url|QString|
 |q|QString|
+
+## InputMedia::typeInputMediaPhotoExternal
+
+#### Schema:
+
+```c++
+inputMediaPhotoExternal#b55f4f18 url:string caption:string = InputMedia;
+```
+
+#### Parameters:
+
+|Name|Type|
+|----|----|
+|url|QString|
+|caption|QString|
+
+## InputMedia::typeInputMediaDocumentExternal
+
+#### Schema:
+
+```c++
+inputMediaDocumentExternal#e5e9607c url:string caption:string = InputMedia;
+```
+
+#### Parameters:
+
+|Name|Type|
+|----|----|
+|url|QString|
+|caption|QString|
+
+## InputMedia::typeInputMediaGame
+
+#### Schema:
+
+```c++
+inputMediaGame#d33f43f3 id:InputGame = InputMedia;
+```
+
+#### Parameters:
+
+|Name|Type|
+|----|----|
+|id|[InputGame](inputgame.md)|
 

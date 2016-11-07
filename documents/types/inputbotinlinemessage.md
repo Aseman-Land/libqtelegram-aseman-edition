@@ -7,6 +7,7 @@
 * [typeInputBotInlineMessageMediaGeo](#inputbotinlinemessagetypeinputbotinlinemessagemediageo)
 * [typeInputBotInlineMessageMediaVenue](#inputbotinlinemessagetypeinputbotinlinemessagemediavenue)
 * [typeInputBotInlineMessageMediaContact](#inputbotinlinemessagetypeinputbotinlinemessagemediacontact)
+* [typeInputBotInlineMessageGame](#inputbotinlinemessagetypeinputbotinlinemessagegame)
 
 ## InputBotInlineMessage::typeInputBotInlineMessageMediaAuto
 
@@ -89,5 +90,19 @@ inputBotInlineMessageMediaContact#2daf01a7 flags:# phone_number:string first_nam
 |phoneNumber|QString|
 |firstName|QString|
 |lastName|QString|
+|replyMarkup|[ReplyMarkup](replymarkup.md)|
+
+## InputBotInlineMessage::typeInputBotInlineMessageGame
+
+#### Schema:
+
+```c++
+inputBotInlineMessageGame#4b425864 flags:# reply_markup:flags.2?ReplyMarkup = InputBotInlineMessage;
+```
+
+#### Parameters:
+
+|Name|Type|
+|----|----|
 |replyMarkup|[ReplyMarkup](replymarkup.md)|
 

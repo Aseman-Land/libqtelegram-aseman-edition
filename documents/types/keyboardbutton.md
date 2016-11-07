@@ -8,6 +8,7 @@
 * [typeKeyboardButtonRequestPhone](#keyboardbuttontypekeyboardbuttonrequestphone)
 * [typeKeyboardButtonRequestGeoLocation](#keyboardbuttontypekeyboardbuttonrequestgeolocation)
 * [typeKeyboardButtonSwitchInline](#keyboardbuttontypekeyboardbuttonswitchinline)
+* [typeKeyboardButtonGame](#keyboardbuttontypekeyboardbuttongame)
 
 ## KeyboardButton::typeKeyboardButton
 
@@ -86,7 +87,23 @@ keyboardButtonRequestGeoLocation#fc796b3f text:string = KeyboardButton;
 #### Schema:
 
 ```c++
-keyboardButtonSwitchInline#ea1b7a14 text:string query:string = KeyboardButton;
+keyboardButtonSwitchInline#568a748 flags:# same_peer:flags.0?true text:string query:string = KeyboardButton;
+```
+
+#### Parameters:
+
+|Name|Type|
+|----|----|
+|samePeer|bool|
+|text|QString|
+|query|QString|
+
+## KeyboardButton::typeKeyboardButtonGame
+
+#### Schema:
+
+```c++
+keyboardButtonGame#50f41ccf text:string = KeyboardButton;
 ```
 
 #### Parameters:
@@ -94,5 +111,4 @@ keyboardButtonSwitchInline#ea1b7a14 text:string query:string = KeyboardButton;
 |Name|Type|
 |----|----|
 |text|QString|
-|query|QString|
 

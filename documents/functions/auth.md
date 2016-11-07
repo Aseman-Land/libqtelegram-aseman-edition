@@ -34,3 +34,5 @@
 
 * **Cancel code** - [TelegramCore::authCancelCode](methods/cancelcode.md)
 
+* **Drop temp auth keys** - [TelegramCore::authDropTempAuthKeys](methods/droptempauthkeys.md)
+

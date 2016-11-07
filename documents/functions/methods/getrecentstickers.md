@@ -7,12 +7,13 @@ TelegramCore::messagesGetRecentStickers
 ## Schema:
 
 ```c++
-messages.getRecentStickers#99197c2c hash:int = messages.RecentStickers;
+messages.getRecentStickers#5ea192c9 flags:# attached:flags.0?true hash:int = messages.RecentStickers;
 ```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
+|attached|bool||
 |hash|qint32||
 |callBack|Callback&lt;[MessagesRecentStickers](../../types/messagesrecentstickers.md)&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
@@ -50,7 +51,7 @@ onGetRecentStickersError(qint64 msgId, qint32 errorCode, const QString &errorTex
 ## Examples:
 
 ```c++
-tg->getRecentStickers(hash, [=](TG_GET_RECENT_STICKERS_CALLBACK){
+tg->getRecentStickers(attached, hash, [=](TG_GET_RECENT_STICKERS_CALLBACK){
     ...
 }, 30000);
 ```
