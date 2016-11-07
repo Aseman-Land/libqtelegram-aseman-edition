@@ -50,6 +50,8 @@ Session::Session(DC *dc, Settings *settings, CryptoUtils *crypto, QObject *paren
     // create session id
     RAND_pseudo_bytes((uchar *) &m_sessionId, 8);
     qCDebug(TG_CORE_SESSION) << "created session with id" << QString::number(m_sessionId, 16);
+
+    connect(this, &QAbstractSocket::disconnected, this, &Session::onDisconnected);
 }
 
 Session::~Session() {
@@ -58,7 +60,6 @@ Session::~Session() {
 
 void Session::close() {
     if (this->state() != QAbstractSocket::UnconnectedState) {
-        connect(this, &QAbstractSocket::disconnected, this, &Session::onDisconnected);
         this->disconnectFromHost();
     } else {
         Q_EMIT sessionClosed(m_sessionId);
