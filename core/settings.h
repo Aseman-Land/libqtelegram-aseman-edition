@@ -125,6 +125,7 @@ public:
     qint32 g() const { return mG; }
     QByteArray p() const { return mP; }
     QList<SecretChat *> &secretChats() { return mSecretChats; }
+
     void setWorkingDcNum(qint32 workingDcNum) { m_workingDcNum = workingDcNum; m_workingDcConfigAvailabe = true; }
     void setOurId(qint32 ourId) { m_ourId = ourId; }
     void setDcsList(const QList<DC *> &dcsList) { m_dcsList = dcsList; }
@@ -132,6 +133,11 @@ public:
     void setG(qint32 g) { mG = g; }
     void setP(const QByteArray &p) { mP = p; }
     void setSecretChats(const QList<SecretChat *> &secretChats) { mSecretChats = secretChats; }
+
+    void setTestMode(bool testMode) { m_testMode = testMode; }
+    void setManagedDownloads(bool managedDownloads) { m_managedDownloads = managedDownloads; }
+    void setLangCode(const QString& langCode) { m_langCode = langCode; }
+    void setResendQueries(bool resendQueries) { mResendQueries = resendQueries; }
 
     bool removeAuthFile();
     void writeCrashFile();
