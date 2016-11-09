@@ -65,11 +65,11 @@ void Connection::setupSocket() {
     // See: http://goo.gl/0pjCQo
     // setSocketOption(QAbstractSocket::KeepAliveOption, 1);
 
-    int flags = 1;
-    auto fd = socketDescriptor();
-    setsockopt(fd, SOL_SOCKET, SO_KEEPALIVE, (const char*)&flags, sizeof(flags));
-
 #ifndef Q_OS_WIN
+    int keepAlive = 1;
+    int fd = socketDescriptor();
+    setsockopt(fd, SOL_SOCKET, SO_KEEPALIVE, &keepAlive, sizeof(keepAlive));
+
     int maxIdle = 5; // 5 seconds
     setsockopt(fd, IPPROTO_TCP, TCP_KEEPIDLE, &maxIdle, sizeof(maxIdle));
 
@@ -79,16 +79,16 @@ void Connection::setupSocket() {
     int interval = 2; // send a keepalive packet out every 2 seconds (after the first idle period)
     setsockopt(fd, SOL_TCP, TCP_KEEPINTVL, &interval, sizeof(interval));
 #else
-    setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, (const char *)&flags, sizeof(flags));
-    setsockopt(fd, IPPROTO_TCP, TCP_NODELAY, (const char *)&flags, sizeof(flags));
+    this->setSocketOption(QAbstractSocket::LowDelayOption, 1);
 
+    SOCKET socket =  socketDescriptor();
     DWORD dwBytesRet = 0;
     tcp_keepalive keepalive_opts;
     keepalive_opts.onoff = TRUE;
     keepalive_opts.keepalivetime = 5000;
     keepalive_opts.keepaliveinterval = 2000;
 
-    WSAIoctl(fd, SIO_KEEPALIVE_VALS, &keepalive_opts, sizeof(keepalive_opts), NULL, 0, &dwBytesRet, NULL, NULL);
+    WSAIoctl(socket, SIO_KEEPALIVE_VALS, &keepalive_opts, sizeof(keepalive_opts), NULL, 0, &dwBytesRet, NULL, NULL);
 #endif
 }
 
