@@ -10,7 +10,7 @@ win32 {
     INCLUDEPATH += $${OPENSSL_INCLUDE_PATH}
     
     win32-msvc* {
-        LIBS += -llibeay32 -lzlibstat -lUser32 -lAdvapi32 -lGdi32
+        LIBS += -llibeay32 -lzlibstat -lUser32 -lAdvapi32 -lGdi32 -lWs2_32
     } else {
         LIBS += -lcrypto -lz
     }

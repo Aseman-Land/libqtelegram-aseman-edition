@@ -133,7 +133,6 @@ public:
     // additional public methods
     void init(qint32 timeout);
     void init();
-    bool isConnected();
     bool isLoggedIn();
     qint32 ourId();
     void setPhoneNumber(const QString &phoneNumber);

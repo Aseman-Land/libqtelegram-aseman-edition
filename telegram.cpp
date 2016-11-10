@@ -300,13 +300,6 @@ QSettings::Format Telegram::defaultSettingsFormat()
     return qtelegram_default_settings_format;
 }
 
-bool Telegram::isConnected() {
-    if (mApi && mApi->mainSession()) {
-        return mApi->mainSession()->state() == QAbstractSocket::ConnectedState;
-    }
-    return false;
-}
-
 bool Telegram::isLoggedIn() {
     return prv->mLibraryState == LoggedIn;
 }

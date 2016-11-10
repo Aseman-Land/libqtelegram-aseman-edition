@@ -24,10 +24,21 @@
 
 #include <QTimer>
 
-#ifdef Q_OS_LINUX
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <netinet/tcp.h>
+#ifndef Q_OS_WIN
+# include <sys/socket.h>
+# ifdef Q_OS_DARWIN
+#  include <netinet/if_ether.h>.
+# else
+#  include <netinet/in.h>
+# endif
+# include <netinet/tcp.h>
+#else
+# ifndef WIN32_LEAN_AND_MEAN
+#  define WIN32_LEAN_AND_MEAN
+# endif
+# include <winsock2.h>
+# include <ws2tcpip.h>
+# include <mstcpip.h>
 #endif
 
 Q_LOGGING_CATEGORY(TG_CORE_CONNECTION, "tg.core.connection")
@@ -54,10 +65,10 @@ void Connection::setupSocket() {
     // See: http://goo.gl/0pjCQo
     // setSocketOption(QAbstractSocket::KeepAliveOption, 1);
 
-#ifdef Q_OS_LINUX
-    int enableKeepAlive = 1;
+#ifndef Q_OS_WIN
+    int keepAlive = 1;
     int fd = socketDescriptor();
-    setsockopt(fd, SOL_SOCKET, SO_KEEPALIVE, &enableKeepAlive, sizeof(enableKeepAlive));
+    setsockopt(fd, SOL_SOCKET, SO_KEEPALIVE, &keepAlive, sizeof(keepAlive));
 
     int maxIdle = 5; // 5 seconds
     setsockopt(fd, IPPROTO_TCP, TCP_KEEPIDLE, &maxIdle, sizeof(maxIdle));
@@ -67,6 +78,17 @@ void Connection::setupSocket() {
 
     int interval = 2; // send a keepalive packet out every 2 seconds (after the first idle period)
     setsockopt(fd, SOL_TCP, TCP_KEEPINTVL, &interval, sizeof(interval));
+#else
+    this->setSocketOption(QAbstractSocket::LowDelayOption, 1);
+
+    SOCKET socket =  socketDescriptor();
+    DWORD dwBytesRet = 0;
+    tcp_keepalive keepalive_opts;
+    keepalive_opts.onoff = TRUE;
+    keepalive_opts.keepalivetime = 5000;
+    keepalive_opts.keepaliveinterval = 2000;
+
+    WSAIoctl(socket, SIO_KEEPALIVE_VALS, &keepalive_opts, sizeof(keepalive_opts), NULL, 0, &dwBytesRet, NULL, NULL);
 #endif
 }
 
@@ -154,9 +176,9 @@ void Connection::onError(QAbstractSocket::SocketError error) {
         }
 
         qint32 reconnectionDelay = 0;
-        if (errorString() == "Network unreachable") {
+        if (errorString().contains("unreachable")) {
             // In this case, there is no way to reach the server because the physical link
-            // is broken (disconnected all connections). Don't retry reconnecting continously
+            // is broken (disconnected all connections). Don't retry reconnecting continuously
             // and insert a delay between reconnection attempts.
             reconnectionDelay = 5000;
         }
