@@ -8,7 +8,7 @@ win32 {
 
     LIBS += -L$${OPENSSL_LIB_DIR} -lssleay32
     INCLUDEPATH += $${OPENSSL_INCLUDE_PATH}
-    
+
     win32-msvc* {
         LIBS += -llibeay32 -lzlibstat -lUser32 -lAdvapi32 -lGdi32 -lWs2_32
     } else {

@@ -5,7 +5,7 @@ QT += multimedia
 TARGET = qtelegram-ae
 TEMPLATE = lib
 VERSION = 1.0.0
-DEFINES += LIBQTELEGRAM_LIBRARY
+DEFINES += LIBQTELEGRAM_LIBRARY 
 
 macx {
     CONFIG += staticlib
