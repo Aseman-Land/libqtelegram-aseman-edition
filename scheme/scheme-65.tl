@@ -803,6 +803,90 @@ fileLocation_Secret23#53d69076 dc_id:int volume_id:long local_id:int secret:long
 decryptedMessageMediaExternalDocument_Secret23#fa95b0dd id:long access_hash:long date:int mime_type:string size:int thumb:PhotoSize dc_id:int attributes:Vector<DocumentAttribute> = DecryptedMessageMedia; 
 secretChatMessage#187dd9f4 chat_id:int ttl:int date:int decryptedMessage:DecryptedMessage attachment:EncryptedFile = SecretChatMessage
 
+---bottypes---
+
+typeUser#ffa800 id:int first_name:string last_name:string username:string = User;
+
+typeChat#ffa800 id:int type:string title:string username:string first_name:string last_name:string all_members_are_administrators:Bool = Chat;
+
+typeMessage#ffa800 message_id:int from:User date:int chat:Chat forward_from:User forward_from_chat:Chat forward_from_message_id:int forward_date:int reply_to_message:Message edit_date:int text:string entities:Vector<MessageEntity> audio:Audio document:Document game:Game photo:Vector<PhotoSize> sticker:Sticker video:Video voice:Voice caption:string contact:Contact location:Location venue:Venue new_chat_member:User left_chat_member:User new_chat_title:string new_chat_photo:Vector<PhotoSize> delet_chat_photo:true group_chat_created:true supergroup_chat_created:true channel_chat_created:true migrate_to_chat_id:int migrate_from_chat_id:int pinned_message:Message = Message;
+typeMessageEntity#ffa800 type:string offset:int length:int url:string user:User = MessageEntity;
+
+typePhotoSize#ffa800 file_id:string width:int height:int file_size:int = PhotoSize;
+
+typeAudio#ffa800 file_id:string duration:int performer:string title:string mime_type:string file_size:int = Audio;
+
+typeDocument#ffa800 file_id:string thumb:PhotoSize file_name:string mime_type:string file_size:int = Document;
+
+typeSticker#ffa800 file_id:string width:int height:int thumb:PhotoSize emoji:string file_size:int = Sticker;
+
+typeVideo#ffa800 file_id:string width:int height:int duration:int thumb:PhotoSize mime_type:string file_size:int = Video;
+
+typeVoice#ffa800 file_id:string duration:int mime_type:string file_size:int = Voice;
+
+typeContact#ffa800 phone_number:string first_name:string last_name:string user_id:int = Contact;
+
+typeLocation#ffa800 longitude:double latitude:double = Location;
+
+typeVenue#ffa800 location:Location title:string address:string foursquare_id:string = Venue;
+
+typeUserProfilePhotos#ffa800 total_count:int photos:Vector<Vector<PhotoSize>> = UserProfilePhotos;
+
+typeFile#ffa800 file_id:string file_size:int file_path:string = File;
+
+typeKeyboardButton#ffa800 text:string request_contact:Bool request_location:Bool = KeyboardButton;
+
+typeReplyKeyboardMarkup#ffa800 keyboard:Vector<Vector<KeyboardButton>> resize_keyboard:Bool one_time_keyboard:Bool selective:Bool = ReplyKeyboardMarkup;
+typeReplyKeyboardRemove#ffa800 removeKeyboard:true selective:Bool = ReplyKeyboardRemove;
+
+typeInlineKeyboardButton#ffa800 text:string url:string callback_data:string switch_inline_query:string switch_inline_query_current_chat:string callback:CallbackGame = InlineKeyboardButton;
+typeInlineKeyboardMarkup#ffa800 inline_keyboard:Vector<Vector<InlineKeyboardButton>> = InlineKeyboardMarkup;
+
+typeCallbackQuery#ffa800 id:string from:User message:Message inline_message_id:string chat_instance:string data:string game_short_name:string = CallbackQuery;
+
+typeForceReply#ffa800 force_reply:true selective:Bool = ForceReply;
+
+typeChatMember#ffa800 user:User status:string = ChatMember;
+
+typeResponseParameters#ffa800 migrate_to_chat_id:int retry_after:int = ResponseParameters;
+
+typeGame#ffa800 title:string description:string photo:Vector<PhotoSize> text:string text_entities:Vector<MessageEntity> animation:Animation = Game
+typeAnimation#ffa800 file_id:string thumb:PhotoSize file_name:string mime_type:string file_size:int = Animation
+type#ffa800 position:int user:User score:int = GameHighScore
+typeCallbackGame#ffa80 = CallbackGame
+
+typeUpdate#ffa800 update_id:int message:Message edit_message:Message channel_post:Message edited_channel_post:Message inline_query:InlineQuery chosen_inline_result:ChosenInlineResult callback_query:CallbackQuery = Update;
+
+typeInlineQuery#ffa800 id:string from:User location:Location query:string offset:string = InlineQuery;
+
+typeInlineQueryResultArticle#ffa800 type:string id:string title:string input_message_content:InputMessageContent reply_markup:InlineKeyboardMarkup url:string hide_url:Bool description:string thumb_url:string thumb_width:int thumb_height:int = InlineQueryResult;
+typeInlineQueryResultPhoto#ffa800 type:string id:string photo_url:string thumb_url:string photo_width:int photo_height:int title:string description:string caption:string reply_markup:InlineKeyboardMarkup input_message_content:InputMessageContent = InlineQueryResult;
+typeInlineQueryResultGif#ffa800 type:string id:string gif_url:string gif_width:int gif_height:int thumb_url:string title:string caption:string reply_markup:InlineKeyboardMarkup input_message_content:InputMessageContent = InlineQueryResult;
+typeInlineQueryResultMpeg4Gif#ffa800 type:string id:string mpeg4_url:string mpeg4_width:int mpeg4_height:int thumb_url:string title:string caption:string reply_markup:InlineKeyboardMarkup input_message_content:InputMessageContent = InlineQueryResult;
+typeInlineQueryResultVideo#ffa800 type:string id:string video_url:string mime_type:string thumb_url:string title:string caption:string video_width:int video_height:int video_duration:int description:string reply_markup:InlineKeyboardMarkup input_message_content:InputMessageContent = InlineQueryResult;
+typeInlineQueryResultAudio#ffa800 type:string id:string audio_url:string title:string caption:string performer:string audio_duration:int reply_markup:InlineKeyboardMarkup input_message_content:InputMessageContent = InlineQueryResult;
+typeInlineQueryResultVoice#ffa800 type:string id:string voice_url:string title:string caption:string voice_duration:int reply_markup:InlineKeyboardMarkup input_message_content:InputMessageContent = InlineQueryResult;
+typeInlineQueryResultDocument#ffa800 type:string id:string title:string caption:string document_url:string mime_type:string reply_markup:InlineKeyboardMarkup input_message_content:InputMessageContent thumb_url:string thumb_width:int thumb_height:int = InlineQueryResult;
+typeInlineQueryResultLocation#ffa800 type:string id:string latitude:double langitude:double title:string reply_markup:InlineKeyboardMarkup input_message_content:InputMessageContent thumb_url:string thumb_width:int thumb_height:int = InlineQueryResult;
+typeInlineQueryResultVenue#ffa800 type:string id:string latitude:double langitude:double title:string address:string foursquare_id:string reply_markup:InlineKeyboardMarkup input_message_content:InputMessageContent  thumb_url:string thumb_width:int thumb_height:int = InlineQueryResult;
+typeInlineQueryResultContact#ffa800 type:string id:string phone_number:string first_name:string last_name:string reply_markup:InlineKeyboardMarkup input_message_content:InputMessageContent  thumb_url:string thumb_width:int thumb_height:int = InlineQueryResult;
+typeInlineQueryResultGame#ffa800 type:string id:string game_short_name:string reply_markup:InlineKeyboardMarkup = InlineQueryResult;
+typeInlineQueryResultCachedPhoto#ffa800 type:string id:string photo_file_id:string title:string description:string caption:string reply_markup:InlineKeyboardMarkup input_message_content:InputMessageContent = InlineQueryResult;
+typeInlineQueryResultCachedGif#ffa800 type:string id:string gif_file_id:string title:string caption:string reply_markup:InlineKeyboardMarkup input_message_content:InputMessageContent = InlineQueryResult;
+typeInlineQueryResultCachedMpeg4Gif#ffa800 type:string id:string mpef4_file_id:string title:string caption:string reply_markup:InlineKeyboardMarkup input_message_content:InputMessageContent = InlineQueryResult;
+typeInlineQueryResultCachedSticker#ffa800 type:string id:string sticker_file_id:string reply_markup:InlineKeyboardMarkup input_message_content:InputMessageContent = InlineQueryResult;
+typeInlineQueryResultCachedDocument#ffa800 type:string id:string title:string document_file_id:string description:string caption:string reply_markup:InlineKeyboardMarkup input_message_content:InputMessageContent = InlineQueryResult;
+typeInlineQueryResultCachedVideo#ffa800 type:string id:string video_url_id:string title:string description:string caption:string reply_markup:InlineKeyboardMarkup input_message_content:InputMessageContent = InlineQueryResult;
+typeInlineQueryResultCachedVoice#ffa800 type:string id:string voice_file_id:string title:string caption:string reply_markup:InlineKeyboardMarkup input_message_content:InputMessageContent = InlineQueryResult;
+typeInlineQueryResultCachedAudio#ffa800 type:string id:string audio_file_id:string caption:string reply_markup:InlineKeyboardMarkup input_message_content:InputMessageContent = InlineQueryResult;
+
+typeInputTextMessageContent#ffa800 message_text:string parse_mode:string disable_web_page_preview:Bool = InputMessageContent;
+typeInputLocationMessageContent#ffa800 latitude:double langitude:double = InputMessageContent;
+typeInputVenueMessageContent#ffa800 latitude:double langitude:double title:string address:string foursquare_id:string = InputMessageContent;
+typeInputContactMessageContent#ffa800 phone_number:string first_name:string last_name:string = InputMessageContent;
+
+typeChosenInlineResult#ffa800 result_id:string from:User location:Location inline_message_id:string query:string = ChosenInlineResult;
+
 ---functions---
 
 invokeAfterMsg#cb9f372d {X:Type} msg_id:long query:!X = X;
