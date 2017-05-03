@@ -113,7 +113,9 @@ void TelegramBot::postQuery(const QString &method, const QUrlQuery &query, std::
     request.setRawHeader("Content-Type", "application/xml");
     request.setUrl(url);
 
-    connect(p->manager, &QNetworkAccessManager::finished, this, [this, callback](QNetworkReply *reply){
+    QNetworkReply *reply = p->manager->get(request);
+
+    connect(reply, &QNetworkReply::finished, this, [this, callback, reply](){
         QByteArray result = reply->readAll();
         reply->deleteLater();
 
@@ -136,8 +138,6 @@ void TelegramBot::postQuery(const QString &method, const QUrlQuery &query, std::
 
         callback(hash.value("result"), CallbackError());
     });
-
-    QNetworkReply *reply = p->manager->get(request);
 
     connect(reply, &QNetworkReply::sslErrors, this, &TelegramBot::sslErrors);
     connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &TelegramBot::error);
