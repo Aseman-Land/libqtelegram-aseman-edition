@@ -29,9 +29,6 @@
 
 #include <QDebug>
 #include <QEventLoop>
-#include <QtMultimedia/QMediaPlayer>
-#include <QtMultimedia/QMediaContent>
-#include <QtMultimedia/QMediaResource>
 #include <QProcess>
 #include <QStringList>
 #include <QtCore>

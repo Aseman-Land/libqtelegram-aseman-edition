@@ -56,7 +56,32 @@ void TelegramBot::getUpdates(Callback<QList<BotUpdate> > callback, qint32 offset
     });
 }
 
-void TelegramBot::sendMessage(const QString &chat_id, const QString &text, Callback<BotMessage> callback, const QString &parse_mode, bool disable_web_page_preview, bool disable_notification, int reply_to_message_id, const QString &reply_markup)
+void TelegramBot::sendMessage(const QString &chat_id, const QString &text, Callback<BotMessage> callback, const QString &parse_mode, bool disable_web_page_preview, bool disable_notification, int reply_to_message_id, const BotInlineKeyboardMarkup &reply_markup)
+{
+    sendMessage(chat_id, text, callback, parse_mode, disable_web_page_preview, disable_notification, reply_to_message_id, reply_markup.toMap());
+}
+
+void TelegramBot::sendMessage(const QString &chat_id, const QString &text, Callback<BotMessage> callback, const QString &parse_mode, bool disable_web_page_preview, bool disable_notification, int reply_to_message_id, const BotReplyKeyboardMarkup &reply_markup)
+{
+    sendMessage(chat_id, text, callback, parse_mode, disable_web_page_preview, disable_notification, reply_to_message_id, reply_markup.toMap());
+}
+
+void TelegramBot::sendMessage(const QString &chat_id, const QString &text, Callback<BotMessage> callback, const QString &parse_mode, bool disable_web_page_preview, bool disable_notification, int reply_to_message_id, const BotReplyKeyboardRemove &reply_markup)
+{
+    sendMessage(chat_id, text, callback, parse_mode, disable_web_page_preview, disable_notification, reply_to_message_id, reply_markup.toMap());
+}
+
+void TelegramBot::sendMessage(const QString &chat_id, const QString &text, Callback<BotMessage> callback, const QString &parse_mode, bool disable_web_page_preview, bool disable_notification, int reply_to_message_id, const BotForceReply &reply_markup)
+{
+    sendMessage(chat_id, text, callback, parse_mode, disable_web_page_preview, disable_notification, reply_to_message_id, reply_markup.toMap());
+}
+
+void TelegramBot::sendMessage(const QString &chat_id, const QString &text, Callback<BotMessage> callback, const QString &parse_mode, bool disable_web_page_preview, bool disable_notification, int reply_to_message_id)
+{
+    sendMessage(chat_id, text, callback, parse_mode, disable_web_page_preview, disable_notification, reply_to_message_id, QMap<QString, QVariant>());
+}
+
+void TelegramBot::sendMessage(const QString &chat_id, const QString &text, Callback<BotMessage> callback, const QString &parse_mode, bool disable_web_page_preview, bool disable_notification, int reply_to_message_id, const QMap<QString, QVariant> &reply_markup)
 {
     QUrlQuery query = QUrlQuery();
     query.addQueryItem("chat_id", chat_id.toInt()? QString::number(chat_id.toInt()) : chat_id);
@@ -65,7 +90,10 @@ void TelegramBot::sendMessage(const QString &chat_id, const QString &text, Callb
     if(disable_web_page_preview) query.addQueryItem("disable_web_page_preview", disable_web_page_preview?"true":"false");
     if(disable_notification) query.addQueryItem("disable_notification", disable_notification?"true":"false");
     if(reply_to_message_id) query.addQueryItem("reply_to_message_id", QString::number(reply_to_message_id));
-    if(reply_markup.count()) query.addQueryItem("reply_markup", reply_markup);
+    if(reply_markup.count()) {
+        QJsonDocument doc( QJsonObject::fromVariantMap(reply_markup) );
+        query.addQueryItem("reply_markup", doc.toJson(QJsonDocument::Compact));
+    }
 
     postQuery(__FUNCTION__, query, [this, callback](const QVariant &res, const CallbackError &error){
         _callCallback<BotMessage>(callback, res.toMap(), error);
@@ -85,8 +113,7 @@ void TelegramBot::postQuery(const QString &method, const QUrlQuery &query, std::
     request.setRawHeader("Content-Type", "application/xml");
     request.setUrl(url);
 
-    QNetworkAccessManager *netManager = new QNetworkAccessManager(this);
-    connect(netManager, &QNetworkAccessManager::finished, this, [this, callback](QNetworkReply *reply){
+    connect(p->manager, &QNetworkAccessManager::finished, this, [this, callback](QNetworkReply *reply){
         QByteArray result = reply->readAll();
         reply->deleteLater();
 
@@ -110,7 +137,7 @@ void TelegramBot::postQuery(const QString &method, const QUrlQuery &query, std::
         callback(hash.value("result"), CallbackError());
     });
 
-    QNetworkReply *reply = netManager->get(request);
+    QNetworkReply *reply = p->manager->get(request);
 
     connect(reply, &QNetworkReply::sslErrors, this, &TelegramBot::sslErrors);
     connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &TelegramBot::error);

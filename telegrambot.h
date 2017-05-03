@@ -39,7 +39,12 @@ public:
 
     void getMe(Callback<BotUser> callback = Q_NULLPTR);
     void getUpdates(Callback< QList<BotUpdate> > callback = Q_NULLPTR, qint32 offset = 0, qint32 limit = 0, qint32 timeout = 0, const QStringList &allowed_updates = QStringList());
-    void sendMessage(const QString &chat_id, const QString &text, Callback<BotMessage> callback = Q_NULLPTR, const QString &parse_mode = QString::null, bool disable_web_page_preview = false, bool disable_notification = false, int reply_to_message_id = 0, const QString &reply_markup = QString());
+
+    void sendMessage(const QString &chat_id, const QString &text, Callback<BotMessage> callback, const QString &parse_mode, bool disable_web_page_preview, bool disable_notification, int reply_to_message_id, const BotInlineKeyboardMarkup &reply_markup);
+    void sendMessage(const QString &chat_id, const QString &text, Callback<BotMessage> callback, const QString &parse_mode, bool disable_web_page_preview, bool disable_notification, int reply_to_message_id, const BotReplyKeyboardMarkup &reply_markup);
+    void sendMessage(const QString &chat_id, const QString &text, Callback<BotMessage> callback, const QString &parse_mode, bool disable_web_page_preview, bool disable_notification, int reply_to_message_id, const BotReplyKeyboardRemove &reply_markup);
+    void sendMessage(const QString &chat_id, const QString &text, Callback<BotMessage> callback, const QString &parse_mode, bool disable_web_page_preview, bool disable_notification, int reply_to_message_id, const BotForceReply &reply_markup);
+    void sendMessage(const QString &chat_id, const QString &text, Callback<BotMessage> callback = Q_NULLPTR, const QString &parse_mode = QString::null, bool disable_web_page_preview = false, bool disable_notification = false, int reply_to_message_id = 0);
 
     void setToken(const QString &token);
     QString token() const;
@@ -53,6 +58,8 @@ private:
     void sslErrors(const QList<QSslError> &errors);
 
 protected:
+    void sendMessage(const QString &chat_id, const QString &text, Callback<BotMessage> callback, const QString &parse_mode, bool disable_web_page_preview, bool disable_notification, int reply_to_message_id, const QMap<QString, QVariant> &reply_markup);
+
     void postQuery(const QString &method, const QUrlQuery &query, std::function<void (const QVariant &res, const CallbackError &error)> callback);
 
     template<typename T>

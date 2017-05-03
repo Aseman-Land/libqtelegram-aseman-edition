@@ -1,6 +1,5 @@
 QT += gui
 QT += network
-QT += multimedia
 
 win32 {
     isEmpty(OPENSSL_LIB_DIR): OPENSSL_LIB_DIR = $${DESTDIR}
