@@ -64,7 +64,7 @@ protected:
 
     template<typename T>
     void _callCallback(const Callback<T> &callback, T result, const CallbackError &error) {
-        callback(result, error);
+        if(callback) callback(result, error);
     }
 
 private:
