@@ -9,8 +9,6 @@ DEFINES += LIBQTELEGRAM_LIBRARY
 macx {
     CONFIG += staticlib
     QT += macextras
-} android {
-    CONFIG += staticlib
 }
 
 include(libqtelegram-ae.pri)

@@ -30,9 +30,8 @@
 #include "libqtelegram_global.h"
 #include "telegram/types/types.h"
 #include "telegram/customtypes/customtypes.h"
-#include "secret/secretchat.h"
 #include "telegram/telegramcore.h"
-#include "core/settings.h"
+#include "core/settingstools.h"
 
 Q_DECLARE_LOGGING_CATEGORY(TG_LIB_API)
 Q_DECLARE_LOGGING_CATEGORY(TG_LIB_SECRET)
@@ -65,10 +64,10 @@ public:
     QString phoneNumber() const;
     QString configPath() const;
 
-    Settings *settings() const;
+    class Settings *settings() const;
     CryptoUtils *crypto() const;
 
-    void setAuthConfigMethods(Settings::ReadFunc readFunc, Settings::WriteFunc writeFunc);
+    void setAuthConfigMethods(SettingsTools::ReadFunc readFunc, SettingsTools::WriteFunc writeFunc);
 
     static void setDefaultSettingsFormat(const QSettings::Format &format);
     static QSettings::Format defaultSettingsFormat();
@@ -191,8 +190,7 @@ private:
     qint64 uploadSendFile(FileOperation &op, int mediaType, const QString &fileName, const QByteArray &bytes, const QByteArray &thumbnailBytes = 0, const QString &thumbnailName = QString::null);
     qint64 uploadSendFile(FileOperation &op, int mediaType, const QString &filePath, const QString &thumbnailPath = QString::null);
     void processSecretChatUpdate(const Update &update);
-    qint64 generateGAorB(SecretChat *secretChat, Callback<EncryptedChat> callBack = 0, qint32 timeout = timeOut());
-    void createSharedKey(SecretChat * secretChat, BIGNUM *p, QByteArray gAOrB);
+    qint64 generateGAorB(class SecretChat *secretChat, Callback<EncryptedChat> callBack = 0, qint32 timeout = timeOut());
     SecretChatMessage toSecretChatMessage(const EncryptedMessage &encryptedMessage);
     void processDifferences(qint64 id, const QList<Message> &messages, const QList<EncryptedMessage> &newEncryptedMessages, const QList<Update> &otherUpdates, const QList<Chat> &chats, const QList<User> &users, const UpdatesState &state, bool isIntermediateState);
     void authorizeUser(qint64 id, const User &user);
@@ -215,7 +213,7 @@ private Q_SLOTS:
     void onError(qint64 id, qint32 errorCode, const QString &errorText, const QString &functionName, const QVariant &attachedData, bool &accepted);
     void onDcProviderReady();
     void onAuthLoggedIn();
-    void onMainDcChanged(DC *dc);
+    void onMainDcChanged(class DC *dc);
     void onSequenceNumberGap(qint32 chatId, qint32 startSeqNo, qint32 endSeqNo);
 
     // secret chats slots

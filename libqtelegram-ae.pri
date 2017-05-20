@@ -82,4 +82,5 @@ HEADERS += \
     $$PWD/telegram.h \
     $$PWD/libqtelegram_global.h \
     $$PWD/file/uploadfileengine.h \
-    $$PWD/telegrambot.h
+    $$PWD/telegrambot.h \
+    $$PWD/core/settingstools.h

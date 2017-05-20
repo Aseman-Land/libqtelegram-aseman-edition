@@ -46,6 +46,8 @@
 #include "file/filehandler.h"
 #include "core/dcprovider.h"
 #include "telegram/coretypes.h"
+#include "secret/secretchat.h"
+#include "core/settings.h"
 
 Q_LOGGING_CATEGORY(TG_TELEGRAM, "tg.telegram")
 Q_LOGGING_CATEGORY(TG_LIB_SECRET, "tg.lib.secret")
@@ -102,8 +104,31 @@ public:
     qint16 defaultHostPort;
     qint16 defaultHostDcId;
 
-    Settings::ReadFunc telegram_settings_read_fnc;
-    Settings::WriteFunc telegram_settings_write_fnc;
+    SettingsTools::ReadFunc telegram_settings_read_fnc;
+    SettingsTools::WriteFunc telegram_settings_write_fnc;
+
+    void createSharedKey(SecretChat *secretChat, BIGNUM *p, QByteArray gAOrB) {
+        // calculate the shared key by doing key = B^a mod p
+        BIGNUM *myKey = secretChat->myKey();
+        // padding of B (gAOrB) must have exactly 256 bytes. After pad, transform to bignum
+        BIGNUM *bigNumGAOrB = Utils::padBytesAndGetBignum(gAOrB);
+
+        // create empty bignum where store the result of operation g^a mod p
+        BIGNUM *result = BN_new();
+        Utils::ensurePtr(result);
+        // do the opeation -> k = g_b^a mod p
+        Utils::ensure(mCrypto->BNModExp(result, bigNumGAOrB, myKey, p));
+
+        // move r (BIGNUM) to shared key (char[]) array format
+        uchar *sharedKey = secretChat->sharedKey();
+        memset(sharedKey, 0, SHARED_KEY_LENGTH);
+        BN_bn2bin(result, sharedKey + (SHARED_KEY_LENGTH - BN_num_bytes (result)));
+
+        qint64 keyFingerprint = Utils::getKeyFingerprint(sharedKey);
+        secretChat->setKeyFingerprint(keyFingerprint);
+
+        BN_free(bigNumGAOrB);
+    }
 };
 
 Telegram::Telegram(const QString &defaultHostAddress, qint16 defaultHostPort, qint16 defaultHostDcId, qint32 appId, const QString &appHash, const QString &phoneNumber, const QString &configPath, const QString &publicKeyFile) :
@@ -284,7 +309,7 @@ CryptoUtils *Telegram::crypto() const
     return prv->mCrypto;
 }
 
-void Telegram::setAuthConfigMethods(Settings::ReadFunc readFunc, Settings::WriteFunc writeFunc)
+void Telegram::setAuthConfigMethods(SettingsTools::ReadFunc readFunc, SettingsTools::WriteFunc writeFunc)
 {
     prv->telegram_settings_read_fnc = readFunc;
     prv->telegram_settings_write_fnc = writeFunc;
@@ -710,7 +735,7 @@ void Telegram::messagesDhConfigNotModified(qint64 msgId, const QByteArray &rando
     case SecretChat::Requested: {
         QByteArray gA = secretChat->gAOrB();
 
-        createSharedKey(secretChat, prv->mSecretState.p(), gA);
+        prv->createSharedKey(secretChat, prv->mSecretState.p(), gA);
         qint64 keyFingerprint = secretChat->keyFingerprint();
 
         InputEncryptedChat inputEncryptedChat;
@@ -917,7 +942,7 @@ void Telegram::processSecretChatUpdate(const Update &update) {
                 return;
             }
 
-            createSharedKey(secretChat, prv->mSecretState.p(), gB);
+            prv->createSharedKey(secretChat, prv->mSecretState.p(), gB);
 
             qint64 calculatedKeyFingerprint = secretChat->keyFingerprint();
             qCDebug(TG_LIB_SECRET) << "calculated keyFingerprint:" << calculatedKeyFingerprint;
@@ -1004,29 +1029,6 @@ void Telegram::processSecretChatUpdate(const Update &update) {
         Q_ASSERT("Not handled");
         break;
     }
-}
-
-void Telegram::createSharedKey(SecretChat *secretChat, BIGNUM *p, QByteArray gAOrB) {
-    // calculate the shared key by doing key = B^a mod p
-    BIGNUM *myKey = secretChat->myKey();
-    // padding of B (gAOrB) must have exactly 256 bytes. After pad, transform to bignum
-    BIGNUM *bigNumGAOrB = Utils::padBytesAndGetBignum(gAOrB);
-
-    // create empty bignum where store the result of operation g^a mod p
-    BIGNUM *result = BN_new();
-    Utils::ensurePtr(result);
-    // do the opeation -> k = g_b^a mod p
-    Utils::ensure(prv->mCrypto->BNModExp(result, bigNumGAOrB, myKey, p));
-
-    // move r (BIGNUM) to shared key (char[]) array format
-    uchar *sharedKey = secretChat->sharedKey();
-    memset(sharedKey, 0, SHARED_KEY_LENGTH);
-    BN_bn2bin(result, sharedKey + (SHARED_KEY_LENGTH - BN_num_bytes (result)));
-
-    qint64 keyFingerprint = Utils::getKeyFingerprint(sharedKey);
-    secretChat->setKeyFingerprint(keyFingerprint);
-
-    BN_free(bigNumGAOrB);
 }
 
 // error and internal managements
