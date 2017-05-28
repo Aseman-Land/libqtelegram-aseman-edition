@@ -1,4 +1,4 @@
-QT += gui
+
 QT += network
 
 TARGET = qtelegram-ae

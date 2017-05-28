@@ -1,4 +1,8 @@
-QT += gui
+QT -= gui
+contains(CONFIG, gui_support) {
+    QT += gui
+}
+
 QT += network
 
 win32 {

@@ -32,9 +32,12 @@
 #include <QFileInfo>
 #include <QMimeDatabase>
 #include <QtEndian>
+#include <QCryptographicHash>
+
+#ifdef QT_GUI_LIB
 #include <QImage>
 #include <QImageReader>
-#include <QCryptographicHash>
+#endif
 
 #include "util/tlvalues.h"
 #include "telegram/types/types.h"
@@ -535,17 +538,17 @@ qint64 Telegram::messagesSendEncryptedPhoto(const InputEncryptedChat &chat, qint
     QFileInfo fileInfo(filePath);
     qint32 size = fileInfo.size();
 
-    QImage image;
-    image.load(filePath);
-    qint32 width = image.width();
-    qint32 height = image.height();
-
     DecryptedMessageMedia media(DecryptedMessageMedia::typeDecryptedMessageMediaPhotoSecret8);
-    media.setW(width);
-    media.setH(height);
     media.setSize(size);
     media.setKey(key);
     media.setIv(iv);
+
+#ifdef QT_GUI_LIB
+    QImage image;
+    image.load(filePath);
+    media.setW(image.width());
+    media.setH(image.height());
+#endif
 
     DecryptedMessage decryptedMessage(DecryptedMessage::typeDecryptedMessageSecret17);
     decryptedMessage.setRandomId(randomId);
@@ -1055,8 +1058,8 @@ void Telegram::onError(qint64 id, qint32 errorCode, const QString &errorText, co
     else
     if (errorCode == 401)
     {
-        if(errorText == "SESSION_PASSWORD_NEEDED")
-            ; // Nothing to do
+        if(errorText == "SESSION_PASSWORD_NEEDED" || errorText == "AUTH_KEY_UNREGISTERED")
+            qDebug() << errorText; // Nothing to do
         else
             onAuthLogOutAnswer(id, false, attachedData);
     }
@@ -1471,12 +1474,14 @@ qint64 Telegram::messagesSendDocument(const InputPeer &peer, qint64 randomId, co
     QList<DocumentAttribute> attributes;
     attributes << fileAttr;
     if(sendAsSticker) {
+#ifdef QT_GUI_LIB
         QImageReader reader(filePath);
         DocumentAttribute imageSizeAttr(DocumentAttribute::typeDocumentAttributeImageSize);
         imageSizeAttr.setH(reader.size().height());
         imageSizeAttr.setW(reader.size().width());
 
         attributes << DocumentAttribute(DocumentAttribute::typeDocumentAttributeSticker) << imageSizeAttr;
+#endif
 
         if(mimeType.contains("webp"))
             mimeType = "image/webp";
