@@ -1,5 +1,5 @@
 # libqtelegram-aseman-edition
-Most powerfull telegram library that created using C++ and Qt. It supports both client and bots API. It's free and opensource and released under the GPLv3 license.
+Most powerfull telegram library. It created using C++/Qt and supports both client and bots API. It's free and opensource and released under the GPLv3 license.
 It's a fork of libqtelegram by Aseman Team which is porting to windows and mac alongside linux support.
 
 ### [Developer Documents](documents/start.md)
