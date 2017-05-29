@@ -1,5 +1,6 @@
 # libqtelegram-aseman-edition
-It's a fork of libqtelegram by Aseman Team which is porting to windows and mac alongside linux support. It's also build using qmake instead of cmake.
+Most powerfull telegram library that created using C++ and Qt. It's free and opensource and released under the GPLv3 license.
+It's a fork of libqtelegram by Aseman Team which is porting to windows and mac alongside linux support.
 
 ### [Developer Documents](documents/start.md)
 
