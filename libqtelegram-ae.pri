@@ -53,7 +53,9 @@ SOURCES += \
     $$PWD/core/dcauth.cpp \
     $$PWD/telegram.cpp \
     $$PWD/file/uploadfileengine.cpp \
-    $$PWD/telegrambot.cpp
+    $$PWD/telegrambot.cpp \
+    $$PWD/tools/abstractbotstate.cpp \
+    $$PWD/tools/botstatemanager.cpp
 
 HEADERS += \
     $$PWD/util/cryptoutils.h \
@@ -87,4 +89,6 @@ HEADERS += \
     $$PWD/libqtelegram_global.h \
     $$PWD/file/uploadfileengine.h \
     $$PWD/telegrambot.h \
-    $$PWD/core/settingstools.h
+    $$PWD/core/settingstools.h \
+    $$PWD/tools/abstractbotstate.h \
+    $$PWD/tools/botstatemanager.h
