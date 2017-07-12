@@ -44,6 +44,8 @@ public:
         // generate random file id
         Utils::randomBytes(&mId, 8);
 
+        mPartLength *= 4;
+
         // calculate part length
         qint32 tmp = ((mLength + 2999) / 3000);
         while (mPartLength < tmp) {
