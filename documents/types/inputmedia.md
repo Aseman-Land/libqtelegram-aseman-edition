@@ -15,6 +15,7 @@
 * [typeInputMediaPhotoExternal](#inputmediatypeinputmediaphotoexternal)
 * [typeInputMediaDocumentExternal](#inputmediatypeinputmediadocumentexternal)
 * [typeInputMediaGame](#inputmediatypeinputmediagame)
+* [typeInputMediaInvoice](#inputmediatypeinputmediainvoice)
 
 ## InputMedia::typeInputMediaEmpty
 
@@ -216,4 +217,24 @@ inputMediaGame#d33f43f3 id:InputGame = InputMedia;
 |Name|Type|
 |----|----|
 |id|[InputGame](inputgame.md)|
+
+## InputMedia::typeInputMediaInvoice
+
+#### Schema:
+
+```c++
+inputMediaInvoice#92153685 flags:# title:string description:string photo:flags.0?InputWebDocument invoice:Invoice payload:bytes provider:string start_param:string = InputMedia;
+```
+
+#### Parameters:
+
+|Name|Type|
+|----|----|
+|title|QString|
+|description|QString|
+|photo|[InputWebDocument](inputwebdocument.md)|
+|invoice|[Invoice](invoice.md)|
+|payload|QByteArray|
+|provider|QString|
+|startParam|QString|
 

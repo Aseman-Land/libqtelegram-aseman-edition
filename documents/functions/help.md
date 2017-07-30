@@ -18,3 +18,7 @@
 
 * **Get terms of service** - [TelegramCore::helpGetTermsOfService](methods/gettermsofservice.md)
 
+* **Set bot updates status** - [TelegramCore::helpSetBotUpdatesStatus](methods/setbotupdatesstatus.md)
+
+* **Get cdn config** - [TelegramCore::helpGetCdnConfig](methods/getcdnconfig.md)
+

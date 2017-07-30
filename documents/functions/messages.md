@@ -68,6 +68,8 @@
 
 * **Received queue** - [TelegramCore::messagesReceivedQueue](methods/receivedqueue.md)
 
+* **Report encrypted spam** - [TelegramCore::messagesReportEncryptedSpam](methods/reportencryptedspam.md)
+
 * **Read message contents** - [TelegramCore::messagesReadMessageContents](methods/readmessagecontents.md)
 
 * **Get all stickers** - [TelegramCore::messagesGetAllStickers](methods/getallstickers.md)
@@ -153,4 +155,20 @@
 * **Get game high scores** - [TelegramCore::messagesGetGameHighScores](methods/getgamehighscores.md)
 
 * **Get inline game high scores** - [TelegramCore::messagesGetInlineGameHighScores](methods/getinlinegamehighscores.md)
+
+* **Get common chats** - [TelegramCore::messagesGetCommonChats](methods/getcommonchats.md)
+
+* **Get all chats** - [TelegramCore::messagesGetAllChats](methods/getallchats.md)
+
+* **Get web page** - [TelegramCore::messagesGetWebPage](methods/getwebpage.md)
+
+* **Toggle dialog pin** - [TelegramCore::messagesToggleDialogPin](methods/toggledialogpin.md)
+
+* **Reorder pinned dialogs** - [TelegramCore::messagesReorderPinnedDialogs](methods/reorderpinneddialogs.md)
+
+* **Get pinned dialogs** - [TelegramCore::messagesGetPinnedDialogs](methods/getpinneddialogs.md)
+
+* **Set bot shipping results** - [TelegramCore::messagesSetBotShippingResults](methods/setbotshippingresults.md)
+
+* **Set bot precheckout results** - [TelegramCore::messagesSetBotPrecheckoutResults](methods/setbotprecheckoutresults.md)
 

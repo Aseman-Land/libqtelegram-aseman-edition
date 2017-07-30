@@ -7,13 +7,14 @@ TelegramCore::helpGetAppChangelog
 ## Schema:
 
 ```c++
-help.getAppChangelog#b921197a = help.AppChangelog;
+help.getAppChangelog#9010ef6f prev_app_version:string = Updates;
 ```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
-|callBack|Callback&lt;[HelpAppChangelog](../../types/helpappchangelog.md)&gt;|0|
+|prevAppVersion|QString||
+|callBack|Callback&lt;[UpdatesType](../../types/updatestype.md)&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
 ## Callback Result:
@@ -21,13 +22,13 @@ help.getAppChangelog#b921197a = help.AppChangelog;
 |Name|Type|
 |----|----|
 |msgId|qint64|
-|result|[HelpAppChangelog](../../types/helpappchangelog.md)|
+|result|[UpdatesType](../../types/updatestype.md)|
 |error|TelegramCore::CallbackError|
 
 ## Signals:
 
 ```c++
-getAppChangelogAnswer(qint64 msgId, const HelpAppChangelog & result)
+getAppChangelogAnswer(qint64 msgId, const UpdatesType & result)
 ```
 ```c++
 getAppChangelogError(qint64 msgId, qint32 errorCode, const QString &errorText)
@@ -36,7 +37,7 @@ getAppChangelogError(qint64 msgId, qint32 errorCode, const QString &errorText)
 ## Events:
 
 ```c++
-onGetAppChangelogAnswer(qint64 msgId, const HelpAppChangelog & result)
+onGetAppChangelogAnswer(qint64 msgId, const UpdatesType & result)
 ```
 ```c++
 onGetAppChangelogError(qint64 msgId, qint32 errorCode, const QString &errorText)
@@ -49,7 +50,7 @@ onGetAppChangelogError(qint64 msgId, qint32 errorCode, const QString &errorText)
 ## Examples:
 
 ```c++
-tg->getAppChangelog([=](TG_GET_APP_CHANGELOG_CALLBACK){
+tg->getAppChangelog(prev_app_version, [=](TG_GET_APP_CHANGELOG_CALLBACK){
     ...
 }, 30000);
 ```

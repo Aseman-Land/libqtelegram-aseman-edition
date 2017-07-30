@@ -7,13 +7,14 @@ TelegramCore::messagesSetGameScore
 ## Schema:
 
 ```c++
-messages.setGameScore#8ef8ecc0 flags:# edit_message:flags.0?true peer:InputPeer id:int user_id:InputUser score:int = Updates;
+messages.setGameScore#8ef8ecc0 flags:# edit_message:flags.0?true force:flags.1?true peer:InputPeer id:int user_id:InputUser score:int = Updates;
 ```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
 |editMessage|bool||
+|force|bool||
 |peer|[InputPeer](../../types/inputpeer.md)||
 |id|qint32||
 |userId|[InputUser](../../types/inputuser.md)||
@@ -54,7 +55,7 @@ onSetGameScoreError(qint64 msgId, qint32 errorCode, const QString &errorText)
 ## Examples:
 
 ```c++
-tg->setGameScore(edit_message, peer, id, user_id, score, [=](TG_SET_GAME_SCORE_CALLBACK){
+tg->setGameScore(edit_message, force, peer, id, user_id, score, [=](TG_SET_GAME_SCORE_CALLBACK){
     ...
 }, 30000);
 ```

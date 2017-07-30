@@ -16,6 +16,9 @@
 * [typeMessageActionPinMessage](#messageactiontypemessageactionpinmessage)
 * [typeMessageActionHistoryClear](#messageactiontypemessageactionhistoryclear)
 * [typeMessageActionGameScore](#messageactiontypemessageactiongamescore)
+* [typeMessageActionPaymentSentMe](#messageactiontypemessageactionpaymentsentme)
+* [typeMessageActionPaymentSent](#messageactiontypemessageactionpaymentsent)
+* [typeMessageActionPhoneCall](#messageactiontypemessageactionphonecall)
 
 ## MessageAction::typeMessageActionEmpty
 
@@ -203,4 +206,54 @@ messageActionGameScore#92a72876 game_id:long score:int = MessageAction;
 |----|----|
 |gameId|qint64|
 |score|qint32|
+
+## MessageAction::typeMessageActionPaymentSentMe
+
+#### Schema:
+
+```c++
+messageActionPaymentSentMe#8f31b327 flags:# currency:string total_amount:long payload:bytes info:flags.0?PaymentRequestedInfo shipping_option_id:flags.1?string charge:PaymentCharge = MessageAction;
+```
+
+#### Parameters:
+
+|Name|Type|
+|----|----|
+|currency|QString|
+|totalAmount|qint64|
+|payload|QByteArray|
+|info|[PaymentRequestedInfo](paymentrequestedinfo.md)|
+|shippingOptionId|QString|
+|charge|[PaymentCharge](paymentcharge.md)|
+
+## MessageAction::typeMessageActionPaymentSent
+
+#### Schema:
+
+```c++
+messageActionPaymentSent#40699cd0 currency:string total_amount:long = MessageAction;
+```
+
+#### Parameters:
+
+|Name|Type|
+|----|----|
+|currency|QString|
+|totalAmount|qint64|
+
+## MessageAction::typeMessageActionPhoneCall
+
+#### Schema:
+
+```c++
+messageActionPhoneCall#80e11a7f flags:# call_id:long reason:flags.0?PhoneCallDiscardReason duration:flags.1?int = MessageAction;
+```
+
+#### Parameters:
+
+|Name|Type|
+|----|----|
+|callId|qint64|
+|reason|[PhoneCallDiscardReason](phonecalldiscardreason.md)|
+|duration|qint32|
 

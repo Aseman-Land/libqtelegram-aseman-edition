@@ -1448,9 +1448,7 @@ qint64 Telegram::messagesSendDocument(const InputPeer &peer, qint64 randomId, co
     inputMedia.setAttributes(attributes);
     inputMedia.setMimeType(mimeType);
     inputMedia.setCaption(caption);
-    if (!thumbnailBytes.isEmpty()) {
-        inputMedia.setClassType(InputMedia::typeInputMediaUploadedThumbDocument);
-    }
+
     FileOperation *op = new FileOperation(FileOperation::sendMedia);
     op->setInputPeer(peer);
     op->setInputMedia(inputMedia);
@@ -1492,9 +1490,7 @@ qint64 Telegram::messagesSendDocument(const InputPeer &peer, qint64 randomId, co
     inputMedia.setMimeType(mimeType);
     inputMedia.setAttributes(attributes);
     inputMedia.setCaption(caption);
-    if (thumbnailFilePath.length() > 0) {
-        inputMedia.setClassType(InputMedia::typeInputMediaUploadedThumbDocument);
-    }
+
     FileOperation *op = new FileOperation(FileOperation::sendMedia);
     op->setInputPeer(peer);
     op->setInputMedia(inputMedia);

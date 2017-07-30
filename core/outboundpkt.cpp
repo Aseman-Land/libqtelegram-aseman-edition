@@ -159,4 +159,8 @@ void OutboundPkt::initConnection() {
     appendQString(Utils::getSystemVersion());
     appendQString(Utils::getAppVersion());
     appendQString(mSettings->langCode());
+#if TG_API_VERSION >= 68
+    appendQString("");
+    appendQString(mSettings->langCode());
+#endif
 }

@@ -5,6 +5,7 @@
 * [typeUpdatesDifferenceEmpty](#updatesdifferencetypeupdatesdifferenceempty)
 * [typeUpdatesDifference](#updatesdifferencetypeupdatesdifference)
 * [typeUpdatesDifferenceSlice](#updatesdifferencetypeupdatesdifferenceslice)
+* [typeUpdatesDifferenceTooLong](#updatesdifferencetypeupdatesdifferencetoolong)
 
 ## UpdatesDifference::typeUpdatesDifferenceEmpty
 
@@ -58,4 +59,18 @@ updates.differenceSlice#a8fb1981 new_messages:Vector<Message> new_encrypted_mess
 |chats|QList&lt;[Chat](chat.md)&gt;|
 |users|QList&lt;[User](user.md)&gt;|
 |intermediateState|[UpdatesState](updatesstate.md)|
+
+## UpdatesDifference::typeUpdatesDifferenceTooLong
+
+#### Schema:
+
+```c++
+updates.differenceTooLong#4afe8f6d pts:int = updates.Difference;
+```
+
+#### Parameters:
+
+|Name|Type|
+|----|----|
+|pts|qint32|
 

@@ -7,12 +7,13 @@ TelegramCore::updatesGetChannelDifference
 ## Schema:
 
 ```c++
-updates.getChannelDifference#bb32d7c0 channel:InputChannel filter:ChannelMessagesFilter pts:int limit:int = updates.ChannelDifference;
+updates.getChannelDifference#3173d78 flags:# force:flags.0?true channel:InputChannel filter:ChannelMessagesFilter pts:int limit:int = updates.ChannelDifference;
 ```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
+|force|bool||
 |channel|[InputChannel](../../types/inputchannel.md)||
 |filter|[ChannelMessagesFilter](../../types/channelmessagesfilter.md)||
 |pts|qint32||
@@ -53,7 +54,7 @@ onGetChannelDifferenceError(qint64 msgId, qint32 errorCode, const QString &error
 ## Examples:
 
 ```c++
-tg->getChannelDifference(channel, filter, pts, limit, [=](TG_GET_CHANNEL_DIFFERENCE_CALLBACK){
+tg->getChannelDifference(force, channel, filter, pts, limit, [=](TG_GET_CHANNEL_DIFFERENCE_CALLBACK){
     ...
 }, 30000);
 ```

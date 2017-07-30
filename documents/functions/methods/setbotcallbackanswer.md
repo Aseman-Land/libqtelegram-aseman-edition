@@ -7,7 +7,7 @@ TelegramCore::messagesSetBotCallbackAnswer
 ## Schema:
 
 ```c++
-messages.setBotCallbackAnswer#c927d44b flags:# alert:flags.1?true query_id:long message:flags.0?string url:flags.2?string = Bool;
+messages.setBotCallbackAnswer#d58f130a flags:# alert:flags.1?true query_id:long message:flags.0?string url:flags.2?string cache_time:int = Bool;
 ```
 ## Parameters:
 
@@ -17,6 +17,7 @@ messages.setBotCallbackAnswer#c927d44b flags:# alert:flags.1?true query_id:long 
 |queryId|qint64||
 |message|QString||
 |url|QString||
+|cacheTime|qint32||
 |callBack|Callback&lt;bool&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
@@ -53,7 +54,7 @@ onSetBotCallbackAnswerError(qint64 msgId, qint32 errorCode, const QString &error
 ## Examples:
 
 ```c++
-tg->setBotCallbackAnswer(alert, query_id, message, url, [=](TG_SET_BOT_CALLBACK_ANSWER_CALLBACK){
+tg->setBotCallbackAnswer(alert, query_id, message, url, cache_time, [=](TG_SET_BOT_CALLBACK_ANSWER_CALLBACK){
     ...
 }, 30000);
 ```

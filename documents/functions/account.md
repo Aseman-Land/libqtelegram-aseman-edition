@@ -54,3 +54,5 @@
 
 * **Confirm phone** - [TelegramCore::accountConfirmPhone](methods/confirmphone.md)
 
+* **Get tmp password** - [TelegramCore::accountGetTmpPassword](methods/gettmppassword.md)
+

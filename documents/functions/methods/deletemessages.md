@@ -7,12 +7,13 @@ TelegramCore::messagesDeleteMessages
 ## Schema:
 
 ```c++
-messages.deleteMessages#a5f18925 id:Vector<int> = messages.AffectedMessages;
+messages.deleteMessages#e58e95d2 flags:# revoke:flags.0?true id:Vector<int> = messages.AffectedMessages;
 ```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
+|revoke|bool||
 |id|QList&lt;qint32&gt;||
 |callBack|Callback&lt;[MessagesAffectedMessages](../../types/messagesaffectedmessages.md)&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
@@ -50,7 +51,7 @@ onDeleteMessagesError(qint64 msgId, qint32 errorCode, const QString &errorText)
 ## Examples:
 
 ```c++
-tg->deleteMessages(id, [=](TG_DELETE_MESSAGES_CALLBACK){
+tg->deleteMessages(revoke, id, [=](TG_DELETE_MESSAGES_CALLBACK){
     ...
 }, 30000);
 ```
