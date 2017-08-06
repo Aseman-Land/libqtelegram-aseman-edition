@@ -219,7 +219,7 @@ private Q_SLOTS:
     // secret chats slots
     void onUpdates(const UpdatesType &upds);
 
-    void onUploadGetFileAnswer(qint64 fileId, const UploadGetFile &result);
+    void onUploadGetFileAnswer(qint64 fileId, const UploadGetFile &result, qint32 errorCode, const QString &errorText);
     void onUploadSendFileAnswer(qint64 fileId, qint32 partId, qint32 uploaded, qint32 totalSize);
 
 protected:

@@ -774,25 +774,34 @@ void Telegram::onUpdates(const UpdatesType &upds) {
     Q_EMIT updates(upds);
 }
 
-void Telegram::onUploadGetFileAnswer(qint64 fileId, const UploadGetFile &result)
+void Telegram::onUploadGetFileAnswer(qint64 fileId, const UploadGetFile &result, qint32 errorCode, const QString &errorText)
 {
-    switch(static_cast<int>(result.classType()))
+    if(errorCode)
     {
-    case UploadGetFile::typeUploadGetFileProgress:
+        CallbackError error;
+        error.null = false;
+        error.errorCode = errorCode;
+        error.errorText = errorText;
+        callBackCall<UploadGetFile>(fileId, result, error);
+    }
+    else
     {
-        Callback<UploadGetFile> callBack = callBackGet<UploadGetFile>(fileId);
-        if(callBack)
-            callBack(fileId, result, TelegramCore::CallbackError());
-    }
-        break;
+        switch(static_cast<int>(result.classType()))
+        {
+        case UploadGetFile::typeUploadGetFileProgress:
+        {
+            callBackCall<UploadGetFile>(fileId, result, TelegramCore::CallbackError(), false);
+        }
+            break;
 
-    case UploadGetFile::typeUploadGetFileFinished:
-    case UploadGetFile::typeUploadGetFileCanceled:
-        callBackCall<UploadGetFile>(fileId, result, TelegramCore::CallbackError());
-        break;
-    }
+        case UploadGetFile::typeUploadGetFileFinished:
+        case UploadGetFile::typeUploadGetFileCanceled:
+            callBackCall<UploadGetFile>(fileId, result, TelegramCore::CallbackError());
+            break;
+        }
 
-    Q_EMIT uploadGetFileAnswer(fileId, result);
+        Q_EMIT uploadGetFileAnswer(fileId, result);
+    }
 }
 
 void Telegram::onUploadSendFileAnswer(qint64 fileId, qint32 partId, qint32 uploaded, qint32 totalSize)
@@ -1065,6 +1074,11 @@ void Telegram::onError(qint64 id, qint32 errorCode, const QString &errorText, co
             qDebug() << errorText; // Nothing to do
         else
             onAuthLogOutAnswer(id, false, attachedData);
+    }
+    else
+    if(functionName == "onUploadGetFileError")
+    {
+        onUploadGetFileError(id, errorCode, errorText, attachedData);
     }
 
     TelegramCore::onError(id, errorCode, errorText, functionName, attachedData, accepted);

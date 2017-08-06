@@ -128,15 +128,18 @@ qint64 FileHandler::uploadSendFileParts(UploadFileEngine &file) {
     // depending on size use one or other api method to upload every part
     qint32 partId = 0;
 
+    qint64 msgId = 0;
     while (file.hasMoreParts()) {
         QByteArray bytes = file.nextPart();
         if (file.length() > 10 * 1024 * 1024) {
-            mApi->uploadSaveBigFilePart(file.id(), partId++, file.nParts(), bytes, file.id(), file.session());
+            msgId = mApi->uploadSaveBigFilePart(file.id(), partId++, file.nParts(), bytes, file.id(), file.session());
         } else {
-            mApi->uploadSaveFilePart(file.id(), partId++, bytes, file.id(), file.session());
+            msgId = mApi->uploadSaveFilePart(file.id(), partId++, bytes, file.id(), file.session());
         }
     }
     // return file id instead of every part msg id
+
+    Q_UNUSED(msgId)
     return file.id();
 }
 
@@ -374,12 +377,15 @@ void FileHandler::onUploadGetFileAnswer(qint64 msgId, const UploadFile &result, 
     const qint32 mtime = result.mtime();
     QByteArray bytes = result.bytes();
 
+    while(mDownloadsMapUpdates.contains(msgId))
+        msgId = mDownloadsMapUpdates.take(msgId);
+
     DownloadFile::Ptr f = mDownloadsMap.take(msgId);
     if(f.isNull())
         return;
 
     if (mCancelDownloadsMap.take(f->id())) {
-        Q_EMIT uploadGetFileAnswer(f->id(), UploadGetFile(UploadGetFile::typeUploadGetFileCanceled));
+        Q_EMIT uploadGetFileAnswer(f->id(), UploadGetFile(UploadGetFile::typeUploadGetFileCanceled), 0, "");
         Q_EMIT uploadCancelFileAnswer(f->id(), true);
         mActiveDownloadsMap.remove(f->id());
         f.clear();
@@ -418,7 +424,7 @@ void FileHandler::onUploadGetFileAnswer(qint64 msgId, const UploadFile &result, 
             result.setDownloaded(f->length());
             result.setTotal(expectedSize);
 
-            Q_EMIT uploadGetFileAnswer(f->id(), result); //emit signal of finished
+            Q_EMIT uploadGetFileAnswer(f->id(), result, 0, ""); //emit signal of finished
             mActiveDownloadsMap.remove(f->id());
             f.clear();
         }
@@ -453,12 +459,13 @@ void FileHandler::onUploadGetFileAnswer(qint64 msgId, const UploadFile &result, 
             f.clear();
         }
 
-        Q_EMIT uploadGetFileAnswer(fileId, result);
+        Q_EMIT uploadGetFileAnswer(fileId, result, 0, "");
     }
 }
 
 void FileHandler::onUploadGetFileError(qint64 id, qint32 errorCode, const QString &errorText, const QVariant &attachedData) {
     Q_UNUSED(attachedData)
+    qCDebug(TG_FILE_FILEHANDLER) << "onUploadGetFileError" << errorText;
     // check for error and resend authCheckPhone() request
     if (errorText.contains("_MIGRATE_")) {
         qint32 newDc = errorText.mid(errorText.lastIndexOf("_") + 1).toInt();
@@ -494,7 +501,12 @@ void FileHandler::onUploadGetFileError(qint64 id, qint32 errorCode, const QStrin
         }
 
     } else {
-        Q_EMIT error(id, errorCode, errorText, __FUNCTION__);
+        qint64 msgId = mDownloadsMap.value(id)->id();
+        if(msgId == 0)
+            msgId = id;
+
+        Q_EMIT uploadGetFileAnswer(msgId, UploadGetFile::typeUploadGetFileEmpty, errorCode, errorText);
+        Q_EMIT error(msgId, errorCode, errorText, __FUNCTION__);
     }
 }
 
@@ -531,7 +543,9 @@ void FileHandler::onMessagesSentEncryptedFile(qint64 msgId, const MessagesSentEn
 
 void FileHandler::onUpdateMessageId(qint64 oldMsgId, qint64 newMsgId) {
     DownloadFile::Ptr file = mDownloadsMap.take(oldMsgId);
+    qCDebug(TG_FILE_FILEHANDLER) << "onUpdateMessageId" << oldMsgId << newMsgId;
     if (!file.isNull()) {
         mDownloadsMap.insert(newMsgId, file);
+        mDownloadsMapUpdates[oldMsgId] = newMsgId;
     }
 }
