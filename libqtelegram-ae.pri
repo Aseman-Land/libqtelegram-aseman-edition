@@ -3,6 +3,10 @@ contains(CONFIG, gui_support) {
     QT += gui
 }
 
+DEFINES += \
+    LIBQTG_GIT_REVISION='\\"$${GIT_REVISION}\\"' \
+    LIBQTG_BUILD_UUID='\\"$${BUILD_UUID}\\"'
+
 QT += network
 
 win32 {

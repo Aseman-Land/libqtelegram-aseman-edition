@@ -328,6 +328,16 @@ QSettings::Format Telegram::defaultSettingsFormat()
     return qtelegram_default_settings_format;
 }
 
+QString Telegram::gitRevision()
+{
+    return LIBQTG_GIT_REVISION;
+}
+
+QString Telegram::buildUuid()
+{
+    return LIBQTG_BUILD_UUID;
+}
+
 bool Telegram::isLoggedIn() {
     return prv->mLibraryState == LoggedIn;
 }

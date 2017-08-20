@@ -72,6 +72,9 @@ public:
     static void setDefaultSettingsFormat(const QSettings::Format &format);
     static QSettings::Format defaultSettingsFormat();
 
+    static QString gitRevision();
+    static QString buildUuid();
+
     // Registration / authorization
     qint64 authCheckPhone(Callback<AuthCheckedPhone > callBack = 0, qint32 timeout = timeOut());
     qint64 authSendCode(Callback<AuthSentCode > callBack = 0, qint32 timeout = timeOut());
