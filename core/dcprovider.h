@@ -73,7 +73,7 @@ private:
 
     // counter of the dc's pending to be authenticated. When this counter is zero, all available DCs are
     // authenticated and a signal dcProviderReady() is emitted
-    qint32 mPendingDcs;
+    QHash<qint32, bool> mPendingDcs;
 
     // this list is filled with a session to every dc receiving auth transfer in transferAuth() operation.
     // Working session exports auth bytes and then is taken the first session in this list for the import.

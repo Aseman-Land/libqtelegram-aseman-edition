@@ -1300,7 +1300,11 @@ qint64 Telegram::contactsGetContacts(Callback<ContactsContacts> callBack, qint32
     //in ascending order may be passed in this 'hash' parameter. If the contact set was not changed,
     //contactsContactsNotModified() will be returned from Api, so the cached client list is returned with the
     //signal that they are the same contacts as previous request
+#if TG_API_VERSION >= 71
+    qint32 hash = 0;
+#else
     QString hash;
+#endif
     if (!prv->m_cachedContacts.isEmpty()) {
         qSort(prv->m_cachedContacts.begin(), prv->m_cachedContacts.end(), lessThan); //lessThan method must be outside any class or be static
         QString hashBase;
@@ -1313,7 +1317,11 @@ qint64 Telegram::contactsGetContacts(Callback<ContactsContacts> callBack, qint32
         }
         QCryptographicHash md5Generator(QCryptographicHash::Md5);
         md5Generator.addData(hashBase.toStdString().c_str());
+#if TG_API_VERSION >= 71
+        hash = md5Generator.result().toInt();
+#else
         hash = md5Generator.result().toHex();
+#endif
     }
     return TelegramCore::contactsGetContacts(hash, callBack, timeout);
 }
