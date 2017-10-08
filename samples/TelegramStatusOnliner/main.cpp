@@ -76,6 +76,13 @@ int main(int argc, char *argv[])
             int code;
             qDebug() << "Please enter the number:";
             std::cin >> code;
+            QString sCode = QString::number(code);
+            telegram.authSignIn(sCode, [&](TG_AUTH_SIGN_IN_CALLBACK){
+              Q_UNUSED(msgId);
+              if(!error.null) {
+                qDebug() << error.errorText;
+              }
+            });
         });
     });
 
