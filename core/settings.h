@@ -79,6 +79,7 @@
 #include <QLoggingCategory>
 #include <openssl/rsa.h>
 #include "secret/secretchat.h"
+#include "settingstools.h"
 #include "libqtelegram_global.h"
 
 Q_DECLARE_LOGGING_CATEGORY(TG_CORE_SETTINGS)
@@ -142,10 +143,7 @@ public:
     bool removeAuthFile();
     void writeCrashFile();
 
-    typedef bool (*ReadFunc)(Telegram *tg, QVariantMap &map);
-    typedef bool (*WriteFunc)(Telegram *tg, const QVariantMap &map);
-
-    void setAuthConfigMethods(ReadFunc readFunc, WriteFunc writeFunc);
+    void setAuthConfigMethods(SettingsTools::ReadFunc readFunc, SettingsTools::WriteFunc writeFunc);
     void clearAuth();
 
 private:
@@ -186,8 +184,8 @@ private:
 
     Telegram *mTelegram;
 
-    ReadFunc _telegram_settings_read_fnc;
-    WriteFunc _telegram_settings_write_fnc;
+    SettingsTools::ReadFunc _telegram_settings_read_fnc;
+    SettingsTools::WriteFunc _telegram_settings_write_fnc;
 };
 
 #endif // SETTINGS_H

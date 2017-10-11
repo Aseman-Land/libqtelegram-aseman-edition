@@ -7,13 +7,14 @@ TelegramCore::messagesSetInlineGameScore
 ## Schema:
 
 ```c++
-messages.setInlineGameScore#15ad9f64 flags:# edit_message:flags.0?true id:InputBotInlineMessageID user_id:InputUser score:int = Bool;
+messages.setInlineGameScore#15ad9f64 flags:# edit_message:flags.0?true force:flags.1?true id:InputBotInlineMessageID user_id:InputUser score:int = Bool;
 ```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
 |editMessage|bool||
+|force|bool||
 |id|[InputBotInlineMessageID](../../types/inputbotinlinemessageid.md)||
 |userId|[InputUser](../../types/inputuser.md)||
 |score|qint32||
@@ -53,7 +54,7 @@ onSetInlineGameScoreError(qint64 msgId, qint32 errorCode, const QString &errorTe
 ## Examples:
 
 ```c++
-tg->setInlineGameScore(edit_message, id, user_id, score, [=](TG_SET_INLINE_GAME_SCORE_CALLBACK){
+tg->setInlineGameScore(edit_message, force, id, user_id, score, [=](TG_SET_INLINE_GAME_SCORE_CALLBACK){
     ...
 }, 30000);
 ```

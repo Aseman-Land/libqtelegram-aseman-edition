@@ -1,6 +1,13 @@
-QT += gui
+QT -= gui
+contains(CONFIG, gui_support) {
+    QT += gui
+}
+
+DEFINES += \
+    LIBQTG_GIT_REVISION='\\"$${GIT_REVISION}\\"' \
+    LIBQTG_BUILD_UUID='\\"$${BUILD_UUID}\\"'
+
 QT += network
-QT += multimedia
 
 win32 {
     isEmpty(OPENSSL_LIB_DIR): OPENSSL_LIB_DIR = $${DESTDIR}
@@ -8,7 +15,7 @@ win32 {
 
     LIBS += -L$${OPENSSL_LIB_DIR} -lssleay32
     INCLUDEPATH += $${OPENSSL_INCLUDE_PATH}
-    
+
     win32-msvc* {
         LIBS += -llibeay32 -lzlibstat -lUser32 -lAdvapi32 -lGdi32 -lWs2_32
     } else {
@@ -49,7 +56,10 @@ SOURCES += \
     $$PWD/core/session.cpp \
     $$PWD/core/dcauth.cpp \
     $$PWD/telegram.cpp \
-    $$PWD/file/uploadfileengine.cpp
+    $$PWD/file/uploadfileengine.cpp \
+    $$PWD/telegrambot.cpp \
+    $$PWD/tools/abstractbotstate.cpp \
+    $$PWD/tools/botstatemanager.cpp
 
 HEADERS += \
     $$PWD/util/cryptoutils.h \
@@ -81,4 +91,8 @@ HEADERS += \
     $$PWD/core/dc.h \
     $$PWD/telegram.h \
     $$PWD/libqtelegram_global.h \
-    $$PWD/file/uploadfileengine.h
+    $$PWD/file/uploadfileengine.h \
+    $$PWD/telegrambot.h \
+    $$PWD/core/settingstools.h \
+    $$PWD/tools/abstractbotstate.h \
+    $$PWD/tools/botstatemanager.h

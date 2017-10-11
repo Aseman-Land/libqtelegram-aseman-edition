@@ -26,6 +26,8 @@
 #include "util/tlvalues.h"
 #include "telegram/coretypes.h"
 
+#include <openssl/bn.h>
+
 Q_LOGGING_CATEGORY(TG_CORE_INBOUNDPKT, "tg.core.inboundpkt")
 
 InboundPkt::InboundPkt(char *buffer, qint32 length) :

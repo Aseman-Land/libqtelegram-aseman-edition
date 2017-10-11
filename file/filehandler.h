@@ -28,7 +28,7 @@ public:
 
 Q_SIGNALS:
     void uploadSendFileAnswer(qint64 fileId, qint32 partId, qint32 uploaded, qint32 totalSize);
-    void uploadGetFileAnswer(qint64 fileId, const UploadGetFile &result);
+    void uploadGetFileAnswer(qint64 fileId, const UploadGetFile &result, qint32 errorCode, const QString &errorText);
     void uploadCancelFileAnswer(qint64 fileId, bool cancelled);
     void error(qint64 id, qint32 errorCode, const QString &errorText, const QString &functionName);
 
@@ -60,6 +60,7 @@ private:
     /* File receiving */
     // requestId -> physical downloading file details (DownloadFile structure includes fileId)
     QMap<qint64, DownloadFile::Ptr> mDownloadsMap;
+    QMap<qint64, qint64> mDownloadsMapUpdates;
     // sessionId -> list of files waiting for session connection to be ready for being downloaded
     QMap<qint64, QList<DownloadFile::Ptr> > mInitialDownloadsMap;
     // fileId -> true if the file download is in progress. An entry does not exists for that fileId if not downloading

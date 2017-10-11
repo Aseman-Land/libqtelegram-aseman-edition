@@ -13,7 +13,8 @@
 * [typeSendMessageGeoLocationAction](#sendmessageactiontypesendmessagegeolocationaction)
 * [typeSendMessageChooseContactAction](#sendmessageactiontypesendmessagechoosecontactaction)
 * [typeSendMessageGamePlayAction](#sendmessageactiontypesendmessagegameplayaction)
-* [typeSendMessageGameStopAction](#sendmessageactiontypesendmessagegamestopaction)
+* [typeSendMessageRecordRoundAction](#sendmessageactiontypesendmessagerecordroundaction)
+* [typeSendMessageUploadRoundAction](#sendmessageactiontypesendmessageuploadroundaction)
 * [typeSendMessageTypingActionSecret17](#sendmessageactiontypesendmessagetypingactionsecret17)
 * [typeSendMessageCancelActionSecret17](#sendmessageactiontypesendmessagecancelactionsecret17)
 * [typeSendMessageRecordVideoActionSecret17](#sendmessageactiontypesendmessagerecordvideoactionsecret17)
@@ -158,16 +159,30 @@ sendMessageGamePlayAction#dd6a8f48 = SendMessageAction;
 #### Parameters:
 
 
-## SendMessageAction::typeSendMessageGameStopAction
+## SendMessageAction::typeSendMessageRecordRoundAction
 
 #### Schema:
 
 ```c++
-sendMessageGameStopAction#15c2c99a = SendMessageAction;
+sendMessageRecordRoundAction#88f27fbc = SendMessageAction;
 ```
 
 #### Parameters:
 
+
+## SendMessageAction::typeSendMessageUploadRoundAction
+
+#### Schema:
+
+```c++
+sendMessageUploadRoundAction#243e1c66 progress:int = SendMessageAction;
+```
+
+#### Parameters:
+
+|Name|Type|
+|----|----|
+|progress|qint32|
 
 ## SendMessageAction::typeSendMessageTypingActionSecret17
 

@@ -32,9 +32,12 @@
 #include <QFileInfo>
 #include <QMimeDatabase>
 #include <QtEndian>
+#include <QCryptographicHash>
+
+#ifdef QT_GUI_LIB
 #include <QImage>
 #include <QImageReader>
-#include <QCryptographicHash>
+#endif
 
 #include "util/tlvalues.h"
 #include "telegram/types/types.h"
@@ -46,6 +49,8 @@
 #include "file/filehandler.h"
 #include "core/dcprovider.h"
 #include "telegram/coretypes.h"
+#include "secret/secretchat.h"
+#include "core/settings.h"
 
 Q_LOGGING_CATEGORY(TG_TELEGRAM, "tg.telegram")
 Q_LOGGING_CATEGORY(TG_LIB_SECRET, "tg.lib.secret")
@@ -102,8 +107,31 @@ public:
     qint16 defaultHostPort;
     qint16 defaultHostDcId;
 
-    Settings::ReadFunc telegram_settings_read_fnc;
-    Settings::WriteFunc telegram_settings_write_fnc;
+    SettingsTools::ReadFunc telegram_settings_read_fnc;
+    SettingsTools::WriteFunc telegram_settings_write_fnc;
+
+    void createSharedKey(SecretChat *secretChat, BIGNUM *p, QByteArray gAOrB) {
+        // calculate the shared key by doing key = B^a mod p
+        BIGNUM *myKey = secretChat->myKey();
+        // padding of B (gAOrB) must have exactly 256 bytes. After pad, transform to bignum
+        BIGNUM *bigNumGAOrB = Utils::padBytesAndGetBignum(gAOrB);
+
+        // create empty bignum where store the result of operation g^a mod p
+        BIGNUM *result = BN_new();
+        Utils::ensurePtr(result);
+        // do the opeation -> k = g_b^a mod p
+        Utils::ensure(mCrypto->BNModExp(result, bigNumGAOrB, myKey, p));
+
+        // move r (BIGNUM) to shared key (char[]) array format
+        uchar *sharedKey = secretChat->sharedKey();
+        memset(sharedKey, 0, SHARED_KEY_LENGTH);
+        BN_bn2bin(result, sharedKey + (SHARED_KEY_LENGTH - BN_num_bytes (result)));
+
+        qint64 keyFingerprint = Utils::getKeyFingerprint(sharedKey);
+        secretChat->setKeyFingerprint(keyFingerprint);
+
+        BN_free(bigNumGAOrB);
+    }
 };
 
 Telegram::Telegram(const QString &defaultHostAddress, qint16 defaultHostPort, qint16 defaultHostDcId, qint32 appId, const QString &appHash, const QString &phoneNumber, const QString &configPath, const QString &publicKeyFile) :
@@ -284,7 +312,7 @@ CryptoUtils *Telegram::crypto() const
     return prv->mCrypto;
 }
 
-void Telegram::setAuthConfigMethods(Settings::ReadFunc readFunc, Settings::WriteFunc writeFunc)
+void Telegram::setAuthConfigMethods(SettingsTools::ReadFunc readFunc, SettingsTools::WriteFunc writeFunc)
 {
     prv->telegram_settings_read_fnc = readFunc;
     prv->telegram_settings_write_fnc = writeFunc;
@@ -298,6 +326,16 @@ void Telegram::setDefaultSettingsFormat(const QSettings::Format &format)
 QSettings::Format Telegram::defaultSettingsFormat()
 {
     return qtelegram_default_settings_format;
+}
+
+QString Telegram::gitRevision()
+{
+    return LIBQTG_GIT_REVISION;
+}
+
+QString Telegram::buildUuid()
+{
+    return LIBQTG_BUILD_UUID;
 }
 
 bool Telegram::isLoggedIn() {
@@ -510,17 +548,17 @@ qint64 Telegram::messagesSendEncryptedPhoto(const InputEncryptedChat &chat, qint
     QFileInfo fileInfo(filePath);
     qint32 size = fileInfo.size();
 
-    QImage image;
-    image.load(filePath);
-    qint32 width = image.width();
-    qint32 height = image.height();
-
     DecryptedMessageMedia media(DecryptedMessageMedia::typeDecryptedMessageMediaPhotoSecret8);
-    media.setW(width);
-    media.setH(height);
     media.setSize(size);
     media.setKey(key);
     media.setIv(iv);
+
+#ifdef QT_GUI_LIB
+    QImage image;
+    image.load(filePath);
+    media.setW(image.width());
+    media.setH(image.height());
+#endif
 
     DecryptedMessage decryptedMessage(DecryptedMessage::typeDecryptedMessageSecret17);
     decryptedMessage.setRandomId(randomId);
@@ -710,7 +748,7 @@ void Telegram::messagesDhConfigNotModified(qint64 msgId, const QByteArray &rando
     case SecretChat::Requested: {
         QByteArray gA = secretChat->gAOrB();
 
-        createSharedKey(secretChat, prv->mSecretState.p(), gA);
+        prv->createSharedKey(secretChat, prv->mSecretState.p(), gA);
         qint64 keyFingerprint = secretChat->keyFingerprint();
 
         InputEncryptedChat inputEncryptedChat;
@@ -746,25 +784,34 @@ void Telegram::onUpdates(const UpdatesType &upds) {
     Q_EMIT updates(upds);
 }
 
-void Telegram::onUploadGetFileAnswer(qint64 fileId, const UploadGetFile &result)
+void Telegram::onUploadGetFileAnswer(qint64 fileId, const UploadGetFile &result, qint32 errorCode, const QString &errorText)
 {
-    switch(static_cast<int>(result.classType()))
+    if(errorCode)
     {
-    case UploadGetFile::typeUploadGetFileProgress:
+        CallbackError error;
+        error.null = false;
+        error.errorCode = errorCode;
+        error.errorText = errorText;
+        callBackCall<UploadGetFile>(fileId, result, error);
+    }
+    else
     {
-        Callback<UploadGetFile> callBack = callBackGet<UploadGetFile>(fileId);
-        if(callBack)
-            callBack(fileId, result, TelegramCore::CallbackError());
-    }
-        break;
+        switch(static_cast<int>(result.classType()))
+        {
+        case UploadGetFile::typeUploadGetFileProgress:
+        {
+            callBackCall<UploadGetFile>(fileId, result, TelegramCore::CallbackError(), false);
+        }
+            break;
 
-    case UploadGetFile::typeUploadGetFileFinished:
-    case UploadGetFile::typeUploadGetFileCanceled:
-        callBackCall<UploadGetFile>(fileId, result, TelegramCore::CallbackError());
-        break;
-    }
+        case UploadGetFile::typeUploadGetFileFinished:
+        case UploadGetFile::typeUploadGetFileCanceled:
+            callBackCall<UploadGetFile>(fileId, result, TelegramCore::CallbackError());
+            break;
+        }
 
-    Q_EMIT uploadGetFileAnswer(fileId, result);
+        Q_EMIT uploadGetFileAnswer(fileId, result);
+    }
 }
 
 void Telegram::onUploadSendFileAnswer(qint64 fileId, qint32 partId, qint32 uploaded, qint32 totalSize)
@@ -781,6 +828,9 @@ void Telegram::timerEvent(QTimerEvent *e)
         if(!mApi)
         {
             qDebug() << "Timeout error initializing. Retrying...";
+            if(prv->initTimeout <= 30000)
+                prv->initTimeout = prv->initTimeout*2;
+
             init(prv->initTimeout);
         }
     }
@@ -917,7 +967,7 @@ void Telegram::processSecretChatUpdate(const Update &update) {
                 return;
             }
 
-            createSharedKey(secretChat, prv->mSecretState.p(), gB);
+            prv->createSharedKey(secretChat, prv->mSecretState.p(), gB);
 
             qint64 calculatedKeyFingerprint = secretChat->keyFingerprint();
             qCDebug(TG_LIB_SECRET) << "calculated keyFingerprint:" << calculatedKeyFingerprint;
@@ -1006,29 +1056,6 @@ void Telegram::processSecretChatUpdate(const Update &update) {
     }
 }
 
-void Telegram::createSharedKey(SecretChat *secretChat, BIGNUM *p, QByteArray gAOrB) {
-    // calculate the shared key by doing key = B^a mod p
-    BIGNUM *myKey = secretChat->myKey();
-    // padding of B (gAOrB) must have exactly 256 bytes. After pad, transform to bignum
-    BIGNUM *bigNumGAOrB = Utils::padBytesAndGetBignum(gAOrB);
-
-    // create empty bignum where store the result of operation g^a mod p
-    BIGNUM *result = BN_new();
-    Utils::ensurePtr(result);
-    // do the opeation -> k = g_b^a mod p
-    Utils::ensure(prv->mCrypto->BNModExp(result, bigNumGAOrB, myKey, p));
-
-    // move r (BIGNUM) to shared key (char[]) array format
-    uchar *sharedKey = secretChat->sharedKey();
-    memset(sharedKey, 0, SHARED_KEY_LENGTH);
-    BN_bn2bin(result, sharedKey + (SHARED_KEY_LENGTH - BN_num_bytes (result)));
-
-    qint64 keyFingerprint = Utils::getKeyFingerprint(sharedKey);
-    secretChat->setKeyFingerprint(keyFingerprint);
-
-    BN_free(bigNumGAOrB);
-}
-
 // error and internal managements
 void Telegram::onError(qint64 id, qint32 errorCode, const QString &errorText, const QString &functionName, const QVariant &attachedData, bool &accepted) {
     if (errorText.contains("_MIGRATE_"))
@@ -1053,10 +1080,15 @@ void Telegram::onError(qint64 id, qint32 errorCode, const QString &errorText, co
     else
     if (errorCode == 401)
     {
-        if(errorText == "SESSION_PASSWORD_NEEDED")
-            ; // Nothing to do
+        if(errorText == "SESSION_PASSWORD_NEEDED" || errorText == "AUTH_KEY_UNREGISTERED")
+            qDebug() << errorText; // Nothing to do
         else
             onAuthLogOutAnswer(id, false, attachedData);
+    }
+    else
+    if(functionName == "onUploadGetFileError")
+    {
+        onUploadGetFileError(id, errorCode, errorText, attachedData);
     }
 
     TelegramCore::onError(id, errorCode, errorText, functionName, attachedData, accepted);
@@ -1216,7 +1248,7 @@ qint64 Telegram::authSignUp(const QString &code, const QString &firstName, const
 }
 
 qint64 Telegram::authCheckPassword(const QByteArray &passwordData, Callback<AuthAuthorization> callBack, qint32 timeout) {
-    return TelegramCore::authCheckPassword( QCryptographicHash::hash(passwordData, QCryptographicHash::Sha256), callBack, timeout);
+    return TelegramCore::authCheckPassword( passwordData, callBack, timeout);
 }
 
 qint64 Telegram::authImportBotAuthorization(const QString &bot_auth_token, qint32 flags, Callback<AuthAuthorization > callBack, qint32 timeout) {
@@ -1268,7 +1300,11 @@ qint64 Telegram::contactsGetContacts(Callback<ContactsContacts> callBack, qint32
     //in ascending order may be passed in this 'hash' parameter. If the contact set was not changed,
     //contactsContactsNotModified() will be returned from Api, so the cached client list is returned with the
     //signal that they are the same contacts as previous request
+#if TG_API_VERSION >= 71
+    qint32 hash = 0;
+#else
     QString hash;
+#endif
     if (!prv->m_cachedContacts.isEmpty()) {
         qSort(prv->m_cachedContacts.begin(), prv->m_cachedContacts.end(), lessThan); //lessThan method must be outside any class or be static
         QString hashBase;
@@ -1281,7 +1317,11 @@ qint64 Telegram::contactsGetContacts(Callback<ContactsContacts> callBack, qint32
         }
         QCryptographicHash md5Generator(QCryptographicHash::Md5);
         md5Generator.addData(hashBase.toStdString().c_str());
+#if TG_API_VERSION >= 71
+        hash = md5Generator.result().toInt();
+#else
         hash = md5Generator.result().toHex();
+#endif
     }
     return TelegramCore::contactsGetContacts(hash, callBack, timeout);
 }
@@ -1345,9 +1385,7 @@ qint64 Telegram::messagesSendVideo(const InputPeer &peer, qint64 randomId, const
     InputMedia inputMedia(InputMedia::typeInputMediaUploadedDocument);
     inputMedia.setAttributes( inputMedia.attributes() << attr );
     inputMedia.setMimeType(mimeType);
-    if (!thumbnailBytes.isEmpty()) {
-        inputMedia.setClassType(InputMedia::typeInputMediaUploadedThumbDocument);
-    }
+
     FileOperation *op = new FileOperation(FileOperation::sendMedia);
     op->setInputPeer(peer);
     op->setInputMedia(inputMedia);
@@ -1371,9 +1409,8 @@ qint64 Telegram::messagesSendVideo(const InputPeer &peer, qint64 randomId, const
     InputMedia inputMedia(InputMedia::typeInputMediaUploadedDocument);
     inputMedia.setAttributes( inputMedia.attributes() << attr );
     inputMedia.setMimeType(QMimeDatabase().mimeTypeForFile(QFileInfo(filePath)).name());
-    if (thumbnailFilePath.length() > 0) {
-        inputMedia.setClassType(InputMedia::typeInputMediaUploadedThumbDocument);
-    }
+
+
     FileOperation *op = new FileOperation(FileOperation::sendMedia);
     op->setInputPeer(peer);
     op->setInputMedia(inputMedia);
@@ -1431,7 +1468,7 @@ qint64 Telegram::messagesSendAudio(const InputPeer &peer, qint64 randomId, const
     return uploadSendFile(*op, inputMedia.classType(), filePath);
 }
 
-qint64 Telegram::messagesSendDocument(const InputPeer &peer, qint64 randomId, const QByteArray &bytes, const QString &fileName, const QString &mimeType, const QByteArray &thumbnailBytes, const QString &thumbnailName, const QList<DocumentAttribute> &extraAttributes, qint32 replyToMsgId, const ReplyMarkup &reply_markup, bool clearDraft, bool silent, bool background, Callback<UploadSendFile > callBack, qint32 timeout) {
+qint64 Telegram::messagesSendDocument(const InputPeer &peer, qint64 randomId, const QByteArray &bytes, const QString &fileName, const QString &mimeType, const QByteArray &thumbnailBytes, const QString &thumbnailName, const QList<DocumentAttribute> &extraAttributes, qint32 replyToMsgId, const ReplyMarkup &reply_markup, bool clearDraft, bool silent, bool background, const QString &caption, Callback<UploadSendFile > callBack, qint32 timeout) {
     DocumentAttribute fileAttr(DocumentAttribute::typeDocumentAttributeFilename);
     fileAttr.setFileName(fileName);
 
@@ -1442,9 +1479,8 @@ qint64 Telegram::messagesSendDocument(const InputPeer &peer, qint64 randomId, co
     InputMedia inputMedia(InputMedia::typeInputMediaUploadedDocument);
     inputMedia.setAttributes(attributes);
     inputMedia.setMimeType(mimeType);
-    if (!thumbnailBytes.isEmpty()) {
-        inputMedia.setClassType(InputMedia::typeInputMediaUploadedThumbDocument);
-    }
+    inputMedia.setCaption(caption);
+
     FileOperation *op = new FileOperation(FileOperation::sendMedia);
     op->setInputPeer(peer);
     op->setInputMedia(inputMedia);
@@ -1459,7 +1495,7 @@ qint64 Telegram::messagesSendDocument(const InputPeer &peer, qint64 randomId, co
     return uploadSendFile(*op, inputMedia.classType(), fileName, bytes, thumbnailBytes, thumbnailName);
 }
 
-qint64 Telegram::messagesSendDocument(const InputPeer &peer, qint64 randomId, const QString &filePath, const QString &thumbnailFilePath, bool sendAsSticker, qint32 replyToMsgId, const ReplyMarkup &reply_markup, bool clearDraft, bool silent, bool background, Callback<UploadSendFile > callBack, qint32 timeout) {
+qint64 Telegram::messagesSendDocument(const InputPeer &peer, qint64 randomId, const QString &filePath, const QString &thumbnailFilePath, bool sendAsSticker, qint32 replyToMsgId, const ReplyMarkup &reply_markup, bool clearDraft, bool silent, bool background, const QString &caption, Callback<UploadSendFile > callBack, qint32 timeout) {
     const QMimeType t = QMimeDatabase().mimeTypeForFile(QFileInfo(filePath));
     QString mimeType = t.name();
 
@@ -1469,12 +1505,14 @@ qint64 Telegram::messagesSendDocument(const InputPeer &peer, qint64 randomId, co
     QList<DocumentAttribute> attributes;
     attributes << fileAttr;
     if(sendAsSticker) {
+#ifdef QT_GUI_LIB
         QImageReader reader(filePath);
         DocumentAttribute imageSizeAttr(DocumentAttribute::typeDocumentAttributeImageSize);
         imageSizeAttr.setH(reader.size().height());
         imageSizeAttr.setW(reader.size().width());
 
         attributes << DocumentAttribute(DocumentAttribute::typeDocumentAttributeSticker) << imageSizeAttr;
+#endif
 
         if(mimeType.contains("webp"))
             mimeType = "image/webp";
@@ -1483,9 +1521,8 @@ qint64 Telegram::messagesSendDocument(const InputPeer &peer, qint64 randomId, co
     InputMedia inputMedia(InputMedia::typeInputMediaUploadedDocument);
     inputMedia.setMimeType(mimeType);
     inputMedia.setAttributes(attributes);
-    if (thumbnailFilePath.length() > 0) {
-        inputMedia.setClassType(InputMedia::typeInputMediaUploadedThumbDocument);
-    }
+    inputMedia.setCaption(caption);
+
     FileOperation *op = new FileOperation(FileOperation::sendMedia);
     op->setInputPeer(peer);
     op->setInputMedia(inputMedia);

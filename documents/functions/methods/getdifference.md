@@ -7,13 +7,14 @@ TelegramCore::updatesGetDifference
 ## Schema:
 
 ```c++
-updates.getDifference#a041495 pts:int date:int qts:int = updates.Difference;
+updates.getDifference#25939651 flags:# pts:int pts_total_limit:flags.0?int date:int qts:int = updates.Difference;
 ```
 ## Parameters:
 
 |Name|Type|Default|
 |----|----|-------|
 |pts|qint32||
+|ptsTotalLimit|qint32||
 |date|qint32||
 |qts|qint32||
 |callBack|Callback&lt;[UpdatesDifference](../../types/updatesdifference.md)&gt;|0|
@@ -52,7 +53,7 @@ onGetDifferenceError(qint64 msgId, qint32 errorCode, const QString &errorText)
 ## Examples:
 
 ```c++
-tg->getDifference(pts, date, qts, [=](TG_GET_DIFFERENCE_CALLBACK){
+tg->getDifference(pts, pts_total_limit, date, qts, [=](TG_GET_DIFFERENCE_CALLBACK){
     ...
 }, 30000);
 ```

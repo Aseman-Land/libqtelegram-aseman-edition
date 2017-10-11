@@ -1,5 +1,6 @@
 # libqtelegram-aseman-edition
-It's a fork of libqtelegram by Aseman Team which is porting to windows and mac alongside linux support. It's also build using qmake instead of cmake.
+Most powerfull telegram library. It created using C++/Qt and supports both client and bots API. It's free and opensource and released under the GPLv3 license.
+It's a fork of libqtelegram by Aseman Team which is porting to windows and mac alongside linux support.
 
 ### [Developer Documents](documents/start.md)
 
@@ -16,17 +17,6 @@ on Fedora (tested on Fedora 20):
     yum install qt5-qtbase qt5-qtbase-devel qt5-qtdeclarative qt5-qtquick1 qt5-qtquick1-devel kde-plasma-applicationname kde-plasma-nm qt5-qtdeclarative-devel qt5-qtdeclarative-static qt5-qtgraphicaleffects qt5-qtquickcontrols openssl-devel libappindicator-devel
 
 For other distributions search for the corresponding packages.
-
-#### Available qmake keywords
-    
-There are some available keywords, you can use it as qmake flags on build step on each project:
-
-    OPENSSL_LIB_DIR
-    OPENSSL_INCLUDE_PATH
-    LIBQTELEGRAM_LIB_DIR
-    LIBQTELEGRAM_INCLUDE_PATH
-    TELEGRAMQML_LIB_DIR
-    TELEGRAMQML_INCLUDE_PATH
 
 #### Get libqtelegram
 

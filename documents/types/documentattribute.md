@@ -64,13 +64,14 @@ documentAttributeSticker#6319d612 flags:# mask:flags.1?true alt:string stickerse
 #### Schema:
 
 ```c++
-documentAttributeVideo#5910cccb duration:int w:int h:int = DocumentAttribute;
+documentAttributeVideo#ef02ce6 flags:# round_message:flags.0?true duration:int w:int h:int = DocumentAttribute;
 ```
 
 #### Parameters:
 
 |Name|Type|
 |----|----|
+|roundMessage|bool|
 |duration|qint32|
 |w|qint32|
 |h|qint32|

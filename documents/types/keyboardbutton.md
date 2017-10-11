@@ -9,6 +9,7 @@
 * [typeKeyboardButtonRequestGeoLocation](#keyboardbuttontypekeyboardbuttonrequestgeolocation)
 * [typeKeyboardButtonSwitchInline](#keyboardbuttontypekeyboardbuttonswitchinline)
 * [typeKeyboardButtonGame](#keyboardbuttontypekeyboardbuttongame)
+* [typeKeyboardButtonBuy](#keyboardbuttontypekeyboardbuttonbuy)
 
 ## KeyboardButton::typeKeyboardButton
 
@@ -104,6 +105,20 @@ keyboardButtonSwitchInline#568a748 flags:# same_peer:flags.0?true text:string qu
 
 ```c++
 keyboardButtonGame#50f41ccf text:string = KeyboardButton;
+```
+
+#### Parameters:
+
+|Name|Type|
+|----|----|
+|text|QString|
+
+## KeyboardButton::typeKeyboardButtonBuy
+
+#### Schema:
+
+```c++
+keyboardButtonBuy#afd93fbb text:string = KeyboardButton;
 ```
 
 #### Parameters:

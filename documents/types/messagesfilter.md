@@ -13,6 +13,9 @@
 * [typeInputMessagesFilterVoice](#messagesfiltertypeinputmessagesfiltervoice)
 * [typeInputMessagesFilterMusic](#messagesfiltertypeinputmessagesfiltermusic)
 * [typeInputMessagesFilterChatPhotos](#messagesfiltertypeinputmessagesfilterchatphotos)
+* [typeInputMessagesFilterPhoneCalls](#messagesfiltertypeinputmessagesfilterphonecalls)
+* [typeInputMessagesFilterRoundVoice](#messagesfiltertypeinputmessagesfilterroundvoice)
+* [typeInputMessagesFilterRoundVideo](#messagesfiltertypeinputmessagesfilterroundvideo)
 
 ## MessagesFilter::typeInputMessagesFilterEmpty
 
@@ -130,6 +133,42 @@ inputMessagesFilterMusic#3751b49e = MessagesFilter;
 
 ```c++
 inputMessagesFilterChatPhotos#3a20ecb8 = MessagesFilter;
+```
+
+#### Parameters:
+
+
+## MessagesFilter::typeInputMessagesFilterPhoneCalls
+
+#### Schema:
+
+```c++
+inputMessagesFilterPhoneCalls#80c99768 flags:# missed:flags.0?true = MessagesFilter;
+```
+
+#### Parameters:
+
+|Name|Type|
+|----|----|
+|missed|bool|
+
+## MessagesFilter::typeInputMessagesFilterRoundVoice
+
+#### Schema:
+
+```c++
+inputMessagesFilterRoundVoice#7a7c17a4 = MessagesFilter;
+```
+
+#### Parameters:
+
+
+## MessagesFilter::typeInputMessagesFilterRoundVideo
+
+#### Schema:
+
+```c++
+inputMessagesFilterRoundVideo#b549da53 = MessagesFilter;
 ```
 
 #### Parameters:

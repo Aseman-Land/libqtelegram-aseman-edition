@@ -307,7 +307,7 @@ bool Settings::removeAuthFile() {
     return false;
 }
 
-void Settings::setAuthConfigMethods(Settings::ReadFunc readFunc, Settings::WriteFunc writeFunc)
+void Settings::setAuthConfigMethods(SettingsTools::ReadFunc readFunc, SettingsTools::WriteFunc writeFunc)
 {
     _telegram_settings_read_fnc = readFunc;
     _telegram_settings_write_fnc = writeFunc;

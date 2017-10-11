@@ -9,7 +9,7 @@
 #### Schema:
 
 ```c++
-messages.botCallbackAnswer#b10df1fb flags:# alert:flags.1?true has_url:flags.3?true message:flags.0?string url:flags.2?string = messages.BotCallbackAnswer;
+messages.botCallbackAnswer#36585ea4 flags:# alert:flags.1?true has_url:flags.3?true message:flags.0?string url:flags.2?string cache_time:int = messages.BotCallbackAnswer;
 ```
 
 #### Parameters:
@@ -20,4 +20,5 @@ messages.botCallbackAnswer#b10df1fb flags:# alert:flags.1?true has_url:flags.3?t
 |hasUrl|bool|
 |message|QString|
 |url|QString|
+|cacheTime|qint32|
 

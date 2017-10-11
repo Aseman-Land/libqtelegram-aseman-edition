@@ -30,9 +30,8 @@
 #include "libqtelegram_global.h"
 #include "telegram/types/types.h"
 #include "telegram/customtypes/customtypes.h"
-#include "secret/secretchat.h"
 #include "telegram/telegramcore.h"
-#include "core/settings.h"
+#include "core/settingstools.h"
 
 Q_DECLARE_LOGGING_CATEGORY(TG_LIB_API)
 Q_DECLARE_LOGGING_CATEGORY(TG_LIB_SECRET)
@@ -65,13 +64,16 @@ public:
     QString phoneNumber() const;
     QString configPath() const;
 
-    Settings *settings() const;
+    class Settings *settings() const;
     CryptoUtils *crypto() const;
 
-    void setAuthConfigMethods(Settings::ReadFunc readFunc, Settings::WriteFunc writeFunc);
+    void setAuthConfigMethods(SettingsTools::ReadFunc readFunc, SettingsTools::WriteFunc writeFunc);
 
     static void setDefaultSettingsFormat(const QSettings::Format &format);
     static QSettings::Format defaultSettingsFormat();
+
+    static QString gitRevision();
+    static QString buildUuid();
 
     // Registration / authorization
     qint64 authCheckPhone(Callback<AuthCheckedPhone > callBack = 0, qint32 timeout = timeOut());
@@ -102,8 +104,8 @@ public:
     qint64 messagesSendVideo(const InputPeer &peer, qint64 randomId, const QString &filePath, qint32 duration, qint32 width, qint32 height, const QString &thumbnailFilePath = QString::null, qint32 replyToMsgId = 0, const ReplyMarkup &reply_markup = ReplyMarkup::null, bool clearDraft = false, bool silent = false, bool background = false, Callback<UploadSendFile > callBack = 0, qint32 timeout = timeOut());
     qint64 messagesSendAudio(const InputPeer &peer, qint64 randomId, const QByteArray &bytes, const QString &fileName, qint32 duration, const QString &mimeType, qint32 replyToMsgId = 0, const ReplyMarkup &reply_markup = ReplyMarkup::null, bool clearDraft = false, bool silent = false, bool background = false, Callback<UploadSendFile > callBack = 0, qint32 timeout = timeOut());
     qint64 messagesSendAudio(const InputPeer &peer, qint64 randomId, const QString &filePath, qint32 duration, qint32 replyToMsgId = 0, const ReplyMarkup &reply_markup = ReplyMarkup::null, bool clearDraft = false, bool silent = false, bool background = false, Callback<UploadSendFile > callBack = 0, qint32 timeout = timeOut());
-    qint64 messagesSendDocument(const InputPeer &peer, qint64 randomId, const QByteArray &bytes, const QString &fileName, const QString &mimeType, const QByteArray &thumbnailBytes = 0, const QString &thumbnailName = QString::null, const QList<DocumentAttribute> &extraAttributes = QList<DocumentAttribute>(), qint32 replyToMsgId = 0, const ReplyMarkup &reply_markup = ReplyMarkup::null, bool clearDraft = false, bool silent = false, bool background = false, Callback<UploadSendFile > callBack = 0, qint32 timeout = timeOut());
-    qint64 messagesSendDocument(const InputPeer &peer, qint64 randomId, const QString &filePath, const QString &thumbnailFilePath = QString::null, bool sendAsSticker = false, qint32 replyToMsgId = 0, const ReplyMarkup &reply_markup = ReplyMarkup::null, bool clearDraft = false, bool silent = false, bool background = false, Callback<UploadSendFile > callBack = 0, qint32 timeout = timeOut());
+    qint64 messagesSendDocument(const InputPeer &peer, qint64 randomId, const QByteArray &bytes, const QString &fileName, const QString &mimeType, const QByteArray &thumbnailBytes = 0, const QString &thumbnailName = QString::null, const QList<DocumentAttribute> &extraAttributes = QList<DocumentAttribute>(), qint32 replyToMsgId = 0, const ReplyMarkup &reply_markup = ReplyMarkup::null, bool clearDraft = false, bool silent = false, bool background = false, const QString &caption = QString::null, Callback<UploadSendFile > callBack = 0, qint32 timeout = timeOut());
+    qint64 messagesSendDocument(const InputPeer &peer, qint64 randomId, const QString &filePath, const QString &thumbnailFilePath = QString::null, bool sendAsSticker = false, qint32 replyToMsgId = 0, const ReplyMarkup &reply_markup = ReplyMarkup::null, bool clearDraft = false, bool silent = false, bool background = false, const QString &caption = QString::null, Callback<UploadSendFile > callBack = 0, qint32 timeout = timeOut());
     qint64 messagesForwardPhoto(const InputPeer &peer, qint64 randomId, qint64 photoId, qint64 accessHash, qint32 replyToMsgId = 0, const ReplyMarkup &reply_markup = ReplyMarkup::null, bool clearDraft = false, bool silent = false, bool background = false, Callback<UpdatesType > callBack = 0, qint32 timeout = timeOut());
     qint64 messagesForwardVideo(const InputPeer &peer, qint64 randomId, qint64 videoId, qint64 accessHash, qint32 replyToMsgId = 0, const ReplyMarkup &reply_markup = ReplyMarkup::null, bool clearDraft = false, bool silent = false, bool background = false, Callback<UpdatesType > callBack = 0, qint32 timeout = timeOut());
     qint64 messagesForwardAudio(const InputPeer &peer, qint64 randomId, qint64 audioId, qint64 accessHash, qint32 replyToMsgId = 0, const ReplyMarkup &reply_markup = ReplyMarkup::null, bool clearDraft = false, bool silent = false, bool background = false, Callback<UpdatesType > callBack = 0, qint32 timeout = timeOut());
@@ -191,8 +193,7 @@ private:
     qint64 uploadSendFile(FileOperation &op, int mediaType, const QString &fileName, const QByteArray &bytes, const QByteArray &thumbnailBytes = 0, const QString &thumbnailName = QString::null);
     qint64 uploadSendFile(FileOperation &op, int mediaType, const QString &filePath, const QString &thumbnailPath = QString::null);
     void processSecretChatUpdate(const Update &update);
-    qint64 generateGAorB(SecretChat *secretChat, Callback<EncryptedChat> callBack = 0, qint32 timeout = timeOut());
-    void createSharedKey(SecretChat * secretChat, BIGNUM *p, QByteArray gAOrB);
+    qint64 generateGAorB(class SecretChat *secretChat, Callback<EncryptedChat> callBack = 0, qint32 timeout = timeOut());
     SecretChatMessage toSecretChatMessage(const EncryptedMessage &encryptedMessage);
     void processDifferences(qint64 id, const QList<Message> &messages, const QList<EncryptedMessage> &newEncryptedMessages, const QList<Update> &otherUpdates, const QList<Chat> &chats, const QList<User> &users, const UpdatesState &state, bool isIntermediateState);
     void authorizeUser(qint64 id, const User &user);
@@ -215,13 +216,13 @@ private Q_SLOTS:
     void onError(qint64 id, qint32 errorCode, const QString &errorText, const QString &functionName, const QVariant &attachedData, bool &accepted);
     void onDcProviderReady();
     void onAuthLoggedIn();
-    void onMainDcChanged(DC *dc);
+    void onMainDcChanged(class DC *dc);
     void onSequenceNumberGap(qint32 chatId, qint32 startSeqNo, qint32 endSeqNo);
 
     // secret chats slots
     void onUpdates(const UpdatesType &upds);
 
-    void onUploadGetFileAnswer(qint64 fileId, const UploadGetFile &result);
+    void onUploadGetFileAnswer(qint64 fileId, const UploadGetFile &result, qint32 errorCode, const QString &errorText);
     void onUploadSendFileAnswer(qint64 fileId, qint32 partId, qint32 uploaded, qint32 totalSize);
 
 protected:

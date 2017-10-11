@@ -1,17 +1,17 @@
-QT += gui
+
 QT += network
-QT += multimedia
 
 TARGET = qtelegram-ae
 TEMPLATE = lib
 VERSION = 1.0.0
 DEFINES += LIBQTELEGRAM_LIBRARY
 
+GIT_REVISION = $$system(git rev-parse HEAD)
+BUILD_UUID = $$system(uuidgen)
+
 macx {
     CONFIG += staticlib
     QT += macextras
-} android {
-    CONFIG += staticlib
 }
 
 include(libqtelegram-ae.pri)

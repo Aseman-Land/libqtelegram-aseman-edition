@@ -4,6 +4,7 @@
 
 * [typeInputPrivacyKeyStatusTimestamp](#inputprivacykeytypeinputprivacykeystatustimestamp)
 * [typeInputPrivacyKeyChatInvite](#inputprivacykeytypeinputprivacykeychatinvite)
+* [typeInputPrivacyKeyPhoneCall](#inputprivacykeytypeinputprivacykeyphonecall)
 
 ## InputPrivacyKey::typeInputPrivacyKeyStatusTimestamp
 
@@ -22,6 +23,17 @@ inputPrivacyKeyStatusTimestamp#4f96cb18 = InputPrivacyKey;
 
 ```c++
 inputPrivacyKeyChatInvite#bdfb0426 = InputPrivacyKey;
+```
+
+#### Parameters:
+
+
+## InputPrivacyKey::typeInputPrivacyKeyPhoneCall
+
+#### Schema:
+
+```c++
+inputPrivacyKeyPhoneCall#fabadc5f = InputPrivacyKey;
 ```
 
 #### Parameters:

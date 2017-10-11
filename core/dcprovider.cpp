@@ -27,7 +27,6 @@ DcProvider::DcProvider(Settings *settings, CryptoUtils *crypto) :
     mSettings(settings),
     mCrypto(crypto),
     mApi(0),
-    mPendingDcs(0),
     mPendingTransferSessions(0),
     mWorkingDcSession(0),
     mConfigReceived(0) {
@@ -66,7 +65,6 @@ void DcProvider::clean() {
     mDcAuths.clear();
     mTransferSessions.clear();
 
-    mPendingDcs = 0;
     mPendingTransferSessions = 0;
     mWorkingDcSession = 0;
 }
@@ -170,13 +168,14 @@ void DcProvider::onDcAuthDisconnected() {
 
 void DcProvider::processDcReady(DC *dc) {
     // create api object if dc is workingDc, and get configuration
+    mPendingDcs[dc->id()] = false;
     if ((!mApi) && (dc->id() == mSettings->workingDcNum())) {
         Session *session = new Session(dc, mSettings, mCrypto, this);
         mApi = new TelegramApi(session, mSettings, mCrypto, this);
         connect(session, &Session::sessionReady, this, &DcProvider::onApiReady);
         connect(session, static_cast<void (QAbstractSocket::*)(QAbstractSocket::SocketError)>(&QAbstractSocket::error), this, &DcProvider::onApiError);
         session->connectToServer();
-    } else if (--mPendingDcs == 0) { // if all dcs are authorized, emit provider ready signal
+    } else if ( mPendingDcs.keys(true).isEmpty() ) { // if all dcs are authorized, emit provider ready signal
         // save the settings here, after all dcs are ready
         mSettings->setDcsList(mDcs.values());
         mSettings->writeAuthFile();
@@ -272,14 +271,17 @@ void DcProvider::onConfigReceived(qint64 msgId, const Config &config) {
 
 //    mPendingDcs = dcOptions.length() -1; //all the received options but the default one, yet used
 
-    mPendingDcs = 0;
+    if(mPendingDcs.count() > 1)
+        mPendingDcs.clear();
+
     Q_FOREACH (DcOption dcOption, dcOptions) {
         if(dcOption.ipv6() || dcOption.mediaOnly())
             continue;
 
-        mPendingDcs++;
+        if(!mPendingDcs.contains(dcOption.id()))
+            mPendingDcs[dcOption.id()] = true;
     }
-    mPendingDcs += -1; //all the received options but the default one, yet used
+//    mPendingDcs += -1; //all the received options but the default one, yet used
 
     Q_FOREACH (DcOption dcOption, dcOptions) {
         qCDebug(TG_CORE_DCPROVIDER) << "dcOption | id =" << dcOption.id() << ", ipAddress =" << dcOption.ipAddress() <<

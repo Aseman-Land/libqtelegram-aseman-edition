@@ -12,6 +12,10 @@
 
 * [BotInlineResult](botinlineresult.md)
 
+* [CdnConfig](cdnconfig.md)
+
+* [CdnPublicKey](cdnpublickey.md)
+
 * [ChannelMessagesFilter](channelmessagesfilter.md)
 
 * [ChannelParticipant](channelparticipant.md)
@@ -41,6 +45,8 @@
 * [ContactLink](contactlink.md)
 
 * [ContactStatus](contactstatus.md)
+
+* [DataJSON](datajson.md)
 
 * [DcOption](dcoption.md)
 
@@ -118,11 +124,15 @@
 
 * [InputNotifyPeer](inputnotifypeer.md)
 
+* [InputPaymentCredentials](inputpaymentcredentials.md)
+
 * [InputPeer](inputpeer.md)
 
 * [InputPeerNotifyEvents](inputpeernotifyevents.md)
 
 * [InputPeerNotifySettings](inputpeernotifysettings.md)
+
+* [InputPhoneCall](inputphonecall.md)
 
 * [InputPhoto](inputphoto.md)
 
@@ -136,9 +146,17 @@
 
 * [InputUser](inputuser.md)
 
+* [InputWebDocument](inputwebdocument.md)
+
+* [InputWebFileLocation](inputwebfilelocation.md)
+
+* [Invoice](invoice.md)
+
 * [KeyboardButton](keyboardbutton.md)
 
 * [KeyboardButtonRow](keyboardbuttonrow.md)
+
+* [LabeledPrice](labeledprice.md)
 
 * [MaskCoords](maskcoords.md)
 
@@ -160,6 +178,16 @@
 
 * [NotifyPeer](notifypeer.md)
 
+* [Page](page.md)
+
+* [PageBlock](pageblock.md)
+
+* [PaymentCharge](paymentcharge.md)
+
+* [PaymentRequestedInfo](paymentrequestedinfo.md)
+
+* [PaymentSavedCredentials](paymentsavedcredentials.md)
+
 * [Peer](peer.md)
 
 * [PeerNotifyEvents](peernotifyevents.md)
@@ -168,9 +196,19 @@
 
 * [PeerSettings](peersettings.md)
 
+* [PhoneCall](phonecall.md)
+
+* [PhoneCallDiscardReason](phonecalldiscardreason.md)
+
+* [PhoneCallProtocol](phonecallprotocol.md)
+
+* [PhoneConnection](phoneconnection.md)
+
 * [Photo](photo.md)
 
 * [PhotoSize](photosize.md)
+
+* [PostAddress](postaddress.md)
 
 * [PrivacyKey](privacykey.md)
 
@@ -182,9 +220,13 @@
 
 * [ReportReason](reportreason.md)
 
+* [RichText](richtext.md)
+
 * [SecretChatMessage](secretchatmessage.md)
 
 * [SendMessageAction](sendmessageaction.md)
+
+* [ShippingOption](shippingoption.md)
 
 * [StickerPack](stickerpack.md)
 
@@ -212,6 +254,8 @@
 
 * [WallPaper](wallpaper.md)
 
+* [WebDocument](webdocument.md)
+
 * [WebPage](webpage.md)
 
 * [AccountAuthorizations](accountauthorizations.md)
@@ -223,6 +267,8 @@
 * [AccountPasswordSettings](accountpasswordsettings.md)
 
 * [AccountPrivacyRules](accountprivacyrules.md)
+
+* [AccountTmpPassword](accounttmppassword.md)
 
 * [AuthAuthorization](authauthorization.md)
 
@@ -255,8 +301,6 @@
 * [ContactsResolvedPeer](contactsresolvedpeer.md)
 
 * [ContactsTopPeers](contactstoppeers.md)
-
-* [HelpAppChangelog](helpappchangelog.md)
 
 * [HelpAppUpdate](helpappupdate.md)
 
@@ -310,6 +354,18 @@
 
 * [MessagesStickers](messagesstickers.md)
 
+* [PaymentsPaymentForm](paymentspaymentform.md)
+
+* [PaymentsPaymentReceipt](paymentspaymentreceipt.md)
+
+* [PaymentsPaymentResult](paymentspaymentresult.md)
+
+* [PaymentsSavedInfo](paymentssavedinfo.md)
+
+* [PaymentsValidatedRequestedInfo](paymentsvalidatedrequestedinfo.md)
+
+* [PhonePhoneCall](phonephonecall.md)
+
 * [PhotosPhoto](photosphoto.md)
 
 * [PhotosPhotos](photosphotos.md)
@@ -322,5 +378,9 @@
 
 * [UpdatesState](updatesstate.md)
 
+* [UploadCdnFile](uploadcdnfile.md)
+
 * [UploadFile](uploadfile.md)
+
+* [UploadWebFile](uploadwebfile.md)
 

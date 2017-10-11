@@ -11,6 +11,7 @@
 * [typeMessageMediaWebPage](#messagemediatypemessagemediawebpage)
 * [typeMessageMediaVenue](#messagemediatypemessagemediavenue)
 * [typeMessageMediaGame](#messagemediatypemessagemediagame)
+* [typeMessageMediaInvoice](#messagemediatypemessagemediainvoice)
 
 ## MessageMedia::typeMessageMediaEmpty
 
@@ -140,4 +141,26 @@ messageMediaGame#fdb19008 game:Game = MessageMedia;
 |Name|Type|
 |----|----|
 |game|[Game](game.md)|
+
+## MessageMedia::typeMessageMediaInvoice
+
+#### Schema:
+
+```c++
+messageMediaInvoice#84551347 flags:# shipping_address_requested:flags.1?true test:flags.3?true title:string description:string photo:flags.0?WebDocument receipt_msg_id:flags.2?int currency:string total_amount:long start_param:string = MessageMedia;
+```
+
+#### Parameters:
+
+|Name|Type|
+|----|----|
+|shippingAddressRequested|bool|
+|test|bool|
+|title|QString|
+|description|QString|
+|photo|[WebDocument](webdocument.md)|
+|receiptMsgId|qint32|
+|currency|QString|
+|totalAmount|qint64|
+|startParam|QString|
 

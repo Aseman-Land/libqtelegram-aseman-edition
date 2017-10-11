@@ -3,13 +3,13 @@
 ## Types
 
 * [typeStorageFileUnknown](#storagefiletypetypestoragefileunknown)
+* [typeStorageFilePartial](#storagefiletypetypestoragefilepartial)
 * [typeStorageFileJpeg](#storagefiletypetypestoragefilejpeg)
 * [typeStorageFileGif](#storagefiletypetypestoragefilegif)
 * [typeStorageFilePng](#storagefiletypetypestoragefilepng)
 * [typeStorageFilePdf](#storagefiletypetypestoragefilepdf)
 * [typeStorageFileMp3](#storagefiletypetypestoragefilemp3)
 * [typeStorageFileMov](#storagefiletypetypestoragefilemov)
-* [typeStorageFilePartial](#storagefiletypetypestoragefilepartial)
 * [typeStorageFileMp4](#storagefiletypetypestoragefilemp4)
 * [typeStorageFileWebp](#storagefiletypetypestoragefilewebp)
 
@@ -19,6 +19,17 @@
 
 ```c++
 storage.fileUnknown#aa963b05 = storage.FileType;
+```
+
+#### Parameters:
+
+
+## StorageFileType::typeStorageFilePartial
+
+#### Schema:
+
+```c++
+storage.filePartial#40bc6f52 = storage.FileType;
 ```
 
 #### Parameters:
@@ -85,17 +96,6 @@ storage.fileMp3#528a0677 = storage.FileType;
 
 ```c++
 storage.fileMov#4b09ebbc = storage.FileType;
-```
-
-#### Parameters:
-
-
-## StorageFileType::typeStorageFilePartial
-
-#### Schema:
-
-```c++
-storage.filePartial#40bc6f52 = storage.FileType;
 ```
 
 #### Parameters:

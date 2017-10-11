@@ -13,7 +13,6 @@
 * [typeUpdateUserPhoto](#updatetypeupdateuserphoto)
 * [typeUpdateContactRegistered](#updatetypeupdatecontactregistered)
 * [typeUpdateContactLink](#updatetypeupdatecontactlink)
-* [typeUpdateNewAuthorization](#updatetypeupdatenewauthorization)
 * [typeUpdateNewEncryptedMessage](#updatetypeupdatenewencryptedmessage)
 * [typeUpdateEncryptedChatTyping](#updatetypeupdateencryptedchattyping)
 * [typeUpdateEncryption](#updatetypeupdateencryption)
@@ -55,6 +54,14 @@
 * [typeUpdateRecentStickers](#updatetypeupdaterecentstickers)
 * [typeUpdateConfig](#updatetypeupdateconfig)
 * [typeUpdatePtsChanged](#updatetypeupdateptschanged)
+* [typeUpdateChannelWebPage](#updatetypeupdatechannelwebpage)
+* [typeUpdateDialogPinned](#updatetypeupdatedialogpinned)
+* [typeUpdatePinnedDialogs](#updatetypeupdatepinneddialogs)
+* [typeUpdateBotWebhookJSON](#updatetypeupdatebotwebhookjson)
+* [typeUpdateBotWebhookJSONQuery](#updatetypeupdatebotwebhookjsonquery)
+* [typeUpdateBotShippingQuery](#updatetypeupdatebotshippingquery)
+* [typeUpdateBotPrecheckoutQuery](#updatetypeupdatebotprecheckoutquery)
+* [typeUpdatePhoneCall](#updatetypeupdatephonecall)
 
 ## Update::typeUpdateNewMessage
 
@@ -228,23 +235,6 @@ updateContactLink#9d2e67c5 user_id:int my_link:ContactLink foreign_link:ContactL
 |myLink|[ContactLink](contactlink.md)|
 |foreignLink|[ContactLink](contactlink.md)|
 
-## Update::typeUpdateNewAuthorization
-
-#### Schema:
-
-```c++
-updateNewAuthorization#8f06529a auth_key_id:long date:int device:string location:string = Update;
-```
-
-#### Parameters:
-
-|Name|Type|
-|----|----|
-|authKeyId|qint64|
-|date|qint32|
-|device|QString|
-|location|QString|
-
 ## Update::typeUpdateNewEncryptedMessage
 
 #### Schema:
@@ -388,17 +378,19 @@ updateNotifySettings#bec268ef peer:NotifyPeer notify_settings:PeerNotifySettings
 #### Schema:
 
 ```c++
-updateServiceNotification#382dd3e4 type:string message:string media:MessageMedia popup:Bool = Update;
+updateServiceNotification#ebe46819 flags:# popup:flags.0?true inbox_date:flags.1?int type:string message:string media:MessageMedia entities:Vector<MessageEntity> = Update;
 ```
 
 #### Parameters:
 
 |Name|Type|
 |----|----|
+|popup|bool|
+|inboxDate|qint32|
 |type|QString|
 |message|QString|
 |media|[MessageMedia](messagemedia.md)|
-|popup|bool|
+|entities|QList&lt;[MessageEntity](messageentity.md)&gt;|
 
 ## Update::typeUpdatePrivacy
 
@@ -868,4 +860,131 @@ updatePtsChanged#3354678f = Update;
 
 #### Parameters:
 
+
+## Update::typeUpdateChannelWebPage
+
+#### Schema:
+
+```c++
+updateChannelWebPage#40771900 channel_id:int webpage:WebPage pts:int pts_count:int = Update;
+```
+
+#### Parameters:
+
+|Name|Type|
+|----|----|
+|channelId|qint32|
+|webpage|[WebPage](webpage.md)|
+|pts|qint32|
+|ptsCount|qint32|
+
+## Update::typeUpdateDialogPinned
+
+#### Schema:
+
+```c++
+updateDialogPinned#d711a2cc flags:# pinned:flags.0?true peer:Peer = Update;
+```
+
+#### Parameters:
+
+|Name|Type|
+|----|----|
+|pinned|bool|
+|peer|[Peer](peer.md)|
+
+## Update::typeUpdatePinnedDialogs
+
+#### Schema:
+
+```c++
+updatePinnedDialogs#d8caf68d flags:# order:flags.0?Vector<Peer> = Update;
+```
+
+#### Parameters:
+
+|Name|Type|
+|----|----|
+|order|QList&lt;[Peer](peer.md)&gt;|
+
+## Update::typeUpdateBotWebhookJSON
+
+#### Schema:
+
+```c++
+updateBotWebhookJSON#8317c0c3 data:DataJSON = Update;
+```
+
+#### Parameters:
+
+|Name|Type|
+|----|----|
+|data|[DataJSON](datajson.md)|
+
+## Update::typeUpdateBotWebhookJSONQuery
+
+#### Schema:
+
+```c++
+updateBotWebhookJSONQuery#9b9240a6 query_id:long data:DataJSON timeout:int = Update;
+```
+
+#### Parameters:
+
+|Name|Type|
+|----|----|
+|queryId|qint64|
+|data|[DataJSON](datajson.md)|
+|timeout|qint32|
+
+## Update::typeUpdateBotShippingQuery
+
+#### Schema:
+
+```c++
+updateBotShippingQuery#e0cdc940 query_id:long user_id:int payload:bytes shipping_address:PostAddress = Update;
+```
+
+#### Parameters:
+
+|Name|Type|
+|----|----|
+|queryId|qint64|
+|userId|qint32|
+|payload|QByteArray|
+|shippingAddress|[PostAddress](postaddress.md)|
+
+## Update::typeUpdateBotPrecheckoutQuery
+
+#### Schema:
+
+```c++
+updateBotPrecheckoutQuery#5d2f3aa9 flags:# query_id:long user_id:int payload:bytes info:flags.0?PaymentRequestedInfo shipping_option_id:flags.1?string currency:string total_amount:long = Update;
+```
+
+#### Parameters:
+
+|Name|Type|
+|----|----|
+|queryId|qint64|
+|userId|qint32|
+|payload|QByteArray|
+|info|[PaymentRequestedInfo](paymentrequestedinfo.md)|
+|shippingOptionId|QString|
+|currency|QString|
+|totalAmount|qint64|
+
+## Update::typeUpdatePhoneCall
+
+#### Schema:
+
+```c++
+updatePhoneCall#ab0f6b1e phone_call:PhoneCall = Update;
+```
+
+#### Parameters:
+
+|Name|Type|
+|----|----|
+|phoneCall|[PhoneCall](phonecall.md)|
 
