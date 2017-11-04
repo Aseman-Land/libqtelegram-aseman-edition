@@ -29,7 +29,7 @@ class SecretState
 {
 public:
     explicit SecretState(Settings *settings);
-    ~SecretState();
+    virtual ~SecretState();
 
     qint32 version() { return mVersion; }
     void setVersion(qint32 version) { mVersion = version; }

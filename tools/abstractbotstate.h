@@ -11,7 +11,7 @@ class LIBQTELEGRAMSHARED_EXPORT AbstractBotState: public QObject
     Q_OBJECT
 public:
     AbstractBotState(TelegramBot *bot);
-    ~AbstractBotState();
+    virtual ~AbstractBotState();
 
     virtual QString title(qint32 userId) = 0;
     virtual BotReplyKeyboardMarkup buttons(qint32 userId) = 0;

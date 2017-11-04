@@ -19,7 +19,7 @@ public:
     typedef QSharedPointer<FileHandler> Ptr;
 
     explicit FileHandler(TelegramCore *core, TelegramApi* api, CryptoUtils *crypto, Settings *settings, DcProvider &dcProvider, SecretState &secretState, QObject *parent = 0);
-    ~FileHandler();
+    virtual ~FileHandler();
 
     qint64 uploadSendFile(FileOperation &op, const QString &fileName, const QByteArray &bytes, const QByteArray &thumbnailBytes = 0, const QString &thumbnailName = QString::null);
     qint64 uploadSendFile(FileOperation &op, const QString &filePath, const QString &thumbnailPath = QString::null);

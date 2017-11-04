@@ -34,7 +34,7 @@ class Query : public QObject
     Q_OBJECT
 public:
     explicit Query(QObject *parent = 0);
-    ~Query();
+    virtual ~Query();
 
     qint64 msgId() { return m_msgId; }
     void setMsgId(qint64 msgId) { m_msgId = msgId; }

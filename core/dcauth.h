@@ -34,7 +34,7 @@ class DCAuth : public Connection
     Q_OBJECT
 public:
     explicit DCAuth(DC *dc, Settings *settings, CryptoUtils *crypto, QObject *parent = 0);
-    ~DCAuth();
+    virtual ~DCAuth();
 
     void createAuthKey();
     DC *dc();

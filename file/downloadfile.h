@@ -37,7 +37,7 @@ public:
     typedef QSharedPointer<DownloadFile> Ptr;
 
     DownloadFile(Session *session, InputFileLocation fileLocation, qint32 expectedSize, QObject *parent = 0);
-    ~DownloadFile();
+    virtual ~DownloadFile();
 
     void appendBytes(const QByteArray &bytes);
     QByteArray bytes() const;

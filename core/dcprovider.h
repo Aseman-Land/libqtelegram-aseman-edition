@@ -34,7 +34,7 @@ class DcProvider : public QObject
     Q_OBJECT
 public:
     DcProvider(Settings *settings, CryptoUtils *crypto);
-    ~DcProvider();
+    virtual ~DcProvider();
 
     void initialize();
     DC *getDc(qint32 dcNum) const;

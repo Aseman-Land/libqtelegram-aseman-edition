@@ -16,7 +16,7 @@ class LIBQTELEGRAMSHARED_EXPORT TelegramBot : public QObject
 public:
     TelegramBot(const QString &token, QObject *parent = Q_NULLPTR);
     TelegramBot(QObject *parent = Q_NULLPTR);
-    ~TelegramBot();
+    virtual ~TelegramBot();
 
     class CallbackError {
     public:

@@ -20,7 +20,7 @@ class LIBQTELEGRAMSHARED_EXPORT BotStateManager : public QObject
 
 public:
     BotStateManager(QObject *parent = Q_NULLPTR);
-    ~BotStateManager();
+    virtual ~BotStateManager();
 
     void setInitialState(const QString &initialState);
     QString initialState() const;
