@@ -8,6 +8,18 @@ AbstractBotState::AbstractBotState(TelegramBot *bot) :
 {
 }
 
+BotReplyKeyboardMarkup AbstractBotState::buttons(qint32 userId)
+{
+    Q_UNUSED(userId)
+    return BotReplyKeyboardMarkup::null;
+}
+
+BotInlineKeyboardMarkup AbstractBotState::inlineButtons(qint32 userId)
+{
+    Q_UNUSED(userId)
+    return BotInlineKeyboardMarkup::null;
+}
+
 QList<QList<BotKeyboardButton> > AbstractBotState::convertListToButtons(const QList<QList<QString> > &buttons)
 {
     QList<QList<BotKeyboardButton>> btnsList;
