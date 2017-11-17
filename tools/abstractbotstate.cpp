@@ -46,6 +46,16 @@ void AbstractBotState::sendMessage(int userId, const QString &text, const BotRep
         bot()->sendMessage(QString::number(userId), text, Q_NULLPTR);
 }
 
+void AbstractBotState::sendPhoto(int userId, const QString &photo, const QString &text, const BotReplyKeyboardMarkup &markup)
+{
+    bot()->sendPhoto(QString::number(userId), photo, Q_NULLPTR, text, false, 0, markup);
+}
+
+void AbstractBotState::sendLocation(int userId, qreal latitude, qreal longitude, const BotReplyKeyboardMarkup &markup)
+{
+    bot()->sendLocation(QString::number(userId), latitude, longitude, Q_NULLPTR, false, false, 0, markup);
+}
+
 AbstractBotState::~AbstractBotState()
 {
 }

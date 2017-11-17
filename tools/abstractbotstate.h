@@ -25,6 +25,8 @@ public:
 
 protected:
     void sendMessage(int userId, const QString &text, const BotReplyKeyboardMarkup &markup = BotReplyKeyboardMarkup::null);
+    void sendPhoto(int userId, const QString &photo, const QString &text, const BotReplyKeyboardMarkup &markup = BotReplyKeyboardMarkup::null);
+    void sendLocation(int userId, qreal latitude, qreal longitude, const BotReplyKeyboardMarkup &markup = BotReplyKeyboardMarkup::null);
 
 private:
     TelegramBot *_bot;

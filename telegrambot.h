@@ -46,6 +46,10 @@ public:
     void sendMessage(const QString &chat_id, const QString &text, Callback<BotMessage> callback, const QString &parse_mode, bool disable_web_page_preview, bool disable_notification, int reply_to_message_id, const BotForceReply &reply_markup);
     void sendMessage(const QString &chat_id, const QString &text, Callback<BotMessage> callback = Q_NULLPTR, const QString &parse_mode = QString::null, bool disable_web_page_preview = false, bool disable_notification = false, int reply_to_message_id = 0);
 
+    void sendPhoto(const QString &chat_id, const QString &photo, Callback<BotMessage> callback, const QString &caption, bool disable_notification, int reply_to_message_id, const BotReplyKeyboardMarkup &reply_markup);
+
+    void sendLocation(const QString &chat_id, qreal latitude, qreal longitude, Callback<BotMessage> callback, bool live_period, bool disable_notification, int reply_to_message_id, const BotReplyKeyboardMarkup &reply_markup);
+
     void editMessageText(const QString &chat_id, const QString &message_id, const QString &inline_message_id, const QString &text, Callback<BotMessage> callback, const QString &parse_mode, bool disable_web_page_preview, const BotInlineKeyboardMarkup &reply_markup);
     void editMessageCaption(const QString &chat_id, const QString &message_id, const QString &inline_message_id, const QString &caption, Callback<BotMessage> callback, const BotInlineKeyboardMarkup &reply_markup);
     void editMessageReplyMarkup(const QString &chat_id, const QString &message_id, const QString &inline_message_id, Callback<BotMessage> callback, const BotInlineKeyboardMarkup &reply_markup);
