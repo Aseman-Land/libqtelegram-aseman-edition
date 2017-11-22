@@ -23,10 +23,14 @@
 
 #include <QtCore/qglobal.h>
 
+#ifndef QT_STATIC
 #if defined(LIBQTELEGRAM_LIBRARY)
 #  define LIBQTELEGRAMSHARED_EXPORT Q_DECL_EXPORT
 #else
 #  define LIBQTELEGRAMSHARED_EXPORT Q_DECL_IMPORT
+#endif
+#else
+#define LIBQTELEGRAMSHARED_EXPORT
 #endif
 
 #endif // LIBQTELEGRAM_GLOBAL_H
