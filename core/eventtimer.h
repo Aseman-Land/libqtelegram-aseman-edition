@@ -24,7 +24,7 @@ class EventTimer : public QTimer
     Q_OBJECT
 public:
     explicit EventTimer(qint64 msgId, qint32 timeout, QObject *parent = 0);
-    ~EventTimer();
+    virtual ~EventTimer();
 
 Q_SIGNALS:
     void timerTimeout(qint64 msgId);

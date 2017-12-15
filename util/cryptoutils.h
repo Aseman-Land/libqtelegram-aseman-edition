@@ -33,7 +33,7 @@ class CryptoUtils : public QObject
     Q_OBJECT
 public:
     CryptoUtils(Settings *settings);
-    ~CryptoUtils();
+    virtual ~CryptoUtils();
     CryptoUtils(const CryptoUtils &);
     CryptoUtils &operator=(const CryptoUtils &);
 

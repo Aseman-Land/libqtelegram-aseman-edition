@@ -20,7 +20,7 @@ class LIBQTELEGRAMSHARED_EXPORT BotStateManager : public QObject
 
 public:
     BotStateManager(QObject *parent = Q_NULLPTR);
-    ~BotStateManager();
+    virtual ~BotStateManager();
 
     void setInitialState(const QString &initialState);
     QString initialState() const;
@@ -52,7 +52,7 @@ protected:
     void timerEvent(QTimerEvent *e);
     void checkUpdates();
     void checkUpdate(const BotUpdate &update);
-    void sendMessage(int userId, const QString &text, const BotReplyKeyboardMarkup &markup, const QString &stateId);
+    void sendMessage(int userId, const QString &text, const BotReplyKeyboardMarkup &markup, const BotInlineKeyboardMarkup &inlintMarkup, const QString &stateId, const QString &replace_message);
 
     QString getCurrentState(int userId);
     void setCurrentState(int id, const QString &currentState);

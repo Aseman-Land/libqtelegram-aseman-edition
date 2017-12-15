@@ -55,7 +55,7 @@ public:
         mInputChatPhoto(InputChatPhoto::typeInputChatPhotoEmpty),
         mGeoPoint(InputGeoPoint::typeInputGeoPointEmpty),
         mType(opType) {}
-    ~FileOperation() {
+    virtual ~FileOperation() {
         setResultCallback<int>(0);
     }
 

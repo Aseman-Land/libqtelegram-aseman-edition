@@ -52,7 +52,7 @@ public:
     typedef QMap<QPair<qint32,qint32>, qint64> Sequence;
 
     explicit SecretChat(Settings *settings);
-    ~SecretChat();
+    virtual ~SecretChat();
 
     void createMyKey(const QByteArray &serverRandom);
 

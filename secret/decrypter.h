@@ -34,7 +34,7 @@ class Decrypter : public QObject, public InboundPkt
     Q_OBJECT
 public:
     explicit Decrypter(Settings *settings);
-    ~Decrypter();
+    virtual ~Decrypter();
 
     void setSecretChat(SecretChat *secretChat);
 

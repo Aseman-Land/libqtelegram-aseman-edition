@@ -42,7 +42,7 @@ public:
 
     explicit UploadFileEngine(Session *session, CryptoUtils *crypto, FileType type, const QByteArray &buffer, QObject *parent = 0);
     explicit UploadFileEngine(Session *session, CryptoUtils *crypto, FileType type, const QString &filePath, QObject *parent = 0);
-    ~UploadFileEngine();
+    virtual ~UploadFileEngine();
 
     qint64 relatedFileId() const { return mRelatedFileId; }
     void setRelatedFileId(qint64 relatedFileId) { mRelatedFileId = relatedFileId; }

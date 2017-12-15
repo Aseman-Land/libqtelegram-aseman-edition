@@ -40,7 +40,7 @@ class Session : public Connection
     Q_OBJECT
 public:
     explicit Session(DC *dc, Settings *settings, CryptoUtils *crypto, QObject *parent = 0);
-    ~Session();
+    virtual ~Session();
 
     DC *dc();
     qint64 sendQuery(OutboundPkt &outboundPkt, QueryMethods *methods, const QVariant &extra = QVariant(), const QString &name = QString());

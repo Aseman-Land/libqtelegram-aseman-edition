@@ -81,6 +81,100 @@ void TelegramBot::sendMessage(const QString &chat_id, const QString &text, Callb
     sendMessage(chat_id, text, callback, parse_mode, disable_web_page_preview, disable_notification, reply_to_message_id, QMap<QString, QVariant>());
 }
 
+void TelegramBot::sendPhoto(const QString &chat_id, const QString &photo, Callback<BotMessage> callback, const QString &caption, bool disable_notification, int reply_to_message_id, const BotReplyKeyboardMarkup &reply_markup)
+{
+    QVariantMap reply_markup_map = reply_markup.toMap();
+    QUrlQuery query = QUrlQuery();
+    query.addQueryItem("chat_id", chat_id.toInt()? QString::number(chat_id.toInt()) : chat_id);
+    if(photo.count()) query.addQueryItem("photo", photo);
+    if(caption.count()) query.addQueryItem("caption", caption);
+    if(disable_notification) query.addQueryItem("disable_notification", disable_notification?"true":"false");
+    if(reply_to_message_id) query.addQueryItem("reply_to_message_id", QString::number(reply_to_message_id));
+    if(reply_markup_map.count()) {
+        QJsonDocument doc( QJsonObject::fromVariantMap(reply_markup_map) );
+        query.addQueryItem("reply_markup", doc.toJson(QJsonDocument::Compact));
+    }
+
+    postQuery(__FUNCTION__, query, [this, callback](const QVariant &res, const CallbackError &error){
+        _callCallback<BotMessage>(callback, res.toMap(), error);
+    });
+}
+
+void TelegramBot::sendLocation(const QString &chat_id, qreal latitude, qreal longitude, Callback<BotMessage> callback, bool live_period, bool disable_notification, int reply_to_message_id, const BotReplyKeyboardMarkup &reply_markup)
+{
+    QVariantMap reply_markup_map = reply_markup.toMap();
+    QUrlQuery query = QUrlQuery();
+    query.addQueryItem("chat_id", chat_id.toInt()? QString::number(chat_id.toInt()) : chat_id);
+    query.addQueryItem("latitude", QString::number(latitude));
+    query.addQueryItem("longitude", QString::number(longitude));
+    if(live_period) query.addQueryItem("live_period", live_period?"true":"false");
+    if(disable_notification) query.addQueryItem("disable_notification", disable_notification?"true":"false");
+    if(reply_to_message_id) query.addQueryItem("reply_to_message_id", QString::number(reply_to_message_id));
+    if(reply_markup_map.count()) {
+        QJsonDocument doc( QJsonObject::fromVariantMap(reply_markup_map) );
+        query.addQueryItem("reply_markup", doc.toJson(QJsonDocument::Compact));
+    }
+
+    postQuery(__FUNCTION__, query, [this, callback](const QVariant &res, const CallbackError &error){
+        _callCallback<BotMessage>(callback, res.toMap(), error);
+    });
+}
+
+void TelegramBot::editMessageText(const QString &chat_id, const QString &message_id, const QString &inline_message_id, const QString &text, Callback<BotMessage> callback, const QString &parse_mode, bool disable_web_page_preview, const BotInlineKeyboardMarkup &reply_markup)
+{
+    QVariantMap reply_markup_map = reply_markup.toMap();
+    QUrlQuery query = QUrlQuery();
+    query.addQueryItem("chat_id", chat_id.toInt()? QString::number(chat_id.toInt()) : chat_id);
+    if(text.count()) query.addQueryItem("text", text);
+    if(message_id.count()) query.addQueryItem("message_id", message_id);
+    if(inline_message_id.count()) query.addQueryItem("inline_message_id", inline_message_id);
+    if(parse_mode.count()) query.addQueryItem("parse_mode", parse_mode);
+    if(disable_web_page_preview) query.addQueryItem("disable_web_page_preview", disable_web_page_preview?"true":"false");
+    if(reply_markup_map.count()) {
+        QJsonDocument doc( QJsonObject::fromVariantMap(reply_markup_map) );
+        query.addQueryItem("reply_markup", doc.toJson(QJsonDocument::Compact));
+    }
+
+    postQuery(__FUNCTION__, query, [this, callback](const QVariant &res, const CallbackError &error){
+        _callCallback<BotMessage>(callback, res.toMap(), error);
+    });
+}
+
+void TelegramBot::editMessageCaption(const QString &chat_id, const QString &message_id, const QString &inline_message_id, const QString &caption, Callback<BotMessage> callback, const BotInlineKeyboardMarkup &reply_markup)
+{
+    QVariantMap reply_markup_map = reply_markup.toMap();
+    QUrlQuery query = QUrlQuery();
+    query.addQueryItem("chat_id", chat_id.toInt()? QString::number(chat_id.toInt()) : chat_id);
+    if(caption.count()) query.addQueryItem("caption", caption);
+    if(message_id.count()) query.addQueryItem("message_id", message_id);
+    if(inline_message_id.count()) query.addQueryItem("inline_message_id", inline_message_id);
+    if(reply_markup_map.count()) {
+        QJsonDocument doc( QJsonObject::fromVariantMap(reply_markup_map) );
+        query.addQueryItem("reply_markup", doc.toJson(QJsonDocument::Compact));
+    }
+
+    postQuery(__FUNCTION__, query, [this, callback](const QVariant &res, const CallbackError &error){
+        _callCallback<BotMessage>(callback, res.toMap(), error);
+    });
+}
+
+void TelegramBot::editMessageReplyMarkup(const QString &chat_id, const QString &message_id, const QString &inline_message_id, Callback<BotMessage> callback, const BotInlineKeyboardMarkup &reply_markup)
+{
+    QVariantMap reply_markup_map = reply_markup.toMap();
+    QUrlQuery query = QUrlQuery();
+    query.addQueryItem("chat_id", chat_id.toInt()? QString::number(chat_id.toInt()) : chat_id);
+    if(message_id.count()) query.addQueryItem("message_id", message_id);
+    if(inline_message_id.count()) query.addQueryItem("inline_message_id", inline_message_id);
+    if(reply_markup_map.count()) {
+        QJsonDocument doc( QJsonObject::fromVariantMap(reply_markup_map) );
+        query.addQueryItem("reply_markup", doc.toJson(QJsonDocument::Compact));
+    }
+
+    postQuery(__FUNCTION__, query, [this, callback](const QVariant &res, const CallbackError &error){
+        _callCallback<BotMessage>(callback, res.toMap(), error);
+    });
+}
+
 void TelegramBot::sendMessage(const QString &chat_id, const QString &text, Callback<BotMessage> callback, const QString &parse_mode, bool disable_web_page_preview, bool disable_notification, int reply_to_message_id, const QMap<QString, QVariant> &reply_markup)
 {
     QUrlQuery query = QUrlQuery();

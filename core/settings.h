@@ -91,7 +91,7 @@ class LIBQTELEGRAMSHARED_EXPORT Settings : public QObject
     Q_OBJECT
 public:
     Settings(Telegram *telegram);
-    ~Settings();
+    virtual ~Settings();
     Settings(const Settings &); // hide copy constructor
     Settings& operator=(const Settings &); // hide asignment
 

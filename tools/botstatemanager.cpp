@@ -179,11 +179,16 @@ void BotStateManager::checkUpdates()
 
 void BotStateManager::checkUpdate(const BotUpdate &upd)
 {
-    if(!upd.message().messageId())
-        return;
-
     const BotMessage &msg = upd.message();
-    int userId = msg.from().id();
+
+    qint32 userId = msg.from().id();
+    if(!userId)
+        userId = upd.inlineQuery().from().id();
+    if(!userId)
+        userId = upd.chosenInlineResult().from().id();
+    if(!userId)
+        userId = upd.callbackQuery().from().id();
+
     QString currentStateId = getCurrentState(userId);
     if(msg.text() == BOT_INIT_COMMAND)
     {
@@ -192,13 +197,14 @@ void BotStateManager::checkUpdate(const BotUpdate &upd)
     }
 
     QString title;
+    QString replaceMsgId = false;
     QString newStateId;
     if(currentStateId.isEmpty())
         newStateId = p->initialState;
     else {
         AbstractBotState *state = p->states.value(currentStateId);
         if(state)
-            newStateId = state->processResult(userId, msg, title);
+            newStateId = state->processResult(userId, upd, title, replaceMsgId);
         else {
             setCurrentState(userId, QString());
             return;
@@ -210,11 +216,12 @@ void BotStateManager::checkUpdate(const BotUpdate &upd)
         return;
 
     if(title.isEmpty()) title = newState->title(userId);
+    const BotInlineKeyboardMarkup &inlineMarkup = newState->inlineButtons(userId);
     const BotReplyKeyboardMarkup &markup = newState->buttons(userId);
-    sendMessage(userId, title, markup, newStateId);
+    sendMessage(userId, title, markup, inlineMarkup, newStateId, replaceMsgId);
 }
 
-void BotStateManager::sendMessage(int userId, const QString &text, const BotReplyKeyboardMarkup &markup, const QString &stateId)
+void BotStateManager::sendMessage(int userId, const QString &text, const BotReplyKeyboardMarkup &markup, const BotInlineKeyboardMarkup &inlintMarkup, const QString &stateId, const QString &replace_message)
 {
     TelegramBot::Callback<BotMessage> callback = [this, userId, stateId](const BotMessage &res, const TelegramBot::CallbackError &error){
         Q_UNUSED(res)
@@ -226,6 +233,12 @@ void BotStateManager::sendMessage(int userId, const QString &text, const BotRepl
         setCurrentState(userId, stateId);
     };
 
+    if(replace_message.count())
+        p->bot->editMessageText(QString::number(userId), replace_message, "", text, callback, false, false, inlintMarkup);
+    else
+    if(inlintMarkup.inlineKeyboard().count())
+        p->bot->sendMessage(QString::number(userId), text, callback, "", false, false, 0, inlintMarkup);
+    else
     if(markup.keyboard().count())
         p->bot->sendMessage(QString::number(userId), text, callback, "", false, false, 0, markup);
     else
