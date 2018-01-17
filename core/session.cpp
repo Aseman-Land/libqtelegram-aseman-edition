@@ -195,6 +195,7 @@ void Session::rpcExecuteAnswer(InboundPkt &inboundPkt, qint64 msgId) {
         return;
     case UpdatesType::typeUpdatesCombined:
         workUpdatesCombined(inboundPkt, msgId);
+        return;
     case UpdatesType::typeUpdates:
         workUpdates(inboundPkt, msgId);
         return;
