@@ -2,12 +2,16 @@ QT -= gui
 contains(CONFIG, gui_support) {
     QT += gui
 }
+!contains(DEFINES, LIBQTELEGRAM_LIBRARY) {
+    DEFINES += LIBQTELEGRAM_EMBEDED_MODE
+}
 
 DEFINES += \
     LIBQTG_GIT_REVISION='\\"$${GIT_REVISION}\\"' \
     LIBQTG_BUILD_UUID='\\"$${BUILD_UUID}\\"'
 
 QT += network
+INCLUDEPATH += $$PWD
 
 win32 {
     isEmpty(OPENSSL_LIB_DIR): OPENSSL_LIB_DIR = $${DESTDIR}

@@ -88,7 +88,7 @@ void Connection::setupSocket() {
     keepalive_opts.keepalivetime = 5000;
     keepalive_opts.keepaliveinterval = 2000;
 
-    WSAIoctl(socket, SIO_KEEPALIVE_VALS, &keepalive_opts, sizeof(keepalive_opts), NULL, 0, &dwBytesRet, NULL, NULL);
+//    WSAIoctl(socket, SIO_KEEPALIVE_VALS, &keepalive_opts, sizeof(keepalive_opts), NULL, 0, &dwBytesRet, NULL, NULL);
 #endif
 }
 

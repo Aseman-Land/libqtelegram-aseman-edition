@@ -3,7 +3,7 @@ QT += network
 
 TARGET = qtelegram-ae
 TEMPLATE = lib
-VERSION = 1.0.0
+!win32: VERSION = 1.0.0
 DEFINES += LIBQTELEGRAM_LIBRARY
 
 GIT_REVISION = $$system(git rev-parse HEAD)
