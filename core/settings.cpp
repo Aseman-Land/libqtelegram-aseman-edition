@@ -150,7 +150,7 @@ bool Settings::loadSettings(const QString &phoneNumber, const QString &baseConfi
     }
 
     QString configDirectory = m_baseConfigDirectory + "/" + m_phoneNumber;
-    QString configPath = QString(configDirectory).replace("~",QDir::homePath());
+    QString configPath = QString(configDirectory).replace(QStringLiteral("~"),QDir::homePath());
 
     if (!m_pubKey) {
         m_pubKey = Utils::rsaLoadPublicKey(publicKeyFile);
@@ -194,9 +194,9 @@ bool Settings::loadSettings(const QString &phoneNumber, const QString &baseConfi
     m_managedDownloads = settings.value(ST_MANAGED_DOWNLOADS, false).toBool();
     m_langCode = settings.value(ST_LANG_CODE, "en").toString();
     mResendQueries = settings.value(ST_RESEND_QUERIES, false).toBool();
-    m_authFilename = settings.value(ST_AUTH_FILE, configPath + '/' + AUTH_KEY_FILE).toString();
-    m_secretChatFilename = settings.value(ST_SECRET, configPath + '/' + SECRET_CHAT_FILE).toString();
-    m_stateFilename = settings.value(ST_STATE_FILE, configPath + '/' + STATE_FILE).toString();
+    m_authFilename = settings.value(QStringLiteral(ST_AUTH_FILE), QString(configPath + "/" AUTH_KEY_FILE)).toString();
+    m_secretChatFilename = settings.value(QStringLiteral(ST_SECRET), QString(configPath + "/" SECRET_CHAT_FILE)).toString();
+    m_stateFilename = settings.value(QStringLiteral(ST_STATE_FILE), QString(configPath + "/" STATE_FILE)).toString();
 
     // log readed data
     qCDebug(TG_CORE_SETTINGS) << "testMode:" << m_testMode;
