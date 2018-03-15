@@ -195,7 +195,7 @@ bool Telegram::isSlept() const
 
 void Telegram::setPhoneNumber(const QString &phoneNumber) {
     if (!prv->mSettings->loadSettings(phoneNumber)) {
-        throw std::runtime_error("setPhoneNumber: could not load settings");
+        return;
     }
     prv->mSecretState.load();
     prv->phoneNumber = phoneNumber;
@@ -228,7 +228,7 @@ void Telegram::init(qint32 timeout) {
 
     // load settings
     if (!prv->mSettings->loadSettings(prv->phoneNumber, prv->configPath, prv->publicKeyFile)) {
-        throw std::runtime_error("loadSettings failure");
+        return;
     }
 
     prv->mCrypto = new CryptoUtils(prv->mSettings);
