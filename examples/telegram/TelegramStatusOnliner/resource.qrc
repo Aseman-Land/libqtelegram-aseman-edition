@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>tg-server.pub</file>
+    </qresource>
+</RCC>

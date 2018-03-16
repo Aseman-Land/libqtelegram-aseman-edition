@@ -888,7 +888,7 @@ SecretChatMessage Telegram::toSecretChatMessage(const EncryptedMessage &encrypte
 }
 
 void Telegram::processSecretChatUpdate(const Update &update) {
-    switch (static_cast<qint32>(update.classType())) {
+    switch (static_cast<qint64>(update.classType())) {
     case Update::typeUpdateNewEncryptedMessage: {
         EncryptedMessage encrypted = update.messageEncrypted();
 
@@ -907,7 +907,7 @@ void Telegram::processSecretChatUpdate(const Update &update) {
 
         const EncryptedChat &encryptedChat = update.chat();
         qint32 chatId = encryptedChat.id();
-        switch (static_cast<qint32>(encryptedChat.classType())) {
+        switch (static_cast<qint64>(encryptedChat.classType())) {
         case EncryptedChat::typeEncryptedChatRequested: {
 
             // here, we have received a request of creating a new secret chat. Emit a signal

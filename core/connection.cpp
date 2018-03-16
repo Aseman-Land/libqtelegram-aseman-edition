@@ -27,7 +27,9 @@
 #ifndef Q_OS_WIN
 # include <sys/socket.h>
 # ifdef Q_OS_DARWIN
-#  include <netinet/if_ether.h>.
+#ifndef Q_OS_IOS
+#  include <netinet/if_ether.h>
+#endif
 # else
 #  include <netinet/in.h>
 # endif
@@ -70,6 +72,7 @@ void Connection::setupSocket() {
     int fd = socketDescriptor();
     setsockopt(fd, SOL_SOCKET, SO_KEEPALIVE, &keepAlive, sizeof(keepAlive));
 
+#ifndef Q_OS_IOS
     int maxIdle = 5; // 5 seconds
     setsockopt(fd, IPPROTO_TCP, TCP_KEEPIDLE, &maxIdle, sizeof(maxIdle));
 
@@ -78,6 +81,7 @@ void Connection::setupSocket() {
 
     int interval = 2; // send a keepalive packet out every 2 seconds (after the first idle period)
     setsockopt(fd, SOL_TCP, TCP_KEEPINTVL, &interval, sizeof(interval));
+#endif
 #else
     this->setSocketOption(QAbstractSocket::LowDelayOption, 1);
 

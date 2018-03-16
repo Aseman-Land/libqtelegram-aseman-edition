@@ -177,7 +177,7 @@ void Session::processRpcMessage(InboundPkt &inboundPkt) {
 void Session::rpcExecuteAnswer(InboundPkt &inboundPkt, qint64 msgId) {
     qint32 op = inboundPkt.prefetchInt();
     qCDebug(TG_CORE_SESSION) << "rpcExecuteAnswer(), op =" << QString::number(op, 16);
-    switch (op) {
+    switch ( static_cast<qint64>(op) ) {
     case TL_MsgContainer:
         workContainer(inboundPkt, msgId);
         return;
