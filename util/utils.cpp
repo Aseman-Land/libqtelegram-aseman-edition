@@ -31,8 +31,9 @@
 #include <QEventLoop>
 #include <QProcess>
 #include <QStringList>
-#include <QtCore>
-
+#include <QFile>
+#include <QCoreApplication>
+#include <QtEndian>
 
 Q_LOGGING_CATEGORY(TG_UTIL_UTILS, "tg.util.utils")
 
