@@ -40,7 +40,15 @@ CryptoUtils::~CryptoUtils() {
 
 qint32 CryptoUtils::encryptPacketBuffer(OutboundPkt &p, void *encryptBuffer) {
     RSA *pubKey = mSettings->pubKey();
-    return padRsaEncrypt((char *) p.buffer(), p.length() * 4, (char *) encryptBuffer, ENCRYPT_BUFFER_INTS * 4, pubKey->n, pubKey->e);
+#if OPENSSL_VERSION_NUMBER < 0x10100000L
+    const BIGNUM *key_e = pubKey->e;
+    const BIGNUM *key_n = pubKey->n;
+#else
+    const BIGNUM *key_e;
+    const BIGNUM *key_n;
+    RSA_get0_key(pubKey, &key_n, &key_e, NULL);
+#endif
+    return padRsaEncrypt((char *) p.buffer(), p.length() * 4, (char *) encryptBuffer, ENCRYPT_BUFFER_INTS * 4, key_n, key_e);
 }
 
 qint32 CryptoUtils::encryptPacketBufferAESUnAuth(const char serverNonce[16], const char hiddenClientNonce[32], OutboundPkt &p, void *encryptBuffer) {
@@ -48,7 +56,11 @@ qint32 CryptoUtils::encryptPacketBufferAESUnAuth(const char serverNonce[16], con
   return padAESEncrypt ((char *) p.buffer(), p.length() * 4, (char *) encryptBuffer, ENCRYPT_BUFFER_INTS * 4);
 }
 
+#if OPENSSL_VERSION_NUMBER < 0x10100000L
 qint32 CryptoUtils::padRsaEncrypt (char *from, qint32 from_len, char *to, qint32 size, BIGNUM *N, BIGNUM *E) {
+#else
+qint32 CryptoUtils::padRsaEncrypt (char *from, qint32 from_len, char *to, qint32 size, const BIGNUM *N, const BIGNUM *E) {
+#endif
     qint32 pad = (255000 - from_len - 32) % 255 + 32;
     qint32 chunks = (from_len + pad) / 255;
     qint32 bits = BN_num_bits (N);
@@ -61,6 +73,7 @@ qint32 CryptoUtils::padRsaEncrypt (char *from, qint32 from_len, char *to, qint32
     Q_UNUSED(isSupported);
     Q_ASSERT(isSupported >= 0);
     qint32 i;
+#if OPENSSL_VERSION_NUMBER < 0x10100000L
     BIGNUM x, y;
     BN_init (&x);
     BN_init (&y);
@@ -77,6 +90,23 @@ qint32 CryptoUtils::padRsaEncrypt (char *from, qint32 from_len, char *to, qint32
     }
     BN_free (&x);
     BN_free (&y);
+#else
+    BIGNUM *x = BN_new(),
+           *y = BN_new();
+    for (i = 0; i < chunks; i++) {
+        BN_bin2bn ((uchar *) from, 255, x);
+        qint32 success = BN_mod_exp (y, x, E, N, BN_ctx);
+        Q_UNUSED(success);
+        Q_ASSERT(success == 1);
+        unsigned l = 256 - BN_num_bytes (y);
+        Q_ASSERT(l <= 256);
+        memset (to, 0, l);
+        BN_bn2bin (y, (uchar *) to + l);
+        to += 256;
+    }
+    BN_free (x);
+    BN_free (y);
+#endif
     return chunks * 256;
 }
 
@@ -173,18 +203,26 @@ qint32 CryptoUtils::checkPrime (BIGNUM *p) {
 
 qint32 CryptoUtils::checkDHParams (BIGNUM *p, qint32 g) {
     if (g < 2 || g > 7) { return -1; }
+#if OPENSSL_VERSION_NUMBER < 0x10100000L
     BIGNUM t;
     BN_init (&t);
-
     BIGNUM dh_g;
     BN_init (&dh_g);
-    Utils::ensure (BN_set_word (&dh_g, 4 * g));
 
+    Utils::ensure (BN_set_word (&dh_g, 4 * g));
     Utils::ensure (BN_mod (&t, p, &dh_g, BN_ctx));
     qint32 x = BN_get_word (&t);
-    Q_ASSERT(x >= 0 && x < 4 * g);
-
     BN_free (&dh_g);
+#else
+    BIGNUM *t = BN_new();
+    BIGNUM *dh_g = BN_new();
+
+    Utils::ensure (BN_set_word (dh_g, 4 * g));
+    Utils::ensure (BN_mod (t, p, dh_g, BN_ctx));
+    qint32 x = BN_get_word (t);
+    BN_free (dh_g);
+#endif
+    Q_ASSERT(x >= 0 && x < 4 * g);
 
     switch (g) {
     case 2:
@@ -208,6 +246,7 @@ qint32 CryptoUtils::checkDHParams (BIGNUM *p, qint32 g) {
 
     if (!checkPrime (p)) { return -1; }
 
+#if OPENSSL_VERSION_NUMBER < 0x10100000L
     BIGNUM b;
     BN_init (&b);
     Utils::ensure (BN_set_word (&b, 2));
@@ -215,6 +254,14 @@ qint32 CryptoUtils::checkDHParams (BIGNUM *p, qint32 g) {
     if (!checkPrime (&t)) { return -1; }
     BN_free (&b);
     BN_free (&t);
+#else
+    BIGNUM *b = BN_new();
+    Utils::ensure (BN_set_word (b, 2));
+    Utils::ensure (BN_div (t, 0, p, b, BN_ctx));
+    if (!checkPrime (t)) { return -1; }
+    BN_free (b);
+    BN_free (t);
+#endif
     return 0;
 }
 
@@ -229,6 +276,7 @@ qint32 CryptoUtils::checkCalculatedParams(const BIGNUM *gAOrB, const BIGNUM *g, 
     ASSERT(p);
 
     // 1) gAOrB and g greater than one and smaller than p-1
+#if OPENSSL_VERSION_NUMBER < 0x10100000L
     BIGNUM one;
     BN_init(&one);
     Utils::ensure(BN_one(&one));
@@ -272,6 +320,46 @@ qint32 CryptoUtils::checkCalculatedParams(const BIGNUM *gAOrB, const BIGNUM *g, 
     BN_free(&exp);
     BN_free(&lowLimit);
     BN_free(&highLimit);
+#else
+    BIGNUM *one = BN_new();
+    Utils::ensure(BN_one(one));
+
+    BIGNUM *pMinusOne = BN_dup(p);
+    Utils::ensure(BN_sub_word(pMinusOne, 1));
+
+    // check params greater than one
+    if (BN_cmp(gAOrB, one) <= 0) return -1;
+    if (BN_cmp(g, one) <= 0) return -1;
+
+    // check params <= p-1
+    if (BN_cmp(gAOrB, pMinusOne) >= 0) return -1;
+    if (BN_cmp(g, pMinusOne) >= 0) return -1;
+
+    // 2) gAOrB between 2^{2048-64} and p - 2^{2048-64}
+    quint64 expWord = 2048 - 64;
+    BIGNUM *exp = BN_new();
+    Utils::ensure(BN_set_word(exp, expWord));
+
+    BIGNUM *base = BN_new();
+    Utils::ensure(BN_set_word(base, 2));
+
+    // lowLimit = base ^ exp
+    BIGNUM *lowLimit = BN_new();
+    Utils::ensure(BN_exp(lowLimit, base, exp, BN_ctx));
+
+    // highLimit = p - lowLimit
+    BIGNUM *highLimit = BN_new();
+    BN_sub(highLimit, p, lowLimit);
+
+    if (BN_cmp(gAOrB, lowLimit) < 0) return -1;
+    if (BN_cmp(gAOrB, highLimit) > 0) return -1;
+
+    BN_free(one);
+    BN_free(pMinusOne);
+    BN_free(exp);
+    BN_free(lowLimit);
+    BN_free(highLimit);
+#endif
 
     return 0;
 }

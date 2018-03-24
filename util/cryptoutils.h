@@ -39,7 +39,11 @@ public:
 
     qint32 encryptPacketBuffer(OutboundPkt &p, void *encryptBuffer);
     qint32 encryptPacketBufferAESUnAuth(const char serverNonce[16], const char hiddenClientNonce[32], OutboundPkt &p, void *encryptBuffer);
+#if OPENSSL_VERSION_NUMBER < 0x10100000L
     qint32 padRsaEncrypt(char *from, qint32 from_len, char *to, qint32 size, BIGNUM *N, BIGNUM *E);
+#else
+    qint32 padRsaEncrypt(char *from, qint32 from_len, char *to, qint32 size, const BIGNUM *N, const BIGNUM *E);
+#endif
 
     void initAESAuth (char authKey[192], char msgKey[16], qint32 encrypt);
     void initAESUnAuth(const char serverNonce[16], const char hiddenClientNonce[32], qint32 encrypt);

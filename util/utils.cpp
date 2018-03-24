@@ -152,7 +152,7 @@ QByteArray Utils::generateRandomBytes() {
     return randomBytes;
 }
 
-qint32 Utils::serializeBignum(BIGNUM *b, char *buffer, qint32 maxlen) {
+qint32 Utils::serializeBignum(const BIGNUM *b, char *buffer, qint32 maxlen) {
     qint32 itslen = BN_num_bytes (b);
     qint32 reqlen;
     if (itslen < 254) {
@@ -300,10 +300,20 @@ RSA *Utils::rsaLoadPublicKey(const QString &publicKeyName) {
 qint64 Utils::computeRSAFingerprint(RSA *key) {
     static char tempbuff[4096];
     static uchar sha[20];
+#if OPENSSL_VERSION_NUMBER < 0x10100000L
     Q_ASSERT(key->n && key->e);
     qint32 l1 = serializeBignum (key->n, tempbuff, 4096);
     Q_ASSERT(l1 > 0);
     qint32 l2 = serializeBignum (key->e, tempbuff + l1, 4096 - l1);
+#else
+    const BIGNUM *key_e;
+    const BIGNUM *key_n;
+    RSA_get0_key(key, &key_n, &key_e, NULL);
+    Q_ASSERT(key_n && key_e);
+    qint32 l1 = serializeBignum (key_n, tempbuff, 4096);
+    Q_ASSERT(l1 > 0);
+    qint32 l2 = serializeBignum (key_e, tempbuff + l1, 4096 - l1);
+#endif
     Q_ASSERT(l2 > 0 && l1 + l2 <= 4096);
     SHA1 ((uchar *)tempbuff, l1 + l2, sha);
     return *(qint64 *)(sha + 12);
