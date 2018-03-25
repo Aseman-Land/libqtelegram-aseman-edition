@@ -41,8 +41,8 @@ CryptoUtils::~CryptoUtils() {
 qint32 CryptoUtils::encryptPacketBuffer(OutboundPkt &p, void *encryptBuffer) {
     RSA *pubKey = mSettings->pubKey();
 #if OPENSSL_VERSION_NUMBER < 0x10100000L
-    const BIGNUM *key_e = pubKey->e;
-    const BIGNUM *key_n = pubKey->n;
+    BIGNUM *key_e = pubKey->e;
+    BIGNUM *key_n = pubKey->n;
 #else
     const BIGNUM *key_e;
     const BIGNUM *key_n;
