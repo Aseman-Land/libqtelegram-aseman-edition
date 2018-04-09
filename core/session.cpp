@@ -177,53 +177,53 @@ void Session::processRpcMessage(InboundPkt &inboundPkt) {
 void Session::rpcExecuteAnswer(InboundPkt &inboundPkt, qint64 msgId) {
     qint32 op = inboundPkt.prefetchInt();
     qCDebug(TG_CORE_SESSION) << "rpcExecuteAnswer(), op =" << QString::number(op, 16);
-    switch ( static_cast<qint64>(op) ) {
-    case TL_MsgContainer:
+    switch ( static_cast<qint32>(op) ) {
+    case (qint32)TL_MsgContainer:
         workContainer(inboundPkt, msgId);
         return;
-    case TL_NewSessionCreated:
+    case (qint32)TL_NewSessionCreated:
         workNewSessionCreated(inboundPkt, msgId);
         return;
-    case TL_MsgsAck:
+    case (qint32)TL_MsgsAck:
         workMsgsAck(inboundPkt, msgId);
         return;
-    case TL_RpcResult:
+    case (qint32)TL_RpcResult:
         workRpcResult(inboundPkt, msgId);
         return;
-    case UpdatesType::typeUpdateShort:
+    case (qint32)UpdatesType::typeUpdateShort:
         workUpdateShort(inboundPkt, msgId);
         return;
-    case UpdatesType::typeUpdatesCombined:
+    case (qint32)UpdatesType::typeUpdatesCombined:
         workUpdatesCombined(inboundPkt, msgId);
         return;
-    case UpdatesType::typeUpdates:
+    case (qint32)UpdatesType::typeUpdates:
         workUpdates(inboundPkt, msgId);
         return;
-    case UpdatesType::typeUpdateShortMessage:
+    case (qint32)UpdatesType::typeUpdateShortMessage:
         workUpdateShortMessage(inboundPkt, msgId);
         return;
-    case UpdatesType::typeUpdateShortChatMessage:
+    case (qint32)UpdatesType::typeUpdateShortChatMessage:
         workUpdateShortChatMessage(inboundPkt, msgId);
         return;
-    case TL_GZipPacked:
+    case (qint32)TL_GZipPacked:
         workPacked(inboundPkt, msgId);
         return;
-    case TL_BadServerSalt:
+    case (qint32)TL_BadServerSalt:
         workBadServerSalt(inboundPkt, msgId);
         return;
-    case TL_Pong:
+    case (qint32)TL_Pong:
         workPong(inboundPkt, msgId);
         return;
-    case TL_MsgDetailedInfo:
+    case (qint32)TL_MsgDetailedInfo:
         workDetailedInfo(inboundPkt, msgId);
         return;
-    case TL_MsgNewDetailedInfo:
+    case (qint32)TL_MsgNewDetailedInfo:
         workNewDetailedInfo(inboundPkt, msgId);
         return;
-    case UpdatesType::typeUpdatesTooLong:
+    case (qint32)UpdatesType::typeUpdatesTooLong:
         workUpdatesTooLong(inboundPkt, msgId);
         return;
-    case TL_BadMsgNotification:
+    case (qint32)TL_BadMsgNotification:
         workBadMsgNotification(inboundPkt, msgId);
         return;
     }
