@@ -213,6 +213,7 @@ void DCAuth::processDHAnswer(InboundPkt &inboundPkt) {
     inboundPkt.setInPtr(decryptBuffer + 15);
     inboundPkt.setInEnd(decryptBuffer + (l >> 2));
 
+#if OPENSSL_VERSION_NUMBER < 0x10100000L
     BIGNUM dh_prime, dh_g, g_a, auth_key_num;
     BN_init(&dh_prime);
     BN_init (&g_a);
@@ -223,6 +224,19 @@ void DCAuth::processDHAnswer(InboundPkt &inboundPkt) {
     qint32 serverTime = inboundPkt.fetchInt();
     mAsserter.check(inboundPkt.inPtr() <= inboundPkt.inEnd());
     mAsserter.check(mCrypto->checkDHParams (&dh_prime, g) >= 0);
+#else
+    BIGNUM *dh_prime = BN_new();
+    BIGNUM *dh_g = BN_new();
+    BIGNUM *g_a = BN_new();
+    BIGNUM *auth_key_num = BN_new();
+    mAsserter.check(inboundPkt.fetchBignum(dh_prime) > 0);
+    mAsserter.check(inboundPkt.fetchBignum(g_a) > 0);
+    mAsserter.check(Utils::check_g_bn(dh_prime, g_a) >= 0);
+
+    qint32 serverTime = inboundPkt.fetchInt();
+    mAsserter.check(inboundPkt.inPtr() <= inboundPkt.inEnd());
+    mAsserter.check(mCrypto->checkDHParams (dh_prime, g) >= 0);
+#endif
 
     static char sha1Buffer[20];
     SHA1 ((uchar *) decryptBuffer + 20, (inboundPkt.inPtr() - decryptBuffer - 5) * 4, (uchar *) sha1Buffer);
@@ -242,6 +256,7 @@ void DCAuth::processDHAnswer(InboundPkt &inboundPkt) {
     outboundPkt.appendInts((qint32 *)m_serverNonce, 4);
     outboundPkt.appendLong(0LL);
 
+#if OPENSSL_VERSION_NUMBER < 0x10100000L
     BN_init (&dh_g);
     Utils::ensure (BN_set_word (&dh_g, g));
     char s_power [256];
@@ -267,6 +282,31 @@ void DCAuth::processDHAnswer(InboundPkt &inboundPkt) {
     BN_free (&dh_g);
     BN_free (&g_a);
     BN_free (&dh_prime);
+#else
+    Utils::ensure (BN_set_word (dh_g, g));
+    char s_power [256];
+    Utils::randomBytes(s_power, 256);
+    BIGNUM *dh_power = BN_bin2bn ((uchar *)s_power, 256, 0);
+    Utils::ensurePtr(dh_power);
+
+    BIGNUM *y = BN_new ();
+    Utils::ensurePtr(y);
+    Utils::ensure(mCrypto->BNModExp(y, dh_g, dh_power, dh_prime));
+    outboundPkt.appendBignum(y);
+    BN_free (y);
+
+    Utils::ensure(mCrypto->BNModExp(auth_key_num, g_a, dh_power, dh_prime));
+    l = BN_num_bytes (auth_key_num);
+
+    mAsserter.check(l >= 250 && l <= 256);
+    mAsserter.check(BN_bn2bin (auth_key_num, (uchar *)m_dc->authKey()));
+    Utils::secureZeroMemory (m_dc->authKey() + l, 0, 256 - l);
+    BN_free (dh_power);
+    BN_free (auth_key_num);
+    BN_free (dh_g);
+    BN_free (g_a);
+    BN_free (dh_prime);
+#endif
 
     SHA1 ((uchar *) (outboundPkt.buffer() + 5), (outboundPkt.length() - 5) * 4, (uchar *) outboundPkt.buffer());
     qint32 encryptBuffer[DECRYPT_BUFFER_INTS];

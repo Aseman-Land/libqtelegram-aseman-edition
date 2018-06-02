@@ -34,5 +34,5 @@ build*
 *.DS_Store
 
 # Generator
-telegram
-build.init
+/telegram
+/build.init

@@ -197,7 +197,7 @@ void BotStateManager::checkUpdate(const BotUpdate &upd)
     }
 
     QString title;
-    QString replaceMsgId = false;
+    QString replaceMsgId = QString();
     QString newStateId;
     if(currentStateId.isEmpty())
         newStateId = p->initialState;
@@ -234,13 +234,13 @@ void BotStateManager::sendMessage(int userId, const QString &text, const BotRepl
     };
 
     if(replace_message.count())
-        p->bot->editMessageText(QString::number(userId), replace_message, "", text, callback, false, false, inlintMarkup);
+        p->bot->editMessageText(QString::number(userId), replace_message, QString(), text, callback, QString(), false, inlintMarkup);
     else
     if(inlintMarkup.inlineKeyboard().count())
-        p->bot->sendMessage(QString::number(userId), text, callback, "", false, false, 0, inlintMarkup);
+        p->bot->sendMessage(QString::number(userId), text, callback, QString(), false, false, 0, inlintMarkup);
     else
     if(markup.keyboard().count())
-        p->bot->sendMessage(QString::number(userId), text, callback, "", false, false, 0, markup);
+        p->bot->sendMessage(QString::number(userId), text, callback, QString(), false, false, 0, markup);
     else
         p->bot->sendMessage(QString::number(userId), text, callback);
 }

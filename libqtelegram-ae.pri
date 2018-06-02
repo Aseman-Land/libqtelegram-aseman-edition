@@ -2,12 +2,18 @@ QT -= gui
 contains(CONFIG, gui_support) {
     QT += gui
 }
+!contains(DEFINES, LIBQTELEGRAM_LIBRARY) {
+    DEFINES += LIBQTELEGRAM_EMBEDED_MODE
+}
+
+ios|osx: QMAKE_CXXFLAGS += -Wno-narrowing
 
 DEFINES += \
     LIBQTG_GIT_REVISION='\\"$${GIT_REVISION}\\"' \
     LIBQTG_BUILD_UUID='\\"$${BUILD_UUID}\\"'
 
 QT += network
+INCLUDEPATH += $$PWD
 
 win32 {
     isEmpty(OPENSSL_LIB_DIR): OPENSSL_LIB_DIR = $${DESTDIR}
@@ -22,14 +28,14 @@ win32 {
         LIBS += -lcrypto -lz
     }
 } else {
-    isEmpty(OPENSSL_INCLUDE_PATH): OPENSSL_INCLUDE_PATH = /usr/include/ /usr/local/include/
+    isEmpty(OPENSSL_INCLUDE_PATH): OPENSSL_INCLUDE_PATH = /usr/include/ /usr/local/include/ $$[QT_INSTALL_HEADERS]
     isEmpty(OPENSSL_LIB_DIR) {
         LIBS += -lssl -lcrypto -lz
     } else {
         LIBS += -L$${OPENSSL_LIB_DIR} -lssl -lcrypto -lz
     }
 
-    INCLUDEPATH += $${OPENSSL_INCLUDE_PATH}
+#    INCLUDEPATH += $${OPENSSL_INCLUDE_PATH}
 }
 
 include(telegram/telegram.pri)

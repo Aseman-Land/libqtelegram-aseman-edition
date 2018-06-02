@@ -195,7 +195,7 @@ bool Telegram::isSlept() const
 
 void Telegram::setPhoneNumber(const QString &phoneNumber) {
     if (!prv->mSettings->loadSettings(phoneNumber)) {
-        throw std::runtime_error("setPhoneNumber: could not load settings");
+        return;
     }
     prv->mSecretState.load();
     prv->phoneNumber = phoneNumber;
@@ -228,7 +228,7 @@ void Telegram::init(qint32 timeout) {
 
     // load settings
     if (!prv->mSettings->loadSettings(prv->phoneNumber, prv->configPath, prv->publicKeyFile)) {
-        throw std::runtime_error("loadSettings failure");
+        return;
     }
 
     prv->mCrypto = new CryptoUtils(prv->mSettings);
@@ -888,7 +888,7 @@ SecretChatMessage Telegram::toSecretChatMessage(const EncryptedMessage &encrypte
 }
 
 void Telegram::processSecretChatUpdate(const Update &update) {
-    switch (static_cast<qint32>(update.classType())) {
+    switch (static_cast<qint64>(update.classType())) {
     case Update::typeUpdateNewEncryptedMessage: {
         EncryptedMessage encrypted = update.messageEncrypted();
 
@@ -907,7 +907,7 @@ void Telegram::processSecretChatUpdate(const Update &update) {
 
         const EncryptedChat &encryptedChat = update.chat();
         qint32 chatId = encryptedChat.id();
-        switch (static_cast<qint32>(encryptedChat.classType())) {
+        switch (static_cast<qint64>(encryptedChat.classType())) {
         case EncryptedChat::typeEncryptedChatRequested: {
 
             // here, we have received a request of creating a new secret chat. Emit a signal
