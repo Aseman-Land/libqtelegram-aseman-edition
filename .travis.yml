@@ -1,0 +1,12 @@
+language: c
+
+before_script:
+- sudo apt-get install g++ gcc git qtbase5-dev libqt5sql5-sqlite libqt5multimediaquick-p5 libqt5multimedia5-plugins libqt5multimedia5 libqt5qml5 libqt5qml-graphicaleffects libqt5qml-quickcontrols qtdeclarative5-dev libqt5quick5 
+
+script:
+- ./init
+- mkdir build && cd build
+- qmake -r PREFIX=/usr  ..
+- make -j
+- make -j check
+- sudo make install
