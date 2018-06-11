@@ -59,6 +59,7 @@ int clock_gettime(int /*clk_id*/, struct timespec* t) {
     return 0;
 }
 #elif defined(Q_OS_WIN)
+#include <Windows.h>
 //clock_gettime is not implemented on Win
 // took from https://stackoverflow.com/questions/5404277/porting-clock-gettime-to-windows
 
