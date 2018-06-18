@@ -35,7 +35,7 @@ win32 {
         LIBS += -L$${OPENSSL_LIB_DIR} -lssl -lcrypto -lz
     }
 
-#    INCLUDEPATH += $${OPENSSL_INCLUDE_PATH}
+    INCLUDEPATH += $${OPENSSL_INCLUDE_PATH}
 }
 
 include(telegram/telegram.pri)
