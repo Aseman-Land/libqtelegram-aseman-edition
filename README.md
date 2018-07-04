@@ -24,24 +24,25 @@ Get libqtelegram using below command
 
     git clone https://github.com/Aseman-Land/libqtelegram-aseman-edition.git
 
-And:
-
-    cd libqtelegram-aseman-edition
-    ./init
-    mkdir build && cd build
-    qmake -r PREFIX=/usr  ..
+#### Configure as Qt Module:
 
 To build libqtelegram as Qt module (You can add libqtelegram to your project using `Qt += telegram` keyword latter) run below qmake command:
 
-```
+```bash
+cd libqtelegram-aseman-edition
 qmake -r ../telegram.pro
 ```
 
+#### Configure as normal Library (Deprecated):
+
+    mkdir build && cd build
+    qmake -r PREFIX=/usr ../libqtelegram-ae.pro
+
 You can also use below flag to qmake to make qt-objects type available:
 
-    qmake -r PREFIX=/usr CONFIG+=typeobjects ..
+    qmake -r PREFIX=/usr CONFIG+=typeobjects ../libqtelegram-ae.pro
 
-And then start building:
+####Build and Install:
 
     make
     sudo make install
