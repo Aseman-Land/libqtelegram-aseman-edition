@@ -283,12 +283,17 @@ void DcProvider::onConfigReceived(qint64 msgId, const Config &config) {
     }
 //    mPendingDcs += -1; //all the received options but the default one, yet used
 
+    QSet<qint32> dcsAddeds;
     Q_FOREACH (DcOption dcOption, dcOptions) {
         qCDebug(TG_CORE_DCPROVIDER) << "dcOption | id =" << dcOption.id() << ", ipAddress =" << dcOption.ipAddress() <<
                     ", port =" << dcOption.port() << ", hostname =" << dcOption.ipAddress() <<
                     ", ipv6 =" << dcOption.ipv6() << ", mediaOnly =" << dcOption.mediaOnly();
         if(dcOption.ipv6() || dcOption.mediaOnly())
             continue;
+        if(dcsAddeds.contains(dcOption.id()))
+            continue;
+
+        dcsAddeds.insert(dcOption.id());
 
         // for every new DC or not authenticated DC, insert into m_dcs and authenticate
         DC *dc = mDcs.value(dcOption.id());

@@ -28,7 +28,7 @@ win32 {
         LIBS += -lcrypto -lz
     }
 } else {
-    isEmpty(OPENSSL_INCLUDE_PATH): OPENSSL_INCLUDE_PATH = /usr/include/ /usr/local/include/ $$[QT_INSTALL_HEADERS]
+    isEmpty(OPENSSL_INCLUDE_PATH): !linux: OPENSSL_INCLUDE_PATH = /usr/include/ /usr/local/include/ $$[QT_INSTALL_HEADERS]
     isEmpty(OPENSSL_LIB_DIR) {
         LIBS += -lssl -lcrypto -lz
     } else {
