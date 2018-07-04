@@ -15,6 +15,8 @@ DEFINES += \
 QT += network
 INCLUDEPATH += $$PWD
 
+!win32: !exists($$PWD/telegram/telegram.pri): system($$PWD/init $$QMAKE_QMAKE)
+
 win32 {
     isEmpty(OPENSSL_LIB_DIR): OPENSSL_LIB_DIR = $${DESTDIR}
     isEmpty(OPENSSL_INCLUDE_PATH): OPENSSL_INCLUDE_PATH = $${DESTDIR}/include

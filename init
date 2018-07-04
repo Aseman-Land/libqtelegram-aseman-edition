@@ -19,7 +19,12 @@ BUILD_DIR="build.init"
 mkdir "$BUILD_DIR"
 cd "$BUILD_DIR"
 
-qmake -r ../libqtelegram-code-generator
+QMAKE="$1"
+if [ "${QMAKE}" = "" ]; then
+    QMAKE="qmake"
+fi
+
+"$QMAKE" -r ../libqtelegram-code-generator
 make
 
 ./libqtelegram-generator 68 $ASEMAN_SRC_PATH/scheme/scheme-68.tl $ASEMAN_SRC_PATH
