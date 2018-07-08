@@ -23,56 +23,56 @@
 
 #define PROG_NAME "libqtelegram"
 #define CONFIG_DIRECTORY "." PROG_NAME
-#define CONFIG_FILE "config"
+#define CONFIG_FILE QStringLiteral("config")
 #define AUTH_KEY_FILE "auth"
 #define STATE_FILE "state"
 #define SECRET_CHAT_FILE "secret"
 #define DEFAULT_CONFIG_CONTENTS     \
   "# This is an empty config file\n" \
   "# Feel free to put something here\n"
-#define ST_DC_NUM "dcNum"
+#define ST_DC_NUM QStringLiteral("dcNum")
 #define ST_AUTH_FILE "authFile"
 #define ST_SECRET "secret"
-#define ST_DOWNLOADS "downloads"
+#define ST_DOWNLOADS QStringLiteral("downloads")
 #define ST_STATE_FILE "stateFile"
-#define ST_TEST_MODE "testMode"
-#define ST_MANAGED_DOWNLOADS "managedDownloads"
-#define ST_LANG_CODE "lang"
-#define ST_RESEND_QUERIES "resendQueries"
+#define ST_TEST_MODE QStringLiteral("testMode")
+#define ST_MANAGED_DOWNLOADS QStringLiteral("managedDownloads")
+#define ST_LANG_CODE QStringLiteral("lang")
+#define ST_RESEND_QUERIES QStringLiteral("resendQueries")
 
-#define ST_WORKING_DC_NUM "workingDcNum"
-#define ST_DC_STATE "state"
-#define ST_OUR_ID "ourId"
-#define ST_DCS_ARRAY "dcs"
-#define ST_HOST "host"
-#define ST_PORT "port"
-#define ST_IPV6 "ipv6"
-#define ST_MEDIA "mediaOnly"
-#define ST_AUTH_KEY_ID "authKeyId"
-#define ST_AUTH_KEY "authKey"
-#define ST_SERVER_SALT "serverSalt"
-#define ST_EXPIRES "expires"
-#define ST_PRODUCTION "production"
-#define ST_TEST "test"
+#define ST_WORKING_DC_NUM QStringLiteral("workingDcNum")
+#define ST_DC_STATE QStringLiteral("state")
+#define ST_OUR_ID QStringLiteral("ourId")
+#define ST_DCS_ARRAY QStringLiteral("dcs")
+#define ST_HOST QStringLiteral("host")
+#define ST_PORT QStringLiteral("port")
+#define ST_IPV6 QStringLiteral("ipv6")
+#define ST_MEDIA QStringLiteral("mediaOnly")
+#define ST_AUTH_KEY_ID QStringLiteral("authKeyId")
+#define ST_AUTH_KEY QStringLiteral("authKey")
+#define ST_SERVER_SALT QStringLiteral("serverSalt")
+#define ST_EXPIRES QStringLiteral("expires")
+#define ST_PRODUCTION QStringLiteral("production")
+#define ST_TEST QStringLiteral("test")
 
-#define ST_VERSION "version"
-#define ST_G "g"
-#define ST_P "p"
-#define ST_SECRET_CHATS_ARRAY "secretChats"
-#define ST_CHAT_ID "chatId"
-#define ST_ACCESS_HASH "accessHash"
-#define ST_ADMIN_ID "adminId"
-#define ST_PARTICIPANT_ID "participantId"
-#define ST_DATE "date"
-#define ST_SHARED_KEY "sharedKey"
-#define ST_LAYER "layer"
-#define ST_IN_SEQ_NO "inSeqNo"
-#define ST_OUT_SEQ_NO "outSeqNo"
-#define ST_STATE "state"
-#define ST_MY_KEY "myKey"
+#define ST_VERSION QStringLiteral("version")
+#define ST_G QStringLiteral("g")
+#define ST_P QStringLiteral("p")
+#define ST_SECRET_CHATS_ARRAY QStringLiteral("secretChats")
+#define ST_CHAT_ID QStringLiteral("chatId")
+#define ST_ACCESS_HASH QStringLiteral("accessHash")
+#define ST_ADMIN_ID QStringLiteral("adminId")
+#define ST_PARTICIPANT_ID QStringLiteral("participantId")
+#define ST_DATE QStringLiteral("date")
+#define ST_SHARED_KEY QStringLiteral("sharedKey")
+#define ST_LAYER QStringLiteral("layer")
+#define ST_IN_SEQ_NO QStringLiteral("inSeqNo")
+#define ST_OUT_SEQ_NO QStringLiteral("outSeqNo")
+#define ST_STATE QStringLiteral("state")
+#define ST_MY_KEY QStringLiteral("myKey")
 
-#define DEFAULT_CONFIG_PATH "~/.libqtelegram"
-#define DEFAULT_PUBLIC_KEY_FILE "qtelegram.pub"
+#define DEFAULT_CONFIG_PATH QStringLiteral("~/.libqtelegram")
+#define DEFAULT_PUBLIC_KEY_FILE QStringLiteral("qtelegram.pub")
 
 #include <QObject>
 #include <QList>

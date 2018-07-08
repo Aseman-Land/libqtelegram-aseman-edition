@@ -14,7 +14,7 @@ macx {
     QT += macextras
 }
 
-include(libqtelegram-ae.pri)
+include(libqtelegram-ae/libqtelegram-ae.pri)
 
 linux {
     contains(QT_ARCH, x86_64) {
@@ -42,7 +42,7 @@ contains(CONFIG, static) || contains(CONFIG, staticlib) {
 
     INSTALL_PREFIX = $$INSTALL_HEADERS_PREFIX/libqtelegram-ae
     INSTALL_HEADERS = $$HEADERS
-    include(qmake/headerinstall.pri)
+    include(libqtelegram-ae/qmake/headerinstall.pri)
 
     target = $$TARGET
     target.path = $$INSTALL_LIBS_PREFIX

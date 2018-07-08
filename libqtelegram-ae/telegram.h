@@ -53,7 +53,7 @@ class LIBQTELEGRAMSHARED_EXPORT Telegram : public TelegramCore
 
 public:
     Telegram(const QString &defaultHostAddress, qint16 defaultHostPort, qint16 defaultHostDcId, qint32 appId, const QString &appHash,
-             const QString &phoneNumber, const QString &configPath = QString("~/.telegram"), const QString &publicKeyFile = QString("tg.pub"));
+             const QString &phoneNumber, const QString &configPath = QStringLiteral("~/.telegram"), const QString &publicKeyFile = QString("tg.pub"));
     virtual ~Telegram();
 
     QString defaultHostAddress();
@@ -85,12 +85,12 @@ public:
     qint64 authImportBotAuthorization(const QString &bot_auth_token, qint32 flags, Callback<AuthAuthorization > callBack = 0, qint32 timeout = timeOut());
 
     // Working with push notifications. Settings
-    qint64 accountRegisterDevice(const QString &token, const QString &appVersion = QString::null, bool appSandbox = false, Callback<bool> callBack = 0, qint32 timeout = timeOut());
+    qint64 accountRegisterDevice(const QString &token, const QString &appVersion = QString(), bool appSandbox = false, Callback<bool> callBack = 0, qint32 timeout = timeOut());
     qint64 accountUnregisterDevice(const QString &token, Callback<bool > callBack = 0, qint32 timeout = timeOut());
 
     //Photos
-    qint64 photosUploadProfilePhoto(const QByteArray &bytes, const QString &fileName, const QString &caption = QString::null, const InputGeoPoint &geoPoint = InputGeoPoint(InputGeoPoint::typeInputGeoPointEmpty), Callback<UploadSendPhoto> callBack = 0, qint32 timeout = timeOut());
-    qint64 photosUploadProfilePhoto(const QString &filePath, const QString &caption = QString::null, const InputGeoPoint &geoPoint = InputGeoPoint(InputGeoPoint::typeInputGeoPointEmpty), Callback<UploadSendPhoto> callBack = 0, qint32 timeout = timeOut());
+    qint64 photosUploadProfilePhoto(const QByteArray &bytes, const QString &fileName, const QString &caption = QString(), const InputGeoPoint &geoPoint = InputGeoPoint(InputGeoPoint::typeInputGeoPointEmpty), Callback<UploadSendPhoto> callBack = 0, qint32 timeout = timeOut());
+    qint64 photosUploadProfilePhoto(const QString &filePath, const QString &caption = QString(), const InputGeoPoint &geoPoint = InputGeoPoint(InputGeoPoint::typeInputGeoPointEmpty), Callback<UploadSendPhoto> callBack = 0, qint32 timeout = timeOut());
 
     // Working with contacts
     qint64 contactsGetContacts(Callback<ContactsContacts > callBack = 0, qint32 timeout = timeOut());
@@ -100,12 +100,12 @@ public:
     qint64 messagesSendPhoto(const InputPeer &peer, qint64 randomId, const QString &filePath, qint32 replyToMsgId = 0, const ReplyMarkup &reply_markup = ReplyMarkup::null, bool clearDraft = false, bool silent = false, bool background = false, Callback<UploadSendFile > callBack = 0, qint32 timeout = timeOut());
     qint64 messagesSendGeoPoint(const InputPeer &peer, qint64 randomId, const InputGeoPoint &InputGeoPoint, qint32 replyToMsgId = 0, const ReplyMarkup &reply_markup = ReplyMarkup::null, bool clearDraft = false, bool silent = false, bool background = false, Callback<UpdatesType > callBack = 0, qint32 timeout = timeOut());
     qint64 messagesSendContact(const InputPeer &peer, qint64 randomId, const QString &phoneNumber, const QString &firstName, const QString &lastName, qint32 replyToMsgId = 0, const ReplyMarkup &reply_markup = ReplyMarkup::null, bool clearDraft = false, bool silent = false, bool background = false, Callback<UpdatesType > callBack = 0, qint32 timeout = timeOut());
-    qint64 messagesSendVideo(const InputPeer &peer, qint64 randomId, const QByteArray &bytes, const QString &fileName, qint32 duration, qint32 width, qint32 height, const QString &mimeType, const QByteArray &thumbnailBytes = 0, const QString &thumbnailName = QString::null, qint32 replyToMsgId = 0, const ReplyMarkup &reply_markup = ReplyMarkup::null, bool clearDraft = false, bool silent = false, bool background = false, Callback<UploadSendFile > callBack = 0, qint32 timeout = timeOut());
-    qint64 messagesSendVideo(const InputPeer &peer, qint64 randomId, const QString &filePath, qint32 duration, qint32 width, qint32 height, const QString &thumbnailFilePath = QString::null, qint32 replyToMsgId = 0, const ReplyMarkup &reply_markup = ReplyMarkup::null, bool clearDraft = false, bool silent = false, bool background = false, Callback<UploadSendFile > callBack = 0, qint32 timeout = timeOut());
+    qint64 messagesSendVideo(const InputPeer &peer, qint64 randomId, const QByteArray &bytes, const QString &fileName, qint32 duration, qint32 width, qint32 height, const QString &mimeType, const QByteArray &thumbnailBytes = 0, const QString &thumbnailName = QString(), qint32 replyToMsgId = 0, const ReplyMarkup &reply_markup = ReplyMarkup::null, bool clearDraft = false, bool silent = false, bool background = false, Callback<UploadSendFile > callBack = 0, qint32 timeout = timeOut());
+    qint64 messagesSendVideo(const InputPeer &peer, qint64 randomId, const QString &filePath, qint32 duration, qint32 width, qint32 height, const QString &thumbnailFilePath = QString(), qint32 replyToMsgId = 0, const ReplyMarkup &reply_markup = ReplyMarkup::null, bool clearDraft = false, bool silent = false, bool background = false, Callback<UploadSendFile > callBack = 0, qint32 timeout = timeOut());
     qint64 messagesSendAudio(const InputPeer &peer, qint64 randomId, const QByteArray &bytes, const QString &fileName, qint32 duration, const QString &mimeType, qint32 replyToMsgId = 0, const ReplyMarkup &reply_markup = ReplyMarkup::null, bool clearDraft = false, bool silent = false, bool background = false, Callback<UploadSendFile > callBack = 0, qint32 timeout = timeOut());
     qint64 messagesSendAudio(const InputPeer &peer, qint64 randomId, const QString &filePath, qint32 duration, qint32 replyToMsgId = 0, const ReplyMarkup &reply_markup = ReplyMarkup::null, bool clearDraft = false, bool silent = false, bool background = false, Callback<UploadSendFile > callBack = 0, qint32 timeout = timeOut());
-    qint64 messagesSendDocument(const InputPeer &peer, qint64 randomId, const QByteArray &bytes, const QString &fileName, const QString &mimeType, const QByteArray &thumbnailBytes = 0, const QString &thumbnailName = QString::null, const QList<DocumentAttribute> &extraAttributes = QList<DocumentAttribute>(), qint32 replyToMsgId = 0, const ReplyMarkup &reply_markup = ReplyMarkup::null, bool clearDraft = false, bool silent = false, bool background = false, const QString &caption = QString::null, Callback<UploadSendFile > callBack = 0, qint32 timeout = timeOut());
-    qint64 messagesSendDocument(const InputPeer &peer, qint64 randomId, const QString &filePath, const QString &thumbnailFilePath = QString::null, bool sendAsSticker = false, qint32 replyToMsgId = 0, const ReplyMarkup &reply_markup = ReplyMarkup::null, bool clearDraft = false, bool silent = false, bool background = false, const QString &caption = QString::null, Callback<UploadSendFile > callBack = 0, qint32 timeout = timeOut());
+    qint64 messagesSendDocument(const InputPeer &peer, qint64 randomId, const QByteArray &bytes, const QString &fileName, const QString &mimeType, const QByteArray &thumbnailBytes = 0, const QString &thumbnailName = QString(), const QList<DocumentAttribute> &extraAttributes = QList<DocumentAttribute>(), qint32 replyToMsgId = 0, const ReplyMarkup &reply_markup = ReplyMarkup::null, bool clearDraft = false, bool silent = false, bool background = false, const QString &caption = QString(), Callback<UploadSendFile > callBack = 0, qint32 timeout = timeOut());
+    qint64 messagesSendDocument(const InputPeer &peer, qint64 randomId, const QString &filePath, const QString &thumbnailFilePath = QString(), bool sendAsSticker = false, qint32 replyToMsgId = 0, const ReplyMarkup &reply_markup = ReplyMarkup::null, bool clearDraft = false, bool silent = false, bool background = false, const QString &caption = QString(), Callback<UploadSendFile > callBack = 0, qint32 timeout = timeOut());
     qint64 messagesForwardPhoto(const InputPeer &peer, qint64 randomId, qint64 photoId, qint64 accessHash, qint32 replyToMsgId = 0, const ReplyMarkup &reply_markup = ReplyMarkup::null, bool clearDraft = false, bool silent = false, bool background = false, Callback<UpdatesType > callBack = 0, qint32 timeout = timeOut());
     qint64 messagesForwardVideo(const InputPeer &peer, qint64 randomId, qint64 videoId, qint64 accessHash, qint32 replyToMsgId = 0, const ReplyMarkup &reply_markup = ReplyMarkup::null, bool clearDraft = false, bool silent = false, bool background = false, Callback<UpdatesType > callBack = 0, qint32 timeout = timeOut());
     qint64 messagesForwardAudio(const InputPeer &peer, qint64 randomId, qint64 audioId, qint64 accessHash, qint32 replyToMsgId = 0, const ReplyMarkup &reply_markup = ReplyMarkup::null, bool clearDraft = false, bool silent = false, bool background = false, Callback<UpdatesType > callBack = 0, qint32 timeout = timeOut());
@@ -190,8 +190,8 @@ protected:
 
 private:
     qint64 messagesForwardMedia(const InputPeer &peer, const InputMedia &media, qint64 randomId, qint32 replyToMsgId, const ReplyMarkup &reply_markup = ReplyMarkup::null, bool clearDraft = false, bool silent = false, bool background = false, Callback<UpdatesType > callBack = 0, qint32 timeout = timeOut());
-    qint64 uploadSendFile(FileOperation &op, int mediaType, const QString &fileName, const QByteArray &bytes, const QByteArray &thumbnailBytes = 0, const QString &thumbnailName = QString::null);
-    qint64 uploadSendFile(FileOperation &op, int mediaType, const QString &filePath, const QString &thumbnailPath = QString::null);
+    qint64 uploadSendFile(FileOperation &op, int mediaType, const QString &fileName, const QByteArray &bytes, const QByteArray &thumbnailBytes = 0, const QString &thumbnailName = QString());
+    qint64 uploadSendFile(FileOperation &op, int mediaType, const QString &filePath, const QString &thumbnailPath = QString());
     void processSecretChatUpdate(const Update &update);
     qint64 generateGAorB(class SecretChat *secretChat, Callback<EncryptedChat> callBack = 0, qint32 timeout = timeOut());
     SecretChatMessage toSecretChatMessage(const EncryptedMessage &encryptedMessage);

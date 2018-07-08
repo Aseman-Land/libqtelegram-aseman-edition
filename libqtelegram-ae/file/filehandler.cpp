@@ -247,7 +247,7 @@ void FileHandler::onUploadSaveFilePartResult(qint64, bool, const QVariant &attac
                     InputEncryptedFile inputEncryptedFile(InputEncryptedFile::typeInputEncryptedFileUploaded);
                     inputEncryptedFile.setId(fileId);
                     inputEncryptedFile.setParts(uploadFile->nParts());
-                    inputEncryptedFile.setMd5Checksum(QString(uploadFile->md5().toHex()));
+                    inputEncryptedFile.setMd5Checksum(QString::fromUtf8(uploadFile->md5().toHex()));
 
                     qint32 keyFingerprint = mCrypto->computeKeyFingerprint(op->key(), op->iv());
                     inputEncryptedFile.setKeyFingerprint(keyFingerprint);
@@ -385,7 +385,7 @@ void FileHandler::onUploadGetFileAnswer(qint64 msgId, const UploadFile &result, 
         return;
 
     if (mCancelDownloadsMap.take(f->id())) {
-        Q_EMIT uploadGetFileAnswer(f->id(), UploadGetFile(UploadGetFile::typeUploadGetFileCanceled), 0, "");
+        Q_EMIT uploadGetFileAnswer(f->id(), UploadGetFile(UploadGetFile::typeUploadGetFileCanceled), 0, QStringLiteral(""));
         Q_EMIT uploadCancelFileAnswer(f->id(), true);
         mActiveDownloadsMap.remove(f->id());
         f.clear();

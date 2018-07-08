@@ -36,3 +36,5 @@ build*
 # Generator
 /telegram
 /build.init
+/libqtelegram-ae/telegram
+/libqtelegram-ae/build.init

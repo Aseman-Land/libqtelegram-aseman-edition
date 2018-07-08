@@ -13,7 +13,7 @@ macx {
 DEFINES += LIBQTELEGRAM_LIBRARY
 CONFIG += typeobjects
 
-include(../../libqtelegram-ae.pri)
+include(../../libqtelegram-ae/libqtelegram-ae.pri)
 
 contains(CONFIG, static) || contains(CONFIG, staticlib) {
     message("libqtelegram will be build as static library")
@@ -24,5 +24,5 @@ contains(CONFIG, static) || contains(CONFIG, staticlib) {
     INSTALL_HEADERS_PREFIX = $$[QT_INSTALL_HEADERS]
     INSTALL_PREFIX = $$INSTALL_HEADERS_PREFIX/QtTelegram
     INSTALL_HEADERS = $$HEADERS
-    include(../../qmake/headerinstall.pri)
+    include(../../libqtelegram-ae/qmake/headerinstall.pri)
 }

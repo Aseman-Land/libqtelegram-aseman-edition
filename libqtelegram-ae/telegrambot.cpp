@@ -41,11 +41,11 @@ void TelegramBot::getMe(Callback<BotUser> callback)
 void TelegramBot::getUpdates(Callback<QList<BotUpdate> > callback, qint32 offset, qint32 limit, qint32 timeout, const QStringList &allowed_updates)
 {
     QUrlQuery query = QUrlQuery();
-    if(offset) query.addQueryItem("offset", QString::number(offset));
-    if(limit) query.addQueryItem("limit", QString::number(limit));
-    if(timeout) query.addQueryItem("timeout", QString::number(timeout));
+    if(offset) query.addQueryItem(QStringLiteral("offset"), QString::number(offset));
+    if(limit) query.addQueryItem(QStringLiteral("limit"), QString::number(limit));
+    if(timeout) query.addQueryItem(QStringLiteral("timeout"), QString::number(timeout));
     for(const QString &alupd: allowed_updates)
-        query.addQueryItem("allowed_updates[]", alupd);
+        query.addQueryItem(QStringLiteral("allowed_updates[]"), alupd);
 
     postQuery(__FUNCTION__, query, [this, callback](const QVariant &res, const CallbackError &error){
         QList<BotUpdate> list;
@@ -85,14 +85,14 @@ void TelegramBot::sendPhoto(const QString &chat_id, const QString &photo, Callba
 {
     QVariantMap reply_markup_map = reply_markup.toMap();
     QUrlQuery query = QUrlQuery();
-    query.addQueryItem("chat_id", chat_id.toInt()? QString::number(chat_id.toInt()) : chat_id);
-    if(photo.count()) query.addQueryItem("photo", photo);
-    if(caption.count()) query.addQueryItem("caption", caption);
-    if(disable_notification) query.addQueryItem("disable_notification", disable_notification?"true":"false");
-    if(reply_to_message_id) query.addQueryItem("reply_to_message_id", QString::number(reply_to_message_id));
+    query.addQueryItem(QStringLiteral("chat_id"), chat_id.toInt()? QString::number(chat_id.toInt()) : chat_id);
+    if(photo.count()) query.addQueryItem(QStringLiteral("photo"), photo);
+    if(caption.count()) query.addQueryItem(QStringLiteral("caption"), caption);
+    if(disable_notification) query.addQueryItem(QStringLiteral("disable_notification"), disable_notification?QStringLiteral("true"):QStringLiteral("false"));
+    if(reply_to_message_id) query.addQueryItem(QStringLiteral("reply_to_message_id"), QString::number(reply_to_message_id));
     if(reply_markup_map.count()) {
         QJsonDocument doc( QJsonObject::fromVariantMap(reply_markup_map) );
-        query.addQueryItem("reply_markup", doc.toJson(QJsonDocument::Compact));
+        query.addQueryItem(QStringLiteral("reply_markup"), QString::fromUtf8(doc.toJson(QJsonDocument::Compact)));
     }
 
     postQuery(__FUNCTION__, query, [this, callback](const QVariant &res, const CallbackError &error){
@@ -104,15 +104,15 @@ void TelegramBot::sendLocation(const QString &chat_id, qreal latitude, qreal lon
 {
     QVariantMap reply_markup_map = reply_markup.toMap();
     QUrlQuery query = QUrlQuery();
-    query.addQueryItem("chat_id", chat_id.toInt()? QString::number(chat_id.toInt()) : chat_id);
-    query.addQueryItem("latitude", QString::number(latitude));
-    query.addQueryItem("longitude", QString::number(longitude));
-    if(live_period) query.addQueryItem("live_period", live_period?"true":"false");
-    if(disable_notification) query.addQueryItem("disable_notification", disable_notification?"true":"false");
-    if(reply_to_message_id) query.addQueryItem("reply_to_message_id", QString::number(reply_to_message_id));
+    query.addQueryItem(QStringLiteral("chat_id"), chat_id.toInt()? QString::number(chat_id.toInt()) : chat_id);
+    query.addQueryItem(QStringLiteral("latitude"), QString::number(latitude));
+    query.addQueryItem(QStringLiteral("longitude"), QString::number(longitude));
+    if(live_period) query.addQueryItem(QStringLiteral("live_period"), live_period?QStringLiteral("true"):QStringLiteral("false"));
+    if(disable_notification) query.addQueryItem(QStringLiteral("disable_notification"), disable_notification?QStringLiteral("true"):QStringLiteral("false"));
+    if(reply_to_message_id) query.addQueryItem(QStringLiteral("reply_to_message_id"), QString::number(reply_to_message_id));
     if(reply_markup_map.count()) {
         QJsonDocument doc( QJsonObject::fromVariantMap(reply_markup_map) );
-        query.addQueryItem("reply_markup", doc.toJson(QJsonDocument::Compact));
+        query.addQueryItem(QStringLiteral("reply_markup"), QString::fromUtf8(doc.toJson(QJsonDocument::Compact)));
     }
 
     postQuery(__FUNCTION__, query, [this, callback](const QVariant &res, const CallbackError &error){
@@ -124,15 +124,15 @@ void TelegramBot::editMessageText(const QString &chat_id, const QString &message
 {
     QVariantMap reply_markup_map = reply_markup.toMap();
     QUrlQuery query = QUrlQuery();
-    query.addQueryItem("chat_id", chat_id.toInt()? QString::number(chat_id.toInt()) : chat_id);
-    if(text.count()) query.addQueryItem("text", text);
-    if(message_id.count()) query.addQueryItem("message_id", message_id);
-    if(inline_message_id.count()) query.addQueryItem("inline_message_id", inline_message_id);
-    if(parse_mode.count()) query.addQueryItem("parse_mode", parse_mode);
-    if(disable_web_page_preview) query.addQueryItem("disable_web_page_preview", disable_web_page_preview?"true":"false");
+    query.addQueryItem(QStringLiteral("chat_id"), chat_id.toInt()? QString::number(chat_id.toInt()) : chat_id);
+    if(text.count()) query.addQueryItem(QStringLiteral("text"), text);
+    if(message_id.count()) query.addQueryItem(QStringLiteral("message_id"), message_id);
+    if(inline_message_id.count()) query.addQueryItem(QStringLiteral("inline_message_id"), inline_message_id);
+    if(parse_mode.count()) query.addQueryItem(QStringLiteral("parse_mode"), parse_mode);
+    if(disable_web_page_preview) query.addQueryItem(QStringLiteral("disable_web_page_preview"), disable_web_page_preview?QStringLiteral("true"):("false"));
     if(reply_markup_map.count()) {
         QJsonDocument doc( QJsonObject::fromVariantMap(reply_markup_map) );
-        query.addQueryItem("reply_markup", doc.toJson(QJsonDocument::Compact));
+        query.addQueryItem(QStringLiteral("reply_markup"), QString::fromUtf8(doc.toJson(QJsonDocument::Compact)));
     }
 
     postQuery(__FUNCTION__, query, [this, callback](const QVariant &res, const CallbackError &error){
@@ -144,13 +144,13 @@ void TelegramBot::editMessageCaption(const QString &chat_id, const QString &mess
 {
     QVariantMap reply_markup_map = reply_markup.toMap();
     QUrlQuery query = QUrlQuery();
-    query.addQueryItem("chat_id", chat_id.toInt()? QString::number(chat_id.toInt()) : chat_id);
-    if(caption.count()) query.addQueryItem("caption", caption);
-    if(message_id.count()) query.addQueryItem("message_id", message_id);
-    if(inline_message_id.count()) query.addQueryItem("inline_message_id", inline_message_id);
+    query.addQueryItem(QStringLiteral("chat_id"), chat_id.toInt()? QString::number(chat_id.toInt()) : chat_id);
+    if(caption.count()) query.addQueryItem(QStringLiteral("caption"), caption);
+    if(message_id.count()) query.addQueryItem(QStringLiteral("message_id"), message_id);
+    if(inline_message_id.count()) query.addQueryItem(QStringLiteral("inline_message_id"), inline_message_id);
     if(reply_markup_map.count()) {
         QJsonDocument doc( QJsonObject::fromVariantMap(reply_markup_map) );
-        query.addQueryItem("reply_markup", doc.toJson(QJsonDocument::Compact));
+        query.addQueryItem(QStringLiteral("reply_markup"), QString::fromUtf8(doc.toJson(QJsonDocument::Compact)));
     }
 
     postQuery(__FUNCTION__, query, [this, callback](const QVariant &res, const CallbackError &error){
@@ -162,12 +162,12 @@ void TelegramBot::editMessageReplyMarkup(const QString &chat_id, const QString &
 {
     QVariantMap reply_markup_map = reply_markup.toMap();
     QUrlQuery query = QUrlQuery();
-    query.addQueryItem("chat_id", chat_id.toInt()? QString::number(chat_id.toInt()) : chat_id);
-    if(message_id.count()) query.addQueryItem("message_id", message_id);
-    if(inline_message_id.count()) query.addQueryItem("inline_message_id", inline_message_id);
+    query.addQueryItem(QStringLiteral("chat_id"), chat_id.toInt()? QString::number(chat_id.toInt()) : chat_id);
+    if(message_id.count()) query.addQueryItem(QStringLiteral("message_id"), message_id);
+    if(inline_message_id.count()) query.addQueryItem(QStringLiteral("inline_message_id"), inline_message_id);
     if(reply_markup_map.count()) {
         QJsonDocument doc( QJsonObject::fromVariantMap(reply_markup_map) );
-        query.addQueryItem("reply_markup", doc.toJson(QJsonDocument::Compact));
+        query.addQueryItem(QStringLiteral("reply_markup"), QString::fromUtf8(doc.toJson(QJsonDocument::Compact)));
     }
 
     postQuery(__FUNCTION__, query, [this, callback](const QVariant &res, const CallbackError &error){
@@ -178,15 +178,15 @@ void TelegramBot::editMessageReplyMarkup(const QString &chat_id, const QString &
 void TelegramBot::sendMessage(const QString &chat_id, const QString &text, Callback<BotMessage> callback, const QString &parse_mode, bool disable_web_page_preview, bool disable_notification, int reply_to_message_id, const QMap<QString, QVariant> &reply_markup)
 {
     QUrlQuery query = QUrlQuery();
-    query.addQueryItem("chat_id", chat_id.toInt()? QString::number(chat_id.toInt()) : chat_id);
-    query.addQueryItem("text", text);
-    if(parse_mode.count()) query.addQueryItem("parse_mode", parse_mode);
-    if(disable_web_page_preview) query.addQueryItem("disable_web_page_preview", disable_web_page_preview?"true":"false");
-    if(disable_notification) query.addQueryItem("disable_notification", disable_notification?"true":"false");
-    if(reply_to_message_id) query.addQueryItem("reply_to_message_id", QString::number(reply_to_message_id));
+    query.addQueryItem(QStringLiteral("chat_id"), chat_id.toInt()? QString::number(chat_id.toInt()) : chat_id);
+    query.addQueryItem(QStringLiteral("text"), text);
+    if(parse_mode.count()) query.addQueryItem(QStringLiteral("parse_mode"), parse_mode);
+    if(disable_web_page_preview) query.addQueryItem(QStringLiteral("disable_web_page_preview"), disable_web_page_preview?QStringLiteral("true"):("false"));
+    if(disable_notification) query.addQueryItem(QStringLiteral("disable_notification"), disable_notification?QStringLiteral("true"):("false"));
+    if(reply_to_message_id) query.addQueryItem(QStringLiteral("reply_to_message_id"), QString::number(reply_to_message_id));
     if(reply_markup.count()) {
         QJsonDocument doc( QJsonObject::fromVariantMap(reply_markup) );
-        query.addQueryItem("reply_markup", doc.toJson(QJsonDocument::Compact));
+        query.addQueryItem(QStringLiteral("reply_markup"), QString::fromUtf8(doc.toJson(QJsonDocument::Compact)));
     }
 
     postQuery(__FUNCTION__, query, [this, callback](const QVariant &res, const CallbackError &error){
@@ -222,15 +222,15 @@ void TelegramBot::postQuery(const QString &method, const QUrlQuery &query, std::
 
         QJsonObject object = json.object();
         QVariantHash hash = object.toVariantHash();
-        if(!hash.value("ok").toBool()) {
+        if(!hash.value(QStringLiteral("ok")).toBool()) {
             CallbackError error;
-            error.errorCode = hash.value("error_code").toInt();
-            error.errorText = hash.value("description").toString();
+            error.errorCode = hash.value(QStringLiteral("error_code")).toInt();
+            error.errorText = hash.value(QStringLiteral("description")).toString();
             error.null = false;
             callback(QVariant(), CallbackError());
         }
 
-        callback(hash.value("result"), CallbackError());
+        callback(hash.value(QStringLiteral("result")), CallbackError());
     });
 
     connect(reply, &QNetworkReply::sslErrors, this, &TelegramBot::sslErrors);

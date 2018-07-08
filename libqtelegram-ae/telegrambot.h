@@ -32,7 +32,7 @@ public:
     static CallbackError apiError() {
         CallbackError error;
         error.errorCode = -1;
-        error.errorText = "LIBQTELEGRAM_API_ERROR";
+        error.errorText = QStringLiteral("LIBQTELEGRAM_API_ERROR");
         error.null = false;
         return error;
     }
@@ -44,7 +44,7 @@ public:
     void sendMessage(const QString &chat_id, const QString &text, Callback<BotMessage> callback, const QString &parse_mode, bool disable_web_page_preview, bool disable_notification, int reply_to_message_id, const BotReplyKeyboardMarkup &reply_markup);
     void sendMessage(const QString &chat_id, const QString &text, Callback<BotMessage> callback, const QString &parse_mode, bool disable_web_page_preview, bool disable_notification, int reply_to_message_id, const BotReplyKeyboardRemove &reply_markup);
     void sendMessage(const QString &chat_id, const QString &text, Callback<BotMessage> callback, const QString &parse_mode, bool disable_web_page_preview, bool disable_notification, int reply_to_message_id, const BotForceReply &reply_markup);
-    void sendMessage(const QString &chat_id, const QString &text, Callback<BotMessage> callback = Q_NULLPTR, const QString &parse_mode = QString::null, bool disable_web_page_preview = false, bool disable_notification = false, int reply_to_message_id = 0);
+    void sendMessage(const QString &chat_id, const QString &text, Callback<BotMessage> callback = Q_NULLPTR, const QString &parse_mode = QString(), bool disable_web_page_preview = false, bool disable_notification = false, int reply_to_message_id = 0);
 
     void sendPhoto(const QString &chat_id, const QString &photo, Callback<BotMessage> callback, const QString &caption, bool disable_notification, int reply_to_message_id, const BotReplyKeyboardMarkup &reply_markup);
 

@@ -41,7 +41,7 @@ QList<QList<BotKeyboardButton> > AbstractBotState::convertListToButtons(const QL
 void AbstractBotState::sendMessage(int userId, const QString &text, const BotReplyKeyboardMarkup &markup)
 {
     if(markup.keyboard().count())
-        bot()->sendMessage(QString::number(userId), text, Q_NULLPTR, "", false, false, 0, markup);
+        bot()->sendMessage(QString::number(userId), text, Q_NULLPTR, QStringLiteral(""), false, false, 0, markup);
     else
         bot()->sendMessage(QString::number(userId), text, Q_NULLPTR);
 }

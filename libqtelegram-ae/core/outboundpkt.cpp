@@ -160,7 +160,7 @@ void OutboundPkt::initConnection() {
     appendQString(Utils::getAppVersion());
     appendQString(mSettings->langCode());
 #if TG_API_VERSION >= 68
-    appendQString("");
+    appendQString(QStringLiteral(""));
     appendQString(mSettings->langCode());
 #endif
 }
