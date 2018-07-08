@@ -172,3 +172,5 @@
 
 * **Set bot precheckout results** - [TelegramCore::messagesSetBotPrecheckoutResults](methods/setbotprecheckoutresults.md)
 
+* **Upload media** - [TelegramCore::messagesUploadMedia](methods/uploadmedia.md)
+

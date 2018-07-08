@@ -16,11 +16,19 @@
 
 * [CdnPublicKey](cdnpublickey.md)
 
+* [ChannelAdminLogEvent](channeladminlogevent.md)
+
+* [ChannelAdminLogEventAction](channeladminlogeventaction.md)
+
+* [ChannelAdminLogEventsFilter](channeladminlogeventsfilter.md)
+
+* [ChannelAdminRights](channeladminrights.md)
+
+* [ChannelBannedRights](channelbannedrights.md)
+
 * [ChannelMessagesFilter](channelmessagesfilter.md)
 
 * [ChannelParticipant](channelparticipant.md)
-
-* [ChannelParticipantRole](channelparticipantrole.md)
 
 * [ChannelParticipantsFilter](channelparticipantsfilter.md)
 
@@ -142,6 +150,8 @@
 
 * [InputStickerSet](inputstickerset.md)
 
+* [InputStickerSetItem](inputstickersetitem.md)
+
 * [InputStickeredMedia](inputstickeredmedia.md)
 
 * [InputUser](inputuser.md)
@@ -157,6 +167,12 @@
 * [KeyboardButtonRow](keyboardbuttonrow.md)
 
 * [LabeledPrice](labeledprice.md)
+
+* [LangPackDifference](langpackdifference.md)
+
+* [LangPackLanguage](langpacklanguage.md)
+
+* [LangPackString](langpackstring.md)
 
 * [MaskCoords](maskcoords.md)
 
@@ -283,6 +299,8 @@
 * [AuthSentCode](authsentcode.md)
 
 * [AuthSentCodeType](authsentcodetype.md)
+
+* [ChannelsAdminLogResults](channelsadminlogresults.md)
 
 * [ChannelsChannelParticipant](channelschannelparticipant.md)
 

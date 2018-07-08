@@ -7,7 +7,7 @@ TelegramCore::channelsEditAdmin
 ## Schema:
 
 ```c++
-channels.editAdmin#eb7611d0 channel:InputChannel user_id:InputUser role:ChannelParticipantRole = Updates;
+channels.editAdmin#20b88214 channel:InputChannel user_id:InputUser admin_rights:ChannelAdminRights = Updates;
 ```
 ## Parameters:
 
@@ -15,7 +15,7 @@ channels.editAdmin#eb7611d0 channel:InputChannel user_id:InputUser role:ChannelP
 |----|----|-------|
 |channel|[InputChannel](../../types/inputchannel.md)||
 |userId|[InputUser](../../types/inputuser.md)||
-|role|[ChannelParticipantRole](../../types/channelparticipantrole.md)||
+|adminRights|[ChannelAdminRights](../../types/channeladminrights.md)||
 |callBack|Callback&lt;[UpdatesType](../../types/updatestype.md)&gt;|0|
 |timeout|qint32|TelegramCore::timeOut()|
 
@@ -52,7 +52,7 @@ onEditAdminError(qint64 msgId, qint32 errorCode, const QString &errorText)
 ## Examples:
 
 ```c++
-tg->editAdmin(channel, user_id, role, [=](TG_EDIT_ADMIN_CALLBACK){
+tg->editAdmin(channel, user_id, admin_rights, [=](TG_EDIT_ADMIN_CALLBACK){
     ...
 }, 30000);
 ```

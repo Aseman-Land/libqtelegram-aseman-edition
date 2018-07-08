@@ -68,7 +68,7 @@ chatForbidden#7328bdb id:int title:string = Chat;
 #### Schema:
 
 ```c++
-channel#a14dca52 flags:# creator:flags.0?true kicked:flags.1?true left:flags.2?true editor:flags.3?true moderator:flags.4?true broadcast:flags.5?true verified:flags.7?true megagroup:flags.8?true restricted:flags.9?true democracy:flags.10?true signatures:flags.11?true min:flags.12?true id:int access_hash:flags.13?long title:string username:flags.6?string photo:ChatPhoto date:int version:int restriction_reason:flags.9?string = Chat;
+channel#cb44b1c flags:# creator:flags.0?true left:flags.2?true broadcast:flags.5?true verified:flags.7?true megagroup:flags.8?true restricted:flags.9?true democracy:flags.10?true signatures:flags.11?true min:flags.12?true id:int access_hash:flags.13?long title:string username:flags.6?string photo:ChatPhoto date:int version:int restriction_reason:flags.9?string admin_rights:flags.14?ChannelAdminRights banned_rights:flags.15?ChannelBannedRights = Chat;
 ```
 
 #### Parameters:
@@ -76,10 +76,7 @@ channel#a14dca52 flags:# creator:flags.0?true kicked:flags.1?true left:flags.2?t
 |Name|Type|
 |----|----|
 |creator|bool|
-|kicked|bool|
 |left|bool|
-|editor|bool|
-|moderator|bool|
 |broadcast|bool|
 |verified|bool|
 |megagroup|bool|
@@ -95,13 +92,15 @@ channel#a14dca52 flags:# creator:flags.0?true kicked:flags.1?true left:flags.2?t
 |date|qint32|
 |version|qint32|
 |restrictionReason|QString|
+|adminRights|[ChannelAdminRights](channeladminrights.md)|
+|bannedRights|[ChannelBannedRights](channelbannedrights.md)|
 
 ## Chat::typeChannelForbidden
 
 #### Schema:
 
 ```c++
-channelForbidden#8537784f flags:# broadcast:flags.5?true megagroup:flags.8?true id:int access_hash:long title:string = Chat;
+channelForbidden#289da732 flags:# broadcast:flags.5?true megagroup:flags.8?true id:int access_hash:long title:string until_date:flags.16?int = Chat;
 ```
 
 #### Parameters:
@@ -113,4 +112,5 @@ channelForbidden#8537784f flags:# broadcast:flags.5?true megagroup:flags.8?true 
 |id|qint32|
 |accessHash|qint64|
 |title|QString|
+|untilDate|qint32|
 

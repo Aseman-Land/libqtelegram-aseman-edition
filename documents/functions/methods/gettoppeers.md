@@ -7,7 +7,7 @@ TelegramCore::contactsGetTopPeers
 ## Schema:
 
 ```c++
-contacts.getTopPeers#d4982db5 flags:# correspondents:flags.0?true bots_pm:flags.1?true bots_inline:flags.2?true groups:flags.10?true channels:flags.15?true offset:int limit:int hash:int = contacts.TopPeers;
+contacts.getTopPeers#d4982db5 flags:# correspondents:flags.0?true bots_pm:flags.1?true bots_inline:flags.2?true phone_calls:flags.3?true groups:flags.10?true channels:flags.15?true offset:int limit:int hash:int = contacts.TopPeers;
 ```
 ## Parameters:
 
@@ -16,6 +16,7 @@ contacts.getTopPeers#d4982db5 flags:# correspondents:flags.0?true bots_pm:flags.
 |correspondents|bool||
 |botsPm|bool||
 |botsInline|bool||
+|phoneCalls|bool||
 |groups|bool||
 |channels|bool||
 |offset|qint32||
@@ -57,7 +58,7 @@ onGetTopPeersError(qint64 msgId, qint32 errorCode, const QString &errorText)
 ## Examples:
 
 ```c++
-tg->getTopPeers(correspondents, bots_pm, bots_inline, groups, channels, offset, limit, hash, [=](TG_GET_TOP_PEERS_CALLBACK){
+tg->getTopPeers(correspondents, bots_pm, bots_inline, phone_calls, groups, channels, offset, limit, hash, [=](TG_GET_TOP_PEERS_CALLBACK){
     ...
 }, 30000);
 ```

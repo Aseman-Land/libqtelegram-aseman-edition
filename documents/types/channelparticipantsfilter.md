@@ -6,6 +6,8 @@
 * [typeChannelParticipantsAdmins](#channelparticipantsfiltertypechannelparticipantsadmins)
 * [typeChannelParticipantsKicked](#channelparticipantsfiltertypechannelparticipantskicked)
 * [typeChannelParticipantsBots](#channelparticipantsfiltertypechannelparticipantsbots)
+* [typeChannelParticipantsBanned](#channelparticipantsfiltertypechannelparticipantsbanned)
+* [typeChannelParticipantsSearch](#channelparticipantsfiltertypechannelparticipantssearch)
 
 ## ChannelParticipantsFilter::typeChannelParticipantsRecent
 
@@ -34,11 +36,14 @@ channelParticipantsAdmins#b4608969 = ChannelParticipantsFilter;
 #### Schema:
 
 ```c++
-channelParticipantsKicked#3c37bb7a = ChannelParticipantsFilter;
+channelParticipantsKicked#a3b54985 q:string = ChannelParticipantsFilter;
 ```
 
 #### Parameters:
 
+|Name|Type|
+|----|----|
+|q|QString|
 
 ## ChannelParticipantsFilter::typeChannelParticipantsBots
 
@@ -50,4 +55,32 @@ channelParticipantsBots#b0d1865b = ChannelParticipantsFilter;
 
 #### Parameters:
 
+
+## ChannelParticipantsFilter::typeChannelParticipantsBanned
+
+#### Schema:
+
+```c++
+channelParticipantsBanned#1427a5e1 q:string = ChannelParticipantsFilter;
+```
+
+#### Parameters:
+
+|Name|Type|
+|----|----|
+|q|QString|
+
+## ChannelParticipantsFilter::typeChannelParticipantsSearch
+
+#### Schema:
+
+```c++
+channelParticipantsSearch#656ac4b q:string = ChannelParticipantsFilter;
+```
+
+#### Parameters:
+
+|Name|Type|
+|----|----|
+|q|QString|
 

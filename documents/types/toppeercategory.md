@@ -7,6 +7,7 @@
 * [typeTopPeerCategoryCorrespondents](#toppeercategorytypetoppeercategorycorrespondents)
 * [typeTopPeerCategoryGroups](#toppeercategorytypetoppeercategorygroups)
 * [typeTopPeerCategoryChannels](#toppeercategorytypetoppeercategorychannels)
+* [typeTopPeerCategoryPhoneCalls](#toppeercategorytypetoppeercategoryphonecalls)
 
 ## TopPeerCategory::typeTopPeerCategoryBotsPM
 
@@ -58,6 +59,17 @@ topPeerCategoryGroups#bd17a14a = TopPeerCategory;
 
 ```c++
 topPeerCategoryChannels#161d9628 = TopPeerCategory;
+```
+
+#### Parameters:
+
+
+## TopPeerCategory::typeTopPeerCategoryPhoneCalls
+
+#### Schema:
+
+```c++
+topPeerCategoryPhoneCalls#1e76a78c = TopPeerCategory;
 ```
 
 #### Parameters:

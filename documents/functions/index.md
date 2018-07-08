@@ -12,6 +12,8 @@
 
 * [Help](help.md)
 
+* [Langpack](langpack.md)
+
 * [Messages](messages.md)
 
 * [Payments](payments.md)
@@ -19,6 +21,8 @@
 * [Phone](phone.md)
 
 * [Photos](photos.md)
+
+* [Stickers](stickers.md)
 
 * [Updates](updates.md)
 

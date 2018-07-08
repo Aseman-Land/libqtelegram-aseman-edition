@@ -40,8 +40,6 @@
 
 * **Invite to channel** - [TelegramCore::channelsInviteToChannel](methods/invitetochannel.md)
 
-* **Kick from channel** - [TelegramCore::channelsKickFromChannel](methods/kickfromchannel.md)
-
 * **Export invite** - [TelegramCore::channelsExportInvite](methods/exportinvite.md)
 
 * **Delete channel** - [TelegramCore::channelsDeleteChannel](methods/deletechannel.md)
@@ -55,4 +53,8 @@
 * **Update pinned message** - [TelegramCore::channelsUpdatePinnedMessage](methods/updatepinnedmessage.md)
 
 * **Get admined public channels** - [TelegramCore::channelsGetAdminedPublicChannels](methods/getadminedpublicchannels.md)
+
+* **Edit banned** - [TelegramCore::channelsEditBanned](methods/editbanned.md)
+
+* **Get admin log** - [TelegramCore::channelsGetAdminLog](methods/getadminlog.md)
 

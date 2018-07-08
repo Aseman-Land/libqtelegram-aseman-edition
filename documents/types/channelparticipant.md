@@ -4,10 +4,9 @@
 
 * [typeChannelParticipant](#channelparticipanttypechannelparticipant)
 * [typeChannelParticipantSelf](#channelparticipanttypechannelparticipantself)
-* [typeChannelParticipantModerator](#channelparticipanttypechannelparticipantmoderator)
-* [typeChannelParticipantEditor](#channelparticipanttypechannelparticipanteditor)
-* [typeChannelParticipantKicked](#channelparticipanttypechannelparticipantkicked)
 * [typeChannelParticipantCreator](#channelparticipanttypechannelparticipantcreator)
+* [typeChannelParticipantAdmin](#channelparticipanttypechannelparticipantadmin)
+* [typeChannelParticipantBanned](#channelparticipanttypechannelparticipantbanned)
 
 ## ChannelParticipant::typeChannelParticipant
 
@@ -40,54 +39,6 @@ channelParticipantSelf#a3289a6d user_id:int inviter_id:int date:int = ChannelPar
 |inviterId|qint32|
 |date|qint32|
 
-## ChannelParticipant::typeChannelParticipantModerator
-
-#### Schema:
-
-```c++
-channelParticipantModerator#91057fef user_id:int inviter_id:int date:int = ChannelParticipant;
-```
-
-#### Parameters:
-
-|Name|Type|
-|----|----|
-|userId|qint32|
-|inviterId|qint32|
-|date|qint32|
-
-## ChannelParticipant::typeChannelParticipantEditor
-
-#### Schema:
-
-```c++
-channelParticipantEditor#98192d61 user_id:int inviter_id:int date:int = ChannelParticipant;
-```
-
-#### Parameters:
-
-|Name|Type|
-|----|----|
-|userId|qint32|
-|inviterId|qint32|
-|date|qint32|
-
-## ChannelParticipant::typeChannelParticipantKicked
-
-#### Schema:
-
-```c++
-channelParticipantKicked#8cc5e69a user_id:int kicked_by:int date:int = ChannelParticipant;
-```
-
-#### Parameters:
-
-|Name|Type|
-|----|----|
-|userId|qint32|
-|kickedBy|qint32|
-|date|qint32|
-
 ## ChannelParticipant::typeChannelParticipantCreator
 
 #### Schema:
@@ -101,4 +52,41 @@ channelParticipantCreator#e3e2e1f9 user_id:int = ChannelParticipant;
 |Name|Type|
 |----|----|
 |userId|qint32|
+
+## ChannelParticipant::typeChannelParticipantAdmin
+
+#### Schema:
+
+```c++
+channelParticipantAdmin#a82fa898 flags:# can_edit:flags.0?true user_id:int inviter_id:int promoted_by:int date:int admin_rights:ChannelAdminRights = ChannelParticipant;
+```
+
+#### Parameters:
+
+|Name|Type|
+|----|----|
+|canEdit|bool|
+|userId|qint32|
+|inviterId|qint32|
+|promotedBy|qint32|
+|date|qint32|
+|adminRights|[ChannelAdminRights](channeladminrights.md)|
+
+## ChannelParticipant::typeChannelParticipantBanned
+
+#### Schema:
+
+```c++
+channelParticipantBanned#222c1886 flags:# left:flags.0?true user_id:int kicked_by:int date:int banned_rights:ChannelBannedRights = ChannelParticipant;
+```
+
+#### Parameters:
+
+|Name|Type|
+|----|----|
+|left|bool|
+|userId|qint32|
+|kickedBy|qint32|
+|date|qint32|
+|bannedRights|[ChannelBannedRights](channelbannedrights.md)|
 

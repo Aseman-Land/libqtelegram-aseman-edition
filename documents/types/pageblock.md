@@ -24,6 +24,7 @@
 * [typePageBlockCollage](#pageblocktypepageblockcollage)
 * [typePageBlockSlideshow](#pageblocktypepageblockslideshow)
 * [typePageBlockChannel](#pageblocktypepageblockchannel)
+* [typePageBlockAudio](#pageblocktypepageblockaudio)
 
 ## PageBlock::typePageBlockUnsupported
 
@@ -350,4 +351,19 @@ pageBlockChannel#ef1751b5 channel:Chat = PageBlock;
 |Name|Type|
 |----|----|
 |channel|[Chat](chat.md)|
+
+## PageBlock::typePageBlockAudio
+
+#### Schema:
+
+```c++
+pageBlockAudio#31b81a7f audio_id:long caption:RichText = PageBlock;
+```
+
+#### Parameters:
+
+|Name|Type|
+|----|----|
+|audioId|qint64|
+|caption|[RichText](richtext.md)|
 

@@ -7,7 +7,7 @@ TelegramCore::messagesSearch
 ## Schema:
 
 ```c++
-messages.search#d4569248 flags:# peer:InputPeer q:string filter:MessagesFilter min_date:int max_date:int offset:int max_id:int limit:int = messages.Messages;
+messages.search#f288a275 flags:# peer:InputPeer q:string from_id:flags.0?InputUser filter:MessagesFilter min_date:int max_date:int offset:int max_id:int limit:int = messages.Messages;
 ```
 ## Parameters:
 
@@ -15,6 +15,7 @@ messages.search#d4569248 flags:# peer:InputPeer q:string filter:MessagesFilter m
 |----|----|-------|
 |peer|[InputPeer](../../types/inputpeer.md)||
 |q|QString||
+|fromId|[InputUser](../../types/inputuser.md)||
 |filter|[MessagesFilter](../../types/messagesfilter.md)||
 |minDate|qint32||
 |maxDate|qint32||
@@ -57,7 +58,7 @@ onSearchError(qint64 msgId, qint32 errorCode, const QString &errorText)
 ## Examples:
 
 ```c++
-tg->search(peer, q, filter, min_date, max_date, offset, max_id, limit, [=](TG_SEARCH_CALLBACK){
+tg->search(peer, q, from_id, filter, min_date, max_date, offset, max_id, limit, [=](TG_SEARCH_CALLBACK){
     ...
 }, 30000);
 ```

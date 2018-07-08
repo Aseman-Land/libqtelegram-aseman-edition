@@ -62,6 +62,8 @@
 * [typeUpdateBotShippingQuery](#updatetypeupdatebotshippingquery)
 * [typeUpdateBotPrecheckoutQuery](#updatetypeupdatebotprecheckoutquery)
 * [typeUpdatePhoneCall](#updatetypeupdatephonecall)
+* [typeUpdateLangPackTooLong](#updatetypeupdatelangpacktoolong)
+* [typeUpdateLangPack](#updatetypeupdatelangpack)
 
 ## Update::typeUpdateNewMessage
 
@@ -987,4 +989,29 @@ updatePhoneCall#ab0f6b1e phone_call:PhoneCall = Update;
 |Name|Type|
 |----|----|
 |phoneCall|[PhoneCall](phonecall.md)|
+
+## Update::typeUpdateLangPackTooLong
+
+#### Schema:
+
+```c++
+updateLangPackTooLong#10c2404b = Update;
+```
+
+#### Parameters:
+
+
+## Update::typeUpdateLangPack
+
+#### Schema:
+
+```c++
+updateLangPack#56022f4d difference:LangPackDifference = Update;
+```
+
+#### Parameters:
+
+|Name|Type|
+|----|----|
+|difference|[LangPackDifference](langpackdifference.md)|
 
