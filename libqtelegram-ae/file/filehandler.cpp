@@ -424,7 +424,7 @@ void FileHandler::onUploadGetFileAnswer(qint64 msgId, const UploadFile &result, 
             result.setDownloaded(f->length());
             result.setTotal(expectedSize);
 
-            Q_EMIT uploadGetFileAnswer(f->id(), result, 0, ""); //emit signal of finished
+            Q_EMIT uploadGetFileAnswer(f->id(), result, 0, QStringLiteral("")); //emit signal of finished
             mActiveDownloadsMap.remove(f->id());
             f.clear();
         }
@@ -459,7 +459,7 @@ void FileHandler::onUploadGetFileAnswer(qint64 msgId, const UploadFile &result, 
             f.clear();
         }
 
-        Q_EMIT uploadGetFileAnswer(fileId, result, 0, "");
+        Q_EMIT uploadGetFileAnswer(fileId, result, 0, QStringLiteral(""));
     }
 }
 
@@ -467,8 +467,8 @@ void FileHandler::onUploadGetFileError(qint64 id, qint32 errorCode, const QStrin
     Q_UNUSED(attachedData)
     qCDebug(TG_FILE_FILEHANDLER) << "onUploadGetFileError" << errorText;
     // check for error and resend authCheckPhone() request
-    if (errorText.contains("_MIGRATE_")) {
-        qint32 newDc = errorText.mid(errorText.lastIndexOf("_") + 1).toInt();
+    if (errorText.contains(QStringLiteral("_MIGRATE_"))) {
+        qint32 newDc = errorText.mid(errorText.lastIndexOf(QStringLiteral("_")) + 1).toInt();
         qCDebug(TG_FILE_FILEHANDLER) << "file migrated to dc" << newDc;
         DC *dc = mDcProvider.getDc(newDc);
         DownloadFile::Ptr f = mDownloadsMap.take(id);
