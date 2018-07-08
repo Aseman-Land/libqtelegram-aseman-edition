@@ -161,7 +161,7 @@ Telegram::Telegram(const QString &defaultHostAddress, qint16 defaultHostPort, qi
     prv->telegram_settings_read_fnc = 0;
     prv->telegram_settings_write_fnc = 0;
 
-    QLoggingCategory::setFilterRules(QString(qgetenv("QT_LOGGING_RULES")));
+    QLoggingCategory::setFilterRules(QString::fromUtf8(qgetenv("QT_LOGGING_RULES")));
 }
 
 bool Telegram::sleep() {

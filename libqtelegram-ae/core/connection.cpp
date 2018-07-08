@@ -180,7 +180,7 @@ void Connection::onError(QAbstractSocket::SocketError error) {
         }
 
         qint32 reconnectionDelay = 0;
-        if (errorString().contains("unreachable")) {
+        if (errorString().contains(QStringLiteral("unreachable"))) {
             // In this case, there is no way to reach the server because the physical link
             // is broken (disconnected all connections). Don't retry reconnecting continuously
             // and insert a delay between reconnection attempts.

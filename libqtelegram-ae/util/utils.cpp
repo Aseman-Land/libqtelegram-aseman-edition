@@ -370,12 +370,12 @@ QString Utils::toHex(void *buffer, qint32 size) {
         sb.append(QString(hexArray.at(i)).toUpper());
         sb.append(QString(hexArray.at(i+1)).toUpper());
         if (count == 8) {
-            sb.append("\n");
+            sb.append(QStringLiteral("\n"));
             count = 0;
         } else if (count == 4) {
-            sb.append("\t");
+            sb.append(QStringLiteral("\t"));
         } else {
-            sb.append(" ");
+            sb.append(QStringLiteral(" "));
         }
     }
     return sb;
@@ -423,7 +423,7 @@ QString Utils::getDeviceModel() {
 #if defined(Q_OS_ANDROID) || defined(Q_OS_IOS)
     return "Mobile";
 #else
-    return "PC";
+    return QStringLiteral("PC");
 #endif
 #else
     struct utsname st;
@@ -444,7 +444,7 @@ QString Utils::getSystemVersion() {
 
 QString Utils::getAppVersion() {
     if(QCoreApplication::applicationVersion().isEmpty())
-        return "1.0";
+        return QStringLiteral("1.0");
     else
         return QCoreApplication::applicationVersion();
 }
