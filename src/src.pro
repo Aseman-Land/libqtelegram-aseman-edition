@@ -1,2 +1,6 @@
 TEMPLATE = subdirs
-SUBDIRS = telegram
+SUBDIRS = \
+    telegram \
+    qml
+
+qml.depends += telegram
