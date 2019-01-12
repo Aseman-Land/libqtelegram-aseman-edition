@@ -1,4 +1,4 @@
-Source: libqtelegram-ae
+Source: qttelegram
 Priority: optional
 Maintainer: Aseman Team <contact@aseman.co>
 Build-Depends: cmake,
@@ -13,20 +13,48 @@ Section: libs
 Homepage: https://github.com/Aseman-Land/libqtelegram-aseman-edition
 Vcs-Browser: https://github.com/Aseman-Land/libqtelegram-aseman-edition
 
-Package: libqtelegram-ae-dev
-Section: libdevel
-Architecture: any
-Depends: libqtelegram-ae (= ${binary:Version})
-Description: Forked libqtelegram. Telegram protocol access library.
- This is a Qt asynchronous library to be used as Telegram client. 
- Using signal-slot mechanism to communicate to telegram servers, 
- exposes an easy to use API for applications to interact to. 
-
-Package: libqtelegram-ae
+Package: libqt5telegram
 Section: libs
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Forked libqtelegram. Telegram protocol access library.
  This is a Qt asynchronous library to be used as Telegram client. 
  Using signal-slot mechanism to communicate to telegram servers, 
- exposes an easy to use API for applications to interact to.
+ exposes an easy to use API for applications to interact to. 
+
+Package: libqt5telegram-dev
+Section: libdevel
+Architecture: any
+Depends: libqt5asemancore (= ${binary:Version})
+Description: Forked libqtelegram. Telegram protocol access library.
+ This is a Qt asynchronous library to be used as Telegram client. 
+ Using signal-slot mechanism to communicate to telegram servers, 
+ exposes an easy to use API for applications to interact to. 
+
+Package: qml-module-telegramqml
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Telegram protocol access library for QML.
+ This is a Qt asynchronous library to be used as Telegram client. 
+ Using signal-slot mechanism to communicate to telegram servers, 
+ exposes an easy to use API for applications to interact to. 
+
+Package: qt5telegram
+Section: libs
+Architecture: any
+Depends: libqt5telegram (= ${binary:Version}),
+ qml-module-telegramqml
+Description: Forked libqtelegram. Telegram protocol access library.
+ This is a Qt asynchronous library to be used as Telegram client. 
+ Using signal-slot mechanism to communicate to telegram servers, 
+ exposes an easy to use API for applications to interact to. 
+
+Package: qt5telegram-dev
+Section: libdevel
+Architecture: any
+Depends: libqt5telegram-dev (= ${binary:Version})
+Description: Forked libqtelegram. Telegram protocol access library.
+ This is a Qt asynchronous library to be used as Telegram client. 
+ Using signal-slot mechanism to communicate to telegram servers, 
+ exposes an easy to use API for applications to interact to. 
