@@ -1,13 +1,26 @@
 Source: qttelegram
 Priority: optional
 Maintainer: Aseman Team <contact@aseman.co>
-Build-Depends: cmake,
-               debhelper (>= 8.0.0),
-               libssl-dev,
-               pkg-config,
-               qt5-default,
-               qtbase5-dev (>= 5.0),
-               qtmultimedia5-dev,
+Build-Depends: 
+ debhelper (>= 8.0.0),
+ g++ (>= 4:4.7),
+ gcc (>= 4:4.7),
+ qtbase5-dev (>= 5.2.0),
+ libqt5sql5-sqlite (>= 5.2.0),
+ libqt5multimediaquick-p5 (>= 5.2.0),
+ libqt5multimedia5-plugins (>= 5.2.0),
+ libqt5multimedia5 (>= 5.2.0),
+ qtchooser,
+ qt5-qmake,
+ qt5-default,
+ libqt5qml5 (>= 5.2.0),
+ libqt5qml-graphicaleffects (>= 5.2.0) | qml-module-qtgraphicaleffects,
+ qtdeclarative5-controls-plugin (>= 5.2.0) | qml-module-qtquick-controls,
+ qtdeclarative5-dev (>= 5.2.0),
+ libqt5quick5 (>= 5.2.0),
+ qtmultimedia5-dev (>= 5.2.0),
+ libqt5webkit5-dev (>= 5.1.0),
+ libssl-dev
 Standards-Version: 3.9.4
 Section: libs
 Homepage: https://github.com/Aseman-Land/libqtelegram-aseman-edition
@@ -25,7 +38,7 @@ Description: Forked libqtelegram. Telegram protocol access library.
 Package: libqt5telegram-dev
 Section: libdevel
 Architecture: any
-Depends: libqt5asemancore (= ${binary:Version})
+Depends: libqt5telegram (= ${binary:Version})
 Description: Forked libqtelegram. Telegram protocol access library.
  This is a Qt asynchronous library to be used as Telegram client. 
  Using signal-slot mechanism to communicate to telegram servers, 
