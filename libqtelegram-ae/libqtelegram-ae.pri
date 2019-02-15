@@ -6,7 +6,7 @@ contains(CONFIG, gui_support) {
     DEFINES += LIBQTELEGRAM_EMBEDED_MODE
 }
 
-ios|osx: QMAKE_CXXFLAGS += -Wno-narrowing
+ios|osx|clang: QMAKE_CXXFLAGS += -Wno-narrowing
 
 DEFINES += \
     LIBQTG_GIT_REVISION='\\"$${GIT_REVISION}\\"' \
