@@ -2,6 +2,7 @@ TARGET  = telegramqml
 TARGETPATH = TelegramQml
 IMPORT_VERSION = 1.0
 
+ios|osx|clang: QMAKE_CXXFLAGS += -Wno-narrowing
 QT += core gui network qml quick telegram xml multimedia sql
 CONFIG += c++11
 

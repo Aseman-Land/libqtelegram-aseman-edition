@@ -1,6 +1,8 @@
 QT += qml quick sql xml multimedia
 CONFIG += c++11
 
+ios|osx|clang: QMAKE_CXXFLAGS += -Wno-narrowing
+
 contains(DEFINES,TELEGRAMQML_QML_PLUGIN) {
     win32 {
         isEmpty(OPENSSL_LIB_DIR): OPENSSL_LIB_DIR = $${DESTDIR}
