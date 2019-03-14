@@ -1,10 +1,9 @@
-QT += core
+QT += core telegram network
 QT -= gui
 
 CONFIG += c++11
 
 INCLUDEPATH += $$[QT_INSTALL_HEADERS]/libqtelegram-ae/
-LIBS += -lqtelegram-ae
 
 TARGET = TelegramStatusOnliner
 TEMPLATE = app

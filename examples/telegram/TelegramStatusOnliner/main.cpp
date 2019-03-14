@@ -2,6 +2,7 @@
 #include <QTimer>
 #include <QDebug>
 #include <QTime>
+#include <QNetworkProxy>
 
 #include <telegram.h>
 
