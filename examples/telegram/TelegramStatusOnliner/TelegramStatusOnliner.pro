@@ -3,6 +3,7 @@ QT -= gui
 
 CONFIG += c++11
 
+ios|osx|clang: QMAKE_CXXFLAGS += -Wno-narrowing
 INCLUDEPATH += $$[QT_INSTALL_HEADERS]/libqtelegram-ae/
 
 TARGET = TelegramStatusOnliner
