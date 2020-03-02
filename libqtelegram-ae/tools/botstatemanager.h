@@ -47,6 +47,7 @@ Q_SIGNALS:
     void settingsPathChanged();
 
 public Q_SLOTS:
+    void changeState(qint32 userId, const QString &stateId, QString title, const QString &replaceMsgId);
 
 protected:
     void timerEvent(QTimerEvent *e);

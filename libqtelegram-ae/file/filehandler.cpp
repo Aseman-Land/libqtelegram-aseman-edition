@@ -210,6 +210,7 @@ void FileHandler::onUploadSaveFilePartResult(qint64, bool, const QVariant &attac
                                                          [=](TG_MESSAGES_SEND_MEDIA_CALLBACK){
                         UploadSendFile usf(error.null? UploadSendFile::typeUploadSendFileFinished :
                                                        UploadSendFile::typeUploadSendFileCanceled);
+
                         usf.setUpdates(result);
                         if(!op->resultCallbackIsNull())
                             op->resultCallback<UploadSendFile>()(msgId, usf, error);

@@ -1,10 +1,12 @@
 #include "abstractbotstate.h"
+#include "botstatemanager.h"
 
 #include <QDebug>
 
 AbstractBotState::AbstractBotState(TelegramBot *bot) :
     QObject(bot),
-    _bot(bot)
+    _bot(bot),
+    _stateManager(Q_NULLPTR)
 {
 }
 
@@ -54,6 +56,11 @@ void AbstractBotState::sendPhoto(int userId, const QString &photo, const QString
 void AbstractBotState::sendLocation(int userId, qreal latitude, qreal longitude, const BotReplyKeyboardMarkup &markup)
 {
     bot()->sendLocation(QString::number(userId), latitude, longitude, Q_NULLPTR, false, false, 0, markup);
+}
+
+void AbstractBotState::setStateManager(BotStateManager *stateManager)
+{
+    _stateManager = stateManager;
 }
 
 AbstractBotState::~AbstractBotState()

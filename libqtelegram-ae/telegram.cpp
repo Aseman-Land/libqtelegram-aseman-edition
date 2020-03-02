@@ -1382,7 +1382,7 @@ qint64 Telegram::messagesSendVideo(const InputPeer &peer, qint64 randomId, const
     attr.setW(width);
     attr.setH(height);
 
-    InputMedia inputMedia(InputMedia::typeInputMediaUploadedDocument);
+    InputMedia inputMedia(thumbnailBytes.isEmpty()? InputMedia::typeInputMediaUploadedDocument : InputMedia::typeInputMediaUploadedThumbDocument);
     inputMedia.setAttributes( inputMedia.attributes() << attr );
     inputMedia.setMimeType(mimeType);
 
@@ -1406,7 +1406,7 @@ qint64 Telegram::messagesSendVideo(const InputPeer &peer, qint64 randomId, const
     attr.setW(width);
     attr.setH(height);
 
-    InputMedia inputMedia(InputMedia::typeInputMediaUploadedDocument);
+    InputMedia inputMedia(thumbnailFilePath.isEmpty()? InputMedia::typeInputMediaUploadedDocument : InputMedia::typeInputMediaUploadedThumbDocument);
     inputMedia.setAttributes( inputMedia.attributes() << attr );
     inputMedia.setMimeType(QMimeDatabase().mimeTypeForFile(QFileInfo(filePath)).name());
 
@@ -1476,7 +1476,7 @@ qint64 Telegram::messagesSendDocument(const InputPeer &peer, qint64 randomId, co
     attributes << fileAttr;
     attributes << extraAttributes;
 
-    InputMedia inputMedia(InputMedia::typeInputMediaUploadedDocument);
+    InputMedia inputMedia(thumbnailBytes.isEmpty()? InputMedia::typeInputMediaUploadedDocument : InputMedia::typeInputMediaUploadedThumbDocument);
     inputMedia.setAttributes(attributes);
     inputMedia.setMimeType(mimeType);
     inputMedia.setCaption(caption);
@@ -1496,13 +1496,17 @@ qint64 Telegram::messagesSendDocument(const InputPeer &peer, qint64 randomId, co
 }
 
 qint64 Telegram::messagesSendDocument(const InputPeer &peer, qint64 randomId, const QString &filePath, const QString &thumbnailFilePath, bool sendAsSticker, qint32 replyToMsgId, const ReplyMarkup &reply_markup, bool clearDraft, bool silent, bool background, const QString &caption, Callback<UploadSendFile > callBack, qint32 timeout) {
+    return messagesSendDocument(peer, randomId, filePath, thumbnailFilePath, {}, sendAsSticker, replyToMsgId, reply_markup, clearDraft, silent, background, caption, callBack, timeout);
+}
+
+qint64 Telegram::messagesSendDocument(const InputPeer &peer, qint64 randomId, const QString &filePath, const QString &thumbnailFilePath, const QList<DocumentAttribute> &extraAttributes, bool sendAsSticker, qint32 replyToMsgId, const ReplyMarkup &reply_markup, bool clearDraft, bool silent, bool background, const QString &caption, Callback<UploadSendFile> callBack, qint32 timeout) {
     const QMimeType t = QMimeDatabase().mimeTypeForFile(QFileInfo(filePath));
     QString mimeType = t.name();
 
     DocumentAttribute fileAttr(DocumentAttribute::typeDocumentAttributeFilename);
     fileAttr.setFileName(QFileInfo(filePath).fileName());
 
-    QList<DocumentAttribute> attributes;
+    QList<DocumentAttribute> attributes = extraAttributes;
     attributes << fileAttr;
     if(sendAsSticker) {
 #ifdef QT_GUI_LIB
@@ -1518,7 +1522,7 @@ qint64 Telegram::messagesSendDocument(const InputPeer &peer, qint64 randomId, co
             mimeType = "image/webp";
     }
 
-    InputMedia inputMedia(InputMedia::typeInputMediaUploadedDocument);
+    InputMedia inputMedia(thumbnailFilePath.isEmpty()? InputMedia::typeInputMediaUploadedDocument : InputMedia::typeInputMediaUploadedThumbDocument);
     inputMedia.setMimeType(mimeType);
     inputMedia.setAttributes(attributes);
     inputMedia.setCaption(caption);

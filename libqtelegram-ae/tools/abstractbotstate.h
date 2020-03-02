@@ -9,6 +9,7 @@
 class LIBQTELEGRAMSHARED_EXPORT AbstractBotState: public QObject
 {
     Q_OBJECT
+    friend class BotStateManager;
 public:
     AbstractBotState(TelegramBot *bot);
     virtual ~AbstractBotState();
@@ -20,6 +21,7 @@ public:
     virtual QString id() const = 0;
 
     TelegramBot *bot() const { return _bot; }
+    class BotStateManager *stateManager() const { return _stateManager; }
 
     static QList<QList<BotKeyboardButton>> convertListToButtons(const QList<QList<QString>> &list);
 
@@ -28,8 +30,11 @@ protected:
     void sendPhoto(int userId, const QString &photo, const QString &text, const BotReplyKeyboardMarkup &markup = BotReplyKeyboardMarkup::null);
     void sendLocation(int userId, qreal latitude, qreal longitude, const BotReplyKeyboardMarkup &markup = BotReplyKeyboardMarkup::null);
 
+    void setStateManager(BotStateManager *stateManager);
+
 private:
     TelegramBot *_bot;
+    BotStateManager *_stateManager;
 };
 
 #endif // ABSTRACTBOTSTATE_H

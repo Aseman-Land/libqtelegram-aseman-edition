@@ -125,6 +125,7 @@ QString BotStateManager::settingsPath() const
 
 BotStateManager &BotStateManager::operator <<(AbstractBotState *state)
 {
+    state->setStateManager(this);
     p->states[state->id()] = state;
     if(p->initialState.isEmpty() && p->states.count() == 1)
         setInitialState(state->id());
@@ -133,6 +134,18 @@ BotStateManager &BotStateManager::operator <<(AbstractBotState *state)
         p->states.remove(state->id());
     });
     return *this;
+}
+
+void BotStateManager::changeState(qint32 userId, const QString &stateId, QString title, const QString &replaceMsgId)
+{
+    AbstractBotState *newState = p->states.value(stateId);
+    if(!newState)
+        return;
+
+    if(title.isNull()) title = newState->title(userId);
+    const BotInlineKeyboardMarkup &inlineMarkup = newState->inlineButtons(userId);
+    const BotReplyKeyboardMarkup &markup = newState->buttons(userId);
+    sendMessage(userId, title, markup, inlineMarkup, stateId, replaceMsgId);
 }
 
 void BotStateManager::timerEvent(QTimerEvent *e)
@@ -211,14 +224,7 @@ void BotStateManager::checkUpdate(const BotUpdate &upd)
         }
     }
 
-    AbstractBotState *newState = p->states.value(newStateId);
-    if(!newState)
-        return;
-
-    if(title.isEmpty()) title = newState->title(userId);
-    const BotInlineKeyboardMarkup &inlineMarkup = newState->inlineButtons(userId);
-    const BotReplyKeyboardMarkup &markup = newState->buttons(userId);
-    sendMessage(userId, title, markup, inlineMarkup, newStateId, replaceMsgId);
+    changeState(userId, newStateId, title, replaceMsgId);
 }
 
 void BotStateManager::sendMessage(int userId, const QString &text, const BotReplyKeyboardMarkup &markup, const BotInlineKeyboardMarkup &inlintMarkup, const QString &stateId, const QString &replace_message)
